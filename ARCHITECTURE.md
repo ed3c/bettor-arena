@@ -29,7 +29,7 @@ bettor-arena/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)
 ├── mcp/               # MCP adapter 層(context-pack+production 引擎;S10 落地)
 ├── scripts/
-│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+allowlist 帳
+│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+allowlist 帳
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
