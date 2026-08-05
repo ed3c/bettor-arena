@@ -1,4 +1,6 @@
 # root_coupling allowlist — <repo-relative path or prefix ending in /> <reason>
 # Historical evidence is declared here, never rewritten: rewriting evidence is
 # forging evidence. Keep this ledger short; every entry is a standing debt.
-data/receipts/ machine receipts are verification evidence; absolute paths there are corpus/source identity, declared not rewritten
+data/receipts/molecular-corpus-parity.json corpus/source repo identity in historical parity evidence, declared not rewritten
+data/receipts/molecular-gate-smoke.json historical smoke-run evidence (2026-08-05), declared not rewritten
+data/receipts/molecular-gate-tdd-red.json historical TDD red evidence, declared not rewritten
