@@ -295,6 +295,35 @@ server 三 actuator 併發實跑。
   (dr-claude-code-skill-market proof-run 實走此路)。
   **禁對已綠 target 用 engine 跑 feedback 輪。**
 
+## CLI driver 與 prompt cache 對齊(2026-08-06 S11 規範節)
+
+**claude lane(主 driver)**
+- 每輪 dispatch=fresh `claude -p`(禁 resume/fork 舊 session 當迭代;迭代狀態只活在沙盒檔案)。
+- feedback **僅尾端 append**(鐵律;自 engine 既有慣例升格成規範文字):被動上下文+PROMPT 前綴
+  逐輪位元組不變,cache 前綴才可命中;改前綴=全 miss+驗證脈絡漂移。
+- model 必須在 dispatch 命令寫死(與 root 鐵律 2 同錨)。
+- 訂閱 session 的 prompt cache TTL=1h 有官方明文;迭代間隔超過 TTL 按冷啟預算,不假設殘留。
+
+**codex lane(備援 driver)**
+- 直呼 `codex exec "<prompt>"`(可選 `--json`、`-o/--output-last-message <file>`、
+  `--output-schema <file>`)。
+- **禁走 Claude host plugin(codex-companion)的絕對路徑或其背景 task 通道**——codex lane
+  零 Claude host 資產依賴(host 中立;背景化坑見 Gotchas「codex 在 Workflow 內」條)。
+- codex 缺席=FATAL exit 64 具名明講;禁靜默 fallback 到 claude lane 冒充跑過(缺席永不可讀成綠)。
+- Codex prompt cache **官方無明文**:只當機會性優化,不入迭代成本預算,
+  不得為湊快取改 dispatch 形態。
+
+**cache 四規**(claude lane 有官方保證;codex lane 同型操作但無官方明文,見上)
+1. 迭代期禁 commit——git 快照入 cache scope(鐵律 8)。
+2. 每輪 fresh dispatch、driver 從沙盒 CWD 起(harness-spec §5)。
+3. feedback 僅尾端 append,前綴逐輪凍結(本節升格)。
+4. model 寫死+訂閱 1h TTL 內排輪;TTL 外當冷啟。
+
+沙盒即 host 目錄的層疊語義(root 被動上下文=共享 cache 前綴段、root 迭代期凍結)
+→ arena `ARCHITECTURE.md` §3 鐵律 3,此處只指針不複述。
+煙測入口=`tests/tools/driver_smoke.sh`(兩 lane 各一發真跑,receipt 落
+`data/receipts/driver-smoke.json`;工具缺席 exit 64 具名)。
+
 ## Modules
 - [modules/harness-spec.md](modules/harness-spec.md) —
   目錄結構圖＋設計決策 know-why(驗證器隔離／300 行腐化／cache 不變量／driver 選型),
