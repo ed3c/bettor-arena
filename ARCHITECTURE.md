@@ -17,6 +17,8 @@ bettor-arena/
 ├── CLAUDE.md          # Claude-tier 薄派生(tight 入口,禁複述)
 ├── ARCHITECTURE.md    # 本檔=工程 SSOT+放置契約權威源
 ├── bootstrap.sh       # 冪等啟用:相對 hooksPath+環境 doctor(exit 64=FATAL)
+├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
+├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
 ├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink → .agents/skills)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
