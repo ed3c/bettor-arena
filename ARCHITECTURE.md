@@ -20,7 +20,7 @@ bettor-arena/
 ├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
-├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink → .agents/skills)
+├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
 ├── .agents/
 │   └── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
