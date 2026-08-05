@@ -5,7 +5,8 @@
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+# Clean the tampered profile too: a mid-test fail must not leave it in the repo.
+trap 'rm -rf "$TMP" "$ROOT/mcp/production/profile.tampered.json"' EXIT
 fail() { echo "FAIL: $1" >&2; exit 1; }
 
 # --- .mcp.json: valid JSON declaring the three portable servers -------------
@@ -59,7 +60,9 @@ fi
 
 # --- bootstrap doctor probes: WARNs fire when absent, clear when present ----
 cp -R "$ROOT/scripts" "$TMP/scripts"
-cp -R "$ROOT/.githooks" "$TMP/.githooks" 2>/dev/null || mkdir "$TMP/.githooks"
+# Unconditional: a mkdir fallback would hand bootstrap an empty .githooks and
+# mask the tracked hooks' absence (same defect test_bootstrap.sh carried).
+cp -R "$ROOT/.githooks" "$TMP/.githooks" || fail ".githooks missing in repo (S8 tracked hooks)"
 cp "$ROOT/bootstrap.sh" "$TMP/bootstrap.sh"
 git -C "$TMP" init -q -b main
 
@@ -77,5 +80,12 @@ ln -s "$(command -v bun)" "$TMP/bin/bun"
 OUT=$(env PATH="$TMP/bin:/usr/bin:/bin" sh "$TMP/bootstrap.sh" 2>&1) \
   || fail "bootstrap FATALed on missing uv; uv must be WARN only"
 echo "$OUT" | grep -q 'WARN.*uv' || fail "missing uv raised no WARN"
+
+# Ollama WARN must fire against an injected dead port even when a real ollama
+# is up on the default — proves the probe reads OLLAMA_URL, not a constant.
+OUT=$(env OLLAMA_URL="http://127.0.0.1:9" sh "$TMP/bootstrap.sh" 2>&1) \
+  || fail "bootstrap FATALed on dead ollama port; ollama must be WARN only"
+echo "$OUT" | grep -q 'WARN.*ollama not reachable.*127.0.0.1:9' \
+  || fail "dead-port OLLAMA_URL raised no WARN naming the injected URL"
 
 echo "PASS: MCP surface contract holds"
