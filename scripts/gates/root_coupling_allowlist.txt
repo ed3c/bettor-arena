@@ -4,3 +4,5 @@
 data/receipts/molecular-corpus-parity.json corpus/source repo identity in historical parity evidence, declared not rewritten
 data/receipts/molecular-gate-smoke.json historical smoke-run evidence (2026-08-05), declared not rewritten
 data/receipts/molecular-gate-tdd-red.json historical TDD red evidence, declared not rewritten
+kb-ingest/port/host-runtime.md upstream-prompt-quote-names-generic-home-path
+kb-ingest/openwiki/ upstream-verbatim-never-rewritten

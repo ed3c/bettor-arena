@@ -1,28 +1,29 @@
 {
-  "allowlist_entries_added": [],
-  "bytes_planned": 276307,
+  "allowlist_entries_added": [
+    "kb-ingest/check_repo_wiki_converge.py gate-scan-constants-are-literal-roots",
+    "kb-ingest/nonofficial/host-runtime.md historical-evidence-foreign-root-anchor",
+    "kb-ingest/openwiki/ upstream-verbatim-never-rewritten"
+  ],
+  "bytes_planned": 193165,
   "component_file_counts": {
-    "loop-factory": 102
+    "kb-ingest": 22
   },
-  "evidence_planned": 0,
-  "files_planned": 102,
-  "files_written": 102,
-  "generated_at": "2026-08-05T17:52:14+00:00",
+  "evidence_planned": 9,
+  "files_planned": 22,
+  "files_written": 22,
+  "generated_at": "2026-08-05T17:57:05+00:00",
   "manifest_schema": "bettor-arena-migration@2.0.0",
   "mode": "apply",
-  "rewrite_planned": 93,
+  "rewrite_planned": 13,
   "root_coupling_gate": "pass",
   "schema": "bettor-arena-migration-stats@2.0.0",
   "source_commit": "f3776cbf1b4c75c78e017e1381a8517cd1865abf",
   "source_root_name": "ts-skill-bettor",
   "suffix_counts": {
-    ".json": 18,
-    ".lock": 2,
-    ".md": 45,
-    ".mjs": 4,
-    ".sh": 5,
-    ".ts": 25,
-    "<none>": 3
+    ".json": 1,
+    ".md": 14,
+    ".py": 3,
+    ".sh": 4
   },
   "symlink_planned": 0,
   "target_root_name": "bettor-arena"
