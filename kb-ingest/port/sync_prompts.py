@@ -7,9 +7,10 @@ lines makes that claim unfalsifiable after the first typo. Re-running this
 against a fresh openwiki checkout regenerates every asset, so `git diff` is the
 proof, and upgrading to a newer openwiki is one command.
 
-The extracted text is wrapped in OPENWIKI-OFFICIAL:BEGIN/END markers so
-`verify_prompts()` can re-derive it and compare, and so skill-bettar's own
-appendices can never leak into the verbatim region.
+The extracted text is wrapped in OPENWIKI-OFFICIAL:BEGIN/END markers so the
+comparators — `--check` here and the module gate's check_prompt_assets()
+(../check_repo_wiki_converge.py) — can re-derive it and compare, and so
+skill-bettor's own appendices can never leak into the verbatim region.
 
 Usage:
     python3 kb-ingest/port/sync_prompts.py <openwiki_repo> [--check]
