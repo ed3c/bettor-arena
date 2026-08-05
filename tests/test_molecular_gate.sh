@@ -99,8 +99,10 @@ set -e
 echo "$ERR" | grep -qi "bun" || fail "bun-absent diagnostic does not name bun"
 
 # Receipt: this run's evidence, written only after every assertion above held.
-mkdir -p "$ROOT/data/receipts"
-cat > "$ROOT/data/receipts/molecular-gate-smoke.json" <<EOF
+# Lands in $TMP — the tracked 2026-08-05 receipt is historical evidence and is
+# never overwritten by reruns (rewriting evidence is forging evidence).
+mkdir -p "$TMP/receipts"
+cat > "$TMP/receipts/molecular-gate-smoke.json" <<EOF
 {
   "kind": "molecular-gate-smoke",
   "utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",

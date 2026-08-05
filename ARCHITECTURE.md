@@ -31,7 +31,7 @@ bettor-arena/
 ├── scripts/
 │   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+allowlist 帳
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
-├── tests/             # repo 級測試(打 gate CLI exit code 接縫)
+├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(last-migration-report.json,執行期生)
 └── docs/              # 計劃/交接文件(非模組知識)
