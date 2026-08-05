@@ -22,6 +22,10 @@ command -v python3 >/dev/null 2>&1 || fatal "python3 not on PATH (gates are Pyth
 command -v bun >/dev/null 2>&1 || fatal "bun not on PATH (factory toolchain; install from https://bun.sh)"
 
 # Relative hooksPath: valid from any checkout location, versioned hooks.
+# .githooks/ is tracked (S8); pointing hooksPath at a missing/empty dir would
+# print OK while registering nothing — assert before configuring.
+[ -d "$ROOT/.githooks" ] && [ -n "$(ls -A "$ROOT/.githooks")" ] \
+  || fatal ".githooks/ missing or empty — hooksPath would register nothing (restore the tracked hooks)"
 git -C "$ROOT" config core.hooksPath .githooks
 
 python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
