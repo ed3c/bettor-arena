@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "perfect-seed-oracle-registry@1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_id", "policy", "oracles"],
+  "properties": {
+    "schema_version": { "const": "perfect-seed-oracle-registry@1.0.0" },
+    "registry_id": { "type": "string", "minLength": 1 },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exit_criteria_must_prebind_oracle",
+        "llm_verdict_is_evidence_not_admission",
+        "forbidden_substitutions"
+      ],
+      "properties": {
+        "exit_criteria_must_prebind_oracle": { "const": true },
+        "llm_verdict_is_evidence_not_admission": { "const": true },
+        "forbidden_substitutions": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "oracles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "oracle_id",
+          "kind",
+          "producer",
+          "cost_class",
+          "command",
+          "evidence_contract",
+          "pass_predicate",
+          "falsifiers",
+          "promotion_effect"
+        ],
+        "properties": {
+          "oracle_id": { "type": "string", "pattern": "^OR-[A-Z0-9-]+$" },
+          "kind": { "enum": ["mechanical", "behavioral", "semantic", "external", "human"] },
+          "producer": { "type": "string", "minLength": 1 },
+          "cost_class": { "enum": ["cq0", "async-cq1", "async-pu"] },
+          "command": { "type": ["array", "null"], "items": { "type": "string", "minLength": 1 } },
+          "evidence_contract": { "type": "string", "minLength": 1 },
+          "pass_predicate": { "type": "string", "minLength": 1 },
+          "falsifiers": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "promotion_effect": { "enum": ["candidate-only", "verification-required", "human-only"] }
+        }
+      }
+    }
+  }
+}

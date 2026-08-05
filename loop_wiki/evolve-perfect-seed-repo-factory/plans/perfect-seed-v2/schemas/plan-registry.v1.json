@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "perfect-seed-plan-registry@1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "definition_revision",
+    "scope_root",
+    "product",
+    "progress_policy",
+    "commit_policy",
+    "attestation_policy",
+    "forgejo_policy",
+    "rag_policy",
+    "milestones",
+    "work_items"
+  ],
+  "properties": {
+    "schema_version": { "const": "perfect-seed-plan-registry@1.0.0" },
+    "plan_id": { "type": "string", "minLength": 1 },
+    "definition_revision": { "type": "integer", "minimum": 1 },
+    "scope_root": { "type": "string", "minLength": 1 },
+    "product": { "type": "object" },
+    "progress_policy": {
+      "type": "object",
+      "required": [
+        "source",
+        "states",
+        "projection_path_pattern",
+        "status_fields_forbidden_in_definition",
+        "human_admit_required"
+      ],
+      "properties": {
+        "source": { "const": "derived-only" },
+        "states": {
+          "type": "array",
+          "const": ["pending", "in_progress", "implemented", "verified", "admitted", "repair_required"]
+        },
+        "projection_path_pattern": { "type": "string", "minLength": 1 },
+        "status_fields_forbidden_in_definition": { "const": true },
+        "human_admit_required": { "const": true }
+      }
+    },
+    "commit_policy": { "type": "object" },
+    "attestation_policy": { "type": "object" },
+    "forgejo_policy": { "type": "object" },
+    "rag_policy": { "type": "object" },
+    "milestones": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "milestone_id",
+          "title",
+          "depends_on",
+          "work_item_ids",
+          "patch_boundary",
+          "deliverables",
+          "exit_criteria"
+        ],
+        "properties": {
+          "milestone_id": { "type": "string", "pattern": "^M[0-9]{2}-[a-z0-9-]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "depends_on": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "work_item_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^WI-[0-9]{2}$" }
+          },
+          "patch_boundary": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "deliverables": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "exit_criteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["criterion_id", "oracle_id", "claim", "evidence", "hollow_control"],
+              "properties": {
+                "criterion_id": { "type": "string", "pattern": "^EC-[0-9]{2}[A-Z]$" },
+                "oracle_id": { "type": "string", "pattern": "^OR-[A-Z0-9-]+$" },
+                "claim": { "type": "string", "minLength": 1 },
+                "evidence": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+                "hollow_control": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "work_items": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["work_item_id", "milestone_id", "owner", "candidate_commit_limit"],
+        "properties": {
+          "work_item_id": { "type": "string", "pattern": "^WI-[0-9]{2}$" },
+          "milestone_id": { "type": "string", "minLength": 1 },
+          "owner": { "const": "repo-terminal-operator" },
+          "candidate_commit_limit": { "const": 1 }
+        }
+      }
+    }
+  }
+}

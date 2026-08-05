@@ -1,0 +1,11 @@
+{
+  "schema_version": "perfect-seed-input@1.0.0",
+  "packet_id": "dr-example",
+  "packet_state": "admitted",
+  "source_kind": "dr",
+  "source_path": "tests/fixtures/dr.md",
+  "task": "Design the smallest traceable repository and choose the next implementation action.",
+  "fixed_prompt_context": ["PROMPT.md", "modules/semantic-truth-context.md"],
+  "emergent_prompt_context": "N/A-none",
+  "human_gate": "required_before_seed_admit"
+}

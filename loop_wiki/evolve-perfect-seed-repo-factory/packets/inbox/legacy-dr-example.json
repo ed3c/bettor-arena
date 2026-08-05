@@ -1,0 +1,8 @@
+{
+  "schema_version": "perfect-seed-input@0.1.0",
+  "packet_id": "legacy-dr-example",
+  "packet_state": "admitted",
+  "source_kind": "dr",
+  "source_path": "tests/fixtures/dr.md",
+  "task": "Replay this legacy packet into the current typed input contract."
+}

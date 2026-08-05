@@ -1,0 +1,536 @@
+{
+  "schema_version": "perfect-seed-plan-registry@1.0.0",
+  "plan_id": "perfect-seed-repo-factory-v2",
+  "definition_revision": 1,
+  "scope_root": "loop_wiki/evolve-perfect-seed-repo-factory",
+  "product": {
+    "preserved_version": "perfect-seed-repo@1.1.0",
+    "target_version": "perfect-seed-repo@2.0.0",
+    "upgrade_policy": "explicit-migrator-only"
+  },
+  "progress_policy": {
+    "source": "derived-only",
+    "states": ["pending", "in_progress", "implemented", "verified", "admitted", "repair_required"],
+    "projection_path_pattern": "_engine-run/progress-projection.<head>.json",
+    "status_fields_forbidden_in_definition": true,
+    "human_admit_required": true
+  },
+  "commit_policy": {
+    "card_schema": "perfect-seed-molecular-index-card@1.0.0",
+    "candidate_commit_per_work_item": 1,
+    "fields": ["Work-Item", "Slice", "Intent", "Scope", "Prompts", "Oracles", "Evidence"],
+    "absolute_paths_forbidden": true,
+    "volatile_axis_state_forbidden": true
+  },
+  "attestation_policy": {
+    "axes": ["cq", "pu", "architecture"],
+    "ref_pattern": "refs/attestations/<candidate>/<axis>/<profile-sha>/<attestation-sha>",
+    "publish_mode": "create-only",
+    "current_state": "derived-by-reopen"
+  },
+  "forgejo_policy": {
+    "role": "recoverable-projection",
+    "local_outbox_when_unavailable": true,
+    "candidate_commit_allowed_without_readback": true,
+    "merge_release_admit_require_readback": true
+  },
+  "rag_policy": {
+    "candidates": ["lancedb", "sqlite-fts5"],
+    "selection": "measured-spike",
+    "truth_authority": false,
+    "deletion_must_not_change_gates": true
+  },
+  "milestones": [
+    {
+      "milestone_id": "M01-v2-contracts-and-genesis",
+      "title": "V2 contracts, schemas, Git genesis, and seed boundary",
+      "depends_on": [],
+      "work_item_ids": ["WI-01"],
+      "patch_boundary": [
+        "templates/repo/.perfect-seed/",
+        "templates/template-metadata.json",
+        "src/contracts.ts",
+        "src/materialize.ts",
+        "tests/seed_factory.test.ts"
+      ],
+      "deliverables": [
+        "versioned v2 schema bundle",
+        "seed-manifest ownership classes",
+        "deterministic Git genesis",
+        "standalone source/manifest bindings"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-01A",
+          "oracle_id": "OR-MECH-SCHEMA",
+          "claim": "Every v2 registry, packet, envelope, manifest, and receipt validates without silently accepting unknown fields.",
+          "evidence": ["schema conformance receipt"],
+          "hollow_control": "unknown field and wrong-version fixtures fail nonzero"
+        },
+        {
+          "criterion_id": "EC-01B",
+          "oracle_id": "OR-BEH-STANDALONE",
+          "claim": "A generated v2 product is a Git repo with reproducible genesis and can verify its seed boundary offline in a fresh clone.",
+          "evidence": ["fresh-clone receipt", "genesis commit/tree binding"],
+          "hollow_control": "missing .git or mutated seed-manifest member fails"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M02-architecture-perception",
+      "title": "Intended/observed architecture graphs and conformance",
+      "depends_on": ["M01-v2-contracts-and-genesis"],
+      "work_item_ids": ["WI-02"],
+      "patch_boundary": [
+        "templates/repo/.perfect-seed/registries/",
+        "templates/repo/.perfect-seed/schemas/",
+        "templates/repo/src/perception/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": ["intended graph", "observed graph projector", "conformance and blind-spot projection"],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-02A",
+          "oracle_id": "OR-MECH-GRAPH-CONFORMANCE",
+          "claim": "Observed graph is bound to commit/tree and reports every missing required edge, unexpected edge, owner drift, closure leak, and opaque blind spot.",
+          "evidence": ["architecture projection receipt"],
+          "hollow_control": "remove one load-bearing edge while preserving filenames"
+        },
+        {
+          "criterion_id": "EC-02B",
+          "oracle_id": "OR-SEM-INTERFACE",
+          "claim": "The declared observation closure is sufficient for terminal-slice and repo-level invariants without claiming universal perception.",
+          "evidence": ["fresh zero-context semantic findings"],
+          "hollow_control": "projection with an unreported dynamic edge is rejected"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M03-work-item-closure",
+      "title": "Work-Item, capability packet, and terminal envelope",
+      "depends_on": ["M01-v2-contracts-and-genesis", "M02-architecture-perception"],
+      "work_item_ids": ["WI-03"],
+      "patch_boundary": [
+        "templates/repo/.perfect-seed/schemas/",
+        "templates/repo/work-items/",
+        "templates/repo/src/perception/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": [
+        "local canonical Work-Item",
+        "immutable capability packet",
+        "one-attempt lease envelope",
+        "terminal closure validator"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-03A",
+          "oracle_id": "OR-MECH-WORK-ITEM",
+          "claim": "One Work-Item binds one terminal slice, one declared path closure, one oracle set, and at most one candidate commit without storing mutable status.",
+          "evidence": ["packet/envelope validation receipt"],
+          "hollow_control": "scope or criterion drift under the same packet hash fails"
+        },
+        {
+          "criterion_id": "EC-03B",
+          "oracle_id": "OR-BEH-STANDALONE",
+          "claim": "The capability packet and envelope bundle validates and dry-runs in a clean offline clone without the mother repo.",
+          "evidence": ["portable execution-closure receipt"],
+          "hollow_control": "remove an embedded manifest binding and rerun"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M04-three-local-skills",
+      "title": "Three standalone repo-local skills",
+      "depends_on": ["M03-work-item-closure"],
+      "work_item_ids": ["WI-04"],
+      "patch_boundary": [
+        "templates/repo/.agents/skills/seed-repo-operator/",
+        "templates/repo/.agents/skills/repo-neural-perception/",
+        "templates/repo/.agents/skills/repo-terminal-operator/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": [
+        "read-only exact-20 reason interface",
+        "read-only perceive interface",
+        "lease-bound execute interface",
+        "forbidden-capability tests"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-04A",
+          "oracle_id": "OR-BEH-SKILL-BOUNDARY",
+          "claim": "Reason, perceive, and execute skills operate standalone and each rejects mutation or authority outside its declared role.",
+          "evidence": ["three skill conformance receipts"],
+          "hollow_control": "each skill attempts one forbidden action and receives typed failure"
+        },
+        {
+          "criterion_id": "EC-04B",
+          "oracle_id": "OR-BEH-TWENTY-CALL",
+          "claim": "The reason skill still executes exactly twenty dependency-valid, non-constant local functions over the repo evidence.",
+          "evidence": ["twenty-call behavioral receipt"],
+          "hollow_control": "twenty constant-return handlers fail semantic behavior"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M05-cq0-incremental-gate",
+      "title": "Incremental low-cost CQ-0",
+      "depends_on": ["M03-work-item-closure", "M04-three-local-skills"],
+      "work_item_ids": ["WI-05"],
+      "patch_boundary": [
+        "templates/repo/scripts/cq0/",
+        "templates/repo/package.json",
+        "templates/repo/src/",
+        "templates/repo/tests/",
+        "src/run_generated_fast_quality.ts"
+      ],
+      "deliverables": [
+        "changed-path format and typed lint",
+        "affected TypeScript project closure",
+        "repo dependency-boundary check",
+        "full-repo fallback",
+        "declared/actual scope receipt"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-05A",
+          "oracle_id": "OR-BEH-CQ0",
+          "claim": "CQ-0 runs minimum lineage, changed-path format/lint, strict affected project closure, dependency boundary, and focused behavior before candidate commit.",
+          "evidence": ["perfect-seed-cq0-receipt@2.0.0"],
+          "hollow_control": "one failing fixture per CQ-0 stage leaves HEAD unchanged"
+        },
+        {
+          "criterion_id": "EC-05B",
+          "oracle_id": "OR-BEH-CQ0-CLOSURE",
+          "claim": "Affected closure matches full-repo detection for cross-project imports; uncertain closure records fallback and checks the full repo.",
+          "evidence": ["incremental/full comparison receipt"],
+          "hollow_control": "change upstream package and break downstream consumer"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M06-molecular-candidate-commit",
+      "title": "Candidate molecular commit card and minimum lineage",
+      "depends_on": ["M05-cq0-incremental-gate"],
+      "work_item_ids": ["WI-06"],
+      "patch_boundary": [
+        "templates/repo/.githooks/",
+        "templates/repo/scripts/lineage/",
+        "templates/repo/.perfect-seed/prompt-templates/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": [
+        "seven-field repo-relative commit card",
+        "fixed/automatic/emergent prompt bindings",
+        "content-addressed lineage manifest",
+        "candidate-not-admitted semantics"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-06A",
+          "oracle_id": "OR-BEH-COMMIT-CARD",
+          "claim": "A candidate commit is accepted only after CQ-0 and its seven stable index-card fields bind prompt roles, oracles, packet, and evidence without absolute paths.",
+          "evidence": ["minimum-lineage gate receipt", "candidate commit/tree"],
+          "hollow_control": "missing field, stale hash, absolute path, or extra scope fails"
+        },
+        {
+          "criterion_id": "EC-06B",
+          "oracle_id": "OR-MECH-COMMIT-CARD",
+          "claim": "Commit cards are deterministic retrieval inputs and never embed volatile async pending/pass state.",
+          "evidence": ["commit parser result"],
+          "hollow_control": "volatile axis trailer is rejected"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M07-attestation-refs",
+      "title": "Append-only attestation refs and freshness projection",
+      "depends_on": ["M06-molecular-candidate-commit"],
+      "work_item_ids": ["WI-07"],
+      "patch_boundary": [
+        "templates/repo/scripts/attestations/",
+        "templates/repo/.perfect-seed/schemas/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": [
+        "create-only CQ/PU/architecture refs",
+        "candidate/tree/profile/oracle-bound attestation",
+        "effective-state projector",
+        "fresh-clone fetch proof"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-07A",
+          "oracle_id": "OR-BEH-ATTESTATION",
+          "claim": "Retries create distinct attestation refs and no earlier observation can be overwritten or relabelled stale.",
+          "evidence": ["attestation publish/read receipt"],
+          "hollow_control": "second publish to identical ref with different bytes fails"
+        },
+        {
+          "criterion_id": "EC-07B",
+          "oracle_id": "OR-BEH-ATTESTATION-FRESHNESS",
+          "claim": "A changed candidate, tree, profile, or oracle set prevents reuse and derives pending or repair_required.",
+          "evidence": ["freshness projection"],
+          "hollow_control": "copy passing attestation from another commit"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M08-forgejo-projection",
+      "title": "Forgejo projection, outbox, and readback",
+      "depends_on": ["M06-molecular-candidate-commit", "M07-attestation-refs"],
+      "work_item_ids": ["WI-08"],
+      "patch_boundary": [
+        "templates/repo/scripts/forgejo/",
+        "templates/repo/data/forgejo/",
+        "templates/repo/.perfect-seed/schemas/",
+        "templates/repo/tests/"
+      ],
+      "deliverables": [
+        "idempotent issue/status request",
+        "local outbox",
+        "hash-bound live readback",
+        "promotion block"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-08A",
+          "oracle_id": "OR-BEH-FORGEJO",
+          "claim": "Work-Item identity survives Forgejo outage; candidate commit succeeds locally, while merge/release/admit remains blocked until readback closes.",
+          "evidence": ["outbox and readback receipts"],
+          "hollow_control": "Forgejo unavailable and forged issue number cannot admit"
+        },
+        {
+          "criterion_id": "EC-08B",
+          "oracle_id": "OR-HUM-FORGEJO-LIVE",
+          "claim": "The live local Forgejo operation and exact readback are accepted as a projection of the same Work-Item and candidate.",
+          "evidence": ["human-admitted Forgejo readback"],
+          "hollow_control": "mismatched issue body or candidate hash is rejected"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M09-progress-and-repair",
+      "title": "Derived progress, drift, and bounded repair prompts",
+      "depends_on": ["M02-architecture-perception", "M07-attestation-refs", "M08-forgejo-projection"],
+      "work_item_ids": ["WI-09"],
+      "patch_boundary": ["templates/repo/src/perception/", "templates/repo/_engine-run/", "templates/repo/tests/"],
+      "deliverables": [
+        "deterministic progress projection",
+        "drift classification",
+        "bounded automatic prompt",
+        "scope-expansion repair proposal"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-09A",
+          "oracle_id": "OR-BEH-PROJECTION",
+          "claim": "Deleting projections and replaying the same registries, Git, attestations, and readbacks yields byte-identical progress and prompt outputs.",
+          "evidence": ["projection rebuild comparison"],
+          "hollow_control": "hand-edited status cannot advance progress"
+        },
+        {
+          "criterion_id": "EC-09B",
+          "oracle_id": "OR-BEH-REPAIR",
+          "claim": "Only same-slice, same-criteria, expected-HEAD, allowed-path drift yields an automatic repair; expansion yields a human-required proposal.",
+          "evidence": ["repair routing receipt"],
+          "hollow_control": "new dependency or path is never silently auto-authorized"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M10-rag-backend-spike",
+      "title": "LanceDB versus SQLite FTS5 spike",
+      "depends_on": ["M06-molecular-candidate-commit", "M07-attestation-refs", "M09-progress-and-repair"],
+      "work_item_ids": ["WI-10"],
+      "patch_boundary": [
+        "templates/repo/scripts/indexing/",
+        "templates/repo/tests/indexing/",
+        "plans/perfect-seed-v2/fixtures/"
+      ],
+      "deliverables": [
+        "same-corpus dual backend benchmark",
+        "quality/provenance/update/cost measurements",
+        "runtime packaging result",
+        "backend decision receipt"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-10A",
+          "oracle_id": "OR-BEH-RAG-SPIKE",
+          "claim": "Both backends run the same commit/Work-Item/attestation queries and report retrieval quality, provenance coverage, rebuild, update locality, p95, RSS, and disk.",
+          "evidence": ["dual-backend measurement receipt"],
+          "hollow_control": "a backend that cannot rebuild or preserve provenance is ineligible"
+        },
+        {
+          "criterion_id": "EC-10B",
+          "oracle_id": "OR-EXT-RAG-RUNTIME",
+          "claim": "The selected backend's Bun/Node runtime and native packaging requirements match verified primary-source and local execution evidence.",
+          "evidence": ["official-source claim ledger", "local runtime receipt"],
+          "hollow_control": "documentation-only support without local run stays candidate"
+        },
+        {
+          "criterion_id": "EC-10C",
+          "oracle_id": "OR-HUM-RAG-SELECT",
+          "claim": "Human admits LanceDB only if it wins the declared Pareto comparison; otherwise SQLite FTS5 is selected.",
+          "evidence": ["backend LAND decision"],
+          "hollow_control": "backend name or novelty cannot substitute for metrics"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M11-v1-v2-migrator",
+      "title": "Explicit v1-to-v2 migrator",
+      "depends_on": [
+        "M01-v2-contracts-and-genesis",
+        "M04-three-local-skills",
+        "M05-cq0-incremental-gate",
+        "M07-attestation-refs"
+      ],
+      "work_item_ids": ["WI-11"],
+      "patch_boundary": ["src/migrate_v1_repo.ts", "templates/repo/", "tests/fixtures/", "tests/seed_factory.test.ts"],
+      "deliverables": [
+        "v1.1-preserving migration",
+        "mapped/synthesized/unmapped receipt",
+        "parent provenance",
+        "needs-enrichment gate"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-11A",
+          "oracle_id": "OR-BEH-MIGRATION",
+          "claim": "Migration preserves v1 bytes and hashes, emits explicit parent provenance, and never maps legacy preflight to CQ-0/CQ-1/PU pass.",
+          "evidence": ["migration receipt", "preserved-hash comparison"],
+          "hollow_control": "missing oracle/architecture fields remain unmapped and block admit"
+        },
+        {
+          "criterion_id": "EC-11B",
+          "oracle_id": "OR-MECH-SCHEMA",
+          "claim": "Unknown legacy fields are listed rather than silently dropped, and critical unmapped fields derive needs-enrichment.",
+          "evidence": ["migration schema result"],
+          "hollow_control": "legacy packet with unknown field cannot produce complete migration"
+        }
+      ]
+    },
+    {
+      "milestone_id": "M12-full-e2e",
+      "title": "Full v2 materialization and adversarial E2E",
+      "depends_on": [
+        "M04-three-local-skills",
+        "M05-cq0-incremental-gate",
+        "M06-molecular-candidate-commit",
+        "M07-attestation-refs",
+        "M08-forgejo-projection",
+        "M09-progress-and-repair",
+        "M10-rag-backend-spike",
+        "M11-v1-v2-migrator"
+      ],
+      "work_item_ids": ["WI-12"],
+      "patch_boundary": ["src/", "templates/repo/", "tests/", "verify.sh", "selftest.sh", "modules/"],
+      "deliverables": [
+        "DR/GCR/repo/grill-me v2 products",
+        "good/hollow/stale/scope-drift E2E",
+        "seed reset/extract proof",
+        "fresh clone and projection rebuild proof"
+      ],
+      "exit_criteria": [
+        {
+          "criterion_id": "EC-12A",
+          "oracle_id": "OR-BEH-E2E",
+          "claim": "All four inputs produce standalone v2 repos that reason, perceive, execute one admitted slice, gate CQ-0, create a candidate, project async evidence, rebuild progress/RAG, and stop at human admission.",
+          "evidence": ["four-source E2E receipts"],
+          "hollow_control": "good/hollow/stale/scope-drift controls have opposite expected outcomes"
+        },
+        {
+          "criterion_id": "EC-12B",
+          "oracle_id": "OR-BEH-SEED-RESET",
+          "claim": "Seed reset reconstructs ontology/template bytes while exporting or preserving domain-run and user-owned modifications without deletion.",
+          "evidence": ["seed extraction/reset receipt"],
+          "hollow_control": "domain change in PROMPT.md is classified as drift, never silently retained as ontology"
+        },
+        {
+          "criterion_id": "EC-12C",
+          "oracle_id": "OR-HUM-V2-ADMIT",
+          "claim": "Human admits v2 only after all milestone evidence is current and no critical blind spot or unmapped migration field remains.",
+          "evidence": ["human LAND decision"],
+          "hollow_control": "green scripts alone cannot set admitted"
+        }
+      ]
+    }
+  ],
+  "work_items": [
+    {
+      "work_item_id": "WI-01",
+      "milestone_id": "M01-v2-contracts-and-genesis",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-02",
+      "milestone_id": "M02-architecture-perception",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-03",
+      "milestone_id": "M03-work-item-closure",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-04",
+      "milestone_id": "M04-three-local-skills",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-05",
+      "milestone_id": "M05-cq0-incremental-gate",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-06",
+      "milestone_id": "M06-molecular-candidate-commit",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-07",
+      "milestone_id": "M07-attestation-refs",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-08",
+      "milestone_id": "M08-forgejo-projection",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-09",
+      "milestone_id": "M09-progress-and-repair",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-10",
+      "milestone_id": "M10-rag-backend-spike",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-11",
+      "milestone_id": "M11-v1-v2-migrator",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    },
+    {
+      "work_item_id": "WI-12",
+      "milestone_id": "M12-full-e2e",
+      "owner": "repo-terminal-operator",
+      "candidate_commit_limit": 1
+    }
+  ]
+}

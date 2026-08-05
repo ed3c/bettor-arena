@@ -1,0 +1,7 @@
+{
+  "schema_version": "perfect-seed-template-lifecycle@1.0.0",
+  "template_version": "perfect-seed-repo@1.1.0",
+  "lifecycle_state": "validated",
+  "human_admit": false,
+  "promotion_evidence": ["tests/seed_factory.test.ts", "verify.sh"]
+}

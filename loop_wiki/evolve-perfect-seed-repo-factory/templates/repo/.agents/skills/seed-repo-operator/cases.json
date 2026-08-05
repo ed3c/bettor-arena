@@ -1,0 +1,75 @@
+{
+  "schema_version": "seed-repo-operator-cases@1.0.0",
+  "cases": [
+    {
+      "id": "T01",
+      "prompt": "Use this repo's local evidence to choose the next implementation slice.",
+      "should_trigger": true,
+      "polarity": "positive",
+      "expect": "twenty-local-calls"
+    },
+    {
+      "id": "T02",
+      "prompt": "Trace this task through the generated seed repo.",
+      "should_trigger": true,
+      "polarity": "positive",
+      "expect": "twenty-local-calls"
+    },
+    {
+      "id": "T03",
+      "prompt": "Inspect claims and unknowns before proposing architecture.",
+      "should_trigger": true,
+      "polarity": "positive",
+      "expect": "twenty-local-calls"
+    },
+    {
+      "id": "T04",
+      "prompt": "Create a dependency-valid local call plan for this repo.",
+      "should_trigger": true,
+      "polarity": "positive",
+      "expect": "twenty-local-calls"
+    },
+    {
+      "id": "T05",
+      "prompt": "Use the seed-repo operator and surface the human admit edge.",
+      "should_trigger": true,
+      "polarity": "positive",
+      "expect": "twenty-local-calls"
+    },
+    {
+      "id": "N01",
+      "prompt": "Search the live web for current prices.",
+      "should_trigger": false,
+      "polarity": "negative",
+      "expect": "external-research-route"
+    },
+    {
+      "id": "N02",
+      "prompt": "Merge this branch automatically.",
+      "should_trigger": false,
+      "polarity": "negative",
+      "expect": "human-admit"
+    },
+    {
+      "id": "N03",
+      "prompt": "Run twenty independent LLM judges.",
+      "should_trigger": false,
+      "polarity": "negative",
+      "expect": "external-carrier-required"
+    },
+    {
+      "id": "N04",
+      "prompt": "Edit the source repo without tests.",
+      "should_trigger": false,
+      "polarity": "negative",
+      "expect": "implementation-workflow"
+    },
+    {
+      "id": "N05",
+      "prompt": "Answer from chat memory and skip local data.",
+      "should_trigger": false,
+      "polarity": "negative",
+      "expect": "fail-hidden-context"
+    }
+  ]
+}

@@ -1,0 +1,447 @@
+{
+  "schema_version": "perfect-seed-architecture-graph@1.0.0",
+  "graph_id": "perfect-seed-v2-intended",
+  "graph_kind": "intended",
+  "scope": "generated perfect-seed-repo@2.0.0",
+  "claim_boundary": "complete only for declared observation closure; blind spots remain explicit",
+  "nodes": [
+    {
+      "node_id": "N01-input",
+      "kind": "input",
+      "base": 7,
+      "owner_paths": ["data/source.json"],
+      "role": "physical DR/GCR/repo/grill-me source identity"
+    },
+    {
+      "node_id": "N02-fixed-prompts",
+      "kind": "document",
+      "base": 1,
+      "owner_paths": [".perfect-seed/prompt-templates/"],
+      "role": "versioned fixed prompt assets"
+    },
+    {
+      "node_id": "N03-emergent-context",
+      "kind": "data",
+      "base": 3,
+      "owner_paths": ["data/prompt-context/emergent/"],
+      "role": "explicit surfaced unknown and drift context"
+    },
+    {
+      "node_id": "N04-seed-manifest",
+      "kind": "registry",
+      "base": 2,
+      "owner_paths": [".perfect-seed/seed-manifest.json"],
+      "role": "hash-bound initial seed and ownership boundary"
+    },
+    {
+      "node_id": "N05-plan-registry",
+      "kind": "registry",
+      "base": 8,
+      "owner_paths": [".perfect-seed/registries/plan-registry.json"],
+      "role": "normative milestone and exit-criterion definitions"
+    },
+    {
+      "node_id": "N06-intended-graph",
+      "kind": "registry",
+      "base": 4,
+      "owner_paths": [".perfect-seed/registries/intended-architecture.json"],
+      "role": "normative topology"
+    },
+    {
+      "node_id": "N07-oracle-registry",
+      "kind": "registry",
+      "base": 6,
+      "owner_paths": [".perfect-seed/registries/oracle-registry.json"],
+      "role": "pre-bound validation authority"
+    },
+    {
+      "node_id": "N08-skill-registry",
+      "kind": "registry",
+      "base": 5,
+      "owner_paths": [".perfect-seed/registries/skill-registry.json"],
+      "role": "capability and forbidden-capability definitions"
+    },
+    {
+      "node_id": "N09-git-genesis",
+      "kind": "git",
+      "base": 3,
+      "owner_paths": [".git/"],
+      "role": "stable initial HEAD/tree and local truth transport"
+    },
+    {
+      "node_id": "N10-work-item",
+      "kind": "data",
+      "base": 8,
+      "owner_paths": ["work-items/"],
+      "role": "local canonical terminal slice identity"
+    },
+    {
+      "node_id": "N11-capability-packet",
+      "kind": "data",
+      "base": 4,
+      "owner_paths": ["data/packets/capabilities/"],
+      "role": "immutable terminal execution closure"
+    },
+    {
+      "node_id": "N12-terminal-envelope",
+      "kind": "data",
+      "base": 2,
+      "owner_paths": ["data/packets/envelopes/"],
+      "role": "one-attempt HEAD/tree/lease authorization"
+    },
+    {
+      "node_id": "N13-reason-skill",
+      "kind": "skill",
+      "base": 5,
+      "owner_paths": [".agents/skills/seed-repo-operator/"],
+      "role": "read-only exact twenty-call reasoning"
+    },
+    {
+      "node_id": "N14-perception-skill",
+      "kind": "skill",
+      "base": 5,
+      "owner_paths": [".agents/skills/repo-neural-perception/"],
+      "role": "read-only graph, closure, progress, drift, prompt, and packet projection"
+    },
+    {
+      "node_id": "N15-terminal-skill",
+      "kind": "skill",
+      "base": 5,
+      "owner_paths": [".agents/skills/repo-terminal-operator/"],
+      "role": "leased mutation, CQ-0, candidate commit, and request projection"
+    },
+    {
+      "node_id": "N16-observed-graph",
+      "kind": "projection",
+      "base": 3,
+      "owner_paths": ["_engine-run/observed-architecture.*.json"],
+      "role": "commit/tree-bound observed topology"
+    },
+    {
+      "node_id": "N17-conformance",
+      "kind": "projection",
+      "base": 6,
+      "owner_paths": ["_engine-run/architecture-conformance.*.json"],
+      "role": "intended/observed diff and blind spots"
+    },
+    {
+      "node_id": "N18-cq0",
+      "kind": "gate",
+      "base": 6,
+      "owner_paths": ["scripts/cq0/", "data/receipts/cq0/"],
+      "role": "synchronous low-cost candidate gate"
+    },
+    {
+      "node_id": "N19-candidate-commit",
+      "kind": "git",
+      "base": 3,
+      "owner_paths": ["refs/heads/"],
+      "role": "one molecular implementation candidate"
+    },
+    {
+      "node_id": "N20-attestations",
+      "kind": "attestation",
+      "base": 6,
+      "owner_paths": ["refs/attestations/"],
+      "role": "create-only CQ/PU/architecture observations"
+    },
+    {
+      "node_id": "N21-forgejo-outbox",
+      "kind": "data",
+      "base": 4,
+      "owner_paths": ["data/forgejo/outbox/", "data/forgejo/readbacks/"],
+      "role": "recoverable projection and live readback"
+    },
+    {
+      "node_id": "N22-progress",
+      "kind": "projection",
+      "base": 8,
+      "owner_paths": ["_engine-run/progress-projection.*.json"],
+      "role": "derived Work-Item and milestone state"
+    },
+    {
+      "node_id": "N23-automatic-prompt",
+      "kind": "projection",
+      "base": 4,
+      "owner_paths": ["_engine-run/prompts/automatic/"],
+      "role": "deterministic next action or bounded repair"
+    },
+    {
+      "node_id": "N24-rag",
+      "kind": "projection",
+      "base": 3,
+      "owner_paths": ["_engine-run/index/"],
+      "role": "rebuildable retrieval over physical facts"
+    },
+    {
+      "node_id": "N25-human-admit",
+      "kind": "human",
+      "base": 8,
+      "owner_paths": ["refs/admissions/"],
+      "role": "sole final admission authority"
+    },
+    {
+      "node_id": "N26-seed-reset",
+      "kind": "script",
+      "base": 2,
+      "owner_paths": ["scripts/seed/reset.ts"],
+      "role": "manifest-driven ontology reset and domain-run separation"
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "E01",
+      "from": "N01-input",
+      "to": "N11-capability-packet",
+      "relation": "reduces",
+      "required": true,
+      "oracle_id": "OR-MECH-WORK-ITEM"
+    },
+    {
+      "edge_id": "E02",
+      "from": "N02-fixed-prompts",
+      "to": "N11-capability-packet",
+      "relation": "binds",
+      "required": true,
+      "oracle_id": "OR-BEH-COMMIT-CARD"
+    },
+    {
+      "edge_id": "E03",
+      "from": "N03-emergent-context",
+      "to": "N11-capability-packet",
+      "relation": "binds",
+      "required": true,
+      "oracle_id": "OR-BEH-COMMIT-CARD"
+    },
+    {
+      "edge_id": "E04",
+      "from": "N04-seed-manifest",
+      "to": "N09-git-genesis",
+      "relation": "verifies",
+      "required": true,
+      "oracle_id": "OR-BEH-STANDALONE"
+    },
+    {
+      "edge_id": "E05",
+      "from": "N05-plan-registry",
+      "to": "N10-work-item",
+      "relation": "defines",
+      "required": true,
+      "oracle_id": "OR-MECH-WORK-ITEM"
+    },
+    {
+      "edge_id": "E06",
+      "from": "N06-intended-graph",
+      "to": "N11-capability-packet",
+      "relation": "constrains",
+      "required": true,
+      "oracle_id": "OR-MECH-GRAPH-CONFORMANCE"
+    },
+    {
+      "edge_id": "E07",
+      "from": "N07-oracle-registry",
+      "to": "N10-work-item",
+      "relation": "constrains",
+      "required": true,
+      "oracle_id": "OR-MECH-WORK-ITEM"
+    },
+    {
+      "edge_id": "E08",
+      "from": "N08-skill-registry",
+      "to": "N13-reason-skill",
+      "relation": "governs",
+      "required": true,
+      "oracle_id": "OR-BEH-SKILL-BOUNDARY"
+    },
+    {
+      "edge_id": "E09",
+      "from": "N08-skill-registry",
+      "to": "N14-perception-skill",
+      "relation": "governs",
+      "required": true,
+      "oracle_id": "OR-BEH-SKILL-BOUNDARY"
+    },
+    {
+      "edge_id": "E10",
+      "from": "N08-skill-registry",
+      "to": "N15-terminal-skill",
+      "relation": "governs",
+      "required": true,
+      "oracle_id": "OR-BEH-SKILL-BOUNDARY"
+    },
+    {
+      "edge_id": "E11",
+      "from": "N10-work-item",
+      "to": "N11-capability-packet",
+      "relation": "materializes",
+      "required": true,
+      "oracle_id": "OR-MECH-WORK-ITEM"
+    },
+    {
+      "edge_id": "E12",
+      "from": "N11-capability-packet",
+      "to": "N12-terminal-envelope",
+      "relation": "authorizes",
+      "required": true,
+      "oracle_id": "OR-MECH-WORK-ITEM"
+    },
+    {
+      "edge_id": "E13",
+      "from": "N11-capability-packet",
+      "to": "N13-reason-skill",
+      "relation": "calls",
+      "required": true,
+      "oracle_id": "OR-BEH-TWENTY-CALL"
+    },
+    {
+      "edge_id": "E14",
+      "from": "N12-terminal-envelope",
+      "to": "N15-terminal-skill",
+      "relation": "calls",
+      "required": true,
+      "oracle_id": "OR-BEH-SKILL-BOUNDARY"
+    },
+    {
+      "edge_id": "E15",
+      "from": "N14-perception-skill",
+      "to": "N16-observed-graph",
+      "relation": "projects",
+      "required": true,
+      "oracle_id": "OR-MECH-GRAPH-CONFORMANCE"
+    },
+    {
+      "edge_id": "E16",
+      "from": "N06-intended-graph",
+      "to": "N17-conformance",
+      "relation": "compares",
+      "required": true,
+      "oracle_id": "OR-MECH-GRAPH-CONFORMANCE"
+    },
+    {
+      "edge_id": "E17",
+      "from": "N16-observed-graph",
+      "to": "N17-conformance",
+      "relation": "compares",
+      "required": true,
+      "oracle_id": "OR-MECH-GRAPH-CONFORMANCE"
+    },
+    {
+      "edge_id": "E18",
+      "from": "N15-terminal-skill",
+      "to": "N18-cq0",
+      "relation": "calls",
+      "required": true,
+      "oracle_id": "OR-BEH-CQ0"
+    },
+    {
+      "edge_id": "E19",
+      "from": "N18-cq0",
+      "to": "N19-candidate-commit",
+      "relation": "gates",
+      "required": true,
+      "oracle_id": "OR-BEH-COMMIT-CARD"
+    },
+    {
+      "edge_id": "E20",
+      "from": "N19-candidate-commit",
+      "to": "N20-attestations",
+      "relation": "binds",
+      "required": true,
+      "oracle_id": "OR-BEH-ATTESTATION"
+    },
+    {
+      "edge_id": "E21",
+      "from": "N19-candidate-commit",
+      "to": "N21-forgejo-outbox",
+      "relation": "projects",
+      "required": true,
+      "oracle_id": "OR-BEH-FORGEJO"
+    },
+    {
+      "edge_id": "E22",
+      "from": "N17-conformance",
+      "to": "N22-progress",
+      "relation": "informs",
+      "required": true,
+      "oracle_id": "OR-BEH-PROJECTION"
+    },
+    {
+      "edge_id": "E23",
+      "from": "N20-attestations",
+      "to": "N22-progress",
+      "relation": "informs",
+      "required": true,
+      "oracle_id": "OR-BEH-ATTESTATION-FRESHNESS"
+    },
+    {
+      "edge_id": "E24",
+      "from": "N21-forgejo-outbox",
+      "to": "N22-progress",
+      "relation": "informs",
+      "required": true,
+      "oracle_id": "OR-BEH-FORGEJO"
+    },
+    {
+      "edge_id": "E25",
+      "from": "N22-progress",
+      "to": "N23-automatic-prompt",
+      "relation": "projects",
+      "required": true,
+      "oracle_id": "OR-BEH-REPAIR"
+    },
+    {
+      "edge_id": "E26",
+      "from": "N19-candidate-commit",
+      "to": "N24-rag",
+      "relation": "indexes",
+      "required": false,
+      "oracle_id": "OR-BEH-RAG-SPIKE"
+    },
+    {
+      "edge_id": "E27",
+      "from": "N20-attestations",
+      "to": "N24-rag",
+      "relation": "indexes",
+      "required": false,
+      "oracle_id": "OR-BEH-RAG-SPIKE"
+    },
+    {
+      "edge_id": "E28",
+      "from": "N22-progress",
+      "to": "N24-rag",
+      "relation": "indexes",
+      "required": false,
+      "oracle_id": "OR-BEH-RAG-SPIKE"
+    },
+    {
+      "edge_id": "E29",
+      "from": "N22-progress",
+      "to": "N25-human-admit",
+      "relation": "proposes",
+      "required": true,
+      "oracle_id": "OR-HUM-V2-ADMIT"
+    },
+    {
+      "edge_id": "E30",
+      "from": "N04-seed-manifest",
+      "to": "N26-seed-reset",
+      "relation": "governs",
+      "required": true,
+      "oracle_id": "OR-BEH-SEED-RESET"
+    },
+    {
+      "edge_id": "E31",
+      "from": "N26-seed-reset",
+      "to": "N04-seed-manifest",
+      "relation": "verifies",
+      "required": true,
+      "oracle_id": "OR-BEH-SEED-RESET"
+    }
+  ],
+  "blind_spot_policy": {
+    "opaque_edges_must_be_reported": true,
+    "absence_requires_enumerated_scan": true,
+    "retrieval_scores_are_candidates": true,
+    "universal_perception_claim_forbidden": true
+  }
+}
