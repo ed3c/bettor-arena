@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -60,8 +61,10 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--out", type=Path, help="receipt file (default: stdout)")
     args = parser.parse_args(argv)
 
-    if not subprocess.run(["bun", "--version"], capture_output=True).returncode == 0:
+    if shutil.which("bun") is None:
         die("bun not on PATH (both validators run under bun)")
+    if subprocess.run(["bun", "--version"], capture_output=True).returncode != 0:
+        die("bun is on PATH but broken: `bun --version` failed")
     source = args.source_repo.expanduser().resolve()
     original = source / ORIGINAL_REL
     rebuilt = ARENA_ROOT / REBUILT_REL
