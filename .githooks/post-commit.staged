@@ -1,0 +1,13 @@
+#!/bin/sh
+# post-commit.staged — record-only stage-request receipt, STAGED (not active).
+# Uses git + sh only; writes one JSON receipt per commit to data/receipts/.
+# Starts no worker, blocks nothing, never fails the commit (it already exists).
+set -eu
+ROOT=$(git rev-parse --show-toplevel)
+SHA=$(git rev-parse HEAD)
+mkdir -p "$ROOT/data/receipts"
+printf '{"kind":"stage-request","sha":"%s","branch":"%s","utc":"%s"}\n' \
+  "$SHA" \
+  "$(git rev-parse --abbrev-ref HEAD)" \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  > "$ROOT/data/receipts/post-commit-$SHA.json"

@@ -1,0 +1,8 @@
+{
+  "kind": "molecular-gate-tdd-red",
+  "utc": "2026-08-05T17:15:28Z",
+  "command": "sh tests/test_molecular_gate.sh",
+  "exit": 1,
+  "stderr": "FAIL: validator missing: .githooks/lib/validate_molecular_message.ts",
+  "note": "test written and run before implementation; proves the suite can fail"
+}

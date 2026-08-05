@@ -1,0 +1,13 @@
+#!/bin/sh
+# commit-msg.staged — molecular commit-message gate, STAGED (not active).
+# Activation = renaming to `commit-msg`, and that is a separate human admit;
+# staging under a dead name keeps this wave's other agents uncommitted-blocked-free.
+#
+# Exit codes: 0 pass · 2 gate FAIL · 64 missing tool (diagnosable, distinct).
+set -eu
+HOOKS=$(cd "$(dirname "$0")" && pwd)
+command -v bun >/dev/null 2>&1 || {
+  echo "commit-msg FATAL: bun not on PATH (molecular gate cannot run; install from https://bun.sh)" >&2
+  exit 64
+}
+exec bun run "$HOOKS/lib/validate_molecular_message.ts" "$1"
