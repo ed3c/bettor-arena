@@ -28,14 +28,16 @@ STATUS: candidate
 
 ## Iteration trajectory
 
-| iter | actor        | result | evidence                                                                                                                                                                                                         |
-| ---- | ------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0    | main-session | RED    | public CLI tests failed because `src/cli.ts` did not exist                                                                                                                                                       |
-| 1    | main-session | GREEN  | four source kinds materialized; six tests and 153 assertions passed                                                                                                                                              |
-| 2    | main-session | RED    | manifest escape test stopped at the earlier missing-call-plan gate; fixture had not run the operator                                                                                                             |
-| 3    | main-session | GREEN  | eight tests/159 assertions; generated repo two tests/37 assertions; unsafe output and manifest escape rejected; hollow mutation, physical trigger, and governed gates passed                                     |
-| 4    | main-session | RED    | generated-repo fast gate exposed 11 format drifts, then two strict lint defects; factory lint/typecheck exposed 14 additional static defects                                                                     |
-| 5    | main-session | GREEN  | 13 factory tests/189 assertions and two generated-repo tests/37 assertions pass; minimum-lineage and real Prettier/typed ESLint/strict-tsc gates pass; format/lint/type hollow controls fail at their own stages |
+| iter | actor        | result | evidence                                                                                                                                                                                                                          |
+| ---- | ------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | main-session | RED    | public CLI tests failed because `src/cli.ts` did not exist                                                                                                                                                                        |
+| 1    | main-session | GREEN  | four source kinds materialized; six tests and 153 assertions passed                                                                                                                                                               |
+| 2    | main-session | RED    | manifest escape test stopped at the earlier missing-call-plan gate; fixture had not run the operator                                                                                                                              |
+| 3    | main-session | GREEN  | eight tests/159 assertions; generated repo two tests/37 assertions; unsafe output and manifest escape rejected; hollow mutation, physical trigger, and governed gates passed                                                      |
+| 4    | main-session | RED    | generated-repo fast gate exposed 11 format drifts, then two strict lint defects; factory lint/typecheck exposed 14 additional static defects                                                                                      |
+| 5    | main-session | GREEN  | 13 factory tests/189 assertions and two generated-repo tests/37 assertions pass; minimum-lineage and real Prettier/typed ESLint/strict-tsc gates pass; format/lint/type hollow controls fail at their own stages                  |
+| 6    | main-session | RED    | seven new source_refs tests failed: validate accepted refless packets, resolve-refs was an unknown command, lineage carried no refs                                                                                               |
+| 7    | main-session | GREEN  | 20 tests/225 assertions; refless/malformed refs fail validate at exit 1; resolve-refs without --peer is NOT_RUN exit 2; refs flow packet→IR→lineage with refs_grounded; migrated legacy packets carry the marked unknown sentinel |
 
 ## Remaining human gates
 

@@ -25,7 +25,21 @@ function run(args: string[], cwd = ROOT) {
   return Bun.spawnSync(["bun", "run", CLI, ...args], { cwd, stdout: "pipe", stderr: "pipe" });
 }
 
-function writePacket(root: string, sourceKind: string, sourcePath: string): string {
+const VALID_SOURCE_REFS = [
+  {
+    repo: "ts-skill-bettor",
+    commit: "f3776cbf1b4c75c78e017e1381a8517cd1865abf",
+    path: "proposals/2026-08-06-perfect-seed-repo-factory.md",
+    anchor: "claim:C001",
+  },
+];
+
+function writePacket(
+  root: string,
+  sourceKind: string,
+  sourcePath: string,
+  sourceRefs: unknown = VALID_SOURCE_REFS,
+): string {
   const packet = join(root, `${sourceKind}.json`);
   writeFileSync(
     packet,
@@ -40,6 +54,7 @@ function writePacket(root: string, sourceKind: string, sourcePath: string): stri
         fixed_prompt_context: ["PROMPT.md", "modules/semantic-truth-context.md"],
         emergent_prompt_context: "N/A-none",
         human_gate: "required_before_seed_admit",
+        ...(sourceRefs === null ? {} : { source_refs: sourceRefs }),
       },
       null,
       2,
@@ -47,6 +62,21 @@ function writePacket(root: string, sourceKind: string, sourcePath: string): stri
     "utf8",
   );
   return packet;
+}
+
+function fixturePeerRepo(root: string): { peer: string; commit: string } {
+  const peer = join(root, "peer");
+  mkdirSync(join(peer, "docs"), { recursive: true });
+  writeFileSync(join(peer, "docs", "claim.md"), "claim body\n", "utf8");
+  const git = (...gitArgs: string[]): string => {
+    const result = Bun.spawnSync(["git", "-C", peer, ...gitArgs], { stdout: "pipe", stderr: "pipe" });
+    if (result.exitCode !== 0) throw new Error(result.stderr.toString());
+    return result.stdout.toString().trim();
+  };
+  git("init", "-q");
+  git("add", "docs/claim.md");
+  git("-c", "user.name=fixture", "-c", "user.email=fixture@test", "commit", "-qm", "fixture");
+  return { peer, commit: git("rev-parse", "HEAD") };
 }
 
 describe("seed-factory build public seam", () => {
@@ -264,6 +294,147 @@ describe("seed-factory build public seam", () => {
         (stage: { status: string; exit_code: number }) => stage.status === "passed" && stage.exit_code === 0,
       ),
     ).toBe(true);
+  });
+
+  test("rejects a packet without source_refs", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"), null);
+    const result = run(["validate", "--packet", packet]);
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr.toString()).toContain("source_refs");
+  });
+
+  test("rejects malformed source_refs shapes", () => {
+    const temp = temporaryRoot();
+    const badShapes: unknown[] = [
+      [],
+      [{ repo: "r", commit: "not-hex", path: "a/b.md", anchor: "L1" }],
+      [{ repo: "r", commit: "abcdef0", path: "/absolute/path.md", anchor: "L1" }],
+      [{ repo: "r", commit: "abcdef0", path: "a/../escape.md", anchor: "L1" }],
+      [{ repo: "r", commit: "abcdef0", path: "a/b.md" }],
+      [{ repo: "", commit: "abcdef0", path: "a/b.md", anchor: "L1" }],
+    ];
+    for (const refs of badShapes) {
+      const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"), refs);
+      const result = run(["validate", "--packet", packet]);
+      expect(result.exitCode, JSON.stringify(refs)).toBe(1);
+      expect(result.stderr.toString()).toContain("source_refs");
+    }
+  });
+
+  test("resolve-refs without --peer reports NOT_RUN with exit 2", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const result = run(["resolve-refs", "--packet", packet]);
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout.toString()).toContain("NOT_RUN");
+    expect(result.stdout.toString()).not.toContain("PASS");
+  });
+
+  test("resolve-refs audits commit existence and tracked path against an explicit peer", () => {
+    const temp = temporaryRoot();
+    const { peer, commit } = fixturePeerRepo(temp);
+
+    const good = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"), [
+      { repo: "peer", commit, path: "docs/claim.md", anchor: "L1" },
+    ]);
+    const passed = run(["resolve-refs", "--packet", good, "--peer", peer]);
+    expect(passed.exitCode, passed.stderr.toString()).toBe(0);
+    expect(passed.stdout.toString()).toContain("PASS");
+
+    const untracked = writePacket(temp, "gcr", join(ROOT, "tests/fixtures/gcr.md"), [
+      { repo: "peer", commit, path: "docs/missing.md", anchor: "L1" },
+    ]);
+    const failedPath = run(["resolve-refs", "--packet", untracked, "--peer", peer]);
+    expect(failedPath.exitCode).toBe(1);
+    expect(failedPath.stderr.toString()).toContain("not tracked");
+
+    const badCommit = writePacket(temp, "grill-me", join(ROOT, "tests/fixtures/grill.md"), [
+      { repo: "peer", commit: "deadbeef00", path: "docs/claim.md", anchor: "L1" },
+    ]);
+    const failedCommit = run(["resolve-refs", "--packet", badCommit, "--peer", peer]);
+    expect(failedCommit.exitCode).toBe(1);
+    expect(failedCommit.stderr.toString()).toContain("commit");
+  });
+
+  test("build carries source_refs through the reduced IR into the lineage manifest", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const output = join(temp, "generated");
+    const built = run(["build", "--packet", packet, "--output", output]);
+    expect(built.exitCode, built.stderr.toString()).toBe(0);
+    const source = JSON.parse(readFileSync(join(output, "data/source.json"), "utf8"));
+    const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
+    expect(source.source_refs).toEqual(VALID_SOURCE_REFS);
+    expect(lineage.source_refs).toEqual(VALID_SOURCE_REFS);
+    expect(lineage.refs_grounded).toBe(true);
+    expect(lineage.terminal_human_gate).toBe("required_before_seed_admit");
+  });
+
+  test("migrated legacy packet builds with sentinel refs and refs_grounded false", () => {
+    const temp = temporaryRoot();
+    const migrated = join(temp, "migrated.json");
+    const migratedRun = Bun.spawnSync(
+      [
+        "bun",
+        "run",
+        join(ROOT, "src", "migrate_packet.ts"),
+        "--input",
+        join(ROOT, "packets", "inbox", "legacy-dr-example.json"),
+        "--output",
+        migrated,
+      ],
+      { stdout: "pipe", stderr: "pipe" },
+    );
+    expect(migratedRun.exitCode, migratedRun.stderr.toString()).toBe(0);
+    const value = JSON.parse(readFileSync(migrated, "utf8"));
+    expect(value.source_refs).toEqual([
+      { repo: "unknown", commit: "0000000", path: "unmigrated/unknown", anchor: "pre-source-refs" },
+    ]);
+    const output = join(temp, "generated");
+    const built = run(["build", "--packet", migrated, "--output", output]);
+    expect(built.exitCode, built.stderr.toString()).toBe(0);
+    const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
+    expect(lineage.refs_grounded).toBe(false);
+  });
+
+  test("generated repo verifier rejects a lineage stripped of source_refs", async () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const output = join(temp, "generated");
+    const built = run(["build", "--packet", packet, "--output", output]);
+    expect(built.exitCode, built.stderr.toString()).toBe(0);
+    const planned = Bun.spawnSync(["bun", "run", "scripts/plan.ts", "--task", "Audit lineage source_refs binding"], {
+      cwd: output,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(planned.exitCode, planned.stderr.toString()).toBe(0);
+
+    const sha256 = (value: string): string => new Bun.CryptoHasher("sha256").update(value).digest("hex");
+    const lineagePath = join(output, "data/lineage.json");
+    const lineage = JSON.parse(readFileSync(lineagePath, "utf8"));
+    delete lineage.source_refs;
+    const lineageBytes = `${JSON.stringify(lineage, null, 2)}\n`;
+    await Bun.write(lineagePath, lineageBytes);
+    const manifestPath = join(output, "data/artifact-manifest.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const entry = manifest.files.find((file: { path: string }) => file.path === "data/lineage.json");
+    entry.sha256 = sha256(lineageBytes);
+    entry.bytes = Buffer.byteLength(lineageBytes);
+    const manifestBytes = `${JSON.stringify(manifest, null, 2)}\n`;
+    await Bun.write(manifestPath, manifestBytes);
+    const receiptPath = join(output, "data/build-receipt.json");
+    const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
+    receipt.artifact_manifest_sha256 = sha256(manifestBytes);
+    await Bun.write(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);
+
+    const verified = Bun.spawnSync(["bun", "run", GENERATED_REPO_VERIFIER, "--repo", output], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(verified.exitCode).not.toBe(0);
+    expect(verified.stderr.toString()).toContain("source_refs");
   });
 
   test("generated fast gate never removes a pre-existing local dependency symlink", () => {

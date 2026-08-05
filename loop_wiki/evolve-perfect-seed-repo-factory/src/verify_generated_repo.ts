@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
+import { assertSourceRefs, refsGrounded } from "./contracts";
 import { verifyMinimumLineage } from "./minimum_lineage";
 
 const args = Bun.argv.slice(2);
@@ -27,6 +28,10 @@ const source = JSON.parse(readFileSync(join(root, "data/source.json"), "utf8"));
 const lineage = JSON.parse(readFileSync(join(root, "data/lineage.json"), "utf8"));
 if (source.human_gate !== "required_before_seed_admit" || lineage.terminal_human_gate !== "required_before_seed_admit")
   throw new Error("generated repo lost human admit gate");
+assertSourceRefs(lineage.source_refs);
+assertSourceRefs(source.source_refs);
+if (lineage.refs_grounded !== refsGrounded(lineage.source_refs))
+  throw new Error("generated repo lineage refs_grounded does not match source_refs");
 const plan = JSON.parse(readFileSync(join(root, "data/call-plan.json"), "utf8"));
 const results = readFileSync(join(root, "data/call-results.jsonl"), "utf8")
   .trim()

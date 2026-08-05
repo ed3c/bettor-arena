@@ -4,6 +4,13 @@ import { isAbsolute, resolve } from "node:path";
 export const SOURCE_KINDS = ["dr", "gcr", "repo", "grill-me"] as const;
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 
+export interface SourceRef {
+  repo: string;
+  commit: string;
+  path: string;
+  anchor: string;
+}
+
 export interface SeedInputPacket {
   schema_version: "perfect-seed-input@1.0.0";
   packet_id: string;
@@ -13,11 +20,36 @@ export interface SeedInputPacket {
   task: string;
   fixed_prompt_context: string[];
   emergent_prompt_context: string;
+  source_refs: SourceRef[];
   human_gate: "required_before_seed_admit";
 }
 
 function requireCondition(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
+}
+
+export function assertSourceRefs(value: unknown): asserts value is SourceRef[] {
+  requireCondition(Array.isArray(value) && value.length > 0, "source_refs must be a non-empty array");
+  for (const ref of value as Array<Partial<SourceRef>>) {
+    requireCondition(typeof ref === "object" && ref !== null, "source_refs entries must be objects");
+    requireCondition(typeof ref.repo === "string" && ref.repo.length > 0, "source_refs repo is required");
+    requireCondition(
+      typeof ref.commit === "string" && /^[0-9a-f]{7,40}$/.test(ref.commit),
+      "source_refs commit must be 7-40 lowercase hex characters",
+    );
+    requireCondition(
+      typeof ref.path === "string" &&
+        ref.path.length > 0 &&
+        !isAbsolute(ref.path) &&
+        !ref.path.split(/[\\/]/).includes(".."),
+      "source_refs path must be repo-relative without traversal",
+    );
+    requireCondition(typeof ref.anchor === "string" && ref.anchor.length > 0, "source_refs anchor is required");
+  }
+}
+
+export function refsGrounded(refs: SourceRef[]): boolean {
+  return refs.every((ref) => ref.repo !== "unknown");
 }
 
 export function readInputPacket(packetPath: string): SeedInputPacket {
@@ -57,6 +89,7 @@ export function readInputPacket(packetPath: string): SeedInputPacket {
     typeof value.emergent_prompt_context === "string" && value.emergent_prompt_context.length > 0,
     "emergent_prompt_context is required",
   );
+  assertSourceRefs(value.source_refs);
   requireCondition(value.human_gate === "required_before_seed_admit", "human_gate must preserve seed admission");
   return { ...value, source_path: sourcePath } as SeedInputPacket;
 }

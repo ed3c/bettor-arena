@@ -59,6 +59,8 @@ export function materializeRepo(
     task_sha256: ir.source.task_sha256,
     fixed_prompt_context: packet.fixed_prompt_context,
     emergent_prompt_context: packet.emergent_prompt_context,
+    source_refs: ir.source.source_refs,
+    refs_grounded: ir.source.refs_grounded,
     terminal_human_gate: packet.human_gate,
   });
   const manifestEntries = listFiles(output)

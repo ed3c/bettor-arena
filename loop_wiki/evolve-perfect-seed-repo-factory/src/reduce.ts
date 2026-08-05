@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import type { SeedInputPacket } from "./contracts";
+import { refsGrounded, type SeedInputPacket } from "./contracts";
 
 const MAX_SOURCE_BYTES = 512 * 1024;
 const MAX_REPO_FILES = 200;
@@ -135,6 +135,8 @@ export function reducePacket(packet: SeedInputPacket, packetSha256: string): Red
       task: packet.task,
       task_sha256: sha256(packet.task),
       evidence_count: evidence.length,
+      source_refs: packet.source_refs,
+      refs_grounded: refsGrounded(packet.source_refs),
       human_gate: packet.human_gate,
     },
     evidence,

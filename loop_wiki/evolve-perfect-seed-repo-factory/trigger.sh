@@ -15,6 +15,8 @@ if [ -z "$PACKET_ID" ]; then
   echo "FAIL: packet_id missing" >&2
   exit 2
 fi
+SOURCE_REFS=$(PACKET_PATH="$PACKET" bun -e 'console.log(JSON.stringify(JSON.parse(require("node:fs").readFileSync(process.env.PACKET_PATH,"utf8")).source_refs))')
+REFS_GROUNDED=$(PACKET_PATH="$PACKET" bun -e 'console.log(JSON.parse(require("node:fs").readFileSync(process.env.PACKET_PATH,"utf8")).source_refs.every((r)=>r.repo!=="unknown"))')
 mkdir -p "$ROOT/_engine-run"
 CONTEXT="$ROOT/_engine-run/exchange-context.$PACKET_ID.md"
 {
@@ -24,6 +26,9 @@ CONTEXT="$ROOT/_engine-run/exchange-context.$PACKET_ID.md"
   echo "- fixed_prompt_context: PROMPT.md + modules/semantic-truth-context.md"
   echo "- iteration_auto_context: $CONTEXT"
   echo "- emergent_prompt_context: physical packet field"
+  echo "- source_refs: $SOURCE_REFS"
+  echo "- refs_grounded: $REFS_GROUNDED"
+  echo "- human_gate: required_before_seed_admit"
   echo "- target_output: $OUTPUT"
 } >"$CONTEXT"
 
@@ -61,6 +66,8 @@ cat >"$ROUTE_RESULT" <<EOF
   "fast_quality_exit": $FAST_QUALITY_RC,
   "operator_exit": $OPERATOR_RC,
   "validator_exit": $VALIDATOR_RC,
+  "source_refs": $SOURCE_REFS,
+  "refs_grounded": $REFS_GROUNDED,
   "output": "$OUTPUT",
   "next_edge": "human_required_before_seed_admit",
   "human_gate": "required_before_seed_admit"
