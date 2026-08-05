@@ -17,9 +17,10 @@ Exit codes: 0 clean · 2 violations · 64 usage or not a git work tree.
 Selftest: --selftest builds throwaway git fixtures and proves the gate can
 fail (a green that was never seen red is not evidence); exits 0 green, 1 red.
 
-Scope note: this gate scans the full tracked tree of the repo containing the
-cwd (its first output line names that root, so a mis-anchored cwd is visible).
-A staged-only mode belongs to S7, when this gate is wired into pre-commit.
+Scope note: this gate scans the full tracked tree of the repo containing this
+script itself — cwd never picks the repo (its first output line names the root
+it scans). A staged-only mode belongs to S7, when this gate is wired into
+pre-commit.
 
 The scan patterns are assembled from fragments so this file's own source
 never contains a literal match for what it hunts.
@@ -142,6 +143,21 @@ def _selftest() -> int:
         cases.append(("untracked-ignored", run(untracked), 0))
     with tempfile.TemporaryDirectory() as td:
         cases.append(("not-a-repo", run(Path(td)), 64))
+    # Anchoring control: invoked as a subprocess from a foreign repo's cwd, the
+    # gate must still scan its OWN repo (the one holding this script), not cwd's.
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        foreign = _fixture(tmp / "e", {"doc.md": f"points at {bad}\n"})
+        own = repo_root(Path(__file__).resolve().parent)
+        proc = subprocess.run([sys.executable, str(Path(__file__).resolve())],
+                              cwd=str(foreign), text=True, capture_output=True)
+        first = proc.stdout.splitlines()[0] if proc.stdout else "<no output>"
+        anchored = (own is not None and str(own) in first
+                    and str(foreign) not in first)
+        if not anchored:
+            print(f"SELFTEST anchoring detail — own={own} first line: {first}",
+                  file=sys.stderr)
+        cases.append(("external-cwd-scans-own-repo", 0 if anchored else 1, 0))
 
     red = [f"{name}: got {got}, want {want}" for name, got, want in cases if got != want]
     for line in red:
@@ -156,7 +172,7 @@ def main(argv: list[str]) -> int:
     if argv:
         print(__doc__.strip(), file=sys.stderr)
         return 64
-    return run(Path.cwd())
+    return run(Path(__file__).resolve().parent)
 
 
 if __name__ == "__main__":

@@ -128,6 +128,20 @@ def _selftest() -> int:
         cases.append(("arch-slotless", run(_fixture(Path(td), slotless)), 64))
     with tempfile.TemporaryDirectory() as td:
         cases.append(("not-a-repo", run(Path(td)), 64))
+    # Anchoring control: invoked as a subprocess from a foreign repo's cwd, the
+    # gate must still scan its OWN repo (the one holding this script), not cwd's.
+    with tempfile.TemporaryDirectory() as td:
+        foreign = _fixture(Path(td), {"a.md": "doc\n"})  # no ARCH here on purpose
+        own = repo_root(Path(__file__).resolve().parent)
+        proc = subprocess.run([sys.executable, str(Path(__file__).resolve())],
+                              cwd=str(foreign), text=True, capture_output=True)
+        first = proc.stdout.splitlines()[0] if proc.stdout else "<no output>"
+        anchored = (own is not None and str(own) in first
+                    and str(foreign) not in first)
+        if not anchored:
+            print(f"SELFTEST anchoring detail — own={own} first line: {first}",
+                  file=sys.stderr)
+        cases.append(("external-cwd-scans-own-repo", 0 if anchored else 1, 0))
 
     red = [f"{name}: got {got}, want {want}" for name, got, want in cases if got != want]
     for line in red:
@@ -142,7 +156,7 @@ def main(argv: list[str]) -> int:
     if argv:
         print(__doc__.strip(), file=sys.stderr)
         return 64
-    return run(Path.cwd())
+    return run(Path(__file__).resolve().parent)
 
 
 if __name__ == "__main__":
