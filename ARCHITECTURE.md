@@ -49,3 +49,6 @@ bettor-arena/
    --peer 審計,無參數 NOT_RUN)。
 5. 快速品質閘(format/lint/型別)為架構級硬閘:pre-commit 掃 staged(<5s)+沙盒 verify T0
    同一定義;快閘綠不冒充 CQ/PU 軸綠;人 admit 永遠是終端邊。
+6. 工具缺席走 FATAL(exit 64),與檢查失敗(exit 2)分流;缺席永不可讀成綠(§1:每個綠
+   先有對應的紅)。
+7. 重複組件禁字面推論等價:判等價=讀碼+真跑;load-bearing 且判錯有代價=重建並列量測。
