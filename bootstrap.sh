@@ -27,6 +27,19 @@ git -C "$ROOT" config core.hooksPath .githooks
 python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
   || fatal "root-coupling gate selftest RED — do not trust its green"
 
+# Optional MCP toolchain: absent is WARN, never FATAL — MCP is opt-in, and a
+# clone without it must still bootstrap. WARNs name the fix, not just the gap.
+warn() { echo "bootstrap WARN: $1" >&2; }
+command -v uv >/dev/null 2>&1 \
+  || warn "uv not on PATH (context-pack/serena MCP launchers need it; install: https://docs.astral.sh/uv/)"
+if command -v curl >/dev/null 2>&1 && curl -sf -m 2 http://localhost:11434/ >/dev/null 2>&1; then
+  echo "bootstrap ok: ollama reachable on localhost:11434"
+else
+  warn "ollama not reachable on localhost:11434 (grepai embeddings; install: brew install ollama, then: ollama serve)"
+fi
+[ -f "$ROOT/.grepai/index.gob" ] \
+  || warn "grepai index absent — rebuild with: grepai init && grepai watch"
+
 echo "bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)"
 
 # MCP approval is a human gate. This script prints the steps and never

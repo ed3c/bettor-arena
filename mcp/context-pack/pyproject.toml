@@ -1,0 +1,22 @@
+[project]
+name = "repo-context-pack-mcp"
+version = "0.1.0"
+description = "Repo-bound evidence-budget Python context packs over MCP."
+requires-python = ">=3.11"
+dependencies = [
+  "mcp==2.0.0",
+]
+
+[project.scripts]
+repo-context-pack-mcp = "context_pack_mcp.server:main"
+
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

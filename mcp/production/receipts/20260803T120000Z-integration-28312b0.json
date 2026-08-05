@@ -1,0 +1,35 @@
+{
+  "schema_version": "mcp-production-integration-receipt@v1",
+  "status": "passed",
+  "merge_commit": "28312b0d8d97632b8610d0bb7a35e2e33fa2631c",
+  "merge_tree": "8081430093759bfe3b36e27bb376831ebbf0d09b",
+  "parents": [
+    "68b5483dc560edff9e8964bebd6ed50483660eb1",
+    "3e02e33decb01d36508c72768e11b5f8c71f97cb"
+  ],
+  "profile_sha256": "8f5a949f2d69702c6034aa80277ee33e4925768b189cb0c50629fb9e4da28ab3",
+  "host_codex_config_sha256": "40c4501f12d5f25270b2af665484bc8ddf65b4ecc04b91dde5fb3fca3fb09eac",
+  "checks": [
+    {
+      "id": "python-unit-and-adversarial",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 30,
+      "elapsed_ms": 3505
+    },
+    {
+      "id": "migration-plan",
+      "status": "passed",
+      "exit_code": 0,
+      "detail": "Both portable mirrors are in_sync; .codex/config.toml is validation-only and cannot be overwritten by apply."
+    },
+    {
+      "id": "runtime-ignore",
+      "status": "passed",
+      "exit_code": 0,
+      "detail": ".mcp-production/ is ignored; immutable checked-in verification receipts remain tracked."
+    }
+  ],
+  "cloud_enabled": false,
+  "observed_at": "2026-08-03T12:00:00Z"
+}

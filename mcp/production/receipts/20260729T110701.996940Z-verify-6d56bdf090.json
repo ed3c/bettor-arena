@@ -1,0 +1,189 @@
+{
+  "action": "verify",
+  "created_at": "2026-07-29T11:07:01.997261+00:00",
+  "details": {
+    "capabilities": [
+      {
+        "heavy_executor": true,
+        "id": "grepai",
+        "payload_residency": "on_demand",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      },
+      {
+        "heavy_executor": true,
+        "id": "serena",
+        "payload_residency": "demand_pull",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      },
+      {
+        "heavy_executor": false,
+        "id": "repo-context-pack",
+        "payload_residency": "demand_pull",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      }
+    ],
+    "git": {
+      "branch": "codex/mcp-production-migration",
+      "commit": "d700458f270d7938924f512ad3c05348f3d769a1",
+      "dirty": true
+    },
+    "human_gates": [
+      {
+        "automatable": false,
+        "description": "Human approves repo-context-pack for this project in Claude.",
+        "id": "claude-project-mcp-approval",
+        "status": "pending"
+      },
+      {
+        "automatable": false,
+        "description": "Human opens a fresh host chat so project MCP configuration is reloaded.",
+        "id": "fresh-chat-config-reload",
+        "status": "pending"
+      }
+    ],
+    "managed_files": [
+      {
+        "path": ".codex/config.toml",
+        "sha256": "aa570e99ac640961859dcb5fdea95ae00e35dc6a9d4f1ed013768841e5d3d787",
+        "status": "pass"
+      },
+      {
+        "path": ".mcp.json",
+        "sha256": "f8ca4b8bb54a6d80d8951dc0c1dfe9443186aa9bd78976761d672db8d11fcb66",
+        "status": "pass"
+      },
+      {
+        "path": ".serena/project.yml",
+        "sha256": "8cba048f5399072834e7965c91d5981f97db312afe6df86f3fa2d794fbcd0e51",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/context-pack/uv.lock",
+        "sha256": "116db2c88a0167a497c7b3fd31741c9f7c0faf29e4ebe25b8e84012757c33359",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/templates/codex-config.toml",
+        "sha256": "aa570e99ac640961859dcb5fdea95ae00e35dc6a9d4f1ed013768841e5d3d787",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/templates/claude-mcp.json",
+        "sha256": "c3ee96c1295f21713e77d22462ef695c9f367e549f27e756ec8eb964d11aede8",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/templates/serena-project.yml",
+        "sha256": "8cba048f5399072834e7965c91d5981f97db312afe6df86f3fa2d794fbcd0e51",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/migrate.py",
+        "sha256": "a645329a69fded8042b323b2f634a4265fcf1ce23eb1e2775da8a4c0ee140d73",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/probe_stdio.py",
+        "sha256": "2b502fea9cbf602812a18d434b29723cff1420bae55f97355b700a63b1b8bf2f",
+        "status": "pass"
+      }
+    ],
+    "mirrors": [
+      {
+        "comparison": "bytes",
+        "source": "mcp/production/templates/codex-config.toml",
+        "source_sha256": "aa570e99ac640961859dcb5fdea95ae00e35dc6a9d4f1ed013768841e5d3d787",
+        "status": "in_sync",
+        "target": ".codex/config.toml",
+        "target_sha256": "aa570e99ac640961859dcb5fdea95ae00e35dc6a9d4f1ed013768841e5d3d787"
+      },
+      {
+        "comparison": "json",
+        "source": "mcp/production/templates/claude-mcp.json",
+        "source_sha256": "c3ee96c1295f21713e77d22462ef695c9f367e549f27e756ec8eb964d11aede8",
+        "status": "in_sync",
+        "target": ".mcp.json",
+        "target_sha256": "f8ca4b8bb54a6d80d8951dc0c1dfe9443186aa9bd78976761d672db8d11fcb66"
+      },
+      {
+        "comparison": "bytes",
+        "source": "mcp/production/templates/serena-project.yml",
+        "source_sha256": "8cba048f5399072834e7965c91d5981f97db312afe6df86f3fa2d794fbcd0e51",
+        "status": "in_sync",
+        "target": ".serena/project.yml",
+        "target_sha256": "8cba048f5399072834e7965c91d5981f97db312afe6df86f3fa2d794fbcd0e51"
+      }
+    ],
+    "probes": [
+      {
+        "duration_ms": 3170,
+        "id": "migration-engine-unit",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "91b40ab07141fb2ca36ad1a0ac8e0ea43be6c43ae7fd275d7dcf700e50658efb",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "duration_ms": 350,
+        "id": "grepai-live-index",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "538ce7ce4240885b2f6a9e7e7262a30b2082266951b699b11d98c93511ff4c45"
+      },
+      {
+        "duration_ms": 341,
+        "id": "grepai-current-content-canary",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "13e7e962ce9f58edcb1149dd5035632c559ae32ff6213af0d64b28ce7bb1c29b"
+      },
+      {
+        "duration_ms": 3751,
+        "id": "serena-live-symbol-canary",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "303a7e6b42c68dd7ab4d090bbe418f6bea8ef12db38f5d617b2640f45f6a9c93"
+      },
+      {
+        "duration_ms": 1681,
+        "id": "context-pack-real-stdio",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "d580456c48fa77acda54e1329c94745b6914cd77de43b1c70d66d0caec0321d3",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "duration_ms": 1123,
+        "id": "codex-project-discovery",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "d9b713c8bb5546f5a8adfb9ab8b8e43e29ad288076f186bd0ead66ffc944c4b6"
+      }
+    ],
+    "receipt_chain": {
+      "receipt_count": 1,
+      "status": "pass",
+      "tip_sha256": "eb0dfb2d80cfcf53b6a96c1eb7671730f7906e5e0d168b77a49616803133add1"
+    },
+    "repo_id": "ts-skill-bettor",
+    "status": "technical_pass_human_pending"
+  },
+  "git": {
+    "branch": "codex/mcp-production-migration",
+    "commit": "d700458f270d7938924f512ad3c05348f3d769a1",
+    "dirty": true
+  },
+  "previous_receipt_sha256": "eb0dfb2d80cfcf53b6a96c1eb7671730f7906e5e0d168b77a49616803133add1",
+  "profile_path": "mcp/production/profile.json",
+  "profile_sha256": "c1db73fa8766f3804f05852cf8ff1a1d0d673823491a399bc411b0c2c061a692",
+  "repo_id": "ts-skill-bettor",
+  "run_id": "20260729T110701.996940Z-verify-6d56bdf090",
+  "schema_version": 1
+}
