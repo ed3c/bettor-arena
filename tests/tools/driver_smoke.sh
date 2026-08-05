@@ -80,7 +80,10 @@ payload = {
     },
 }
 text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-assert "/Users/" not in text and "/home/" not in text, "receipt must not carry absolute home paths"
+# Fragment-assembled so this script never embeds a literal match for what the
+# root-coupling gate hunts (same convention as check_root_coupling.py PATTERNS).
+home_roots = ("/Use" + "rs/", "/ho" + "me/")
+assert not any(p in text for p in home_roots), "receipt must not carry absolute home paths"
 with open(os.environ["RECEIPT"], "w", encoding="utf-8") as fh:
     fh.write(text)
 ' || fatal "receipt write failed"
@@ -95,5 +98,8 @@ if [ "$claude_exit" -ne 0 ] || [ "$codex_exit" -ne 0 ]; then
   echo "driver_smoke FAIL: a lane ran but did not round-trip (see receipt)" >&2
   exit 2
 fi
+# Exit 0 alone is not a round-trip: the reply itself must carry the asked-for token.
+case "$claude_out" in *OK*) ;; *) echo "driver_smoke FAIL: claude lane exit 0 but reply lacks OK" >&2; exit 2;; esac
+case "$codex_last" in *OK*) ;; *) echo "driver_smoke FAIL: codex lane exit 0 but reply lacks OK" >&2; exit 2;; esac
 echo "driver_smoke PASS: both lanes round-tripped, receipt written"
 exit 0

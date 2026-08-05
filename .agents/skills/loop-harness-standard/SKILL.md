@@ -302,7 +302,9 @@ server 三 actuator 併發實跑。
 - feedback **僅尾端 append**(鐵律;自 engine 既有慣例升格成規範文字):被動上下文+PROMPT 前綴
   逐輪位元組不變,cache 前綴才可命中;改前綴=全 miss+驗證脈絡漂移。
 - model 必須在 dispatch 命令寫死(與 root 鐵律 2 同錨)。
-- 訂閱 session 的 prompt cache TTL=1h 有官方明文;迭代間隔超過 TTL 按冷啟預算,不假設殘留。
+- 訂閱 session 的 prompt cache TTL=1h 有官方明文(code.claude.com/docs/en/prompt-caching:
+  "On a Claude subscription, Claude Code requests the one-hour TTL automatically";API key 預設
+  5 分鐘,同頁);迭代間隔超過 TTL 按冷啟預算,不假設殘留。
 
 **codex lane(備援 driver)**
 - 直呼 `codex exec "<prompt>"`(可選 `--json`、`-o/--output-last-message <file>`、

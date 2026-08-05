@@ -29,8 +29,8 @@ const VALID_SOURCE_REFS = [
   {
     repo: "ts-skill-bettor",
     commit: "f3776cbf1b4c75c78e017e1381a8517cd1865abf",
-    path: "proposals/2026-08-06-perfect-seed-repo-factory.md",
-    anchor: "claim:C001",
+    path: "AGENTS.md",
+    anchor: "L20:重複組件禁字面推論等價",
   },
 ];
 
