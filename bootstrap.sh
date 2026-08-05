@@ -28,3 +28,13 @@ python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
   || fatal "root-coupling gate selftest RED — do not trust its green"
 
 echo "bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)"
+
+# MCP approval is a human gate. This script prints the steps and never
+# performs them: auto-enabling project MCP servers would be self-approval.
+cat <<'EOF'
+MCP approval (human-owned, not automated):
+  1. Claude Code: open this repo fresh; when prompted for the project .mcp.json
+     servers (grepai / repo-context-pack / serena), review and approve yourself.
+  2. Codex: .codex/config.toml ships only portable MCP declarations; add the
+     host sections (permissions/network/sockets) by hand before trusting.
+EOF
