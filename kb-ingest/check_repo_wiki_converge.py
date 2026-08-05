@@ -171,7 +171,7 @@ HOST_SKILL_LINKS = [
 INDEXING = HOST_ROOT / "indexing"
 
 OW = KB / "openwiki"        # upstream bytes ONLY — enforced by check_official_purity()
-NO = KB / "port"     # everything skill-bettor added
+PORT = KB / "port"     # everything skill-bettor added
 
 # The seven machine-generated prompt assets. Each must carry the verbatim markers
 # and the generator's do-not-edit banner.
@@ -190,12 +190,12 @@ CORE_FILES = [
     PROFILE_DECLARATION,
     SKILL,
     MODULE,
-    NO / "README.md",
-    NO / "sync_prompts.py",
-    NO / "host-runtime.md",
-    NO / "repodoc-extension.md",
-    NO / "openwiki_post.py",
-    NO / "openwiki_subagent.sh",
+    PORT / "README.md",
+    PORT / "sync_prompts.py",
+    PORT / "host-runtime.md",
+    PORT / "repodoc-extension.md",
+    PORT / "openwiki_post.py",
+    PORT / "openwiki_subagent.sh",
     KB / "engine-baseline.md",
     KB / "mastery-ladder.md",
     KB / "setup-repo.sh",
@@ -274,7 +274,7 @@ PROFILE_NO_OLD_ABSOLUTE_PATHS = {
     "skill-bettor-layout": [SKILL, MODULE, KB / "setup-repo.sh", KB / "setup-prototype.sh"],
 }
 
-CORE_EXECUTABLES = [NO / "openwiki_subagent.sh", KB / "setup-repo.sh"]
+CORE_EXECUTABLES = [PORT / "openwiki_subagent.sh", KB / "setup-repo.sh"]
 PROFILE_EXECUTABLES = {"skill-bettor-layout": [KB / "setup-prototype.sh"]}
 
 
@@ -380,7 +380,7 @@ def check_prompt_assets() -> None:
         for needle in ("DO NOT EDIT BY HAND", "<!-- OPENWIKI-OFFICIAL:BEGIN -->",
                        "<!-- OPENWIKI-OFFICIAL:END -->", "upstream: langchain-ai/openwiki @"):
             if needle not in text:
-                fail(f"{shown} is missing {needle!r} — regenerate with {rel(NO / 'sync_prompts.py')}")
+                fail(f"{shown} is missing {needle!r} — regenerate with {rel(PORT / 'sync_prompts.py')}")
         body = text.split("<!-- OPENWIKI-OFFICIAL:BEGIN -->", 1)[1]
         # An unresolved {PLACEHOLDER} would be shipped to the model as literal text.
         # User-prompt templates keep theirs on purpose; system prompts must have none.
@@ -406,7 +406,7 @@ def check_prompt_assets() -> None:
 
 
 def check_selftests() -> None:
-    for script in (NO / "openwiki_post.py", NO / "sync_prompts.py"):
+    for script in (PORT / "openwiki_post.py", PORT / "sync_prompts.py"):
         result = run([sys.executable, str(script), "--selftest"])
         if result.returncode != 0 or "selftest ok" not in result.stdout:
             fail(f"{rel(script)} --selftest failed:\n{result.stdout}")
@@ -418,7 +418,7 @@ def check_subagent_boundaries() -> None:
     The target here has a COMMITTED openwiki/, so a naive "the wiki is untracked
     anyway" assumption would pass while the real boundary leaked.
     """
-    script = NO / "openwiki_subagent.sh"
+    script = PORT / "openwiki_subagent.sh"
     with tempfile.TemporaryDirectory(prefix="repo-wiki-converge-") as tmp:
         target = Path(tmp) / "target"
         (target / "src").mkdir(parents=True)
