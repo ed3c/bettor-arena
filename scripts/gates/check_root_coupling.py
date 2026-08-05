@@ -15,7 +15,11 @@ evidence is forging evidence.
 
 Exit codes: 0 clean · 2 violations · 64 usage or not a git work tree.
 Selftest: --selftest builds throwaway git fixtures and proves the gate can
-fail (a green that was never seen red is not evidence).
+fail (a green that was never seen red is not evidence); exits 0 green, 1 red.
+
+Scope note: this gate scans the full tracked tree of the repo containing the
+cwd (its first output line names that root, so a mis-anchored cwd is visible).
+A staged-only mode belongs to S7, when this gate is wired into pre-commit.
 
 The scan patterns are assembled from fragments so this file's own source
 never contains a literal match for what it hunts.
@@ -88,6 +92,7 @@ def run(start: Path) -> int:
     if root is None:
         print("check_root_coupling: not inside a git work tree", file=sys.stderr)
         return 64
+    print(f"check_root_coupling: scanning repo root {root}")
     violations = scan(root)
     if violations:
         for v in violations:
