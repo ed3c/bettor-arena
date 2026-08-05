@@ -179,7 +179,7 @@ def build_operations(source_root: Path, target_root: Path, manifest: dict) -> li
 
 
 def apply_operations(operations: list[Operation], manifest: dict,
-                     source_root: Path, target_root: Path) -> int:
+                     source_root: Path) -> int:
     root_str = str(source_root)
     token = manifest["root_token"]
     written = 0
@@ -198,8 +198,13 @@ def apply_operations(operations: list[Operation], manifest: dict,
                 shutil.copy2(op.source, op.target)
             else:
                 rewritten = text.replace(root_str, token)
-                if root_str in rewritten:  # replace() cannot leave this; assert before success
-                    raise ValueError(f"rewrite incomplete for {op.rel}")
+                # replace() removed the source root; what can still leak is any
+                # OTHER home root (foreign machine paths) — scan for those.
+                leftover = next((p for p in HOME_PATTERNS if p in rewritten), None)
+                if leftover is not None:
+                    raise ValueError(
+                        f"rewrite left a home-root residue in {op.rel} "
+                        f"(pattern {leftover!r}): declare it as evidence or fix the source")
                 op.target.write_text(rewritten, encoding="utf-8")
         else:
             shutil.copy2(op.source, op.target)
@@ -309,7 +314,7 @@ def main(argv: list[str]) -> int:
         mode = "apply" if args.apply else "dry-run"
         payload = stats_payload(manifest, operations, source_root, target_root, mode)
         if args.apply:
-            payload["files_written"] = apply_operations(operations, manifest, source_root, target_root)
+            payload["files_written"] = apply_operations(operations, manifest, source_root)
             payload["allowlist_entries_added"] = ensure_target_allowlist(target_root, manifest)
             gate_status = run_target_gate(target_root)
             payload["root_coupling_gate"] = gate_status
@@ -464,7 +469,37 @@ def _selftest() -> int:
             check("allowlist-appended", "evidence/ fixture-historical-evidence" in ledger,
                   f"ledger: {ledger!r}")
 
+        # target whose own gate is a permanently-red stub: the exit-2 branch of
+        # run_target_gate must actually fire, not just exist in the source.
+        tgt_red = base / "tgt_red"
+        red_gate = tgt_red / TARGET_GATE_REL
+        red_gate.parent.mkdir(parents=True)
+        red_gate.write_text("import sys\nsys.stderr.write('stub gate: always red\\n')\nsys.exit(2)\n",
+                            encoding="utf-8")
+        red = _run_cli(["--manifest", str(manifest_path), "--source-root", str(src),
+                        "--target-root", str(tgt_red), "--apply"])
+        check("target-gate-red-exit-2", red.returncode == 2, f"exit {red.returncode}: {red.stderr}")
+        check("target-gate-red-receipt",
+              (tgt_red / RECEIPT_REL).is_file()
+              and '"root_coupling_gate": "fail"' in (tgt_red / RECEIPT_REL).read_text(encoding="utf-8"),
+              "receipt missing or does not record the red gate")
+
         # negative controls
+        # a foreign home root surviving rewrite must refuse, not ship coupling
+        (src / "code/foreign.py").write_text(
+            f'OTHER = "{HOME_PATTERNS[0]}otherbox/elsewhere"\n', encoding="utf-8")
+        subprocess.run(["git", "-C", str(src), "add", "code/foreign.py"], check=True)
+        tgt_residue = base / "tgt_residue"
+        tgt_residue.mkdir()
+        residue = _run_cli(["--manifest", str(manifest_path), "--source-root", str(src),
+                            "--target-root", str(tgt_residue), "--apply"])
+        check("home-residue-refused", residue.returncode == 64,
+              f"exit {residue.returncode}: {residue.stderr}")
+        check("home-residue-named", "foreign.py" in residue.stderr,
+              f"stderr does not name the leaking file: {residue.stderr!r}")
+        subprocess.run(["git", "-C", str(src), "rm", "-q", "--cached", "code/foreign.py"], check=True)
+        (src / "code/foreign.py").unlink()
+
         os.symlink(str(src / "docs/note.md"), src / "code/abs_link")
         subprocess.run(["git", "-C", str(src), "add", "code/abs_link"], check=True)
         abslink = _run_cli([*common])
