@@ -14,9 +14,11 @@ Contract (S2, ts-skill-bettor issue #4):
   to the {REPO_ROOT} token. Files under an evidence_allowlist prefix are
   copied verbatim (rewriting evidence is forging evidence) and are declared
   in the target's root-coupling allowlist ledger instead.
-- After --apply the engine writes a stats receipt (no absolute paths) to
-  <target>/data/migration/last-migration-report.json and, when the target
-  carries scripts/gates/check_root_coupling.py, requires that gate green.
+- After --apply the engine writes a per-run stats receipt (no absolute paths)
+  to <target>/data/migration/report-<source-commit>-<component-set>.json —
+  history is never overwritten — plus last-migration-report.json as a copy of
+  the latest run for existing readers. When the target carries
+  scripts/gates/check_root_coupling.py, that gate must come back green.
 
 Exit codes: 0 ok · 2 post-apply target gate red · 64 usage/precondition
 (same root, non-git source, bad manifest) · anything else is a crash.
@@ -39,7 +41,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT_TOKEN_DEFAULT = "{REPO_ROOT}"
-RECEIPT_REL = "data/migration/last-migration-report.json"
+RECEIPT_DIR_REL = "data/migration"
+RECEIPT_REL = RECEIPT_DIR_REL + "/last-migration-report.json"
 TARGET_GATE_REL = "scripts/gates/check_root_coupling.py"
 TARGET_ALLOWLIST_REL = "scripts/gates/root_coupling_allowlist.txt"
 # Assembled so this file never contains a literal match for what it polices.
@@ -318,10 +321,16 @@ def main(argv: list[str]) -> int:
             payload["allowlist_entries_added"] = ensure_target_allowlist(target_root, manifest)
             gate_status = run_target_gate(target_root)
             payload["root_coupling_gate"] = gate_status
-            receipt = target_root / RECEIPT_REL
-            receipt.parent.mkdir(parents=True, exist_ok=True)
-            receipt.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-                               encoding="utf-8")
+            # Receipts are history: one file per run (named by source commit +
+            # component set), never overwritten. last-migration-report.json is
+            # kept as a copy of the latest run for its existing readers.
+            slug = "-".join(sorted(c["id"] for c in manifest["components"]))
+            text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+            receipt_dir = target_root / RECEIPT_DIR_REL
+            receipt_dir.mkdir(parents=True, exist_ok=True)
+            per_run = receipt_dir / f"report-{payload['source_commit'][:7]}-{slug}.json"
+            per_run.write_text(text, encoding="utf-8")
+            (target_root / RECEIPT_REL).write_text(text, encoding="utf-8")
             if gate_status == "fail":
                 print(f"FAIL: target gate {TARGET_GATE_REL} red after apply", file=sys.stderr)
                 return 2
@@ -465,6 +474,16 @@ def _selftest() -> int:
             if receipt.is_file():
                 check("receipt-no-abs-paths", src_str not in receipt.read_text(encoding="utf-8"),
                       "receipt leaks source root")
+            # per-run receipt: history is append-only, the single-slot file is
+            # only a convenience copy of the latest run.
+            slug = "-".join(sorted(c["id"] for c in json.loads(
+                manifest_path.read_text(encoding="utf-8"))["components"]))
+            per_run = tgt / RECEIPT_DIR_REL / f"report-{payload['source_commit'][:7]}-{slug}.json"
+            check("per-run-receipt-exists", per_run.is_file(), str(per_run))
+            if per_run.is_file() and receipt.is_file():
+                check("per-run-receipt-is-latest-copy",
+                      per_run.read_bytes() == receipt.read_bytes(),
+                      "last-migration-report.json is not a copy of the per-run receipt")
             ledger = allowlist.read_text(encoding="utf-8")
             check("allowlist-appended", "evidence/ fixture-historical-evidence" in ledger,
                   f"ledger: {ledger!r}")

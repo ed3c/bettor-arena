@@ -33,7 +33,7 @@ bettor-arena/
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
-│   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(last-migration-report.json,執行期生)
+│   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only;last-migration-report.json=最新拷貝,執行期生)
 └── docs/              # 計劃/交接文件(非模組知識)
 ```
 
