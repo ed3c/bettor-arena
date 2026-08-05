@@ -53,6 +53,18 @@ RC=$?
 set -e
 [ "$RC" -eq 2 ] || fail "TS type error exited $RC, want 2"
 
+# 2b) TS strictness parity probe: optional-param `.length` must red here exactly
+#     as the factory's strict tsconfig reds it (two mounts, one judgment). The
+#     probe is prettier-clean so the red can only come from ts-typecheck.
+printf 'export function f(s?: string): number {\n  return s.length;\n}\n' > "$W/optional.ts"
+set +e
+OUT=$(sh "$G" "$W/optional.ts" 2>&1)
+RC=$?
+set -e
+[ "$RC" -eq 2 ] || fail "optional-param strictness probe exited $RC, want 2 (pre-commit tsc diverges from factory strict tsconfig)"
+echo "$OUT" | grep -q '"id":"ts-typecheck","status":"failed"' \
+  || fail "strictness probe did not red at ts-typecheck — $OUT"
+
 # 3) Python lane negative control: format violation → red; and with a TS file
 #    also staged, fail-fast must mark the TS stages not_run.
 set +e
@@ -138,6 +150,16 @@ git -C "$R" add b.ts
 git -C "$R" commit -q -m "bad ts" 2>/dev/null && fail "type-error commit was accepted"
 [ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "type-error commit exists"
 git -C "$R" reset -q b.ts && rm "$R/b.ts"
+
+# 10b) Index/worktree divergence: staged blob is broken, worktree copy is clean
+#      → the hook must judge the staged blob and still block the commit.
+printf 'const broken: number = "nope";\nexport default broken;\n' > "$R/e.ts"
+git -C "$R" add e.ts
+printf 'export const fine: number = 1;\n' > "$R/e.ts"
+git -C "$R" commit -q -m "bad staged blob" 2>/dev/null \
+  && fail "staged-bad/worktree-clean commit was accepted (gate judged the worktree, not the index)"
+[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "staged-bad commit exists"
+git -C "$R" reset -q e.ts && rm "$R/e.ts"
 
 # 11) Staged py format violation → blocked.
 printf 'x=1;y  =2\n' > "$R/b.py"

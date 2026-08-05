@@ -18,8 +18,9 @@
 #     the same lane for now and therefore depend on the factory's
 #     devDependencies and configs; two honest limits of that ride: eslint
 #     skips files outside its base path (warning, not a lie of a green — the
-#     receipt still records the stage), and tsc checks given files with
-#     default compilerOptions because --project cannot take a file list. The
+#     receipt still records the stage), and tsc checks given files with the
+#     factory tsconfig's compilerOptions mirrored as CLI flags (--project
+#     cannot take a file list), so both mounts judge a file identically. The
 #     factory's own full-project typecheck lives in mount 2.
 #   Python lane (*.py): ruff format --check + ruff check. ruff absent (also
 #     no uvx to fetch it) = FATAL 64, named.
@@ -129,7 +130,14 @@ run_stage py-format  "$PY" $RUFF format --check
 run_stage py-lint    "$PY" $RUFF check --quiet
 run_stage ts-format  "$TS" in_factory ./node_modules/.bin/prettier --config prettier.config.mjs --check
 run_stage ts-lint    "$TS" in_factory ./node_modules/.bin/eslint --config eslint.config.mjs
-run_stage ts-typecheck "$TS" in_factory ./node_modules/.bin/tsc --noEmit
+# Mirrors the factory tsconfig.json compilerOptions (tsc --project cannot take
+# a file list, so the flags ride the CLI); if the factory tsconfig changes,
+# change this line with it — gate_inputs hashes both so drift is visible.
+run_stage ts-typecheck "$TS" in_factory ./node_modules/.bin/tsc --noEmit \
+  --strict --noUncheckedIndexedAccess --exactOptionalPropertyTypes \
+  --noImplicitOverride --noFallthroughCasesInSwitch --noImplicitReturns \
+  --useUnknownInCatchVariables --skipLibCheck \
+  --target es2022 --module esnext --moduleResolution bundler --lib es2022 --types bun
 
 # ------------------------------------------------------------------ receipt
 sha256() {

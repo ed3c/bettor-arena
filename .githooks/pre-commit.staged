@@ -6,10 +6,15 @@
 #   1. Self-integrity, radius = this gate's own closure only (.githooks/ +
 #      scripts/gates/): staged vs worktree must be identical there, otherwise
 #      the hook/gate that is running is not the one being committed.
-#   2. Feeds `git diff --cached --name-only` (added/copied/modified/renamed
-#      only — deletions have nothing to check) to scripts/gates/fast_quality.sh,
-#      the single check definition (same source as the factory sandbox's
-#      full-scope verify.sh quality:fast mount; see the gate header).
+#   2. Materializes the staged blobs (added/copied/modified/renamed only —
+#      deletions have nothing to check) into a temp tree via
+#      `git checkout-index --prefix` — the gate must judge the bytes being
+#      committed, never the worktree copies — and feeds those temp paths to
+#      scripts/gates/fast_quality.sh, the single check definition (same source
+#      as the factory sandbox's full-scope verify.sh quality:fast mount; see
+#      the gate header). Relative layout is preserved under the prefix; note
+#      the temp tree sits outside eslint's base path, so the hook's ts-lint
+#      ride is warn-and-skip — mount 2 carries the full eslint pass.
 #   3. check_root_coupling.py --staged (index blobs, not worktree).
 #
 # Budget: FAST_QUALITY_BUDGET seconds (default 5) wall for the gate call;
@@ -29,8 +34,12 @@ fi
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
 [ -n "$STAGED" ] || exit 0
 
+STAGEDTREE=$(mktemp -d)
+trap 'rm -rf "$STAGEDTREE"' EXIT
+printf '%s\n' "$STAGED" | git checkout-index --prefix="$STAGEDTREE/tree/" --stdin
+
 BUDGET=${FAST_QUALITY_BUDGET:-5}
-printf '%s\n' "$STAGED" | sh scripts/gates/fast_quality.sh &
+printf '%s\n' "$STAGED" | sed "s|^|$STAGEDTREE/tree/|" | sh scripts/gates/fast_quality.sh &
 GATE=$!
 ( sleep "$BUDGET"; kill "$GATE" 2>/dev/null ) &
 DOG=$!
@@ -45,4 +54,5 @@ if [ "$RC" -ge 128 ]; then
 fi
 [ "$RC" -eq 0 ] || exit "$RC"
 
-exec python3 scripts/gates/check_root_coupling.py --staged
+# No exec: the EXIT trap must still fire to clean up the staged tree.
+python3 scripts/gates/check_root_coupling.py --staged
