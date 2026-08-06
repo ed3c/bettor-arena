@@ -3,7 +3,7 @@
 # type / shell syntax) for bettor-arena. ARCHITECTURE.md §3.5's "same
 # definition, different scope" gate:
 #
-#   mount 1 (this file): staged/preflight scope — pre-commit.staged feeds it
+#   mount 1 (this file): staged/preflight scope — the armed pre-commit feeds it
 #     the staged file list; any caller may feed any list.
 #   mount 2 (same source): the factory sandbox's full-scope mount is
 #     loop_wiki/evolve-perfect-seed-repo-factory/verify.sh → `bun run

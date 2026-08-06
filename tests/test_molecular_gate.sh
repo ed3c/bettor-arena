@@ -1,5 +1,5 @@
 #!/bin/sh
-# Seam: commit-msg.staged / post-commit.staged CLI exit codes + real git
+# Seam: the ACTIVE commit-msg / post-commit hooks CLI exit codes + real git
 # commit behavior, in an isolated fixture where the staged hooks are ACTIVATED
 # (activation in this repo itself is a separate human admit).
 set -eu
@@ -10,12 +10,12 @@ fail() { echo "FAIL: $1" >&2; exit 1; }
 
 V="$ROOT/.githooks/lib/validate_molecular_message.ts"
 [ -f "$V" ] || fail "validator missing: $V"
-[ -f "$ROOT/.githooks/commit-msg.staged" ] || fail "commit-msg.staged missing"
-[ -f "$ROOT/.githooks/post-commit.staged" ] || fail "post-commit.staged missing"
+[ -f "$ROOT/.githooks/commit-msg" ] || fail "commit-msg missing"
+[ -f "$ROOT/.githooks/post-commit" ] || fail "post-commit missing"
 
-# Staged names must NOT be active in this repo (activation = separate human admit).
-[ ! -e "$ROOT/.githooks/commit-msg" ] || fail "commit-msg unexpectedly active in repo"
-[ ! -e "$ROOT/.githooks/post-commit" ] || fail "post-commit unexpectedly active in repo"
+# #14 stage-2 (human admit) armed these hooks; they must be live and executable.
+[ -x "$ROOT/.githooks/commit-msg" ] || fail "commit-msg not executable (armed hook would be silently ignored)"
+[ -x "$ROOT/.githooks/post-commit" ] || fail "post-commit not executable (armed hook would be silently ignored)"
 
 # Charter: single file, node: builtins only, no sibling-checkout reads.
 if grep -E '^import .* from "(\.|/)' "$V" | grep -v '"node:' >/dev/null; then
@@ -29,8 +29,8 @@ bun run "$V" --selftest >/dev/null || fail "validator selftest RED"
 R="$TMP/repo"
 mkdir -p "$R/.githooks/lib" "$R/scripts/gates"
 cp "$V" "$R/.githooks/lib/"
-cp "$ROOT/.githooks/commit-msg.staged" "$R/.githooks/commit-msg"
-cp "$ROOT/.githooks/post-commit.staged" "$R/.githooks/post-commit"
+cp "$ROOT/.githooks/commit-msg" "$R/.githooks/commit-msg"
+cp "$ROOT/.githooks/post-commit" "$R/.githooks/post-commit"
 chmod +x "$R/.githooks/commit-msg" "$R/.githooks/post-commit"
 git -C "$R" init -q -b main
 git -C "$R" config core.hooksPath .githooks
