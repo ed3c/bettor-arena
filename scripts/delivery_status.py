@@ -67,7 +67,10 @@ def render(
     line: dict, issues: list[dict], pulls: list[dict], milestone: dict | None
 ) -> str:
     """Format one line's four layers. Pure — the selftest drives it with fixtures."""
-    slices = [i for i in issues if not i.get("pull_request")]
+    # Presence, not truthiness: a forge that answers `"pull_request": {}` would
+    # slip a PR into the slice count under a falsy test (measured — the fixture
+    # that exposed this had exactly that shape).
+    slices = [i for i in issues if i.get("pull_request") is None]
     open_slices = [i for i in slices if i["state"] == "open"]
     open_pulls = [p for p in pulls if p["state"] == "open"]
     if milestone:
@@ -158,9 +161,17 @@ def _selftest() -> int:
 
     cases: list[tuple[str, bool]] = []
     out = render(line, issues, pulls, milestone)
-    cases.append(("pull-requests-are-not-counted-as-slices", "1 open of 2" in out))
-    cases.append(("open-slice-numbers-named", "#2" in out))
-    cases.append(("pr-layer-counts-separately", "1 open of 2" in out.split("3 PRs")[1]))
+    # Scope each assertion to its own layer line. The first version of this case
+    # searched the whole output for "1 open of 2" and passed because the PR line
+    # happened to contain it — a green earned by the wrong line is a false green,
+    # and it hid a real bug in the slice filter for exactly one round.
+    slice_line = next(ln for ln in out.splitlines() if "2 slices" in ln)
+    pr_line = next(ln for ln in out.splitlines() if "3 PRs" in ln)
+    cases.append(
+        ("pull-requests-are-not-counted-as-slices", "1 open of 2" in slice_line)
+    )
+    cases.append(("open-slice-numbers-named", "#2" in slice_line))
+    cases.append(("pr-layer-counts-separately", "1 open of 2" in pr_line))
     cases.append(("milestone-percentage", "3/4 (75%)" in out))
 
     bare = render({"line": "bare"}, [], [], None)

@@ -1,5 +1,7 @@
 ---
 description: forgejo-delivery-loop 轉發層——四層原生追蹤面（PRD issue→slice issues→PR→milestone）的狀態、切線、issue 循環與收據同步入口
+argument-hint: "[<line-id> | run <line-id> | sync <line-id> [--dry-run] | new-line <line-id>]"
+allowed-tools: Bash(python3 scripts/gates/check_delivery_receipt.py:*), Bash(python3 scripts/delivery_status.py:*), Bash(python3 scripts/delivery_sync.py:*), Read, Glob, Grep
 ---
 
 用 Skill 工具載入 `forgejo-delivery-loop`，然後按 `$ARGUMENTS` 分派（本檔零邏輯，程序 SSOT＝
@@ -14,8 +16,9 @@ PRD http://localhost:3000/neon/bettor-arena/issues/2 與 milestone /milestone/1�
 - **`run <line-id>`**：進入 SKILL.md「未完成項執行循環」：goal 鎖線 → 每張 open issue：隔離工作面 →
   /tdd 實作 → /code-review → PR body 寫 `Closes #N`（merge 留給人）；漂移或新發現一律開新 issue
   掛同 milestone，不夾帶進進行中的 PR。
-- **`sync <line-id>`**：物化 repo 後補寫/更新 `delivery.json`（四層位址＋synced_at_commit），
-  並把新 issues 掛上 milestone；完成後重跑收據閘驗證。
+- **`sync <line-id>`**：`python3 scripts/delivery_sync.py --line <line-id>`——從 forge 現況重寫
+  `delivery.json` 的四層位址與 commit 戳，**寫完立刻跑收據閘**（閘紅＝這次 sync 不算數）。
+  先看不寫加 `--dry-run`。手改收據會漂，所以這步有工具而不是散文。
 - **`new-line <line-id>`**：按 modules §6 的鋪法開新線：PRD issue → slice issues（`## Parent` 回鏈＋
   checkbox＋`Blocked by`）→ 掛 milestone → `registry.json` 登記。
 
