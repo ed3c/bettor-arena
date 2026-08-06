@@ -8,7 +8,8 @@
 - **Intent-Slice**:commit 訊息裡的意圖錨,形態 `ISSUE-<n>`(ADR 0001);n 解析到本計劃的
   issue tracker。
 - **protected surface**:改動即要求 molecular 訊息的路徑集(閘與 hook 自身的閉包)。
-- **receipt**:機器可驗的執行證據檔;成敗都落帳。歷史 receipt 是凍結證據,永不改寫
-  (改寫證據=偽造證據)。
+- **receipt**:機器可驗的執行證據檔;成敗都落帳。歷史 receipt 是凍結證據,不得改寫
+  (改寫證據=偽造證據);唯一顯式例外=遷移引擎 `--force-receipt`(重跑意圖必須明示聲明,
+  預設碰撞拒寫)。
 - **evidence allowlist**:宣告「此檔含歷史絕對路徑屬證據身份」的帳;每條都是 standing debt。
 - **candidate**:全部機械閘綠、等待人 admit 的狀態;不是 merge 令。
