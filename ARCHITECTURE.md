@@ -18,6 +18,8 @@ bettor-arena/
 ├── CONTEXT.md         # 詞彙表(glossary only;admit 三義/Intent-Slice/receipt 等 canonical terms)
 ├── ARCHITECTURE.md    # 本檔=工程 SSOT+放置契約權威源
 ├── bootstrap.sh       # 冪等啟用:相對 hooksPath+環境 doctor(exit 64=FATAL)
+├── delivery.json      # 本線交付收據(物理證據:四層位址+synced_at_commit);SSOT 對映在
+│                      #   .agents/skills/forgejo-delivery-loop/registry.json,T0 閘=check_delivery_receipt.py
 ├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
@@ -33,6 +35,7 @@ bettor-arena/
 ├── openwiki/          # repo-wiki-converge 生成的 as-built wiki(可再生投影,git 追蹤;更新走官方 update 模式,index.md 由 finalize 生成禁手寫)
 ├── scripts/
 │   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(三閘共用 repo_root/fixture 樣板)+allowlist 帳
+│   ├── delivery_status.py # 交付活狀態顯式審計(打網路,禁進 hook;--selftest 零網路驗渲染)
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)

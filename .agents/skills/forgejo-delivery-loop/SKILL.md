@@ -55,6 +55,10 @@ line／repo／issues[]／pr／milestone_url／synced_at_commit)。
 `python3 scripts/gates/check_delivery_receipt.py`(T0,零網路,`--selftest` 自證)掃 registry 列出的
 每條線:物化路徑存在而收據缺席或欄位缺漏＝FATAL——與「真的尚未物化」在輸出裡長得不一樣(缺席≠否)。
 
+**兩支工具各答一半,別混**:收據閘(零網路,commit 時)答「交付證據在不在、形狀對不對」;
+`scripts/delivery_status.py`(顯式審計,打網路,**禁進 hook**)答「此刻真實狀態」——把 forge 現況
+拉成四層總表。閘綠不代表狀態好,狀態好不代表證據留了,兩者不可互推。
+
 本 repo 的工廠已有同型交付終點:`trigger.sh` 在 route-result 全綠後確定性寫 wiki-update 請求。
 delivery 收據與它是**同一個交付終點的兩張帳**(一張對 wiki,一張對追蹤面),不是兩套機制。
 

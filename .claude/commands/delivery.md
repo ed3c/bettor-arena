@@ -6,9 +6,10 @@ description: forgejo-delivery-loop 轉發層——四層原生追蹤面（PRD is
 `.agents/skills/forgejo-delivery-loop/SKILL.md` ＋ `modules/delivery-mechanism.md`；本 repo 的活錨＝
 PRD http://localhost:3000/neon/bettor-arena/issues/2 與 milestone /milestone/1）：
 
-- **無參數**：跑 `python3 scripts/gates/check_delivery_receipt.py`（收據閘，零網路）＋逐線經 Forgejo API
-  拉四層活狀態，輸出各線進度總表（低壓縮：每線列 PRD／open slices／open PRs／milestone 完成率）。
-- **`<line-id>`**：`check_delivery_receipt.py --line <line-id>` 取該線上下文＋該 repo open issues——
+- **無參數**：兩支各答一半，都要跑——`python3 scripts/gates/check_delivery_receipt.py`（收據閘，
+  零網路，答「交付證據在不在、形狀對不對」）＋ `python3 scripts/delivery_status.py`（顯式審計，
+  打網路，答「此刻真實狀態」：每線 PRD／open slices／open PRs／milestone 完成率／plan 位址）。
+- **`<line-id>`**：`check_delivery_receipt.py --line <line-id>` 取登記上下文，`delivery_status.py --line <line-id>` 取活狀態——
   這是切工作面開工前的定向步驟。
 - **`run <line-id>`**：進入 SKILL.md「未完成項執行循環」：goal 鎖線 → 每張 open issue：隔離工作面 →
   /tdd 實作 → /code-review → PR body 寫 `Closes #N`（merge 留給人）；漂移或新發現一律開新 issue
