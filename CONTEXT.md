@@ -13,3 +13,6 @@
   預設碰撞拒寫)。
 - **evidence allowlist**:宣告「此檔含歷史絕對路徑屬證據身份」的帳;每條都是 standing debt。
 - **candidate**:全部機械閘綠、等待人 admit 的狀態;不是 merge 令。
+- **wiki-update request / receipt**:工廠交付成功後確定性落於 `data/wiki-update/` 的 typed 請求
+  (三欄 context 分流:fixed=官方 prompt 指針、iteration=確定性 delta、emergent=backlog 落點指針),
+  與消化站處理後回鏈 request_id 的執行證據;湧現內容只落 openwiki 原生 backlog,永不進規範模組。

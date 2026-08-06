@@ -81,6 +81,27 @@ on Claude Code or Codex CLI. No API key: inference is the host CLI's own subscri
   can see — throwaway `git worktree` for the critic and finder (with `openwiki/` removed for the
   finder), a wiki-only scratch copy for the verifier.
 
+### `wiki_update_worker.sh` — digestion station for factory wiki-update requests
+
+Consumes the typed request the factory delivery terminus
+(`loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh`) drops into `data/wiki-update/` after a
+successful delivery, and walks the official update pipeline: parse → preflight →
+[LLM regeneration: TODO, a real run is FATAL 64 until wired] → review gates
+(`openwiki_subagent.sh`, `OPENWIKI_DRY_RUN` in dry-run; critic is recorded `skipped-no-skeleton`
+when the update flow has no `_skeleton.md`) → `openwiki_post.py` migrate/finalize on a scratch copy
+(the live wiki is byte-compared and any mutation fails loud) → a receipt back-linking the
+`request_id` into `data/wiki-update/`.
+
+- **Needs**: `python3`, `git`, and a host CLI for the gate runner. `--selftest` proves the
+  deterministic face with fixture requests (absent file = 64, broken/foreign/hollow = 2, good
+  dry-run = 0 with a back-linked receipt).
+- **Read by**: whoever lands a factory delivery and wants the wiki caught up; the trigger only
+  writes the request — it starts no worker, same record-only boundary as the post-commit hook.
+- **Emergent separation**: emergent observations (new page needs, drift) never enter the request
+  or any standards module; they land in the openwiki-native backlog
+  (`openwiki/quickstart.md` `## Backlog`, normalized by `openwiki_post.py --normalize-backlog`),
+  which the request's `emergent_prompt_context` merely points at.
+
 ### `host-runtime.md` — appendix
 
 Maps upstream's virtual filesystem onto a real host: what `/` means, which code-owned passes a script

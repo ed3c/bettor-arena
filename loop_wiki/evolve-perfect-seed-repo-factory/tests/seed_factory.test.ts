@@ -1,5 +1,15 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -622,5 +632,73 @@ describe("seed-factory build public seam", () => {
     expect(checked.stderr.toString()).toContain("generated repo node_modules must be absent");
     expect(existsSync(localModules)).toBe(true);
     expect(readFileSync(join(localModules, "sentinel"), "utf8")).toBe("owned-by-caller\n");
+  });
+});
+
+describe("wiki-update delivery terminus (ISSUE-23)", () => {
+  const ARENA = resolve(ROOT, "..", "..");
+
+  test("a successful trigger delivery emits a typed wiki-update request with the three context lanes", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const requestPath = join(ARENA, "data", "wiki-update", "request-fixture-dr.json");
+    rmSync(requestPath, { force: true });
+    try {
+      const result = Bun.spawnSync(["sh", join(ROOT, "trigger.sh"), packet, join(temp, "out")], {
+        cwd: ROOT,
+        stdout: "pipe",
+        stderr: "pipe",
+      });
+      expect(result.exitCode, result.stderr.toString()).toBe(0);
+      // Negative control the slice exists for: delivery succeeded but the
+      // request artifact is absent — that must be caught, not assumed away.
+      expect(existsSync(requestPath)).toBe(true);
+      const request = JSON.parse(readFileSync(requestPath, "utf8"));
+      expect(request.schema_version).toBe("bettor-arena-wiki-update-request@1.0.0");
+      expect(request.packet_id).toBe("fixture-dr");
+      expect(request.git_head).toMatch(/^[0-9a-f]{40}$/);
+      expect(request.request_id).toBe(`fixture-dr@${request.git_head}`);
+      expect(request.route_result.build_exit).toBe(0);
+      expect(request.route_result.validator_exit).toBe(0);
+      expect(request.route_result.path).toBe(
+        "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.fixture-dr.json",
+      );
+      // fixed lane: pointers only, never copied prompt content.
+      expect(request.fixed_prompt_context).toEqual([
+        "kb-ingest/openwiki/update.system.md",
+        "kb-ingest/openwiki/user.update.md",
+        "kb-ingest/port/host-runtime.md",
+      ]);
+      // iteration lane: deterministic delta, with absence as a named state.
+      const delta = request.iteration_auto_context;
+      expect(["computed", "no-last-update", "unresolvable-last-head"]).toContain(delta.delta_status);
+      expect(Array.isArray(delta.changed_files)).toBe(true);
+      if (delta.delta_status === "computed") expect(delta.last_update_git_head).toMatch(/^[0-9a-f]{40}$/);
+      // emergent lane: a pointer to the openwiki-native backlog, nothing inline.
+      expect(request.emergent_prompt_context).toBe("openwiki/quickstart.md#backlog");
+    } finally {
+      rmSync(requestPath, { force: true });
+    }
+  }, 180000);
+
+  test("standards modules carry zero emergent content — emergent lands only in the openwiki backlog", () => {
+    const EMERGENT = /emergent_observation|wiki[-_]update|##\s*Backlog/i;
+    // Positive control: prove the matcher can go red before trusting its green.
+    expect(EMERGENT.test("## Backlog\n- drift observed during generation")).toBe(true);
+
+    const markdownFilesUnder = (dir: string): string[] =>
+      readdirSync(dir).flatMap((name) => {
+        const path = join(dir, name);
+        if (statSync(path).isDirectory()) return markdownFilesUnder(path);
+        return name.endsWith(".md") ? [path] : [];
+      });
+    const files = [
+      ...markdownFilesUnder(join(ROOT, "modules")),
+      ...markdownFilesUnder(join(ROOT, "templates", "repo")),
+    ];
+    expect(files.length).toBeGreaterThan(0);
+    for (const file of files) {
+      expect(EMERGENT.test(readFileSync(file, "utf8")), `emergent content leaked into ${file}`).toBe(false);
+    }
   });
 });

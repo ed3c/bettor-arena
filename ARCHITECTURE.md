@@ -35,6 +35,9 @@ bettor-arena/
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
+│   ├── wiki-update/   # 工廠交付終點的 wiki-update 請求+消化站 receipt(runtime 生成物,gitignore;
+│   │                  # schema bettor-arena-wiki-update-request@1.0.0,producer=工廠 trigger.sh,
+│   │                  # consumer=kb-ingest/port/wiki_update_worker.sh;湧現內容不落此處,只落 openwiki backlog)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only,同名重跑 exit 64/--force-receipt 顯式覆寫;S3/S4 的 apply 早於 per-run 機制,其 receipt 僅存 git history 的 last-migration-report.json 版本;last-migration-report.json=最新拷貝,執行期生)
 └── docs/              # 計劃/交接文件(非模組知識);adr/=架構決策記錄(0001=slice 詞彙)
 ```
