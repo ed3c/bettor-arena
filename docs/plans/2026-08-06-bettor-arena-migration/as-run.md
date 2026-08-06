@@ -32,10 +32,13 @@
 | #22 | wave-4 殘債 | 完成 | `2c36ddf` | stale 態、毀損 exit 2、15b trap、O_EXCL |
 | #23 | wiki 維護自動觸發 | 完成 | `8a32aa9`→`a286d67` | 交付即發 typed 請求、消化站全鏈、湧現分離 grep 負控、通電真跑一輪 |
 | #24 | delegated-executable 漂移 | 完成 | ts `40b9b1f` | 6 個 launch site 逐一讀 caller 分類、注入未分類必紅負控 |
-| #16 | 來源側移除段 | **未完成** | ts `d497730`(標記+expectations)、`0445a51`(MIGRATED 標記) | 斷點修補與計數穩定性斷言已就緒;**物理刪除待人 keystroke** |
+| #16 | 來源側移除段 | **完成** | ts `7787bd5`(移除+回釘)、`9d90693`(forwarder 三態)、`5b344bf`(#26 退役) | 6 個目標出 index(第 6 個=`.claude/skills/repo-wiki-converge` symlink,由 forwarder 閘在移除當下找到);刪後 5 支閘綠;`test_golden_seed_migration_context.sh` 既有紅=#30 |
 | #17 | 憑證輪替 | **完成** | `243650f`(憑證衛生閘) | 閘 selftest 五案+突變負控;帳號密碼 2026-08-07 由人在 UI 改畢,`git ls-remote` 兩 remote 實測 exit 0 |
 | #26 | engine_nv.sh 宣告但未建造 | **完成(撤)** | ts `fe4abe2`(具名 NOT-RUN)→ 2026-08-07 人裁退役 | selftest 與 `_nv_fixtures/` 已刪、§2 槽位與 harness-wiki 記退役理由;方法論(harness-spec §4.5+四 checker)不隨之退役 |
-| #27 | delivery-loop 移植 Forgejo | 進行中 | 本次 | 收據閘 selftest 四案、milestone 實建、registry 零 github.com |
+| #27 | delivery-loop 移植 Forgejo | **完成** | ts `b8d42bd`(三支工具+`/delivery`)、arena `b30f909`(null 修正) | 收據閘 selftest 四案、milestone 實建、registry 零 github.com;ts 側真跑派送兩半皆通 |
+| ts#1 | GCR-SLICE-02 admit | **完成** | ts `2cd905f`→`0f8e451` | 旅程真走完:PR-head preview → fast-forward merge → canonical smoke,兩相位投影相同且等於綁定 artifact hash;milestone `gcr-admitted-tracer` blocked_dependency→in_progress→verified |
+| #30 | context 套件既有紅 | **未完成** | — | `next_route_node: target-selftest` 缺失;**先於本輪工作即紅**(乾淨 HEAD 重跑訊息逐字相同),真因未查明前不修 |
+| #31 | 宣告值無人斷言 | **未完成** | — | `runtime_boundary_coverage_complete` 釘成 false 照樣 PASS;由 #16 回釘的一次順序錯誤暴露 |
 
 ## 2. 跑過什麼(真跑,非宣稱)
 
@@ -47,7 +50,7 @@
 
 ## 3. 沒跑什麼(缺席具名,不冒充綠)
 
-- **物理刪除**(#16):腳本就緒且守衛負控驗過,但從未執行——執行過一次是 dry-run 誤觸,已完整復原。
+- **物理刪除**(#16):2026-08-07 **人 admit 後真跑並 commit**。先前那次是 dry-run 誤觸,已完整復原;本次走 `HUMAN_ADMIT` 守衛、停在 commit 前交人審。
 - **Forgejo 帳號密碼輪替**(#17):git 早前已換 scoped token;**密碼本體 2026-08-07 由人在 UI 改畢**,兩 repo `git ls-remote` 實測 exit 0 才准結票。
 - **engine_nv.sh**(#26):從未建造。2026-08-07 人裁**撤**——selftest 與治具刪除,留著一個永遠 NOT-RUN 的正控等於養一個沒人讀的燈。
 - **看板第四層**:Forgejo 9.0.3 projects API 404,agent 不能驅動;改用 milestone,缺口寫在
