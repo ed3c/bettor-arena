@@ -45,6 +45,18 @@ fi
 [ -f "$ROOT/.grepai/index.gob" ] \
   || warn "grepai index absent — rebuild with: grepai init && grepai watch"
 
+# As-built wiki freshness: stale or absent is WARN, never FATAL — the wiki is a
+# regenerable projection (ARCHITECTURE.md §2 openwiki/), not a bootstrap need.
+if [ -f "$ROOT/openwiki/.last-update.json" ]; then
+  WIKI_HEAD=$(sed -n 's/.*"gitHead"[[:space:]]*:[[:space:]]*"\([0-9a-f]*\)".*/\1/p' \
+    "$ROOT/openwiki/.last-update.json" | head -1)
+  REPO_HEAD=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo no-commit)
+  [ -n "$WIKI_HEAD" ] && [ "$WIKI_HEAD" = "$REPO_HEAD" ] \
+    || warn "openwiki/ is stale (wiki gitHead ${WIKI_HEAD:-unset} != HEAD $REPO_HEAD) — rerun the repo-wiki-converge update flow"
+else
+  warn "openwiki/ wiki absent or unfinalized — generate it with the repo-wiki-converge skill"
+fi
+
 echo "bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)"
 
 # MCP approval is a human gate. This script prints the steps and never

@@ -1,0 +1,8 @@
+<results>
+  <result id="Q-01" status="PARTIAL">
+    <missing>/openwiki/factory/build-pipeline.md and /openwiki/factory/generated-repo.md cover the flow and invariants but cite no focused test names from tests/seed_factory.test.ts — missing citations of "does not overwrite an existing output", "generated repo verifier rejects a lineage stripped of source_refs", and "build carries source_refs through the reduced IR into the lineage manifest" (the suite is only referenced in aggregate as "20 tests / 225 assertions").</missing>
+  </result>
+  <result id="Q-02" status="PARTIAL">
+    <missing>/openwiki/factory/packet-contract.md documents the full lifecycle and distinguishability semantics but cites no focused test names — missing citations of "resolved status is granted only by a receipt bound to the audited packet bytes", "a corrupted receipt fails the check with exit 2 and a named diagnostic", and "a receipt missing its binding fields reads stale, never declared or resolved".</missing>
+  </result>
+</results>

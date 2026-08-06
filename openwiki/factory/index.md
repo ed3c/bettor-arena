@@ -1,0 +1,8 @@
+# Files
+
+- [Factory build pipeline — trigger, build, three validators](build-pipeline.md) - How trigger.sh orchestrates packet validation, exchange-context generation, the run.sh build dispatch, and the three post-build validators into a route-result JSON with per-stage exit codes and a mandatory human gate.
+- [Generated seed repo — the product contract](generated-repo.md) - What a factory-generated repo must contain and prove — the 13-file requirement set, the 20-call operator runtime invariants, the shared minimum-lineage module, template lifecycle governance, and the local operator skill.
+- [Seed-repo factory — overview and workflow](overview.md) - The bounded micro-loop that turns one admitted source packet into a standalone seed repo — eight bases, ownership boundary, the F0→H1 stateful workflow, source-kind routing, and the v2 execution plan pointer.
+- [Seed input packet contract and refs tri-state](packet-contract.md) - The perfect-seed-input@1.0.0 schema, source_refs shape rules, the declared/sentinel/resolved/stale refs_status states, the explicit resolve-refs --peer audit, and the legacy migration edge with its marked sentinel.
+- [Perfect-seed v2 execution plan (pointer and structure)](v2-plan.md) - Structure and truth-layer discipline of plans/perfect-seed-v2/ — the canonical machine-readable plan for evolving the factory template from 1.1.0 to a standalone 2.0.0; a plan, not implementation evidence.
+- [Factory verification — T0 chain, hollow control, portability, baselines](verification.md) - The factory's verifier topology — verify.sh's full T0 chain, the selftest good/hollow anti-placebo pair, the git-archive portability proof with negative controls, governed baselines, and the PLAN.md iteration ledger.

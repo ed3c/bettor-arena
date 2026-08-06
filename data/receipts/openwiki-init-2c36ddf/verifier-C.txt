@@ -1,0 +1,11 @@
+<results>
+  <result id="Q-05" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/official-port.md documents the rebuild decision, PRESERVED_EXTENSION_FIELDS divergence, mermaid degradation, link-stamp idempotency, and selftest-proven protected-page byte-equality, but the `_selftest` coverage of GitHub duplicate-anchor suffix handling and of `pass_backlog_heading`'s assert-before-announce behavior is absent (the page names duplicate-anchor slugs and backlog normalization nowhere in selftest terms).</missing>
+  </result>
+  <result id="Q-06" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/official-port.md covers per-role sandboxes, verifier path-shape/intent-file stripping, dry-run + gate boundary proofs, OPENWIKI_LABEL, and empty-output-FATAL, but omits the worktree-vs-copy fallback when TARGET is not its own repo toplevel, the cleanup trap firing only for registered worktrees, and the concrete Claude flags (`--allowedTools`/`--add-dir`) vs codex `-s read-only` (only "allowlisted read-only tool set" is stated).</missing>
+  </result>
+  <result id="Q-07" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/overview.md and official-port.md cover purity boundary, placeholder rejection, MODULE_ROOT/HOST_ROOT, exit-3 FATAL profiles, foreign_home_paths/ALLOWED_ROOTS with the --git-common-dir case, and both selftests, but omit the extraction internals: `literal_after`/`read_template_literal` over `code.ts` template literals, `apply_placeholders` capped at 1 to mirror JS `str.replace`, and the gate's content spot-check needles for the official init/update prompts (only provenance-marker needles are documented); sync_prompts `_selftest`'s escape-case round-trips are also unmentioned.</missing>
+  </result>
+</results>

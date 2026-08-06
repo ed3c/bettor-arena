@@ -1,0 +1,10 @@
+{
+  "kind": "openwiki-init-gates",
+  "target_head": "2c36ddf502e9e4c88b3fbe135bd540cb534663f4",
+  "host": "claude",
+  "critic": "PASS (round 2, zero new requests)",
+  "finder": "10 questions",
+  "verifier": "wave1: 1 PASS 9 PARTIAL; wave2 (retry of 9): all PASS",
+  "utc": "2026-08-06T02:28:32Z",
+  "note": "runner scratch lives in untracked .openwiki-review/; this directory is the frozen copy per the data/receipts ledger discipline"
+}

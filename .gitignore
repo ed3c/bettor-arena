@@ -3,3 +3,4 @@ __pycache__/
 node_modules/
 data/receipts/post-commit-*.json
 .serena/
+.openwiki-review/
