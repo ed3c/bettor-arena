@@ -15,8 +15,14 @@ if [ -z "$PACKET_ID" ]; then
   echo "FAIL: packet_id missing" >&2
   exit 2
 fi
-SOURCE_REFS=$(PACKET_PATH="$PACKET" bun -e 'console.log(JSON.stringify(JSON.parse(require("node:fs").readFileSync(process.env.PACKET_PATH,"utf8")).source_refs))')
-REFS_GROUNDED=$(PACKET_PATH="$PACKET" bun -e 'console.log(JSON.parse(require("node:fs").readFileSync(process.env.PACKET_PATH,"utf8")).source_refs.every((r)=>r.repo!=="unknown"))')
+# Sentinel/resolution judgement is owned by contracts.ts; the shell only relays the cli JSON.
+REFS_STATUS_JSON=$(bun run "$ROOT/src/cli.ts" refs-status --packet "$PACKET")
+REFS_STATUS=$(REFS_STATUS_JSON="$REFS_STATUS_JSON" bun -e 'console.log(JSON.parse(process.env.REFS_STATUS_JSON).refs_status)')
+SOURCE_REFS=$(REFS_STATUS_JSON="$REFS_STATUS_JSON" bun -e 'console.log(JSON.stringify(JSON.parse(process.env.REFS_STATUS_JSON).source_refs))')
+case "$REFS_STATUS" in
+  declared|sentinel|resolved) ;;
+  *) echo "FAIL: unrecognized refs_status: $REFS_STATUS" >&2; exit 2 ;;
+esac
 mkdir -p "$ROOT/_engine-run"
 CONTEXT="$ROOT/_engine-run/exchange-context.$PACKET_ID.md"
 {
@@ -27,7 +33,7 @@ CONTEXT="$ROOT/_engine-run/exchange-context.$PACKET_ID.md"
   echo "- iteration_auto_context: $CONTEXT"
   echo "- emergent_prompt_context: physical packet field"
   echo "- source_refs: $SOURCE_REFS"
-  echo "- refs_grounded: $REFS_GROUNDED"
+  echo "- refs_status: $REFS_STATUS"
   echo "- human_gate: required_before_seed_admit"
   echo "- target_output: $OUTPUT"
 } >"$CONTEXT"
@@ -67,7 +73,7 @@ cat >"$ROUTE_RESULT" <<EOF
   "operator_exit": $OPERATOR_RC,
   "validator_exit": $VALIDATOR_RC,
   "source_refs": $SOURCE_REFS,
-  "refs_grounded": $REFS_GROUNDED,
+  "refs_status": "$REFS_STATUS",
   "output": "$OUTPUT",
   "next_edge": "human_required_before_seed_admit",
   "human_gate": "required_before_seed_admit"

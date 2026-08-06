@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
-import { assertSourceRefs, refsGrounded } from "./contracts";
+import { assertSourceRefs, refsShapeStatus } from "./contracts";
 import { verifyMinimumLineage } from "./minimum_lineage";
 
 const args = Bun.argv.slice(2);
@@ -30,8 +30,16 @@ if (source.human_gate !== "required_before_seed_admit" || lineage.terminal_human
   throw new Error("generated repo lost human admit gate");
 assertSourceRefs(lineage.source_refs);
 assertSourceRefs(source.source_refs);
-if (lineage.refs_grounded !== refsGrounded(lineage.source_refs))
-  throw new Error("generated repo lineage refs_grounded does not match source_refs");
+if (JSON.stringify(source.source_refs) !== JSON.stringify(lineage.source_refs))
+  throw new Error("generated repo source.json and lineage.json source_refs diverge");
+if (source.refs_status !== lineage.refs_status)
+  throw new Error("generated repo source.json and lineage.json refs_status diverge");
+const shape = refsShapeStatus(lineage.source_refs);
+const statusConsistent =
+  shape === "sentinel"
+    ? lineage.refs_status === "sentinel"
+    : lineage.refs_status === "declared" || lineage.refs_status === "resolved";
+if (!statusConsistent) throw new Error("generated repo lineage refs_status does not match source_refs");
 const plan = JSON.parse(readFileSync(join(root, "data/call-plan.json"), "utf8"));
 const results = readFileSync(join(root, "data/call-results.jsonl"), "utf8")
   .trim()

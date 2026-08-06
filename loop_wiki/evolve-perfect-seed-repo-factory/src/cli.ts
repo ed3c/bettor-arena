@@ -1,6 +1,6 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
-import { readInputPacket } from "./contracts";
+import { readInputPacket, refsStatusForPacket, resolveReceiptPath } from "./contracts";
 import { materializeRepo } from "./materialize";
 import { reducePacket } from "./reduce";
 
@@ -23,8 +23,20 @@ function validateOutputPath(outputPath: string): void {
   if (existsSync(outputPath)) throw new Error(`output already exists: ${outputPath}`);
 }
 
+function refsStatusJson(packetPath: string): string {
+  const packet = readInputPacket(packetPath);
+  const status = refsStatusForPacket(packetPath, packet, sha256(readFileSync(packetPath)));
+  return JSON.stringify({
+    schema_version: "perfect-seed-refs-status@1.0.0",
+    packet_id: packet.packet_id,
+    refs_status: status,
+    source_refs: packet.source_refs,
+  });
+}
+
 function resolveRefs(args: string[]): void {
-  const packet = readInputPacket(option(args, "--packet"));
+  const packetPath = option(args, "--packet");
+  const packet = readInputPacket(packetPath);
   const peerIndex = args.indexOf("--peer");
   const peer = peerIndex >= 0 ? args[peerIndex + 1] : undefined;
   if (!peer) {
@@ -48,7 +60,24 @@ function resolveRefs(args: string[]): void {
     if (tracked.exitCode !== 0 || !tracked.stdout.toString().split("\n").includes(ref.path))
       throw new Error(`source_refs path not tracked at ${ref.commit}: ${ref.path}`);
   }
-  console.log(`PASS: resolved ${packet.source_refs.length} source_refs against ${peer}`);
+  const receiptPath = resolveReceiptPath(packetPath);
+  writeFileSync(
+    receiptPath,
+    `${JSON.stringify(
+      {
+        schema_version: "perfect-seed-resolve-receipt@1.0.0",
+        packet_id: packet.packet_id,
+        packet_sha256: sha256(readFileSync(packetPath)),
+        peer,
+        ref_count: packet.source_refs.length,
+        refs_status: "resolved",
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  console.log(`PASS: resolved ${packet.source_refs.length} source_refs against ${peer}; receipt=${receiptPath}`);
 }
 
 function main(args: string[]): void {
@@ -68,16 +97,20 @@ function main(args: string[]): void {
     resolveRefs(args);
     return;
   }
+  if (command === "refs-status") {
+    console.log(refsStatusJson(option(args, "--packet")));
+    return;
+  }
   if (command !== "build")
     throw new Error(
-      "usage: cli.ts validate|validate-output|resolve-refs|build --packet <absolute-path> [--output <absolute-path>] [--peer <absolute-path>]",
+      "usage: cli.ts validate|validate-output|resolve-refs|refs-status|build --packet <absolute-path> [--output <absolute-path>] [--peer <absolute-path>]",
     );
   const packetPath = option(args, "--packet");
   const outputPath = option(args, "--output");
   validateOutputPath(outputPath);
   const packet = readInputPacket(packetPath);
   const packetBytes = readFileSync(packetPath);
-  const ir = reducePacket(packet, sha256(packetBytes));
+  const ir = reducePacket(packet, sha256(packetBytes), refsStatusForPacket(packetPath, packet, sha256(packetBytes)));
   const receipt = materializeRepo(ROOT, outputPath, packet, ir);
   console.log(JSON.stringify({ status: "candidate-human-admit-required", ...receipt }));
 }

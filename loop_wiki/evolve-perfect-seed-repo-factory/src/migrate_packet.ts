@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { isAbsolute } from "node:path";
+import { SENTINEL_SOURCE_REF } from "./contracts";
 
 const args = Bun.argv.slice(2);
 const inputIndex = args.indexOf("--input");
@@ -19,11 +20,9 @@ const migrated = {
   packet_state: legacy.packet_state ?? "draft",
   fixed_prompt_context: legacy.fixed_prompt_context ?? ["PROMPT.md", "modules/semantic-truth-context.md"],
   emergent_prompt_context: legacy.emergent_prompt_context ?? "N/A-none",
-  // Pre-source-refs packets carry a marked sentinel ref: validate accepts it,
-  // but route-result records refs_grounded:false so the packet never fakes an anchor.
-  source_refs: legacy.source_refs ?? [
-    { repo: "unknown", commit: "0000000", path: "unmigrated/unknown", anchor: "pre-source-refs" },
-  ],
+  // Pre-source-refs packets carry the marked sentinel ref: validate accepts it,
+  // but route-result and lineage record refs_status:"sentinel" so the packet never fakes an anchor.
+  source_refs: legacy.source_refs ?? [SENTINEL_SOURCE_REF],
   human_gate: "required_before_seed_admit",
 };
 writeFileSync(output, `${JSON.stringify(migrated, null, 2)}\n`, "utf8");

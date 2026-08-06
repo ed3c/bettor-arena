@@ -341,6 +341,15 @@ describe("seed-factory build public seam", () => {
     const passed = run(["resolve-refs", "--packet", good, "--peer", peer]);
     expect(passed.exitCode, passed.stderr.toString()).toBe(0);
     expect(passed.stdout.toString()).toContain("PASS");
+    const receipt = JSON.parse(readFileSync(`${good}.resolve-receipt.json`, "utf8"));
+    expect(receipt).toMatchObject({
+      schema_version: "perfect-seed-resolve-receipt@1.0.0",
+      packet_id: "fixture-dr",
+      refs_status: "resolved",
+      peer,
+      ref_count: 1,
+    });
+    expect(receipt.packet_sha256).toBe(new Bun.CryptoHasher("sha256").update(readFileSync(good)).digest("hex"));
 
     const untracked = writePacket(temp, "gcr", join(ROOT, "tests/fixtures/gcr.md"), [
       { repo: "peer", commit, path: "docs/missing.md", anchor: "L1" },
@@ -367,11 +376,53 @@ describe("seed-factory build public seam", () => {
     const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
     expect(source.source_refs).toEqual(VALID_SOURCE_REFS);
     expect(lineage.source_refs).toEqual(VALID_SOURCE_REFS);
-    expect(lineage.refs_grounded).toBe(true);
+    expect(source.refs_status).toBe("declared");
+    expect(lineage.refs_status).toBe("declared");
     expect(lineage.terminal_human_gate).toBe("required_before_seed_admit");
   });
 
-  test("migrated legacy packet builds with sentinel refs and refs_grounded false", () => {
+  test("refs-status reports declared for shape-valid refs and sentinel for migrated placeholders", () => {
+    const temp = temporaryRoot();
+    const declared = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const declaredRun = run(["refs-status", "--packet", declared]);
+    expect(declaredRun.exitCode, declaredRun.stderr.toString()).toBe(0);
+    const declaredJson = JSON.parse(declaredRun.stdout.toString());
+    expect(declaredJson).toMatchObject({
+      schema_version: "perfect-seed-refs-status@1.0.0",
+      packet_id: "fixture-dr",
+      refs_status: "declared",
+    });
+    expect(declaredJson.source_refs).toEqual(VALID_SOURCE_REFS);
+
+    const sentinel = writePacket(temp, "gcr", join(ROOT, "tests/fixtures/gcr.md"), [
+      { repo: "unknown", commit: "0000000", path: "unmigrated/unknown", anchor: "pre-source-refs" },
+    ]);
+    const sentinelRun = run(["refs-status", "--packet", sentinel]);
+    expect(sentinelRun.exitCode, sentinelRun.stderr.toString()).toBe(0);
+    expect(JSON.parse(sentinelRun.stdout.toString()).refs_status).toBe("sentinel");
+  });
+
+  test("resolved status is granted only by a receipt bound to the audited packet bytes", () => {
+    const temp = temporaryRoot();
+    const { peer, commit } = fixturePeerRepo(temp);
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"), [
+      { repo: "peer", commit, path: "docs/claim.md", anchor: "L1" },
+    ]);
+    expect(run(["resolve-refs", "--packet", packet, "--peer", peer]).exitCode).toBe(0);
+    expect(JSON.parse(run(["refs-status", "--packet", packet]).stdout.toString()).refs_status).toBe("resolved");
+
+    const output = join(temp, "generated");
+    const built = run(["build", "--packet", packet, "--output", output]);
+    expect(built.exitCode, built.stderr.toString()).toBe(0);
+    const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
+    expect(lineage.refs_status).toBe("resolved");
+
+    // Tampering the packet after the audit invalidates the receipt binding.
+    writeFileSync(packet, `${readFileSync(packet, "utf8").replace("N/A-none", "tampered-after-audit")}`, "utf8");
+    expect(JSON.parse(run(["refs-status", "--packet", packet]).stdout.toString()).refs_status).toBe("declared");
+  });
+
+  test("migrated legacy packet builds with sentinel refs and refs_status sentinel", () => {
     const temp = temporaryRoot();
     const migrated = join(temp, "migrated.json");
     const migratedRun = Bun.spawnSync(
@@ -395,7 +446,46 @@ describe("seed-factory build public seam", () => {
     const built = run(["build", "--packet", migrated, "--output", output]);
     expect(built.exitCode, built.stderr.toString()).toBe(0);
     const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
-    expect(lineage.refs_grounded).toBe(false);
+    expect(lineage.refs_status).toBe("sentinel");
+  });
+
+  test("generated repo verifier rejects a source.json whose refs_status diverges from lineage", async () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    const output = join(temp, "generated");
+    const built = run(["build", "--packet", packet, "--output", output]);
+    expect(built.exitCode, built.stderr.toString()).toBe(0);
+    const planned = Bun.spawnSync(["bun", "run", "scripts/plan.ts", "--task", "Audit source refs_status binding"], {
+      cwd: output,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(planned.exitCode, planned.stderr.toString()).toBe(0);
+
+    const sha256 = (value: string): string => new Bun.CryptoHasher("sha256").update(value).digest("hex");
+    const sourcePath = join(output, "data/source.json");
+    const source = JSON.parse(readFileSync(sourcePath, "utf8"));
+    source.refs_status = "resolved";
+    const sourceBytes = `${JSON.stringify(source, null, 2)}\n`;
+    await Bun.write(sourcePath, sourceBytes);
+    const manifestPath = join(output, "data/artifact-manifest.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const entry = manifest.files.find((file: { path: string }) => file.path === "data/source.json");
+    entry.sha256 = sha256(sourceBytes);
+    entry.bytes = Buffer.byteLength(sourceBytes);
+    const manifestBytes = `${JSON.stringify(manifest, null, 2)}\n`;
+    await Bun.write(manifestPath, manifestBytes);
+    const receiptPath = join(output, "data/build-receipt.json");
+    const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
+    receipt.artifact_manifest_sha256 = sha256(manifestBytes);
+    await Bun.write(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);
+
+    const verified = Bun.spawnSync(["bun", "run", GENERATED_REPO_VERIFIER, "--repo", output], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(verified.exitCode).not.toBe(0);
+    expect(verified.stderr.toString()).toContain("refs_status");
   });
 
   test("generated repo verifier rejects a lineage stripped of source_refs", async () => {

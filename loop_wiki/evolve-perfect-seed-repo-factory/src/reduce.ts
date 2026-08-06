@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import { refsGrounded, type SeedInputPacket } from "./contracts";
+import type { RefsStatus, SeedInputPacket } from "./contracts";
 
 const MAX_SOURCE_BYTES = 512 * 1024;
 const MAX_REPO_FILES = 200;
@@ -86,7 +86,7 @@ function repoEvidence(packet: SeedInputPacket): EvidenceRecord[] {
   });
 }
 
-export function reducePacket(packet: SeedInputPacket, packetSha256: string): ReducedIR {
+export function reducePacket(packet: SeedInputPacket, packetSha256: string, refsStatus: RefsStatus): ReducedIR {
   const evidence = packet.source_kind === "repo" ? repoEvidence(packet) : textEvidence(packet);
   const firstEvidence = evidence[0];
   if (!firstEvidence) throw new Error("source produced zero evidence records");
@@ -136,7 +136,7 @@ export function reducePacket(packet: SeedInputPacket, packetSha256: string): Red
       task_sha256: sha256(packet.task),
       evidence_count: evidence.length,
       source_refs: packet.source_refs,
-      refs_grounded: refsGrounded(packet.source_refs),
+      refs_status: refsStatus,
       human_gate: packet.human_gate,
     },
     evidence,

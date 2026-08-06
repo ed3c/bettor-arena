@@ -2,7 +2,7 @@
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { readInputPacket } from "./contracts";
+import { readInputPacket, refsStatusForPacket } from "./contracts";
 import { materializeRepo } from "./materialize";
 import { verifyMinimumLineage } from "./minimum_lineage";
 import { reducePacket } from "./reduce";
@@ -19,7 +19,13 @@ try {
   const packetBytes = readFileSync(packetPath);
   const packet = readInputPacket(packetPath);
   const output = join(temporaryRoot, "generated");
-  materializeRepo(root, output, packet, reducePacket(packet, sha256(packetBytes)));
+  const packetSha256 = sha256(packetBytes);
+  materializeRepo(
+    root,
+    output,
+    packet,
+    reducePacket(packet, packetSha256, refsStatusForPacket(packetPath, packet, packetSha256)),
+  );
   const result = verifyMinimumLineage(output);
   console.log(
     JSON.stringify({

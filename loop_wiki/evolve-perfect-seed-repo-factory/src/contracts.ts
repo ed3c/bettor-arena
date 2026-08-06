@@ -48,8 +48,39 @@ export function assertSourceRefs(value: unknown): asserts value is SourceRef[] {
   }
 }
 
-export function refsGrounded(refs: SourceRef[]): boolean {
-  return refs.every((ref) => ref.repo !== "unknown");
+// Single point of sentinel truth: migrate injects this exact ref, and every
+// status judgement routes through refsShapeStatus / refsStatusForPacket below.
+export const SENTINEL_REPO = "unknown";
+export const SENTINEL_SOURCE_REF: SourceRef = {
+  repo: SENTINEL_REPO,
+  commit: "0000000",
+  path: "unmigrated/unknown",
+  anchor: "pre-source-refs",
+};
+
+export type RefsStatus = "declared" | "sentinel" | "resolved";
+
+export function refsShapeStatus(refs: SourceRef[]): "declared" | "sentinel" {
+  return refs.some((ref) => ref.repo === SENTINEL_REPO) ? "sentinel" : "declared";
+}
+
+export function resolveReceiptPath(packetPath: string): string {
+  return `${packetPath}.resolve-receipt.json`;
+}
+
+// "resolved" is granted only by a resolve-refs --peer audit receipt bound to the
+// exact packet bytes; standing gates read that local receipt, never a sibling checkout.
+export function refsStatusForPacket(packetPath: string, packet: SeedInputPacket, packetSha256: string): RefsStatus {
+  const shape = refsShapeStatus(packet.source_refs);
+  if (shape === "sentinel") return "sentinel";
+  const receiptPath = resolveReceiptPath(packetPath);
+  if (!existsSync(receiptPath)) return "declared";
+  const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as Record<string, unknown>;
+  requireCondition(
+    receipt.schema_version === "perfect-seed-resolve-receipt@1.0.0",
+    `unsupported resolve receipt schema: ${receiptPath}`,
+  );
+  return receipt.refs_status === "resolved" && receipt.packet_sha256 === packetSha256 ? "resolved" : "declared";
 }
 
 export function readInputPacket(packetPath: string): SeedInputPacket {
