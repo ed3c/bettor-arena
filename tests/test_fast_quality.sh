@@ -136,7 +136,7 @@ chmod +x "$R/.githooks/pre-commit"
 # Structure gates (placement/skill-pointers) verify THIS repo's structure and
 # carry their own selftests; the fixture only needs to prove the hook CALLS
 # them. Marker-writing stubs make that wiring observable, not silently skipped.
-for stub in check_placement check_skill_pointers; do
+for stub in check_placement check_skill_pointers check_credential_hygiene; do
   printf '#!/usr/bin/env python3\n# fixture stub: real gate has its own selftest; this proves hook wiring.\nimport pathlib\npathlib.Path(__file__).with_name("%s.called").touch()\n' "$stub" \
     > "$R/scripts/gates/$stub.py"
 done
@@ -161,9 +161,10 @@ T0=$(python3 -c 'import time; print(time.time())')
 git -C "$R" commit -q -m "clean commit" || fail "clean commit rejected by hook"
 T1=$(python3 -c 'import time; print(time.time())')
 [ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "clean commit not created"
-# Wiring proof: the hook must have invoked both structure-gate stubs.
+# Wiring proof: the hook must have invoked every repo-level gate stub.
 [ -f "$R/scripts/gates/check_placement.called" ] || fail "hook did not call check_placement"
 [ -f "$R/scripts/gates/check_skill_pointers.called" ] || fail "hook did not call check_skill_pointers"
+[ -f "$R/scripts/gates/check_credential_hygiene.called" ] || fail "hook did not call check_credential_hygiene"
 ELAPSED=$(python3 -c "print($T1 - $T0)")
 python3 -c "import sys; sys.exit(0 if $ELAPSED < 5.0 else 1)" \
   || fail "hook wall time ${ELAPSED}s breaches the <5s budget"
