@@ -164,7 +164,6 @@ gutted-no-token)證實 exit-code-only 會放過 gutted 那支,加 token 後轉�
 | `ablation_audit.sh` | L3(**只指路不 invoke**) | 同上;它硬性要求 `--as-of YYYY-MM-DD`、明文禁預設 today,自動跑就得由呼叫端捏日期 | 同上 |
 | `purge_loop.py` | L3 | 頭注自陳「on-demand 昂貴工具」;逐行刪→跑家族 eval,成本量級分鐘/小時 | 無——它本來就人起火 |
 | `runtest_ablation_dualarm.py` | L2 | 零 LLM(≈1.7s),驗的是消融引擎不是 repo 狀態 | 消融引擎壞掉只在真消融時發現,代價=一次燒掉的額度 |
-| `loop_wiki/engine_nv_selftest.sh` | L2 | 驗 `engine_nv.sh` 的 N-variant dispatch;該 wrapper 是**人啟動的兩相位工具**,每次使用人都在場 | 誤改只在下次真用時發現,而那時人在場;為手動工具付 ≈18s/commit 不划算 |
 | 24 支沙盒 `selftest.sh` | L2 | 一沙盒一正控(good/hollow 雙臂),與 repo 靜態狀態無關;合計 ≳2min | 見下方隔離帶 |
 | `loop_wiki/engine_selftest.sh` 的**自證** | **刻意不自證** | 它整支就是那支 selftest(不解析參數:`--selftest`/`--bogus-flag`/零參數 rc 皆 0)。對它跑閘的閘=同義反覆 | 零;誠實宣告不自證好過綠一個空洞 |
 
@@ -208,7 +207,7 @@ gutted-no-token)證實 exit-code-only 會放過 gutted 那支,加 token 後轉�
 python3 scripts/check_all_skills.py                  # 無參 == --layer commit
 python3 scripts/check_all_skills.py --layer meta     # 閘的閘(--selftest 為向後相容別名)
 python3 scripts/check_all_skills.py --layer push     # L2 真超集
-python3 scripts/check_all_skills.py --layer full     # push ∪ engine_nv 正控
+python3 scripts/check_all_skills.py --layer full     # push ∪ on-demand 正控(2026-08-07: engine_nv 正控隨其 wrapper 退役,#26)
 ```
 
 **`full` 的紅線**:`full` **永不**包含燒額度的東西(`--real` 消融、`runner --set holdout`、
@@ -243,7 +242,6 @@ loop_wiki/engine_selftest.sh	L1
 scripts/check_driver_feedback_parity.sh	L1c
 scripts/weekly_audit.sh	L2
 scripts/runtest_ablation_dualarm.py	L2
-loop_wiki/engine_nv_selftest.sh	L2
 scripts/check_ablation_retirement.py	L3
 scripts/ablation_audit.sh	L3
 scripts/purge_loop.py	L3

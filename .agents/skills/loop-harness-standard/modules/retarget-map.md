@@ -88,7 +88,8 @@ skill-bettor 真的要接 Antigravity CLI host),那就是把不適用的架構�
   實質改指 ARCHITECTURE §5 agy 列同義警告);「D12 引擎家族」編號;定位段對上游 §9❶「三類編排
   skill」的指針(本地無此節,留實質句)。
 - **新增於本地而上游無**:判官禁 ponytail hook 注入條款(本地已知 SubagentStart fail-open 注入
-  風險);variant 目錄收攏形態「由 engine_nv wrapper(Slice C)定」的顯式留白。
+  風險);variant 目錄收攏形態「由 engine_nv wrapper(Slice C)定」的顯式留白——**2026-08-07 該
+  wrapper 人裁退役(#26,從未建造),留白改記為具名空缺**。
 - 上游計劃檔 02/05 以絕對路徑唯讀指針保留於 module 頭注,證成史不搬。
 
 ## 2026-07-19 更正(composer-integration Slice E,seam 審計追加)

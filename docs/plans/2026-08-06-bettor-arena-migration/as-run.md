@@ -33,8 +33,8 @@
 | #23 | wiki 維護自動觸發 | 完成 | `8a32aa9`→`a286d67` | 交付即發 typed 請求、消化站全鏈、湧現分離 grep 負控、通電真跑一輪 |
 | #24 | delegated-executable 漂移 | 完成 | ts `40b9b1f` | 6 個 launch site 逐一讀 caller 分類、注入未分類必紅負控 |
 | #16 | 來源側移除段 | **未完成** | ts `d497730`(標記+expectations)、`0445a51`(MIGRATED 標記) | 斷點修補與計數穩定性斷言已就緒;**物理刪除待人 keystroke** |
-| #17 | 憑證輪替 | **未完成** | `243650f`(憑證衛生閘) | 閘 selftest 五案+突變負控;**帳號密碼待人在 UI 改** |
-| #26 | engine_nv.sh 宣告但未建造 | **未完成** | ts `fe4abe2`(具名 NOT-RUN+§2 標註) | selftest 改 exit 64 具名缺席;**建或撤待人裁** |
+| #17 | 憑證輪替 | **完成** | `243650f`(憑證衛生閘) | 閘 selftest 五案+突變負控;帳號密碼 2026-08-07 由人在 UI 改畢,`git ls-remote` 兩 remote 實測 exit 0 |
+| #26 | engine_nv.sh 宣告但未建造 | **完成(撤)** | ts `fe4abe2`(具名 NOT-RUN)→ 2026-08-07 人裁退役 | selftest 與 `_nv_fixtures/` 已刪、§2 槽位與 harness-wiki 記退役理由;方法論(harness-spec §4.5+四 checker)不隨之退役 |
 | #27 | delivery-loop 移植 Forgejo | 進行中 | 本次 | 收據閘 selftest 四案、milestone 實建、registry 零 github.com |
 
 ## 2. 跑過什麼(真跑,非宣稱)
@@ -48,8 +48,8 @@
 ## 3. 沒跑什麼(缺席具名,不冒充綠)
 
 - **物理刪除**(#16):腳本就緒且守衛負控驗過,但從未執行——執行過一次是 dry-run 誤觸,已完整復原。
-- **Forgejo 帳號密碼輪替**(#17):git 已換 scoped token 並實證通路;密碼本體未改。
-- **engine_nv.sh**(#26):從未建造,現在是具名 NOT-RUN,不是紅。
+- **Forgejo 帳號密碼輪替**(#17):git 早前已換 scoped token;**密碼本體 2026-08-07 由人在 UI 改畢**,兩 repo `git ls-remote` 實測 exit 0 才准結票。
+- **engine_nv.sh**(#26):從未建造。2026-08-07 人裁**撤**——selftest 與治具刪除,留著一個永遠 NOT-RUN 的正控等於養一個沒人讀的燈。
 - **看板第四層**:Forgejo 9.0.3 projects API 404,agent 不能驅動;改用 milestone,缺口寫在
   `.agents/skills/forgejo-delivery-loop/modules/delivery-mechanism.md` §7。
 - **跨 repo `Closes #N` 自動關閉**:未實測,故未宣稱。

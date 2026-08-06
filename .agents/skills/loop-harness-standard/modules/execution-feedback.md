@@ -30,8 +30,9 @@
 ```
 pre-register 時必產 `expected-observation` 欄。N 版執行軌跡＝各 variant worktree 內的
 `_engine-run/`(`trajectory.log`+`driver.iterN.out`——本地 engine 實名,`loop_wiki/engine.sh` 的 `TRAJ=`/`RUN_DIR=` 與 dispatch 落檔處;
-上游用 `.json`,本地不同,以本地為準)+該 worktree 內實測輸出;variant 目錄收攏形態由 N-variant
-wrapper(engine_nv,Slice C 落地時定)決定。每版另附 `variant-<X>/APPROACH.md`(≤10 行,含
+上游用 `.json`,本地不同,以本地為準)+該 worktree 內實測輸出;variant 目錄收攏形態原寫「由 N-variant
+wrapper(engine_nv,Slice C 落地時定)決定」——**該 wrapper 從未建造,2026-08-07 人裁退役(#26)**,
+故此處是**具名空缺**不是待填的留白:真要跑時由該次 Workflow 腳本現地定義。每版另附 `variant-<X>/APPROACH.md`(≤10 行,含
 `approach:`/`family:` 兩欄,判官讀這個定位,不通讀全軌跡)。
 
 ## 2. 邏輯面:六步
