@@ -10,16 +10,25 @@ sys.path[0] is this directory when a gate runs as a script, so a plain
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
 
 def repo_root(start: Path) -> Path | None:
     """Toplevel of the git work tree containing `start`, or None outside one."""
+    # Git exports repository-local variables to hooks.  A relative
+    # GIT_WORK_TREE (commonly ".") is then reinterpreted after `git -C start`,
+    # making a gate under scripts/gates believe that directory is the repo
+    # root.  Discovery must be anchored by `start`, not inherited hook state.
+    env = os.environ.copy()
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_PREFIX"):
+        env.pop(name, None)
     result = subprocess.run(
         ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
         text=True,
         capture_output=True,
+        env=env,
     )
     if result.returncode != 0:
         return None

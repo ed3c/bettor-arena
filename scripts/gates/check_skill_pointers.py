@@ -98,6 +98,19 @@ def run(start: Path) -> int:
                         "(content must not live behind a host entry)"
                     )
 
+    # 2b: every canonical skill must be reachable from the Claude host surface.
+    # The original one-way check proved that existing pointers were valid but
+    # silently passed when a new canonical skill had no pointer at all.
+    for entry in sorted(agents_skills.iterdir()):
+        if entry.name == ".gitignore" or not (entry / "SKILL.md").is_file():
+            continue
+        host_entry = claude_skills / entry.name
+        if not host_entry.is_symlink() or not (host_entry / "SKILL.md").is_file():
+            violations.append(
+                f"MISSING-HOST-POINTER {CLAUDE_SKILLS_REL}/{entry.name} "
+                f"(canonical {AGENTS_SKILLS_REL}/{entry.name} is not exposed to Claude)"
+            )
+
     # 3: no two real SKILL.md files under a same-named skill directory
     by_dirname: dict[str, list[str]] = {}
     for rel in visible_paths(root):
@@ -175,6 +188,14 @@ def _selftest() -> int:
         (repo / "vendor/foo/SKILL.md").write_text("far copy\n", encoding="utf-8")
         subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
         cases.append(("far-duplicate-red", run(repo), 2))
+    with tempfile.TemporaryDirectory() as td:
+        repo = _fixture(Path(td))  # canonical skill omitted from Claude host surface
+        (repo / ".agents/skills/bar").mkdir()
+        (repo / ".agents/skills/bar/SKILL.md").write_text(
+            "bar content\n", encoding="utf-8"
+        )
+        subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+        cases.append(("missing-host-pointer-red", run(repo), 2))
     with tempfile.TemporaryDirectory() as td:
         repo = _fixture(Path(td))
         import shutil

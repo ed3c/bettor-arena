@@ -23,6 +23,11 @@ head -1 "$CMD" | grep -q '^---$' || fail "no frontmatter fence on line 1"
 grep -q '^description:' "$CMD" || fail "frontmatter lacks description"
 grep -q '\$ARGUMENTS' "$CMD" || fail "forwarder never passes \$ARGUMENTS through"
 grep -q 'forgejo-delivery-loop' "$CMD" || fail "forwarder does not name the skill it forwards to"
+grep -q '\.claude/skills/forgejo-delivery-loop/SKILL.md' "$CMD" \
+  || fail "forwarder does not point at the canonical skill"
+if grep -q 'python3 scripts/' "$CMD"; then
+  fail "forwarder duplicates workflow commands instead of remaining a thin alias"
+fi
 
 # --- every promise must resolve --------------------------------------------
 # Extract `scripts/...py` mentions and require each to exist and be runnable.

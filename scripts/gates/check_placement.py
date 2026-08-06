@@ -14,6 +14,7 @@ using throwaway git fixtures with positive and negative controls.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -142,6 +143,19 @@ def _selftest() -> int:
                 file=sys.stderr,
             )
         cases.append(("external-cwd-scans-own-repo", 0 if anchored else 1, 0))
+
+    # Git hooks may export a relative GIT_WORK_TREE.  `git -C scripts/gates`
+    # must not reinterpret that value and shrink the repository root.
+    poisoned_env = os.environ.copy()
+    poisoned_env["GIT_WORK_TREE"] = "."
+    proc = subprocess.run(
+        [sys.executable, str(Path(__file__).resolve())],
+        cwd=str(repo_root(Path(__file__).resolve().parent)),
+        env=poisoned_env,
+        text=True,
+        capture_output=True,
+    )
+    cases.append(("hook-relative-worktree-env", proc.returncode, 0))
 
     red = [
         f"{name}: got {got}, want {want}" for name, got, want in cases if got != want
