@@ -56,3 +56,6 @@ fi
 
 # No exec: the EXIT trap must still fire to clean up the staged tree.
 python3 scripts/gates/check_root_coupling.py --staged
+# Repo-level structure gates (fast, read-only; §2 placement + skill pointer SSOT).
+python3 scripts/gates/check_placement.py
+python3 scripts/gates/check_skill_pointers.py

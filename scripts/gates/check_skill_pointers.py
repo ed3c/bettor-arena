@@ -17,6 +17,7 @@ Exit codes: 0 clean · 2 pointer contract violated · 64 usage / not a git
 work tree / expected dirs missing. --selftest: 0 green · 1 red, throwaway
 git fixtures with positive and negative (injected residual copy) controls.
 """
+
 from __future__ import annotations
 
 import os
@@ -33,7 +34,9 @@ ALLOWED_TARGET_RELS = (AGENTS_SKILLS_REL, "kb-ingest/skill")
 def repo_root(start: Path) -> Path | None:
     result = subprocess.run(
         ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-        text=True, capture_output=True)
+        text=True,
+        capture_output=True,
+    )
     if result.returncode != 0:
         return None
     return Path(result.stdout.strip())
@@ -42,14 +45,19 @@ def repo_root(start: Path) -> Path | None:
 def visible_paths(root: Path) -> list[str]:
     out = subprocess.run(
         ["git", "-C", str(root), "ls-files", "-co", "--exclude-standard", "-z"],
-        text=True, capture_output=True, check=True).stdout
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout
     return [p for p in out.split("\0") if p]
 
 
 def _resolves_inside(link: Path, root: Path, allowed_rels: tuple[str, ...]) -> bool:
     real = Path(os.path.realpath(link))
-    return any(real == (root / rel / link.name) or real.is_relative_to(root / rel)
-               for rel in allowed_rels)
+    return any(
+        real == (root / rel / link.name) or real.is_relative_to(root / rel)
+        for rel in allowed_rels
+    )
 
 
 def run(start: Path) -> int:
@@ -61,8 +69,11 @@ def run(start: Path) -> int:
     claude_skills = root / CLAUDE_SKILLS_REL
     agents_skills = root / AGENTS_SKILLS_REL
     if not claude_skills.is_dir() or not agents_skills.is_dir():
-        print(f"check_skill_pointers: {CLAUDE_SKILLS_REL} or {AGENTS_SKILLS_REL} "
-              "missing — no pointer contract surface", file=sys.stderr)
+        print(
+            f"check_skill_pointers: {CLAUDE_SKILLS_REL} or {AGENTS_SKILLS_REL} "
+            "missing — no pointer contract surface",
+            file=sys.stderr,
+        )
         return 64
 
     violations: list[str] = []
@@ -72,13 +83,16 @@ def run(start: Path) -> int:
         if entry.name == ".gitignore":
             continue
         if not entry.is_symlink():
-            violations.append(f"REAL-ENTRY {CLAUDE_SKILLS_REL}/{entry.name} "
-                              "(host entries must be symlinks, zero content copies)")
+            violations.append(
+                f"REAL-ENTRY {CLAUDE_SKILLS_REL}/{entry.name} "
+                "(host entries must be symlinks, zero content copies)"
+            )
             continue
         if not _resolves_inside(entry, root, ALLOWED_TARGET_RELS):
             violations.append(
                 f"ESCAPED-LINK {CLAUDE_SKILLS_REL}/{entry.name} -> {os.readlink(entry)} "
-                f"(must resolve inside {' or '.join(ALLOWED_TARGET_RELS)})")
+                f"(must resolve inside {' or '.join(ALLOWED_TARGET_RELS)})"
+            )
 
     # 2: content home must not point back into the host tree
     for dirpath, dirnames, filenames in os.walk(agents_skills):
@@ -88,19 +102,27 @@ def run(start: Path) -> int:
                 real = Path(os.path.realpath(p))
                 if real.is_relative_to(root / ".claude"):
                     rel = p.relative_to(root)
-                    violations.append(f"BACK-LINK {rel} -> {os.readlink(p)} "
-                                      "(content must not live behind a host entry)")
+                    violations.append(
+                        f"BACK-LINK {rel} -> {os.readlink(p)} "
+                        "(content must not live behind a host entry)"
+                    )
 
     # 3: no two real SKILL.md files under a same-named skill directory
     by_dirname: dict[str, list[str]] = {}
     for rel in visible_paths(root):
         parts = rel.split("/")
-        if parts[-1] == "SKILL.md" and len(parts) >= 2 and not (root / rel).is_symlink():
+        if (
+            parts[-1] == "SKILL.md"
+            and len(parts) >= 2
+            and not (root / rel).is_symlink()
+        ):
             by_dirname.setdefault(parts[-2], []).append(rel)
     for dirname, rels in sorted(by_dirname.items()):
         if len(rels) > 1:
-            violations.append(f"DUPLICATE-SKILL {dirname}: {' | '.join(sorted(rels))} "
-                              "(skill content must exist exactly once)")
+            violations.append(
+                f"DUPLICATE-SKILL {dirname}: {' | '.join(sorted(rels))} "
+                "(skill content must exist exactly once)"
+            )
 
     if violations:
         for line in violations:
@@ -112,6 +134,7 @@ def run(start: Path) -> int:
 
 
 # ---------------------------------------------------------------- selftest
+
 
 def _fixture(tmp: Path) -> Path:
     repo = tmp / "fixture"
@@ -136,7 +159,9 @@ def _selftest() -> int:
         repo = _fixture(Path(td))  # injected residual copy: dual-home drift
         (repo / ".claude/skills/foo").unlink()
         (repo / ".claude/skills/foo").mkdir()
-        (repo / ".claude/skills/foo/SKILL.md").write_text("stale copy\n", encoding="utf-8")
+        (repo / ".claude/skills/foo/SKILL.md").write_text(
+            "stale copy\n", encoding="utf-8"
+        )
         cases.append(("residual-copy-red", run(repo), 2))
     with tempfile.TemporaryDirectory() as td:
         repo = _fixture(Path(td))  # link escaping the allowed content homes
@@ -148,7 +173,9 @@ def _selftest() -> int:
     with tempfile.TemporaryDirectory() as td:
         repo = _fixture(Path(td))  # content home pointing back into the host tree
         (repo / ".claude/skills/bar-home").mkdir()
-        (repo / ".claude/skills/bar-home/SKILL.md").write_text("host-side\n", encoding="utf-8")
+        (repo / ".claude/skills/bar-home/SKILL.md").write_text(
+            "host-side\n", encoding="utf-8"
+        )
         os.symlink("../../.claude/skills/bar-home", repo / ".agents/skills/bar")
         cases.append(("back-link-red", run(repo), 2))
     with tempfile.TemporaryDirectory() as td:
@@ -160,12 +187,15 @@ def _selftest() -> int:
     with tempfile.TemporaryDirectory() as td:
         repo = _fixture(Path(td))
         import shutil
+
         shutil.rmtree(repo / ".claude/skills")
         cases.append(("surface-missing", run(repo), 64))
     with tempfile.TemporaryDirectory() as td:
         cases.append(("not-a-repo", run(Path(td)), 64))
 
-    red = [f"{name}: got {got}, want {want}" for name, got, want in cases if got != want]
+    red = [
+        f"{name}: got {got}, want {want}" for name, got, want in cases if got != want
+    ]
     for line in red:
         print(f"SELFTEST case failed — {line}", file=sys.stderr)
     print("SELFTEST " + ("GREEN" if not red else "RED"))

@@ -16,6 +16,7 @@ Usage:
 
 Exit codes: 0 measurement completed · 64 precondition (missing repo/validator/bun).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,8 +30,10 @@ from pathlib import Path
 
 ARENA_ROOT = Path(__file__).resolve().parents[2]
 REBUILT_REL = ".githooks/lib/validate_molecular_message.ts"
-ORIGINAL_REL = ("loop_wiki/evolve-unknown-discovery-plan-truth/adapters/typescript/"
-                "runtime/scripts/validate_molecular_commit_message.ts")
+ORIGINAL_REL = (
+    "loop_wiki/evolve-unknown-discovery-plan-truth/adapters/typescript/"
+    "runtime/scripts/validate_molecular_commit_message.ts"
+)
 
 
 def die(message: str) -> None:
@@ -39,24 +42,41 @@ def die(message: str) -> None:
 
 
 def git(repo: Path, *args: str) -> str:
-    result = subprocess.run(["git", "-C", str(repo), *args], text=True, capture_output=True)
+    result = subprocess.run(
+        ["git", "-C", str(repo), *args], text=True, capture_output=True
+    )
     if result.returncode != 0:
         die(f"git {' '.join(args)} failed in {repo.name}: {result.stderr.strip()}")
     return result.stdout
 
 
-def run_validator(validator: Path, message_file: Path, empty_paths_file: Path) -> tuple[int, str]:
+def run_validator(
+    validator: Path, message_file: Path, empty_paths_file: Path
+) -> tuple[int, str]:
     result = subprocess.run(
-        ["bun", "run", str(validator), "--changed-paths-file", str(empty_paths_file),
-         str(message_file)],
-        text=True, capture_output=True, cwd=str(validator.parent))
+        [
+            "bun",
+            "run",
+            str(validator),
+            "--changed-paths-file",
+            str(empty_paths_file),
+            str(message_file),
+        ],
+        text=True,
+        capture_output=True,
+        cwd=str(validator.parent),
+    )
     return result.returncode, result.stderr
 
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source-repo", type=Path, required=True,
-                        help="root of the source repo carrying the original validator (read-only)")
+    parser.add_argument(
+        "--source-repo",
+        type=Path,
+        required=True,
+        help="root of the source repo carrying the original validator (read-only)",
+    )
     parser.add_argument("--commits", type=int, default=100)
     parser.add_argument("--out", type=Path, help="receipt file (default: stdout)")
     args = parser.parse_args(argv)
@@ -85,19 +105,25 @@ def main(argv: list[str]) -> int:
         empty.write_text("", encoding="utf-8")
         msg = tmp / "COMMIT_MSG"
         for sha in shas:
-            msg.write_text(git(source, "log", "-1", "--format=%B", sha), encoding="utf-8")
+            msg.write_text(
+                git(source, "log", "-1", "--format=%B", sha), encoding="utf-8"
+            )
             orig_rc, orig_err = run_validator(original, msg, empty)
             rebuilt_rc, _ = run_validator(rebuilt, msg, empty)
             if orig_rc == rebuilt_rc:
                 matched += 1
             else:
-                mismatches.append({
-                    "sha": sha,
-                    "subject": git(source, "log", "-1", "--format=%s", sha).strip(),
-                    "original_exit": orig_rc,
-                    "rebuilt_exit": rebuilt_rc,
-                    "original_stderr": [l for l in orig_err.splitlines() if l.strip()],
-                })
+                mismatches.append(
+                    {
+                        "sha": sha,
+                        "subject": git(source, "log", "-1", "--format=%s", sha).strip(),
+                        "original_exit": orig_rc,
+                        "rebuilt_exit": rebuilt_rc,
+                        "original_stderr": [
+                            line for line in orig_err.splitlines() if line.strip()
+                        ],
+                    }
+                )
 
     receipt = {
         "kind": "molecular-corpus-parity",

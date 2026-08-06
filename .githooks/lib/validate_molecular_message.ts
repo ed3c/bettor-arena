@@ -53,10 +53,12 @@ const REQUIRED_FIELDS = [
 // S6: this repo's own gate/hook surface — changes here must be traceable.
 const PROTECTED_PREFIXES = [".githooks/", "scripts/gates/"] as const;
 
+// Arena slice vocabulary (ADR 0001): Intent-Slice anchors the Forgejo issue
+// tracker (ISSUE-<n>), the SSOT of this plan's intent chain. The source repo's
+// prefixes (GCR-SLICE-/TS-SLICE-/...) were deliberately not imported — that
+// would re-embed the source repo's topology this rebuild just stripped.
 function isMolecularMessage(text: string): boolean {
-  return /Intent-Slice:\s+(GCR-SLICE-\d{2}|TS-SLICE-[A-Z0-9-]+|GOLDEN-FLOW-SLICE-[A-Z0-9-]+|HARNESS-CROSS-CUTTING-[A-Z0-9-]+)/.test(
-    text,
-  );
+  return /Intent-Slice:\s+ISSUE-\d+/.test(text);
 }
 
 export function validateText(text: string, requireMolecular = false): string[] {
@@ -118,7 +120,7 @@ function selftest(): number {
   const ordinary = "Fix typo\n\nNo molecular lineage in this commit.\n";
   const good = `Add a gate
 
-Intent-Slice: TS-SLICE-SELFTEST-01
+Intent-Slice: ISSUE-3
 Route: docs/routes.md#gate
 Plan-Package: docs/plan-package.yaml
 Small-Loop: loop_wiki/some-loop/
@@ -136,7 +138,7 @@ docs/plan-package.yaml
   if (validateText(ordinary, true).length === 0) return fail("protected surface must reject an ordinary message");
   if (validateText(good).length > 0) return fail("good molecular message did not validate");
   if (validateText(good, true).length > 0) return fail("good molecular message must satisfy protected surface");
-  const hollow = "Add a gate\n\nIntent-Slice: GCR-SLICE-01\nRoute: docs/routes.md\n";
+  const hollow = "Add a gate\n\nIntent-Slice: ISSUE-10\nRoute: docs/routes.md\n";
   if (validateText(hollow).length === 0) return fail("hollow molecular message unexpectedly validated");
   const swapped = good
     .replace("Fixed-Prompt-Context: docs/prompt.md", "MOVED")
@@ -149,8 +151,8 @@ docs/plan-package.yaml
   if (!validateText(noBlank).some((f) => f.includes("blank line"))) {
     return fail("missing subject separator unexpectedly validated");
   }
-  if (validateText("Intent-Slice: HARNESS-INPUT\n", true).length === 0) {
-    return fail("unsupported intent prefix unexpectedly satisfied protected surface");
+  if (validateText("Intent-Slice: TS-SLICE-01\n", true).length === 0) {
+    return fail("source-repo vocabulary (deliberately unsupported) unexpectedly satisfied protected surface");
   }
   console.log("PASS: selftest");
   return 0;

@@ -11,6 +11,7 @@ Exit codes: 0 clean · 2 undeclared root items · 64 usage, not a git work
 tree, or ARCHITECTURE.md missing/slotless. --selftest: 0 green · 1 red,
 using throwaway git fixtures with positive and negative controls.
 """
+
 from __future__ import annotations
 
 import re
@@ -26,7 +27,9 @@ ENTRY_RE = re.compile(r"^[├└]──\s+(\S+)")
 def repo_root(start: Path) -> Path | None:
     result = subprocess.run(
         ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-        text=True, capture_output=True)
+        text=True,
+        capture_output=True,
+    )
     if result.returncode != 0:
         return None
     return Path(result.stdout.strip())
@@ -51,7 +54,10 @@ def declared_slots(text: str) -> set[str] | None:
 def actual_root_items(root: Path) -> set[str]:
     out = subprocess.run(
         ["git", "-C", str(root), "ls-files", "-z"],
-        text=True, capture_output=True, check=True).stdout
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout
     return {p.split("/", 1)[0] for p in out.split("\0") if p}
 
 
@@ -63,20 +69,27 @@ def run(start: Path) -> int:
     print(f"check_placement: scanning repo root {root}")
     arch = root / ARCH_REL
     if not arch.is_file():
-        print(f"check_placement: {ARCH_REL} missing — no placement contract to check against",
-              file=sys.stderr)
+        print(
+            f"check_placement: {ARCH_REL} missing — no placement contract to check against",
+            file=sys.stderr,
+        )
         return 64
     slots = declared_slots(arch.read_text(encoding="utf-8"))
     if slots is None:
-        print(f"check_placement: no §2 tree block with root entries in {ARCH_REL}",
-              file=sys.stderr)
+        print(
+            f"check_placement: no §2 tree block with root entries in {ARCH_REL}",
+            file=sys.stderr,
+        )
         return 64
     unmapped = sorted(actual_root_items(root) - slots)
     if unmapped:
         for name in unmapped:
             print(f"UNPLACED {name}", file=sys.stderr)
-        print(f"FAIL: {len(unmapped)} tracked root item(s) have no {ARCH_REL} §2 slot "
-              "(amend the map first, then land the file)", file=sys.stderr)
+        print(
+            f"FAIL: {len(unmapped)} tracked root item(s) have no {ARCH_REL} §2 slot "
+            "(amend the map first, then land the file)",
+            file=sys.stderr,
+        )
         return 2
     print("PASS: every tracked root item maps to a §2 slot")
     return 0
@@ -133,17 +146,24 @@ def _selftest() -> int:
     with tempfile.TemporaryDirectory() as td:
         foreign = _fixture(Path(td), {"a.md": "doc\n"})  # no ARCH here on purpose
         own = repo_root(Path(__file__).resolve().parent)
-        proc = subprocess.run([sys.executable, str(Path(__file__).resolve())],
-                              cwd=str(foreign), text=True, capture_output=True)
+        proc = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve())],
+            cwd=str(foreign),
+            text=True,
+            capture_output=True,
+        )
         first = proc.stdout.splitlines()[0] if proc.stdout else "<no output>"
-        anchored = (own is not None and str(own) in first
-                    and str(foreign) not in first)
+        anchored = own is not None and str(own) in first and str(foreign) not in first
         if not anchored:
-            print(f"SELFTEST anchoring detail — own={own} first line: {first}",
-                  file=sys.stderr)
+            print(
+                f"SELFTEST anchoring detail — own={own} first line: {first}",
+                file=sys.stderr,
+            )
         cases.append(("external-cwd-scans-own-repo", 0 if anchored else 1, 0))
 
-    red = [f"{name}: got {got}, want {want}" for name, got, want in cases if got != want]
+    red = [
+        f"{name}: got {got}, want {want}" for name, got, want in cases if got != want
+    ]
     for line in red:
         print(f"SELFTEST case failed — {line}", file=sys.stderr)
     print("SELFTEST " + ("GREEN" if not red else "RED"))

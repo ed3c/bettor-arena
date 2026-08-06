@@ -15,6 +15,7 @@
 bettor-arena/
 ├── AGENTS.md          # 跨 host 工程原則(Codex 官方讀取面;內容 SSOT 指針)
 ├── CLAUDE.md          # Claude-tier 薄派生(tight 入口,禁複述)
+├── CONTEXT.md         # 詞彙表(glossary only;admit 三義/Intent-Slice/receipt 等 canonical terms)
 ├── ARCHITECTURE.md    # 本檔=工程 SSOT+放置契約權威源
 ├── bootstrap.sh       # 冪等啟用:相對 hooksPath+環境 doctor(exit 64=FATAL)
 ├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
@@ -34,7 +35,7 @@ bettor-arena/
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only;last-migration-report.json=最新拷貝,執行期生)
-└── docs/              # 計劃/交接文件(非模組知識)
+└── docs/              # 計劃/交接文件(非模組知識);adr/=架構決策記錄(0001=slice 詞彙)
 ```
 
 ## §3 鐵律(承 PRD 全部裁決,只列最高頻)

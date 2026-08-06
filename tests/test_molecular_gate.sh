@@ -54,7 +54,7 @@ grep -q '"stage-request"' "$RCPT" || fail "receipt is not a stage-request record
 # 2) Hollow molecular message → commit must fail AND commit must not exist.
 echo x > "$R/plain2.txt"
 git -C "$R" add plain2.txt
-printf 'bad hollow molecular\n\nIntent-Slice: GCR-SLICE-01\nRoute: somewhere\n' > "$TMP/hollow.msg"
+printf 'bad hollow molecular\n\nIntent-Slice: ISSUE-10\nRoute: somewhere\n' > "$TMP/hollow.msg"
 if git -C "$R" commit -q -F "$TMP/hollow.msg" 2>/dev/null; then
   fail "hollow molecular commit was accepted"
 fi
@@ -72,7 +72,7 @@ fi
 cat > "$TMP/good.msg" <<'EOF'
 good: molecular message touching gate surface
 
-Intent-Slice: TS-SLICE-GATE-01
+Intent-Slice: ISSUE-14
 Route: docs/routes.md#gate
 Plan-Package: docs/plan-package.yaml
 Small-Loop: loop_wiki/some-loop/
