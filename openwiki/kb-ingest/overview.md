@@ -5,7 +5,7 @@ description: The repo-wiki-converge module — its official/port directory bound
 tags: [kb-ingest, repo-wiki, module-gate]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [kb-ingest-module, host-profile, mastery-ladder, module-gate]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -29,7 +29,7 @@ Adding behavior means adding a file in `port/`, never editing `../openwiki/`; th
 
 "It proves the skill's claims are backed by runnable local assets rather than prose": official assets exist and are machine-generated, the deterministic post-processing runs (selftests), the three subagents' read boundaries actually hold, and — where declared — the RepoDoc lane still accepts a wiki (src: kb-ingest/check_repo_wiki_converge.py:3-8).
 
-**Tri-exit contract**: 0 pass · 1 fail · 3 FATAL "cannot tell" (src: kb-ingest/check_repo_wiki_converge.py:10-11). Exit 3 is NOT a worse 1: it means the gate could not establish what it was supposed to check (no host declaration, unparseable declaration, unknown profile name, no git worktree) — "a forgotten configuration would otherwise read as 'this host legitimately has no such profile' and the check would disappear while the banner stayed green" (src: check_repo_wiki_converge.py:19-24). This is the module-level instance of iron law 6's absence≠green (src: ARCHITECTURE.md:53-54).
+**Tri-exit contract**: 0 pass · 1 fail · 3 FATAL "cannot tell" (src: kb-ingest/check_repo_wiki_converge.py:10-11). Exit 3 is NOT a worse 1: it means the gate could not establish what it was supposed to check (no host declaration, unparseable declaration, unknown profile name, no git worktree) — "a forgotten configuration would otherwise read as 'this host legitimately has no such profile' and the check would disappear while the banner stayed green" (src: check_repo_wiki_converge.py:19-24). This is the module-level instance of iron law 6's absence≠green (src: ARCHITECTURE.md:57-58).
 
 **Two roots, deliberately distinct**: `MODULE_ROOT` (this directory — self-provable checks resolve from it so the module survives being copied to another repo under another name at another depth) vs `HOST_ROOT` (the enclosing checkout — only host-profile checks may touch it). "Collapsing the two … is what pinned this lane to one repo at one depth" (src: check_repo_wiki_converge.py:13-18).
 

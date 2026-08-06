@@ -5,7 +5,7 @@ description: The three portable MCP server declarations for both hosts, the read
 tags: [mcp, host-loop, context-pack]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [mcp-declarations, context-pack, mcp-production-migration]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -13,7 +13,7 @@ generated_at: null
 
 # MCP surface — declarations, context-pack server, production engine
 
-The MCP surface landed as S10 (issue #12, commit 3bfd114): portable declarations for two hosts plus the adapter layer under `mcp/` (src: ARCHITECTURE.md:26, 31). Approval is always human-owned — [bootstrap](bootstrap.md) prints the steps and never performs them (src: bootstrap.sh:50-58).
+The MCP surface landed as S10 (issue #12, commit 3bfd114): portable declarations for two hosts plus the adapter layer under `mcp/` (src: ARCHITECTURE.md:26, 31). Approval is always human-owned — [bootstrap](bootstrap.md) prints the steps and never performs them (src: bootstrap.sh:67-75).
 
 ## The three declarations (the "三件套")
 

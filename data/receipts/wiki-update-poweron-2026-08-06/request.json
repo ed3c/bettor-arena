@@ -1,0 +1,25 @@
+{
+  "schema_version": "bettor-arena-wiki-update-request@1.0.0",
+  "request_id": "poweron-2026-08-06@1e7f3df900094d85b99bd7b91dc6a827f8e583d0",
+  "packet_id": "poweron-2026-08-06",
+  "git_head": "1e7f3df900094d85b99bd7b91dc6a827f8e583d0",
+  "route_result": {
+    "path": "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json",
+    "build_exit": 0,
+    "fast_quality_exit": 0,
+    "operator_exit": 0,
+    "validator_exit": 0,
+    "refs_status": "declared"
+  },
+  "fixed_prompt_context": [
+    "kb-ingest/openwiki/update.system.md",
+    "kb-ingest/openwiki/user.update.md",
+    "kb-ingest/port/host-runtime.md"
+  ],
+  "iteration_auto_context": {
+    "last_update_git_head": "2c36ddf502e9e4c88b3fbe135bd540cb534663f4",
+    "delta_status": "computed",
+    "changed_files": [".githooks/post-commit",".gitignore","ARCHITECTURE.md","CONTEXT.md","bootstrap.sh","data/receipts/openwiki-init-2c36ddf/critic-round1.txt","data/receipts/openwiki-init-2c36ddf/critic-round2.txt","data/receipts/openwiki-init-2c36ddf/finder-questions.txt","data/receipts/openwiki-init-2c36ddf/summary.json","data/receipts/openwiki-init-2c36ddf/verifier-A.txt","data/receipts/openwiki-init-2c36ddf/verifier-A2.txt","data/receipts/openwiki-init-2c36ddf/verifier-B.txt","data/receipts/openwiki-init-2c36ddf/verifier-B2.txt","data/receipts/openwiki-init-2c36ddf/verifier-C.txt","data/receipts/openwiki-init-2c36ddf/verifier-C2.txt","data/receipts/openwiki-init-2c36ddf/verifier-D.txt","data/receipts/openwiki-init-2c36ddf/verifier-D2.txt","kb-ingest/port/README.md","kb-ingest/port/wiki_update_worker.sh","loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts","loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts","loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh","openwiki/.last-update.json","openwiki/architecture.md","openwiki/data-ledgers.md","openwiki/factory/build-pipeline.md","openwiki/factory/generated-repo.md","openwiki/factory/index.md","openwiki/factory/overview.md","openwiki/factory/packet-contract.md","openwiki/factory/v2-plan.md","openwiki/factory/verification.md","openwiki/gates/fast-quality.md","openwiki/gates/index.md","openwiki/gates/structure-gates.md","openwiki/host-loop/bootstrap.md","openwiki/host-loop/claude-host.md","openwiki/host-loop/git-hooks.md","openwiki/host-loop/index.md","openwiki/host-loop/mcp-surface.md","openwiki/host-loop/molecular-messages.md","openwiki/index.md","openwiki/kb-ingest/index.md","openwiki/kb-ingest/official-port.md","openwiki/kb-ingest/overview.md","openwiki/migration/engine.md","openwiki/migration/history.md","openwiki/migration/index.md","openwiki/quickstart.md","openwiki/skills-surface.md","openwiki/testing.md","tests/test_bootstrap.sh"]
+  },
+  "emergent_prompt_context": "openwiki/quickstart.md#backlog"
+}

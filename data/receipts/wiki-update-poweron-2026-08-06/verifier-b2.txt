@@ -1,0 +1,11 @@
+<results>
+  <result id="Q-04" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/official-port.md (§wiki_update_worker.sh, "Post passes" bullet) describes the dry-run live-wiki proof only as "byte-diff the live wiki against a pre-run snapshot": it lacks the named `live-before` copy, the `diff -r` comparator, and the statement that this comparison is asserted before any success line prints. Same page also never states what the dry-run explicitly does NOT cover on a real run (no model turn or write-boundary gate exercise, no real verifier verdicts, no live finalize, no `_plan.md` removal, no `gitHead`-equals-HEAD assert). Also verify the receipt field name: the page calls the skipped-segment field `llm_regenerate`, the source criterion names it `regenerate_state`.</missing>
+  </result>
+  <result id="Q-05" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/official-port.md and /openwiki/data-ledgers.md#openwikilast-updatejson-the-wiki-freshness-anchor omit: the worker's concrete finalize invocation (`--target "$root" --command update --model claude-code+sonnet --status success --normalize-backlog`) and the explicit statement that `gitHead` is the worker-root target repo's HEAD; the omission mechanics inside `write_last_update` (`check=False`, stderr to DEVNULL, empty stdout drops the key, so a git failure never raises); the exit code the failed assert maps to (named FAIL 2); the position of `pass_backlog_heading` in the ordered finalize chain (mermaid → indexes → links → `.last-update.json` → backlog heading); and why `index.md` must never be hand-written (deterministic regeneration overwrite).</missing>
+  </result>
+  <result id="Q-06" status="PARTIAL">
+    <missing>/openwiki/factory/build-pipeline.md (step 7 / "Focused tests") lacks the test's pre-clean plus `finally` cleanup of `data/wiki-update/request-*.json`, which is what stops a stale request from masquerading as this delivery's emission. Neither that page nor /openwiki/kb-ingest/official-port.md nor /openwiki/data-ledgers.md states the drift-coupling consequence explicitly: the three-value `delta_status` enum is hard-coded independently in `trigger.sh` and `wiki_update_worker.sh` stage 1 and pinned in `seed_factory.test.ts`, so adding a fourth status requires editing all three.</missing>
+  </result>
+</results>

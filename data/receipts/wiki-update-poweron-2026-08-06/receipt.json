@@ -1,0 +1,18 @@
+{
+  "schema_version": "bettor-arena-wiki-update-receipt@1.0.0",
+  "request_id": "poweron-2026-08-06@1e7f3df900094d85b99bd7b91dc6a827f8e583d0",
+  "request_path": "/Users/neon/bettor-arena/data/wiki-update/request-poweron-2026-08-06.json",
+  "mode": "full",
+  "stages": {
+    "parse": 0,
+    "preflight": 0,
+    "llm_regenerate": "ran:model=sonnet,changed=2",
+    "gate_finder": 0,
+    "gate_verifier": 0,
+    "gate_critic": "skipped-no-skeleton",
+    "post_migrate": 0,
+    "post_finalize": 0
+  },
+  "verifier_partials_deferred": 4,
+  "utc": "2026-08-06T10:56:30Z"
+}

@@ -85,15 +85,23 @@ on Claude Code or Codex CLI. No API key: inference is the host CLI's own subscri
 
 Consumes the typed request the factory delivery terminus
 (`loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh`) drops into `data/wiki-update/` after a
-successful delivery, and walks the official update pipeline: parse → preflight →
-[LLM regeneration: TODO, a real run is FATAL 64 until wired] → review gates
-(`openwiki_subagent.sh`, `OPENWIKI_DRY_RUN` in dry-run; critic is recorded `skipped-no-skeleton`
-when the update flow has no `_skeleton.md`) → `openwiki_post.py` migrate/finalize on a scratch copy
-(the live wiki is byte-compared and any mutation fails loud) → a receipt back-linking the
-`request_id` into `data/wiki-update/`.
+successful delivery, and walks the official update pipeline: parse → preflight → LLM regeneration
+(`claude -p` drives the official update prompts — system = `update.system.md` + the
+`host-runtime.md` adapter, user = `user.update.md` with the request's delta as runtime context;
+model pinned `sonnet`; writes are gated to `openwiki/` by a git-status boundary check, and a
+stray write outside it is FAIL 2) → review gates (`openwiki_subagent.sh`: delta-scoped finder
+question set, verifier batches of ≤3 where every verdict must be PASS or the gate is red with the
+findings printed; critic is recorded `skipped-no-skeleton` — an update flow has no `_skeleton.md`)
+→ `openwiki_post.py` migrate/finalize on the live wiki (`.last-update.json` gitHead asserted
+against HEAD) → a receipt back-linking the `request_id` into `data/wiki-update/`.
 
-- **Needs**: `python3`, `git`, and a host CLI for the gate runner. `--selftest` proves the
-  deterministic face with fixture requests (absent file = 64, broken/foreign/hollow = 2, good
+In `--dry-run` every deterministic seam still runs with the REAL components, but the LLM segment
+is skipped by name, gates run under `OPENWIKI_DRY_RUN`, and post passes run on a scratch copy
+(the live wiki is byte-compared and any mutation fails loud).
+
+- **Needs**: `python3`, `git`, and the `claude` CLI (absence is a named FATAL 64). `--selftest`
+  proves the deterministic face with fixture requests (absent file = 64, broken/foreign/hollow = 2,
+  absent claude on a real run = 64 naming the tool, a stray write outside `openwiki/` = 2, good
   dry-run = 0 with a back-linked receipt).
 - **Read by**: whoever lands a factory delivery and wants the wiki caught up; the trigger only
   writes the request — it starts no worker, same record-only boundary as the post-commit hook.

@@ -5,7 +5,7 @@ description: The .agents/skills host-neutral content SSOT, the .claude/skills sy
 tags: [skills, ssot, pointers]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [skills-single-home, host-pointers]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -33,4 +33,4 @@ The skills subtree was the `agents-skills` component of the [migration manifest]
 
 ## Sandbox-local skills
 
-The factory sandbox and its generated repos carry their OWN `.agents/` trees (`seed-factory-router` agent, `perfect-seed-domain` skill, and each product's `seed-repo-operator`) — deliberately outside the host skills surface, because the sandbox is its own host (iron law 3, src: ARCHITECTURE.md:47-48). See [factory overview](factory/overview.md) and [generated repo](factory/generated-repo.md).
+The factory sandbox and its generated repos carry their OWN `.agents/` trees (`seed-factory-router` agent, `perfect-seed-domain` skill, and each product's `seed-repo-operator`) — deliberately outside the host skills surface, because the sandbox is its own host (iron law 3, src: ARCHITECTURE.md:51-52). See [factory overview](factory/overview.md) and [generated repo](factory/generated-repo.md).

@@ -5,7 +5,7 @@ description: The bounded micro-loop that turns one admitted source packet into a
 tags: [factory, micro-loop, workflow]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [seed-factory, eight-bases, stateful-workflow, source-kinds]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -55,7 +55,7 @@ Four context/format documents own their domains; the packet contract makes one o
 - `modules/architecture.md` — the reduced-IR record table (what entropy each record removes and what information it preserves), the code-SSOT boundary, and the gate order chain ending in "future asynchronous Code Quality + Production Use axes → human admit" (src: loop_wiki/evolve-perfect-seed-repo-factory/modules/architecture.md:3-40).
 - `modules/exchange-formats.md` — packet/result schema semantics; see [packet contract](packet-contract.md).
 - `modules/production-readiness.md` — must be read before claiming reusable-seed status (src: loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md:9).
-- `modules/semantic-truth-context.md` — a HARD packet requirement: `readInputPacket` rejects any packet whose `fixed_prompt_context` does not include it (src: loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:127-130).
+- `modules/semantic-truth-context.md` — a HARD packet requirement: `readInputPacket` rejects any packet whose `fixed_prompt_context` does not include it (src: loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:129-133).
 
 ## Governance rule
 

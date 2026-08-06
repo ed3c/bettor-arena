@@ -1,0 +1,19 @@
+{
+  "schema_version": "perfect-seed-input@1.0.0",
+  "packet_id": "poweron-2026-08-06",
+  "packet_state": "admitted",
+  "source_kind": "repo",
+  "source_path": "tests/fixtures/repo",
+  "task": "Power-on delivery: build a seed from the factory's own fixture repo to exercise the full chain — build, fast-quality, operator, validator — and hand the delivery terminus a real wiki-update request so the digestion station's newly wired LLM regeneration segment runs end to end.",
+  "fixed_prompt_context": ["PROMPT.md", "modules/semantic-truth-context.md"],
+  "emergent_prompt_context": "N/A-none",
+  "source_refs": [
+    {
+      "repo": "ts-skill-bettor",
+      "commit": "f3776cbf1b4c75c78e017e1381a8517cd1865abf",
+      "path": "AGENTS.md",
+      "anchor": "L20:重複組件禁字面推論等價"
+    }
+  ],
+  "human_gate": "required_before_seed_admit"
+}

@@ -1,0 +1,98 @@
+[Q-01]: How does one factory delivery become an updated wiki end to end — from `loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh` writing `data/wiki-update/request-<packet_id>.json` through `kb-ingest/port/wiki_update_worker.sh:run_worker` stages parse → preflight → regenerate → gates → post → receipt — and which failures are FAIL 2 versus FATAL 64?
+Acceptance criteria:
+- Trace the producer/consumer handoff: the request path and `request_id`/`packet_id` fields trigger.sh emits, and the exact fields `run_worker` stage 1 requires (`schema_version`, `route_result.path`, non-empty `fixed_prompt_context`, the three legal `delta_status` values).
+- Explain stage 2 preflight: which pointers are resolved against the arena root (`WIKI_WORKER_ROOT` or `git rev-parse --show-toplevel`), and why a missing pointer/route_result is `fail` 2 while a missing `openwiki_subagent.sh`/`openwiki_post.py` is `fatal` 64.
+- State the exit-code taxonomy the worker shares with ARCHITECTURE.md §3 rule 6 (tool/input absence = 64, contract check failure = 2) and name at least three concrete conditions for each.
+- Name the selftest cases in `wiki_update_worker.sh:selftest` that prove the taxonomy (absent request, non-JSON, foreign schema, missing field).
+Source evidence:
+- loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh:REQUEST — deterministic delivery-terminus emission of the typed request.
+- kb-ingest/port/wiki_update_worker.sh:run_worker — the six-stage consumer pipeline.
+- kb-ingest/port/wiki_update_worker.sh:fail/fatal — the 2-vs-64 split.
+- ARCHITECTURE.md:§3 — the iron rule the split implements.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"a successful trigger delivery emits a typed wiki-update request with the three context lanes" — pins the emitted contract.
+
+[Q-02]: In the real-run LLM regeneration segment of `kb-ingest/port/wiki_update_worker.sh` (stage 3), how are the official prompts composed and how is the "writes may only touch `openwiki/`" claim actually enforced rather than promised?
+Acceptance criteria:
+- Explain prompt composition: the `OPENWIKI-OFFICIAL:BEGIN/END` marker extraction from `kb-ingest/openwiki/update.system.md` and `user.update.md`, the `host-runtime.md` adapter appendix, the fixture-stub fallback when markers are absent, and how `{WIKI_GOAL}`/`{RUNTIME_CONTEXT}`/`{ADDITIONAL_USER_REQUEST}` are filled from the request delta.
+- Describe the boundary gate mechanically: `dirty_before`/`dirty_after` porcelain snapshots, the `comm -13` diff with `cut -c4-`, the `grep -v '^openwiki/'` stray test, and why the regen transcript is moved to `data/wiki-update/` only *after* the snapshot.
+- Explain why line 33's `[ -n "${BASH_VERSION:-}" ] || exec bash "$0" "$@"` guard is load-bearing, i.e. which construct silently degrades under POSIX `sh` and what a degraded gate would let through.
+- Identify how invocation authority is bounded (pinned `--model sonnet`, `--permission-mode acceptEdits`, `--add-dir`, the read-only `--allowedTools` git/rg allowlist) and which selftest case proves a straying model run is FAIL 2, not a pass.
+Source evidence:
+- kb-ingest/port/wiki_update_worker.sh:run_worker (stage 3) — prompt composition and the claude -p invocation.
+- kb-ingest/port/wiki_update_worker.sh:selftest — `real-run-stray-write-is-fail-2` and `real-run-absent-claude-is-fatal-64`.
+- kb-ingest/port/README.md:"wiki_update_worker.sh" — the documented boundary claim to check against the code.
+- kb-ingest/port/openwiki_subagent.sh — the allowlist convention the regeneration call mirrors.
+
+[Q-03]: How does the real-run review gate in `kb-ingest/port/wiki_update_worker.sh` (stage 4) turn one finder question set into batched verifier verdicts, and what stops an empty, missing, or shapeless review from reading as green?
+Acceptance criteria:
+- Trace the finder call: the delta-scoped payload built from `iteration_auto_context.changed_files`, why only the last stdout line of `openwiki_subagent.sh` is the review path, and what `openwiki_subagent.sh` removes from the finder sandbox (`rm -rf $SANDBOX/openwiki`) so questions come from source alone.
+- Explain the batching split on `^\[Q-\d+\]:` into groups of ≤3, and how `OPENWIKI_LABEL="b$i"` changes the output filename `.openwiki-review/verifier-b<i>-latest.txt` so concurrent batches cannot overwrite each other.
+- Explain the verdict pass: every `<result id status>` must be `PASS`; a missing verifier file, zero `<result>` blocks, or zero `[Q-NN]` questions each fail by name rather than defaulting green.
+- State how a RED gate is surfaced to the caller (findings printed, then FAIL 2) and why the critic is recorded `skipped-no-skeleton` instead of skipped silently.
+Source evidence:
+- kb-ingest/port/wiki_update_worker.sh:run_worker (stage 4) — batching, verdict parsing, red-gate handling.
+- kb-ingest/port/openwiki_subagent.sh:OUT/OPENWIKI_LABEL — the labelled review-file naming that batching depends on.
+- kb-ingest/port/openwiki_subagent.sh (finder sandbox) — the physical read boundary the questions rely on.
+- kb-ingest/port/README.md:"openwiki_subagent.sh" — documents "an empty review is NOT a pass".
+
+[Q-04]: What exactly does `wiki_update_worker.sh --dry-run` prove, and by which mechanisms does it guarantee it neither spends a model turn nor mutates the live `openwiki/` or an existing receipt?
+Acceptance criteria:
+- Name the three deterministic seams that still run with real components (gates under `OPENWIKI_DRY_RUN`, `openwiki_post.py migrate`/`finalize` on a scratch copy, receipt write) and the one segment skipped by name (`regenerate_state="skipped-dry-run"`).
+- Explain the live-wiki non-mutation proof: the `live-before` copy, the `diff -r` byte comparison, and why the comparison is asserted before any success line is printed.
+- Explain the frozen-evidence receipt rule: collision → FATAL 64, `WIKI_UPDATE_FORCE_RECEIPT=1` → explicit overwrite, and how this matches the `receipt` definition in CONTEXT.md and the migration engine's `--force-receipt` precedent in ARCHITECTURE.md §2.
+- Name the selftest cases proving each (`good-dry-run` with a back-linked `request_id`, `receipt-collision-refused`, `receipt-collision-forced`) and state what real-run behavior the dry-run explicitly does *not* cover.
+Source evidence:
+- kb-ingest/port/wiki_update_worker.sh:run_worker (stages 5–6) — scratch copy, byte compare, receipt collision policy.
+- kb-ingest/port/wiki_update_worker.sh:selftest — the collision and good-dry-run cases.
+- CONTEXT.md:receipt — frozen-evidence glossary term the rule implements.
+- kb-ingest/port/openwiki_post.py:main — the migrate/finalize passes the dry-run exercises.
+
+[Q-05]: After a real update run, how does `.last-update.json` get its `gitHead`, and why does the worker assert it equals HEAD before announcing success — given that `openwiki_post.py:write_last_update` omits the field silently when git fails?
+Acceptance criteria:
+- Trace `finalize` argument flow from the worker (`--target "$root" --command update --model claude-code+sonnet --status success --normalize-backlog`) into `write_last_update`, and state which repo's HEAD `gitHead` records.
+- Explain the silent-omission failure mode (`check=False`, stderr to DEVNULL, empty stdout → key dropped) and how the worker's `sed`-extracted `recorded` vs `git rev-parse HEAD` comparison converts it into a named FAIL 2.
+- Explain the ordered finalize passes (mermaid → indexes → links → `.last-update.json` → backlog heading) and why `index.md` must never be hand-written.
+- Describe what `--normalize-backlog` edits in `openwiki/quickstart.md` and how its self-assertion avoids printing success for a rewrite that matched nothing.
+- Name the consumers of the recorded `gitHead`: `trigger.sh` delta computation and `bootstrap.sh` freshness WARN.
+Source evidence:
+- kb-ingest/port/openwiki_post.py:write_last_update — gitHead computation and silent omission path.
+- kb-ingest/port/openwiki_post.py:pass_backlog_heading — backlog normalization and its assert-before-announce.
+- kb-ingest/port/wiki_update_worker.sh:run_worker (stage 5, real branch) — the HEAD assertion and `_plan.md` removal.
+- loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh:LAST_HEAD — downstream consumer of the recorded gitHead.
+
+[Q-06]: How does `trigger.sh` compute the `iteration_auto_context` delta, and what keeps its three `delta_status` values, the standalone-tree skip, and the worker's accepted enum from drifting apart?
+Acceptance criteria:
+- Explain the three branches — `no-last-update`, `unresolvable-last-head` (via `git cat-file -e`), `computed` (via `git diff --name-only LAST_HEAD HEAD`) — and why absence is a named state rather than an empty delta.
+- Explain the standalone-tree path: when `git rev-parse --show-toplevel` fails, emission is a named skip printed as `wiki_update_request=skipped-standalone` with exit 0, and why a skipped request must not read as an emitted one.
+- Identify the coupling risk: `wiki_update_worker.sh` stage 1 hard-codes the same three-value set, so adding a fourth status requires changes in both files plus the test.
+- Name the test assertions that pin both the emitted lanes and the standalone skip, and explain the pre-clean/`finally` cleanup that stops a stale request from masquerading as this delivery's emission.
+Source evidence:
+- loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh:DELTA_STATUS — the three-branch delta computation.
+- loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh:ARENA — the standalone named-skip branch.
+- kb-ingest/port/wiki_update_worker.sh:run_worker (stage 1) — the mirrored `delta_status` enum.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"wiki-update delivery terminus (ISSUE-23)" — pins lanes, skip, and cleanup.
+
+[Q-07]: How does `refs_status` get decided and relayed — from `src/contracts.ts:refsStatusForPacket` through `trigger.sh` into both `route-result.<packet_id>.json` and the wiki-update request — and what would adding a fifth status require?
+Acceptance criteria:
+- Explain the status ladder: `sentinel` (via `SENTINEL_REPO` shape), `declared` (no receipt), `resolved` (receipt schema + `packet_sha256` binds the exact packet bytes), `stale` (receipt exists but no longer binds), and why `ReceiptCheckError` is exit 2 rather than a raw parse traceback.
+- Explain the shell's relay-only role: `trigger.sh` reads the `refs-status` CLI JSON and its `case` accepts declared/sentinel/resolved, rejects `stale` by name, and rejects anything else as unrecognized.
+- Name every place a new status value would have to be added (contracts.ts union, the trigger `case`, route-result JSON, the request's `route_result.refs_status`, generated-repo lineage/source verification).
+- Cite the tests proving `stale` is named rather than lumped in with unrecognized, and that a foreign receipt schema fails as exit 2.
+Source evidence:
+- loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:refsStatusForPacket — sole authority for the status decision.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:ReceiptCheckError — the "evidence exists but unreadable" taxonomy.
+- loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh:REFS_STATUS — the relay and its rejection `case`.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"trigger rejects a stale refs_status by name, not as unrecognized" — proves the named rejection.
+
+[Q-08]: What does `bootstrap.sh` treat as FATAL 64 versus WARN, and how is the `openwiki/` freshness check made both decidable and non-blocking in a real clone rather than only in fixtures?
+Acceptance criteria:
+- List the FATAL 64 preconditions (not a git work tree; missing git/python3/bun; empty or missing `.githooks/`; root-coupling gate selftest RED) and the WARN-only ones (uv, ollama, grepai index, wiki absent/stale/undecidable), and explain why the MCP approval steps are printed rather than performed.
+- Explain the freshness algorithm: parsing `gitHead` from `openwiki/.last-update.json`, verifying it resolves via `git rev-parse -q --verify`, and why the staleness diff uses `':(exclude)openwiki/'` instead of comparing raw HEADs.
+- Explain why hooksPath is set relatively and why the non-empty `.githooks/` assertion precedes `git config` (a hooksPath pointing at nothing would print OK while registering nothing).
+- Name the seams `tests/test_bootstrap.sh` asserts: idempotency, absent/fresh/stale WARN trio, missing-bun and missing-python3 as 64 naming the tool, and hookless as 64 naming `.githooks`.
+- Explain why the test's fixture commits pass `-c core.hooksPath=` and what that deliberately excludes from this seam's coverage.
+Source evidence:
+- bootstrap.sh:fatal/warn — the 64-vs-WARN split implementing ARCHITECTURE.md §3 rule 6.
+- bootstrap.sh:WIKI_HEAD — the freshness algorithm and its exclude-path diff.
+- tests/test_bootstrap.sh:fixture_commit — the WARN trio and hook-free fixture rationale.
+- .githooks/post-commit — the record-only receipt whose hook registration bootstrap arms.
