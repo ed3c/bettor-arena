@@ -16,12 +16,15 @@ Contract (S2, ts-skill-bettor issue #4):
   in the target's root-coupling allowlist ledger instead.
 - After --apply the engine writes a per-run stats receipt (no absolute paths)
   to <target>/data/migration/report-<source-commit>-<component-set>.json —
-  history is never overwritten — plus last-migration-report.json as a copy of
-  the latest run for existing readers. When the target carries
-  scripts/gates/check_root_coupling.py, that gate must come back green.
+  history is never overwritten: a re-run against an existing receipt refuses
+  with exit 64 unless --force-receipt is passed — plus
+  last-migration-report.json as a copy of the latest run for existing readers.
+  When the target carries scripts/gates/check_root_coupling.py, that gate must
+  come back green.
 
 Exit codes: 0 ok · 2 post-apply target gate red · 64 usage/precondition
-(same root, non-git source, bad manifest) · anything else is a crash.
+(same root, non-git source, bad manifest, receipt collision) · anything else
+is a crash.
 Selftest: --selftest builds throwaway git fixtures and proves every exit
 path above, including that dry-run leaves the target byte-identical.
 """
@@ -367,6 +370,11 @@ def main(argv: list[str]) -> int:
         "--apply", action="store_true", help="write files (default: dry-run)"
     )
     parser.add_argument(
+        "--force-receipt",
+        action="store_true",
+        help="overwrite an existing per-run receipt (same source commit + component set)",
+    )
+    parser.add_argument(
         "--stats", action="store_true", help="print the JSON stats payload"
     )
     parser.add_argument("--selftest", action="store_true")
@@ -397,6 +405,21 @@ def main(argv: list[str]) -> int:
         mode = "apply" if args.apply else "dry-run"
         payload = stats_payload(manifest, operations, source_root, target_root, mode)
         if args.apply:
+            # Receipts are history: one file per run (named by source commit +
+            # component set), never silently overwritten. A colliding re-run is
+            # refused up front (precondition, before any write) rather than
+            # suffixed: a monotonic suffix would leave several near-duplicate
+            # receipts for the same inputs and make "which one is the record
+            # for commit X" ambiguous; --force-receipt states the intent.
+            slug = "-".join(sorted(c["id"] for c in manifest["components"]))
+            receipt_dir = target_root / RECEIPT_DIR_REL
+            per_run = receipt_dir / f"report-{payload['source_commit'][:7]}-{slug}.json"
+            if per_run.exists() and not args.force_receipt:
+                raise ValueError(
+                    "per-run receipt already exists for this source commit + "
+                    f"component set: {RECEIPT_DIR_REL}/{per_run.name}; "
+                    "re-run with --force-receipt to overwrite it"
+                )
             payload["files_written"] = apply_operations(
                 operations, manifest, source_root
             )
@@ -405,16 +428,12 @@ def main(argv: list[str]) -> int:
             )
             gate_status = run_target_gate(target_root)
             payload["root_coupling_gate"] = gate_status
-            # Receipts are history: one file per run (named by source commit +
-            # component set), never overwritten. last-migration-report.json is
-            # kept as a copy of the latest run for its existing readers.
-            slug = "-".join(sorted(c["id"] for c in manifest["components"]))
+            # last-migration-report.json is kept as a copy of the latest run
+            # for its existing readers.
             text = (
                 json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
             )
-            receipt_dir = target_root / RECEIPT_DIR_REL
             receipt_dir.mkdir(parents=True, exist_ok=True)
-            per_run = receipt_dir / f"report-{payload['source_commit'][:7]}-{slug}.json"
             per_run.write_text(text, encoding="utf-8")
             (target_root / RECEIPT_REL).write_text(text, encoding="utf-8")
             if gate_status == "fail":
@@ -695,6 +714,39 @@ def _selftest() -> int:
                 "allowlist-appended",
                 "evidence/ fixture-historical-evidence" in ledger,
                 f"ledger: {ledger!r}",
+            )
+
+            # same source commit + same component set re-run: receipts are
+            # history, so a colliding apply must refuse (exit 64) instead of
+            # silently rewriting it; --force-receipt is the explicit override.
+            receipt_before = per_run.read_bytes()
+            rerun = _run_cli([*common, "--apply"])
+            check(
+                "rerun-collision-refused",
+                rerun.returncode == 64,
+                f"exit {rerun.returncode}: {rerun.stderr}",
+            )
+            check(
+                "rerun-collision-names-flag",
+                "--force-receipt" in rerun.stderr,
+                f"stderr does not name the override: {rerun.stderr!r}",
+            )
+            check(
+                "rerun-collision-receipt-untouched",
+                per_run.read_bytes() == receipt_before,
+                "refused rerun rewrote the per-run receipt",
+            )
+            mtime_before = per_run.stat().st_mtime_ns
+            forced = _run_cli([*common, "--apply", "--force-receipt"])
+            check(
+                "rerun-forced-exit",
+                forced.returncode == 0,
+                f"exit {forced.returncode}: {forced.stderr}",
+            )
+            check(
+                "rerun-forced-rewrites",
+                per_run.stat().st_mtime_ns != mtime_before,
+                "--force-receipt did not rewrite the per-run receipt",
             )
 
         # target whose own gate is a permanently-red stub: the exit-2 branch of
