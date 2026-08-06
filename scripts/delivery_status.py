@@ -81,8 +81,8 @@ def render(
     else:
         layer4 = "NO MILESTONE — layer 4 absent, progress has no horizontal view"
     lines = [
-        f"line: {line['line']}  repo: {line.get('forgejo_repo', '?')}",
-        f"  1 PRD      {line.get('prd_issue', 'MISSING — no spec root registered')}",
+        f"line: {line['line']}  repo: {line.get('forgejo_repo') or '?'}",
+        f"  1 PRD      {line.get('prd_issue') or 'MISSING — no spec root registered'}",
         f"  2 slices   {len(open_slices)} open of {len(slices)}"
         + (
             f" → {', '.join('#' + str(i['number']) for i in open_slices[:8])}"
@@ -96,7 +96,7 @@ def render(
             else ""
         ),
         f"  4 progress {layer4}",
-        f"  plan       {line.get('plan_doc', 'MISSING — no as-run ledger registered')}",
+        f"  plan       {line.get('plan_doc') or 'MISSING — no as-run ledger registered'}",
     ]
     return "\n".join(lines)
 
@@ -183,6 +183,21 @@ def _selftest() -> int:
         )
     )
     cases.append(("absent-plan-is-named", "no as-run ledger" in bare))
+
+    # A registry states "this line has no PRD" as an explicit null, not by
+    # leaving the key out — and dict.get's default only fires on a missing key.
+    # The first fixture only omitted keys, so real data printed a bare "None"
+    # where MISSING belonged; a null field is the shape that actually occurs.
+    nulled = render(
+        {"line": "nulled", "forgejo_repo": None, "prd_issue": None, "plan_doc": None},
+        [],
+        [],
+        None,
+    )
+    cases.append(
+        ("null-prd-is-named-not-None", "MISSING" in nulled and "None" not in nulled)
+    )
+    cases.append(("null-plan-is-named", "no as-run ledger" in nulled))
 
     red = [name for name, ok in cases if not ok]
     for name in red:
