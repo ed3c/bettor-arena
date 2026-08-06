@@ -6,15 +6,17 @@
 #   1. Self-integrity, radius = this gate's own closure only (.githooks/ +
 #      scripts/gates/): staged vs worktree must be identical there, otherwise
 #      the hook/gate that is running is not the one being committed.
-#   2. Materializes the staged blobs (added/copied/modified/renamed only —
-#      deletions have nothing to check) into a temp tree via
-#      `git checkout-index --prefix` — the gate must judge the bytes being
-#      committed, never the worktree copies — and feeds those temp paths to
-#      scripts/gates/fast_quality.sh, the single check definition (same source
-#      as the factory sandbox's full-scope verify.sh quality:fast mount; see
-#      the gate header). Relative layout is preserved under the prefix; note
-#      the temp tree sits outside eslint's base path, so the hook's ts-lint
-#      ride is warn-and-skip — mount 2 carries the full eslint pass.
+#   2. Materializes the whole index into a temp tree via
+#      `git checkout-index -a --prefix` — the gate must judge the bytes being
+#      committed, never the worktree copies, and staged TS files must resolve
+#      imports against tracked-but-unchanged siblings at their index bytes —
+#      then feeds only the staged (added/copied/modified/renamed — deletions
+#      have nothing to check) temp paths to scripts/gates/fast_quality.sh,
+#      the single check definition (same source as the factory sandbox's
+#      full-scope verify.sh quality:fast mount; see the gate header).
+#      Relative layout is preserved under the prefix; note the temp tree sits
+#      outside eslint's base path, so the hook's ts-lint ride is
+#      warn-and-skip — mount 2 carries the full eslint pass.
 #   3. check_root_coupling.py --staged (index blobs, not worktree).
 #
 # Budget: FAST_QUALITY_BUDGET seconds (default 5) wall for the gate call;
@@ -38,7 +40,8 @@ STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
 
 STAGEDTREE=$(mktemp -d)
 trap 'rm -rf "$STAGEDTREE"' EXIT
-printf '%s\n' "$STAGED" | git checkout-index --prefix="$STAGEDTREE/tree/" --stdin
+# -a: full index, not just staged paths — staged files may import unchanged ones.
+git checkout-index -a --prefix="$STAGEDTREE/tree/"
 
 BUDGET=${FAST_QUALITY_BUDGET:-5}
 # Job control (set -m) puts each background job in its own process group, so

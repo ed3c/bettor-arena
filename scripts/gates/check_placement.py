@@ -20,19 +20,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+from _gate_common import git_fixture, repo_root
+
 ARCH_REL = "ARCHITECTURE.md"
 ENTRY_RE = re.compile(r"^[├└]──\s+(\S+)")
-
-
-def repo_root(start: Path) -> Path | None:
-    result = subprocess.run(
-        ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        return None
-    return Path(result.stdout.strip())
 
 
 def declared_slots(text: str) -> set[str] | None:
@@ -114,16 +105,7 @@ fixture/
 """
 
 
-def _fixture(tmp: Path, files: dict[str, str]) -> Path:
-    repo = tmp / "fixture"
-    repo.mkdir(parents=True)
-    subprocess.run(["git", "-C", str(repo), "init", "-q", "-b", "main"], check=True)
-    for rel, content in files.items():
-        p = repo / rel
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(content, encoding="utf-8")
-    subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
-    return repo
+_fixture = git_fixture
 
 
 def _selftest() -> int:

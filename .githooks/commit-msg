@@ -1,7 +1,7 @@
 #!/bin/sh
-# commit-msg.staged — molecular commit-message gate, STAGED (not active).
-# Activation = renaming to `commit-msg`, and that is a separate human admit;
-# staging under a dead name keeps this wave's other agents uncommitted-blocked-free.
+# commit-msg — molecular commit-message gate, ACTIVE (armed by the #14 stage-2
+# human admit, 2026-08-06). Protected-surface commits must carry a molecular
+# message with Intent-Slice: ISSUE-<n> (ADR 0001). Rollback = rename to .staged.
 #
 # Exit codes: 0 pass · 2 gate FAIL · 64 missing tool (diagnosable, distinct).
 set -eu

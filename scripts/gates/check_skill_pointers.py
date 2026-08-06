@@ -26,20 +26,11 @@ import sys
 import tempfile
 from pathlib import Path
 
+from _gate_common import repo_root
+
 CLAUDE_SKILLS_REL = ".claude/skills"
 AGENTS_SKILLS_REL = ".agents/skills"
 ALLOWED_TARGET_RELS = (AGENTS_SKILLS_REL, "kb-ingest/skill")
-
-
-def repo_root(start: Path) -> Path | None:
-    result = subprocess.run(
-        ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        return None
-    return Path(result.stdout.strip())
 
 
 def visible_paths(root: Path) -> list[str]:

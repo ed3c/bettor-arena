@@ -131,6 +131,7 @@ mkdir -p "$R/.githooks" "$R/scripts/gates"
 cp "$H" "$R/.githooks/pre-commit"
 cp "$G" "$R/scripts/gates/fast_quality.sh"
 cp "$ROOT/scripts/gates/check_root_coupling.py" "$R/scripts/gates/"
+cp "$ROOT/scripts/gates/_gate_common.py" "$R/scripts/gates/"
 chmod +x "$R/.githooks/pre-commit"
 # Structure gates (placement/skill-pointers) verify THIS repo's structure and
 # carry their own selftests; the fixture only needs to prove the hook CALLS

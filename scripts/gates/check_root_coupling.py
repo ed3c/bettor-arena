@@ -34,22 +34,13 @@ import sys
 import tempfile
 from pathlib import Path
 
+from _gate_common import git_fixture, repo_root
+
 # Assembled at runtime so the gate does not flag its own source.
 PATTERNS = tuple(
     a + b for a, b in (("/Use", "rs/"), ("/ho", "me/"), ("C:\\Use", "rs\\"))
 )
 ALLOWLIST_REL = "scripts/gates/root_coupling_allowlist.txt"
-
-
-def repo_root(start: Path) -> Path | None:
-    result = subprocess.run(
-        ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        return None
-    return Path(result.stdout.strip())
 
 
 def tracked_files(root: Path) -> list[str]:
@@ -160,18 +151,7 @@ def run(start: Path, staged: bool = False) -> int:
 
 # ---------------------------------------------------------------- selftest
 
-
-def _fixture(tmp: Path, files: dict[str, str], track: bool = True) -> Path:
-    repo = tmp / "fixture"
-    repo.mkdir(parents=True)
-    subprocess.run(["git", "-C", str(repo), "init", "-q", "-b", "main"], check=True)
-    for rel, content in files.items():
-        p = repo / rel
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(content, encoding="utf-8")
-    if track:
-        subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
-    return repo
+_fixture = git_fixture
 
 
 def _selftest() -> int:
