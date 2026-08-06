@@ -27,6 +27,10 @@
 #      WIKI_UPDATE_CLAUDE_BIN — claude binary override (selftest seam).
 # Exit: 0 ok · 2 contract fail (incl. red gates / boundary strays) ·
 #       64 FATAL (absent input/tool, receipt collision)
+# This script needs bash (process substitution in the write-boundary gate);
+# invoked as `sh worker.sh`, POSIX sh would silently neuter that gate — the
+# guard below re-execs into bash instead of running degraded.
+[ -n "${BASH_VERSION:-}" ] || exec bash "$0" "$@"
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
