@@ -3,13 +3,10 @@
   "line": "bettor-arena-migration",
   "repo": "neon/bettor-arena",
   "issues": [
-    "http://localhost:3000/neon/bettor-arena/issues/26",
-    "http://localhost:3000/neon/bettor-arena/issues/17",
-    "http://localhost:3000/neon/bettor-arena/issues/16",
     "http://localhost:3000/neon/bettor-arena/issues/2"
   ],
   "pr": "http://localhost:3000/neon/bettor-arena/pulls/25",
   "milestone_url": "http://localhost:3000/neon/bettor-arena/milestone/1",
   "plan_doc": "docs/plans/2026-08-06-bettor-arena-migration/as-run.md",
-  "synced_at_commit": "82b155e"
+  "synced_at_commit": "036cf93"
 }

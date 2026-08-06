@@ -31,6 +31,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / "gates"))
 from _gate_common import repo_root  # noqa: E402
 
+NO_OPEN_ISSUES = "NONE-OPEN-no-prd-registered"
+"""Placed in the issues list when a line owes nothing and registers no PRD. Named rather
+than empty: the receipt gate requires every field non-empty, so an empty list would be
+indistinguishable from a receipt that recorded nothing."""
+
 REGISTRY_REL = ".agents/skills/forgejo-delivery-loop/registry.json"
 
 
@@ -71,6 +76,16 @@ def build_receipt(
     Open issues are what an unfinished line owes; closed ones live in git history
     and the plan ledger, so listing them here would make the receipt grow without
     telling anyone anything new.
+
+    Both fallbacks below were written when neither line had shipped anything, and both
+    were wrong the first time that stopped being true — found on the ts-skill-bettor
+    copy and swept here the same day rather than left to be rediscovered:
+
+    * `dict.get(k, default)` does not fire on a key holding an explicit null, so a line
+      with no open issues and a null PRD produced `"issues": [null]`;
+    * "no open PR" was read as "no PR", so a line whose only pull request had MERGED
+      produced an empty `pr` — and the receipt gate rightly refuses an empty required
+      field, making the receipt unwritable.
     """
     repo = line["forgejo_repo"]
     open_issues = [
@@ -81,13 +96,26 @@ def build_receipt(
     open_pulls = [
         f"{base_url}/{repo}/pulls/{p['number']}" for p in pulls if p["state"] == "open"
     ]
+    # Open PR (work in flight), then most recently merged (work delivered), then the
+    # previous receipt. A closed-unmerged PR is not a carrier, and none is invented.
+    merged_pulls = [
+        f"{base_url}/{repo}/pulls/{p['number']}"
+        for p in sorted(pulls, key=lambda p: p["number"], reverse=True)
+        if p.get("merged") or p.get("merged_at")
+    ]
     receipt = dict(previous or {})
     receipt.update(
         {
             "line": line["line"],
             "repo": repo,
-            "issues": open_issues or [line.get("prd_issue", "")],
-            "pr": open_pulls[0] if open_pulls else (previous or {}).get("pr", ""),
+            "issues": open_issues or [line.get("prd_issue") or NO_OPEN_ISSUES],
+            "pr": (
+                open_pulls[0]
+                if open_pulls
+                else merged_pulls[0]
+                if merged_pulls
+                else (previous or {}).get("pr", "")
+            ),
             "milestone_url": line.get("milestone_url", ""),
             "plan_doc": line.get("plan_doc", ""),
             "synced_at_commit": head,
@@ -136,6 +164,8 @@ def sync(root: Path, line_id: str, dry_run: bool) -> int:
         json.loads(target.read_text(encoding="utf-8")) if target.is_file() else None
     )
     receipt = build_receipt(line, issues, pulls, base_url, head, previous)
+    # Count what is owed, not list length: a finished line still carries one sentinel.
+    owed_count = len([u for u in receipt["issues"] if u != NO_OPEN_ISSUES])
     text = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
 
     if dry_run:
@@ -145,7 +175,7 @@ def sync(root: Path, line_id: str, dry_run: bool) -> int:
 
     target.write_text(text, encoding="utf-8")
     print(
-        f"synced {target.relative_to(root)} → {len(receipt['issues'])} open issue(s), "
+        f"synced {target.relative_to(root)} → {owed_count} open issue(s), "
         f"pr={receipt['pr'] or 'none'}, at {head}"
     )
     # Assert before announcing: a sync whose receipt the gate rejects is not done.
@@ -205,6 +235,63 @@ def _selftest() -> int:
         )
     )
     cases.append(("no-open-pr-leaves-pr-empty-not-fabricated", empty["pr"] == ""))
+
+    # The shapes this repository's own line actually reached on 2026-08-07, each of
+    # which the previous version got wrong the first time it met them for real.
+    nulled = build_receipt(
+        {**line, "prd_issue": None}, [], [], "http://x", "abc1234", None
+    )
+    cases.append(
+        (
+            "null-prd-with-no-open-issues-says-so-not-none",
+            nulled["issues"] == [NO_OPEN_ISSUES],
+        )
+    )
+    merged = build_receipt(
+        line,
+        [],
+        [
+            {"number": 25, "state": "closed", "merged": True},
+            {"number": 7, "state": "closed", "merged": False},
+        ],
+        "http://x",
+        "abc1234",
+        None,
+    )
+    cases.append(
+        ("merged-pr-is-the-carrier", merged["pr"] == "http://x/neon/demo/pulls/25")
+    )
+    cases.append(
+        (
+            "closed-unmerged-pr-is-not-a-carrier",
+            build_receipt(
+                line,
+                [],
+                [{"number": 7, "state": "closed", "merged": False}],
+                "http://x",
+                "abc1234",
+                None,
+            )["pr"]
+            == "",
+        )
+    )
+    cases.append(
+        (
+            "open-pr-outranks-merged-one",
+            build_receipt(
+                line,
+                [],
+                [
+                    {"number": 25, "state": "closed", "merged": True},
+                    {"number": 30, "state": "open"},
+                ],
+                "http://x",
+                "abc1234",
+                None,
+            )["pr"]
+            == "http://x/neon/demo/pulls/30",
+        )
+    )
 
     red = [name for name, ok in cases if not ok]
     for name in red:
