@@ -106,6 +106,20 @@ set -e
 [ "$RC" -eq 64 ] || fail "ruff-absent exited $RC, want 64"
 echo "$ERR" | grep -qi 'ruff' || fail "ruff-absent diagnostic does not name ruff"
 
+# 7b) No-network-fallback control: uvx IS on PATH but ruff is not — the gate
+#     must still FATAL 64 naming ruff, never shell out to a fetching fallback
+#     (a green judged by a network-fetched tool is not the pinned toolchain).
+STUBBIN="$TMP/stubbin"
+mkdir -p "$STUBBIN"
+printf '#!/bin/sh\nexit 0\n' > "$STUBBIN/uvx"
+chmod +x "$STUBBIN/uvx"
+set +e
+ERR=$(env PATH="$STUBBIN:/usr/bin:/bin" sh "$G" "$W/good.py" 2>&1)
+RC=$?
+set -e
+[ "$RC" -eq 64 ] || fail "uvx-present/ruff-absent exited $RC, want 64 (gate still has a uvx fallback)"
+echo "$ERR" | grep -qi 'ruff' || fail "uvx-present/ruff-absent diagnostic does not name ruff"
+
 # 8) check_root_coupling --staged is exercised by its own selftest (staged
 #    positive + worktree-only negative controls live there).
 python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \

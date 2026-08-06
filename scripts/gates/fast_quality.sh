@@ -22,8 +22,9 @@
 #     factory tsconfig's compilerOptions mirrored as CLI flags (--project
 #     cannot take a file list), so both mounts judge a file identically. The
 #     factory's own full-project typecheck lives in mount 2.
-#   Python lane (*.py): ruff format --check + ruff check. ruff absent (also
-#     no uvx to fetch it) = FATAL 64, named.
+#   Python lane (*.py): ruff format --check + ruff check. ruff absent =
+#     FATAL 64, named, with install guidance — no network fallback: the gate
+#     judges with the locally pinned tool or refuses, it never fetches one.
 #   Shell lane  (*.sh *.bash): bash -n (sh -n when bash is absent).
 #
 # Fail-fast: first failing stage blocks all later stages, which are recorded
@@ -74,12 +75,9 @@ done
 IFS=$OLDIFS
 
 # ------------------------------------------------- tool presence (FATAL 64)
-RUFF=""
 if [ -n "$PY" ]; then
-  if command -v ruff >/dev/null 2>&1; then RUFF="ruff"
-  elif command -v uvx >/dev/null 2>&1; then RUFF="uvx ruff"
-  else fatal "ruff not on PATH and no uvx to fetch it (Python lane cannot run; brew install ruff)"
-  fi
+  command -v ruff >/dev/null 2>&1 \
+    || fatal "ruff not on PATH (Python lane cannot run; install it: brew install ruff, or pipx install ruff)"
 fi
 if [ -n "$TS" ]; then
   [ -d "$FACTORY/node_modules/.bin" ] \
@@ -125,9 +123,8 @@ in_factory() { (cd "$FACTORY" && "$@"); }
 
 # Cheap lanes first so a cheap red spares the expensive TS toolchain spin-up.
 run_stage sh-syntax  "$SH" "$SHELLCHECKER" -n
-# shellcheck disable=SC2086 — $RUFF is intentionally one-or-two words
-run_stage py-format  "$PY" $RUFF format --check
-run_stage py-lint    "$PY" $RUFF check --quiet
+run_stage py-format  "$PY" ruff format --check
+run_stage py-lint    "$PY" ruff check --quiet
 run_stage ts-format  "$TS" in_factory ./node_modules/.bin/prettier --config prettier.config.mjs --check
 run_stage ts-lint    "$TS" in_factory ./node_modules/.bin/eslint --config eslint.config.mjs
 # Mirrors the factory tsconfig.json compilerOptions (tsc --project cannot take
