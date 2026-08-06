@@ -5,7 +5,7 @@ description: The three zero-LLM Python structure gates and their shared spine �
 tags: [gates, root-coupling, placement, skill-pointers]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [root-coupling, evidence-allowlist, placement-gate, skill-pointer-gate, gate-selftest]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -13,7 +13,7 @@ generated_at: null
 
 # Structure gates — root coupling, placement, skill pointers
 
-`scripts/gates/` holds the repo-level defense scripts, zero LLM involvement (src: ARCHITECTURE.md:33). All three Python gates ride the [pre-commit hook](../host-loop/git-hooks.md) after the quality gate (src: .githooks/pre-commit:68-71) and share the exit contract 0 clean · 2 violation · 64 usage/precondition, with `--selftest` returning 0 green / 1 red on throwaway git fixtures.
+`scripts/gates/` holds the repo-level defense scripts, zero LLM involvement (src: ARCHITECTURE.md:34). All three Python gates ride the [pre-commit hook](../host-loop/git-hooks.md) after the quality gate (src: .githooks/pre-commit:68-71) and share the exit contract 0 clean · 2 violation · 64 usage/precondition, with `--selftest` returning 0 green / 1 red on throwaway git fixtures.
 
 ## Shared spine — _gate_common.py
 
@@ -23,7 +23,7 @@ All three gates anchor their scan on `Path(__file__).resolve().parent`, NOT cwd 
 
 ## check_root_coupling.py — no absolute home roots in tracked files
 
-The open-source contract: "clone anywhere and every gate runs"; absolute home-root prefixes in tracked files silently re-couple the tree to one machine (src: scripts/gates/check_root_coupling.py:4-8). Iron law 2 (src: ARCHITECTURE.md:45-46). Mechanics:
+The open-source contract: "clone anywhere and every gate runs"; absolute home-root prefixes in tracked files silently re-couple the tree to one machine (src: scripts/gates/check_root_coupling.py:4-8). Iron law 2 (src: ARCHITECTURE.md:49-50). Mechanics:
 
 - **Patterns are assembled at runtime from fragments** — the macOS/Linux/Windows per-user prefixes — so the gate's own source never contains a literal match for what it hunts (src: scripts/gates/check_root_coupling.py:26-27, 39-42). The migration engine uses the identical trick (src: scripts/migrate/migrate_seed.py:52-55).
 - **Scope**: tracked files only — untracked local state is allowed to be dirty (src: scripts/gates/check_root_coupling.py:8-9). Binary/unreadable files are skipped as "not a text coupling surface" (src: scripts/gates/check_root_coupling.py:88-90).

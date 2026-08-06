@@ -5,7 +5,7 @@ description: The tests/ suite — CLI-exit-code seam tests with red-first contro
 tags: [tests, seams, tools]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [seam-tests, driver-smoke, corpus-parity]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -13,11 +13,11 @@ generated_at: null
 
 # Repo-level seam tests and measurement tools
 
-`tests/` holds repo-level tests that hit the gate CLI exit-code seam (src: ARCHITECTURE.md:36) — the only seam iron law 1 allows (src: ARCHITECTURE.md:43-44). The house style across every file: isolated fixture copies (`mktemp -d` + trap cleanup), both directions exercised, and reds demonstrated before greens are trusted. Run any file directly: `sh tests/<name>.sh`.
+`tests/` holds repo-level tests that hit the gate CLI exit-code seam (src: ARCHITECTURE.md:37) — the only seam iron law 1 allows (src: ARCHITECTURE.md:47-48). The house style across every file: isolated fixture copies (`mktemp -d` + trap cleanup), both directions exercised, and reds demonstrated before greens are trusted. Run any file directly: `sh tests/<name>.sh`.
 
 ## The six seam tests
 
-- **test_bootstrap.sh** — bootstrap CLI exit codes + resulting git config on an isolated copy: relative hooksPath set, idempotent rerun, unconditional `.githooks/` copy so a missing tracked-hooks dir fails rather than being masked (src: tests/test_bootstrap.sh:2-21). See [bootstrap](host-loop/bootstrap.md).
+- **test_bootstrap.sh** — bootstrap CLI exit codes + resulting git config on an isolated copy: relative hooksPath set, idempotent rerun, unconditional `.githooks/` copy so a missing tracked-hooks dir fails rather than being masked (src: tests/test_bootstrap.sh:2-21); the openwiki-freshness WARN block: absent/fresh/stale wiki fixtures, committed with `core.hooksPath` disabled because the seam under test is the doctor WARN, not the hooks (src: tests/test_bootstrap.sh:22-39); and three FATAL-64 probes asserting code AND diagnostic: missing `bun`, missing `python3` (stub PATH of git/sh/bun symlinks), and a removed `.githooks/` each fail by name (src: tests/test_bootstrap.sh:41-66). See [bootstrap](host-loop/bootstrap.md).
 - **test_fast_quality.sh** — `fast_quality.sh` CLI + the REAL pre-commit's behavior in a fixture repo. Controls: per-lane negative controls (TS type error, Python format violation, shell syntax error), clean positive control, fail-fast `not_run` assertion, ruff-absent FATAL 64, hook self-integrity block, budget-overrun FATAL, <5s wall bound — "every green here was first seen red while this file predated the implementation" (src: tests/test_fast_quality.sh:2-11). Since commit 2c36ddf, one EXIT trap owns tagged-orphan cleanup so every failure path sweeps watchdog survivors off the host (proved red first with an escaping setsid grandchild). See [fast quality](gates/fast-quality.md).
 - **test_host_config.sh** — host config files + rm_guard CLI: settings.json validity, `$CLAUDE_PROJECT_DIR` usage, PreToolUse registration present, and the guard blocking an escape (2) while passing an inside delete (0) — "or its green proves nothing" (src: tests/test_host_config.sh:2-20). See [Claude host](host-loop/claude-host.md).
 - **test_mcp_surface.sh** — `.mcp.json` declares exactly the three servers; production engine `--help` runs and its profile binds to THIS repo; the engine-hash check is driven RED on a tampered profile; bootstrap doctor WARNs are driven to fire and to clear; mid-test failure cannot leave the tampered profile behind (src: tests/test_mcp_surface.sh:2-18). See [MCP surface](host-loop/mcp-surface.md).

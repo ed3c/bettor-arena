@@ -5,7 +5,7 @@ description: Structure and truth-layer discipline of plans/perfect-seed-v2/ — 
 tags: [factory, plan, v2]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [v2-plan, truth-layers, ontology-placement]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -17,7 +17,7 @@ generated_at: null
 
 ## Location decision
 
-The plan deliberately lives factory-local instead of the generic `docs/plans/<date>-<topic>/` convention, following the human-approved factory-local boundary (src: README.md:8-10) — consistent with iron law 3's "sandboxes use their own directory as host dir" (src: ARCHITECTURE.md:47-48).
+The plan deliberately lives factory-local instead of the generic `docs/plans/<date>-<topic>/` convention, following the human-approved factory-local boundary (src: README.md:8-10) — consistent with iron law 3's "sandboxes use their own directory as host dir" (src: ARCHITECTURE.md:51-52).
 
 ## Truth layers
 

@@ -5,7 +5,7 @@ description: The idempotent activation script that registers versioned git hooks
 tags: [bootstrap, host-loop, doctor]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [bootstrap-activation, hookspath, doctor-fatal-warn]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -29,12 +29,13 @@ generated_at: null
    - `uv` absent → names the context-pack/serena launchers and the install URL (src: bootstrap.sh:37-38).
    - ollama unreachable on `${OLLAMA_URL:-http://localhost:11434}` → names grepai embeddings and the brew/serve commands (src: bootstrap.sh:39-44). The URL is parameterized via `OLLAMA_URL` (hardened in commit 57f6809, src: git log).
    - `.grepai/index.gob` absent → names `grepai init && grepai watch` (src: bootstrap.sh:45-46).
-6. **Success line**: `bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)` (src: bootstrap.sh:48).
-7. **MCP approval instructions, printed never performed**: "auto-enabling project MCP servers would be self-approval" (src: bootstrap.sh:50-58). The human approves `.mcp.json`'s three servers in Claude Code's project-trust prompt and hand-adds host sections to `.codex/config.toml` — see [MCP surface](mcp-surface.md).
+6. **As-built wiki freshness, WARN never FATAL (ISSUE-23)**: the wiki is a regenerable projection, not a bootstrap need (src: bootstrap.sh:48-49). Three named outcomes, never a silent pass: no `openwiki/.last-update.json` → "wiki absent or unfinalized"; a recorded `gitHead` this checkout cannot resolve → "freshness undecidable" (distinct from stale — the anchor itself is unusable); a resolvable `gitHead` with any non-`openwiki/` diff to HEAD → "is stale" (src: bootstrap.sh:50-63). Excluding `openwiki/` from the freshness diff is deliberate: comparing raw HEADs would flag the wiki's own landing commit forever, since finalize's `.last-update.json` write is itself a commit to the tree it is describing (src: bootstrap.sh:53-55). See [kb-ingest official port](../kb-ingest/official-port.md#wiki_update_workersh-digestion-station-for-factory-wiki-update-requests) for the pipeline that clears this WARN.
+7. **Success line**: `bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)` (src: bootstrap.sh:65).
+8. **MCP approval instructions, printed never performed**: "auto-enabling project MCP servers would be self-approval" (src: bootstrap.sh:67-75). The human approves `.mcp.json`'s three servers in Claude Code's project-trust prompt and hand-adds host sections to `.codex/config.toml` — see [MCP surface](mcp-surface.md).
 
 ## Focused test
 
-`tests/test_bootstrap.sh` exercises the seam on an isolated copy: first run must set `core.hooksPath` to exactly the relative string `.githooks`, the second run must be idempotent with no drift, and the copy step for `.githooks/` is deliberately unconditional so a missing tracked hooks dir fails the test rather than being masked by a fallback `mkdir` (src: tests/test_bootstrap.sh:2-21). Historical anchor: the tracked-hooks-exist assertion was added in commit 7e52b8e ("assert tracked hooks exist before claiming OK").
+`tests/test_bootstrap.sh` exercises the seam on an isolated copy: first run must set `core.hooksPath` to exactly the relative string `.githooks`, the second run must be idempotent with no drift, and the copy step for `.githooks/` is deliberately unconditional so a missing tracked hooks dir fails the test rather than being masked by a fallback `mkdir` (src: tests/test_bootstrap.sh:2-21). Historical anchor: the tracked-hooks-exist assertion was added in commit 7e52b8e ("assert tracked hooks exist before claiming OK"). The same file also drives the wiki-freshness WARN through all three named outcomes on isolated fixture commits: absent wiki fires, a freshly-stamped `.last-update.json` stays silent, and a subsequent code-only commit flips it to stale (src: tests/test_bootstrap.sh:22-39). The fixture commits run with `-c core.hooksPath=` — hooks explicitly disabled — because this seam tests the doctor WARN, not the hooks: those have their own seam tests (fast_quality / molecular), and the fixture lacks the factory toolchain the pre-commit TS lane needs (src: tests/test_bootstrap.sh:22-26). Three FATAL-64 probes close the file, each asserting both the exit code and that the diagnostic names its subject: a `PATH=/usr/bin:/bin` run must FATAL 64 naming `bun`; a stub PATH dir holding only `git`/`sh`/`bun` symlinks must FATAL 64 naming `python3`; and removing `.githooks/` entirely must FATAL 64 naming `.githooks` rather than printing OK over an empty hooksPath registration (src: tests/test_bootstrap.sh:41-66).
 
 ## Relationship to the rest of the host loop
 

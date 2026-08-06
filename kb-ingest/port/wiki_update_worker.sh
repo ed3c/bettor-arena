@@ -288,8 +288,41 @@ print("\n".join(red))
 PY
 ) || fail "verifier verdict parsing failed"
     if [ -n "$red_questions" ]; then
-      printf '%s\n' "$red_questions" >&2
-      fail "verifier gate RED — repair the named pages per the findings above, then rerun"
+      # Bounded-round stop-loss, encoded in the mechanism (human ruling
+      # 2026-08-06): the finder mints NEW questions every rerun, so a strict
+      # all-PASS gate is an unbounded treadmill. With the explicit flag, and
+      # ONLY when every finding is a PARTIAL (missing depth) — a FAIL (wrong
+      # content) always stays red — the findings defer into the wiki's own
+      # ## Backlog section (the emergent lane: run-discovered observations,
+      # never a standards module) and the run proceeds, with the deferred
+      # count carried on the receipt. Default remains strict.
+      if [ "${WIKI_UPDATE_DEFER_PARTIALS:-0}" = "1" ] \
+        && ! printf '%s\n' "$red_questions" | grep -qv ' PARTIAL: '; then
+        DEFERRED_COUNT=$(printf '%s\n' "$red_questions" | grep -c ' PARTIAL: ')
+        RED_QUESTIONS="$red_questions" REQUEST_ID="$request_id" \
+          python3 - "$root/openwiki/quickstart.md" <<'PY' || fail "backlog deferral write failed"
+import os, sys
+from pathlib import Path
+
+page = Path(sys.argv[1])
+text = page.read_text(encoding="utf-8")
+marker = "\n## Backlog\n"
+at = text.find(marker)
+if at < 0:
+    print("FAIL: quickstart has no canonical ## Backlog section to defer into", file=sys.stderr)
+    sys.exit(2)
+insert_at = at + len(marker)
+lines = "".join(
+    f"- [deferred from {os.environ['REQUEST_ID']}] {line}\n"
+    for line in os.environ["RED_QUESTIONS"].splitlines() if line.strip())
+page.write_text(text[:insert_at] + "\n" + lines + text[insert_at:], encoding="utf-8")
+print(f"[backlog] deferred {len(lines.splitlines())} PARTIAL finding(s) into quickstart ## Backlog")
+PY
+        echo "[gates] verifier PARTIALs deferred to backlog (count=$DEFERRED_COUNT) per bounded-round policy"
+      else
+        printf '%s\n' "$red_questions" >&2
+        fail "verifier gate RED — repair the named pages per the findings above, then rerun"
+      fi
     fi
   fi
   echo "[gates] finder=$gate_finder verifier=$gate_verifier critic=$gate_critic"
@@ -344,6 +377,7 @@ PY
   RECEIPT_PATH="$receipt" REQUEST_ID="$request_id" REQUEST_PATH="$request" MODE="$mode" \
   GATE_FINDER="$gate_finder" GATE_VERIFIER="$gate_verifier" GATE_CRITIC="$gate_critic" \
   REGENERATE="$regenerate_state" POST_MIGRATE="$post_migrate" POST_FINALIZE="$post_finalize" \
+  DEFERRED="${DEFERRED_COUNT:-0}" \
   RECEIPT_SCHEMA="$RECEIPT_SCHEMA" python3 - <<'PY'
 import datetime, json, os
 receipt = {
@@ -361,6 +395,9 @@ receipt = {
         "post_migrate": int(os.environ["POST_MIGRATE"]),
         "post_finalize": int(os.environ["POST_FINALIZE"]),
     },
+    # Bounded-round policy: PARTIAL findings deferred into the wiki backlog
+    # (emergent lane) instead of blocking finalize; 0 on strict runs.
+    "verifier_partials_deferred": int(os.environ["DEFERRED"]),
     "utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
 }
 with open(os.environ["RECEIPT_PATH"], "w", encoding="utf-8") as handle:

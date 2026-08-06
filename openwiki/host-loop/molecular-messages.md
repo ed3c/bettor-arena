@@ -5,7 +5,7 @@ description: The rebuilt validate_molecular_message.ts gate — its legislated c
 tags: [commit-msg, molecular, protected-surface]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [molecular-message, intent-slice, protected-surface, corpus-parity]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -13,7 +13,7 @@ generated_at: null
 
 # Molecular commit-message contract
 
-`.githooks/lib/validate_molecular_message.ts` is the commit-msg gate's brain, run under bun by the [commit-msg hook](git-hooks.md). It was REBUILT (S8, commit 99fa15d) from the source repo's UDPT validator rather than copied — the iron-law-7 discipline of judging equivalence by rebuild, not by name (src: ARCHITECTURE.md:55).
+`.githooks/lib/validate_molecular_message.ts` is the commit-msg gate's brain, run under bun by the [commit-msg hook](git-hooks.md). It was REBUILT (S8, commit 99fa15d) from the source repo's UDPT validator rather than copied — the iron-law-7 discipline of judging equivalence by rebuild, not by name (src: ARCHITECTURE.md:59).
 
 ## Legislated charter
 

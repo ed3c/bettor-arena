@@ -5,7 +5,7 @@ description: The single fast-quality check definition (format/lint/type/shell-sy
 tags: [gates, fast-quality, receipt]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [fast-quality, claim-boundary, gate-inputs]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -36,7 +36,7 @@ The first failing stage blocks all later stages, which are recorded as `not_run`
 
 ## Receipt and claim boundary
 
-The JSON receipt (stdout, or `--receipt <path>`; "Never lands in data/receipts/") carries schema `bettor-arena-fast-quality-receipt@1.0.0`, per-lane counts, per-stage status/exit, and `gate_inputs` — sha256 of every involved config file plus the script itself, so config drift is visible in the receipt (src: scripts/gates/fast_quality.sh:33-36, 139-164). Its `claim_boundary` is hard-coded `preflight-only-not-code-quality-axis`: "green here is a preflight pass only, never a CQ/PU code-quality-axis claim" (src: scripts/gates/fast_quality.sh:36-38, 161) — iron law 5 (src: ARCHITECTURE.md:51-53). Factory-side receipts of this shape accumulate under `loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/fast-quality.*.receipt.json`.
+The JSON receipt (stdout, or `--receipt <path>`; "Never lands in data/receipts/") carries schema `bettor-arena-fast-quality-receipt@1.0.0`, per-lane counts, per-stage status/exit, and `gate_inputs` — sha256 of every involved config file plus the script itself, so config drift is visible in the receipt (src: scripts/gates/fast_quality.sh:33-36, 139-164). Its `claim_boundary` is hard-coded `preflight-only-not-code-quality-axis`: "green here is a preflight pass only, never a CQ/PU code-quality-axis claim" (src: scripts/gates/fast_quality.sh:36-38, 161) — iron law 5 (src: ARCHITECTURE.md:55-57). Factory-side receipts of this shape accumulate under `loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/fast-quality.*.receipt.json`.
 
 Exit codes: 0 pass · 2 check failed · 64 FATAL (usage, missing file, missing tool). `FAST_QUALITY_FACTORY` overrides the factory path as a test seam (src: scripts/gates/fast_quality.sh:39-40).
 

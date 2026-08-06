@@ -5,7 +5,7 @@ description: The manifest-declared, root-decoupled subtree migration engine — 
 tags: [migration, engine, receipts]
 node_kind: RepoDoc
 repo: neon/bettor-arena
-commit: 2c36ddf
+commit: ca72a92
 covers: [migration-engine, manifest, force-receipt, evidence-verbatim]
 generated_by: claude-code+claude-fable-5
 generated_at: null
@@ -59,4 +59,4 @@ After `--apply`, a per-run stats receipt (no absolute paths — "the receipt lan
 
 ## Relationship to mcp/production/migrate.py
 
-Different engine, different domain, same discipline: `mcp/production/migrate.py` migrates MCP configuration by profile with chained receipts and human gates ([MCP surface](../host-loop/mcp-surface.md)); this engine migrates repo subtrees by manifest. Neither reuses the other — the iron-law-7 rebuild-not-assume rule (src: ARCHITECTURE.md:55).
+Different engine, different domain, same discipline: `mcp/production/migrate.py` migrates MCP configuration by profile with chained receipts and human gates ([MCP surface](../host-loop/mcp-surface.md)); this engine migrates repo subtrees by manifest. Neither reuses the other — the iron-law-7 rebuild-not-assume rule (src: ARCHITECTURE.md:59).
