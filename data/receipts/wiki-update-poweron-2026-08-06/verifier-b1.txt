@@ -1,0 +1,11 @@
+<results>
+  <result id="Q-01" status="PASS">
+    <missing>None</missing>
+  </result>
+  <result id="Q-02" status="PASS">
+    <missing>None</missing>
+  </result>
+  <result id="Q-03" status="PARTIAL">
+    <missing>/openwiki/kb-ingest/official-port.md (§wiki_update_worker.sh review-gates bullet, and the openwiki_subagent.sh section) omits: (1) that the worker takes only the LAST stdout line of `openwiki_subagent.sh` as the review-file path and why (the runner emits diagnostics/progress on stdout before that path); (2) the named failure branch for a finder output containing zero `[Q-NN]` questions — the page documents only the missing-verifier-file and zero-`<result>`-block reds, so a question-less finder run is not shown to fail by name.</missing>
+  </result>
+</results>

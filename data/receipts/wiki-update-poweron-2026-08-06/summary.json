@@ -1,0 +1,17 @@
+{
+  "kind": "wiki-update-gates",
+  "packet_id": "poweron-2026-08-06",
+  "request_id": "poweron-2026-08-06@1e7f3df900094d85b99bd7b91dc6a827f8e583d0",
+  "stages": {
+    "parse": 0,
+    "preflight": 0,
+    "llm_regenerate": "ran:model=sonnet,changed=2",
+    "gate_finder": 0,
+    "gate_verifier": 0,
+    "gate_critic": "skipped-no-skeleton",
+    "post_migrate": 0,
+    "post_finalize": 0
+  },
+  "utc": "2026-08-06T10:56:30Z",
+  "note": "runner scratch lives in untracked .openwiki-review/ and the gitignored data/wiki-update/ ledger; this directory is the frozen copy per the data/receipts ledger discipline (same pattern as openwiki-init-2c36ddf). verifier-b2 source file is named verifier-B2-latest.txt on disk: the case-insensitive default APFS volume collapses the worker's b2 label onto the init run's B2 wave file."
+}
