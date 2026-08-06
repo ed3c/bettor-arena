@@ -148,6 +148,11 @@ PY
   local receipt
   mkdir -p "$root/data/wiki-update"
   receipt="$root/data/wiki-update/receipt-$packet_id.json"
+  # Receipts are frozen evidence (CONTEXT.md; house rule set by #19): a rerun
+  # must declare its intent, never silently rewrite history.
+  if [ -e "$receipt" ] && [ "${WIKI_UPDATE_FORCE_RECEIPT:-0}" != "1" ]; then
+    fatal "receipt already exists: $receipt — rerun with WIKI_UPDATE_FORCE_RECEIPT=1 to overwrite explicitly"
+  fi
   RECEIPT_PATH="$receipt" REQUEST_ID="$request_id" REQUEST_PATH="$request" MODE="$mode" \
   GATE_FINDER="$gate_finder" GATE_VERIFIER="$gate_verifier" GATE_CRITIC="$gate_critic" \
   REGENERATE="$regenerate_state" POST_MIGRATE="$post_migrate" POST_FINALIZE="$post_finalize" \
@@ -240,6 +245,13 @@ EOF
   else
     tail -5 "$base/good.out" >&2
   fi
+
+  # Frozen-evidence rule: a rerun over an existing receipt refuses (64) unless
+  # the overwrite intent is explicit; with it, the rerun succeeds.
+  (WIKI_WORKER_ROOT="$fixture" "$0" "$request" --dry-run) >/dev/null 2>&1
+  expect "receipt-collision-refused" 64 $?
+  (WIKI_WORKER_ROOT="$fixture" WIKI_UPDATE_FORCE_RECEIPT=1 "$0" "$request" --dry-run) >/dev/null 2>&1
+  expect "receipt-collision-forced" 0 $?
 
   echo "SELFTEST $([ "$red" -eq 0 ] && echo GREEN || echo RED)"
   return "$red"

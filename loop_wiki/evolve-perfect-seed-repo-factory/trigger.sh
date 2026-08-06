@@ -97,7 +97,15 @@ fi
 #   iteration = deterministic delta (.last-update.json gitHead -> HEAD)
 #   emergent  = pointer to the openwiki-native backlog; emergent content itself
 #               lands only there, never in this request or any standards module
-ARENA=$(git -C "$ROOT" rev-parse --show-toplevel)
+# Standalone trees (portability.sh's extracted archive) have no enclosing git
+# repo and no arena ledger: emission is then a NAMED skip, never a failure —
+# the factory must stay relocatable, and a skipped request must not read as an
+# emitted one (the e2e test asserts emission only inside the arena).
+if ! ARENA=$(git -C "$ROOT" rev-parse --show-toplevel 2>/dev/null); then
+  echo "NOTE: wiki-update request skipped — standalone tree (no enclosing git repo)"
+  echo "PASS: route_result=$ROUTE_RESULT wiki_update_request=skipped-standalone"
+  exit 0
+fi
 GIT_HEAD=$(git -C "$ARENA" rev-parse HEAD)
 LAST_HEAD=""
 if [ -f "$ARENA/openwiki/.last-update.json" ]; then
