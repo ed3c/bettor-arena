@@ -643,15 +643,24 @@ describe("wiki-update delivery terminus (ISSUE-23)", () => {
   test("a successful trigger delivery emits a typed wiki-update request with the three context lanes", () => {
     const temp = temporaryRoot();
     const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    // Pre-clean so a stale request from an earlier run cannot masquerade as
+    // this delivery's emission.
+    if (ARENA !== "") rmSync(join(ARENA, "data", "wiki-update", "request-fixture-dr.json"), { force: true });
+    const result = Bun.spawnSync(["sh", join(ROOT, "trigger.sh"), packet, join(temp, "out")], {
+      cwd: ROOT,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(result.exitCode, result.stderr.toString()).toBe(0);
+    if (ARENA === "") {
+      // Standalone tree (portability's extracted archive): emission is a NAMED
+      // skip — asserting that keeps the factory relocatable without letting a
+      // skipped request masquerade as an emitted one.
+      expect(result.stdout.toString()).toContain("wiki_update_request=skipped-standalone");
+      return;
+    }
     const requestPath = join(ARENA, "data", "wiki-update", "request-fixture-dr.json");
-    rmSync(requestPath, { force: true });
     try {
-      const result = Bun.spawnSync(["sh", join(ROOT, "trigger.sh"), packet, join(temp, "out")], {
-        cwd: ROOT,
-        stdout: "pipe",
-        stderr: "pipe",
-      });
-      expect(result.exitCode, result.stderr.toString()).toBe(0);
       // Negative control the slice exists for: delivery succeeded but the
       // request artifact is absent — that must be caught, not assumed away.
       expect(existsSync(requestPath)).toBe(true);
