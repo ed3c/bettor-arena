@@ -37,9 +37,10 @@
 | #26 | engine_nv.sh 宣告但未建造 | **完成(撤)** | ts `fe4abe2`(具名 NOT-RUN)→ 2026-08-07 人裁退役 | selftest 與 `_nv_fixtures/` 已刪、§2 槽位與 harness-wiki 記退役理由;方法論(harness-spec §4.5+四 checker)不隨之退役 |
 | #27 | delivery-loop 移植 Forgejo | **完成** | ts `b8d42bd`(三支工具+`/delivery`)、arena `b30f909`(null 修正) | 收據閘 selftest 四案、milestone 實建、registry 零 github.com;ts 側真跑派送兩半皆通 |
 | ts#1 | GCR-SLICE-02 admit | **完成** | ts `2cd905f`→`0f8e451` | 旅程真走完:PR-head preview → fast-forward merge → canonical smoke,兩相位投影相同且等於綁定 artifact hash;milestone `gcr-admitted-tracer` blocked_dependency→in_progress→verified |
-| #30 | context 套件既有紅 | **未完成** | — | `next_route_node: target-selftest` 缺失;**先於本輪工作即紅**(乾淨 HEAD 重跑訊息逐字相同),真因未查明前不修 |
-| #31 | 宣告值無人斷言 | **未完成** | — | `runtime_boundary_coverage_complete` 釘成 false 照樣 PASS;由 #16 回釘的一次順序錯誤暴露 |
-
+| #30 | context 套件既有紅 | **完成** | ts `90bbe7f` | 生產者錯:REQUIRED_TARGET_PATHS 仍列 5 個源樹已無的檔案,恆停在 migration-target-repair。guard 擴成兩 twin 逐項比對(單側刪一條原本靜默) |
+| #31 | 宣告值無人斷言 | **完成** | ts `90bbe7f` | 兩個字串斷言收口(前綴洩漏),同型缺陷在上一行的 python_spawn_boundary_coverage 一併修;9 個無人讀的 key 全屬生產者輸入,已記進 notes |
+| ts#27b | 收據物化 | **完成** | ts `fc2b196`、arena `517dd59` | PR merge 後線才有交付載體;真跑 sync 炸出 explicit-null 與 merged-PR 兩缺陷,兩份姊妹副本同日一起掃 |
+| #2 | PRD 母票 | **完成** | 本輪 | 驗收條款逐條真跑:5 結構閘+5 selftest+fast_quality+7 tests+工廠三支+kb-ingest 閘,全綠零紅 |
 ## 2. 跑過什麼(真跑,非宣稱)
 
 - **六波 workflow**(22+ agent):implement→tdd→code-review 逐片,findings 回流成 fix commit 或新票。
@@ -55,8 +56,11 @@
 - **engine_nv.sh**(#26):從未建造。2026-08-07 人裁**撤**——selftest 與治具刪除,留著一個永遠 NOT-RUN 的正控等於養一個沒人讀的燈。
 - **看板第四層**:Forgejo 9.0.3 projects API 404,agent 不能驅動;改用 milestone,缺口寫在
   `.agents/skills/forgejo-delivery-loop/modules/delivery-mechanism.md` §7。
-- **跨 repo `Closes #N` 自動關閉**:未實測,故未宣稱。
-- **CQ／PU 由 record-only 升 blocking**:綁第一個 admitted tracer,尚未發生。
+- **跨 repo `Closes #N` 自動關閉**:仍未實測,故仍不宣稱(本輪的關票全部由顯式 API PATCH 完成,
+  不是靠 commit 訊息觸發——這一點刻意不含糊)。
+- **CQ／PU 由 record-only 升 blocking**:**觸發條件 2026-08-07 已成立**——第一個 admitted tracer
+  (ts-skill-bettor#1,GCR-SLICE-02)走完真實旅程並產出 admission-result@v1。升級本身**尚未做**,
+  這條從「尚未發生」改記為「已到期未做」,開票 arena#32 追。兩者在帳上不能長得一樣。
 
 ## 4. 過程中的事故與修正(留帳而非美化)
 
@@ -70,6 +74,20 @@
 4. **無界 treadmill**:wiki verifier 每輪生新題,all-PASS 不可終止(實測 8→3→2)。停損編進機制:
    PARTIAL-only 遞延 backlog,FAIL 恆紅,receipt 記遞延數。
 5. **agent 以等待句收尾**:三次子 agent 掛好 monitor 就終結回報。收尾由主 session 接管。
+
+6. **截斷普查冒充完整普查**:查引用時 `git grep` 後面接了 `head -30`,真實清單 12 筆,漏掉 6 個活引用。
+   #26 的刪除腳本前置擋下才發現。教訓:枚舉引用永不截斷——被截斷的普查與完整的普查長得一模一樣,
+   直到下游有人不同意。
+7. **回釘順序錯導致靜默劣化**:先改記憶體裡的登記表、後寫檔,而 checker 從磁碟讀,於是算出來的 payload
+   仍帶著 stale 條目,兩個狀態旗標被釘成劣化值(`runtime_boundary_coverage_complete` True→False)
+   ——**而套件照樣 PASS**。它被抓到不是因為閘紅了,是因為人看 diff 覺得「這不是計數、是旗標變差」
+   而去重算。暴露出宣告值無人斷言的缺口(#31)。
+8. **變異對照本身寫壞**:`sed` 把 preview 與 canonical 兩邊都改成同一個值,兩者仍相等,閘自然回 passed。
+   教訓:負控要先證明它真的只動到單一變因,否則它證明的是別的事。
+9. **修在發現處而非所有存在處**:explicit-null 的 `dict.get` 缺陷在 audit renderer 修過一次,
+   姊妹工具 `delivery_sync` 的兩份副本都還留著,直到真跑 sync 才炸出來。本輪已同日一起掃兩側。
+10. **反引號被 shell 吃掉**:用 `python3 -c "…"` 改文件時,雙引號字串裡的反引號是命令替換,
+   於是寫進帳的段落少了每一個 code span。改用落檔腳本重寫。小,但同型:**在 shell 裡拼字串就是在拼運氣**。
 
 ## 5. 這條線怎麼繼續
 
