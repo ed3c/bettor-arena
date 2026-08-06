@@ -22,9 +22,54 @@ command -v python3 >/dev/null 2>&1 || fatal "python3 not on PATH (gates are Pyth
 command -v bun >/dev/null 2>&1 || fatal "bun not on PATH (factory toolchain; install from https://bun.sh)"
 
 # Relative hooksPath: valid from any checkout location, versioned hooks.
+# .githooks/ is tracked (S8); pointing hooksPath at a missing/empty dir would
+# print OK while registering nothing — assert before configuring.
+[ -d "$ROOT/.githooks" ] && [ -n "$(ls -A "$ROOT/.githooks")" ] \
+  || fatal ".githooks/ missing or empty — hooksPath would register nothing (restore the tracked hooks)"
 git -C "$ROOT" config core.hooksPath .githooks
 
 python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
   || fatal "root-coupling gate selftest RED — do not trust its green"
 
+# Optional MCP toolchain: absent is WARN, never FATAL — MCP is opt-in, and a
+# clone without it must still bootstrap. WARNs name the fix, not just the gap.
+warn() { echo "bootstrap WARN: $1" >&2; }
+command -v uv >/dev/null 2>&1 \
+  || warn "uv not on PATH (context-pack/serena MCP launchers need it; install: https://docs.astral.sh/uv/)"
+OLLAMA="${OLLAMA_URL:-http://localhost:11434}"
+if command -v curl >/dev/null 2>&1 && curl -sf -m 2 "$OLLAMA/" >/dev/null 2>&1; then
+  echo "bootstrap ok: ollama reachable on $OLLAMA"
+else
+  warn "ollama not reachable on $OLLAMA (grepai embeddings; install: brew install ollama, then: ollama serve)"
+fi
+[ -f "$ROOT/.grepai/index.gob" ] \
+  || warn "grepai index absent — rebuild with: grepai init && grepai watch"
+
+# As-built wiki freshness: stale or absent is WARN, never FATAL — the wiki is a
+# regenerable projection (ARCHITECTURE.md §2 openwiki/), not a bootstrap need.
+if [ -f "$ROOT/openwiki/.last-update.json" ]; then
+  WIKI_HEAD=$(sed -n 's/.*"gitHead"[[:space:]]*:[[:space:]]*"\([0-9a-f]*\)".*/\1/p' \
+    "$ROOT/openwiki/.last-update.json" | head -1)
+  # Stale means the CODE moved since generation. Comparing raw HEADs would flag
+  # the wiki's own landing commit forever; excluding openwiki/ from the diff
+  # makes "fresh" reachable in the real repo, not only in fixtures.
+  if [ -z "$WIKI_HEAD" ] || ! git -C "$ROOT" rev-parse -q --verify "$WIKI_HEAD" >/dev/null 2>&1; then
+    warn "openwiki/ freshness undecidable (recorded gitHead ${WIKI_HEAD:-unset} unknown here) — rerun the repo-wiki-converge update flow"
+  elif ! git -C "$ROOT" diff --quiet "$WIKI_HEAD" HEAD -- . ':(exclude)openwiki/' 2>/dev/null; then
+    warn "openwiki/ is stale (code changed since wiki gitHead $WIKI_HEAD) — rerun the repo-wiki-converge update flow"
+  fi
+else
+  warn "openwiki/ wiki absent or unfinalized — generate it with the repo-wiki-converge skill"
+fi
+
 echo "bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)"
+
+# MCP approval is a human gate. This script prints the steps and never
+# performs them: auto-enabling project MCP servers would be self-approval.
+cat <<'EOF'
+MCP approval (human-owned, not automated):
+  1. Claude Code: open this repo fresh; when prompted for the project .mcp.json
+     servers (grepai / repo-context-pack / serena), review and approve yourself.
+  2. Codex: .codex/config.toml ships only portable MCP declarations; add the
+     host sections (permissions/network/sockets) by hand before trusting.
+EOF

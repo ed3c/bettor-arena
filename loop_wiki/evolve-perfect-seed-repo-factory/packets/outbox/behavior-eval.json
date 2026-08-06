@@ -1,0 +1,20 @@
+{
+  "schema_version": "perfect-seed-behavior-eval@1.0.0",
+  "packet_id": "factory-public-seams",
+  "packet_state": "validated",
+  "cases": [
+    { "id": "dr-build", "expect": "repo-and-20-calls" },
+    { "id": "gcr-build", "expect": "repo-and-20-calls" },
+    { "id": "repo-build", "expect": "repo-and-20-calls" },
+    { "id": "grill-build", "expect": "repo-and-20-calls" },
+    { "id": "unknown-kind", "expect": "fail-loud" },
+    { "id": "overwrite-output", "expect": "fail-loud" },
+    { "id": "missing-skill", "expect": "hollow-fail" },
+    { "id": "minimum-lineage-drift", "expect": "fail-before-static-quality" },
+    { "id": "format-defect", "expect": "fail-before-lint" },
+    { "id": "lint-defect", "expect": "fail-before-typecheck" },
+    { "id": "type-defect", "expect": "fail-before-behavior" }
+  ],
+  "validator": "bun test tests/seed_factory.test.ts + sh selftest.sh",
+  "human_gate": "required_before_seed_admit"
+}

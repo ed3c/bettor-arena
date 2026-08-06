@@ -1,0 +1,15 @@
+{
+  "schema_version": "perfect-seed-governance@1.0.0",
+  "packet_kind": "baseline-update",
+  "packet_id": "baseline-update-example",
+  "packet_state": "reviewed",
+  "human_gate": "required_before_baseline_update",
+  "expected_stats": {
+    "schema_version": "perfect-seed-stats@1.0.0",
+    "source_kinds": 4,
+    "reasoning_functions": 20,
+    "reduced_ir_kinds": 9,
+    "template_files": 18,
+    "state_nodes": 7
+  }
+}

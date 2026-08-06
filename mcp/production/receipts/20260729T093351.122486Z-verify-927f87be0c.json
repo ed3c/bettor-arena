@@ -1,0 +1,120 @@
+{
+  "action": "verify",
+  "created_at": "2026-07-29T09:33:51.122716+00:00",
+  "details": {
+    "capabilities": [
+      {
+        "heavy_executor": true,
+        "id": "grepai",
+        "payload_residency": "on_demand",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      },
+      {
+        "heavy_executor": true,
+        "id": "serena",
+        "payload_residency": "demand_pull",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      },
+      {
+        "heavy_executor": false,
+        "id": "repo-context-pack",
+        "payload_residency": "demand_pull",
+        "registration": "always",
+        "surface_residency": "session_scoped"
+      }
+    ],
+    "git": {
+      "branch": "codex/mcp-production-migration",
+      "commit": "81d4c528c2fcd6a89904951e331bd900242c0f35",
+      "dirty": true
+    },
+    "human_gates": [
+      {
+        "automatable": false,
+        "description": "Human approves repo-context-pack for this project in Claude.",
+        "id": "claude-project-mcp-approval",
+        "status": "pending"
+      },
+      {
+        "automatable": false,
+        "description": "Human opens a fresh host chat so project MCP configuration is reloaded.",
+        "id": "fresh-chat-config-reload",
+        "status": "pending"
+      }
+    ],
+    "managed_files": [
+      {
+        "path": ".codex/config.toml",
+        "sha256": "aa570e99ac640961859dcb5fdea95ae00e35dc6a9d4f1ed013768841e5d3d787",
+        "status": "pass"
+      },
+      {
+        "path": ".mcp.json",
+        "sha256": "f8ca4b8bb54a6d80d8951dc0c1dfe9443186aa9bd78976761d672db8d11fcb66",
+        "status": "pass"
+      },
+      {
+        "path": ".serena/project.yml",
+        "sha256": "8cba048f5399072834e7965c91d5981f97db312afe6df86f3fa2d794fbcd0e51",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/context-pack/uv.lock",
+        "sha256": "116db2c88a0167a497c7b3fd31741c9f7c0faf29e4ebe25b8e84012757c33359",
+        "status": "pass"
+      },
+      {
+        "path": "mcp/production/migrate.py",
+        "sha256": "58f3b995a82af489b365f5e220c0da4b46c6831d54bdd60af145cd46d711e76f",
+        "status": "pass"
+      }
+    ],
+    "mirrors": [],
+    "probes": [
+      {
+        "duration_ms": 1750,
+        "id": "migration-engine-unit",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "3526b988163e0930364f098a84ef0dffdea641fdaea14af1e1521438650a279d",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "duration_ms": 1691,
+        "id": "context-pack-real-stdio",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "3219ec940b00cc1c222a19444468d4c2d59da01f5294f573c8009e4023cba315",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "duration_ms": 739,
+        "id": "codex-project-discovery",
+        "returncode": 0,
+        "status": "pass",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "d9b713c8bb5546f5a8adfb9ab8b8e43e29ad288076f186bd0ead66ffc944c4b6"
+      }
+    ],
+    "receipt_chain": {
+      "receipt_count": 0,
+      "status": "pass",
+      "tip_sha256": null
+    },
+    "repo_id": "ts-skill-bettor",
+    "status": "technical_pass_human_pending"
+  },
+  "git": {
+    "branch": "codex/mcp-production-migration",
+    "commit": "81d4c528c2fcd6a89904951e331bd900242c0f35",
+    "dirty": true
+  },
+  "previous_receipt_sha256": null,
+  "profile_path": "mcp/production/profile.json",
+  "profile_sha256": "72200d23ce08fc1eddc7f333b69438d2dd49b85a01220a3b589ce4e8a46f9681",
+  "repo_id": "ts-skill-bettor",
+  "run_id": "20260729T093351.122486Z-verify-927f87be0c",
+  "schema_version": 1
+}

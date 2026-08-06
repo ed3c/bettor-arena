@@ -1,0 +1,140 @@
+Based on my inspection of the repository source and tests, here is the question set:
+
+[Q-01]: How does a `build` invocation travel from `src/cli.ts:main` through `contracts.ts:readInputPacket`, `reduce.ts:reducePacket`, and `materialize.ts:materializeRepo`, and which invariants must `verify_generated_repo.ts` re-prove on the generated candidate before the terminal human admit?
+Acceptance criteria:
+- Identify the packet validations in `readInputPacket` (schema_version, `packet_state: "admitted"`, source-kind/path agreement, `fixed_prompt_context` must include `modules/semantic-truth-context.md`) and the output-path guards in `validateOutputPath`/`materializeRepo` (absolute, unsafe characters, never overwrite).
+- Explain how `reducePacket` derives evidence/claims/unknowns/decisions differently for `repo` vs text sources, including the `MAX_SOURCE_BYTES`/`MAX_REPO_FILES` bounds and the zero-evidence failure.
+- Trace lineage/manifest/build-receipt emission in `materializeRepo` (`artifact_manifest_sha256`, `terminal_state: "candidate-human-admit-required"`).
+- Name the checks `verify_generated_repo.ts` performs (required files, human-gate preservation, `source.json`/`lineage.json` refs agreement, exactly 20 call records, dependency order, final `F20` `admit_edge: human_required`).
+- Cite focused tests, e.g. `tests/seed_factory.test.ts:"does not overwrite an existing output"` and `"generated repo verifier rejects a lineage stripped of source_refs"`.
+Source evidence:
+- loop_wiki/evolve-perfect-seed-repo-factory/src/cli.ts:main — dispatches validate/build and maps `ReceiptCheckError` to exit 2.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:readInputPacket — enforces packet admission invariants.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/reduce.ts:reducePacket — builds the bounded evidence IR.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/materialize.ts:materializeRepo — writes lineage, manifest, and build receipt.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/verify_generated_repo.ts — re-proves candidate invariants.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"build carries source_refs through the reduced IR into the lineage manifest" — proves lineage propagation.
+
+[Q-02]: What is the full `source_refs` status lifecycle — `sentinel` injection by `src/migrate_packet.ts`, `declared`/`resolved`/`stale` judgement in `contracts.ts:refsStatusForPacket`, and the `resolve-refs --peer` audit in `cli.ts:resolveRefs` — and how are "never audited", "audited then broken", and "unreadable receipt" kept distinguishable?
+Acceptance criteria:
+- Explain why `migrate_packet.ts` injects `SENTINEL_SOURCE_REF` for `perfect-seed-input@0.1.0` packets and how `refsShapeStatus` makes sentinel dominate any receipt.
+- Trace how `resolveRefs` requires an explicit `--peer` (otherwise `NOT_RUN` with exit 2), audits commit existence and tracked path via `git cat-file`/`ls-tree`, and writes a receipt bound to `packet_sha256`.
+- Explain when `refsStatusForPacket` returns `stale` versus throwing `ReceiptCheckError` (exit 2 in `cli.ts`), and why standing gates never read sibling checkouts.
+- Show where `verify_generated_repo.ts` enforces refs_status/shape consistency between `source.json` and `lineage.json`.
+- Cite tests such as `seed_factory.test.ts:"resolved status is granted only by a receipt bound to the audited packet bytes"` and `"a corrupted receipt fails the check with exit 2 and a named diagnostic"`.
+Source evidence:
+- loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:refsStatusForPacket — the four-state refs status judgement.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/contracts.ts:SENTINEL_SOURCE_REF — single point of sentinel truth.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/migrate_packet.ts — injects the sentinel during 0.1.0→1.0.0 migration.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/cli.ts:resolveRefs — explicit-audit-only peer verification and receipt write.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"a receipt missing its binding fields reads stale, never declared or resolved" — proves the stale distinction.
+
+[Q-03]: How is the single fast-quality definition in `scripts/gates/fast_quality.sh` mounted at two scopes — the staged pre-commit preflight in `.githooks/pre-commit` and the factory full-scope `src/run_fast_quality.ts` — and how do the staged-tree materialization, watchdog budget, and receipt `claim_boundary` guarantee that what is judged is exactly what is committed?
+Acceptance criteria:
+- Explain the three lanes (TS via factory `node_modules/.bin` with mirrored tsc flags, Python via ruff with FATAL 64 when absent, shell via `bash -n`), fail-fast `not_run` recording, and the `FAST_QUALITY_FACTORY` test seam.
+- Trace `.githooks/pre-commit`: self-integrity check on `.githooks/`+`scripts/gates/`, `git checkout-index -a --prefix` staged-tree materialization, and why staged TS must resolve imports against index bytes.
+- Explain the `FAST_QUALITY_BUDGET` process-group watchdog and why overrun is FATAL 64, never a silent pass.
+- Explain `gate_inputs` config hashing and the `claim_boundary: "preflight-only-not-code-quality-axis"` claim limit in the receipt.
+- Name coverage in `tests/test_fast_quality.sh` and `seed_factory.test.ts:"factory fast gate writes a preflight-only receipt in fail-fast order"`.
+Source evidence:
+- scripts/gates/fast_quality.sh:run_stage — lane execution, fail-fast blocking, and receipt stages.
+- .githooks/pre-commit — staged-tree materialization, budget watchdog, and gate chaining.
+- loop_wiki/evolve-perfect-seed-repo-factory/src/run_fast_quality.ts — the full-scope second mount.
+- tests/test_fast_quality.sh — exercises lane and receipt behavior.
+- loop_wiki/evolve-perfect-seed-repo-factory/tests/seed_factory.test.ts:"generated quality gate detects format, lint, and type defects at their physical stages" — proves stage attribution.
+
+[Q-04]: How do the three structure gates — `check_placement.py:declared_slots`, `check_root_coupling.py:scan`/`scan_staged`, and `check_skill_pointers.py:run` — enforce the §2 placement map, home-root decoupling, and the skills-SSOT pointer contract, and why do they anchor to their own repo rather than cwd with a 0/2/64 exit taxonomy?
+Acceptance criteria:
+- Explain how `declared_slots` parses the ARCHITECTURE.md §2 fenced tree and why a declared-but-empty slot stays green while an undeclared root item exits 2.
+- Contrast `scan` (worktree text) with `scan_staged` (`git grep --cached` index blobs, allowlist read from the index) and the runtime-assembled `PATTERNS` that keep the gate from flagging its own source.
+- Explain the allowlist ledger semantics ("rewriting evidence is forging evidence") and the three skill-pointer checks (host entries are symlinks into allowed homes, no back-links into `.claude/`, no duplicate real SKILL.md).
+- Distinguish exit 64 (not a work tree / missing contract surface) from exit 2 (violations) and explain the `external-cwd-scans-own-repo` selftest control.
+- Name the selftest negative controls that prove each gate can go red (e.g. `residual-copy-red`, `staged-violation`, `undeclared-root-item`).
+Source evidence:
+- scripts/gates/check_placement.py:declared_slots — parses §2 root slots against `git ls-files`.
+- scripts/gates/check_root_coupling.py:scan_staged — judges index blobs, not the worktree.
+- scripts/gates/check_skill_pointers.py:run — the three pointer-contract checks.
+- scripts/gates/_gate_common.py:repo_root — self-anchoring shared by all gates.
+- scripts/gates/check_root_coupling.py:_selftest — worktree-drift and anchoring controls.
+
+[Q-05]: In `kb-ingest/port/openwiki_post.py`, how do the `migrate` and `finalize` passes (front-matter rebuild, mermaid degrade, index sync, link stamping) decide what to rewrite, and where does this port deliberately diverge from upstream via `PRESERVED_EXTENSION_FIELDS` and the `PROTECTED` page set?
+Acceptance criteria:
+- Explain the rebuild-or-not decision in `normalize_concept_content`/`has_usable_type` and why the line-based `read_field` parser routes unreadable values to the safe path.
+- Explain why `PRESERVED_EXTENSION_FIELDS` is deliberately wider than upstream (RepoDoc routing fields would otherwise be dropped for exactly the malformed pages) and how `--protect` pages are indexed but never rewritten.
+- Trace `degrade_invalid_mermaid`'s heuristic-only path (under-reports, never over-reports) and the stamp format, including nested-fence exclusion in `extract_mermaid_fences`.
+- Explain link-stamp idempotency: `strip_link_stamps` before `validate_links` before `stamp_links`, so re-runs neither accumulate stamps nor change bytes.
+- Cite the `_selftest` assertions proving protected-page byte-equality, GitHub duplicate-anchor suffixes, and the opt-in `pass_backlog_heading` assert-before-announce behavior.
+Source evidence:
+- kb-ingest/port/openwiki_post.py:normalize_concept_content — the data-destroying decision boundary.
+- kb-ingest/port/openwiki_post.py:PRESERVED_EXTENSION_FIELDS — deliberate divergence from upstream.
+- kb-ingest/port/openwiki_post.py:degrade_invalid_mermaid — heuristic degradation with in-place stamps.
+- kb-ingest/port/openwiki_post.py:pass_links — strip/validate/stamp idempotent cycle.
+- kb-ingest/port/openwiki_post.py:_selftest — proves protected pages, idempotency, and backlog normalization.
+
+[Q-06]: How does `kb-ingest/port/openwiki_subagent.sh` construct a physically different sandbox per role (critic worktree + skeleton, finder worktree with `openwiki/` deleted, verifier wiki-only snapshot keeping its `openwiki/` prefix), and how does `check_repo_wiki_converge.py:check_subagent_boundaries` prove those read boundaries against a committed-wiki fixture?
+Acceptance criteria:
+- Explain per-role sandbox derivation, the worktree-vs-copy fallback when TARGET is not its own repo toplevel, and the cleanup trap that only fires for registered worktrees.
+- Explain why the verifier snapshot preserves the `openwiki/` path shape and removes `_skeleton.md`/`_plan.md` (path shape is part of the contract; intent files must not masquerade as wiki content).
+- Trace the shape assertions and `OPENWIKI_DRY_RUN` listing, and how the gate uses it to fail on "finder sees openwiki" / "verifier sees src" and on leaked worktrees.
+- Explain the host dispatch differences (codex `-s read-only` real sandbox vs claude `--allowedTools`/`--add-dir`) and the `OPENWIKI_LABEL` concurrent-wave collision guard.
+- Explain why empty output is FATAL, never a pass.
+Source evidence:
+- kb-ingest/port/openwiki_subagent.sh — role sandbox construction, shape assertions, host dispatch.
+- kb-ingest/check_repo_wiki_converge.py:check_subagent_boundaries — proves boundaries with a committed `openwiki/` fixture and worktree-cleanup check.
+- kb-ingest/openwiki (directory boundary, not read) — the wiki-only content the verifier may see, per the sandbox contract.
+
+[Q-07]: How does the repo-wiki-converge perception gate establish that its prompt assets are verbatim upstream — via `sync_prompts.py:build`/`wrap`/`--check`, `check_repo_wiki_converge.py:check_official_purity` and `check_prompt_assets` — and how do host profiles and the exit-3 FATAL contract keep a missing configuration from reading as a pass?
+Acceptance criteria:
+- Explain the extraction pipeline (`literal_after`/`read_template_literal` over `code.ts` template literals, single-shot `apply_placeholders` capped at 1 to mirror JS `str.replace`, provenance `wrap` markers) and why a script beats hand-copied markdown.
+- Explain the directory-boundary purity rule (openwiki/ holds exactly the seven generated assets) versus in-file marker checks, and the unresolved-`{PLACEHOLDER}` rejection for system prompts only.
+- Explain MODULE_ROOT vs HOST_ROOT, the profile declaration in `host-profile.json`, and why every load failure is FATAL exit 3 rather than an empty profile list.
+- Explain the `foreign_home_paths` stale-root scan derived from ALLOWED_ROOTS (including the linked-worktree `--git-common-dir` case).
+- Name the runnable proofs the gate chains: `--selftest` of both port scripts and the spot-check needles for the official init/update prompts.
+Source evidence:
+- kb-ingest/port/sync_prompts.py:build — verbatim extraction and placeholder resolution from upstream TS sources.
+- kb-ingest/check_repo_wiki_converge.py:check_official_purity — directory-boundary enforcement of "upstream bytes only".
+- kb-ingest/check_repo_wiki_converge.py:_load_profiles — FATAL-not-empty profile declaration semantics.
+- kb-ingest/check_repo_wiki_converge.py:foreign_home_paths — allowed-roots-derived stale-root scan.
+- kb-ingest/port/sync_prompts.py:_selftest — round-trips the escape cases the extractor must survive.
+
+[Q-08]: In `mcp/production/migrate.py`, how do `apply_plan`'s backup/restore transaction, the `_exclusive_write` append-only receipt hash chain, `rollback`'s receipt binding, and `verify_profile`'s post-probe re-checks compose into a fail-closed migration whose terminal state is `technical_pass_human_pending` rather than done?
+Acceptance criteria:
+- Trace `apply_plan`: drift detection via `build_plan`/`_equivalent`, clean-destination and protected-branch preconditions, per-target backups, and full restoration when a later write or the receipt write fails.
+- Explain the receipt chain (`previous_receipt_sha256` linking in `write_receipt`, `check_receipt_chain` tamper rejection) and why `_exclusive_write` uses `os.link` for append-only collision detection with symlink-safe fd walks (`_open_parent_dir`, `_assert_parent_binding`).
+- Explain `rollback`'s bindings: apply-receipt-only, in-chain, profile-sha match, and after-sha verification before restoring.
+- Explain `verify_profile`'s status lattice: `not_run` when declared probes are skipped, post-probe re-validation of managed files/mirrors/forbidden paths/chain, and pending human gates blocking `technical_pass`.
+- Cite tests like `test_migrate.py:test_apply_restores_prior_targets_when_a_later_write_fails`, `test_receipt_chain_rejects_tampering`, and `test_skipping_declared_probes_is_not_a_pass`.
+Source evidence:
+- mcp/production/migrate.py:apply_plan — the backup/write/restore transaction.
+- mcp/production/migrate.py:_exclusive_write — append-only receipt publication with rebind assertions.
+- mcp/production/migrate.py:verify_profile — probe execution and post-probe re-checks with human gates pending.
+- mcp/production/migrate.py:rollback — receipt-bound restoration.
+- mcp/production/tests/test_migrate.py:test_verify_rejects_probe_that_mutates_a_managed_mirror — proves post-probe drift detection.
+
+[Q-09]: How does `mcp/context-pack`'s `RepositoryContextEngine.build_python_context_pack` produce a deterministic, budget-bounded evidence pack — from the symlink-refusing snapshot read in `_read_source`, through mandatory-vs-optional evidence assembly, to the sha-keyed LRU cache — and how is that surfaced over stdio by `server.py`?
+Acceptance criteria:
+- Explain `_read_source`'s security model: component-wise `O_NOFOLLOW|O_DIRECTORY` fd walk, traversal rejection, size bound, and the before/after `fstat` identity check that fails on concurrent modification.
+- Explain evidence classification in `_SemanticCollector` (guards, raises, mutations, calls vs mandatory `unresolved_dynamic_call`) and why signatures/dynamic calls are mandatory.
+- Trace budget assembly: `_stabilize_size` fixed-point sizing, mandatory-overflow error, priority-ordered optional admission, and the `truncated`/`omitted_evidence_count` reporting.
+- Explain cache keying `(path, sha256, symbol, max_bytes)`, deep-copy on hit, and LRU eviction.
+- Name focused tests, e.g. `test_engine.py:test_rejects_absolute_traversal_and_symlink_escape` and `test_mandatory_signature_is_never_silently_truncated`, plus the stdio surface tests in `test_server.py`.
+Source evidence:
+- mcp/context-pack/src/context_pack_mcp/engine.py:RepositoryContextEngine._read_source — symlink-safe snapshot with identity stability check.
+- mcp/context-pack/src/context_pack_mcp/engine.py:build_python_context_pack — budgeted mandatory/optional assembly and cache.
+- mcp/context-pack/src/context_pack_mcp/engine.py:_SemanticCollector — evidence kind classification.
+- mcp/context-pack/src/context_pack_mcp/server.py:build_python_context_pack — stdio tool surface and REPO_CONTEXT_ROOT resolution.
+- mcp/context-pack/tests/test_engine.py:test_budget_retains_mandatory_facts_and_reports_truncation — proves budget semantics.
+
+[Q-10]: What charter does `.githooks/lib/validate_molecular_message.ts` enforce at commit time — `isMolecularMessage` detection, required trailer fields, and `requireMolecular` for the protected `.githooks/`+`scripts/gates/` surface — and how do `tests/test_molecular_gate.sh` and `tests/tools/replay_corpus_parity.py` prove and measure its deliberate divergence from the source-repo validator?
+Acceptance criteria:
+- Explain the charter constraints (node:-builtins-only imports, no sibling-checkout reads) and how the gate test greps imports to enforce it, plus why S1–S6 upstream rules were stripped or retargeted.
+- Explain when a message is judged molecular (`Intent-Slice: ISSUE-\d+`), the `REQUIRED_FIELDS` block checks, and how protected-prefix staged changes force `requireMolecular`.
+- Trace the fixture-repo test: activated hooks, ordinary commit passes, hollow molecular message rejected with no commit created, and the record-only `stage-request` post-commit receipt naming the sha.
+- Explain what `replay_corpus_parity.py` measures (exit-code parity over the last N source-repo commit messages, message-only mode) and why mismatches are expected-by-design, recorded, and not judged.
+- Identify the exit-code taxonomy (0/2/64) shared by the validator and the parity tool's precondition failures.
+Source evidence:
+- .githooks/lib/validate_molecular_message.ts:validateText — molecular detection, required fields, and protected-surface requirement.
+- .githooks/commit-msg / .githooks/post-commit — the active enforcement and record-only receipt hooks.
+- tests/test_molecular_gate.sh — fixture-repo proof that hollow molecular commits are rejected and receipts are record-only.
+- tests/tools/replay_corpus_parity.py:main — measures original-vs-rebuilt exit-code parity without judging the gap.
+- data/receipts/molecular-corpus-parity.json — the receipt this measurement reproduces.

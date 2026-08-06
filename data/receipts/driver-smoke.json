@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-08-05T18:43:56+00:00",
+  "lanes": {
+    "claude": {
+      "argv_shape": "claude -p <prompt> --max-turns 1",
+      "exit": 0,
+      "output_head": "OK"
+    },
+    "codex": {
+      "argv_shape": "codex exec <prompt> -o <last-message-file>",
+      "exit": 0,
+      "last_message_head": "OK"
+    }
+  },
+  "prompt": "reply exactly OK",
+  "schema": "bettor-arena-driver-smoke@1.0.0"
+}

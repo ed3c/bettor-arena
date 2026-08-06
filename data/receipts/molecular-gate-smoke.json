@@ -1,0 +1,16 @@
+{
+  "kind": "molecular-gate-smoke",
+  "utc": "2026-08-05T17:18:24Z",
+  "checks": [
+    "validator-selftest-green",
+    "staged-names-inactive-in-repo",
+    "node-builtin-imports-only",
+    "ordinary-commit-passes",
+    "post-commit-stage-request-receipt",
+    "hollow-molecular-commit-rejected-and-absent",
+    "protected-surface-ordinary-message-rejected",
+    "full-molecular-commit-passes",
+    "bun-absent-exit-64-names-bun"
+  ],
+  "result": "PASS"
+}

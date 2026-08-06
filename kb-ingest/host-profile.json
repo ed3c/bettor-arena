@@ -1,0 +1,27 @@
+{
+  "schema": "repo-wiki-converge-host-profile@v1",
+  "host": "bettor-arena",
+  "comment": [
+    "Which host-specific profiles check_repo_wiki_converge.py runs on top of its core checks.",
+    "Core is everything the module can prove about itself: upstream purity, prompt verbatimness,",
+    "post-pass selftests, and the three subagent read boundaries. Those run everywhere.",
+    "A profile asserts something about the HOST this copy is installed in, so a copy dropped into",
+    "another repo declares an empty list and still gets a real gate.",
+    "",
+    "This file must exist. A missing or unparseable declaration is FATAL (exit 3), never a silent",
+    "skip: 'nobody configured it' must not be readable as 'this host has no such profile'.",
+    "Unknown profile names are FATAL for the same reason -- a typo would otherwise disable a check",
+    "while still looking green.",
+    "",
+    "Known profiles:",
+    "  repodoc              -- the indexing/ KB sink: RepoDoc frontmatter contract + dry-run ingest",
+    "  host-skill-links     -- the host exposes this skill as a symlink into the module, not a copy",
+    "  skill-bettor-layout  -- source-repo directory conventions: repo//prototype/ scaffolders,",
+    "                          SKILL_BETTOR_* env names, the retirement commit pin",
+    "",
+    "bettor-arena declares host-skill-links only. It has no indexing/ KB sink (repodoc) and does",
+    "not carry the skill-bettor repo//prototype/ working-directory conventions (skill-bettor-layout);",
+    "declaring either here would make the gate assert host facts that are false in this checkout."
+  ],
+  "profiles": ["host-skill-links"]
+}

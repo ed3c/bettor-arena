@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "repo_id": "bettor-arena",
+  "engine_sha256": "fe5066b1707d9cc24b92468fc88ff78bd3819dc4bb2091d3c6b4c833ceb143ac",
+  "protected_branches": ["main", "master"],
+  "receipt_dir": "mcp/production/receipts",
+  "backup_dir": ".mcp-production/backups",
+  "managed_files": [
+    {
+      "path": ".codex/config.toml",
+      "format": "toml",
+      "contains": [
+        "[mcp_servers.grepai]",
+        "[mcp_servers.repo-context-pack]",
+        "[mcp_servers.serena]",
+        "32308a871c13f8fa5936c7d44a8bca710001277e"
+      ]
+    },
+    {"path": ".mcp.json", "format": "json"},
+    {"path": "mcp/context-pack/uv.lock", "format": "text"},
+    {"path": "mcp/production/templates/claude-mcp.json", "format": "json"},
+    {"path": "mcp/production/migrate.py", "format": "text", "secret_scan": false},
+    {"path": "mcp/production/probe_stdio.py", "format": "text", "secret_scan": false}
+  ],
+  "mirrors": [
+    {
+      "source": "mcp/production/templates/claude-mcp.json",
+      "target": ".mcp.json",
+      "comparison": "json"
+    }
+  ],
+  "forbidden_paths": [],
+  "capabilities": [
+    {
+      "id": "grepai",
+      "registration": "always",
+      "surface_residency": "session_scoped",
+      "payload_residency": "on_demand",
+      "heavy_executor": true
+    },
+    {
+      "id": "serena",
+      "registration": "always",
+      "surface_residency": "session_scoped",
+      "payload_residency": "demand_pull",
+      "heavy_executor": true
+    },
+    {
+      "id": "repo-context-pack",
+      "registration": "always",
+      "surface_residency": "session_scoped",
+      "payload_residency": "demand_pull",
+      "heavy_executor": false
+    }
+  ],
+  "probes": [
+    {
+      "id": "migration-engine-unit",
+      "argv": [
+        "{python}", "-m", "unittest", "discover",
+        "-s", "mcp/production/tests", "-p", "test_*.py", "-v"
+      ],
+      "cwd": ".",
+      "timeout_sec": 60
+    },
+    {
+      "id": "context-pack-real-stdio",
+      "argv": [
+        "uv", "run", "--project", "mcp/context-pack", "--frozen",
+        "python", "-m", "unittest", "discover",
+        "-s", "mcp/context-pack/tests", "-p", "test_*.py", "-v"
+      ],
+      "cwd": ".",
+      "timeout_sec": 180
+    }
+  ],
+  "human_gates": [
+    {
+      "id": "claude-project-mcp-approval",
+      "description": "Human approves grepai/repo-context-pack/serena for this project in Claude."
+    },
+    {
+      "id": "fresh-chat-config-reload",
+      "description": "Human opens a fresh host chat so project MCP configuration is reloaded."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "perfect-seed-plan-validation-receipt@1.0.0",
+  "status": "passed",
+  "claim_boundary": "plan-structure-only-not-v2-implementation-progress",
+  "measured_at": "2026-08-04T01:28:33.889+08:00",
+  "recorder": "main-session",
+  "plan_files_observed_excluding_this_receipt": 33,
+  "normative_artifacts": [
+    {
+      "path": "plan-registry.json",
+      "sha256": "df1a00f9bd6f4ed8eddb414fa96d8c5999c0dedaa17ae66b08042197df581a02"
+    },
+    {
+      "path": "intended-architecture.json",
+      "sha256": "32d174a8f9111f13210cb1ed9460a80292c98358b2097fa9ff0b116999af6839"
+    },
+    {
+      "path": "oracle-registry.json",
+      "sha256": "acbc3a09b7fce0f4044418f44e7ace1e7612c9b5be97d3f7a5b4562d9b5246a1"
+    },
+    {
+      "path": "schemas/plan-registry.v1.json",
+      "sha256": "a7373e5bb302fd19dcd40c85c7063981ea9d7b6e0289b25e17565b26a57b9c05"
+    },
+    {
+      "path": "schemas/architecture-graph.v1.json",
+      "sha256": "4f2e3d592584284e9f9a56045fe416a5b339d539095cfdaaba04afd98b963aee"
+    },
+    {
+      "path": "schemas/oracle-registry.v1.json",
+      "sha256": "e2706e1585fdfd2b5849cde3b1e42be6afe4a2c4c1c255d35d0f76f78648381c"
+    }
+  ],
+  "checks": [
+    {
+      "id": "draft-2020-12-schema-validation",
+      "status": "passed",
+      "observed": "three normative registries validate against their schemas"
+    },
+    {
+      "id": "dag-and-reference-closure",
+      "status": "passed",
+      "observed": "12 milestones, 12 Work-Items, 24 oracles, 26 nodes, 31 edges, bases 1-8"
+    },
+    {
+      "id": "slice-contract-sections",
+      "status": "passed",
+      "observed": "all 12 slices contain the eight required execution sections"
+    },
+    {
+      "id": "route-ledger-node-coverage",
+      "status": "passed",
+      "observed": "Match, Generate, Validate, interface, dispatch, and final plan gates are present"
+    },
+    {
+      "id": "format-and-whitespace",
+      "status": "passed",
+      "observed": "Prettier check and git diff --check passed"
+    },
+    {
+      "id": "factory-fast-preflight",
+      "status": "passed",
+      "observed": "minimum lineage, Prettier, typed ESLint, and strict TypeScript passed",
+      "receipt_ref": "_engine-run/fast-quality.1785778109666.53318.receipt.json",
+      "receipt_sha256": "61db5287f7359c30b106de1ea28b46fee9bc6c2c4b19c5b71784629aa9d99d2a",
+      "receipt_location": "factory-runtime-ignored-not-plan-ssot"
+    }
+  ],
+  "implementation_work_item_admitted": false,
+  "v2_product_implemented": false
+}

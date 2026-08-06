@@ -1,0 +1,214 @@
+{
+  "schema": "bettor-arena-migration@2.0.0",
+  "notes": [
+    "S2 (ts-skill-bettor issue #4): declarative surface for migrating four subtrees",
+    "from ts-skill-bettor into bettor-arena. Repo-relative paths only; the engine",
+    "(scripts/migrate/migrate_seed.py) derives the source root at runtime and takes",
+    "the target root as the single user-supplied absolute path.",
+    ".claude/skills is excluded: skill content lives host-neutral in .agents/skills;",
+    "target-side symlinks are bootstrap's job (S5), not migration payload.",
+    "evidence_allowlist prefixes are copied verbatim (rewriting evidence is forging",
+    "evidence) and declared into the target root-coupling ledger on --apply."
+  ],
+  "root_token": "{REPO_ROOT}",
+  "rewrite_suffixes": [
+    ".md",
+    ".py",
+    ".sh",
+    ".json",
+    ".toml",
+    ".ts",
+    ".txt",
+    ".yaml",
+    ".yml"
+  ],
+  "excluded_path_parts": [
+    "node_modules",
+    "__pycache__",
+    ".venv",
+    "dist"
+  ],
+  "components": [
+    {
+      "id": "agents-skills",
+      "kind": "directory",
+      "required": true,
+      "source": ".agents/skills",
+      "target": ".agents/skills"
+    },
+    {
+      "id": "claude-host",
+      "kind": "directory",
+      "required": true,
+      "source": ".claude",
+      "target": ".claude",
+      "exclude_prefixes": [
+        ".claude/skills/"
+      ]
+    },
+    {
+      "id": "kb-ingest",
+      "kind": "directory",
+      "required": true,
+      "source": "kb-ingest",
+      "target": "kb-ingest"
+    },
+    {
+      "id": "loop-factory",
+      "kind": "directory",
+      "required": true,
+      "source": "loop_wiki/evolve-perfect-seed-repo-factory",
+      "target": "loop_wiki/evolve-perfect-seed-repo-factory"
+    }
+  ],
+  "evidence_allowlist": [
+    {
+      "prefix": ".agents/skills/autoresearch-composer/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/dr-research-loop/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/dr-to-mvp/modules/legacy-skill-2026-07-22.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/dr-to-mvp/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/external-verify/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/fold-in/modules/fold-in-know-why.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/fold-in/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/SKILL.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/modules/conversation-pipeline.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/modules/downstream-landing.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/modules/skill-bettor-port-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/gemini-conversation-research/scripts/",
+      "reason": "frozen-ingest-receipts-and-upstream-engine-anchors"
+    },
+    {
+      "prefix": ".agents/skills/harness-wiki/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/html-for-decisions/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/html-for-decisions/reference/antigravity-example-decision-dashboard.html",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/judge-loop-chooser/modules/grounding-and-independence.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/judge-loop-chooser/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/loop-harness-review-handoff/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/loop-harness-standard/modules/evals-design-method.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/loop-harness-standard/modules/execution-feedback.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/loop-harness-standard/modules/harness-spec.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/loop-harness-standard/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/path-b-reduction/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/repo-agent-native/modules/codebase-mastery-methodology.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/repo-agent-native/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/repo-agent-native/modules/specs-as-code-prompt.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/sdlc-plan-composer/modules/codex-integration.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/sdlc-plan-composer/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/skill-authoring/SKILL.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/truth-verify-loop/SKILL.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": ".agents/skills/truth-verify-loop/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".agents/skills/unknown-discovery-composer/modules/retarget-map.md",
+      "reason": "port-lineage-ledger"
+    },
+    {
+      "prefix": ".claude/hooks/rm_guard.py",
+      "reason": "verified-block-evidence-in-docstring"
+    },
+    {
+      "prefix": "kb-ingest/check_repo_wiki_converge.py",
+      "reason": "gate-scan-constants-are-literal-roots"
+    },
+    {
+      "prefix": "kb-ingest/nonofficial/host-runtime.md",
+      "reason": "historical-evidence-foreign-root-anchor"
+    },
+    {
+      "prefix": "kb-ingest/openwiki/",
+      "reason": "upstream-verbatim-never-rewritten"
+    }
+  ]
+}

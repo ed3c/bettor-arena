@@ -1,0 +1,141 @@
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { isAbsolute, resolve } from "node:path";
+
+export const SOURCE_KINDS = ["dr", "gcr", "repo", "grill-me"] as const;
+export type SourceKind = (typeof SOURCE_KINDS)[number];
+
+export interface SourceRef {
+  repo: string;
+  commit: string;
+  path: string;
+  anchor: string;
+}
+
+export interface SeedInputPacket {
+  schema_version: "perfect-seed-input@1.0.0";
+  packet_id: string;
+  packet_state: "admitted";
+  source_kind: SourceKind;
+  source_path: string;
+  task: string;
+  fixed_prompt_context: string[];
+  emergent_prompt_context: string;
+  source_refs: SourceRef[];
+  human_gate: "required_before_seed_admit";
+}
+
+function requireCondition(condition: unknown, message: string): asserts condition {
+  if (!condition) throw new Error(message);
+}
+
+export function assertSourceRefs(value: unknown): asserts value is SourceRef[] {
+  requireCondition(Array.isArray(value) && value.length > 0, "source_refs must be a non-empty array");
+  for (const ref of value as Array<Partial<SourceRef>>) {
+    requireCondition(typeof ref === "object" && ref !== null, "source_refs entries must be objects");
+    requireCondition(typeof ref.repo === "string" && ref.repo.length > 0, "source_refs repo is required");
+    requireCondition(
+      typeof ref.commit === "string" && /^[0-9a-f]{7,40}$/.test(ref.commit),
+      "source_refs commit must be 7-40 lowercase hex characters",
+    );
+    requireCondition(
+      typeof ref.path === "string" &&
+        ref.path.length > 0 &&
+        !isAbsolute(ref.path) &&
+        !ref.path.split(/[\\/]/).includes(".."),
+      "source_refs path must be repo-relative without traversal",
+    );
+    requireCondition(typeof ref.anchor === "string" && ref.anchor.length > 0, "source_refs anchor is required");
+  }
+}
+
+// Single point of sentinel truth: migrate injects this exact ref, and every
+// status judgement routes through refsShapeStatus / refsStatusForPacket below.
+export const SENTINEL_REPO = "unknown";
+export const SENTINEL_SOURCE_REF: SourceRef = {
+  repo: SENTINEL_REPO,
+  commit: "0000000",
+  path: "unmigrated/unknown",
+  anchor: "pre-source-refs",
+};
+
+export type RefsStatus = "declared" | "sentinel" | "resolved" | "stale";
+
+// A receipt that exists but cannot be read as JSON is a failed check, not a
+// status: callers route this to exit 2 instead of a bare parse traceback.
+export class ReceiptCheckError extends Error {}
+
+export function refsShapeStatus(refs: SourceRef[]): "declared" | "sentinel" {
+  return refs.some((ref) => ref.repo === SENTINEL_REPO) ? "sentinel" : "declared";
+}
+
+export function resolveReceiptPath(packetPath: string): string {
+  return `${packetPath}.resolve-receipt.json`;
+}
+
+// "resolved" is granted only by a resolve-refs --peer audit receipt bound to the
+// exact packet bytes; standing gates read that local receipt, never a sibling checkout.
+// A receipt that exists but no longer binds (sha mismatch, missing fields) reads
+// "stale": audited-then-broken must stay distinguishable from never-audited.
+export function refsStatusForPacket(packetPath: string, packet: SeedInputPacket, packetSha256: string): RefsStatus {
+  const shape = refsShapeStatus(packet.source_refs);
+  if (shape === "sentinel") return "sentinel";
+  const receiptPath = resolveReceiptPath(packetPath);
+  if (!existsSync(receiptPath)) return "declared";
+  let receipt: Record<string, unknown>;
+  try {
+    receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as Record<string, unknown>;
+  } catch (error) {
+    throw new ReceiptCheckError(
+      `resolve receipt is not valid JSON: ${receiptPath} (${error instanceof Error ? error.message : String(error)})`,
+    );
+  }
+  if (receipt.schema_version !== "perfect-seed-resolve-receipt@1.0.0") {
+    // Same taxonomy as invalid JSON: the evidence exists but cannot be read
+    // under this contract — a check that ran and failed (exit 2), not a
+    // generic input error.
+    throw new ReceiptCheckError(`unsupported resolve receipt schema: ${receiptPath}`);
+  }
+  return receipt.refs_status === "resolved" && receipt.packet_sha256 === packetSha256 ? "resolved" : "stale";
+}
+
+export function readInputPacket(packetPath: string): SeedInputPacket {
+  requireCondition(isAbsolute(packetPath), "packet path must be absolute");
+  requireCondition(existsSync(packetPath), `packet not found: ${packetPath}`);
+  const value = JSON.parse(readFileSync(packetPath, "utf8")) as Partial<SeedInputPacket>;
+  requireCondition(value.schema_version === "perfect-seed-input@1.0.0", "unsupported schema_version");
+  requireCondition(
+    typeof value.packet_id === "string" && /^[a-zA-Z0-9][a-zA-Z0-9._-]{2,80}$/.test(value.packet_id),
+    "invalid packet_id",
+  );
+  requireCondition(value.packet_state === "admitted", "packet_state must be admitted before build");
+  requireCondition(
+    SOURCE_KINDS.includes(value.source_kind as SourceKind),
+    `unsupported source_kind: ${String(value.source_kind)}`,
+  );
+  requireCondition(typeof value.source_path === "string" && value.source_path.length > 0, "source_path is required");
+  requireCondition(!/[\0\r\n]/.test(value.source_path), "source_path contains unsafe characters");
+  const sourcePath = isAbsolute(value.source_path)
+    ? resolve(value.source_path)
+    : resolve(import.meta.dir, "..", value.source_path);
+  requireCondition(existsSync(sourcePath), `source not found: ${sourcePath}`);
+  requireCondition(
+    value.source_kind === "repo" ? statSync(sourcePath).isDirectory() : statSync(sourcePath).isFile(),
+    "source kind does not match source path",
+  );
+  requireCondition(
+    typeof value.task === "string" && value.task.trim().length >= 12 && value.task.length <= 4000,
+    "task must contain 12-4000 characters",
+  );
+  requireCondition(Array.isArray(value.fixed_prompt_context), "fixed_prompt_context must be an array");
+  requireCondition(
+    value.fixed_prompt_context.includes("modules/semantic-truth-context.md"),
+    "fixed_prompt_context must include modules/semantic-truth-context.md",
+  );
+  requireCondition(
+    typeof value.emergent_prompt_context === "string" && value.emergent_prompt_context.length > 0,
+    "emergent_prompt_context is required",
+  );
+  assertSourceRefs(value.source_refs);
+  requireCondition(value.human_gate === "required_before_seed_admit", "human_gate must preserve seed admission");
+  return { ...value, source_path: sourcePath } as SeedInputPacket;
+}

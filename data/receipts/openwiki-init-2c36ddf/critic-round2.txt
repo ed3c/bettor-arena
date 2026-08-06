@@ -1,0 +1,20 @@
+三項 prior request 已全部逐檔對證完畢，修訂也未造成既有頁面的回退（原有各頁與 coverage check 原封保留）。結論如下。
+
+<review status="PASS">
+  <prior_requests>
+    <item id="RQ-01" status="VERIFIED">
+      <evidence>骨架第 29 行新增 `factory/generated-repo.md`，其描述逐項對上倉庫實況：13 個必要檔案清單與 `src/verify_generated_repo.ts:12-24` 完全一致（含 `.agents/skills/seed-repo-operator/SKILL.md` 與 `scripts/plan.ts`），該驗證器亦真的檢查 source.json/lineage.json 的 source_refs 與 refs_status 一致性（:27-36）；operator 不變量在 `templates/repo/src/operator.ts` 全數實證——恰 20 capabilities（:13-14）、call_id 唯一（:15）、依賴序執行（:21-22）、sha256 綁定 input/output（:35,:37），終端 `human_required` 在 `templates/repo/src/functions.ts:88` 落地並由 `tests/operator.test.ts:18` 斷言為最後一筆結果；`src/minimum_lineage.ts` 確為 `templates/repo/scripts/check_minimum_lineage.ts` 的單行 re-export；`src/check_template_lifecycle.ts:6-16` 實證五個合法狀態、seed 需 `human_admit=true`、promotion evidence 存在性檢查，且 `templates/template-metadata.json` 存在；seed-repo-operator 皮膚含 `cases.json`。overview 補充亦屬實：`loop_wiki/evolve-perfect-seed-repo-factory/.agents/agents/seed-factory-router.md` 與 `.agents/skills/perfect-seed-domain/SKILL.md` 均存在（骨架用的相對路徑與 ROUTES.md:29-30 自身寫法一致，於 factory 頁脈絡下無歧義），`modules/semantic-truth-context.md` 的 HARD 要求由 `src/contracts.ts:129-130` 強制。</evidence>
+    </item>
+    <item id="RQ-02" status="VERIFIED">
+      <evidence>骨架第 30 行新增 `factory/v2-plan.md`，內容與 `plans/perfect-seed-v2/README.md` 逐點對應：四層真相層（README §Truth layers 1-4）、plan-not-evidence 邊界（:5-6）、六個合法 derived states（:22-24）、factory-local SSOT 位置決策與拒用 docs/plans/ 的理由（:8-10）、`.perfect-seed/` + `seed-manifest.json` 五類路徑分類的 ontology placement（:28-44）；實際目錄含 00–12 共 13 份 slice 文件、route-ledger.md、dispatches/、fixtures/、validation/、三個 normative registries + schemas，均與骨架描述吻合。骨架明確定位為 pointer-and-structure、不複述 slice 內容，且 `factory/overview.md`（第 26 行）已加「v2 execution plan」指針段。</evidence>
+    </item>
+    <item id="RQ-03" status="VERIFIED">
+      <evidence>骨架第 23 行 `host-loop/mcp-surface.md` 已補齊 verify lane 另一半，逐項實證：`mcp/production/probe_stdio.py` 有 `PROTOCOL_VERSION = "2025-06-18"`（:21）、fail-closed `ProbeError`（:24 起多處 raise）、專屬測試 `tests/test_probe_stdio.py` 存在；`profile.json` 含 `engine_sha256`（:4）、`managed_files` contains 斷言（:8-12）、`mirrors`（:25）、`capabilities`（:33）、`human_gates`（:77），`templates/claude-mcp.json` 存在且骨架正確標明 template 才是編輯入口。第 36 行 `data-ledgers.md` 的 receipt 落點圖已完整：`mcp/production/receipts/`（實有 7 筆 verify + 1 筆 integration 帶時間戳鏈式命名檔）、`mcp/context-pack/benchmarks/receipts/`（m1-pro-2026-07-29.json 實存）、factory `_engine-run/`，連同原有 data/receipts/ 與 data/migration/。</evidence>
+    </item>
+  </prior_requests>
+
+  <new_requests>
+  </new_requests>
+</review>
+
+三項修訂全部以倉庫證據核實為真，修訂範圍（兩個新頁、三處描述擴充）未刪減或弱化任何既有骨架段落，coverage check 完整保留——骨架通過，可進入撰寫階段。

@@ -1,0 +1,26 @@
+本則是對 `/openwiki/_skeleton.md` 的**初次架構覆蓋審查**：我先獨立掃完整個 repo（root SSOT、hooks、三結構閘、工廠 src/templates/plans、kb-ingest port、mcp 兩引擎、遷移引擎、tests、skills 指針面），再與骨架逐項比對。骨架整體品質高——20 頁對映 §2 全部槽位、頁面描述帶機制與測試證據——但有三處實質缺口，全部集中在「檔名層掃描會漏、要讀進實作才看得見」的區域。
+
+<review status="CHANGES_REQUESTED">
+  <prior_requests>
+  </prior_requests>
+
+  <new_requests>
+    <item id="RQ-01">
+      <gap>工廠的「產物合約」沒有 canonical home：generated-repo template（`templates/repo/`）的 operator runtime、工廠自身的 agent/skill/context 資產，在骨架裡只剩 build-pipeline.md 的一個子句「materialization boundary (materialize.ts, templates/repo), 20-call plan/results」。工廠的產品本身（一個 generated repo 是什麼、必須含什麼、operator 怎麼跑）是最大的 change surface，卻無頁面承擔。</gap>
+      <evidence>`templates/repo/src/operator.ts` 強制「恰好 20 個 capability、無重複 call_id、依賴序執行、input/output 皆 sha256 hash-bound」；`templates/repo/scripts/check_minimum_lineage.ts` 是 minimum-lineage 的實作本體，工廠側 `src/minimum_lineage.ts` 只是一行 re-export（跨界依賴：工廠 verifier 依賴 template 內的模組）；`verify_generated_repo.ts` 列出 generated repo 的 13 個必要檔（data/evidence.jsonl、call-plan.json、call-results.jsonl、seed-repo-operator SKILL.md…）；`templates/template-metadata.json` + `TEMPLATE_VERSION`（materialize.ts）承載 template 生命週期（`src/check_template_lifecycle.ts` 驗它）。另外 ROUTES.md M0 的 actor `.agents/agents/seed-factory-router.md`、`.agents/skills/perfect-seed-domain/`、以及 packet 合約 load-bearing 的 `modules/semantic-truth-context.md`（contracts.ts 明文要求 fixed_prompt_context 必含它）與 `modules/exchange-formats.md` 等四個 modules 檔，骨架任何頁面描述都未點名。</evidence>
+      <required_change>新增 `factory/generated-repo.md`（或等值頁）：generated repo 的必要檔清單與各 data 記錄語義、operator 的 20-call 不變量（registry 大小/唯一性/依賴序/hash 綁定/終端 human_required）、minimum-lineage 模組的 template↔factory 共用關係、template-metadata/TEMPLATE_VERSION 生命週期與其驗證器、seed-repo-operator skill 與 cases.json 的角色。並在 factory/overview.md 或 packet-contract.md 的描述裡明確收編 seed-factory-router agent、perfect-seed-domain skill、modules/ 四檔（特別標注 semantic-truth-context.md 是 packet 合約的硬性要求）。</required_change>
+    </item>
+    <item id="RQ-02">
+      <gap>`loop_wiki/evolve-perfect-seed-repo-factory/plans/perfect-seed-v2/` 整棵子樹（35+ 檔）在骨架中完全缺席——這是自我宣告的 canonical SSOT，不是可忽略的散頁筆記。</gap>
+      <evidence>`plans/perfect-seed-v2/README.md`：「This is the canonical, machine-readable execution plan for evolving the bounded factory from perfect-seed-repo@1.1.0 to a standalone perfect-seed-repo@2.0.0 … There is one SSOT: this directory. Do not mirror mutable plan definitions elsewhere.」子樹含 normative 定義層（`plan-registry.json`、`intended-architecture.json`、`oracle-registry.json` + 三份 v1 schema）、13 個切片文件、route-ledger、dispatches、fixtures 四型控制組、`validation/plan-validation-receipt.json`。骨架的 factory 四頁與 coverage check（`loop_wiki → factory/*`）都沒有任何字樣指到它；讀 wiki 的人會誤以為工廠只有 v1 現況、沒有已裁決的 v2 演進合約。</evidence>
+      <required_change>給 v2 計劃一個明確 home：最小方案是在 `factory/overview.md` 描述裡加一節「v2 execution plan」，涵蓋其 truth-layer 紀律（normative registry vs 切片文件 vs validation receipt）、plan-not-evidence 邊界、與 factory-local SSOT 位置決策（為何不放 docs/plans/）；或獨立成 `factory/v2-plan.md`。文檔化為指針＋結構即可，不需複述 13 個切片內容。</required_change>
+    </item>
+    <item id="RQ-03">
+      <gap>`host-loop/mcp-surface.md` 對 mcp/production 的描述只到 migrate.py，漏掉 verify lane 的另一半：`probe_stdio.py`（314 行、有自己的 test）、profile 宣告的 probes 執行機制、`templates/` mirror 來源、與 `mcp/production/receipts/` append-only 帳（data-ledgers.md 也只收 `data/`，未收這個 receipt 落點）。</gap>
+      <evidence>`mcp/production/migrate.py` 的 profile schema 把 `probes` 列為 PROFILE_REQUIRED（L45），`_run_probe`（L656）於 verify 時執行 profile 宣告的 argv；`probe_stdio.py` 是獨立的「real JSON-RPC transport」stdio 探針（PROTOCOL_VERSION 2025-06-18），`tests/test_probe_stdio.py` 驗它；`profile.json` 的 mirrors 宣告 `templates/claude-mcp.json → .mcp.json`（.mcp.json 是 template 的派生鏡像——這是骨架未述的生成關係）；`mcp/production/receipts/` 已有 8 份 verify/integration receipt。骨架與 data-ledgers.md 的 receipt 清單皆未涵蓋。</evidence>
+      <required_change>擴充 `host-loop/mcp-surface.md` 描述：加入 probe_stdio.py 的 JSON-RPC 探針角色與 migrate.py verify 的 probes 執行關係、templates/→.mcp.json 的 mirror 生成鏈（改 MCP 宣告的正確入口是 template 而非 .mcp.json 直改）、profile.json 的 engine_sha256 自綁定。並在 `data-ledgers.md` 描述中把 `mcp/production/receipts/`（及工廠 `_engine-run/` 已有、此處補齊對稱性）列入 receipt 落點清單。</required_change>
+    </item>
+  </new_requests>
+</review>
+
+補充一句審查邊界：`.serena/` 為 gitignored 本機狀態、`.agents/skills/` 二十個 skill 內容依排除條款不入審；骨架其餘頁面（gates、hooks、molecular、kb-ingest port、migration engine/history、testing、skills-surface）與我的獨立盤點逐項吻合，含測試證據與不變量敘述，無需改動。

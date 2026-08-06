@@ -1,0 +1,281 @@
+{
+  "schema_version": "perfect-seed-oracle-registry@1.0.0",
+  "registry_id": "perfect-seed-v2-oracles",
+  "policy": {
+    "exit_criteria_must_prebind_oracle": true,
+    "llm_verdict_is_evidence_not_admission": true,
+    "forbidden_substitutions": [
+      "README keyword",
+      "file existence",
+      "agent self-claim",
+      "mock-as-real",
+      "test green without hollow control"
+    ]
+  },
+  "oracles": [
+    {
+      "oracle_id": "OR-MECH-SCHEMA",
+      "kind": "mechanical",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "run", "scripts/validate_v2_contracts.ts"],
+      "evidence_contract": "perfect-seed-contract-validation-receipt@1.0.0",
+      "pass_predicate": "all selected instances validate; every negative fixture fails with its expected typed reason",
+      "falsifiers": ["unknown field accepted", "wrong version coerced", "schema-invalid instance exits zero"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-STANDALONE",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/standalone-v2.test.ts"],
+      "evidence_contract": "perfect-seed-standalone-receipt@1.0.0",
+      "pass_predicate": "fresh offline clone reopens genesis, manifests, packet, and envelope without mother-repo paths",
+      "falsifiers": ["mother repo required", "absolute source path required", "missing Git HEAD accepted"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-MECH-GRAPH-CONFORMANCE",
+      "kind": "mechanical",
+      "producer": "repo-neural-perception",
+      "cost_class": "cq0",
+      "command": ["bun", "run", "scripts/perceive.ts", "--request", "fixtures/graph-request.json"],
+      "evidence_contract": "perfect-seed-architecture-conformance@1.0.0",
+      "pass_predicate": "required nodes and edges close and every opaque surface is reported as a blind spot",
+      "falsifiers": ["missing edge omitted", "unexpected owner ignored", "opaque dynamic edge reported conformant"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-SEM-INTERFACE",
+      "kind": "semantic",
+      "producer": "opus-fresh-zero-context",
+      "cost_class": "async-cq1",
+      "command": null,
+      "evidence_contract": "judge-findings-only@1",
+      "pass_predicate": "fresh reviewer finds the declared closure, blind-spot language, and authority boundaries coherent and falsifiable",
+      "falsifiers": ["universal perception claim", "single hidden truth source", "skill can self-admit"],
+      "promotion_effect": "human-only"
+    },
+    {
+      "oracle_id": "OR-MECH-WORK-ITEM",
+      "kind": "mechanical",
+      "producer": "repo-neural-perception",
+      "cost_class": "cq0",
+      "command": ["bun", "run", "scripts/validate_work_item.ts", "--request", "fixtures/work-item.json"],
+      "evidence_contract": "perfect-seed-work-item-validation@1.0.0",
+      "pass_predicate": "identity, terminal closure, scope, criteria, packet, envelope, and candidate cardinality agree",
+      "falsifiers": ["mutable status accepted", "scope drift under same packet", "second candidate accepted"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-SKILL-BOUNDARY",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/skill-boundaries.test.ts"],
+      "evidence_contract": "perfect-seed-skill-conformance@1.0.0",
+      "pass_predicate": "each of the three skills performs its public job and rejects every declared forbidden capability",
+      "falsifiers": ["reason mutates", "perceive implements", "execute changes exit criteria", "any skill admits"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-TWENTY-CALL",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/operator.test.ts"],
+      "evidence_contract": "perfect-seed-reasoning-receipt@2.0.0",
+      "pass_predicate": "exactly twenty unique dependency-valid calls produce hash-bound task-sensitive results and end human_required",
+      "falsifiers": ["constant-return handlers", "duplicate call", "dependency inversion", "network call"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-CQ0",
+      "kind": "behavioral",
+      "producer": "repo-terminal-operator",
+      "cost_class": "cq0",
+      "command": ["bun", "run", "quality:cq0", "--packet", "fixtures/terminal-envelope.json"],
+      "evidence_contract": "perfect-seed-cq0-receipt@2.0.0",
+      "pass_predicate": "lineage, format, typed lint, strict type closure, dependency boundary, and focused behavior pass before commit",
+      "falsifiers": ["failed stage still commits", "declared scope differs from actual", "dependency stage absent"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-CQ0-CLOSURE",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/cq0-closure.test.ts"],
+      "evidence_contract": "perfect-seed-cq0-closure-comparison@1.0.0",
+      "pass_predicate": "incremental closure detects every seeded cross-project defect found by full-repo checks or explicitly falls back",
+      "falsifiers": ["downstream consumer omitted", "tsconfig drift not falling back", "rename ignored"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-COMMIT-CARD",
+      "kind": "behavioral",
+      "producer": "repo-terminal-operator",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/molecular-commit.test.ts"],
+      "evidence_contract": "perfect-seed-minimum-lineage-result@1.0.0",
+      "pass_predicate": "commit hook reopens staged manifest, prompt roles, scope, CQ-0, packet, criteria, and all seven fields",
+      "falsifiers": ["absolute path accepted", "stale prompt accepted", "unconsumed staged path accepted"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-MECH-COMMIT-CARD",
+      "kind": "mechanical",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "run", "scripts/validate_commit_card.ts", "--message-file", "fixtures/COMMIT_EDITMSG"],
+      "evidence_contract": "perfect-seed-commit-card-result@1.0.0",
+      "pass_predicate": "seven fields parse canonically and contain no volatile axis state",
+      "falsifiers": ["eighth mutable status field accepted", "field order ambiguity", "missing prompt role"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-ATTESTATION",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "async-cq1",
+      "command": ["bun", "test", "tests/attestation-refs.test.ts"],
+      "evidence_contract": "perfect-seed-attestation-publication@1.0.0",
+      "pass_predicate": "create-only ref publication, reopen, fetch, and retry preservation all pass",
+      "falsifiers": ["ref overwritten", "retry deletes failure", "fresh clone cannot fetch evidence"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-BEH-ATTESTATION-FRESHNESS",
+      "kind": "behavioral",
+      "producer": "repo-neural-perception",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/attestation-freshness.test.ts"],
+      "evidence_contract": "perfect-seed-attestation-projection@1.0.0",
+      "pass_predicate": "only exact current candidate/tree/profile/oracle attestations contribute to verified",
+      "falsifiers": ["copied receipt accepted", "profile drift ignored", "stale stored as producer claim"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-BEH-FORGEJO",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "async-cq1",
+      "command": ["bun", "test", "tests/forgejo-projection.test.ts"],
+      "evidence_contract": "perfect-seed-forgejo-projection@1.0.0",
+      "pass_predicate": "offline outbox is idempotent and lack of current readback blocks promotion without blocking local candidate",
+      "falsifiers": ["issue number becomes identity", "offline admit", "mismatched candidate readback accepted"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-HUM-FORGEJO-LIVE",
+      "kind": "human",
+      "producer": "human",
+      "cost_class": "async-cq1",
+      "command": null,
+      "evidence_contract": "forgejo-live-readback-admission@1.0.0",
+      "pass_predicate": "human accepts exact local Forgejo issue/comment/readback binding",
+      "falsifiers": ["wrong repository", "wrong issue marker", "wrong candidate hash"],
+      "promotion_effect": "human-only"
+    },
+    {
+      "oracle_id": "OR-BEH-PROJECTION",
+      "kind": "behavioral",
+      "producer": "repo-neural-perception",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/projection-rebuild.test.ts"],
+      "evidence_contract": "perfect-seed-progress-projection@1.0.0",
+      "pass_predicate": "same physical inputs produce byte-identical state and prompt projection after deletion",
+      "falsifiers": ["projection contains hidden truth", "file ordering changes hash", "manual status advances state"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-BEH-REPAIR",
+      "kind": "behavioral",
+      "producer": "repo-neural-perception",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/repair-routing.test.ts"],
+      "evidence_contract": "perfect-seed-repair-projection@1.0.0",
+      "pass_predicate": "bounded same-closure drift yields automatic prompt; expansion yields human-required proposal",
+      "falsifiers": ["new dependency auto-authorized", "exit criterion modified", "stale HEAD ignored"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-BEH-RAG-SPIKE",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "async-cq1",
+      "command": ["bun", "run", "scripts/indexing/compare_backends.ts", "--fixture", "tests/indexing/corpus.json"],
+      "evidence_contract": "perfect-seed-rag-comparison@1.0.0",
+      "pass_predicate": "same corpus/query/update/rebuild workload reports quality, provenance, p95, RSS, disk, and packaging",
+      "falsifiers": ["different queries per backend", "rebuild failure", "retrieval without provenance"],
+      "promotion_effect": "human-only"
+    },
+    {
+      "oracle_id": "OR-EXT-RAG-RUNTIME",
+      "kind": "external",
+      "producer": "external-verify",
+      "cost_class": "async-cq1",
+      "command": null,
+      "evidence_contract": "external-claim-ledger@1",
+      "pass_predicate": "primary-source runtime/package claims are current and local execution independently confirms the selected surface",
+      "falsifiers": ["secondary source only", "Node support inferred as Bun support", "version unpinned"],
+      "promotion_effect": "human-only"
+    },
+    {
+      "oracle_id": "OR-HUM-RAG-SELECT",
+      "kind": "human",
+      "producer": "human",
+      "cost_class": "async-cq1",
+      "command": null,
+      "evidence_contract": "rag-backend-land-decision@1.0.0",
+      "pass_predicate": "human selects the measured Pareto winner or the declared SQLite fallback",
+      "falsifiers": ["novelty-only selection", "missing runtime proof", "index promoted to truth"],
+      "promotion_effect": "human-only"
+    },
+    {
+      "oracle_id": "OR-BEH-MIGRATION",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "cq0",
+      "command": ["bun", "test", "tests/v1-v2-migration.test.ts"],
+      "evidence_contract": "perfect-seed-v1-v2-migration-receipt@1.0.0",
+      "pass_predicate": "v1 bytes and hashes remain preserved and mapped/synthesized/unmapped semantics are explicit",
+      "falsifiers": ["legacy preflight becomes CQ pass", "unknown field dropped", "in-place upgrade"],
+      "promotion_effect": "candidate-only"
+    },
+    {
+      "oracle_id": "OR-BEH-E2E",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "async-pu",
+      "command": ["sh", "selftest.sh"],
+      "evidence_contract": "perfect-seed-v2-e2e-receipt@1.0.0",
+      "pass_predicate": "all four sources pass the full standalone lifecycle and adversarial fixtures fail at their declared edges",
+      "falsifiers": ["hollow passes", "stale verifies", "scope drift commits", "human gate disappears"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-BEH-SEED-RESET",
+      "kind": "behavioral",
+      "producer": "mechanical-script",
+      "cost_class": "async-pu",
+      "command": ["bun", "test", "tests/seed-reset.test.ts"],
+      "evidence_contract": "perfect-seed-reset-receipt@1.0.0",
+      "pass_predicate": "initial seed hash-matches after reset while runtime and user-domain classes are exported or preserved without deletion",
+      "falsifiers": ["filename heuristic", "user file deletion", "domain pollution retained as ontology"],
+      "promotion_effect": "verification-required"
+    },
+    {
+      "oracle_id": "OR-HUM-V2-ADMIT",
+      "kind": "human",
+      "producer": "human",
+      "cost_class": "async-pu",
+      "command": null,
+      "evidence_contract": "perfect-seed-v2-admission@1.0.0",
+      "pass_predicate": "human admits current milestone evidence with no critical blind spots, stale refs, or critical unmapped fields",
+      "falsifiers": ["script-only admission", "LLM-only admission", "Forgejo status-only admission"],
+      "promotion_effect": "human-only"
+    }
+  ]
+}

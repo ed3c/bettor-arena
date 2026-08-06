@@ -1,0 +1,19 @@
+{
+  "schema_version": "perfect-seed-input@1.0.0",
+  "packet_id": "dr-example",
+  "packet_state": "admitted",
+  "source_kind": "dr",
+  "source_path": "tests/fixtures/dr.md",
+  "task": "Design the smallest traceable repository and choose the next implementation action.",
+  "fixed_prompt_context": ["PROMPT.md", "modules/semantic-truth-context.md"],
+  "emergent_prompt_context": "N/A-none",
+  "source_refs": [
+    {
+      "repo": "ts-skill-bettor",
+      "commit": "f3776cbf1b4c75c78e017e1381a8517cd1865abf",
+      "path": "AGENTS.md",
+      "anchor": "L20:重複組件禁字面推論等價"
+    }
+  ],
+  "human_gate": "required_before_seed_admit"
+}

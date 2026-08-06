@@ -1,0 +1,11 @@
+<results>
+  <result id="Q-03" status="PARTIAL">
+    <missing>The wiki never names or describes the seed_factory.test.ts test "factory fast gate writes a preflight-only receipt in fail-fast order" (nor the "generated quality gate detects format, lint, and type defects at their physical stages" stage-attribution test); /openwiki/gates/fast-quality.md and /openwiki/factory/verification.md only cite the suite in aggregate (20 tests / 225 assertions). Add the named test coverage to /openwiki/gates/fast-quality.md or /openwiki/factory/verification.md.</missing>
+  </result>
+  <result id="Q-04" status="PASS">
+    <missing>None</missing>
+  </result>
+  <result id="Q-10" status="PARTIAL">
+    <missing>/openwiki/host-loop/molecular-messages.md and /openwiki/testing.md describe tests/test_molecular_gate.sh only as "real commit behavior runs in a fixture"; they omit the fixture-test trace assertions: an ordinary commit succeeds, a hollow molecular message is rejected with no commit created, and the post-commit stage-request receipt is verified record-only and names the resulting sha.</missing>
+  </result>
+</results>

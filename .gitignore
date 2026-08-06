@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+node_modules/
+data/receipts/post-commit-*.json
+data/wiki-update/
+.serena/
+.openwiki-review/

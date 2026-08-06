@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/mcp-production/profile.schema.json",
+  "title": "Repository MCP production migration profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repo_id",
+    "engine_sha256",
+    "managed_files",
+    "mirrors",
+    "capabilities",
+    "probes",
+    "human_gates"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "repo_id": {"type": "string", "minLength": 1},
+    "engine_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "protected_branches": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "receipt_dir": {"type": "string", "minLength": 1},
+    "backup_dir": {"type": "string", "minLength": 1},
+    "managed_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "format"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "format": {"enum": ["json", "toml", "text"]},
+          "contains": {"type": "array", "items": {"type": "string"}},
+          "secret_scan": {"type": "boolean"}
+        }
+      }
+    },
+    "mirrors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "target", "comparison"],
+        "properties": {
+          "source": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "comparison": {"enum": ["bytes", "json"]}
+        }
+      }
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "registration",
+          "surface_residency",
+          "payload_residency",
+          "heavy_executor"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "registration": {"enum": ["always", "project_scoped", "on_demand"]},
+          "surface_residency": {"enum": ["resident", "session_scoped", "on_demand"]},
+          "payload_residency": {"enum": ["resident", "session_scoped", "demand_pull", "on_demand"]},
+          "heavy_executor": {"type": "boolean"}
+        }
+      }
+    },
+    "probes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "argv", "cwd", "timeout_sec"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "argv": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"}
+          },
+          "cwd": {"type": "string", "minLength": 1},
+          "timeout_sec": {"type": "number", "exclusiveMinimum": 0, "maximum": 3600},
+          "env": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      }
+    },
+    "human_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "description": {"type": "string"}
+        }
+      }
+    }
+  }
+}
