@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
-import { readInputPacket, refsStatusForPacket, resolveReceiptPath } from "./contracts";
+import { ReceiptCheckError, readInputPacket, refsStatusForPacket, resolveReceiptPath } from "./contracts";
 import { materializeRepo } from "./materialize";
 import { reducePacket } from "./reduce";
 
@@ -109,8 +109,8 @@ function main(args: string[]): void {
   const outputPath = option(args, "--output");
   validateOutputPath(outputPath);
   const packet = readInputPacket(packetPath);
-  const packetBytes = readFileSync(packetPath);
-  const ir = reducePacket(packet, sha256(packetBytes), refsStatusForPacket(packetPath, packet, sha256(packetBytes)));
+  const packetSha256 = sha256(readFileSync(packetPath));
+  const ir = reducePacket(packet, packetSha256, refsStatusForPacket(packetPath, packet, packetSha256));
   const receipt = materializeRepo(ROOT, outputPath, packet, ir);
   console.log(JSON.stringify({ status: "candidate-human-admit-required", ...receipt }));
 }
@@ -119,5 +119,6 @@ try {
   main(Bun.argv.slice(2));
 } catch (error) {
   console.error(`FAIL: ${error instanceof Error ? error.message : String(error)}`);
-  process.exitCode = 1;
+  // Exit 2 = a check ran and failed on unreadable evidence; 1 = precondition/usage.
+  process.exitCode = error instanceof ReceiptCheckError ? 2 : 1;
 }

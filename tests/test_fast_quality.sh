@@ -235,6 +235,10 @@ git -C "$R" reset -q d.ts && rm "$R/d.ts"
 #      spawns in milliseconds — a budget of 0 could kill before anything
 #      spawned, making the no-orphan assertion trivially (vacuously) green.
 TAG="fq-orphan-probe-$$"
+# One EXIT trap owns orphan cleanup from here on: every exit path — fail(),
+# a set -e death, or normal completion — sweeps tagged survivors off the host.
+# (Replaces three per-assertion pkill copies that missed the instrument edge.)
+trap 'pkill -f "$TAG" 2>/dev/null || true; rm -rf "$TMP"' EXIT
 # The grandchild's fds are detached so a surviving orphan cannot also hang the
 # $(…) capture below by holding the pipe open — the pgrep is the one detector.
 printf '#!/bin/sh\n# orphan-probe stub; the real gate is restored right after this case\nsh -c "while :; do sleep 5; done # %s" </dev/null >/dev/null 2>&1 &\ntouch grandchild.spawned\nwait\n' "$TAG" \
@@ -246,13 +250,12 @@ set +e
 ERR=$(env FAST_QUALITY_BUDGET=1 git -C "$R" commit -q -m "orphan probe" 2>&1)
 RC=$?
 set -e
-[ "$RC" -ne 0 ] || { pkill -f "$TAG" 2>/dev/null || true; fail "orphan-probe commit was accepted"; }
-echo "$ERR" | grep -q 'budget' || { pkill -f "$TAG" 2>/dev/null || true; fail "orphan-probe budget FATAL missing: $ERR"; }
+[ "$RC" -ne 0 ] || fail "orphan-probe commit was accepted"
+echo "$ERR" | grep -q 'budget' || fail "orphan-probe budget FATAL missing: $ERR"
 # Instrument first, reading second: prove the grandchild really spawned…
 [ -f "$R/grandchild.spawned" ] || fail "orphan-probe instrument broken: stub never spawned its grandchild"
 # …then assert the budget kill reached it.
 if pgrep -f "$TAG" >/dev/null 2>&1; then
-  pkill -f "$TAG" 2>/dev/null || true
   fail "watchdog left an orphaned grandchild running past the budget kill"
 fi
 rm -f "$R/grandchild.spawned"

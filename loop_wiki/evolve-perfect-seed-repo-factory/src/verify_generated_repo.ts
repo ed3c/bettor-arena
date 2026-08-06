@@ -38,7 +38,7 @@ const shape = refsShapeStatus(lineage.source_refs);
 const statusConsistent =
   shape === "sentinel"
     ? lineage.refs_status === "sentinel"
-    : lineage.refs_status === "declared" || lineage.refs_status === "resolved";
+    : ["declared", "resolved", "stale"].includes(lineage.refs_status);
 if (!statusConsistent) throw new Error("generated repo lineage refs_status does not match source_refs");
 const plan = JSON.parse(readFileSync(join(root, "data/call-plan.json"), "utf8"));
 const results = readFileSync(join(root, "data/call-results.jsonl"), "utf8")

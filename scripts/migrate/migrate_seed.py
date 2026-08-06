@@ -414,12 +414,24 @@ def main(argv: list[str]) -> int:
             slug = "-".join(sorted(c["id"] for c in manifest["components"]))
             receipt_dir = target_root / RECEIPT_DIR_REL
             per_run = receipt_dir / f"report-{payload['source_commit'][:7]}-{slug}.json"
-            if per_run.exists() and not args.force_receipt:
-                raise ValueError(
-                    "per-run receipt already exists for this source commit + "
-                    f"component set: {RECEIPT_DIR_REL}/{per_run.name}; "
-                    "re-run with --force-receipt to overwrite it"
-                )
+            if not args.force_receipt:
+                # O_EXCL claims the slot atomically, closing the TOCTOU window
+                # an exists() probe left between check and write: two racing
+                # applies can both see "absent", but only one exclusive create
+                # succeeds. A crash after this claim leaves an empty receipt,
+                # so the next run refuses until --force-receipt acknowledges
+                # the earlier attempt — failing closed on ambiguous history.
+                receipt_dir.mkdir(parents=True, exist_ok=True)
+                try:
+                    os.close(
+                        os.open(per_run, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+                    )
+                except FileExistsError:
+                    raise ValueError(
+                        "per-run receipt already exists for this source commit + "
+                        f"component set: {RECEIPT_DIR_REL}/{per_run.name}; "
+                        "re-run with --force-receipt to overwrite it"
+                    ) from None
             payload["files_written"] = apply_operations(
                 operations, manifest, source_root
             )

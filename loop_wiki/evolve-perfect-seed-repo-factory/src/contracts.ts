@@ -58,7 +58,11 @@ export const SENTINEL_SOURCE_REF: SourceRef = {
   anchor: "pre-source-refs",
 };
 
-export type RefsStatus = "declared" | "sentinel" | "resolved";
+export type RefsStatus = "declared" | "sentinel" | "resolved" | "stale";
+
+// A receipt that exists but cannot be read as JSON is a failed check, not a
+// status: callers route this to exit 2 instead of a bare parse traceback.
+export class ReceiptCheckError extends Error {}
 
 export function refsShapeStatus(refs: SourceRef[]): "declared" | "sentinel" {
   return refs.some((ref) => ref.repo === SENTINEL_REPO) ? "sentinel" : "declared";
@@ -70,17 +74,26 @@ export function resolveReceiptPath(packetPath: string): string {
 
 // "resolved" is granted only by a resolve-refs --peer audit receipt bound to the
 // exact packet bytes; standing gates read that local receipt, never a sibling checkout.
+// A receipt that exists but no longer binds (sha mismatch, missing fields) reads
+// "stale": audited-then-broken must stay distinguishable from never-audited.
 export function refsStatusForPacket(packetPath: string, packet: SeedInputPacket, packetSha256: string): RefsStatus {
   const shape = refsShapeStatus(packet.source_refs);
   if (shape === "sentinel") return "sentinel";
   const receiptPath = resolveReceiptPath(packetPath);
   if (!existsSync(receiptPath)) return "declared";
-  const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as Record<string, unknown>;
+  let receipt: Record<string, unknown>;
+  try {
+    receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as Record<string, unknown>;
+  } catch (error) {
+    throw new ReceiptCheckError(
+      `resolve receipt is not valid JSON: ${receiptPath} (${error instanceof Error ? error.message : String(error)})`,
+    );
+  }
   requireCondition(
     receipt.schema_version === "perfect-seed-resolve-receipt@1.0.0",
     `unsupported resolve receipt schema: ${receiptPath}`,
   );
-  return receipt.refs_status === "resolved" && receipt.packet_sha256 === packetSha256 ? "resolved" : "declared";
+  return receipt.refs_status === "resolved" && receipt.packet_sha256 === packetSha256 ? "resolved" : "stale";
 }
 
 export function readInputPacket(packetPath: string): SeedInputPacket {

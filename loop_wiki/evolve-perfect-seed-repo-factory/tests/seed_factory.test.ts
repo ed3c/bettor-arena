@@ -417,9 +417,52 @@ describe("seed-factory build public seam", () => {
     const lineage = JSON.parse(readFileSync(join(output, "data/lineage.json"), "utf8"));
     expect(lineage.refs_status).toBe("resolved");
 
-    // Tampering the packet after the audit invalidates the receipt binding.
+    // Tampering the packet after the audit invalidates the receipt binding —
+    // and the break must read "stale", not blend into never-audited "declared".
     writeFileSync(packet, `${readFileSync(packet, "utf8").replace("N/A-none", "tampered-after-audit")}`, "utf8");
-    expect(JSON.parse(run(["refs-status", "--packet", packet]).stdout.toString()).refs_status).toBe("declared");
+    expect(JSON.parse(run(["refs-status", "--packet", packet]).stdout.toString()).refs_status).toBe("stale");
+
+    // The stale state survives into the built lineage the human gate reads.
+    const staleOutput = join(temp, "generated-stale");
+    const staleBuilt = run(["build", "--packet", packet, "--output", staleOutput]);
+    expect(staleBuilt.exitCode, staleBuilt.stderr.toString()).toBe(0);
+    expect(JSON.parse(readFileSync(join(staleOutput, "data/lineage.json"), "utf8")).refs_status).toBe("stale");
+    const stalePlanned = Bun.spawnSync(["bun", "run", "scripts/plan.ts", "--task", "Audit stale refs at the gate"], {
+      cwd: staleOutput,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(stalePlanned.exitCode, stalePlanned.stderr.toString()).toBe(0);
+    const staleVerified = Bun.spawnSync(["bun", "run", GENERATED_REPO_VERIFIER, "--repo", staleOutput], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(staleVerified.exitCode, staleVerified.stderr.toString()).toBe(0);
+  });
+
+  test("a receipt missing its binding fields reads stale, never declared or resolved", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    writeFileSync(
+      `${packet}.resolve-receipt.json`,
+      `${JSON.stringify({ schema_version: "perfect-seed-resolve-receipt@1.0.0" })}\n`,
+      "utf8",
+    );
+    const result = run(["refs-status", "--packet", packet]);
+    expect(result.exitCode, result.stderr.toString()).toBe(0);
+    expect(JSON.parse(result.stdout.toString()).refs_status).toBe("stale");
+  });
+
+  test("a corrupted receipt fails the check with exit 2 and a named diagnostic", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    writeFileSync(`${packet}.resolve-receipt.json`, "{not json", "utf8");
+    const result = run(["refs-status", "--packet", packet]);
+    expect(result.exitCode).toBe(2);
+    const stderr = result.stderr.toString();
+    expect(stderr).toContain("FAIL:");
+    expect(stderr).toContain("resolve-receipt.json");
+    expect(stderr).not.toContain("    at "); // no raw stack trace
   });
 
   test("migrated legacy packet builds with sentinel refs and refs_status sentinel", () => {
