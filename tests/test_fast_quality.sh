@@ -1,7 +1,7 @@
 #!/bin/sh
-# Seam: fast_quality.sh CLI exit codes + pre-commit.staged real git commit
-# behavior, in an isolated fixture where the staged hook is ACTIVATED
-# (activation in this repo itself is a separate human admit).
+# Seam: fast_quality.sh CLI exit codes + pre-commit real git commit behavior,
+# in an isolated fixture repo (the hook was activated in this repo by the
+# admitted #14 stage 1; this file judges the same hook source).
 #
 # Controls (every green here was first seen red while this file predated the
 # implementation): three lanes each carry a negative control — TS type error,
@@ -15,12 +15,11 @@ trap 'rm -rf "$TMP"' EXIT
 fail() { echo "FAIL: $1" >&2; exit 1; }
 
 G="$ROOT/scripts/gates/fast_quality.sh"
-H="$ROOT/.githooks/pre-commit.staged"
+H="$ROOT/.githooks/pre-commit"
 FACTORY="$ROOT/loop_wiki/evolve-perfect-seed-repo-factory"
 [ -f "$G" ] || fail "gate missing: $G"
-[ -f "$H" ] || fail "pre-commit.staged missing: $H"
-# Staged name must NOT be active in this repo (activation = separate human admit).
-[ ! -e "$ROOT/.githooks/pre-commit" ] || fail "pre-commit unexpectedly active in repo"
+# #14 stage 1 (human admit) activated the hook; it must be live and executable.
+[ -x "$H" ] || fail "pre-commit missing or not executable: $H"
 
 # Assembled so this tracked file never embeds a literal home-root prefix.
 BADROOT=$(printf '/Use%s' 'rs/nobody/home')
