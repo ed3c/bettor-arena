@@ -35,7 +35,14 @@ if ! git diff --quiet -- .githooks scripts/gates; then
   exit 2
 fi
 
-STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+# Mode 120000 is a symlink: it has a path as its content, nothing to format,
+# lint or typecheck, and the quality gate rightly refuses a non-regular input.
+# Whether the link resolves where it should is check_skill_pointers' contract,
+# which runs below — so a symlink is filtered here, never silently unchecked.
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | while IFS= read -r path; do
+  mode=$(git ls-files --stage -- "$path" | cut -c1-6)
+  if [ "$mode" != "120000" ]; then printf '%s\n' "$path"; fi
+done)
 [ -n "$STAGED" ] || exit 0
 
 STAGEDTREE=$(mktemp -d)
@@ -70,3 +77,4 @@ python3 scripts/gates/check_root_coupling.py --staged
 python3 scripts/gates/check_placement.py
 python3 scripts/gates/check_skill_pointers.py
 python3 scripts/gates/check_credential_hygiene.py
+python3 scripts/gates/check_delivery_receipt.py

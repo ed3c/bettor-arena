@@ -21,7 +21,8 @@ bettor-arena/
 ├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
-├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill)
+├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill;
+│                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
 ├── .agents/
 │   └── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
@@ -31,7 +32,7 @@ bettor-arena/
 ├── mcp/               # MCP adapter 層(context-pack+production 引擎;S10 落地)
 ├── openwiki/          # repo-wiki-converge 生成的 as-built wiki(可再生投影,git 追蹤;更新走官方 update 模式,index.md 由 finalize 生成禁手寫)
 ├── scripts/
-│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+_gate_common.py(三閘共用 repo_root/fixture 樣板)+allowlist 帳
+│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(三閘共用 repo_root/fixture 樣板)+allowlist 帳
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
 ├── data/              # 機器帳與 receipt 落點(遷移 stats/煙測 receipt)
@@ -39,7 +40,9 @@ bettor-arena/
 │   │                  # schema bettor-arena-wiki-update-request@1.0.0,producer=工廠 trigger.sh,
 │   │                  # consumer=kb-ingest/port/wiki_update_worker.sh;湧現內容不落此處,只落 openwiki backlog)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only,同名重跑 exit 64/--force-receipt 顯式覆寫;S3/S4 的 apply 早於 per-run 機制,其 receipt 僅存 git history 的 last-migration-report.json 版本;last-migration-report.json=最新拷貝,執行期生)
-└── docs/              # 計劃/交接文件(非模組知識);adr/=架構決策記錄(0001=slice 詞彙)
+└── docs/              # 計劃/交接文件(非模組知識);adr/=架構決策記錄(0001=slice 詞彙);
+                       #   plans/<date>-<topic>/as-run.md=該線執行帳(已完成/未完成/已跑/未跑),
+                       #   forgejo-delivery-loop 三 SSOT 之一,與 openwiki(as-built)分工
 ```
 
 ## §3 鐵律(承 PRD 全部裁決,只列最高頻)

@@ -1,0 +1,39 @@
+{
+  "_schema": "forgejo-delivery-registry@0.1.0 — 每條線一項；delivery.json（物理收據，落在物化 repo 根）必含 required_receipt_fields 全部欄位。新線先在此登記再物化，T0 閘才有可驗面。位址一律 Forgejo，禁 github.com（人裁 2026-08-06：不用雲端 GitHub）。",
+  "forge": {
+    "kind": "forgejo",
+    "base_url": "http://localhost:3000",
+    "api_base": "http://localhost:3000/api/v1",
+    "auth": "git credential helper（記憶體取用；秘密不落盤、不輸出）",
+    "layer4": "milestone — Forgejo 9.0.3 的 projects API 實測 404，看板無法由機器驅動；milestone 是唯一 API 可驅動且原生投影進度的橫向視圖"
+  },
+  "required_receipt_fields": [
+    "line",
+    "repo",
+    "issues",
+    "pr",
+    "milestone_url",
+    "synced_at_commit"
+  ],
+  "lines": [
+    {
+      "line": "bettor-arena-migration",
+      "forgejo_repo": "neon/bettor-arena",
+      "prd_issue": "http://localhost:3000/neon/bettor-arena/issues/2",
+      "milestone_url": "http://localhost:3000/neon/bettor-arena/milestone/1",
+      "materialized_path": null,
+      "plan_doc": "docs/plans/2026-08-06-bettor-arena-migration/as-run.md",
+      "issue_urls": [
+        "http://localhost:3000/neon/bettor-arena/issues/16",
+        "http://localhost:3000/neon/bettor-arena/issues/17",
+        "http://localhost:3000/neon/bettor-arena/issues/26",
+        "http://localhost:3000/neon/bettor-arena/issues/27"
+      ],
+      "pr_urls": [
+        "http://localhost:3000/neon/bettor-arena/pulls/1",
+        "http://localhost:3000/neon/bettor-arena/pulls/25"
+      ],
+      "note": "materialized_path 為 null：本線交付的是 repo 自身與其閘，不是一個被物化到 prototype/ 的子 repo。工廠 build 出的生成 repo 落在 scratch（一次性），故不是這條線的收據對象——收據對象出現時再改此欄，T0 閘在 null 時走 SKIP 並具名。"
+    }
+  ]
+}
