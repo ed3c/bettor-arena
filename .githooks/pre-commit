@@ -1,6 +1,6 @@
 #!/bin/sh
-# pre-commit.staged — staged-only fast-quality preflight, STAGED (not active).
-# Activation = renaming to `pre-commit`, and that is a separate human admit.
+# pre-commit — staged-only fast-quality preflight (activated from
+# pre-commit.staged by the admitted #14 stage 1).
 #
 # What it does, in order:
 #   1. Self-integrity, radius = this gate's own closure only (.githooks/ +
@@ -18,8 +18,10 @@
 #   3. check_root_coupling.py --staged (index blobs, not worktree).
 #
 # Budget: FAST_QUALITY_BUDGET seconds (default 5) wall for the gate call;
-# overrun = kill + FATAL 64, never a silent pass. Runs no tests, touches no
-# network. Exit: 0 pass · 2 gate FAIL · 64 FATAL (budget / missing tool).
+# overrun = process-group kill (the gate's whole tree — sh, node, tsc — no
+# orphaned grandchildren) + FATAL 64, never a silent pass. Runs no tests,
+# touches no network. Exit: 0 pass · 2 gate FAIL · 64 FATAL (budget /
+# missing tool).
 set -eu
 ROOT=$(git rev-parse --show-toplevel)
 cd "$ROOT"
@@ -39,14 +41,19 @@ trap 'rm -rf "$STAGEDTREE"' EXIT
 printf '%s\n' "$STAGED" | git checkout-index --prefix="$STAGEDTREE/tree/" --stdin
 
 BUDGET=${FAST_QUALITY_BUDGET:-5}
-printf '%s\n' "$STAGED" | sed "s|^|$STAGEDTREE/tree/|" | sh scripts/gates/fast_quality.sh &
+# Job control (set -m) puts each background job in its own process group, so
+# the watchdog's kill -- -pgid reaches the gate's whole tree (sh, node, tsc),
+# not just the pipeline leader — a plain kill of $GATE orphaned grandchildren.
+set -m
+( printf '%s\n' "$STAGED" | sed "s|^|$STAGEDTREE/tree/|" | sh scripts/gates/fast_quality.sh ) &
 GATE=$!
-( sleep "$BUDGET"; kill "$GATE" 2>/dev/null ) &
+( sleep "$BUDGET"; kill -- -"$GATE" 2>/dev/null ) &
 DOG=$!
+set +m
 set +e
 wait "$GATE"; RC=$?
 set -e
-kill "$DOG" 2>/dev/null || true
+kill -- -"$DOG" 2>/dev/null || true
 wait "$DOG" 2>/dev/null || true
 if [ "$RC" -ge 128 ]; then
   echo "pre-commit FATAL: fast_quality exceeded the ${BUDGET}s budget and was killed" >&2
