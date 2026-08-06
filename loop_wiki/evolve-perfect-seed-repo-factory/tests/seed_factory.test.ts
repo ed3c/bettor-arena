@@ -465,6 +465,38 @@ describe("seed-factory build public seam", () => {
     expect(stderr).not.toContain("    at "); // no raw stack trace
   });
 
+  test("a receipt under a foreign schema fails the check with exit 2, same taxonomy as corruption", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    writeFileSync(
+      `${packet}.resolve-receipt.json`,
+      `${JSON.stringify({ schema_version: "perfect-seed-resolve-receipt@9.9.9", refs_status: "resolved" })}\n`,
+      "utf8",
+    );
+    const result = run(["refs-status", "--packet", packet]);
+    expect(result.exitCode).toBe(2);
+    expect(result.stderr.toString()).toContain("unsupported resolve receipt schema");
+  });
+
+  test("trigger rejects a stale refs_status by name, not as unrecognized", () => {
+    const temp = temporaryRoot();
+    const packet = writePacket(temp, "dr", join(ROOT, "tests/fixtures/dr.md"));
+    writeFileSync(
+      `${packet}.resolve-receipt.json`,
+      `${JSON.stringify({ schema_version: "perfect-seed-resolve-receipt@1.0.0", refs_status: "resolved", packet_sha256: "0".repeat(64) })}\n`,
+      "utf8",
+    );
+    const result = Bun.spawnSync(["sh", join(ROOT, "trigger.sh"), packet, join(temp, "out")], {
+      cwd: ROOT,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(result.exitCode).toBe(2);
+    const stderr = result.stderr.toString();
+    expect(stderr).toContain("refs_status=stale");
+    expect(stderr).not.toContain("unrecognized");
+  });
+
   test("migrated legacy packet builds with sentinel refs and refs_status sentinel", () => {
     const temp = temporaryRoot();
     const migrated = join(temp, "migrated.json");

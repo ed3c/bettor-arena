@@ -21,6 +21,10 @@ REFS_STATUS=$(REFS_STATUS_JSON="$REFS_STATUS_JSON" bun -e 'console.log(JSON.pars
 SOURCE_REFS=$(REFS_STATUS_JSON="$REFS_STATUS_JSON" bun -e 'console.log(JSON.stringify(JSON.parse(process.env.REFS_STATUS_JSON).source_refs))')
 case "$REFS_STATUS" in
   declared|sentinel|resolved) ;;
+  stale)
+    echo "FAIL: refs_status=stale — the resolve receipt no longer matches this packet;" \
+         "rerun resolve-refs --peer (or deliver as declared by removing the stale receipt)" >&2
+    exit 2 ;;
   *) echo "FAIL: unrecognized refs_status: $REFS_STATUS" >&2; exit 2 ;;
 esac
 mkdir -p "$ROOT/_engine-run"

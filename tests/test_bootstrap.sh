@@ -19,6 +19,25 @@ HP=$(git -C "$TMP" config core.hooksPath) || fail "hooksPath unset after bootstr
 sh "$TMP/bootstrap.sh" || fail "bootstrap is not idempotent (second run exited $?)"
 [ "$(git -C "$TMP" config core.hooksPath)" = ".githooks" ] || fail "hooksPath drifted on rerun"
 
+# Wiki freshness WARN (never FATAL): absent fires / fresh silent / stale fires.
+# Fixture commits disable hooksPath explicitly: this seam tests the doctor
+# WARN, not the hooks — those have their own seam tests (fast_quality /
+# molecular), and the fixture lacks the factory toolchain the TS lane needs.
+fixture_commit() { git -C "$TMP" -c core.hooksPath= -c user.email=t@t -c user.name=t commit -qm "$1"; }
+git -C "$TMP" add -A
+fixture_commit base
+ERR=$(sh "$TMP/bootstrap.sh" 2>&1) || fail "bootstrap failed inside wiki-warn block"
+echo "$ERR" | grep -q "wiki absent" || fail "absent wiki did not WARN"
+mkdir -p "$TMP/openwiki"
+printf '{"gitHead": "%s"}\n' "$(git -C "$TMP" rev-parse HEAD)" > "$TMP/openwiki/.last-update.json"
+ERR=$(sh "$TMP/bootstrap.sh" 2>&1) || fail "bootstrap failed with fresh wiki"
+echo "$ERR" | grep -q "openwiki/ is stale" && fail "fresh wiki wrongly WARNed stale"
+echo x > "$TMP/code.txt"
+git -C "$TMP" add code.txt
+fixture_commit change
+ERR=$(sh "$TMP/bootstrap.sh" 2>&1) || fail "bootstrap failed with stale wiki"
+echo "$ERR" | grep -q "openwiki/ is stale" || fail "stale wiki did not WARN"
+
 # Missing-tool probe must be FATAL 64 with a diagnosable message, distinct from gate FAIL 2.
 set +e
 ERR=$(env PATH=/usr/bin:/bin sh "$TMP/bootstrap.sh" 2>&1)

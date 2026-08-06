@@ -89,10 +89,12 @@ export function refsStatusForPacket(packetPath: string, packet: SeedInputPacket,
       `resolve receipt is not valid JSON: ${receiptPath} (${error instanceof Error ? error.message : String(error)})`,
     );
   }
-  requireCondition(
-    receipt.schema_version === "perfect-seed-resolve-receipt@1.0.0",
-    `unsupported resolve receipt schema: ${receiptPath}`,
-  );
+  if (receipt.schema_version !== "perfect-seed-resolve-receipt@1.0.0") {
+    // Same taxonomy as invalid JSON: the evidence exists but cannot be read
+    // under this contract — a check that ran and failed (exit 2), not a
+    // generic input error.
+    throw new ReceiptCheckError(`unsupported resolve receipt schema: ${receiptPath}`);
+  }
   return receipt.refs_status === "resolved" && receipt.packet_sha256 === packetSha256 ? "resolved" : "stale";
 }
 
