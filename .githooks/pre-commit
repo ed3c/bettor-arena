@@ -78,3 +78,14 @@ python3 scripts/gates/check_placement.py
 python3 scripts/gates/check_skill_pointers.py
 python3 scripts/gates/check_credential_hygiene.py
 python3 scripts/gates/check_delivery_receipt.py
+
+# agent-docs drift gate: the CLAUDE.md / AGENTS.md being committed must match
+# their source in the shared skill. Pure forwarder -- the logic lives once, in
+# scripts/pre-commit-agent-docs.sh; four copies of a checker is the shape this
+# gate exists to remove.
+AGENT_DOCS_GATE="$HOME/.agents/skills-shared/skills/forgejo-delivery-loop/scripts/pre-commit-agent-docs.sh"
+if [ -f "$AGENT_DOCS_GATE" ]; then
+  sh "$AGENT_DOCS_GATE" || exit $?
+else
+  echo "pre-commit SKIP: agent-docs gate not on this machine -- docs unchecked" >&2
+fi
