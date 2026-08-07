@@ -33,7 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / "gates"))
 from _gate_common import repo_root  # noqa: E402
 
-REGISTRY_REL = ".agents/skills/forgejo-delivery-loop/registry.json"
+REGISTRY_REL = ".skill-bindings/forgejo-delivery-loop/registry.json"
 
 
 def credential(host: str) -> tuple[str, str]:

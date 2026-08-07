@@ -36,7 +36,7 @@ NO_OPEN_ISSUES = "NONE-OPEN-no-prd-registered"
 than empty: the receipt gate requires every field non-empty, so an empty list would be
 indistinguishable from a receipt that recorded nothing."""
 
-REGISTRY_REL = ".agents/skills/forgejo-delivery-loop/registry.json"
+REGISTRY_REL = ".skill-bindings/forgejo-delivery-loop/registry.json"
 
 
 def credential(host: str) -> tuple[str, str]:

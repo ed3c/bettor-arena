@@ -28,6 +28,10 @@ bettor-arena/
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
 ├── .agents/
 │   └── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
+├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:
+│                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
+│                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
+│                      #   目錄不存在=未 retarget,是缺席不是缺陷
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
 ├── loop_wiki/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)

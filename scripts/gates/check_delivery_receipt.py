@@ -31,7 +31,7 @@ from pathlib import Path
 
 from _gate_common import repo_root  # noqa: E402
 
-REGISTRY_REL = ".agents/skills/forgejo-delivery-loop/registry.json"
+REGISTRY_REL = ".skill-bindings/forgejo-delivery-loop/registry.json"
 
 
 def load_registry(path: Path) -> dict:

@@ -3,11 +3,15 @@
 
 Mechanizes the S5 skills-SSOT contract (ARCHITECTURE.md §2): `.agents/skills/`
 is the host-neutral single home of skill content; `.claude/skills/` holds only
-symlinks that resolve into `.agents/skills/` or a module-owned skill home
+symlinks that name `.agents/skills/` or a module-owned skill home
 (`kb-ingest/skill`). Checks, against tracked+untracked-visible files:
 
-1. every `.claude/skills/` entry is a symlink resolving inside
-   `.agents/skills/` or `kb-ingest/skill` (no real files, no escapes);
+1. every `.claude/skills/` entry is a symlink naming `.agents/skills/` or
+   `kb-ingest/skill` (no real files, no escapes). Only the first hop is
+   checked: an entry under `.agents/skills/` may itself be a symlink into the
+   shared skills checkout, and where that leads is the shared-skills registry's
+   contract, not this one. What this gate owns is that `.claude/` names no
+   content of its own and always defers to the content home;
 2. no symlink under `.agents/skills/` resolves back into `.claude/` (content
    must never live behind a host entry);
 3. repo-wide, no two real SKILL.md files share the same skill-directory name
@@ -43,10 +47,19 @@ def visible_paths(root: Path) -> list[str]:
     return [p for p in out.split("\0") if p]
 
 
-def _resolves_inside(link: Path, root: Path, allowed_rels: tuple[str, ...]) -> bool:
-    real = Path(os.path.realpath(link))
+def _names_content_home(link: Path, root: Path, allowed_rels: tuple[str, ...]) -> bool:
+    """Where this link points, not where the chain ends.
+
+    Resolved lexically on purpose: the content home may itself be a symlink farm
+    into a checkout outside the repo, and following through would report every
+    shared skill as an escape. The pointer contract is about `.claude/` holding
+    no content, which the first hop already decides.
+    """
+    target = Path(os.readlink(link))
+    named = target if target.is_absolute() else link.parent / target
+    named = Path(os.path.normpath(named))
     return any(
-        real == (root / rel / link.name) or real.is_relative_to(root / rel)
+        named == (root / rel / link.name) or named.is_relative_to(root / rel)
         for rel in allowed_rels
     )
 
@@ -79,10 +92,10 @@ def run(start: Path) -> int:
                 "(host entries must be symlinks, zero content copies)"
             )
             continue
-        if not _resolves_inside(entry, root, ALLOWED_TARGET_RELS):
+        if not _names_content_home(entry, root, ALLOWED_TARGET_RELS):
             violations.append(
                 f"ESCAPED-LINK {CLAUDE_SKILLS_REL}/{entry.name} -> {os.readlink(entry)} "
-                f"(must resolve inside {' or '.join(ALLOWED_TARGET_RELS)})"
+                f"(must name {' or '.join(ALLOWED_TARGET_RELS)})"
             )
 
     # 2: content home must not point back into the host tree
@@ -174,6 +187,31 @@ def _selftest() -> int:
         (repo / ".claude/skills/foo").unlink()
         os.symlink("../../elsewhere", repo / ".claude/skills/foo")
         cases.append(("escaped-link-red", run(repo), 2))
+    with tempfile.TemporaryDirectory() as td:
+        # content home is a symlink into a checkout outside the repo: legal, and
+        # the reason this gate stops at the first hop
+        tdp = Path(td)
+        shared = tdp / "shared-checkout/skills/shared-one"
+        shared.mkdir(parents=True)
+        (shared / "SKILL.md").write_text("shared body\n", encoding="utf-8")
+        repo = _fixture(tdp)
+        os.symlink(shared, repo / ".agents/skills/shared-one")
+        os.symlink(
+            "../../.agents/skills/shared-one", repo / ".claude/skills/shared-one"
+        )
+        subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+        cases.append(("shared-checkout-green", run(repo), 0))
+    with tempfile.TemporaryDirectory() as td:
+        # same shared body, but the host entry reaches past the content home
+        tdp = Path(td)
+        shared = tdp / "shared-checkout/skills/shared-one"
+        shared.mkdir(parents=True)
+        (shared / "SKILL.md").write_text("shared body\n", encoding="utf-8")
+        repo = _fixture(tdp)
+        os.symlink(shared, repo / ".agents/skills/shared-one")
+        os.symlink(shared, repo / ".claude/skills/shared-one")
+        subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+        cases.append(("host-bypasses-content-home-red", run(repo), 2))
     with tempfile.TemporaryDirectory() as td:
         repo = _fixture(Path(td))  # content home pointing back into the host tree
         (repo / ".claude/skills/bar-home").mkdir()
