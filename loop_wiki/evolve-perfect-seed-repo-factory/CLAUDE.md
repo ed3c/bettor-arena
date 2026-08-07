@@ -7,4 +7,6 @@
 - Twenty local deterministic calls are not twenty external model/tool calls.
 - Do not overwrite an output or mutate a source repo.
 - A green verifier yields a validated candidate, never automatic seed admission.
+- Every green is classified by reach (STATIC, SANDBOX, PROD); no claim settles
+  on a single reach class. See `modules/eight-base-laws.md`.
 - Human admission is the terminal edge.

@@ -8,6 +8,8 @@
 4. `modules/exchange-formats.md` before changing packet or result fields.
 5. `modules/production-readiness.md` before claiming reusable-seed status.
 6. `modules/semantic-truth-context.md` before generating task context.
+7. `modules/eight-base-laws.md` for the global-law landing per base and the
+   reach taxonomy (STATIC/SANDBOX/PROD) before reading any green as settled.
 
 ## Eight bases
 
