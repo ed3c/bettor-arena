@@ -33,7 +33,10 @@ bettor-arena/
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
 │                      #   目錄不存在=未 retarget,是缺席不是缺陷
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
-├── notebooklm/        # NotebookLM 業務迴圈模組(workflow.py=唯一入口,registry.json=互動資料(notebook pin/harvest target;憑證只留指針,絕不落值),自有 `--selftest` 零網路)。
+├── notebooklm/        # NotebookLM 業務迴圈模組(README.md=法則層+抖動迴圈+已抓到的缺陷,開這個目錄的
+│                      #   agent 先讀它;workflow.py=唯一入口,drive_fetch.py=認證過的 Drive 路徑,
+│                      #   registry.json=互動資料(notebook pin/harvest target;憑證只留指針,絕不落值),
+│                      #   自有 `--selftest` 零網路)。
 │                      #   兩跳:hop1 從具名 notebook 取一個 Google Doc/Sheet 的 fulltext,
 │                      #   hop2(`--follow` opt-in)拿 hop1 抽出的 docs.google 文件 URL 真去存取——
 │                      #   走**丟棄式 scratch notebook**,來源 notebook 永不被寫。

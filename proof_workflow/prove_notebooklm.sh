@@ -31,6 +31,8 @@ PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
 
 prove_init notebooklm "loopctl notebooklm run -> notebooklm/workflow.py -> notebook by title -> one Google Doc/Sheet -> the docs.google link inside it -> data/notebooklm/<utc>/"
 
+prove_context laws notebooklm/README.md \
+  "the module's own law layer -> the agent that opens this directory: the nine rules, the signal->action table for a red, and the defects already caught. Hashed here on purpose — a law layer nothing hashes can be edited without moving any digest, and the lineage hook would stay silent about a change to what the next agent reads FIRST"
 prove_context skill .agents/skills/notebooklm-workflow/SKILL.md \
   "repo -> the agent driving this loop: which button, and how to read each exit code"
 prove_context module .agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md \

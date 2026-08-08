@@ -17,6 +17,10 @@ description: >-
 > 本 skill 只講**怎麼驅動 notebooklm 迴圈**。迴圈本身的放置契約在 `ARCHITECTURE.md` §2 的
 > `notebooklm/` 槽,對外表面在 `loopctl/contract.json`,證明與對照組在 `proof_workflow/`。
 > 這裡不複述任何一份,只留「什麼時候按哪一顆、紅了怎麼讀」。
+>
+> **要改機制、或紅了不知道那是什麼:先讀 [`notebooklm/README.md`](../../../notebooklm/README.md)。**
+> 那是該模組的法則層(九條判準 ＋ 訊號→動作表 ＋ 已經真的抓到過的缺陷)。本 skill 是操作面,
+> 它是判斷面;紅的時候查它,不要從這裡重新推。
 
 ## 1. 表面
 

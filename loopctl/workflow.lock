@@ -1,26 +1,26 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "129b568ea48462f9f22e766525e8118837057c13",
+  "workflow_commit": "65e9ad222000d504070a533bdafb720e22eb8fb8",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-129b568ea484-dirty.json",
-    "harness": "harness-129b568ea484-dirty.json",
-    "macro": "macro-129b568ea484-dirty.json",
-    "micro": "micro-129b568ea484-dirty.json",
-    "notebooklm": "notebooklm-129b568ea484-dirty.json",
-    "openwiki": "openwiki-129b568ea484-dirty.json",
-    "policy": "policy-129b568ea484-dirty.json",
-    "workflow": "workflow-129b568ea484-dirty.json"
+    "container": "container-65e9ad222000-dirty.json",
+    "harness": "harness-65e9ad222000-dirty.json",
+    "macro": "macro-65e9ad222000-dirty.json",
+    "micro": "micro-65e9ad222000-dirty.json",
+    "notebooklm": "notebooklm-65e9ad222000-dirty.json",
+    "openwiki": "openwiki-65e9ad222000-dirty.json",
+    "policy": "policy-65e9ad222000-dirty.json",
+    "workflow": "workflow-65e9ad222000-dirty.json"
   },
   "counts": {
     "artifact": 6,
-    "context": 22,
+    "context": 23,
     "harness": 68
   },
-  "workflow_digest": "394ca81484bb9424223e0013b50be1b6b3a439ab6954c9e26e0b733ff7cd1747",
+  "workflow_digest": "fd395babaf59eac7b8796750d39adb72adcf98a42517dc1eca1d1a41000f7072",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
-      "sha256": "277bb0ee66262fc9671374166b5d67e157230b5f75c299128133b885d61d07b6",
+      "sha256": "c795ce4a923fa5ffa7cd3a499b4e57266f7548329c9716f296cccefb16206b5c",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -94,7 +94,7 @@
       ]
     },
     "ARCHITECTURE.md": {
-      "sha256": "cb6c7c960940df57b81059a13609a12f569dfa4243924069db99040cd159d5c9",
+      "sha256": "8dd9fcbfd45f6334df939417cd7781d473f2f15804ab689f3fe129e6403f6aac",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -125,7 +125,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-129b568ea48462f9f22e766525e8118837057c13.json": {
+    "data/receipts/post-commit-65e9ad222000d504070a533bdafb720e22eb8fb8.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -513,6 +513,14 @@
         "workflow"
       ]
     },
+    "notebooklm/README.md": {
+      "sha256": "63b9335bb6fb2eeb6aed141168a02021df5a55be606c90bbaf46255715a21d05",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "notebooklm"
+      ]
+    },
     "notebooklm/drive_fetch.py": {
       "sha256": "655208d0d489d246ec91e0359fa5e11033fa28aa4021f042829405df1c7bf428",
       "hash_source": "index",
@@ -714,7 +722,7 @@
       ]
     },
     "proof_workflow/prove_notebooklm.sh": {
-      "sha256": "f1e60f6d086fb54ac970795aa712081cacee5d7e25632794afae5b1699a6e7dd",
+      "sha256": "14fbcfa9ce1df565e43ab60bf86cf49b1b876171753d8e7a2a88868a267b584b",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
