@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "1.3.0",
+  "surface_version": "1.5.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -34,7 +34,10 @@
   "modes": {
     "run": "execute the loop's real entry point",
     "prove": "traverse it and write a proof receipt under data/proof-workflow/",
-    "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof"
+    "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof",
+    "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
+    "trailer": "print the lineage trailer this commit should carry (empty when no workflow file is staged)",
+    "replay": "check a commit or tag out into a disposable worktree and run THAT version's CLI"
   },
   "commands": [
     {
@@ -42,7 +45,9 @@
       "mode": "run",
       "target": "bootstrap.sh",
       "required": [],
-      "optional": ["--ollama-url"],
+      "optional": [
+        "--ollama-url"
+      ],
       "opt_in": {
         "--ollama-url": "OLLAMA_URL — the endpoint the doctor probes for grepai embeddings; unreachable is a WARN, never FATAL. Default http://localhost:11434"
       },
@@ -55,15 +60,21 @@
         ],
         "exit": "0 activated · 64 FATAL (missing tool, not a work tree, empty .githooks, root-coupling selftest red)"
       },
-      "writes": ["git config core.hooksPath"]
+      "writes": [
+        "git config core.hooksPath"
+      ]
     },
     {
       "loop": "macro",
       "mode": "prove",
       "target": "proof_workflow/prove_macro_loop.sh",
       "required": [],
-      "optional": ["--force-receipt"],
-      "writes": ["data/proof-workflow/macro-<commit12>[-dirty].json"]
+      "optional": [
+        "--force-receipt"
+      ],
+      "writes": [
+        "data/proof-workflow/macro-<commit12>[-dirty].json"
+      ]
     },
     {
       "loop": "macro",
@@ -81,7 +92,14 @@
       "mode": "run",
       "target": "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh",
       "required": [],
-      "optional": ["--packet", "--output", "--source", "--kind", "--task", "--packet-id"],
+      "optional": [
+        "--packet",
+        "--output",
+        "--source",
+        "--kind",
+        "--task",
+        "--packet-id"
+      ],
       "arg_groups": {
         "packet": "--packet + --output — hand it a packet you already have",
         "source": "--source + --task [+ --kind, --packet-id, --output] — hand it a document or a repo and let the CLI build the packet"
@@ -116,8 +134,12 @@
       "mode": "prove",
       "target": "proof_workflow/prove_micro_loop.sh",
       "required": [],
-      "optional": ["--force-receipt"],
-      "writes": ["data/proof-workflow/micro-<commit12>[-dirty].json"]
+      "optional": [
+        "--force-receipt"
+      ],
+      "writes": [
+        "data/proof-workflow/micro-<commit12>[-dirty].json"
+      ]
     },
     {
       "loop": "micro",
@@ -134,8 +156,14 @@
       "loop": "openwiki",
       "mode": "run",
       "target": "kb-ingest/port/wiki_update_worker.sh",
-      "required": ["--request"],
-      "optional": ["--full", "--force-receipt", "--defer-partials"],
+      "required": [
+        "--request"
+      ],
+      "optional": [
+        "--full",
+        "--force-receipt",
+        "--defer-partials"
+      ],
       "opt_in": {
         "--full": "spends real model turns and rewrites openwiki/ in place; without it the run is --dry-run and the probabilistic segment is skipped by name",
         "--force-receipt": "WIKI_UPDATE_FORCE_RECEIPT=1 — receipts are frozen evidence, so a rerun over an existing one must declare itself",
@@ -155,28 +183,109 @@
         "exit": "0 ok · 2 contract fail, including a red verifier gate · 64 FATAL (absent request, absent tool, receipt collision)",
         "note": "without --full the run is --dry-run: every deterministic seam executes with the REAL components and the model turn is skipped BY NAME, with the live wiki byte-compared before and after to prove it was untouched"
       },
-      "writes": ["data/wiki-update/receipt-<packet>.json", "openwiki/ (--full only)"]
+      "writes": [
+        "data/wiki-update/receipt-<packet>.json",
+        "openwiki/ (--full only)"
+      ]
     },
     {
       "loop": "openwiki",
       "mode": "prove",
       "target": "proof_workflow/prove_openwiki.sh",
       "required": [],
-      "optional": ["--force-receipt"],
-      "writes": ["data/proof-workflow/openwiki-<commit12>[-dirty].json"]
+      "optional": [
+        "--force-receipt"
+      ],
+      "writes": [
+        "data/proof-workflow/openwiki-<commit12>[-dirty].json"
+      ]
     },
     {
       "loop": "openwiki",
       "mode": "test",
       "target": "proof_workflow/control_openwiki_entry.sh",
       "required": [],
-      "optional": ["--full"],
+      "optional": [
+        "--full"
+      ],
       "opt_in": {
         "--full": "sets CONTROL_OPENWIKI_FULL=1: after every probe, exercises the model turn once inside the disposable worktree as an existence proof only, never read back into the classification"
       },
       "writes": [
         "proof_workflow/data/<run_id>/",
         "data/proof-workflow/control-openwiki-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "lock",
+      "target": "loopctl/workflow_lock.py",
+      "required": [],
+      "optional": [],
+      "io": {
+        "input": "none — it reads the three proof receipts at HEAD",
+        "output": [
+          "loopctl/workflow.lock"
+        ],
+        "exit": "0 built · 64 FATAL when a receipt is missing, because a manifest built from nothing would declare that nothing belongs to the workflow"
+      },
+      "writes": [
+        "loopctl/workflow.lock"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "trailer",
+      "target": "loopctl/lineage.py",
+      "required": [],
+      "optional": [],
+      "io": {
+        "input": "the staged path list and workflow.lock",
+        "output": [
+          "stdout only"
+        ],
+        "exit": "0 always; empty output means no workflow file is staged"
+      },
+      "writes": [
+        "stdout only"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "test",
+      "target": "proof_workflow/control_workflow_lineage.sh",
+      "required": [],
+      "optional": [],
+      "io": {
+        "input": "none — it plants its own defects in a disposable worktree at HEAD",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every planted defect caught · 2 the machinery missed one · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "replay",
+      "target": "loopctl/replay.sh",
+      "required": [
+        "--at"
+      ],
+      "optional": [
+        "--loop"
+      ],
+      "io": {
+        "input": "--at <commit|tag>, and optionally --loop to replay one loop",
+        "output": [
+          "nothing in this tree; the replay runs inside a disposable worktree"
+        ],
+        "exit": "0 tracked content matches and that version still executes · 2 drift or a failed run · 64 FATAL"
+      },
+      "writes": [
+        "nothing in this tree; the replay runs inside a disposable worktree"
       ]
     }
   ]

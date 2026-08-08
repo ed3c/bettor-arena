@@ -3,25 +3,27 @@
 #
 #   loopctl.sh workflow replay --at <commit|tag> [--loop macro|micro|openwiki]
 #
-# The point is not "run today's scripts against an old tree". It checks that ref
-# out into a disposable detached worktree and runs THAT version's loopctl and
-# THAT version's proofs, so what executes is the workflow as it was, not today's
-# workflow wearing an old commit's name. Today's code touches nothing but the
-# comparison at the end.
+# That ref is checked out into a disposable detached worktree and THAT version's
+# loopctl runs there, so what executes is the workflow as it was rather than
+# today's workflow wearing an old commit's name. Today's tree is never touched.
 #
-# The verdict is the digest. A traversal at a given commit produced a specific
-# proof_digest, recorded in that commit's receipt; replaying it must reproduce
-# the same number. Equal means the workflow at that ref still executes to the same
-# bytes. Different means something it depends on has moved out from under it —
-# which is a real answer, not a failure of the replay, so it is reported as a
-# comparison rather than swallowed as an error.
+# Two questions, answered separately because they fail for different reasons:
 #
-# A tag is resolved through git, so `--at v1.0` and `--at <that commit>` are the
-# same run; the tag is recorded alongside so the receipt says which name was used.
+#   VERIFY  is the workflow's committed content still what that commit recorded?
+#           Every tracked file in that ref's workflow.lock is re-hashed straight
+#           out of git and compared. Fully deterministic — no run required.
+#   RUN     does that version still execute? That ref's own `loopctl <loop> run`
+#           is invoked for real in the worktree, and its exit code is reported.
 #
-# Exit: 0 replayed and every digest matched · 2 a digest differs, or a proof
-# failed at that ref · 64 FATAL (ref does not resolve, no worktree, no receipt
-# to compare against).
+# The proof digest is deliberately NOT the verdict. Proofs hash runtime evidence
+# — a post-commit receipt for the current HEAD, a route-result, an exchange
+# context — and none of that exists in a fresh checkout of an old commit. A
+# comparison that can only pass in the tree where the run happened is not a
+# replay; the first version of this file demanded exactly that and failed on its
+# first real use, which is how the untracked half of the manifest was found.
+#
+# Exit: 0 both questions answered green · 2 tracked content drifted, or the run
+# failed · 64 FATAL (ref does not resolve, no worktree, no lock at that ref).
 set -u
 
 HERE=$(cd "$(dirname "$0")" && pwd -P)
@@ -41,67 +43,111 @@ done
 RESOLVED=$(python3 "$HERE/lineage.py" resolve "$ROOT" "$REF") || exit 64
 COMMIT=$(printf '%s' "$RESOLVED" | python3 -c 'import json,sys; print(json.load(sys.stdin)["commit"])')
 TAGS=$(printf '%s' "$RESOLVED" | python3 -c 'import json,sys; print(" ".join(json.load(sys.stdin)["tags"]))')
-SHORT=$(printf %.12s "$COMMIT")
 echo "replay: ref=$REF commit=$COMMIT${TAGS:+ tags=$TAGS}"
 
+# --- VERIFY: the workflow's committed content, straight out of git -----------
+# `git cat-file` rather than a checkout: the question is what the commit carries,
+# and reading it from a working tree would let a local edit answer for it.
+VERIFY=$(python3 - "$ROOT" "$COMMIT" <<'PY'
+import hashlib, json, subprocess, sys
+
+root, commit = sys.argv[1], sys.argv[2]
+
+
+def show(path):
+    p = subprocess.run(["git", "-C", root, "show", f"{commit}:{path}"],
+                       capture_output=True, check=False)
+    return p.stdout if p.returncode == 0 else None
+
+
+raw = show("loopctl/workflow.lock")
+if raw is None:
+    print("FATAL no workflow.lock at that ref — nothing records what its workflow was")
+    raise SystemExit(0)
+lock = json.loads(raw)
+drifted, absent, checked = [], [], 0
+for path, meta in lock["files"].items():
+    blob = show(path)
+    if blob is None:
+        # Untracked at that ref: runtime evidence, which a commit never carries.
+        absent.append(path)
+        continue
+    checked += 1
+    if hashlib.sha256(blob).hexdigest() != meta["sha256"]:
+        drifted.append(path)
+print(json.dumps({"checked": checked, "untracked": len(absent), "drifted": drifted,
+                  "workflow_commit": lock["workflow_commit"],
+                  "tags": lock.get("workflow_tags", [])}))
+PY
+) || exit 64
+case "$VERIFY" in
+  "FATAL "*) echo "replay FATAL: ${VERIFY#FATAL }" >&2; exit 64 ;;
+esac
+DRIFTED=$(printf '%s' "$VERIFY" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("\n".join(d["drifted"]))')
+printf '%s' "$VERIFY" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+ok = d['checked'] - len(d['drifted'])
+print(f\"  [verify] {ok}/{d['checked']} tracked workflow file(s) match the lock; \"
+      f\"{d['untracked']} runtime path(s) a commit never carries were skipped by name\")
+"
+RC=0
+if [ -n "$DRIFTED" ]; then
+  echo "  [verify] DRIFTED:" >&2
+  printf '%s\n' "$DRIFTED" | sed 's/^/    /' >&2
+  RC=2
+fi
+
+# --- RUN: that version's own CLI, in a disposable worktree -------------------
 BASE=$(mktemp -d "${TMPDIR:-/tmp}/loopctl-replay.XXXXXX")
 WT="$BASE/repo"
 cleanup() { git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1; }
 trap cleanup EXIT
 git -C "$ROOT" worktree add --detach "$WT" "$COMMIT" >/dev/null 2>&1 \
   || { echo "replay FATAL: could not check out $COMMIT into a worktree" >&2; exit 64; }
-
+[ -f "$WT/loopctl/loopctl.sh" ] || {
+  echo "replay FATAL: $COMMIT predates loopctl/ — there is no CLI at that ref to replay" >&2
+  exit 64; }
 # The factory's dependencies are gitignored, so no historical checkout carries
-# them. Borrowing today's is deliberate and bounded: whether a clean install
-# suffices is portability.sh's claim, and re-installing per replay would make a
-# replay cost minutes instead of seconds.
+# them. Borrowing today's is bounded and stated: whether a clean install suffices
+# is portability.sh's claim, and reinstalling per replay would cost minutes.
 FACTORY=loop_wiki/evolve-perfect-seed-repo-factory
 [ -d "$ROOT/$FACTORY/node_modules" ] && [ ! -e "$WT/$FACTORY/node_modules" ] \
   && ln -s "$ROOT/$FACTORY/node_modules" "$WT/$FACTORY/node_modules"
 
-[ -f "$WT/loopctl/loopctl.sh" ] || {
-  echo "replay FATAL: $COMMIT predates loopctl/ — there is no CLI at that ref to replay" >&2
-  exit 64; }
+run_loop() { # loop, extra args
+  _loop=$1; shift
+  OUT=$( (cd "$WT" && sh loopctl/loopctl.sh "$_loop" run "$@") 2>&1 )
+  _rc=$?
+  if [ "$_rc" -eq 0 ]; then
+    echo "  [run] $_loop executed at that ref — exit 0"
+  else
+    echo "  [run] $_loop FAILED at that ref — exit $_rc" >&2
+    printf '%s\n' "$OUT" | tail -4 >&2
+    RC=2
+  fi
+}
 
-RC=0
 for LOOP in macro micro openwiki; do
   [ -z "$ONLY" ] || [ "$ONLY" = "$LOOP" ] || continue
-  RECORDED=$(python3 - "$ROOT" "$LOOP" "$SHORT" <<'PY'
-import json, sys
-from pathlib import Path
-root, loop, short = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-for name in (f"{loop}-{short}.json", f"{loop}-{short}-dirty.json"):
-    path = root / "data" / "proof-workflow" / name
-    if path.is_file():
-        print(json.loads(path.read_text(encoding="utf-8"))["molecular_hardening"]["proof_digest"])
-        break
-PY
-)
-  if [ -z "$RECORDED" ]; then
-    echo "  [$LOOP] no receipt at $SHORT to compare against — replay would prove nothing" >&2
-    RC=64
-    continue
-  fi
-  # That ref's own CLI, that ref's own proof. --force-receipt because the replay
-  # writes into the disposable worktree's ledger, never this one's.
-  OUT=$( (cd "$WT" && sh loopctl/loopctl.sh "$LOOP" prove --force-receipt) 2>&1 )
-  PROVE_RC=$?
-  NOW=$(printf '%s' "$OUT" | sed -n 's/.*digest=\([0-9a-f]\{64\}\).*/\1/p' | head -1)
-  if [ "$PROVE_RC" -ne 0 ]; then
-    echo "  [$LOOP] the proof failed at that ref (exit $PROVE_RC)" >&2
-    printf '%s\n' "$OUT" | tail -5 >&2
-    RC=2
-  elif [ "$NOW" = "$RECORDED" ]; then
-    echo "  [$LOOP] digest matches: $(printf %.12s "$NOW")"
-  else
-    echo "  [$LOOP] DIGEST MOVED: recorded $(printf %.12s "$RECORDED") -> replayed $(printf %.12s "${NOW:-none}")" >&2
-    RC=2
-  fi
+  case "$LOOP" in
+    macro) run_loop macro ;;
+    micro) run_loop micro --packet "$WT/$FACTORY/packets/inbox/dr-example.json" --output "$BASE/seed" ;;
+    openwiki)
+      # The worker's input is the micro loop's output, so a replay of this loop
+      # only means anything after that one has run in the same worktree.
+      REQ=$(ls "$WT"/data/wiki-update/request-*.json 2>/dev/null | sort | tail -1)
+      if [ -z "$REQ" ]; then
+        echo "  [run] openwiki skipped: no request in this worktree — replay micro first (its output is this loop's input)"
+      else
+        run_loop openwiki --request "$REQ" --force-receipt
+      fi ;;
+  esac
 done
 
 if [ "$RC" -eq 0 ]; then
-  echo "PASS: the workflow at ${TAGS:-$SHORT} still executes to the digests it recorded"
+  echo "PASS: the workflow at ${TAGS:-$COMMIT} still carries what it recorded and still executes"
 else
-  echo "FAIL: replay of ${TAGS:-$SHORT} did not reproduce what was recorded" >&2
+  echo "FAIL: replay of ${TAGS:-$COMMIT} did not hold" >&2
 fi
 exit "$RC"

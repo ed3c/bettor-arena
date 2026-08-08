@@ -41,6 +41,40 @@ def _receipt(repo: Path, loop: str, short: str) -> Path | None:
     return None
 
 
+def commit_bytes(repo: Path, path: str, worktree_sha: str) -> tuple[str, str]:
+    """The hash of what a commit would carry for this path, and where it came from.
+
+    Concurrency, not pedantry. The receipts hash the WORKING TREE — correctly, since
+    that is what ran — but a commit carries the INDEX, and anything edited between a
+    proof and its commit made the lock describe bytes nobody was committing. The gate
+    then refused with an error that read like the committer's mistake. Reading the
+    index instead closes that window: someone else's unstaged edit cannot move this,
+    and only `git add` can, which is the committer's own act.
+
+    Order still matters and is stated where it is needed: stage first, then lock,
+    then stage the lock. Falls back to HEAD for a workflow file that is tracked but
+    not staged, and only then to the worktree — each labelled, so a reader never has
+    to guess which one answered.
+    """
+    for args, origin in (
+        (["rev-parse", f":{path}"], "index"),
+        (["rev-parse", f"HEAD:{path}"], "head"),
+    ):
+        blob = subprocess.run(
+            ["git", "-C", str(repo), *args], capture_output=True, text=True, check=False
+        ).stdout.strip()
+        if blob:
+            content = subprocess.run(
+                ["git", "-C", str(repo), "cat-file", "blob", blob],
+                capture_output=True,
+                check=False,
+            ).stdout
+            return hashlib.sha256(content).hexdigest(), origin
+    # Untracked runtime evidence: only the working tree has it, and the receipt
+    # already hashed exactly those bytes.
+    return worktree_sha, "worktree"
+
+
 def build(repo: Path) -> dict:
     head = subprocess.run(
         ["git", "-C", str(repo), "rev-parse", "HEAD"],
@@ -73,9 +107,30 @@ def build(repo: Path) -> dict:
             path = step.get("path")
             if not path or path == "-" or not step.get("sha256"):
                 continue
+            digest, origin = commit_bytes(repo, path, step["sha256"])
             files.setdefault(
                 path,
-                {"sha256": step["sha256"], "kind": step["kind"], "loop": loop},
+                {
+                    "sha256": digest,
+                    "hash_source": origin,
+                    "kind": step["kind"],
+                    "loop": loop,
+                },
+            )
+
+    # Cycle guard. The lock is DERIVED from these receipts, so a proof that hashed
+    # the lock would make the receipt depend on a file that depends on the receipt:
+    # every rebuild would move both and neither would ever settle. It is excluded
+    # by a note in the macro proof today, and this refuses to let a future step
+    # reintroduce it silently — a self-referential manifest looks green while
+    # never converging.
+    for self_ref in ("loopctl/workflow.lock",):
+        if self_ref in files:
+            raise SystemExit(
+                f"workflow-lock FATAL: {self_ref} appears in a proof receipt. The lock is "
+                "built from those receipts, so hashing it there is a cycle: the digest "
+                "would depend on a file that depends on the digest, and no rebuild would "
+                "ever settle. Remove that step, or record it with prove_note instead."
             )
 
     canonical = "".join(

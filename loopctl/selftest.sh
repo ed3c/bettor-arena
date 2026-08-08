@@ -55,8 +55,14 @@ PY
   # grep -oE, not sed: BSD sed has no \| alternation, so the sed form silently
   # matched nothing on macOS — which is how the first version of this file
   # reported GREEN with this very check dead.
-  grep -oE '^  (macro|micro|openwiki)/(run|prove|test)\)' "$_cli" \
-    | tr -d ' )' | sort >"$_tmp/wired.txt"
+  # Two dispatch shapes, both extracted: the loops go through `case $LOOP/$MODE`,
+  # while workflow's subcommands sit in their own nested case. Extracting only the
+  # first shape made a declared command look unwired and sent the fix at the
+  # contract instead of at the extraction.
+  {
+    grep -oE '^  (macro|micro|openwiki)/(run|prove|test)\)' "$_cli" | tr -d ' )'
+    grep -oE '^      (lock|trailer|test|replay)\)' "$_cli" | tr -d ' )' | sed 's|^|workflow/|'
+  } | sort >"$_tmp/wired.txt"
   if _nonempty "declared-commands" "$_tmp/declared.txt" && _nonempty "wired-commands" "$_tmp/wired.txt"; then
     _only_contract=$(comm -23 "$_tmp/declared.txt" "$_tmp/wired.txt")
     _only_wired=$(comm -13 "$_tmp/declared.txt" "$_tmp/wired.txt")

@@ -28,6 +28,7 @@ version being descended from, and it is what `replay` can check out and run.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -36,6 +37,8 @@ from pathlib import Path
 TRAILER = "Workflow-Lineage:"
 VERSION_TRAILER = "Workflow-Version:"
 TOUCHED_TRAILER = "Workflow-Touched:"
+# The deadlock escape. A reason is mandatory; see the check below.
+OVERRIDE_TRAILER = "Workflow-Lineage-Override:"
 
 
 def git(repo: Path, *args: str) -> str:
@@ -79,6 +82,29 @@ def trailer_lines(lock: dict, hits: list[tuple[str, str, str]]) -> list[str]:
     return lines
 
 
+def stale_entries(repo: Path, lock: dict, paths: list[str]) -> list[str]:
+    """Workflow paths whose STAGED bytes differ from what the lock records.
+
+    Compared against the index rather than the working tree: the index is what
+    the commit will carry, and a file edited after `git add` would otherwise be
+    judged by bytes nobody is committing.
+    """
+    stale = []
+    for path in paths:
+        blob = git(repo, "rev-parse", f":{path}")
+        if not blob:
+            continue
+        recorded = lock["files"].get(path, {}).get("sha256")
+        actual = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "blob", blob],
+            capture_output=True,
+            check=False,
+        ).stdout
+        if recorded and hashlib.sha256(actual).hexdigest() != recorded:
+            stale.append(path)
+    return stale
+
+
 def has_trailer(message: str) -> bool:
     return any(line.startswith(TRAILER) for line in message.splitlines())
 
@@ -119,6 +145,49 @@ def main(argv: list[str]) -> int:
         if not hits:
             return 0
         message = Path(argv[3]).read_text(encoding="utf-8")
+        # Deadlock escape, and deliberately not an env var. The gate needs the
+        # machinery to work, and the machinery is itself in the workflow — so a
+        # broken prove, lock or CLI can leave the only fix uncommittable. The way
+        # out is written INTO the message, which makes it permanent, reviewable
+        # and impossible to leave on by accident, unlike --no-verify (forbidden
+        # here) or an environment variable nobody sees afterwards.
+        override = next(
+            (
+                line[len(OVERRIDE_TRAILER) :].strip()
+                for line in message.splitlines()
+                if line.startswith(OVERRIDE_TRAILER)
+            ),
+            None,
+        )
+        if override:
+            print(f"lineage: override accepted — {override}", file=sys.stderr)
+            return 0
+        if override == "":
+            print(
+                f"lineage FAIL: {OVERRIDE_TRAILER} needs a reason. An escape with no "
+                "recorded why is the same as no gate.",
+                file=sys.stderr,
+            )
+            return 2
+        # The lock must describe the bytes being committed, not the bytes it was
+        # built from. Both ship in the same commit, so a lock built before a late
+        # edit goes out stale inside the very commit that invalidated it — which
+        # is exactly what replay's verify caught on its first real run.
+        stale = stale_entries(repo, lock, [p for _, _, p in hits])
+        if stale:
+            print(
+                "lineage FAIL: workflow.lock does not describe the bytes being committed:",
+                file=sys.stderr,
+            )
+            for path in stale:
+                print(f"  {path}", file=sys.stderr)
+            print(
+                "  Re-stamp and re-lock before committing:\n"
+                "    for l in macro micro openwiki; do sh loopctl/loopctl.sh $l prove --force-receipt; done\n"
+                "    sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lock",
+                file=sys.stderr,
+            )
+            return 2
         if has_trailer(message):
             return 0
         print(
@@ -186,6 +255,27 @@ def _selftest() -> int:
         trailer_lines({**lock, "workflow_tags": []}, hits)[0],
         f"{TRAILER} {'a' * 40}",
     )
+
+    # The deadlock escape: present with a reason it passes, present empty it does
+    # not. An escape with no recorded why is the same as no gate.
+    def override_of(msg: str):
+        return next(
+            (
+                line[len(OVERRIDE_TRAILER) :].strip()
+                for line in msg.splitlines()
+                if line.startswith(OVERRIDE_TRAILER)
+            ),
+            None,
+        )
+
+    case(
+        "override-with-reason",
+        override_of(f"s\n\n{OVERRIDE_TRAILER} CLI itself is broken\n"),
+        "CLI itself is broken",
+    )
+    case("override-without-reason", override_of(f"s\n\n{OVERRIDE_TRAILER}\n"), "")
+    case("no-override-is-none", override_of("s\n\nbody\n"), None)
+
     case("trailer-detected", has_trailer(f"subject\n\n{TRAILER} abc\n"), True)
     case("absent-trailer-detected", has_trailer("subject\n\nbody only\n"), False)
     # The trailer must be recognised as a trailer, not as any line mentioning it.

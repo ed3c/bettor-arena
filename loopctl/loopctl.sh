@@ -69,7 +69,12 @@ case "${1:-}" in
       replay)
         shift 2
         sh "$HERE/replay.sh" "$@"; exit $? ;;
-      *) echo "usage: loopctl.sh workflow <lock|trailer|replay --at <commit|tag> [--loop <loop>]>" >&2; exit 64 ;;
+      test)
+        # The control group for the lineage machinery itself: does the thing that
+        # senses a moved workflow actually sense it, and does replay execute the
+        # version a tag names. Planted defects only, all inside a worktree.
+        sh "$ROOT/proof_workflow/control_workflow_lineage.sh"; exit $? ;;
+      *) echo "usage: loopctl.sh workflow <lock|trailer|test|replay --at <commit|tag> [--loop <loop>]>" >&2; exit 64 ;;
     esac ;;
   --selftest) . "$HERE/selftest.sh"; loopctl_selftest; exit $? ;;
   -h|--help|"") usage; exit 64 ;;
