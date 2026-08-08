@@ -634,6 +634,40 @@
         ],
         "exit": "0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input"
       },
+      "mcp_carrier": {
+        "kind": "ctg-inline-bundle@1.0.0",
+        "max_request_bytes": 1048576,
+        "description": "MCP accepts no local path. Supply one closed content-addressed bundle; the server materializes it only inside the call and returns bounded artifacts inline without disposable paths.",
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bundle"],
+          "properties": {
+            "bundle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["packet_ref", "files"],
+              "properties": {
+                "packet_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                "files": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["artifact_ref", "sha256", "content_base64"],
+                    "properties": {
+                      "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                      "content_base64": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "writes": [
         "<output>/"
       ]

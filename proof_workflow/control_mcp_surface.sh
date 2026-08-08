@@ -66,7 +66,9 @@ if declared != exposed:
 for tool in tools:
     command = next(c for c in contract["commands"]
                    if c["loop"] == tool["_argv"]["loop"] and c["mode"] == tool["_argv"]["mode"])
-    want = {f.lstrip("-").replace("-", "_") for f in command["required"]}
+    carrier = command.get("mcp_carrier")
+    want = (set(carrier["input_schema"]["required"]) if carrier else
+            {f.lstrip("-").replace("-", "_") for f in command["required"]})
     got = set(tool["inputSchema"]["required"])
     if want != got:
         print(f"{tool['name']}: required params {got} != contract {want}")
@@ -74,6 +76,65 @@ for tool in tools:
 print(f"{len(tools)} tools match the contract exactly")
 PY
 expect "mcp-surface-equals-cli-surface" $? 0
+
+# --- CTG carrier: inline bundle in, bounded typed artifacts out ----------------
+# Local packet/output paths would couple the call to the server host and leak a
+# disposable worktree path on delivery. The pinned contract replaces those CLI
+# carrier flags with one content-addressed bundle object for MCP only.
+CTG_F=loop_wiki/code-truth-graph
+PYTHONPATH="$ROOT/$CTG_F/src" python3 -m code_truth_graph.fixture --out "$BASE/ctg-bundle" >/dev/null || {
+  echo "control FATAL: could not materialize CTG MCP fixture" >&2; exit 64; }
+python3 - "$BASE/ctg-bundle" "$BASE/ctg-inline.jsonl" <<'PY'
+import base64, hashlib, json, sys
+from pathlib import Path
+
+bundle = Path(sys.argv[1])
+files = []
+for path in sorted(p for p in bundle.rglob("*") if p.is_file()):
+    content = path.read_bytes()
+    files.append({
+        "artifact_ref": path.relative_to(bundle).as_posix(),
+        "sha256": hashlib.sha256(content).hexdigest(),
+        "content_base64": base64.b64encode(content).decode("ascii"),
+    })
+request = {
+    "jsonrpc": "2.0",
+    "id": 41,
+    "method": "tools/call",
+    "params": {
+        "name": "loopctl_ctg_run",
+        "arguments": {"bundle": {"packet_ref": "ctg-input.json", "files": files}},
+    },
+}
+Path(sys.argv[2]).write_text(json.dumps(request) + "\n", encoding="utf-8")
+PY
+capture ctg-inline-call -- sh -c "python3 '$SERVER' --ref HEAD < '$BASE/ctg-inline.jsonl'"
+CTG_MCP_OUT="$RUNDIR/streams/$CAPTURE_SEQ-ctg-inline-call.out"
+python3 - "$CTG_MCP_OUT" <<'PY'
+import base64, hashlib, json, sys
+from pathlib import Path
+
+response = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+result = response["result"]
+assert result["isError"] is False, response
+payload = json.loads(result["content"][0]["text"])
+delivery = payload["ctg_delivery"]
+assert delivery["route_result"]["overall"]["exit"] == 0, payload
+assert payload["artifacts"] == [], payload
+assert "loopctl-mcp-" not in json.dumps(payload), payload
+assert delivery["artifacts"], payload
+for item in delivery["artifacts"]:
+    content = base64.b64decode(item["content_base64"], validate=True)
+    assert hashlib.sha256(content).hexdigest() == item["sha256"], item
+    assert "artifact_ref" not in item, item
+PY
+expect "ctg-inline-carrier-has-no-local-or-disposable-path" $? 0
+
+printf '{"jsonrpc":"2.0","id":42,"method":"tools/call","params":{"name":"loopctl_ctg_run","arguments":{"packet":"/tmp/forbidden.json","output":"/tmp/forbidden"}}}\n' >"$BASE/ctg-local-path.jsonl"
+capture ctg-local-path-refusal -- sh -c "python3 '$SERVER' --ref HEAD < '$BASE/ctg-local-path.jsonl'"
+CTG_LOCAL_OUT="$RUNDIR/streams/$CAPTURE_SEQ-ctg-local-path-refusal.out"
+grep -q 'local packet/output paths are forbidden' "$CTG_LOCAL_OUT" && CTG_REFUSED=yes || CTG_REFUSED=no
+expect "ctg-mcp-local-path-refused" "$CTG_REFUSED" yes
 
 # --- pinning: the server must serve the REF, not the working tree ------------
 # A sentinel is written into the live tree and left UNCOMMITTED. A pinned server
