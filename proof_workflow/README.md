@@ -110,6 +110,7 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | 釘舊 tag 時每次調用 exit 64 | 真跑 MCP | 該表面早於 `--json` → **啟動時**檢查並具名版本與修法 |
 | 改了兩支對照組，lineage trailer 卻沒點名 | commit 後讀 trailer | manifest builder 的 `LOOPS` 寫死五個而 CLI 長到七個，漏掉 `workflow` 與 `harness` → **proof_workflow 全部 20 檔不在 manifest 內，改了不動任何戳記** |
 | 從 contract 取 loop 名字仍 FATAL | 換掉寫死清單後重建 | `mcp prove` 與 `policy prove` 是同一份證明、共用一份收據 → 改成**從 `writes` 推收據名**，不從命令名推 |
+| trailer 把檔案歸錯 loop | 讀 `harness:macro:loopctl/workflow_lock.py` | `setdefault` 讓字母序最前的 loop 佔位。**收據裡沒有任何欄位陳述擁有權**（macro 真的在 commit 路徑上跑 lineage.py，workflow 真的是它的證明，兩邊都 `ran`、位元組相同）→ 不換更好的裁決規則，改成**列出全部認領者** `macro+workflow`；六個檔如此，而這也把單一標籤藏起來的事實掀出來：改它們會動**兩份** digest |
 
 ### 容器與沙盒（OrbStack / Apple container / OpenShell）
 

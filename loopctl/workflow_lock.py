@@ -185,15 +185,30 @@ def build(repo: Path) -> dict:
             if not path or path == "-" or not step.get("sha256"):
                 continue
             digest, origin = commit_bytes(repo, path, step["sha256"])
-            files.setdefault(
+            entry = files.setdefault(
                 path,
                 {
                     "sha256": digest,
                     "hash_source": origin,
                     "kind": step["kind"],
-                    "loop": loop,
+                    "loops": [],
                 },
             )
+            # EVERY claiming loop, not the first one to arrive. This was
+            # `"loop": loop` under a setdefault, so a file walked by two
+            # traversals was attributed to whichever loop sorted first, and the
+            # trailer said `harness:macro:loopctl/workflow_lock.py` about a file
+            # the workflow proof owns. Five files carried the wrong loop that way.
+            #
+            # The fix is not a better tiebreak. Nothing in the receipts states
+            # ownership — macro really runs lineage.py on the commit path and the
+            # workflow proof really is the proof OF it, both `ran`, same bytes —
+            # so any single label would be invented here rather than measured
+            # there. Listing the claimants is the only attribution the evidence
+            # supports, and it surfaces what the single label hid: editing one of
+            # these moves TWO proof digests.
+            if loop not in entry["loops"]:
+                entry["loops"].append(loop)
 
     # Cycle guard. The lock is DERIVED from these receipts, so a proof that hashed
     # the lock would make the receipt depend on a file that depends on the receipt:
@@ -246,9 +261,9 @@ def staged(repo: Path) -> list[str]:
 
 
 def touched(lock: dict, paths: list[str]) -> list[tuple[str, str, str]]:
-    """Staged paths that are part of the workflow, with the kind and loop each belongs to."""
+    """Staged paths that are part of the workflow, with the kind and the loops that claim each."""
     return [
-        (p, lock["files"][p]["kind"], lock["files"][p]["loop"])
+        (p, lock["files"][p]["kind"], "+".join(lock["files"][p]["loops"]))
         for p in paths
         if p in lock["files"]
     ]
@@ -301,10 +316,22 @@ def _selftest() -> int:
 
     lock = {
         "files": {
-            "a/harness.sh": {"sha256": "x", "kind": "harness", "loop": "macro"},
-            "b/prompt.md": {"sha256": "y", "kind": "context", "loop": "openwiki"},
+            "a/harness.sh": {"sha256": "x", "kind": "harness", "loops": ["macro"]},
+            "b/prompt.md": {"sha256": "y", "kind": "context", "loops": ["openwiki"]},
+            # Walked by two traversals — the case the single `loop` field could
+            # not express and silently answered with whichever sorted first.
+            "c/shared.py": {
+                "sha256": "z",
+                "kind": "harness",
+                "loops": ["macro", "workflow"],
+            },
         }
     }
+    case(
+        "every-claiming-loop-is-named",
+        touched(lock, ["c/shared.py"]),
+        [("c/shared.py", "harness", "macro+workflow")],
+    )
     case(
         "in-manifest-is-reported",
         touched(lock, ["a/harness.sh", "unrelated.txt"]),

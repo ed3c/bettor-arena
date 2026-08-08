@@ -66,7 +66,7 @@ def staged(repo: Path) -> list[str]:
 
 def touched(lock: dict, paths: list[str]) -> list[tuple[str, str, str]]:
     return sorted(
-        (lock["files"][p]["kind"], lock["files"][p]["loop"], p)
+        (lock["files"][p]["kind"], "+".join(lock["files"][p]["loops"]), p)
         for p in paths
         if p in lock["files"]
     )
@@ -226,15 +226,22 @@ def _selftest() -> int:
         "workflow_commit": "a" * 40,
         "workflow_tags": ["v1.0"],
         "files": {
-            "p/harness.sh": {"kind": "harness", "loop": "macro", "sha256": "x"},
-            "p/prompt.md": {"kind": "context", "loop": "openwiki", "sha256": "y"},
+            "p/harness.sh": {"kind": "harness", "loops": ["macro"], "sha256": "x"},
+            "p/prompt.md": {"kind": "context", "loops": ["openwiki"], "sha256": "y"},
+            # A file two traversals walk: the trailer must name both, or it
+            # asserts an ownership no receipt states.
+            "p/shared.py": {
+                "kind": "harness",
+                "loops": ["macro", "workflow"],
+                "sha256": "z",
+            },
         },
     }
     case(
         "untouched-emits-nothing", trailer_lines(lock, touched(lock, ["other.txt"])), []
     )
 
-    hits = touched(lock, ["p/prompt.md", "other.txt", "p/harness.sh"])
+    hits = touched(lock, ["p/prompt.md", "other.txt", "p/harness.sh", "p/shared.py"])
     lines = trailer_lines(lock, hits)
     case("lineage-first", lines[0], f"{TRAILER} {'a' * 40}")
     case("version-from-tag", lines[1], f"{VERSION_TRAILER} v1.0")
@@ -246,6 +253,7 @@ def _selftest() -> int:
         [
             f"{TOUCHED_TRAILER} context:openwiki:p/prompt.md",
             f"{TOUCHED_TRAILER} harness:macro:p/harness.sh",
+            f"{TOUCHED_TRAILER} harness:macro+workflow:p/shared.py",
         ],
     )
     # A tagless workflow must still stamp its commit; the version line is the
