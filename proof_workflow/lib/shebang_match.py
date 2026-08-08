@@ -14,10 +14,49 @@ the same way and were fine only because they really are `#!/bin/sh`.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
+
+
+def repo_root() -> Path:
+    """The tree containing THIS FILE, never the caller's cwd.
+
+    Anchored on __file__ because the answer changes with the tree: run from a
+    worktree that lacks a fix, the same scan reports the mismatch the fix
+    removed, and comparing that against a proof run in the main tree compares
+    two different trees while looking like one measurement. That is how it
+    surfaced — a live scan said exit 2 next to a harness proof saying 0.
+
+    The env scrub is the second half and is not hypothetical: git exports
+    GIT_DIR / GIT_WORK_TREE / GIT_PREFIX to hooks, and a relative GIT_WORK_TREE
+    ("." is common) is reinterpreted after `git -C`, making a file under
+    proof_workflow/lib believe that directory is the root. Same shape and same
+    reason as scripts/gates/_gate_common.py, kept local rather than imported:
+    proof_workflow/ owns its own lib, and reaching into scripts/gates/ would
+    make two modules depend on each other to resolve a path.
+    """
+    env = os.environ.copy()
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_PREFIX"):
+        env.pop(name, None)
+    return Path(
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(Path(__file__).resolve().parent),
+                "rev-parse",
+                "--show-toplevel",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=env,
+        ).stdout.strip()
+    )
+
 
 # `sh path/to/x.sh` but not `bash path/to/x.sh` — the negative lookbehind is the
 # whole point, since "sh " is a suffix of "bash ".
@@ -181,6 +220,33 @@ def _selftest() -> int:
         finally:
             globals()["bash_scripts"] = real
 
+    # Anchoring, driven rather than asserted: invoked as a subprocess from a
+    # FOREIGN repo's cwd, the scan must still report its OWN tree. It resolved
+    # from cwd until this case existed, so running it from a worktree scanned
+    # the worktree — and the answer differs per tree, which is the whole reason
+    # this matters. scripts/gates/check_placement.py carries the identical case
+    # under the identical name; two anchoring conventions in one repo is how a
+    # reader learns the wrong one.
+    with tempfile.TemporaryDirectory() as t:
+        foreign = Path(t) / "foreign"
+        foreign.mkdir()
+        subprocess.run(["git", "-C", str(foreign), "init", "-q"], check=True)
+        proc = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve())],
+            cwd=str(foreign),
+            capture_output=True,
+            text=True,
+        )
+        first = (proc.stdout or "<no output>").splitlines()[0]
+        own = str(repo_root())
+        case(
+            "external-cwd-scans-own-repo",
+            (own in first, str(foreign) in first),
+            (True, False),
+        )
+        if own not in first:
+            print("  detail — own=%s first=%s" % (own, first), file=sys.stderr)
+
     if red == 0:
         print("SELFTEST GREEN")
         return 0
@@ -191,14 +257,10 @@ def _selftest() -> int:
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--selftest"]:
         sys.exit(_selftest())
-    root = Path(
-        subprocess.run(
-            ["git", "rev-parse", "--show-toplevel"],
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
-    )
+    root = repo_root()
+    # Which tree answered, printed FIRST. Without it a red here and a green in a
+    # proof read as a contradiction rather than as two trees.
+    print("shebang: scanning repo root %s" % root)
     problems, unresolved = scan(root)
     for p in problems:
         print("shebang-mismatch: %s" % p, file=sys.stderr)

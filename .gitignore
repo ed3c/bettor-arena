@@ -20,3 +20,9 @@ data/codex-sandbox/
 # not source: the numbers belong in whatever writes them up, not on main.
 data/automode-bench/
 .container-home/
+# Native worktrees live here. Each one is a git repository, so a `git add -A`
+# stages it as an embedded repo — a clone of this repo would carry a pointer to
+# something it cannot fetch, and the fast-quality gate FATALs on a path it
+# cannot read. Caught exactly that way. This is the shape fix: the guard belongs
+# where every caller already routes, not in each person remembering.
+.claude/worktrees/
