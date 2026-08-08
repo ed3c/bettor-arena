@@ -61,7 +61,12 @@ expect "no-runtime-is-fatal" "$NO_RT" 64
 # broken" — a dead /var/run/docker.sock refuses while `docker ps` works, because
 # OrbStack redirects the CLI through a docker CONTEXT and nothing else sees it.
 if [ -S "$HOME/.orbstack/run/docker.sock" ]; then
-  capture socket-announcement -- sh -c "sh '$ROOT/loopctl/container-run.sh' serve 2>&1 | head -3"
+  # env -u DOCKER_HOST: capture.sh now selects the orbstack socket for every
+  # control, which is what the rest of this file needs — and it silently disarmed
+  # this check, because the wrapper only announces a socket it chose itself. The
+  # case went red for the right reason. What is under test here is the WRAPPER's
+  # own selection, so it has to be asked with the variable unset.
+  capture socket-announcement -- env -u DOCKER_HOST sh -c "sh '$ROOT/loopctl/container-run.sh' serve 2>&1 | head -3"
   SOCK_OUT="$RUNDIR/streams/$CAPTURE_SEQ-socket-announcement.out"
   grep -q 'DOCKER_HOST -> orbstack socket' "$SOCK_OUT" && ANNOUNCED=yes || ANNOUNCED=no
   expect "orbstack-socket-selected-and-announced" "$ANNOUNCED" yes
@@ -203,6 +208,37 @@ PY
   # `policy test`, gated on the provider existing. Named here so the boundary
   # between the two controls is readable from either side.
   echo "  [note] the proxy rewrite itself is exercised by 'policy test' (credential-turn), not here"
+
+  # The upload boundary, driven rather than read. .gitignore is hashed by the
+  # container proof, which records WHICH bytes the rules are — and says nothing
+  # about whether they exclude anything. If the filter ever stopped applying,
+  # every sandbox would silently receive the run traces, the downloaded agent
+  # drafts and the benchmark evidence, and the proof would stay green throughout.
+  #
+  # Both directions in one sandbox: an ignored path must be absent AND a tracked
+  # one present. Absence alone is also what a failed upload looks like.
+  if command -v openshell >/dev/null 2>&1 && [ -d "$ROOT/proof_workflow/data" ]; then
+    capture upload-honours-gitignore -- sh -c "openshell sandbox create --name upload-boundary-probe \
+      --no-tty --no-keep --from '$ROOT/loopctl/Dockerfile' --upload '$ROOT' -- sh -c '
+        cd /sandbox/$(basename "$ROOT") 2>/dev/null || { echo NO_UPLOAD; exit 0; }
+        [ -e proof_workflow/data ] && echo IGNORED_PATH_LEAKED || echo ignored-path-absent
+        [ -f loopctl/loopctl.sh ] && echo tracked-path-present || echo TRACKED_PATH_MISSING'"
+    UP_OUT="$RUNDIR/streams/$CAPTURE_SEQ-upload-honours-gitignore.out"
+    if grep -q 'ignored-path-absent' "$UP_OUT" && grep -q 'tracked-path-present' "$UP_OUT"; then
+      expect "upload-honours-gitignore" filtered filtered
+    elif grep -q 'IGNORED_PATH_LEAKED' "$UP_OUT"; then
+      echo "  [RED]  upload-honours-gitignore — a gitignored path rode into the sandbox; run traces and agent drafts are travelling with every upload" >&2
+      RED=1
+    elif grep -q 'TRACKED_PATH_MISSING\|NO_UPLOAD' "$UP_OUT"; then
+      echo "  [RED]  upload-honours-gitignore — the tree did not arrive at all, so 'the ignored path is absent' proves nothing" >&2
+      RED=1
+    else
+      echo "  [note] the upload probe produced no reading — NOT EXERCISED, not passed"
+      tail -3 "$UP_OUT" >&2
+    fi
+  else
+    echo "  [note] no openshell or no local run traces — the upload boundary is NOT exercised this run"
+  fi
 else
   echo "  [note] image '$IMAGE' is not built here — the ENTRYPOINT and base-tool checks are NOT exercised"
   echo "         build it with: sh loopctl/container-run.sh build"

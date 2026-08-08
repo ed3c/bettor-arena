@@ -40,6 +40,15 @@ PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
 
 prove_init openwiki "kb-ingest/port/wiki_update_worker.sh <request.json> -> openwiki/ -> data/wiki-update/receipt-<id>.json"
 
+# The module's own laws. Hashed for the same reason the other two READMEs are: a
+# document that tells the next agent how to read a red can itself drift, and an
+# unstamped edit to it changes every future reading with nothing saying so.
+# Placed AFTER prove_init, because prove_context resolves against a root that
+# init sets — calling it first FATALed with "context document absent" about a
+# file that was plainly there, which is the recorder being right and loud.
+prove_context kb-ingest-laws kb-ingest/README.md \
+  "kb-ingest -> agent session: the three roots, exit 3, the upstream/port boundary, and the Harness of defects already found"
+
 # --- probabilistic lane: the official prompt assets the turn is composed from
 prove_context update-system kb-ingest/openwiki/update.system.md \
   "OPENWIKI-OFFICIAL block -> claude -p --system-prompt (update mode)"

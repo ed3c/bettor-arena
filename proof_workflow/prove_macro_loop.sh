@@ -44,6 +44,12 @@ prove_context glossary CONTEXT.md \
 # change how every future reader interprets a red, and nothing would have said so.
 prove_context proof-workflow-laws proof_workflow/README.md \
   "proof_workflow -> agent session: the laws, the -test loop, and the Harness of defects already found"
+# Same argument one layer over: this one tells the next reader how the CLI surface
+# is bound and which of its failures have already been paid for. Its own law 9 says
+# a file no receipt hashes moves no digest and gets no trailer — so it is hashed
+# here rather than being an exception to the rule it states.
+prove_context loopctl-laws loopctl/README.md \
+  "loopctl -> agent session: contract-vs-wiring, the surface lock, and the Harness of CLI defects already found"
 
 # --- deterministic harness: activation ---------------------------------------
 prove_harness bootstrap bootstrap.sh \

@@ -31,10 +31,9 @@ POLICY="$ROOT/loopctl/sandbox-policy.yaml"
 command -v openshell >/dev/null 2>&1 || {
   echo "control FATAL: openshell is not on PATH — the policy cannot be exercised, and reading it is not the same as enforcing it" >&2
   exit 64; }
-if [ -z "${DOCKER_HOST:-}" ] && [ -S "$HOME/.orbstack/run/docker.sock" ]; then
-  DOCKER_HOST="unix://$HOME/.orbstack/run/docker.sock"
-  export DOCKER_HOST
-fi
+# The orbstack socket selection used to live here and now lives in capture.sh,
+# because a fourth caller forgot it and got "Connection refused" on a working
+# machine. One entry point, not four copies.
 
 RED=0
 expect() { # name got want

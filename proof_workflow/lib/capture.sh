@@ -43,6 +43,17 @@ capture_init() { # label
   RUNDIR="$CAPTURE_ROOT/proof_workflow/data/$RUN_ID"
   mkdir -p "$RUNDIR/streams"
   CAPTURE_SEQ=0
+  # OrbStack redirects the docker CLI through a context, so `docker ps` works
+  # while /var/run/docker.sock refuses — and OpenShell, which dials the socket
+  # directly, fails with "Connection refused (os error 61)" on an otherwise
+  # healthy machine. Selected HERE rather than in each control: three copies had
+  # accumulated (the policy control, codex-sandbox.sh, automode-bench.sh) and the
+  # fourth caller forgot, which is a shape problem, not a discipline one. Every
+  # control already routes through capture_init, so forgetting becomes impossible.
+  if [ -z "${DOCKER_HOST:-}" ] && [ -S "$HOME/.orbstack/run/docker.sock" ]; then
+    DOCKER_HOST="unix://$HOME/.orbstack/run/docker.sock"
+    export DOCKER_HOST
+  fi
   echo "control[$1] run_id=$RUN_ID commit=$CAPTURE_COMMIT"
 }
 
