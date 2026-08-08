@@ -82,8 +82,19 @@ case "${1:-}" in
     case "${2:-}" in
       build)     sh "$ROOT/loopctl/container-run.sh" build; exit $? ;;
       preflight) sh "$ROOT/loopctl/container-run.sh" preflight; exit $? ;;
+      prove)
+        # This branch runs BEFORE the contract check, so flags arrive unparsed.
+        # --force-receipt is honoured explicitly rather than silently dropped: a
+        # dropped flag makes the receipt collide and FATAL, which reads as the
+        # proof failing rather than as the flag going missing.
+        if [ "${3:-}" = "--force-receipt" ]; then
+          PROVE_FORCE_RECEIPT=1 sh "$ROOT/proof_workflow/prove_container.sh"
+        else
+          sh "$ROOT/proof_workflow/prove_container.sh"
+        fi
+        exit $? ;;
       test)      sh "$ROOT/proof_workflow/control_container_surface.sh"; exit $? ;;
-      *) echo "usage: loopctl.sh container <build|preflight|test>" >&2; exit 64 ;;
+      *) echo "usage: loopctl.sh container <build|preflight|prove|test>" >&2; exit 64 ;;
     esac ;;
   mcp)
     # The external-facing layer. serve is long-lived on purpose: isolation comes

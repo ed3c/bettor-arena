@@ -136,15 +136,6 @@ prove_harness loopctl-workflow-lock loopctl/workflow_lock.py \
   -- python3 loopctl/workflow_lock.py --selftest
 prove_harness loopctl-replay loopctl/replay.sh \
   "a commit or tag -> that ref's own CLI and proofs in a disposable worktree -> digest compared against what it recorded (needs a ref and a worktree; not fired here)"
-# The container layer. Hashed, not fired: building an image inside a proof would
-# put minutes into the hot path, and `container test` is where its properties are
-# actually held down.
-prove_harness container-image loopctl/Dockerfile \
-  "OCI image: deterministic base build-checked; ENTRYPOINT cleared because node:22's inherited one restart-loops any supervisor-driven runtime"
-prove_harness container-wrapper loopctl/container-run.sh \
-  "runtime-agnostic invocation: live-socket selection, host uid, session mounts, no default ref for serve"
-prove_harness container-preflight loopctl/container_preflight.sh \
-  "inside the container: deterministic base, worktree isolation, and one real turn per driver to tell present from authenticated"
 prove_harness prepare-commit-msg .githooks/prepare-commit-msg \
   "staged paths -> workflow.lock -> Workflow-Lineage/Version/Touched trailers written into the message"
 prove_note workflow-lock-not-hashed \

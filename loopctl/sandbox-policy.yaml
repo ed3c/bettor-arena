@@ -1,0 +1,77 @@
+# sandbox-policy.yaml — what an EXTERNAL caller's sandbox may touch.
+#
+#   openshell sandbox create --policy loopctl/sandbox-policy.yaml …
+#
+# This is the half the container layer could not express. A bind-mount plus a
+# host uid keeps external work off the host tree; it says nothing about where
+# that work may connect, and "external callers must not reach my infrastructure"
+# is a network question at least as much as a filesystem one.
+#
+# Written as a DENY-BY-DEFAULT surface: nothing is reachable unless named here,
+# so a new endpoint is an explicit edit rather than something that quietly starts
+# working. The cost is real — an agent that needs a host nobody listed fails —
+# and that is the intended failure: a refusal names what was missing, whereas an
+# open egress names nothing at all.
+#
+# NOT a substitute for the git-anchored proofs. An upload-based sandbox carries
+# no .git, so the loops' receipts and replay cannot live here (proof_workflow
+# /README.md §3). This policy governs sandboxes that RUN AGENT TURNS.
+
+version: 1
+
+filesystem_policy:
+  # The workspace is the only writable place that survives the turn. /tmp is
+  # writable because the toolchain needs scratch, and /dev/null because a
+  # sandbox that cannot discard output makes every tool's quiet mode fail.
+  include_workdir: true
+  read_only: [/usr, /lib, /bin, /sbin, /etc, /proc, /dev/urandom]
+  read_write: [/sandbox, /tmp, /dev/null]
+
+landlock:
+  # best_effort rather than strict: on a kernel without Landlock, strict would
+  # refuse to start and the sandbox would look broken rather than degraded. The
+  # network policy below is enforced by the proxy either way, so the filesystem
+  # tier degrading does not silently open egress.
+  compatibility: best_effort
+
+network_policies:
+  # The model endpoints, and only these. Hosts taken from the runtime's own
+  # backend defaults rather than guessed:
+  # crates/openshell-router/src/backend.rs names api.anthropic.com and
+  # api.openai.com as the provider bases.
+  anthropic:
+    name: anthropic-messages
+    endpoints:
+      - host: api.anthropic.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: full
+    # Only the writing role's binary may use it. A sandbox where any process can
+    # reach the model API is one `curl` away from being a general egress.
+    binaries:
+      - path: /usr/local/bin/claude
+
+  openai:
+    name: openai-responses
+    endpoints:
+      - host: api.openai.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: full
+    binaries:
+      - path: /usr/local/bin/codex
+
+# Deliberately absent, each for a stated reason rather than an oversight:
+#
+#   * no git remote, no package registry. A turn that needs to fetch is a turn
+#     whose inputs were not uploaded, and silently allowing the fetch would hide
+#     that the packet was incomplete.
+#   * no localhost egress. The gateway, the Forgejo instance and the databases on
+#     this machine are exactly the infrastructure an external caller must not
+#     reach; they are unreachable here because nothing names them.
+#   * no MCP endpoint yet. The proxy can enforce MCP method, tool and params
+#     rules, and pointing a sandbox at the loopctl MCP server without those rules
+#     written would hand it every tool the contract declares. That belongs in a
+#     policy of its own, after the tool-level rules are decided.

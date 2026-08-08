@@ -63,7 +63,7 @@ PY
     grep -oE '^  (macro|micro|openwiki)/(run|prove|test)\)' "$_cli" | tr -d ' )'
     grep -oE '^      (lock|trailer|replay)\)' "$_cli" | tr -d ' )' | sed 's|^|workflow/|'
     grep -oE '^      (serve|tools)\)' "$_cli" | tr -d ' )' | sed 's|^|mcp/|'
-    grep -oE '^      (build|preflight)\)' "$_cli" | tr -d ' )' | sed 's|^|container/|'
+    grep -oE '^      (build|preflight|prove)\)' "$_cli" | tr -d ' )' | sed 's|^|container/|'
     # `test)` appears under workflow, mcp and container; the shape alone cannot
     # say which, so all three are named here rather than guessed.
     printf 'workflow/test\nmcp/test\ncontainer/test\n'

@@ -1,19 +1,20 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "d6086c4c4618d26d05e7339275fcf812574f918b",
+  "workflow_commit": "ca8049f7e040c614d498ef97321d56bf09dccc48",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-d6086c4c4618-dirty.json",
-    "micro": "micro-d6086c4c4618-dirty.json",
-    "openwiki": "openwiki-d6086c4c4618-dirty.json"
+    "macro": "macro-ca8049f7e040-dirty.json",
+    "micro": "micro-ca8049f7e040-dirty.json",
+    "openwiki": "openwiki-ca8049f7e040-dirty.json",
+    "container": "container-ca8049f7e040-dirty.json"
   },
   "counts": {
     "artifact": 19,
     "context": 20,
-    "harness": 36,
+    "harness": 37,
     "optional": 1
   },
-  "workflow_digest": "83f7682cce7303024da81e96a1f5a29ef1cea81b83632c6c80881b564c966961",
+  "workflow_digest": "b655338a58b4b71fa8f96c5da440de6be15f779928a4db4750156092bc6130be",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -81,7 +82,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-d6086c4c4618d26d05e7339275fcf812574f918b.json": {
+    "data/receipts/post-commit-ca8049f7e040c614d498ef97321d56bf09dccc48.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -337,22 +338,22 @@
       "sha256": "cbabf0839716ac27cdf9b69d12715afc9ef5c8a34ef39d60f5b908316a640008",
       "hash_source": "index",
       "kind": "harness",
-      "loop": "macro"
+      "loop": "container"
     },
     "loopctl/container-run.sh": {
       "sha256": "bcb5ab9fcfd8c1c93289b463daa0e1723d657b07fccfddf1399882026da72174",
       "hash_source": "index",
       "kind": "harness",
-      "loop": "macro"
+      "loop": "container"
     },
     "loopctl/container_preflight.sh": {
       "sha256": "b7bd149947dd03ccd12f649ecf5a20f5f800f5eaad875f262ec67fe77e99bad6",
       "hash_source": "index",
       "kind": "harness",
-      "loop": "macro"
+      "loop": "container"
     },
     "loopctl/contract.json": {
-      "sha256": "8d923a345b2648a9f1a86712370c52ddfc83e5c597c54dc395e30a6bba6fc35a",
+      "sha256": "44e539dc296dabe5de281d41ec9e8da704de218b15d048529be8933521cf3aa8",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -370,7 +371,7 @@
       "loop": "macro"
     },
     "loopctl/loopctl.sh": {
-      "sha256": "5625cc15803a6bffe37e1af88de263bff815bef6b711d71b2d020072a8270ba9",
+      "sha256": "177a7b87aa2dfa7ef55c1848556b881447364afb8207b2fbcdbab1bb65fa27ae",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -382,13 +383,13 @@
       "loop": "macro"
     },
     "loopctl/selftest.sh": {
-      "sha256": "1943a35c896e4e263873d15ab4b5de494ad01520e211d615817c3b5403588cbf",
+      "sha256": "4286e3971e83903562bc29624711c5e8a48b2cd28fab0016420d4ce6e3be1243",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
     },
     "loopctl/surface.lock": {
-      "sha256": "0dd5f8ddc8fe201646fd7dfadffa3f46af4131347cb884d6d09885421c322ad6",
+      "sha256": "1f37c040fce26de9f69d1f0c3c4372d08ba42e9174f996da8caac7d5a4d0570e",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -400,7 +401,7 @@
       "loop": "macro"
     },
     "loopctl/workflow_lock.py": {
-      "sha256": "c09e510bacc79aa813f918b8e3324e18510a29ad028731a3ebace2430fc462ab",
+      "sha256": "38e2e5fc43c8b2f7494a8d0c9d7cf2e0cb4e0d780c3e870d67533f385b48d1db",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -434,6 +435,12 @@
       "hash_source": "index",
       "kind": "context",
       "loop": "macro"
+    },
+    "proof_workflow/control_container_surface.sh": {
+      "sha256": "8b1fa56535b01ea0a31f41231f1121cc0e190f8fe60d4ac87a9b9a722cabf697",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "container"
     },
     "scripts/gates/check_credential_hygiene.py": {
       "sha256": "7dd0c4e38682e8b903549c503c326997445ded4be6be4719f5a180733cfbffa5",

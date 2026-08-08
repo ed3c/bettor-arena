@@ -1,0 +1,57 @@
+#!/bin/sh
+# prove_container.sh — physical traversal proof of the container layer.
+#
+# Entry point: `loopctl container build` -> the OCI image -> `container preflight`
+# inside it. This is the layer external callers reach the loops through, and it
+# was the only mechanism here with a control group and no receipt — so nothing
+# recorded WHICH bytes of it a green control had been measured against.
+#
+#   DETERMINISTIC harness — the Dockerfile, the runtime-agnostic wrapper, the
+#     in-container preflight, and the control that holds their properties down.
+#     None is fired here: building an image costs minutes, and firing the wrapper
+#     would start a container. `container test` is where they run.
+#   PROBABILISTIC read documents — none of its own. The container carries the
+#     other loops' context lanes rather than adding one, and saying so is the
+#     point: a proof that silently has no context steps looks the same as one
+#     whose context was forgotten.
+#
+# Terminal artifact: the image is NOT one. It is rebuildable from the Dockerfile
+# and lives in a runtime's store, not in this tree — hashing an image id would
+# record which machine last built it. What the image must satisfy is asserted by
+# `container test` against the real thing instead.
+#
+# Usage: sh proof_workflow/prove_container.sh
+# Exit:  0 pass · 2 a step went red · 64 FATAL.
+set -u
+
+PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
+. "$PROVE_HOME/lib/prove.sh"
+
+prove_init container "loopctl container build -> OCI image -> container preflight (inside)"
+
+# --- the layer's own files ---------------------------------------------------
+prove_harness dockerfile loopctl/Dockerfile \
+  "base image -> deterministic base (build-checked) + the sandbox runtime's contract: sandbox user/group, iproute2 for proxy-mode isolation, OCI USER as identity fallback, workspace == home == policy-admitted path"
+prove_harness wrapper loopctl/container-run.sh \
+  "caller -> live-socket selection (a dead /var/run/docker.sock is refused, not absent) -> host uid -> session mounts -> no default ref for serve"
+prove_harness preflight loopctl/container_preflight.sh \
+  "inside the container -> deterministic base, worktree isolation, and ONE REAL TURN per driver to tell present from authenticated"
+prove_harness control proof_workflow/control_container_surface.sh \
+  "planted defects -> wrapper tier always, image tier only when an image exists (absent = NOT EXERCISED, never a pass)"
+
+# --- what this layer deliberately does not carry -----------------------------
+prove_note no-context-lane - \
+  "this layer reads no prompt of its own: it carries the other loops' context lanes rather than adding one. Recorded so that 'no context steps' reads as a decision instead of as an omission"
+prove_note image-not-an-artifact - \
+  "the built image is not hashed: it is rebuildable from the Dockerfile above and lives in a runtime's store, so its id would record which machine last built it rather than what the layer is. Its required shape is asserted by 'container test' against the real image"
+
+# --- the assertion that keeps the two isolation models honest ----------------
+# Upload-based sandboxes carry no .git, and every loopctl command resolves its
+# root through git. This asserts the dependency exists rather than leaving it as
+# prose: if the CLI ever stopped needing a work tree, the division of labour in
+# proof_workflow/README.md would be stale and nothing would say so.
+prove_harness git-anchored-by-construction - \
+  "loopctl resolves the repo root through git, which is why an upload-based sandbox (no .git) cannot host the proofs — asserted, not assumed" \
+  -- sh -c 'grep -q "rev-parse --show-toplevel" loopctl/loopctl.sh'
+
+prove_emit

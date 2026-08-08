@@ -30,7 +30,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-LOOPS = ("macro", "micro", "openwiki")
+LOOPS = ("macro", "micro", "openwiki", "container")
 
 
 def _receipt(repo: Path, loop: str, short: str) -> Path | None:
