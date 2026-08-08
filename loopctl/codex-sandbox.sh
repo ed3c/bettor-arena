@@ -164,12 +164,34 @@ NAME=${CODEX_SANDBOX_NAME:-codex-write-$STAMP}
 [ -n "$OUT" ] || OUT="$ROOT/data/codex-sandbox/$STAMP"
 WORK="/sandbox/$(basename "$ROOT")"
 
+# The shared skills, at a NAMED commit — resolved BEFORE the dry-run returns,
+# because it is a precondition that can refuse, and a dry-run that stops short of
+# a refusal is not a dry-run. Without it the turn runs with none at all
+# (/sandbox/.codex/skills does not exist) and, worse, nothing records that, so
+# "which skills was this turn running with" has no answer at all.
+#
+# Opt-in: it refuses a dirty canonical, and a caller who has not yet decided what
+# to do about that should not be blocked from taking an ordinary turn.
+SKILLS_ARGS=""
+SKILLS_LINE="skills-bundle: not carried (SANDBOX_SKILLS=1 to include them)"
+if [ "${SANDBOX_SKILLS:-0}" = 1 ]; then
+  SKILLS_DIR="$OUT/skills-bundle"
+  if SKILLS_LINE=$(sh "$ROOT/loopctl/skills-bundle.sh" "$SKILLS_DIR" 2>&1); then
+    SKILLS_ARGS="--upload $SKILLS_DIR/skills:/sandbox/.codex/skills"
+  else
+    printf '%s\n' "$SKILLS_LINE" >&2
+    echo "FATAL: skills were asked for and could not be named — taking the turn anyway would put an unnameable version behind a receipt that claims to be reproducible" >&2
+    exit 64
+  fi
+fi
+
 if [ "$DRY" -eq 1 ]; then
   cat <<EOF
 dry-run — every precondition ran, nothing was created
   session   $AUTH_FILE (auth_mode=chatgpt, unexpired, ${#AUTH} bytes)
   sandbox   $NAME  policy=loopctl/sandbox-policy.yaml  image=loopctl/Dockerfile
   upload    $ROOT -> $WORK   (no .git travels; codex runs with --skip-git-repo-check)
+  skills    $SKILLS_LINE
   turn      codex exec -s danger-full-access
   changes   -> $OUT
 EOF
@@ -223,10 +245,12 @@ fi
 exit $rc
 '
 
+printf '%s\n' "$SKILLS_LINE"
 openshell sandbox create --name "$NAME" --no-tty \
   --policy "$ROOT/loopctl/sandbox-policy.yaml" \
   --env "CODEX_AUTH_JSON=$AUTH" \
   --env "CODEX_PROMPT=$PROMPT" \
+  $SKILLS_ARGS \
   --from "$ROOT/loopctl/Dockerfile" --upload "$ROOT" \
   -- sh -c "$INNER"
 TURN_RC=$?

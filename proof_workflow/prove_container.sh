@@ -43,6 +43,16 @@ prove_harness preflight loopctl/container_preflight.sh \
 # that governs which bytes ever reach a sandbox.
 prove_harness upload-boundary .gitignore \
   "the ignore rules -> what `openshell sandbox --upload` sends and what a commit carries; per-run evidence (data/codex-sandbox/, proof_workflow/data/) is excluded here so an agent's draft never lands on main by default"
+# The shared skills entering a sandbox under a name. Before it, a sandbox turn
+# ran with zero skills and nothing recorded that — "which skills version was this"
+# had no answer at all. Its refusal is the mechanism: the canonical is read live
+# by five projects through symlinks, so an uncommitted edit there is in force
+# everywhere while being in no commit, and carrying that in would put an
+# unnameable version behind a receipt claiming reproducibility. It fired on the
+# real canonical the first time it was pointed at it.
+prove_harness skills-bundle loopctl/skills-bundle.sh \
+  "shared-skills canonical -> a bundle named by commit -> <sandbox>/.claude|.codex/skills; a dirty canonical is refused, and the explicit override stamps -dirty so the id can never read as a named commit" \
+  -- sh loopctl/skills-bundle.sh --selftest
 prove_harness codex-writing-role loopctl/codex-sandbox.sh \
   "host ChatGPT session -> --env -> ~/.codex/auth.json inside an OpenShell sandbox -> one write turn -> changed files back out; its selftest gives each way of having no usable session its own exit" \
   -- sh loopctl/codex-sandbox.sh --selftest
