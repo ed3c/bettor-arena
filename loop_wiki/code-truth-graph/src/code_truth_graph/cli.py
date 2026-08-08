@@ -7,13 +7,14 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 from . import RUNTIME_REF
 from .graphrag import compute_communities, export_graphrag
-from .java_ast import JavaAstError, extract_java_records, ingest_java_ast
+from .java_ast import MINIMAL_ENV, JavaAstError, extract_java_records, ingest_java_ast
 from .model import (
     add_evidence,
     attach_evidence_to_node,
@@ -200,9 +201,20 @@ def runner_identity() -> dict[str, str]:
         for path in paths
         if path.is_file()
     ]
+    identities: dict[str, str] = {}
+    for key, revision in (("repo_commit", "HEAD"), ("repo_tree", "HEAD^{tree}")):
+        result = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", revision],
+            capture_output=True,
+            text=True,
+            check=False,
+            env=MINIMAL_ENV,
+            timeout=5,
+        )
+        identity = result.stdout.strip() if result.returncode == 0 else ""
+        identities[key] = identity or "UNVERIFIED_RELOCATED"
     return {
-        "repo_commit": "UNRELEASED",
-        "repo_tree": "UNRELEASED",
+        **identities,
         "surface_version": SURFACE_VERSION,
         "runtime_ref": RUNTIME_REF,
         "runtime_sha256": hashlib.sha256("".join(manifest).encode()).hexdigest(),
@@ -278,7 +290,7 @@ def verify_ref(bundle: Path, descriptor: object, label: str) -> tuple[Path, str]
     expected = descriptor.get("sha256")
     actual = sha256(artifact)
     if expected != actual:
-        raise ContractError(
+        raise MeasurementError(
             f"{label} digest mismatch: expected {expected}, got {actual}"
         )
     return artifact, actual
@@ -456,6 +468,33 @@ def run(packet_path: Path, output: Path) -> int:
         raise MeasurementError(
             "stale subject identity: file_manifest_digest does not match snapshot"
         )
+    snapshot_hashes = {actual for _entry, actual, _source in snapshot_files}
+    source_ref_hashes: set[str] = set()
+    for index, item in enumerate(packet["source_refs"]):
+        assert isinstance(item, dict)
+        path = item["path"]
+        anchor = item["anchor"]
+        digest = item["sha256"]
+        if (
+            not isinstance(path, str)
+            or not SAFE_ARTIFACT_REF.fullmatch(path)
+            or Path(path).is_absolute()
+            or ".." in Path(path).parts
+        ):
+            raise ContractError(
+                f"source_refs[{index}].path is not a safe repo-relative path"
+            )
+        if not isinstance(anchor, str) or not anchor:
+            raise ContractError(
+                f"source_refs[{index}].anchor must be a non-empty string"
+            )
+        if item["repo"] != snapshot["repo_id"] or item["commit"] != snapshot["commit"]:
+            raise MeasurementError(f"stale source_refs[{index}] repository identity")
+        if not isinstance(digest, str) or digest not in snapshot_hashes:
+            raise MeasurementError(f"stale source_refs[{index}] content digest")
+        source_ref_hashes.add(digest)
+    if source_ref_hashes != snapshot_hashes:
+        raise MeasurementError("source_refs do not cover the complete subject snapshot")
 
     evidence_records: list[dict[str, object]] = []
     for item in packet["evidence"]:

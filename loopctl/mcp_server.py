@@ -626,23 +626,65 @@ def _selftest() -> int:
     case("allowed-tool-is-not-denied", "loopctl_micro_run" in DENIED_TOOLS, False)
     case("ctg-inline-tool-is-not-denied", "loopctl_ctg_run" in DENIED_TOOLS, False)
 
+    parser_cases = (
+        ("missing-ref-is-fatal", [], {}, True),
+        ("mutable-head-is-fatal", ["--ref", "HEAD"], {}, True),
+        ("unknown-flag-is-fatal", ["--ref", "abc123", "--reff"], {}, True),
+        ("missing-ref-value-is-fatal", ["--ref"], {}, True),
+        (
+            "exact-ref-and-http-parse",
+            ["--ref", "abc123", "--http", "8765"],
+            {},
+            False,
+        ),
+    )
+    for name, arguments, environment, want_error in parser_cases:
+        try:
+            parsed = parse_server_args(arguments, environment)
+        except (TypeError, ValueError):
+            got_error = True
+            parsed = None
+        else:
+            got_error = False
+        case(name, got_error, want_error)
+        if name == "exact-ref-and-http-parse":
+            case("exact-ref-and-http-values", parsed, ("abc123", 8765))
+
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red
+
+
+def parse_server_args(
+    argv: list[str], environment: dict[str, str] | None = None
+) -> tuple[str, int | None]:
+    environment = os.environ if environment is None else environment
+    ref = environment.get("LOOPCTL_REF", "")
+    port = None
+    rest = list(argv)
+    while rest:
+        flag = rest.pop(0)
+        if flag == "--ref":
+            if not rest:
+                raise ValueError("--ref requires an exact commit or immutable tag")
+            ref = rest.pop(0)
+        elif flag == "--http":
+            if not rest:
+                raise ValueError("--http requires a port")
+            port = int(rest.pop(0))
+        else:
+            raise ValueError(f"unknown argument: {flag}")
+    if not ref or ref == "HEAD":
+        raise ValueError("an exact --ref or LOOPCTL_REF is required; HEAD is mutable")
+    return ref, port
 
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if argv[:1] == ["--selftest"]:
         raise SystemExit(_selftest())
-    ref = "HEAD"
-    port = None
-    rest = list(argv)
-    while rest:
-        flag = rest.pop(0)
-        if flag == "--ref" and rest:
-            ref = rest.pop(0)
-        elif flag == "--http" and rest:
-            port = int(rest.pop(0))
-    if ref == "HEAD" and os.environ.get("LOOPCTL_REF"):
-        ref = os.environ["LOOPCTL_REF"]
+    try:
+        ref, port = parse_server_args(argv)
+    except (TypeError, ValueError) as exc:
+        print(f"mcp-server FATAL: {exc}", file=sys.stderr)
+        raise SystemExit(64) from exc
     raise SystemExit(serve_http(ref, port) if port else serve(ref))

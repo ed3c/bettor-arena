@@ -21,5 +21,7 @@ from pathlib import Path
 result = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 assert result["schema_version"] == "ctg-route-result@1.0.0"
 assert result["overall"]["exit"] == 0
+assert result["actual_runner"]["repo_commit"] == "UNVERIFIED_RELOCATED"
+assert result["actual_runner"]["repo_tree"] == "UNVERIFIED_RELOCATED"
 assert all("ctg-portability" not in item["artifact_ref"] for item in result["artifacts"])
 PY

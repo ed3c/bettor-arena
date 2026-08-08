@@ -146,13 +146,15 @@ if [ "$RC" -ne 0 ]; then
   exit 1
 fi
 
-python3 - "$RESPONSE" "$OUTPUT" <<'PY' || exit 1
+python3 - "$RESPONSE" "$OUTPUT" "$ROOT" <<'PY' || exit 1
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 response_path = Path(sys.argv[1])
 output = Path(sys.argv[2])
+root = Path(sys.argv[3])
 response = json.loads(response_path.read_text(encoding="utf-8"))
 assert response["loop"] == "ctg", response
 assert response["mode"] == "run", response
@@ -182,6 +184,12 @@ assert result["claim_boundary"] == "structure-only demo", result
 assert set(result["actual_runner"]) == {
     "repo_commit", "repo_tree", "runtime_ref", "runtime_sha256", "surface_version"
 }, result
+assert result["actual_runner"]["repo_commit"] == subprocess.check_output(
+    ["git", "-C", str(root), "rev-parse", "HEAD"], text=True
+).strip(), result
+assert result["actual_runner"]["repo_tree"] == subprocess.check_output(
+    ["git", "-C", str(root), "rev-parse", "HEAD^{tree}"], text=True
+).strip(), result
 assert set(result["digests"]) == {
     "delivery", "domain_profile", "execution_argv", "input", "subject_snapshot"
 }, result
@@ -472,6 +480,29 @@ else
 fi
 [ "$RC" -eq 2 ] || {
   echo "CTG CLI case failed — stale subject exited $RC, want 2" >&2
+  exit 1
+}
+
+STALE_SOURCE_REF_PACKET="$BUNDLE/ctg-input-stale-source-ref.json"
+python3 - "$BUNDLE/ctg-input.json" "$STALE_SOURCE_REF_PACKET" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+packet = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+packet["source_refs"][0]["commit"] = "0" * 40
+Path(sys.argv[2]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+if sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$STALE_SOURCE_REF_PACKET" \
+  --output "$TMP/stale-source-ref-output" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — stale source_ref identity passed" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 2 ] || {
+  echo "CTG CLI case failed — stale source_ref exited $RC, want 2" >&2
   exit 1
 }
 
