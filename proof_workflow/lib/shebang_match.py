@@ -58,6 +58,18 @@ def bash_scripts(root: Path) -> set[str]:
 
 def scan(root: Path) -> tuple[list[str], list[str]]:
     bash = bash_scripts(root)
+    if not bash:
+        # Measured, not imagined: stubbing the resolver to return an empty set
+        # made the whole scan report zero mismatches and exit 0. A checker that
+        # resolved nothing and returned success is indistinguishable from one
+        # that checked everything and found nothing, and this is the one shape
+        # this repo refuses everywhere else. 64 = cannot tell, never 0 or 2.
+        raise SystemExit(
+            "shebang FATAL: no bash-shebang script found anywhere in %s. Either "
+            "this tree really has none, or the resolver is broken — and a pass "
+            "that covered nothing looks exactly like a pass that covered "
+            "everything." % root
+        )
     bad, unresolved = [], []
     for caller in sorted((root / "proof_workflow").glob("*.sh")):
         for n, line in enumerate(caller.read_text(encoding="utf-8").splitlines(), 1):
@@ -144,6 +156,30 @@ def _selftest() -> int:
         bool(INVOKE.search("use --dry-run-sh worker.sh")),
         False,
     )
+
+    # The vacuous-pass guard, driven rather than trusted: with the resolver
+    # returning nothing the scan used to report zero mismatches and exit 0.
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as t:
+        fake = Path(t)
+        (fake / "proof_workflow").mkdir()
+        (fake / "proof_workflow" / "prove_x.sh").write_text(
+            "-- sh a/worker.sh\n", encoding="utf-8"
+        )
+        real = globals()["bash_scripts"]
+        globals()["bash_scripts"] = lambda _r: set()
+        try:
+            scan(fake)
+            case("empty-resolver-is-fatal-not-a-pass", "returned", "SystemExit")
+        except SystemExit as exc:
+            case(
+                "empty-resolver-is-fatal-not-a-pass",
+                "covered nothing" in str(exc),
+                True,
+            )
+        finally:
+            globals()["bash_scripts"] = real
 
     if red == 0:
         print("SELFTEST GREEN")

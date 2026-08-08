@@ -77,6 +77,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | guarded 那組三次全空 | `-a never` 不是 `codex exec` 的旗標——那個 `always\|never\|auto` **是 `--color` 的**（法則 8） |
 | 報表印出正確表格「之後」才當掉 | codex 沒有 cost 欄位，`median` 對空集合拋例外。讀取端有防、**彙總端沒有** |
 | OpenShell `Connection refused` 而 `docker ps` 正常 | OrbStack 走 docker **context**；`DOCKER_HOST` 要指到 orbstack socket。**這段曾散成四份，第四個呼叫端忘了** → 收斂進 `capture.sh` |
+| 新加的守衛「綠」，但它其實什麼都沒查 | 把 resolver 樁成回空集合 → 掃描報 0 個不符、exit 0。**「解析不到卻回傳成功」與「查遍了沒問題」長得一模一樣** → 空集合改成 FATAL(64)，並用樁把這件事驗進 selftest |
 | 上一列那個修法**弄紅了另一個檢查** | 環境變數集中設好後，wrapper 跳過自己的選擇邏輯、不再印公告，而對照組正在斷言那句話。**收斂共用設定會讓「驗這個設定本身」的檢查失去對象** → 那一格改用 `env -u` 問 |
 
 ### 邊界（刻意不做的）

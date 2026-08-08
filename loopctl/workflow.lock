@@ -1,15 +1,15 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "77ce9e424c78619af70aaab878c882c9a0dcf0b9",
+  "workflow_commit": "5bfb191a8631cff151b2c9fad95fcf006533bef9",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-77ce9e424c78-dirty.json",
-    "harness": "harness-77ce9e424c78-dirty.json",
-    "macro": "macro-77ce9e424c78-dirty.json",
-    "micro": "micro-77ce9e424c78-dirty.json",
-    "openwiki": "openwiki-77ce9e424c78-dirty.json",
-    "policy": "policy-77ce9e424c78-dirty.json",
-    "workflow": "workflow-77ce9e424c78-dirty.json"
+    "container": "container-5bfb191a8631-dirty.json",
+    "harness": "harness-5bfb191a8631-dirty.json",
+    "macro": "macro-5bfb191a8631-dirty.json",
+    "micro": "micro-5bfb191a8631-dirty.json",
+    "openwiki": "openwiki-5bfb191a8631-dirty.json",
+    "policy": "policy-5bfb191a8631-dirty.json",
+    "workflow": "workflow-5bfb191a8631-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -17,7 +17,7 @@
     "harness": 68,
     "optional": 1
   },
-  "workflow_digest": "18fbc9bef280d7d9178358c8e6b43b8fba03974ff16e3307a9a9c29cf4c257cf",
+  "workflow_digest": "43402268a016323c53ffa6933f4909fabfe7553e300cd1535c1d26d4ab5940b2",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-77ce9e424c78619af70aaab878c882c9a0dcf0b9.json": {
+    "data/receipts/post-commit-5bfb191a8631cff151b2c9fad95fcf006533bef9.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -479,7 +479,7 @@
       ]
     },
     "loopctl/README.md": {
-      "sha256": "68589a1b66f768daa5b91f8817001dc07e07694a87b850fea11a2f5163dfe9f1",
+      "sha256": "05e6a6c3fd519addf5388a95a4eb9f712a0eeebe6ef5eb4057a1753ab8c5538e",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1018,7 +1018,7 @@
       ]
     },
     "proof_workflow/lib/shebang_match.py": {
-      "sha256": "fdf1addf31e5abda099108624658b27b30427fe181f51a2320cb85559dac8eaa",
+      "sha256": "8b4912879ad9980f4710bae0679e12f43aa0960dc1ca143111380e244dc108df",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
