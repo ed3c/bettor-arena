@@ -228,6 +228,34 @@ TURN_RC=0
 
 於是容器**不再只服務唯讀角色**：codex（讀）靠掛載 `~/.codex`，claude（寫）靠 provider 佔位符。
 
+### codex 在 OpenShell 內寫入：一條刻意較弱的路
+
+```
+sh loopctl/codex-sandbox.sh --dry-run "<prompt>"     # 前置全跑、不建任何東西
+sh loopctl/codex-sandbox.sh "<prompt>"               # 真跑，改動檔案下載回 data/codex-sandbox/<utc>/
+```
+
+**codex 用不了 claude 那套佔位符，而這是量出來的不是猜的**：它在任何請求之前把憑證當 JWT 解析，
+佔位符當場死在本地（`invalid agent identity JWT format`）。所以訂閱 session **必須以真值**經
+`--env` 進沙盒、重建成 `~/.codex/auth.json`——沙盒內每個 process 都讀得到它。守線的只剩 policy
+的 deny-by-default ＋ binary 綁定，加上沙盒用完即棄。**這條比 claude 弱，不要當成同一級。**
+
+四個關卡各自的真相（每一個都只有真跑才看得見）：
+
+| 症狀 | 真因 |
+|---|---|
+| `agent identity JWT payload is not valid JSON` | **`--with-access-token` 要的不是 ChatGPT access token**，是 codex 自己的 agent-identity JWT。看起來像 token 壞掉，其實是餵錯欄位——正解是重建整份 `auth.json` |
+| `HTTP CONNECT failed with status 403`，而 policy 明明列了 codex | npm 把 codex 裝成 **`.js` shim**，真正連線的是它 spawn 出來的 vendored 原生檔，**policy 綁的路徑沒有任何 process 擁有**。claude 沒事只因為 npm 給的是 ELF。Dockerfile 改指原生檔並在 build 期斷言 ELF |
+| 模型答了、tokens 也燒了，但沒有檔案 | codex 用 **bubblewrap 關自己的 shell 指令**，在容器內建不了 user namespace。`-s danger-full-access` 關掉那層內沙盒——**不是放寬邊界**：外層的 Landlock／seccomp／出口白名單全在，這正是 OpenShell 自己丟掉 AppArmor 時給的同一個理由 |
+| token 疑似在傳輸中被截斷 | **沒有**。host 與沙盒內 sha256 一致（`len=1752`）——先量再修，省下一整條錯誤的追查 |
+
+access token 壽命 **10 天**（不是一小時），host 上的 codex 會自動續期，所以實務成本是**每週重抽一次**。
+`codex-sandbox.sh --selftest` 把「讀不到／不是 JSON／是 API key／空 token／已過期」五種缺席各給
+獨立出口——過期若不在這裡擋，會在沙盒裡變成一個看不出原因的 auth 錯誤。
+
+改動怎麼回來：upload 沙盒**沒有 `.git`**，所以不是 diff，是時間戳比對後打包下載。**刪除不會被帶回**，
+這一點寫在腳本裡，免得那個包被當成完整 diff 讀。
+
 ### 邊界（這些不在證明裡，而且是刻意的）
 
 - **`loopctl/workflow.lock` 不入任何證明。** 它由收據長出；hash 它會讓 digest 依賴一個依賴

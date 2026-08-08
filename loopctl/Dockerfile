@@ -62,6 +62,32 @@ ARG CODEX_PKG=@openai/codex
 RUN npm install -g "$CLAUDE_PKG" || echo "WARN: could not install $CLAUDE_PKG — the writing role will report absent" >&2
 RUN npm install -g "$CODEX_PKG"  || echo "WARN: could not install $CODEX_PKG — the read-only role will report absent" >&2
 
+# Point /usr/local/bin/codex at the NATIVE binary instead of npm's node shim.
+#
+# Not tidiness — the sandbox policy binds network endpoints to a binary PATH, and
+# npm installs `codex` as a .js launcher that spawns a vendored executable from
+# deep inside node_modules. The process that actually opens the connection is
+# therefore neither `/usr/local/bin/codex` nor anything the policy can name, so a
+# subscription turn died on `HTTP CONNECT failed with status 403` from the proxy
+# while the policy plainly listed codex. claude works because npm ships it as
+# `claude.exe`, an ELF at the linked path: same shape, and that difference is the
+# whole bug.
+#
+# The path is discovered, never written down: it carries the platform triple and
+# the platform package's version, both of which move. Absent is FATAL here rather
+# than a warning, unlike the install above — an image that silently kept the shim
+# would look identical and fail only inside a sandbox, hours later, as a 403.
+RUN set -eu; \
+    if [ -x /usr/local/bin/codex ]; then \
+      real=$(find /usr/local/lib/node_modules/@openai/codex/node_modules \
+               -type f -perm -u+x -name codex 2>/dev/null | head -1); \
+      [ -n "$real" ] || { echo "FATAL: codex is installed but its native binary was not found under node_modules; the policy's binary identity would never match" >&2; exit 1; }; \
+      ln -sf "$real" /usr/local/bin/codex; \
+      file_out=$(head -c 4 /usr/local/bin/codex | od -An -c | tr -d ' \n'); \
+      case "$file_out" in *177ELF*) : ;; *) echo "FATAL: /usr/local/bin/codex is still not an ELF after relinking (got $file_out)" >&2; exit 1 ;; esac; \
+      codex --version; \
+    fi
+
 # The deterministic base IS build-checked. Shipping an image whose base is broken
 # would move the failure to a caller's first request.
 RUN set -eu; \

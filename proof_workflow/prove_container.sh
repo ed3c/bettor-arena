@@ -36,6 +36,9 @@ prove_harness wrapper loopctl/container-run.sh \
   "caller -> live-socket selection (a dead /var/run/docker.sock is refused, not absent) -> host uid -> session mounts -> no default ref for serve"
 prove_harness preflight loopctl/container_preflight.sh \
   "inside the container -> deterministic base, worktree isolation, and ONE REAL TURN per driver to tell present from authenticated"
+prove_harness codex-writing-role loopctl/codex-sandbox.sh \
+  "host ChatGPT session -> --env -> ~/.codex/auth.json inside an OpenShell sandbox -> one write turn -> changed files back out; its selftest gives each way of having no usable session its own exit" \
+  -- sh loopctl/codex-sandbox.sh --selftest
 prove_note control-owned-by-harness proof_workflow/control_container_surface.sh \
   "declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests"
 

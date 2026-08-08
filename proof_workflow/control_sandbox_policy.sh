@@ -126,6 +126,33 @@ else
   echo "         create it with: openshell provider create --name $PROVIDER --type generic --credential CLAUDE_CODE_OAUTH_TOKEN"
 fi
 
+# --- the other writing role, which pays a different price -------------------
+# codex cannot use the placeholder above — it parses its credential as a JWT
+# before any request — so its session enters the sandbox as a real value and the
+# policy is the only thing bounding what can spend it. Two policy properties ride
+# on this and nothing else covers them: that chatgpt.com is admitted at all (the
+# subscription backend is NOT api.openai.com), and that codex's binary identity
+# still matches after an image rebuild.
+#
+# Opt-in, like CONTROL_OPENWIKI_FULL: it costs an image build, an upload and a
+# real model turn, which is minutes and tokens on every `policy test`. Default is
+# NOT EXERCISED with the command named — a silent skip would read as covered.
+if [ "${CONTROL_CODEX_TURN:-0}" = 1 ]; then
+  if [ -f "${CODEX_AUTH_FILE:-$HOME/.codex/auth.json}" ]; then
+    capture codex-write-turn -- sh "$ROOT/loopctl/codex-sandbox.sh" \
+      "create a file named CONTROL_CODEX_TURN.txt whose only content is the word ok, then stop"
+    CODEX_RC=$?
+    CODEX_OUT="$RUNDIR/streams/$CAPTURE_SEQ-codex-write-turn.out"
+    expect "codex-write-turn-completes" "$CODEX_RC" 0
+    grep -q "^changed files: [1-9]" "$CODEX_OUT" && WROTE=yes || WROTE=no
+    expect "codex-turn-actually-wrote-a-file" "$WROTE" yes
+  else
+    echo "  [note] no codex session on this host — the codex write turn is NOT EXERCISED, not passed"
+  fi
+else
+  echo "  [note] the codex write turn is NOT EXERCISED (costs a build + a real turn); run with CONTROL_CODEX_TURN=1 to include it"
+fi
+
 echo "control[sandbox-policy] trace=proof_workflow/data/$RUN_ID"
 if [ "$RED" -eq 0 ]; then
   echo "PASS: the policy denied every unnamed destination, including this machine's own services,"

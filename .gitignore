@@ -8,4 +8,8 @@ data/wiki-update/
 proof_workflow/data/
 .grepai/
 data/ingest/
+# What a sandboxed codex turn wrote, one directory per run. Evidence of a run,
+# not part of the repo: committing it would put an agent's draft on main before
+# anyone read it.
+data/codex-sandbox/
 .container-home/

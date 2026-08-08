@@ -86,6 +86,29 @@ network_policies:
     binaries:
       - path: /usr/local/bin/codex
 
+  # Codex on a ChatGPT subscription does NOT dial api.openai.com. Read out of the
+  # shipped CLI rather than assumed: the binary carries
+  # `https://chatgpt.com/backend-api/codex`, and with only the entry above a
+  # subscription-mode turn is denied by a policy that looks like it admits codex.
+  #
+  # Same binary binding, and here it is doing more work than it looks. The token
+  # reaching this sandbox is a REAL access token, not a placeholder — codex
+  # parses its credential as a JWT before any request, so the placeholder model
+  # that carries claude cannot carry codex. That trade is stated in
+  # proof_workflow/README.md; what belongs here is the consequence: the secret is
+  # readable inside the sandbox, so the set of processes allowed to spend it is
+  # the only remaining boundary.
+  codex_chatgpt:
+    name: codex-chatgpt-backend
+    endpoints:
+      - host: chatgpt.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: full
+    binaries:
+      - path: /usr/local/bin/codex
+
   # The loops, as MCP. host.docker.internal is the runtime's alias for this
   # machine and is named ONLY for this port — Forgejo on :3000 and everything
   # else local stay unreachable, which control_sandbox_policy.sh proves rather

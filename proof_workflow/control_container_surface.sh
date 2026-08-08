@@ -131,6 +131,24 @@ PY
     BIN_RC=$?
     expect "policy-bound-binaries-exist-in-the-image" "$BIN_RC" 0
     [ "$BIN_RC" -eq 0 ] || cat "$RUNDIR/streams/$CAPTURE_SEQ-policy-binaries-in-image.out" >&2
+
+    # Existing is not enough — the bound path must BE the process that opens the
+    # connection. npm ships codex as a .js launcher that spawns a vendored
+    # executable from inside node_modules, so the policy named a path no running
+    # process ever had and a subscription turn died on `HTTP CONNECT failed with
+    # status 403` while the policy plainly listed codex. claude was fine only
+    # because npm ships it as an ELF at the linked path.
+    #
+    # Every bound binary is checked, not just codex: any of them could acquire a
+    # wrapper on an upgrade, and the failure would again surface as a proxy
+    # refusal pointing at the network rather than at the image.
+    capture policy-binaries-are-not-shims -- docker run --rm --entrypoint sh "$IMAGE" -c \
+      "for b in $POLICY_BINS; do \
+         head -c 2 \"\$b\" | grep -q '#!' && { echo \"SHIM \$b — a script here means the requesting process is the interpreter, which the policy cannot name\"; exit 1; }; \
+       done; echo no-shims-among-bound-binaries"
+    SHIM_RC=$?
+    expect "policy-bound-binaries-are-real-executables" "$SHIM_RC" 0
+    [ "$SHIM_RC" -eq 0 ] || cat "$RUNDIR/streams/$CAPTURE_SEQ-policy-binaries-are-not-shims.out" >&2
   fi
 
   # The subscription credential reaches the sandbox as a PLACEHOLDER, never as a
