@@ -29,6 +29,16 @@
 #            two different digests. A tracked terminus belongs to the commit;
 #            judge it there. Tracked-but-deleted-in-the-worktree is its own
 #            named FAIL, so HEAD bytes can never cover for a local deletion.
+#   optional a host asset the entry point tolerates the absence of — hashed as
+#            present-optional when it is there, recorded absent-optional when it
+#            is not, and never a failure either way. This kind exists because
+#            `.grepai/index.gob` has no honest home in the others: artifact makes
+#            its absence a red, context makes it a FATAL, and note drops it out
+#            of the digest so its state stops being evidence at all. The obvious
+#            abuse — call anything load-bearing "optional" and stay green — is
+#            what the control group closes: it classifies by experiment, and the
+#            comparator fails when something it measured as required is carried
+#            here. Do not use this kind for anything the control has not measured.
 #   note     something on the path that is deliberately NOT hashed, and why.
 #            Bounding what a proof covers is fine; doing it silently is not —
 #            a dropped path must read as dropped, never as covered.
@@ -188,6 +198,20 @@ prove_artifact() { # id repo-relative-path dataflow
     _prove_record artifact "$1" "$2" null null absent "$3"
     PROVE_STATUS=failed
     echo "  [artifact] $1 — ABSENT — $2 (the mechanism left no terminus here)" >&2
+  fi
+  return 0
+}
+
+prove_optional() { # id repo-relative-path dataflow
+  if _sha=$(_prove_hash "$2"); then
+    _prove_record optional "$1" "$2" "$_sha" null present-optional "$3"
+    echo "  [optional] $1 — present-optional — $2"
+  else
+    # No hash, but the state is still recorded and still moves the digest by way
+    # of the manifest staying one line shorter — absence is a fact about this
+    # commit, not a gap in the record.
+    _prove_record optional "$1" "$2" null null absent-optional "$3"
+    echo "  [optional] $1 — absent-optional — $2 (tolerated; the entry point exits 0 without it)"
   fi
   return 0
 }
@@ -354,7 +378,34 @@ _prove_selftest() {
   expect "tracked-terminus-deleted-locally" 2 $?
   mv "$base/terminus.away" "$repo/terminus.json"
 
-  # 8) molecular hardening: one changed byte on the traversed path must move
+  # 8) the optional kind: present is hashed and absent is recorded, and the two
+  #    must not produce the same digest — an optional asset whose state cannot
+  #    be read off the receipt is not covered, it is merely mentioned.
+  printf 'idx\n' >"$repo/hostasset.bin"
+  opt_run() {
+    (
+      PROVE_HOME="$repo"
+      prove_init "$1" "optional fixture"
+      prove_context doc doc.md "fixture -> reader"
+      prove_optional asset hostasset.bin "host -> tolerated asset"
+      prove_emit
+    ) >/dev/null 2>&1
+  }
+  opt_run optpresent; expect "optional-present-is-green" 0 $?
+  present_receipt="$repo/data/proof-workflow/optpresent-$sha12-dirty.json"
+  grep -q '"state":"present-optional"' "$present_receipt" 2>/dev/null \
+    || { echo "SELFTEST case failed — present optional asset not recorded as present-optional" >&2; red=1; }
+  mv "$repo/hostasset.bin" "$base/hostasset.away"
+  opt_run optabsent; expect "optional-absent-is-not-a-failure" 0 $?
+  absent_receipt="$repo/data/proof-workflow/optabsent-$sha12-dirty.json"
+  grep -q '"state":"absent-optional"' "$absent_receipt" 2>/dev/null \
+    || { echo "SELFTEST case failed — absent optional asset not recorded as absent-optional" >&2; red=1; }
+  if [ "$(digest_of "$present_receipt")" = "$(digest_of "$absent_receipt" 2>/dev/null)" ]; then
+    echo "SELFTEST case failed — present and absent optional produced the same digest" >&2; red=1
+  fi
+  mv "$base/hostasset.away" "$repo/hostasset.bin"
+
+  # 9) molecular hardening: one changed byte on the traversed path must move
   #    the digest, and the dirty tree must be visible in the receipt name.
   printf 'doc drifted\n' >"$repo/doc.md"
   run_case green 0 1; expect "dirty-rerun" 0 $?

@@ -39,6 +39,38 @@ def covered(path: str, proof_paths: set[str]) -> bool:
     return any(p == path or p.startswith(path.rstrip("/") + "/") for p in proof_paths)
 
 
+def proof_states(receipt_dir: Path, short: str) -> dict[str, str]:
+    """Each covered path mapped to the STATE the proof recorded for it.
+
+    Needed for one check only, and it is the check that keeps `prove_optional`
+    from becoming a way to stay green: the proof may declare a path optional,
+    but whether it is optional is decided by the probe, not by the declaration.
+    """
+    states: dict[str, str] = {}
+    for name in ("macro", "micro", "openwiki"):
+        for candidate in (f"{name}-{short}.json", f"{name}-{short}-dirty.json"):
+            path = receipt_dir / candidate
+            if not path.is_file():
+                continue
+            data = json.loads(path.read_text(encoding="utf-8"))
+            for step in data["steps"]:
+                if step.get("path"):
+                    states.setdefault(step["path"], step.get("state", ""))
+            break
+    return states
+
+
+def misdeclared_optional(
+    classes: dict[str, tuple[str, int]], states: dict[str, str]
+) -> list[str]:
+    """Paths the probe measured as required that the proof carries as optional."""
+    return sorted(
+        p
+        for p, (cls, _) in classes.items()
+        if cls == "required" and states.get(p, "").endswith("-optional")
+    )
+
+
 def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
     """Every path covered by ANY proof at this commit, mapped to which proof.
 
@@ -102,6 +134,9 @@ def compare(rundir: Path, macro_receipt: Path, receipt_dir: Path, short: str) ->
         "message_lanes_fired": read_lines(rundir / "fired-lanes.txt"),
         "proof_covered_paths": {p: covered_by[p] for p in sorted(proof_paths)},
         "required_uncovered": required_uncovered,
+        "misdeclared_optional": misdeclared_optional(
+            classes, proof_states(receipt_dir, short)
+        ),
         "optional_uncovered": optional_uncovered,
     }
 
@@ -166,6 +201,9 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
         "proof_covered_paths": {p: covered_by[p] for p in sorted(proof_paths)},
         "produced_uncovered": produced_uncovered,
         "required_uncovered": required_uncovered,
+        "misdeclared_optional": misdeclared_optional(
+            classes, proof_states(receipt_dir, short)
+        ),
         "optional_uncovered": optional_uncovered,
     }
 
@@ -225,6 +263,7 @@ def main() -> int:
     failed = (
         result["required_uncovered"]
         or result.get("produced_uncovered")
+        or result.get("misdeclared_optional")
         or not result.get("tools_covered_transitively_by_bootstrap_step", True)
         or bootstrap_rc != 0
     )
@@ -319,6 +358,12 @@ def main() -> int:
     for p in result.get("produced_uncovered", []):
         print(
             f"  GAP: {p} is really produced by the entry point and no proof treats it as a terminus",
+            file=sys.stderr,
+        )
+    for p in result.get("misdeclared_optional", []):
+        print(
+            f"  GAP: {p} is carried as optional by a proof, but removing it changes the "
+            "entry point's exit — optional is decided by the probe, not by the declaration",
             file=sys.stderr,
         )
     for p in result["optional_uncovered"]:
@@ -487,6 +532,30 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        # The latch on prove_optional: a proof may not declare away a dependency
+        # the probe measured as load-bearing.
+        case(
+            "misdeclared-optional-detected",
+            misdeclared_optional(
+                {"f/needed.ts": ("required", 2)}, {"f/needed.ts": "present-optional"}
+            ),
+            ["f/needed.ts"],
+        )
+        case(
+            "honestly-optional-not-flagged",
+            misdeclared_optional(
+                {"f/spare.ts": ("optional", 0)}, {"f/spare.ts": "absent-optional"}
+            ),
+            [],
+        )
+        case(
+            "required-declared-required-not-flagged",
+            misdeclared_optional(
+                {"f/needed.ts": ("required", 2)}, {"f/needed.ts": "hashed-not-run"}
+            ),
+            [],
+        )
+
         out = compare_micro(rundir, rdir, short)
         case(
             "dot-id-instance-covered-by-ledger",

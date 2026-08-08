@@ -95,5 +95,12 @@ prove_artifact head-receipt "data/receipts/post-commit-$PROVE_COMMIT.json" \
   "post-commit hook -> receipt naming this exact commit (physical evidence the hook fired here)"
 prove_artifact delivery-receipt delivery.json \
   "macro loop -> four-layer delivery address + synced_at_commit (T0 of the delivery gate)"
+# A host asset bootstrap tolerates the absence of — measured, not assumed:
+# control_macro_entry.sh removes it in a throwaway worktree and bootstrap still
+# exits 0, only WARNing. Covering it as an artifact would make a legitimate
+# absence a red; leaving it out entirely is what let it sit uncovered while the
+# control reported it every run. Its state now lands on the receipt either way.
+prove_optional grepai-index .grepai/index.gob \
+  "grepai init/watch -> semantic index for the MCP lane; absent = bootstrap WARN, never FATAL"
 
 prove_emit

@@ -106,8 +106,16 @@ prove_artifact last-update openwiki/.last-update.json \
 # Commit traceability of the wiki itself: the gitHead it was generated at must
 # resolve in this repository, and its distance to HEAD is the staleness fact
 # bootstrap.sh warns on. Undecidable is a named red, not a shrug.
+# The staleness distance is measured and carried as a FACT, not turned into a
+# verdict. bootstrap already WARNs that the wiki is stale, and making the proof
+# red on it would block every traversal until someone spends a model turn — but
+# leaving the number only in a WARN means nobody can see it grow. On the receipt
+# it is trackable; whether to regenerate stays a human call with a cost.
+WIKI_HEAD=$(sed -n 's/.*"gitHead": *"\([0-9a-f]\{40\}\)".*/\1/p' "$PROVE_ROOT/openwiki/.last-update.json" | head -1)
+BEHIND=$(git -C "$PROVE_ROOT" rev-list --count "$WIKI_HEAD..HEAD" 2>/dev/null || echo unknown)
+DRIFTED=$(git -C "$PROVE_ROOT" diff --name-only "$WIKI_HEAD" HEAD -- . ':(exclude)openwiki/' 2>/dev/null | grep -c . || echo unknown)
 prove_harness wiki-githead-resolves - \
-  "openwiki/.last-update.json gitHead -> git cat-file -e (the wiki names a commit that exists here)" \
+  "openwiki/.last-update.json gitHead -> git cat-file -e; measured drift at this run: $BEHIND commit(s) behind HEAD, $DRIFTED non-wiki file(s) changed since" \
   -- sh -c 'h=$(sed -n "s/.*\"gitHead\": *\"\([0-9a-f]\{40\}\)\".*/\1/p" openwiki/.last-update.json | head -1); [ -n "$h" ] && git cat-file -e "$h"'
 
 prove_emit
