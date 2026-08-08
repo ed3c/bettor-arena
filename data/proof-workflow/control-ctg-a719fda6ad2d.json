@@ -1,0 +1,147 @@
+{
+  "baseline": {
+    "canonical_projection": "6eb41dc73f9c56fe0b9205f956c53fa634466919523606d7b52c8baf2018d862",
+    "exit": 0,
+    "repeat_count": 3
+  },
+  "claim_boundary": "copied deterministic packet closure only; no live PROD/device side effect",
+  "commit": "a719fda6ad2da4764777c6e0b07562de6adc7360",
+  "input_classifications": [
+    {
+      "artifact_ref": "domain-profile.json",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    },
+    {
+      "artifact_ref": "evidence/inv-demo.txt",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    },
+    {
+      "artifact_ref": "subject-snapshot.json",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    },
+    {
+      "artifact_ref": "subject/files/rules.txt",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    }
+  ],
+  "produced_artifacts": [
+    "code-truth-graph.json",
+    "ctg-route-result.json",
+    "graphrag/entities.csv",
+    "graphrag/relationships.csv",
+    "graphrag/text_units.csv",
+    "report.html"
+  ],
+  "proof_digest": "58b47a65e07f4fee9b94eecab34b6b9697a76a3c91924b63d36677d0e5f08cbd",
+  "run_id": "20260808T191034Z-a719fda6ad2d",
+  "runs": [
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-1",
+      "seq": 1,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 312,
+        "sha256": "b793f9d0b96f7175484193e9a42e01d85642d5f9a235dd4b2553dcf4fc056c24"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-2",
+      "seq": 2,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 312,
+        "sha256": "21271126fcddca75ad39b37b0e1438aa7b314ae134b45e5ceace8218b33faa40"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-1",
+      "seq": 3,
+      "stderr": {
+        "bytes": 66,
+        "sha256": "3ea6c6bf11d519c1ff5c440a9f489808baafddb73eceb947008d690c92fed709"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-2",
+      "seq": 4,
+      "stderr": {
+        "bytes": 68,
+        "sha256": "aa724cc39bdd7662661517c485b0b357ff2a1b52f82e42388817667025b84637"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-3",
+      "seq": 5,
+      "stderr": {
+        "bytes": 68,
+        "sha256": "8fcbfa5f3084764ac3e870e8c6e744616b83c6732fac6bc448dc615c62a9ff54"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-4",
+      "seq": 6,
+      "stderr": {
+        "bytes": 70,
+        "sha256": "d1732a8d826aabd8f9420883879a7dfeff91f2268ce746682ea903c5515a5f09"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-after-probes",
+      "seq": 7,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 302,
+        "sha256": "a7a208b56bbf6dbfc1f5025ad4b5076c4cfe300508af8286f0061e6b679d531d"
+      }
+    }
+  ],
+  "schema_version": "bettor-arena-ctg-control@1.0.0",
+  "status": "passed"
+}

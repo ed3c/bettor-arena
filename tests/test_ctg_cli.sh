@@ -322,6 +322,26 @@ assert result["stages"][0]["state"] == "FAILED", result
 assert result["artifacts"] == [], result
 PY
 
+cp -R "$BUNDLE" "$TMP/missing-evidence-bundle"
+rm "$TMP/missing-evidence-bundle/evidence/inv-demo.txt"
+MISSING_EVIDENCE_OUTPUT="$TMP/missing-evidence-output"
+if sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$TMP/missing-evidence-bundle/ctg-input.json" \
+  --output "$MISSING_EVIDENCE_OUTPUT" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — missing declared evidence was accepted" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 2 ] || {
+  echo "CTG CLI case failed — missing declared evidence exited $RC, want 2" >&2
+  exit 1
+}
+[ -f "$MISSING_EVIDENCE_OUTPUT/ctg-route-result.json" ] || {
+  echo "CTG CLI case failed — missing evidence left no failure route-result" >&2
+  exit 1
+}
+
 DUPLICATE_PACKET="$BUNDLE/ctg-input-duplicate-key.json"
 python3 - "$BUNDLE/ctg-input.json" "$DUPLICATE_PACKET" <<'PY'
 import sys

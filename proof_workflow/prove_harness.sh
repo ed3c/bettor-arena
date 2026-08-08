@@ -38,6 +38,8 @@ prove_harness comparator proof_workflow/lib/compare_control.py \
   -- python3 proof_workflow/lib/compare_control.py --selftest
 prove_harness capture proof_workflow/lib/capture.sh \
   "physical trace of a real run: argv, cwd, exit, both streams to disk with a sha256 each (sourced, so hashed rather than fired)"
+prove_harness ctg-control-helper proof_workflow/ctg_control.py \
+  "closed packet closure + canonical projection + proof linkage for the CTG behavioral control"
 # The coverage checker, which caught its own absence the moment it became tracked:
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written

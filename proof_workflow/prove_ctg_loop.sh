@@ -26,6 +26,8 @@ prove_harness input-schema "$F/schemas/ctg-input.schema.json" \
   "external packet -> closed semantic envelope (hashed; json readability is exercised by the public contract test)"
 prove_harness result-schema "$F/schemas/ctg-route-result.schema.json" \
   "runtime stages and artifact digests -> closed route-result envelope (hashed; json readability is exercised by the public contract test)"
+prove_harness control-schema "$F/schemas/ctg-control.schema.json" \
+  "copied-input behavior probes -> closed control receipt"
 prove_harness runtime-ref "$F/src/code_truth_graph/__init__.py" \
   "immutable runtime identity -> expected_runner comparison"
 prove_harness runtime "$F/src/code_truth_graph/cli.py" \

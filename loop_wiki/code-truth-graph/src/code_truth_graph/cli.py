@@ -427,7 +427,12 @@ def run(packet_path: Path, output: Path) -> int:
     evidence_records: list[dict[str, object]] = []
     for item in packet["evidence"]:
         assert isinstance(item, dict)
-        artifact = resolve_artifact(bundle, item["artifact_ref"])
+        try:
+            artifact = resolve_artifact(bundle, item["artifact_ref"])
+        except ContractError as exc:
+            raise MeasurementError(
+                f"declared evidence is unavailable: {item['evidence_id']}"
+            ) from exc
         actual = sha256(artifact)
         if item["sha256"] != actual:
             raise MeasurementError(f"evidence digest mismatch: {item['evidence_id']}")
