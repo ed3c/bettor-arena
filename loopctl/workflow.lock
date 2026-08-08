@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "65e9ad222000d504070a533bdafb720e22eb8fb8",
+  "workflow_commit": "e79e171daedbc3d9297549d9801ddd8f59c49246",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-65e9ad222000-dirty.json",
-    "harness": "harness-65e9ad222000-dirty.json",
-    "macro": "macro-65e9ad222000-dirty.json",
-    "micro": "micro-65e9ad222000-dirty.json",
-    "notebooklm": "notebooklm-65e9ad222000-dirty.json",
-    "openwiki": "openwiki-65e9ad222000-dirty.json",
-    "policy": "policy-65e9ad222000-dirty.json",
-    "workflow": "workflow-65e9ad222000-dirty.json"
+    "container": "container-e79e171daedb-dirty.json",
+    "harness": "harness-e79e171daedb-dirty.json",
+    "macro": "macro-e79e171daedb-dirty.json",
+    "micro": "micro-e79e171daedb-dirty.json",
+    "notebooklm": "notebooklm-e79e171daedb-dirty.json",
+    "openwiki": "openwiki-e79e171daedb-dirty.json",
+    "policy": "policy-e79e171daedb-dirty.json",
+    "workflow": "workflow-e79e171daedb-dirty.json"
   },
   "counts": {
     "artifact": 6,
     "context": 23,
     "harness": 68
   },
-  "workflow_digest": "fd395babaf59eac7b8796750d39adb72adcf98a42517dc1eca1d1a41000f7072",
+  "workflow_digest": "fe2ba69f378bcaabec28b32813691896dad854310c4129358cc27ffca238f36d",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "c795ce4a923fa5ffa7cd3a499b4e57266f7548329c9716f296cccefb16206b5c",
@@ -125,7 +125,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-65e9ad222000d504070a533bdafb720e22eb8fb8.json": {
+    "data/receipts/post-commit-e79e171daedbc3d9297549d9801ddd8f59c49246.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -514,7 +514,7 @@
       ]
     },
     "notebooklm/README.md": {
-      "sha256": "63b9335bb6fb2eeb6aed141168a02021df5a55be606c90bbaf46255715a21d05",
+      "sha256": "62a6df13333480ded40df60cfc7ee65e0baaa5bd13892bf87ec299744e2cac66",
       "hash_source": "index",
       "kind": "context",
       "loops": [

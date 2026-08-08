@@ -50,7 +50,7 @@ sh loopctl/loopctl.sh notebooklm test [--live]                # 對照組驗行�
 | `64` + `not on PATH` | 裝 notebooklm-py。**不要**跑去修登入 |
 | `2` + `not-authenticated` | `notebooklm auth refresh`；太舊才 `login`。別當成套件壞了 |
 | `2` + `PARTIAL id` | 有人把部分 id 傳進去了。修呼叫端，**不要**放寬純度斷言 |
-| `2` + `follow-not-accessible` | 先 `curl` 那個 URL：401=沒分享（找人）／404=id 是假的（回頭看 hop1 來源可信度） |
+| `2` + `follow-not-accessible` | 先 `curl` 那個 URL：**404=id 是假的**（回頭看 hop1 來源可信度）／**401=只是要登入，不代表沒分享給你**——你自己的私人文件同樣 401（§3 已量），所以下一步是查認證，不是去找人要權限 |
 | `2` + `follow-library-absent` | CLI 在但它的直譯器 import 不到套件。修安裝，不是修權限 |
 | `2` + `follow-none-accessible` | 讀收據 `hop2.attempted`——各條理由不一定同一種修法 |
 | `2` + `no-ai-related-source` | 先確認不是**中文標題配不到**（§3 第 3 列），再考慮 `--source-title` |
@@ -82,6 +82,7 @@ sh loopctl/loopctl.sh notebooklm test [--live]                # 對照組驗行�
 | 缺陷 | 怎麼被發現 | 修法 |
 |---|---|---|
 | 11 條連結全部 `ADD_SOURCE rpc_code=9` | 三個一變因探針：五份文件全失敗／同一本加 `example.com` 成功（機制沒壞）／未認證 curl 回 **401**，亂編 id 回 **404** | 401≠404 ⇒ 存在但被閘住 ⇒ CLI 的 URL 攝取是**匿名**的 ⇒ 改走 `sources.add_drive`（library only，CLI 無此旗標） |
+| 上一條的**病因判斷是錯的**：我寫「沒分享給這個帳號」 | 用 Google Drive MCP 當**獨立第二抵達**逐一驗那 11 個 file id（2026-08-08） | **11/11 存在、原生 Google Doc、owner 就是本帳號**（`[AI Product Note] <公司>｜<日期>` 系列，3–5KB），亂編 id 回 `Entity not found`（負控有效）。所以閘是**認證**不是**分享**——**你自己的私人文件對匿名抓取一樣 401**。兩種抵達對「機制該怎麼改」一致（走認證路徑），對「為什麼」不一致，而**錯的那個會把人送去要一份他本來就擁有的權限**。`workflow.py` 的 `follow-not-accessible` 訊息仍列著舊病因，待修 |
 | library 在別的環境，import 不到 | 上一條的修法要用 library | 直譯器**從 CLI 的 shebang 推**。寫死絕對路徑會被 root-coupling 閘擋，而且下一台機器就錯 |
 | `json.loads` 死在一份真的存在的文件上 | 用部分 id 呼叫 `--json` | stdout 前面多一行 `Matched: <id> (<title>)` → 全 UUID ＋ **解析後仍斷言純度** |
 | 中文標題全被判為「與 AI 無關」 | 挑選段挑不到任何來源 | Python 的 `\b` 是 Unicode-aware，`\bAI\b` **配不到**「AI高價值…」→ 改 ASCII 邊界 lookaround。**這個失敗長得跟「notebook 是空的」一模一樣** |
