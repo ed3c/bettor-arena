@@ -39,8 +39,8 @@ prove_harness prepare-commit-msg .githooks/prepare-commit-msg \
   "staged paths -> the trailer written into the message; idempotent, and never fails the commit — the gate is what refuses"
 prove_harness commit-msg-gate .githooks/commit-msg \
   "message + staged paths -> molecular contract AND lineage check; a helper that can be skipped is not a contract"
-prove_harness control proof_workflow/control_workflow_lineage.sh \
-  "plants a real modification into a real manifest file inside a worktree: sensed with the right kind, stale lock refused, unstamped refused, outsider silent, tag replayed"
+prove_note control-owned-by-harness proof_workflow/control_workflow_lineage.sh \
+  "declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests"
 
 prove_note workflow-lock-not-hashed loopctl/workflow.lock \
   "declared out of scope: the lock is BUILT FROM the proof receipts, so hashing it here would make this digest depend on a file that depends on this digest — every rebuild moves both and neither settles, while looking green throughout. Its integrity comes from being rebuildable, and workflow_lock.py refuses the cycle at source"

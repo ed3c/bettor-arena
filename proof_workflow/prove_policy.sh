@@ -33,8 +33,8 @@ prove_init policy "sandbox-policy.yaml (network) + mcp_server.py DENIED_TOOLS (t
 # --- the network half --------------------------------------------------------
 prove_harness sandbox-policy loopctl/sandbox-policy.yaml \
   "deny-by-default network surface: model endpoints bound to the single binary allowed to use them; one MCP port named on the host alias and nothing else local"
-prove_harness policy-control proof_workflow/control_sandbox_policy.sh \
-  "drives real denials from inside a sandbox and separates a dropped connection from a proxy verdict — a policy only ever seen accepting is not known to deny"
+prove_note policy-control-owned-by-harness proof_workflow/control_sandbox_policy.sh \
+  "declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests — the same reason README.md is declared rather than hashed there"
 
 # --- the tool half, which the installed gateway cannot express ---------------
 prove_harness mcp-server loopctl/mcp_server.py \
@@ -46,8 +46,8 @@ prove_harness mcp-tools loopctl/mcp_tools.py \
 prove_harness result-shape loopctl/result_json.py \
   "one machine-readable result per invocation: exit unchanged, artifacts scraped from the run's own announcement, truncation declared" \
   -- python3 loopctl/result_json.py --selftest
-prove_harness mcp-control proof_workflow/control_mcp_surface.sh \
-  "drives the wrapper over real stdio: pin holds, live tree unchanged, no worktree survives, undeclared argument refused"
+prove_note mcp-control-owned-by-harness proof_workflow/control_mcp_surface.sh \
+  "declared here, hashed by the harness proof — same ownership rule as above"
 
 # --- the assertion that keeps the two halves honest about each other ---------
 # The policy carries a comment saying per-tool rules live in the server because

@@ -38,6 +38,13 @@ prove_harness comparator proof_workflow/lib/compare_control.py \
   -- python3 proof_workflow/lib/compare_control.py --selftest
 prove_harness capture proof_workflow/lib/capture.sh \
   "physical trace of a real run: argv, cwd, exit, both streams to disk with a sha256 each (sourced, so hashed rather than fired)"
+# The coverage checker, which caught its own absence the moment it became tracked:
+# it is the file that asks whether the instrument is measured, and nothing was
+# measuring it. Left out of the first version of this proof because it was written
+# afterwards — which is exactly how the eleven-file gap happened, one file at a time.
+prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
+  "tracked proof_workflow files x proof receipts at this commit -> covered / declared / UNCOVERED; a control receipt is refused as a source" \
+  -- python3 proof_workflow/lib/harness_coverage.py --selftest
 
 # --- every traversal proof --------------------------------------------------
 # Hashed, never fired: a proof run from inside a proof would write receipts about

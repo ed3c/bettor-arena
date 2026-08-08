@@ -1,21 +1,21 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "ff9b2c6de6316d31dcdfdb84467790cc1eb4ac54",
+  "workflow_commit": "7ab38e5fc25e6eacaf50825d84feb573dc1518cd",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-ff9b2c6de631-dirty.json",
-    "micro": "micro-ff9b2c6de631-dirty.json",
-    "openwiki": "openwiki-ff9b2c6de631-dirty.json",
-    "container": "container-ff9b2c6de631-dirty.json",
-    "policy": "policy-ff9b2c6de631-dirty.json"
+    "macro": "macro-7ab38e5fc25e-dirty.json",
+    "micro": "micro-7ab38e5fc25e-dirty.json",
+    "openwiki": "openwiki-7ab38e5fc25e-dirty.json",
+    "container": "container-7ab38e5fc25e-dirty.json",
+    "policy": "policy-7ab38e5fc25e-dirty.json"
   },
   "counts": {
     "artifact": 19,
     "context": 20,
-    "harness": 43,
+    "harness": 40,
     "optional": 1
   },
-  "workflow_digest": "15905c8d375fda4e3a465431be145b7d32bc13ec62d4aa9cb7e051d89d94a7da",
+  "workflow_digest": "1f1e0aabe9447ea2ccc14134f29dbb26da26ae1a5065d1b8a270a8ed14d644c5",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -83,7 +83,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-ff9b2c6de6316d31dcdfdb84467790cc1eb4ac54.json": {
+    "data/receipts/post-commit-7ab38e5fc25e6eacaf50825d84feb573dc1518cd.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -460,24 +460,6 @@
       "hash_source": "index",
       "kind": "context",
       "loop": "macro"
-    },
-    "proof_workflow/control_container_surface.sh": {
-      "sha256": "8b1fa56535b01ea0a31f41231f1121cc0e190f8fe60d4ac87a9b9a722cabf697",
-      "hash_source": "index",
-      "kind": "harness",
-      "loop": "container"
-    },
-    "proof_workflow/control_mcp_surface.sh": {
-      "sha256": "050ddde4c7227323e6476cacec0ae40411b07c9b66bcc6ca49acb46f1a01f1dd",
-      "hash_source": "index",
-      "kind": "harness",
-      "loop": "policy"
-    },
-    "proof_workflow/control_sandbox_policy.sh": {
-      "sha256": "57ee6363f8c583d1e199c810b1c9e8467ca50fb74dcb24d744ea246327c543d5",
-      "hash_source": "index",
-      "kind": "harness",
-      "loop": "policy"
     },
     "scripts/gates/check_credential_hygiene.py": {
       "sha256": "7dd0c4e38682e8b903549c503c326997445ded4be6be4719f5a180733cfbffa5",

@@ -36,8 +36,8 @@ prove_harness wrapper loopctl/container-run.sh \
   "caller -> live-socket selection (a dead /var/run/docker.sock is refused, not absent) -> host uid -> session mounts -> no default ref for serve"
 prove_harness preflight loopctl/container_preflight.sh \
   "inside the container -> deterministic base, worktree isolation, and ONE REAL TURN per driver to tell present from authenticated"
-prove_harness control proof_workflow/control_container_surface.sh \
-  "planted defects -> wrapper tier always, image tier only when an image exists (absent = NOT EXERCISED, never a pass)"
+prove_note control-owned-by-harness proof_workflow/control_container_surface.sh \
+  "declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests"
 
 # --- what this layer deliberately does not carry -----------------------------
 prove_note no-context-lane - \
