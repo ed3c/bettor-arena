@@ -1,24 +1,24 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "ff93c45568e0acc7b4efe31d8e1e82e11933422d",
+  "workflow_commit": "8686f2cd45680eb37aa96414f54d8520feec84c6",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-ff93c45568e0-dirty.json",
-    "ctg": "ctg-ff93c45568e0-dirty.json",
-    "harness": "harness-ff93c45568e0-dirty.json",
-    "macro": "macro-ff93c45568e0-dirty.json",
-    "micro": "micro-ff93c45568e0-dirty.json",
-    "notebooklm": "notebooklm-ff93c45568e0-dirty.json",
-    "openwiki": "openwiki-ff93c45568e0-dirty.json",
-    "policy": "policy-ff93c45568e0-dirty.json",
-    "workflow": "workflow-ff93c45568e0-dirty.json"
+    "container": "container-8686f2cd4568-dirty.json",
+    "ctg": "ctg-8686f2cd4568-dirty.json",
+    "harness": "harness-8686f2cd4568-dirty.json",
+    "macro": "macro-8686f2cd4568-dirty.json",
+    "micro": "micro-8686f2cd4568-dirty.json",
+    "notebooklm": "notebooklm-8686f2cd4568-dirty.json",
+    "openwiki": "openwiki-8686f2cd4568-dirty.json",
+    "policy": "policy-8686f2cd4568-dirty.json",
+    "workflow": "workflow-8686f2cd4568-dirty.json"
   },
   "counts": {
     "artifact": 34,
     "context": 34,
     "harness": 104
   },
-  "workflow_digest": "ff02528d65e30c19b3b2f6f3e30c36f456fca571dccb950cd3298c0406bb5118",
+  "workflow_digest": "ead67725f7ecf81471059de2b058ef4c37744691605090eb9bb8b2d01aa41b9e",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -126,7 +126,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-ff93c45568e0acc7b4efe31d8e1e82e11933422d.json": {
+    "data/receipts/post-commit-8686f2cd45680eb37aa96414f54d8520feec84c6.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -424,7 +424,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/src/code_truth_graph/cli.py": {
-      "sha256": "9dc156d6ff566d3f0eb3eced90fd5f5b9adbca6126e0be9f1c1f32079a104895",
+      "sha256": "5d303526b09fe5f5bb9d6c37a1f044decf0fdcfbda6abad4af95d4422c7b272c",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1388,7 +1388,7 @@
       ]
     },
     "tests/test_ctg_cli.sh": {
-      "sha256": "4177f22f3c28ce7febd46f9efaadc7d634b7fac6e0c7006bd41c64fd84643cc2",
+      "sha256": "230fe779bbd098b60c83b4e0e180d65768cec412b12b1e82009f798f1c7d4a3e",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

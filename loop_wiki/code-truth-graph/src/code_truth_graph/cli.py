@@ -310,6 +310,39 @@ def stage(
     }
 
 
+def evidence_reaches_lane(item: dict[str, object], lane: str) -> bool:
+    kind = str(item.get("kind", "")).lower()
+    environment = str(item.get("environment_class", "")).lower()
+    if lane == "SANDBOX":
+        return kind in {"sandbox", "sandbox_receipt"} or environment in {
+            "sandbox",
+            "synthetic_sandbox",
+        }
+    if lane == "PROD":
+        return kind in {"prod_receipt", "production_receipt"} and environment in {
+            "device_prod",
+            "prod",
+            "production",
+        }
+    raise ValueError(f"unsupported evidence lane: {lane}")
+
+
+def measured_lane_stage(
+    lane: str,
+    requirement: object,
+    evidence_records: list[dict[str, object]],
+) -> dict[str, object]:
+    if requirement == "not_requested":
+        return stage(lane, "NOT_REQUESTED", None, [])
+    matching = [item for item in evidence_records if evidence_reaches_lane(item, lane)]
+    if matching:
+        return stage(lane, "PASSED", 0, [])
+    message = f"{lane} {requirement} lane has no typed evidence"
+    value = stage(lane, "NOT_EXERCISED", 2 if requirement == "required" else None, [])
+    value["diagnostics"] = [message]
+    return value
+
+
 def failed_result(packet_path: Path, output: Path, diagnostic: str) -> None:
     packet = read_json(packet_path.resolve())
     subject = require_object(packet["subject_snapshot"], "subject_snapshot")
@@ -621,11 +654,17 @@ def run(packet_path: Path, output: Path) -> int:
             "sha256": sha256(report_path),
         }
     )
-    stages = [
-        stage("STATIC", "PASSED", 0, [graph_artifact]),
-        stage("SANDBOX", "NOT_REQUESTED", None, []),
-        stage("PROD", "NOT_REQUESTED", None, []),
-    ]
+    stages = [stage("STATIC", "PASSED", 0, [graph_artifact])]
+    stages.extend(
+        measured_lane_stage(lane, requirements[lane], evidence_records)
+        for lane in ("SANDBOX", "PROD")
+    )
+    required_lane_failed = any(
+        requirements[stage_result["name"]] == "required"
+        and stage_result["state"] != "PASSED"
+        for stage_result in stages
+    )
+    overall_exit = 2 if required_lane_failed else 0
     result_path = output / "ctg-route-result.json"
     result = {
         "schema_version": "ctg-route-result@1.0.0",
@@ -653,15 +692,20 @@ def run(packet_path: Path, output: Path) -> int:
             ),
             "evidence_availability": "CONSUMED",
         },
-        "next_edge": "human_review",
+        "next_edge": "packet_or_evidence_repair"
+        if required_lane_failed
+        else "human_review",
         "human_gate": packet.get("human_gate"),
-        "overall": {"state": "PASSED", "exit": 0},
+        "overall": {
+            "state": "FAILED" if required_lane_failed else "PASSED",
+            "exit": overall_exit,
+        },
         "claim_boundary": "structure-only demo",
     }
     write_json(result_path, result)
     print(f"route_result={result_path}")
     print(f"ctg_graph={graph_path}")
-    return 0
+    return overall_exit
 
 
 def parser() -> argparse.ArgumentParser:

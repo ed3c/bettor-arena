@@ -206,6 +206,92 @@ cmp "$OUTPUT/ctg-route-result.json" "$OUTPUT_REPEAT/ctg-route-result.json" >/dev
   exit 1
 }
 
+OPTIONAL_PACKET="$BUNDLE/ctg-input-sandbox-optional.json"
+python3 - "$BUNDLE/ctg-input.json" "$OPTIONAL_PACKET" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+packet = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+packet["packet_id"] = "ctg-fixture-sandbox-optional"
+packet["reach_requirements"]["SANDBOX"] = "optional"
+Path(sys.argv[2]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$OPTIONAL_PACKET" \
+  --output "$TMP/optional-output" >/dev/null || exit 1
+python3 - "$TMP/optional-output/ctg-route-result.json" <<'PY' || exit 1
+import json
+import sys
+from pathlib import Path
+
+result = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+stages = {stage["name"]: stage for stage in result["stages"]}
+assert stages["SANDBOX"]["state"] == "NOT_EXERCISED", stages
+assert result["overall"] == {"state": "PASSED", "exit": 0}, result
+PY
+
+REQUIRED_PACKET="$BUNDLE/ctg-input-sandbox-required.json"
+python3 - "$BUNDLE/ctg-input.json" "$REQUIRED_PACKET" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+packet = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+packet["packet_id"] = "ctg-fixture-sandbox-required"
+packet["reach_requirements"]["SANDBOX"] = "required"
+Path(sys.argv[2]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+if sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$REQUIRED_PACKET" \
+  --output "$TMP/required-output" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — missing required SANDBOX evidence passed" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 2 ] || {
+  echo "CTG CLI case failed — missing required SANDBOX evidence exited $RC, want 2" >&2
+  exit 1
+}
+python3 - "$TMP/required-output/ctg-route-result.json" <<'PY' || exit 1
+import json
+import sys
+from pathlib import Path
+
+result = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+stages = {stage["name"]: stage for stage in result["stages"]}
+assert stages["SANDBOX"]["state"] == "NOT_EXERCISED", stages
+assert result["overall"] == {"state": "FAILED", "exit": 2}, result
+PY
+
+SANDBOX_EVIDENCE_PACKET="$BUNDLE/ctg-input-sandbox-evidence.json"
+python3 - "$BUNDLE/ctg-input.json" "$SANDBOX_EVIDENCE_PACKET" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+packet = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+packet["packet_id"] = "ctg-fixture-sandbox-evidence"
+packet["reach_requirements"]["SANDBOX"] = "required"
+packet["evidence"][0]["kind"] = "sandbox_receipt"
+packet["evidence"][0]["environment_class"] = "synthetic_sandbox"
+Path(sys.argv[2]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$SANDBOX_EVIDENCE_PACKET" \
+  --output "$TMP/sandbox-evidence-output" >/dev/null || exit 1
+python3 - "$TMP/sandbox-evidence-output/ctg-route-result.json" <<'PY' || exit 1
+import json
+import sys
+from pathlib import Path
+
+result = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+stages = {stage["name"]: stage for stage in result["stages"]}
+assert stages["SANDBOX"]["state"] == "PASSED", stages
+assert result["overall"] == {"state": "PASSED", "exit": 0}, result
+PY
+
 UNKNOWN_PACKET="$BUNDLE/ctg-input-unknown-key.json"
 python3 - "$BUNDLE/ctg-input.json" "$UNKNOWN_PACKET" <<'PY'
 import json
