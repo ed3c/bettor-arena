@@ -57,6 +57,15 @@ prove_context subagent-finder kb-ingest/openwiki/subagents/question-finder.md \
   "systemPrompt section -> finder child, sandbox = worktree with openwiki/ DELETED"
 prove_context subagent-verifier kb-ingest/openwiki/subagents/answer-verifier.md \
   "systemPrompt section -> verifier child, sandbox = wiki-only scratch copy"
+# The emergent lane's landing site. The request names it
+# (emergent_prompt_context: openwiki/quickstart.md#backlog) and the worker defers
+# PARTIAL verifier findings into its ## Backlog under the bounded-round policy —
+# so run-discovered content lands here and nowhere near a standards module. It
+# was uncovered until control_openwiki_entry.sh ran the entry point and listed
+# what it really reads: the same shape as the micro loop's iteration lane, named
+# in the contract and missing from the coverage.
+prove_context emergent-backlog openwiki/quickstart.md \
+  "emergent lane -> ## Backlog: deferred PARTIAL findings, run-discovered only"
 
 # --- deterministic harness: the code-owned layer under those prompts ---------
 prove_harness openwiki-post kb-ingest/port/openwiki_post.py \

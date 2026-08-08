@@ -201,8 +201,21 @@ def main() -> int:
     mode = os.environ.get("CONTROL_MODE", "macro")
     short = commit[:12]
     try:
-        if mode == "micro":
+        # micro and openwiki share one comparison: both entry points are judged
+        # on what they consumed and what they produced. Only the macro entry has
+        # a doctor whose tool gating needs its own clause.
+        if mode in ("micro", "openwiki"):
             result = compare_micro(rundir, macro_receipt.parent, short)
+            if mode == "openwiki":
+                full = read_lines(rundir / "full-mode-receipts.txt")
+                result["probabilistic_segment"] = {
+                    "exercised_by_this_control": False,
+                    "why": "the run is --dry-run: the claude -p regeneration turn and the "
+                    "finder/verifier subagent turns are skipped by name, because a segment "
+                    "whose output varies per run makes the probe's exit-code comparison "
+                    "meaningless",
+                    "full_mode_receipts_found": full,
+                }
         else:
             result = compare(rundir, macro_receipt, macro_receipt.parent, short)
     except ValueError as exc:
