@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "48a48bfc3e46f7321ee5d6c6469e39fae13c388d",
+  "workflow_commit": "c13368548ef5ef21b17cd35b302566f5e3af05af",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-48a48bfc3e46-dirty.json",
-    "harness": "harness-48a48bfc3e46-dirty.json",
-    "macro": "macro-48a48bfc3e46-dirty.json",
-    "micro": "micro-48a48bfc3e46-dirty.json",
-    "openwiki": "openwiki-48a48bfc3e46-dirty.json",
-    "policy": "policy-48a48bfc3e46-dirty.json",
-    "workflow": "workflow-48a48bfc3e46-dirty.json"
+    "container": "container-c13368548ef5-dirty.json",
+    "harness": "harness-c13368548ef5-dirty.json",
+    "macro": "macro-c13368548ef5-dirty.json",
+    "micro": "micro-c13368548ef5-dirty.json",
+    "openwiki": "openwiki-c13368548ef5-dirty.json",
+    "policy": "policy-c13368548ef5-dirty.json",
+    "workflow": "workflow-c13368548ef5-dirty.json"
   },
   "counts": {
     "artifact": 19,
-    "context": 23,
+    "context": 24,
     "harness": 63,
     "optional": 1
   },
-  "workflow_digest": "fe4d8b59515008d64e288e8d58f09a5e9a3d501eefc273b1bed47d6029a686d8",
+  "workflow_digest": "9ae03cf396f39f3592ac77d5e79f84e5a25307edc4504f843068ee18a3d7cd09",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-48a48bfc3e46f7321ee5d6c6469e39fae13c388d.json": {
+    "data/receipts/post-commit-c13368548ef5ef21b17cd35b302566f5e3af05af.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -633,6 +633,14 @@
         "workflow"
       ]
     },
+    "mcp/README.md": {
+      "sha256": "41dba8256e01496866af1c1bda4e0d7521e3590e13cd479ef75dbad3c9b55ab5",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "macro"
+      ]
+    },
     "openwiki/.last-update.json": {
       "sha256": "9badc5a7f37f12da17ef2011782f50f38ee5d1ccf5b22e2e1a67d0bdcf80d3a0",
       "hash_source": "index",
@@ -786,7 +794,7 @@
       ]
     },
     "proof_workflow/prove_macro_loop.sh": {
-      "sha256": "a4001d888b37a3a994a627e3150b4085e73148f26c6cf4f4c393f89e5f2a34ab",
+      "sha256": "f3876181c0bebf9d0e3a6d338ea2c045e524d4accd47552b5a936c04e57e7ca6",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

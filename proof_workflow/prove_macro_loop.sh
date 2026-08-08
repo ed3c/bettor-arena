@@ -50,6 +50,13 @@ prove_context proof-workflow-laws proof_workflow/README.md \
 # here rather than being an exception to the rule it states.
 prove_context loopctl-laws loopctl/README.md \
   "loopctl -> agent session: contract-vs-wiring, the surface lock, and the Harness of CLI defects already found"
+# Hashed here even though NOTHING under mcp/ is — which is the point. That gap is
+# real and named in the document itself, so at least the statement of it moves a
+# digest and draws a trailer. Covering the mechanisms is blocked on a pre-existing
+# red test in context-pack; wiring it in now would make this proof red for a
+# reason that predates it.
+prove_context mcp-laws mcp/README.md \
+  "mcp -> agent session: mechanism-vs-policy, receipts that hash instead of transcribe, the narrow read-only tool surface, and the coverage gap"
 
 # --- deterministic harness: activation ---------------------------------------
 prove_harness bootstrap bootstrap.sh \
