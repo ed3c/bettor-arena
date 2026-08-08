@@ -103,6 +103,20 @@ case "${1:-}" in
       test)      sh "$ROOT/proof_workflow/control_container_surface.sh"; exit $? ;;
       *) echo "usage: loopctl.sh container <build|preflight|prove|test>" >&2; exit 64 ;;
     esac ;;
+  harness)
+    # The instrument measuring itself. Not a cycle: a script's own bytes do not
+    # move when the digest moves, unlike workflow.lock which is derived from it.
+    case "${2:-}" in
+      prove)
+        if [ "${3:-}" = "--force-receipt" ]; then
+          PROVE_FORCE_RECEIPT=1 sh "$ROOT/proof_workflow/prove_harness.sh"
+        else
+          sh "$ROOT/proof_workflow/prove_harness.sh"
+        fi
+        exit $? ;;
+      test) sh "$ROOT/proof_workflow/control_harness_coverage.sh"; exit $? ;;
+      *) echo "usage: loopctl.sh harness <prove|test>" >&2; exit 64 ;;
+    esac ;;
   policy)
     case "${2:-}" in
       prove)

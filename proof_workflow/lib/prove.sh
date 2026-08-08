@@ -289,6 +289,13 @@ EOF
 
 _prove_selftest() {
   red=0
+  # Hermetic against the caller's environment. PROVE_FORCE_RECEIPT inherited from
+  # a parent turned the receipt-collision case green — the check kept running and
+  # kept reporting, and only its VERDICT changed, which is worse than failing to
+  # run. Surfaced the moment prove_harness.sh invoked this selftest under a
+  # --force-receipt of its own. A selftest whose answer depends on who called it
+  # is measuring the caller.
+  unset PROVE_FORCE_RECEIPT
   expect() { # name want got
     [ "$3" = "$2" ] || { echo "SELFTEST case failed — $1: got $3, want $2" >&2; red=1; }
   }

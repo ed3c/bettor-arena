@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.2.0",
+  "surface_version": "2.3.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -525,6 +525,45 @@
       },
       "writes": [
         "data/proof-workflow/policy-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "harness",
+      "mode": "prove",
+      "target": "proof_workflow/prove_harness.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/harness-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/harness-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "harness",
+      "mode": "test",
+      "target": "proof_workflow/control_harness_coverage.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it plants an uncovered file and requires the scan to catch it",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every harness file covered or declared · 2 something is hashed by nothing · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
       ]
     }
   ],

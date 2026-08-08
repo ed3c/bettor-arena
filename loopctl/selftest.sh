@@ -71,7 +71,8 @@ PY
       workflow/lock workflow/trailer workflow/replay workflow/test workflow/prove \
       mcp/serve mcp/tools mcp/test mcp/prove \
       container/build container/preflight container/prove container/test \
-      policy/prove policy/test
+      policy/prove policy/test \
+      harness/prove harness/test
   } | sort >"$_tmp/wired.txt"
   if _nonempty "declared-commands" "$_tmp/declared.txt" && _nonempty "wired-commands" "$_tmp/wired.txt"; then
     _only_contract=$(comm -23 "$_tmp/declared.txt" "$_tmp/wired.txt")
