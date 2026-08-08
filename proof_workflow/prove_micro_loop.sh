@@ -40,6 +40,14 @@ PACKET=$F/packets/inbox/dr-example.json
 
 prove_init micro "$F/trigger.sh <packet> <output> -> route-result -> data/wiki-update/request"
 
+# The directory's own laws, one level above the factory. Hashed for the same
+# reason the other three READMEs are: a document that tells the next agent how to
+# read a red can itself drift, and an unstamped edit changes every later reading
+# with nothing saying so. Note the path is loop_wiki/, not $F — the laws hold for
+# any loop placed there, not only for this factory.
+prove_context loop-wiki-laws loop_wiki/README.md \
+  "loop_wiki -> agent session: judgement in the typed layer, named exits, one-variable experiments, and the Harness of defects already found"
+
 # --- probabilistic lane: the three context lanes of the exchange -------------
 prove_context fixed-prompt "$F/PROMPT.md" \
   "fixed lane -> engine turn: the invariant task statement"

@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "1d0a4b310d4ba8ec1cd74abdc88462def97a1f23",
+  "workflow_commit": "48a48bfc3e46f7321ee5d6c6469e39fae13c388d",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-1d0a4b310d4b-dirty.json",
-    "harness": "harness-1d0a4b310d4b-dirty.json",
-    "macro": "macro-1d0a4b310d4b-dirty.json",
-    "micro": "micro-1d0a4b310d4b-dirty.json",
-    "openwiki": "openwiki-1d0a4b310d4b-dirty.json",
-    "policy": "policy-1d0a4b310d4b-dirty.json",
-    "workflow": "workflow-1d0a4b310d4b-dirty.json"
+    "container": "container-48a48bfc3e46-dirty.json",
+    "harness": "harness-48a48bfc3e46-dirty.json",
+    "macro": "macro-48a48bfc3e46-dirty.json",
+    "micro": "micro-48a48bfc3e46-dirty.json",
+    "openwiki": "openwiki-48a48bfc3e46-dirty.json",
+    "policy": "policy-48a48bfc3e46-dirty.json",
+    "workflow": "workflow-48a48bfc3e46-dirty.json"
   },
   "counts": {
     "artifact": 19,
-    "context": 22,
+    "context": 23,
     "harness": 63,
     "optional": 1
   },
-  "workflow_digest": "560b192cecadaef6aa3c584fbc8b1e35f0c0c73bbc6d337edbd1868807529cd5",
+  "workflow_digest": "fe4d8b59515008d64e288e8d58f09a5e9a3d501eefc273b1bed47d6029a686d8",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-1d0a4b310d4ba8ec1cd74abdc88462def97a1f23.json": {
+    "data/receipts/post-commit-48a48bfc3e46f7321ee5d6c6469e39fae13c388d.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -284,6 +284,14 @@
       "kind": "harness",
       "loops": [
         "openwiki"
+      ]
+    },
+    "loop_wiki/README.md": {
+      "sha256": "8b56cdc74ddd862d346eb58d09641ce1da60491e506b1f349534407f1dc0e3cb",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "micro"
       ]
     },
     "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md": {
@@ -786,7 +794,7 @@
       ]
     },
     "proof_workflow/prove_micro_loop.sh": {
-      "sha256": "1ed1f0ddfe19c12d08101f1136b2cd32719edb507b0e5d876f30853290b1db3a",
+      "sha256": "5e7f1f5e7eb366073c098e5b274fc9107b9877af2abab8967299ef0df9642244",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
