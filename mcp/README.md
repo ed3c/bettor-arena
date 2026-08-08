@@ -8,9 +8,10 @@
 兩個住戶，職責不重疊：
 `production/`＝把 MCP 設定**遷移**到別的 repo 的機制；`context-pack/`＝一支**唯讀**的 MCP server。
 
-> **⚠ 目前 `mcp/` 沒有任何證明雜湊它**（`workflow.lock` 裡 0 個 `mcp/` 路徑）。
-> 意思是：改這裡的任何一支程式，**digest 不動、lineage trailer 不出聲**。
-> 這是已知缺口，不是設計；動它之前先讀法則 10。
+> `mcp/` 曾經**完全沒有收據**（manifest 裡 0 個路徑）。現在由 macro 的證明覆蓋：
+> `migrate.py` 與 `engine.py` **跑各自的測試**，`probe_stdio.py`／`server.py` 被雜湊，
+> benchmark 收據列為 artifact。`server.py` 不跑，是因為它的測試需要專案 venv 才有的 `mcp` SDK，
+> 而 `bootstrap.sh` 把 `uv` 列為 **WARNING**——讓證明依賴一個可選工具，會把一個合法環境變成紅燈。
 
 ## §1 法則
 
@@ -83,7 +84,8 @@ uv run --project mcp/context-pack --frozen python mcp/context-pack/benchmarks/co
 | 症狀 | 真因 |
 |---|---|
 | 兩個 `.py` 過不了 ruff-format | **刻意不修。** 它們被一份凍結的 benchmark 收據釘住，為了格式而重釘收據＝偽造證據（法則 10）。理由寫在 commit 裡 |
-| `test_in_process_tools_list_and_call` 紅 | **先存在的失敗，與這輪改動無關**——在 HEAD 驗過完全相同。**不要在它上面疊修改**，先讓它獨立地紅或綠 |
+| `test_in_process_tools_list_and_call` 紅 | **不是程式缺陷，是環境。** `test_server` 匯入專案 venv 才有的 `mcp` SDK：`uv run --frozen` 下 12/12 綠（連跑三次），`PYTHONPATH=src python3` 下 `ModuleNotFoundError`。**我一度把它記成「先存在的失敗」，那個誤記讓整個 `mcp/` 多沒有收據好幾輪** |
+| 排除了某個測試模組，它還是把整批弄紅 | `unittest discover` **先匯入所有符合 pattern 的模組，才套用 `-k` 篩選**。用 `-k 'not server'` 擋不住匯入 → 改成兩個明確的 `-p` |
 | 收據看起來像稽核紀錄，其實含輸出 | 那正是法則 2 要擋的形狀：一份可稽核的檔案變成外洩面 |
 
 ### 邊界（刻意不做的）
@@ -91,7 +93,6 @@ uv run --project mcp/context-pack --frozen python mcp/context-pack/benchmarks/co
 - **不鏡像 host 權限設定**（法則 1）。
 - **context-pack 不做搜尋、不做 LSP、不碰 TypeScript**（法則 6）；窄是它的價值。
 - **不宣稱本機記憶體對齊會影響遠端 cache**（法則 9）。
-- **`mcp/` 目前不在任何證明的雜湊裡**——這是**缺口不是決定**。要補的話，
-  `migrate.py` 與 `engine.py` 各自帶得動的驗證面（unittest）就是現成的 `prove_harness` 目標；
-  卡住的是 context-pack 有一個先存在的紅測試，接進去會讓整份證明變紅。
-  **先讓那個測試獨立地綠，再接。**
+- **`server.py` 被雜湊但不被執行**：它的測試需要 `uv` 才有的 SDK，而 `uv` 在 `bootstrap.sh`
+  是 WARNING 級。**這是 STATIC 單一抵達，要當成單一抵達讀**（`proof_workflow/README.md` 法則）。
+  想升級成兩種抵達，就得先把 `uv` 從 WARNING 升成硬需求——那是另一個決定，不是這裡順手做的事。

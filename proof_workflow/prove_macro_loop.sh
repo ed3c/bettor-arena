@@ -58,6 +58,30 @@ prove_context loopctl-laws loopctl/README.md \
 prove_context mcp-laws mcp/README.md \
   "mcp -> agent session: mechanism-vs-policy, receipts that hash instead of transcribe, the narrow read-only tool surface, and the coverage gap"
 
+# --- the MCP subsystem, which nothing measured until now ---------------------
+# mcp/ had ZERO paths in the manifest against a 1044-line migration engine and a
+# read-only server: editing either moved no digest and drew no trailer. The block
+# was said to be a red test in context-pack; it is not a red test. test_server
+# imports the `mcp` SDK, which lives only in the project venv, so it fails outside
+# `uv run --frozen` and passes inside it — three consecutive green runs. An
+# environment difference recorded as a code defect kept this uncovered.
+prove_harness mcp-migrate mcp/production/migrate.py \
+  "profile -> plan/apply/verify/rollback with six named refusals; receipts hash instead of transcribe and chain by the predecessor's sha256" \
+  -- sh -c 'cd mcp/production && python3 -m unittest discover -s tests'
+prove_harness mcp-probe mcp/production/probe_stdio.py \
+  "a Codex-configured stdio MCP -> one real JSON-RPC handshake, fail-closed (hashed here; the suite above covers it)"
+# Two explicit patterns, not one pattern plus `-k 'not server'`: unittest discover
+# IMPORTS every matching module before any filter runs, so excluding by name still
+# hit the missing SDK and this step went red for a reason that was not about the
+# engine at all.
+prove_harness context-pack-engine mcp/context-pack/src/context_pack_mcp/engine.py \
+  "selected source -> AST evidence pack bound to source bytes, partial completeness reported; refuses traversal, symlink escape, oversized and mid-read mutation" \
+  -- sh -c "cd mcp/context-pack && PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_engine.py' && PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_benchmark_receipt.py'"
+prove_harness context-pack-server mcp/context-pack/src/context_pack_mcp/server.py \
+  "two read-only tools over the engine (hashed, not run: its suite needs the project venv for the mcp SDK, and bootstrap.sh treats uv as a WARNING — making this proof require an optional tool would turn a legitimate environment into a red)"
+prove_artifact benchmark-receipt mcp/context-pack/benchmarks/receipts/m1-pro-2026-07-29.json \
+  "frozen comparison on a named machine and date; re-pinning it to satisfy a formatter would be falsifying evidence, which is why two files here keep their formatting debt"
+
 # --- deterministic harness: activation ---------------------------------------
 prove_harness bootstrap bootstrap.sh \
   "clone -> git config core.hooksPath=.githooks + tool doctor (exit 64 = FATAL)" \
