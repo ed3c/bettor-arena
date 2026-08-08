@@ -83,6 +83,25 @@ fast receipt 的 claim boundary（`preflight-only-not-code-quality-axis`）與
 - 無聊優於聰明：reduced IR 逐欄明列 entropy removed；20-call 固定數量＝顯式優於隱式。
 - 最簡實作：asynchronous axes 誠實標 pending（`modules/production-readiness.md`），
   不用未成熟的複雜性冒充已接線。
+- 根目錄 decoupling（模組能自由遷移）：訊號＝想把「在 `loop_wiki/<loop>/` 底下會跑」
+  讀成「這個 loop 搬得走」→ 動作＝`sh portability.sh`（`git archive HEAD:$PREFIX` 抽到
+  臨時目錄、`bun install --frozen-lockfile`、跑抽出樹自己的 `verify.sh`）→ 為何：
+  向上解析的耦合在原地永遠綠。本迴圈的解耦形狀是**可 grep 的具體物**，不是宣稱：
+  `PREFIX` 由 `git rev-parse --show-prefix` 解析（不寫死深度）、`bun.lock` 自帶、
+  `run_fast_quality.ts` 以顯式相對路徑呼叫 `./node_modules/.bin/*`（無 upward resolution
+  可觸發）、`trigger.sh:100` 明寫 standalone tree 無外圍 git 也要能跑。
+- 這條的三個負控就是它的可證偽面：archive 不得帶 `node_modules`（帶了則安裝步驟不證事）、
+  安裝前 `verify.sh` 必須先紅（不紅則綠不是被 archive 買到的）、拔掉 `tsconfig.json`
+  必須拿回 exit 2（否則儀器不會紅）。少任何一個，portability 的綠退回單純宣稱。
+- claim boundary 要照抄不得放大：receipt 寫的是
+  `relocatability-of-HEAD-only-not-of-the-working-tree`；髒子樹直接 exit 64 拒跑，
+  因為那時證的是沒人在看的那個 commit。
+- **本條觸發的新推論（pending，未接）**：`portability.sh` 只證**工廠自己**搬得走；
+  工廠**產出的 generated repo** 目前只有 `run_generated_fast_quality.ts`（STATIC 面），
+  沒有任何抽出＋乾淨安裝的搬移證據——依 §4 同源判準，工廠可搬不蘊含產物可搬，
+  而「seed repo 可被使用者搬到自己的 root 底下」正是產品宣稱的一部分。
+  訊號＝有人拿 portability 綠替 seed 的可遷移性背書 → 動作＝停在人閘，
+  或先補 generated-repo 版的抽出＋乾淨安裝＋負控 → 為何：不同源時反證無效。
 
 ## B6 independent verification（§5 判定）
 
