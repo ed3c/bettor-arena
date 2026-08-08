@@ -162,9 +162,68 @@ codex exec (read-only role)   authenticated — 真的答了一個 turn
 claude -p  (writing role)     present but NOT authenticated (exit 1)
 ```
 
-掛 `~/.codex` 帶得進 session，掛 `~/.claude` ＋ `~/.claude.json` **帶不進**。所以現階段容器
-**只能服務唯讀角色**（finder／verifier／critic），寫入角色缺一步。這正是 §1 法則 11 的實例：
-兩支都 `present`，只有真跑才分得出來。
+掛 `~/.codex` 帶得進 session，掛 `~/.claude` ＋ `~/.claude.json` **帶不進**（憑證在 macOS
+Keychain）。這是 §1 法則 11 的實例：兩支都 `present`，只有真跑才分得出來。
+
+**寫入角色現在通了，但不是靠掛載**——見下一節。掛載這條路已經放棄，不要再試。
+
+### 寫入角色的憑證：不要在容器內登入
+
+Keychain 掛不進去，但**在容器內登入並持久化 HOME 是最差的一條**——token 會落在
+`~/.claude/.credentials.json`，而沙盒存在的理由就是裡面跑的東西不可信。
+
+正解是把憑證留在外面：host 上 `claude setup-token` 鑄一個長效 bearer，交給 gateway
+
+```
+openshell provider create --name claude-code --type generic \
+  --credential CLAUDE_CODE_OAUTH_TOKEN=<token>
+openshell sandbox create --provider claude-code --policy loopctl/sandbox-policy.yaml -- claude
+```
+
+沙盒拿到的不是值，是佔位符——實測（gateway 0.0.59，探針沙盒 `printenv`）：
+
+```
+CLAUDE_CODE_OAUTH_TOKEN=openshell:resolve:env:v2540341773931874873_CLAUDE_CODE_OAUTH_TOKEN
+```
+
+內建 `claude-code` provider spec 只自動探索 `ANTHROPIC_API_KEY`／`CLAUDE_API_KEY`，但那是探索
+清單不是限制：`--type generic` 接受任意 key 名。
+
+**佔位符是 capability 不是 secret**——沙盒內每個 process 都讀得到它，任何能連到
+`api.anthropic.com` 的都能讓 proxy 替它簽名。所以 policy 的 `binaries:` 綁定在這個模型下
+**是唯一還在守線的東西**，「token 又不在裡面，binary 清單只是多一層」剛好講反。
+
+| 測試（`--network none`，隔絕網路才分得出「本地拒絕」與「送出失敗」） | 結果 |
+|---|---|
+| 無 token | `Not logged in · Please run /login`，**不碰網路** |
+| 亂填 `not-a-token` | `Unable to connect (ENOTIMP)`，送出了 |
+| 佔位符字串 | 同上，送出了 |
+
+所以 client 端**完全不檢查 token 形狀**，佔位符不會在打到 proxy 前被打回。
+
+`container test` 把這兩臂都留下，但**判在「有沒有那句本地拒絕」而不是判連線錯誤**——連線錯誤要等
+client 重試耗盡才出現，第一版等它等到 `timeout` 砍掉、以 exit 124 誤判成紅；拒絕那句是秒回的，
+「窗內沒出現」才是便宜又正確的訊號。無 token 那臂先跑，它是負控制：**少了它，「佔位符沒被拒絕」
+可能只是那句話換了寫法而永遠不會出現**。
+
+**端到端真跑（policy 治理下的沙盒，一顆真 token，一個真 turn）**：
+
+```
+ENV=openshell:resolve:env:v8831555111520736500_CLAUDE_CODE_OAUTH_TOKEN
+--- turn:
+ok
+TURN_RC=0
+```
+
+**兩件事必須同時成立，少一件另一件就沒有價值**——turn 通了但 token 躺在環境裡，只是把祕密裝進盒子；
+佔位符買不到一個 turn，那就是壞掉的沙盒。所以 `policy test` 的 `credential-turn` 兩個都判：
+`sandbox-holds-a-placeholder-not-the-token` ＋ `placeholder-buys-a-real-turn`。
+
+分工：`container test` 只驗 client 接受形狀（不需要憑證，跑得起來就跑）；**proxy 到底有沒有替換
+是 gateway 的性質，驗在 gateway 所在的那一支**，且 gate 在 provider 存在與否——對照組不能自己
+鑄訂閱 token，**沒有就是 NOT EXERCISED，不是通過**。
+
+於是容器**不再只服務唯讀角色**：codex（讀）靠掛載 `~/.codex`，claude（寫）靠 provider 佔位符。
 
 ### 邊界（這些不在證明裡，而且是刻意的）
 

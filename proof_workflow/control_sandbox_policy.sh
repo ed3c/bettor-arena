@@ -88,9 +88,48 @@ else
   esac
 fi
 
+# --- the credential half: the token must WORK without ever being in here -----
+# Everything above is a denial. This is the one positive property, and it is the
+# one the whole writing role rests on: the subscription credential is handed to
+# the gateway as a provider, the sandbox receives only
+# `openshell:resolve:env:v<n>_CLAUDE_CODE_OAUTH_TOKEN`, and the proxy substitutes
+# the real value on the way out. Two things have to hold at once, and either one
+# alone is worthless — a working turn with the token sitting in the environment
+# is just a secret in a box, and a placeholder that cannot buy a turn is a
+# broken sandbox.
+#
+# Gated on the provider existing rather than skipped silently: a control may not
+# mint a subscription token, so its absence is NOT EXERCISED, never a pass.
+PROVIDER=${POLICY_CLAUDE_PROVIDER:-claude-code}
+if openshell provider list 2>/dev/null | grep -q "^$PROVIDER "; then
+  capture credential-turn -- sh -c "openshell sandbox create --name policy-credential --no-tty --no-keep \
+    --policy '$POLICY' --provider '$PROVIDER' --from '$ROOT/loopctl/Dockerfile' --upload '$ROOT' \
+    -- sh -c 'echo \"ENV=\${CLAUDE_CODE_OAUTH_TOKEN:-<unset>}\"; claude -p \"reply with exactly: ok\"; echo \"TURN_RC=\$?\"'"
+  CRED_OUT="$RUNDIR/streams/$CAPTURE_SEQ-credential-turn.out"
+
+  SEEN=$(sed -nE 's/^ENV=(.*)$/\1/p' "$CRED_OUT" | head -1)
+  case "$SEEN" in
+    openshell:resolve:env:*) expect "sandbox-holds-a-placeholder-not-the-token" placeholder placeholder ;;
+    "") echo "  [note] the credential sandbox printed no ENV line — NOT exercised, so neither half below is proven" ;;
+    "<unset>") echo "  [RED]  sandbox-holds-a-placeholder-not-the-token — the provider injected nothing; the turn below cannot mean anything" >&2; RED=1 ;;
+    *) echo "  [RED]  sandbox-holds-a-placeholder-not-the-token — the environment carries a literal value, so the secret IS in the sandbox and every process there can read it" >&2; RED=1 ;;
+  esac
+
+  TURN_RC=$(sed -nE 's/^TURN_RC=([0-9]+)$/\1/p' "$CRED_OUT" | head -1)
+  case "$TURN_RC" in
+    0) expect "placeholder-buys-a-real-turn" 0 0 ;;
+    "") echo "  [note] the credential sandbox printed no TURN_RC — the proxy rewrite is NOT exercised this run" ;;
+    *) echo "  [RED]  placeholder-buys-a-real-turn — got $TURN_RC; the proxy did not substitute the placeholder, so the writing role cannot run without putting the token in the sandbox" >&2; RED=1 ;;
+  esac
+else
+  echo "  [note] no provider '$PROVIDER' on this gateway — the proxy rewrite is NOT exercised, not passed."
+  echo "         create it with: openshell provider create --name $PROVIDER --type generic --credential CLAUDE_CODE_OAUTH_TOKEN"
+fi
+
 echo "control[sandbox-policy] trace=proof_workflow/data/$RUN_ID"
 if [ "$RED" -eq 0 ]; then
-  echo "PASS: the policy denied every unnamed destination, including this machine's own services"
+  echo "PASS: the policy denied every unnamed destination, including this machine's own services,"
+  echo "      and the credential half held — placeholder in the sandbox, real turn out of it"
   exit 0
 fi
 echo "FAIL: the policy let something through that an external caller must not reach" >&2

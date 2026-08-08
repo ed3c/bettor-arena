@@ -49,6 +49,29 @@ network_policies:
         access: full
     # Only the writing role's binary may use it. A sandbox where any process can
     # reach the model API is one `curl` away from being a general egress.
+    #
+    # THE BINDING IS NOW LOAD-BEARING FOR A SECOND REASON, and the second one is
+    # easier to argue away. The subscription credential does not live in the
+    # sandbox: `claude setup-token` mints a long-lived bearer on the host, it is
+    # handed to the gateway as
+    #
+    #   openshell provider create --name claude-code --type generic \
+    #     --credential CLAUDE_CODE_OAUTH_TOKEN=<token>
+    #
+    # and what the sandbox actually receives is a PLACEHOLDER — measured, not
+    # read from the docs: a probe sandbox on gateway 0.0.59 printed
+    # `openshell:resolve:env:v<n>_CLAUDE_CODE_OAUTH_TOKEN`. The proxy substitutes
+    # the real value into the outbound request.
+    #
+    # Which makes the placeholder a CAPABILITY, not a secret: every process in
+    # the sandbox can read it, and any of them that could reach this host would
+    # have the proxy sign requests on its behalf. So "the token isn't in here
+    # anyway, the binary list is belt-and-braces" is exactly backwards — with the
+    # placeholder model the binary list is the only thing left holding the line.
+    #
+    # No refresh endpoint is named. The minted token is used directly as a
+    # bearer, and if a build ever does need one, deny-by-default means the
+    # refusal names the host instead of the sandbox quietly reaching it.
     binaries:
       - path: /usr/local/bin/claude
 

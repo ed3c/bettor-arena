@@ -103,6 +103,88 @@ if command -v docker >/dev/null 2>&1 && docker image inspect "$IMAGE" >/dev/null
   BASE_RC=$?
   expect "image-carries-every-tool-the-loops-need" "$BASE_RC" 0
   [ "$BASE_RC" -eq 0 ] || cat "$RUNDIR/streams/$CAPTURE_SEQ-image-base.out" >&2
+
+  # The policy binds each network endpoint to a binary PATH, and nothing checked
+  # that the image agrees with those paths. It is a silent coupling in the worst
+  # direction: npm's prefix moving, or a base-image change, denies the traffic
+  # and the failure surfaces as "claude cannot reach the API" — a symptom that
+  # points at the agent, the network and the token before it points at a string
+  # in a YAML file two directories away.
+  #
+  # Read out of the policy rather than listed here. A second list is what makes
+  # a control fail on its own staleness instead of on the thing it measures.
+  # Space-separated, not newline: the list is interpolated into a `for` inside a
+  # `sh -c` string, and a newline ENDS the list there — the first version ran the
+  # first path as the loop body and EXECUTED the remaining paths as commands.
+  POLICY_BINS=$(python3 - "$ROOT/loopctl/sandbox-policy.yaml" <<'PY'
+import re, sys
+src = open(sys.argv[1], encoding="utf-8").read()
+print(" ".join(sorted({m.group(1) for m in re.finditer(r"^\s*-\s*path:\s*(\S+)", src, re.M)})))
+PY
+)
+  if [ -z "$POLICY_BINS" ]; then
+    echo "  [RED]  policy-bound-binaries-derived — extracted no path from sandbox-policy.yaml; an empty list would make the next check pass by measuring nothing" >&2
+    RED=1
+  else
+    capture policy-binaries-in-image -- docker run --rm --entrypoint sh "$IMAGE" -c \
+      "for b in $POLICY_BINS; do [ -x \"\$b\" ] || { echo \"MISSING \$b\"; exit 1; }; done; echo all-bound-binaries-present"
+    BIN_RC=$?
+    expect "policy-bound-binaries-exist-in-the-image" "$BIN_RC" 0
+    [ "$BIN_RC" -eq 0 ] || cat "$RUNDIR/streams/$CAPTURE_SEQ-policy-binaries-in-image.out" >&2
+  fi
+
+  # The subscription credential reaches the sandbox as a PLACEHOLDER, never as a
+  # value (sandbox-policy.yaml, anthropic.binaries). The whole model dies if the
+  # client inspects the token's shape and refuses it before the proxy ever gets
+  # to substitute — so that is the property, stated as the thing that would kill
+  # it rather than as "auth works".
+  #
+  # Judged on the LOGIN REFUSAL, not on the connect error. The first version
+  # waited for `Unable to connect`, which arrives only after the client has
+  # exhausted its retries — timeout 60 killed it at exit 124 with partial output
+  # and the case scored RED for being slow. The refusal, when it comes, is
+  # immediate; absence of it inside the window is the signal, and it costs
+  # seconds instead of minutes.
+  #
+  # --network none on purpose: with egress the two arms would both end in a
+  # network verdict and stop being distinguishable.
+  REFUSAL='not logged in|please run /login|invalid api key|invalid.*token|malformed'
+
+  # Negative arm FIRST, because it is what makes the other one mean anything. No
+  # credential at all must produce the refusal; if it does not, the signature has
+  # moved and the positive arm below is passing on a string that never appears.
+  capture no-token-is-refused-locally -- docker run --rm --network none \
+    --entrypoint sh "$IMAGE" -c 'timeout 45 claude -p hi 2>&1'
+  NT_OUT="$RUNDIR/streams/$CAPTURE_SEQ-no-token-is-refused-locally.out"
+  if grep -qiE "$REFUSAL" "$NT_OUT"; then
+    expect "no-token-is-refused-before-any-request" refused refused
+    ARMED=yes
+  else
+    echo "  [RED]  no-token-is-refused-before-any-request — the refusal signature did not appear, so the placeholder arm cannot tell 'accepted' from 'never refuses anything'" >&2
+    head -c 400 "$NT_OUT" >&2
+    RED=1
+    ARMED=no
+  fi
+
+  if [ "$ARMED" = yes ]; then
+    capture placeholder-token-not-refused -- docker run --rm --network none \
+      -e CLAUDE_CODE_OAUTH_TOKEN='openshell:resolve:env:v1_CLAUDE_CODE_OAUTH_TOKEN' \
+      --entrypoint sh "$IMAGE" -c 'timeout 45 claude -p hi 2>&1'
+    PH_OUT="$RUNDIR/streams/$CAPTURE_SEQ-placeholder-token-not-refused.out"
+    if grep -qiE "$REFUSAL" "$PH_OUT"; then
+      echo "  [RED]  placeholder-token-is-not-refused-locally — the client rejected the placeholder before any request; the provider-placeholder credential model is dead as written and the sandbox needs a real token in it, which is the thing this design exists to avoid" >&2
+      head -c 400 "$PH_OUT" >&2
+      RED=1
+    else
+      expect "placeholder-token-is-not-refused-locally" accepted accepted
+    fi
+  fi
+
+  # This pair only proves the client accepts the SHAPE. Whether the proxy really
+  # substitutes it is a gateway property and is exercised where the gateway is —
+  # `policy test`, gated on the provider existing. Named here so the boundary
+  # between the two controls is readable from either side.
+  echo "  [note] the proxy rewrite itself is exercised by 'policy test' (credential-turn), not here"
 else
   echo "  [note] image '$IMAGE' is not built here — the ENTRYPOINT and base-tool checks are NOT exercised"
   echo "         build it with: sh loopctl/container-run.sh build"

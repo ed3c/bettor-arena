@@ -1,13 +1,13 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "12255273c0a5ea38a55092811703d95ca892ccfe",
+  "workflow_commit": "39d81dd4b340faa842a74e23be9a2f282c971c21",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-12255273c0a5-dirty.json",
-    "micro": "micro-12255273c0a5-dirty.json",
-    "openwiki": "openwiki-12255273c0a5-dirty.json",
-    "container": "container-12255273c0a5-dirty.json",
-    "policy": "policy-12255273c0a5-dirty.json"
+    "macro": "macro-39d81dd4b340-dirty.json",
+    "micro": "micro-39d81dd4b340-dirty.json",
+    "openwiki": "openwiki-39d81dd4b340-dirty.json",
+    "container": "container-39d81dd4b340-dirty.json",
+    "policy": "policy-39d81dd4b340-dirty.json"
   },
   "counts": {
     "artifact": 19,
@@ -15,7 +15,7 @@
     "harness": 40,
     "optional": 1
   },
-  "workflow_digest": "5bd41f7c6c6c46cf8f625b6a080518e57e0679afc95fde0edb62859c446c8e49",
+  "workflow_digest": "cb2152b13d128f5532a5750ede545fb0b3007b629929d374c1c4bff124e0d44e",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -83,7 +83,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-12255273c0a5ea38a55092811703d95ca892ccfe.json": {
+    "data/receipts/post-commit-39d81dd4b340faa842a74e23be9a2f282c971c21.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -402,7 +402,7 @@
       "loop": "policy"
     },
     "loopctl/sandbox-policy.yaml": {
-      "sha256": "96dea08c4626679687c6b4351e6f97b8794b6fc98dc99df5302dcdd09f4944d9",
+      "sha256": "3e72a971d862090d6ca510bb8163864227f950cbd7daf9a4331721e8fb5ae37e",
       "hash_source": "index",
       "kind": "harness",
       "loop": "policy"
@@ -456,7 +456,7 @@
       "loop": "openwiki"
     },
     "proof_workflow/README.md": {
-      "sha256": "093266543da6c47d061226faf3630bd3a594d640a001647c4a86d9cfaf7113ba",
+      "sha256": "d9f4dee52c91e863b5d9f72a4219831dc6bdf39d23e55bbbe4fa67aac3fd2991",
       "hash_source": "index",
       "kind": "context",
       "loop": "macro"
