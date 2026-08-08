@@ -184,6 +184,49 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def sha256_value(value: object) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(payload).hexdigest()
+
+
+def runner_identity() -> dict[str, str]:
+    root = Path(__file__).resolve().parents[2]
+    paths = [root / "run.sh", root / "trigger.sh"]
+    paths.extend(sorted((root / "src/code_truth_graph").glob("*.py")))
+    paths.extend(sorted((root / "schemas").glob("*.json")))
+    paths.extend(sorted((root / "tools").rglob("*")))
+    manifest = [
+        f"{path.relative_to(root).as_posix()}\0{sha256(path)}\n"
+        for path in paths
+        if path.is_file()
+    ]
+    return {
+        "repo_commit": "UNRELEASED",
+        "repo_tree": "UNRELEASED",
+        "surface_version": SURFACE_VERSION,
+        "runtime_ref": RUNTIME_REF,
+        "runtime_sha256": hashlib.sha256("".join(manifest).encode()).hexdigest(),
+    }
+
+
+def execution_digests(packet_path: Path) -> dict[str, str]:
+    return {
+        "execution_argv": sha256_value(
+            {
+                "command": "ctg run",
+                "packet_sha256": sha256(packet_path),
+                "transport": "one-shot",
+            }
+        ),
+        "delivery": sha256_value(
+            {
+                "artifact_refs": "output-relative",
+                "output_contract": "fresh-absolute-directory",
+            }
+        ),
+    }
+
+
 def reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
     value: dict[str, object] = {}
     for key, item in pairs:
@@ -267,7 +310,54 @@ def stage(
     }
 
 
+def failed_result(packet_path: Path, output: Path, diagnostic: str) -> None:
+    packet = read_json(packet_path.resolve())
+    subject = require_object(packet["subject_snapshot"], "subject_snapshot")
+    profile = require_object(packet["domain_profile"], "domain_profile")
+    requirements = require_object(packet["reach_requirements"], "reach_requirements")
+    stages = [
+        {
+            "name": "STATIC",
+            "state": "FAILED",
+            "exit": 2,
+            "diagnostics": [diagnostic],
+            "artifacts": [],
+        }
+    ]
+    for lane in ("SANDBOX", "PROD"):
+        requirement = requirements[lane]
+        state = "NOT_REQUESTED" if requirement == "not_requested" else "BLOCKED"
+        stages.append(stage(lane, state, None, []))
+    result = {
+        "schema_version": "ctg-route-result@1.0.0",
+        "packet_id": packet["packet_id"],
+        "observation_id": packet["observation_id"],
+        "actual_runner": runner_identity(),
+        "digests": {
+            "input": sha256(packet_path),
+            "subject_snapshot": subject["sha256"],
+            "domain_profile": profile["sha256"],
+            **execution_digests(packet_path),
+        },
+        "refs_status": "stale",
+        "stages": stages,
+        "artifacts": [],
+        "graph_summary": {"node_count": 0, "edge_count": 0},
+        "settlement_summary": {
+            "invariant_outcome": "UNCHALLENGED",
+            "evidence_availability": "INVALID",
+        },
+        "next_edge": "packet_or_evidence_repair",
+        "human_gate": packet["human_gate"],
+        "overall": {"state": "FAILED", "exit": 2},
+        "claim_boundary": "measurement failed before a graph could be admitted",
+    }
+    write_json(output / "ctg-route-result.json", result)
+
+
 def run(packet_path: Path, output: Path) -> int:
+    if not output.is_absolute():
+        raise ContractError(f"output must be absolute: {output}")
     if output.exists():
         raise ContractError(f"output must not already exist: {output}")
     packet_path = packet_path.resolve()
@@ -287,6 +377,10 @@ def run(packet_path: Path, output: Path) -> int:
         )
     if expected_runner.get("runtime_ref") != RUNTIME_REF:
         raise ContractError(f"expected_runner.runtime_ref must be {RUNTIME_REF}")
+    try:
+        output.mkdir(parents=True)
+    except OSError as exc:
+        raise ContractError(f"cannot create output directory {output}: {exc}") from exc
 
     subject_descriptor = packet.get("subject_snapshot")
     snapshot_path, snapshot_sha = verify_ref(
@@ -343,7 +437,6 @@ def run(packet_path: Path, output: Path) -> int:
     if not isinstance(requirements, dict) or requirements.get("STATIC") != "required":
         raise ContractError("this runtime requires reach_requirements.STATIC=required")
 
-    output.mkdir(parents=True)
     observed = sorted(
         str(item["observed_at"]) for item in evidence_records if item.get("observed_at")
     )
@@ -533,14 +626,12 @@ def run(packet_path: Path, output: Path) -> int:
         "schema_version": "ctg-route-result@1.0.0",
         "packet_id": packet.get("packet_id"),
         "observation_id": packet.get("observation_id"),
-        "actual_runner": {
-            "surface_version": SURFACE_VERSION,
-            "runtime_ref": RUNTIME_REF,
-        },
+        "actual_runner": runner_identity(),
         "digests": {
             "input": sha256(packet_path),
             "subject_snapshot": snapshot_sha,
             "domain_profile": profile_sha,
+            **execution_digests(packet_path),
         },
         "refs_status": "resolved",
         "stages": stages,
@@ -583,6 +674,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ctg FATAL: {exc}", file=sys.stderr)
         return 64
     except MeasurementError as exc:
+        try:
+            failed_result(args.packet, args.output, str(exc))
+        except (ContractError, OSError) as result_exc:
+            print(
+                f"ctg FATAL: failed to materialize route-result: {result_exc}",
+                file=sys.stderr,
+            )
+            return 64
         print(f"ctg FAILED: {exc}", file=sys.stderr)
         return 2
 

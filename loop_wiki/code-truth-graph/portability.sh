@@ -11,6 +11,8 @@ cp -R "$HERE" "$RELOCATED"
 
 PACKET=$(PYTHONPATH="$RELOCATED/src" python3 -m code_truth_graph.fixture --out "$TMP/bundle") || exit 64
 sh "$RELOCATED/run.sh" --packet "$PACKET" --output "$TMP/output" >/dev/null || exit $?
+PYTHONPATH="$RELOCATED/src" python3 -m code_truth_graph.verify_artifacts \
+  --output "$TMP/output" >/dev/null || exit 2
 python3 - "$TMP/output/ctg-route-result.json" <<'PY'
 import json
 import sys

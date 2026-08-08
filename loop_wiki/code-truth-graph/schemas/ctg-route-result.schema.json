@@ -26,20 +26,25 @@
     "actual_runner": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_version", "runtime_ref"],
+      "required": ["repo_commit", "repo_tree", "surface_version", "runtime_ref", "runtime_sha256"],
       "properties": {
+        "repo_commit": {"type": "string", "minLength": 1},
+        "repo_tree": {"type": "string", "minLength": 1},
         "surface_version": {"type": "string"},
-        "runtime_ref": {"type": "string"}
+        "runtime_ref": {"type": "string"},
+        "runtime_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "digests": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["input", "subject_snapshot", "domain_profile"],
+      "required": ["input", "subject_snapshot", "domain_profile", "execution_argv", "delivery"],
       "properties": {
         "input": {"$ref": "#/$defs/sha256"},
         "subject_snapshot": {"$ref": "#/$defs/sha256"},
-        "domain_profile": {"$ref": "#/$defs/sha256"}
+        "domain_profile": {"$ref": "#/$defs/sha256"},
+        "execution_argv": {"$ref": "#/$defs/sha256"},
+        "delivery": {"$ref": "#/$defs/sha256"}
       }
     },
     "refs_status": {"enum": ["resolved", "stale"]},

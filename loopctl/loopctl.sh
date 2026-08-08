@@ -313,7 +313,7 @@ case "$LOOP/$MODE" in
   ctg/run)
     _ctg_packet=$(value_of --packet "$@")
     _ctg_output=$(value_of --output "$@")
-    sh "$ROOT/$TARGET" --packet "$_ctg_packet" --output "$_ctg_output" ;;
+    sh "$ROOT/$TARGET" "$_ctg_packet" "$_ctg_output" ;;
   ctg/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   ctg/test) sh "$ROOT/$TARGET" ;;
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;

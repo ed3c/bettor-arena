@@ -179,6 +179,12 @@ assert result["observation_id"] == "obs-fixture-001", result
 assert result["overall"]["exit"] == 0, result
 assert result["human_gate"] == "required_before_invariant_admit", result
 assert result["claim_boundary"] == "structure-only demo", result
+assert set(result["actual_runner"]) == {
+    "repo_commit", "repo_tree", "runtime_ref", "runtime_sha256", "surface_version"
+}, result
+assert set(result["digests"]) == {
+    "delivery", "domain_profile", "execution_argv", "input", "subject_snapshot"
+}, result
 stages = {stage["name"]: stage for stage in result["stages"]}
 assert stages["STATIC"]["state"] == "PASSED", stages
 assert stages["SANDBOX"]["state"] == "NOT_REQUESTED", stages
@@ -281,6 +287,41 @@ fi
   exit 1
 }
 
+BAD_EVIDENCE_PACKET="$BUNDLE/ctg-input-bad-evidence.json"
+python3 - "$BUNDLE/ctg-input.json" "$BAD_EVIDENCE_PACKET" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+packet = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+packet["evidence"][0]["sha256"] = "0" * 64
+Path(sys.argv[2]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+BAD_EVIDENCE_OUTPUT="$TMP/bad-evidence-output"
+if sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$BAD_EVIDENCE_PACKET" \
+  --output "$BAD_EVIDENCE_OUTPUT" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — bad evidence digest was accepted" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 2 ] || {
+  echo "CTG CLI case failed — bad evidence exited $RC, want 2" >&2
+  exit 1
+}
+python3 - "$BAD_EVIDENCE_OUTPUT/ctg-route-result.json" <<'PY' || exit 1
+import json
+import sys
+from pathlib import Path
+
+result = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+assert result["overall"] == {"exit": 2, "state": "FAILED"}, result
+assert result["stages"][0]["name"] == "STATIC", result
+assert result["stages"][0]["state"] == "FAILED", result
+assert result["artifacts"] == [], result
+PY
+
 DUPLICATE_PACKET="$BUNDLE/ctg-input-duplicate-key.json"
 python3 - "$BUNDLE/ctg-input.json" "$DUPLICATE_PACKET" <<'PY'
 import sys
@@ -365,6 +406,23 @@ PY
 
 sh "$ROOT/loop_wiki/code-truth-graph/portability.sh" >/dev/null || {
   echo "CTG CLI case failed — relocated runtime did not pass" >&2
+  exit 1
+}
+
+TRIGGER_OUTPUT="$TMP/trigger-output"
+sh "$ROOT/loop_wiki/code-truth-graph/trigger.sh" \
+  "$BUNDLE/ctg-input.json" "$TRIGGER_OUTPUT" >/dev/null || {
+  echo "CTG CLI case failed — positional trigger did not pass" >&2
+  exit 1
+}
+if sh "$ROOT/loop_wiki/code-truth-graph/trigger.sh" "$BUNDLE/ctg-input.json" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — trigger accepted missing output argument" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 64 ] || {
+  echo "CTG CLI case failed — trigger usage exited $RC, want 64" >&2
   exit 1
 }
 
