@@ -92,7 +92,16 @@ expect "stale-lock-refuses-the-commit" "$STALE_RC" 2
 # Re-lock first, so this case is testing the missing trailer and not the staleness
 # from case 2 — one variable at a time, or the second check proves nothing.
 CAPTURE_CWD="$WT"
-capture relock-in-worktree -- sh -c "cd '$WT' && for l in macro micro openwiki; do sh loopctl/loopctl.sh \$l prove --force-receipt >/dev/null 2>&1; done; sh loopctl/loopctl.sh workflow lock"
+# Every loop that declares `prove`, read from the contract. The first version
+# hard-coded macro/micro/openwiki; the manifest builder later grew to seven
+# loops, `workflow lock` then FATALed on the missing receipts, the lock was never
+# rebuilt, and the staleness gate correctly refused — so this control failed on
+# its own stale list rather than on the machinery. A second list that can drift
+# is what everything else here exists to remove.
+capture relock-in-worktree -- sh -c "cd '$WT' && \
+  for l in \$(python3 -c 'import json,sys; print(\" \".join(sorted({c[\"loop\"] for c in json.load(open(\"loopctl/contract.json\"))[\"commands\"] if c[\"mode\"]==\"prove\"})))'); do \
+    sh loopctl/loopctl.sh \$l prove --force-receipt >/dev/null 2>&1; \
+  done; sh loopctl/loopctl.sh workflow lock"
 CAPTURE_CWD=""
 git -C "$WT" add loopctl/workflow.lock 2>/dev/null || true
 printf 'subject with no trailer\n' >"$BASE/bare.msg"
