@@ -43,7 +43,12 @@ bettor-arena/
 │                      #   永不讀成綠)、context=概率性那一側真正讀的文檔(只 hash 不執行,缺席即 FATAL)、
 │                      #   artifact=末端產物(tracked 者判 HEAD 位元組,免得同一趟的 harness 移動自己的證據;
 │                      #   tracked 但本地被刪=獨立紅)、note=刻意不 hash 者連理由一起入帳,禁無聲截斷。
-│                      #   收據落 data/proof-workflow/,帶 commit+tree+全路徑 sha256 折成的 proof_digest
+│                      #   收據落 data/proof-workflow/,帶 commit+tree+全路徑 sha256 折成的 proof_digest。
+│                      #   control_macro_entry.sh=大迴圈啟動點的**對照組**:真跑 bootstrap.sh,把每條
+│                      #   執行的 argv/exit/stdout/stderr 落 proof_workflow/data/<run_id>/(gitignore,
+│                      #   因 gate 輸出含本機絕對 repo root;收據帶每個 stream 的 sha256 把它釘回 commit)。
+│                      #   路徑是必要還是可選由**實驗**判定——丟棄式 worktree 拿掉該路徑再跑,看 exit 變不變,
+│                      #   不讀 fatal/warn 字面;未分類即 FATAL。比對面是三支證明收據的聯集,不只 macro
 ├── scripts/
 │   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(三閘共用 repo_root/fixture 樣板)+allowlist 帳
 │   ├── delivery_status.py # 交付活狀態顯式審計(打網路,禁進 hook;--selftest 零網路驗渲染)
