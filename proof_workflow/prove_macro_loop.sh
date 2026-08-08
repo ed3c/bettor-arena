@@ -103,4 +103,17 @@ prove_artifact delivery-receipt delivery.json \
 prove_optional grepai-index .grepai/index.gob \
   "grepai init/watch -> semantic index for the MCP lane; absent = bootstrap WARN, never FATAL"
 
+# --- the CLI surface the outside world is meant to use -----------------------
+# Hashed here so that a change to the declared surface moves this digest. That is
+# the point of the surface existing: internals drifting shows up in each loop's
+# own proof, and the surface drifting shows up right here, so neither can move
+# quietly to suit a call site.
+prove_harness loopctl-surface loopctl/contract.json \
+  "declared surface: loop x mode x required/optional flags x what each writes (data, not executed)"
+prove_harness loopctl-surface-lock loopctl/surface.lock \
+  "the pinned external promise: surface_version + the digest of loops x modes x flags only — internal iteration leaves it untouched by construction"
+prove_harness loopctl-cli loopctl/loopctl.sh \
+  "caller -> contract check -> dispatch -> target exit code passed through untouched" \
+  -- sh loopctl/loopctl.sh --selftest
+
 prove_emit

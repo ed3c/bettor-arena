@@ -1,0 +1,135 @@
+{
+  "schema_version": "bettor-arena-loopctl-contract@1.0.0",
+  "surface_version": "1.1.0",
+  "stability": [
+    "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
+    "of modes, and each command's required and optional flags. That is the promise, and it",
+    "is pinned in surface.lock — --selftest recomputes it and goes red on any drift, so the",
+    "promise cannot move by accident. Changing it means bumping surface_version and running",
+    "`loopctl.sh surface-relock`, which refuses to relock while the version is unchanged.",
+    "",
+    "Everything else is internal and free to iterate without touching that promise: which",
+    "file implements a command (target), what it writes, how it is invoked, and the whole",
+    "of loopctl.sh's dispatch. Move a target, rewrite an entry point, change its private",
+    "flags -- the surface digest does not move, and external callers keep working.",
+    "",
+    "The two are separately visible on purpose. Internal drift shows up in each loop's own",
+    "proof receipt; surface drift shows up here. Collapsing them into one number would make",
+    "ordinary internal iteration indistinguishable from a broken promise."
+  ],
+  "purpose": [
+    "The only surface an outside caller is meant to touch. Each loop has one entry point,",
+    "and reaching past this file into the entry point's own flags -- or worse, editing the",
+    "entry point to make a call site work -- is the jitter this exists to stop.",
+    "",
+    "This file is the SURFACE and is machine-readable on purpose: `loopctl.sh contract`",
+    "prints it with a sha256, so a changed surface is a visible event rather than a quiet",
+    "one. How each target is invoked is wiring and lives in loopctl.sh; the two are held",
+    "together by --selftest, which fails if either side gains an entry the other lacks.",
+    "",
+    "Exit codes are passed through from the target verbatim, never re-mapped:",
+    "0 ok - 2 the loop's own check failed - 64 usage, contract violation, or a FATAL",
+    "(absent tool, absent input) from the target itself."
+  ],
+  "modes": {
+    "run": "execute the loop's real entry point",
+    "prove": "traverse it and write a proof receipt under data/proof-workflow/",
+    "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof"
+  },
+  "commands": [
+    {
+      "loop": "macro",
+      "mode": "run",
+      "target": "bootstrap.sh",
+      "required": [],
+      "optional": [],
+      "writes": ["git config core.hooksPath"]
+    },
+    {
+      "loop": "macro",
+      "mode": "prove",
+      "target": "proof_workflow/prove_macro_loop.sh",
+      "required": [],
+      "optional": ["--force-receipt"],
+      "writes": ["data/proof-workflow/macro-<commit12>[-dirty].json"]
+    },
+    {
+      "loop": "macro",
+      "mode": "test",
+      "target": "proof_workflow/control_macro_entry.sh",
+      "required": [],
+      "optional": [],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-macro-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "micro",
+      "mode": "run",
+      "target": "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh",
+      "required": ["--packet", "--output"],
+      "optional": [],
+      "writes": [
+        "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.<packet>.json",
+        "data/wiki-update/request-<packet>.json",
+        "<output>"
+      ]
+    },
+    {
+      "loop": "micro",
+      "mode": "prove",
+      "target": "proof_workflow/prove_micro_loop.sh",
+      "required": [],
+      "optional": ["--force-receipt"],
+      "writes": ["data/proof-workflow/micro-<commit12>[-dirty].json"]
+    },
+    {
+      "loop": "micro",
+      "mode": "test",
+      "target": "proof_workflow/control_micro_entry.sh",
+      "required": [],
+      "optional": [],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-micro-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "run",
+      "target": "kb-ingest/port/wiki_update_worker.sh",
+      "required": ["--request"],
+      "optional": ["--full", "--force-receipt", "--defer-partials"],
+      "opt_in": {
+        "--full": "spends real model turns and rewrites openwiki/ in place; without it the run is --dry-run and the probabilistic segment is skipped by name",
+        "--force-receipt": "WIKI_UPDATE_FORCE_RECEIPT=1 — receipts are frozen evidence, so a rerun over an existing one must declare itself",
+        "--defer-partials": "WIKI_UPDATE_DEFER_PARTIALS=1 — bounded-round policy: PARTIAL verifier findings defer into the wiki backlog instead of blocking; a FAIL still stays red"
+      },
+      "surface_note": "these are the worker's only two caller-facing env switches, both on the surface on purpose. WIKI_WORKER_ROOT and WIKI_UPDATE_CLAUDE_BIN are selftest seams and are deliberately NOT exposed: a surface that covers most of a target teaches callers to reach past it for the rest.",
+      "writes": ["data/wiki-update/receipt-<packet>.json", "openwiki/ (--full only)"]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "prove",
+      "target": "proof_workflow/prove_openwiki.sh",
+      "required": [],
+      "optional": ["--force-receipt"],
+      "writes": ["data/proof-workflow/openwiki-<commit12>[-dirty].json"]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "test",
+      "target": "proof_workflow/control_openwiki_entry.sh",
+      "required": [],
+      "optional": ["--full"],
+      "opt_in": {
+        "--full": "sets CONTROL_OPENWIKI_FULL=1: after every probe, exercises the model turn once inside the disposable worktree as an existence proof only, never read back into the classification"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-openwiki-<commit12>.json"
+      ]
+    }
+  ]
+}

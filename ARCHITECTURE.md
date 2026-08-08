@@ -37,6 +37,12 @@ bettor-arena/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)
 ├── mcp/               # MCP adapter 層(context-pack+production 引擎;S10 落地)
 ├── openwiki/          # repo-wiki-converge 生成的 as-built wiki(可再生投影,git 追蹤;更新走官方 update 模式,index.md 由 finalize 生成禁手寫)
+├── loopctl/           # 三條迴圈對外的唯一 CLI 表面(外界只准碰這裡;繞過它去學各入口的私有旗標,
+│                      #   下一步就是為了遷就呼叫端去改入口本身——這支存在就是擋這種抖動)。
+│                      #   contract.json=宣告面(loop×mode×必填/選填旗標/寫出什麼;`contract` 子命令
+│                      #   連 sha256 一起印,表面變動因此是可見事件);loopctl.sh=接線;兩者由
+│                      #   selftest.sh 雙向綁死,任一邊多出命令即紅。exit code 原樣透傳不重映射。
+│                      #   危險路徑一律 opt-in 旗標(`openwiki run --full` 才燒 model turn 並改 openwiki/)
 ├── proof_workflow/    # 三條迴圈的物理遍歷證明(一迴圈一支 .sh;lib/prove.sh=共用記錄器,
 │                      #   `--selftest` 是它自己的負控)。每支從啟動點走到末端產物,分記兩種步驟:
 │                      #   harness=確定性腳本(真跑並記 exit;會改帳的入口只 hash 記 hashed-not-run,
