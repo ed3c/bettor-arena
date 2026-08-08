@@ -60,7 +60,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | `Dockerfile` / `container-run.sh` / `container_preflight.sh` | 映像、runtime 選擇、**一個真 turn** 分辨 present 與 authenticated |
 | `sandbox-policy.yaml` | deny-by-default 出口 ＋ binary 綁定 |
 | `codex-sandbox.sh` | codex 寫入角色（**真憑證進沙盒**，比 claude 那條弱，header 有寫） |
-| `automode-bench.sh` / `automode_report.py` | 成對自動許可實驗；跑之前先讀報表的判準 |
+| `automode-bench.sh` / `automode_report.py` | 三臂自動許可實驗（`off`／`on`／`reduce`）× 兩個 venue（`sandbox`／`direct`）；跑之前先讀報表的判準 |
 
 ### 真的抓到過的缺陷（形似訊號時先查這裡）
 
@@ -77,6 +77,8 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | guarded 那組三次全空 | `-a never` 不是 `codex exec` 的旗標——那個 `always\|never\|auto` **是 `--color` 的**（法則 8） |
 | 報表印出正確表格「之後」才當掉 | codex 沒有 cost 欄位，`median` 對空集合拋例外。讀取端有防、**彙總端沒有** |
 | OpenShell `Connection refused` 而 `docker ps` 正常 | OrbStack 走 docker **context**；`DOCKER_HOST` 要指到 orbstack socket。**這段曾散成四份，第四個呼叫端忘了** → 收斂進 `capture.sh` |
+| 想「加一個省 token 的模式」時 | **先看 `reduce` 這一臂為什麼長這樣。** 它與 `off` 旗標**逐位元組相同**，只多一個 `.claudeignore`——因為 `on` 貴的原因是換掉工具面→cached prefix 變了→整個重寫。往 `reduce` 加任何一個旗標，它就變成第二個 `on`，而報表還是寫 `reduce`。selftest 有一條專門把這個等式釘住，並且驗過會紅 |
+| 直接執行的三臂量測沒有分離 | n=3 時**組內散布壓過組間差異**（off 的 cost 跨 0.135–0.466）。唯一看得見的形狀是 `on` 從沒有便宜的那一次，而 off／reduce 各有一次 cache-write 只有 ~3000——與 prefix 理論一致，**但一致不等於成立**。要下結論得加 n，或換一個真的會誘發貪婪探勘的任務 |
 | 新加的守衛「綠」，但它其實什麼都沒查 | 把 resolver 樁成回空集合 → 掃描報 0 個不符、exit 0。**「解析不到卻回傳成功」與「查遍了沒問題」長得一模一樣** → 空集合改成 FATAL(64)，並用樁把這件事驗進 selftest |
 | 上一列那個修法**弄紅了另一個檢查** | 環境變數集中設好後，wrapper 跳過自己的選擇邏輯、不再印公告，而對照組正在斷言那句話。**收斂共用設定會讓「驗這個設定本身」的檢查失去對象** → 那一格改用 `env -u` 問 |
 

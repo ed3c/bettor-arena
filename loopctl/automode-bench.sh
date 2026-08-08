@@ -46,11 +46,13 @@ RUNS=3
 ARM=both
 DRY=0
 PLATFORM=claude
+VENUE=sandbox
 while [ $# -gt 0 ]; do
   case "$1" in
     --runs) shift; RUNS=${1:-3} ;;
     --arm) shift; ARM=${1:-both} ;;
     --platform) shift; PLATFORM=${1:-claude} ;;
+    --venue) shift; VENUE=${1:-sandbox} ;;
     --dry-run) DRY=1 ;;
     --selftest) SELFTEST=1 ;;
     -h|--help) sed -n '2,12p' "$0" >&2; exit 64 ;;
@@ -113,8 +115,23 @@ build/
 # which belongs to `--color`. codex exec rejected it outright and the whole
 # guarded arm produced three empty runs. Reading the neighbourhood of a grep hit
 # is not reading the interface.
+# Claude arm flags, named for the same reason the codex ones are: the selftest
+# asserts a relationship BETWEEN them, and a copy it could not see would drift.
+#
+# The relationship is the whole design. `reduce` must carry the SAME flags as
+# `off`, because its entire claim is that the cached prefix is untouched and only
+# the ignore file differs. Add one flag to `reduce` and it becomes another `on` —
+# a different tool surface, a rewritten cache — while the table still says
+# "reduce", which is precisely the shape that would publish a false result.
+CLAUDE_OFF_FLAGS='--dangerously-skip-permissions'
+CLAUDE_REDUCE_FLAGS='--dangerously-skip-permissions'
+CLAUDE_ON_FLAGS='--allowedTools Read,Glob,Grep'
+
 CODEX_OFF_FLAGS='--dangerously-bypass-approvals-and-sandbox'
 CODEX_ON_FLAGS='-s danger-full-access --strict-config -c approval_policy=never -c tool_output_token_limit=512'
+# The lever alone, appended to the OFF flags so the rest of the invocation is
+# untouched. Kept as its own string because the selftest asserts on it.
+CODEX_REDUCE_ONLY='--strict-config -c tool_output_token_limit=512'
 
 if [ "${SELFTEST:-0}" = 1 ]; then
   RED=0
@@ -142,20 +159,48 @@ if [ "${SELFTEST:-0}" = 1 ]; then
     *tool_output_token_limit*) echo "  [ok]   codex-guard-uses-a-key-this-version-has" ;;
     *) echo "  [RED]  codex-guard-uses-a-key-this-version-has — the reference document's max_stdout_lines/max_stdout_bytes do not exist in codex 0.147" >&2; RED=1 ;;
   esac
+  # The reduce arm's entire claim is "same prefix as off, one ignore file more".
+  # Asserted, because the day someone adds a flag here the arm silently becomes a
+  # second `on` — different tool surface, rewritten cache — while the report still
+  # labels it `reduce` and the conclusion inverts with nothing going red.
+  say "reduce-keeps-the-baseline-prefix" "$CLAUDE_REDUCE_FLAGS" "$CLAUDE_OFF_FLAGS"
+  case "$CLAUDE_ON_FLAGS" in
+    "$CLAUDE_OFF_FLAGS") echo "  [RED]  on-really-does-move-the-prefix — if it matched off, the expensive arm and the baseline would be the same run and the 22% finding would be noise" >&2; RED=1 ;;
+    *) echo "  [ok]   on-really-does-move-the-prefix" ;;
+  esac
+  # Same shape on the codex side: reduce is off PLUS the lever, nothing else.
+  case "$CODEX_REDUCE_ONLY" in
+    *approval_policy*|*danger-full-access*) echo "  [RED]  codex-reduce-changes-only-the-output-lever — it moved an axis other than output, so it is not comparable to off" >&2; RED=1 ;;
+    *tool_output_token_limit*) echo "  [ok]   codex-reduce-changes-only-the-output-lever" ;;
+    *) echo "  [RED]  codex-reduce-changes-only-the-output-lever — the lever is missing entirely" >&2; RED=1 ;;
+  esac
   [ "$RED" -eq 0 ] && { echo "SELFTEST GREEN"; exit 0; }
   echo "SELFTEST RED" >&2; exit 2
 fi
 
-command -v openshell >/dev/null 2>&1 || { echo "FATAL: openshell is not on PATH" >&2; exit 64; }
+# Only the sandbox venue needs the gateway. Requiring it for `direct` would turn
+# a machine that can perfectly well run the measurement into a FATAL about a
+# component the run never touches.
+if [ "$VENUE" = sandbox ]; then
+  command -v openshell >/dev/null 2>&1 || { echo "FATAL: openshell is not on PATH (needed by --venue sandbox; --venue direct does not use it)" >&2; exit 64; }
+fi
+case "$VENUE" in sandbox|direct) ;; *) echo "FATAL: --venue must be sandbox or direct" >&2; exit 64 ;; esac
 CODEX_AUTH=""
-case "$PLATFORM" in
-  claude)
+# Credentials are a SANDBOX concern only. Run directly, both CLIs use the host's
+# own session — which is also the honest difference between the two venues, and
+# the reason the direct numbers are not interchangeable with the sandbox ones.
+case "$VENUE:$PLATFORM" in
+  direct:*)
+    command -v "$PLATFORM" >/dev/null 2>&1 || {
+      echo "FATAL: $PLATFORM is not on PATH — the direct venue runs the host's own CLI" >&2; exit 64; }
+    ;;
+  sandbox:claude)
     openshell provider list 2>/dev/null | grep -q "^claude-code " || {
       echo "FATAL: no 'claude-code' provider on this gateway — the sandbox would have no credential." >&2
       echo "       openshell provider create --name claude-code --type generic --credential CLAUDE_CODE_OAUTH_TOKEN" >&2
       exit 64; }
     ;;
-  codex)
+  sandbox:codex)
     # codex cannot use the provider placeholder — it parses its credential as a
     # JWT before any request — so the session goes in as a real value. Same trade
     # as codex-sandbox.sh, and the same reason it is stated rather than buried.
@@ -171,7 +216,7 @@ print(json.dumps(d, separators=(",", ":")))
 PY
 ) || exit 64
     ;;
-  *) echo "FATAL: --platform must be claude or codex" >&2; exit 64 ;;
+  *) echo "FATAL: --platform must be claude or codex (got '$PLATFORM')" >&2; exit 64 ;;
 esac
 if [ -z "${DOCKER_HOST:-}" ] && [ -S "$HOME/.orbstack/run/docker.sock" ]; then
   DOCKER_HOST="unix://$HOME/.orbstack/run/docker.sock"; export DOCKER_HOST
@@ -184,15 +229,21 @@ WORK="/sandbox/$(basename "$ROOT")"
 
 if [ "$DRY" -eq 1 ]; then
   echo "dry-run — preconditions ran, nothing was created"
-  echo "  platform  $PLATFORM      arms $ARM      runs per arm: $RUNS"
+  echo "  platform  $PLATFORM      venue $VENUE      arms $ARM      runs per arm: $RUNS"
+  case "$VENUE" in
+    direct) echo "            direct = host CLI, host session, cwd = a DISPOSABLE worktree at HEAD" ;;
+    sandbox) echo "            sandbox = OpenShell, policy-governed egress, credentials injected" ;;
+  esac
   echo "  task      \"$(printf '%s' "$TASK" | cut -c1-58)...\""
   echo "  graded on the answer containing: $EXPECT"
   if [ "$PLATFORM" = claude ]; then
-    echo "  off       claude --dangerously-skip-permissions, no .claudeignore"
-    echo "  on        claude --allowedTools Read,Glob,Grep + .claudeignore ($(printf '%s' "$IGNORE" | grep -cv '^#') patterns)"
+    echo "  off       claude $CLAUDE_OFF_FLAGS, no .claudeignore"
+    echo "  on        claude $CLAUDE_ON_FLAGS + .claudeignore ($(printf '%s' "$IGNORE" | grep -cv '^#') patterns)"
+    echo "  reduce    claude $CLAUDE_REDUCE_FLAGS + .claudeignore  <- SAME flags as off; only the ignore file differs"
   else
     echo "  off       codex $CODEX_OFF_FLAGS"
     echo "  on        codex $CODEX_ON_FLAGS"
+    echo "  reduce    codex $CODEX_OFF_FLAGS $CODEX_REDUCE_ONLY  <- off PLUS the output lever, nothing else"
     echo "  NOT VARIED: the sandbox axis. bwrap cannot create a namespace here, so"
     echo "              read-only and workspace-write do not execute at all."
   fi
@@ -216,8 +267,16 @@ cd '"$WORK"' || exit 64
 '
   if [ "$PLATFORM" = claude ]; then
     case "$arm" in
-      off) flags='--dangerously-skip-permissions'; write_ignore=0 ;;
-      on)  flags='--allowedTools Read,Glob,Grep'; write_ignore=1 ;;
+      off) flags="$CLAUDE_OFF_FLAGS"; write_ignore=0 ;;
+      on)  flags="$CLAUDE_ON_FLAGS"; write_ignore=1 ;;
+      # The arm the measurement asked for. `on` narrows the TOOL SURFACE, which
+      # changes the cached prefix and forces it to be rewritten — measured at
+      # roughly twice the cache writes and about 22% more money than `off`, in
+      # the opposite direction to the document's prediction. `reduce` therefore
+      # keeps the prefix byte-identical to `off` and differs by ONE thing: the
+      # ignore file. Same permission flags, same tool set, so any difference is
+      # attributable to what was kept out of reads rather than to a cache reset.
+      reduce) flags="$CLAUDE_REDUCE_FLAGS"; write_ignore=1 ;;
       *) echo "FATAL: unknown arm $arm" >&2; exit 64 ;;
     esac
     CRED_ARGS="--provider claude-code"
@@ -245,6 +304,9 @@ tar cf /sandbox/bench.tar -C /sandbox $(cd /sandbox && ls run-*.json run-*.err 2
     case "$arm" in
       off) flags="$CODEX_OFF_FLAGS" ;;
       on)  flags="$CODEX_ON_FLAGS" ;;
+      # Same single-variable discipline: `off` plus the one output lever this
+      # version has, and nothing else moved.
+      reduce) flags="$CODEX_OFF_FLAGS $CODEX_REDUCE_ONLY" ;;
       *) echo "FATAL: unknown arm $arm" >&2; exit 64 ;;
     esac
     ENV_ARGS="--env CODEX_AUTH_JSON=$CODEX_AUTH"
@@ -273,6 +335,44 @@ tar cf /sandbox/bench.tar -C /sandbox $(cd /sandbox && ls run-*.jsonl run-*.err 
 '
   fi
 
+  if [ "$VENUE" = direct ]; then
+    # Host process, DISPOSABLE WORKTREE — never the live tree. The baseline arm
+    # carries --dangerously-skip-permissions, which is the exact thing sandboxes
+    # exist to contain; pointing that at the checkout someone is working in would
+    # trade a measurement for an unbounded write. A worktree at HEAD gives the
+    # same bytes with none of that, and it is the pattern the controls already
+    # use. `direct` therefore measures the CLI without the container, not without
+    # isolation — a distinction worth keeping, because the second one is not on
+    # offer here.
+    echo "=== $PLATFORM arm $arm: $RUNS run(s) directly, in a worktree at HEAD"
+    DWT="$OUT/.wt-$arm"
+    git -C "$ROOT" worktree add --detach "$DWT" HEAD >/dev/null 2>&1 || {
+      echo "FATAL: could not create the worktree for the direct venue" >&2; exit 64; }
+    [ "${write_ignore:-0}" -eq 1 ] && printf '%s' "$IGNORE" >"$DWT/.claudeignore"
+    mkdir -p "$OUT/$arm"
+    i=1
+    while [ "$i" -le "$RUNS" ]; do
+      if [ "$PLATFORM" = claude ]; then
+        ( cd "$DWT" && claude -p "$TASK" --output-format json $flags ) \
+          >"$OUT/$arm/run-$i.json" 2>"$OUT/$arm/run-$i.err" || true
+        produced="$OUT/$arm/run-$i.json"
+      else
+        ( cd "$DWT" && codex exec --skip-git-repo-check --json $flags "$TASK" ) \
+          >"$OUT/$arm/run-$i.jsonl" 2>"$OUT/$arm/run-$i.err" || true
+        produced="$OUT/$arm/run-$i.jsonl"
+      fi
+      if [ ! -s "$produced" ]; then
+        echo "run $i produced NOTHING — aborting this arm. stderr follows:"
+        head -c 400 "$OUT/$arm/run-$i.err"
+        break
+      fi
+      echo "run $i done"
+      i=$((i + 1))
+    done
+    git -C "$ROOT" worktree remove --force "$DWT" >/dev/null 2>&1
+    return 0
+  fi
+
   echo "=== $PLATFORM arm $arm: $RUNS run(s) in $name"
   openshell sandbox delete "$name" >/dev/null 2>&1
   openshell sandbox create --name "$name" --no-tty \
@@ -291,8 +391,9 @@ tar cf /sandbox/bench.tar -C /sandbox $(cd /sandbox && ls run-*.jsonl run-*.err 
 
 case "$ARM" in
   both) run_arm off; run_arm on ;;
-  off|on) run_arm "$ARM" ;;
-  *) echo "FATAL: --arm must be off, on or both" >&2; exit 64 ;;
+  all) run_arm off; run_arm on; run_arm reduce ;;
+  off|on|reduce) run_arm "$ARM" ;;
+  *) echo "FATAL: --arm must be off, on, reduce, both or all" >&2; exit 64 ;;
 esac
 
 python3 "$ROOT/loopctl/automode_report.py" --platform "$PLATFORM" "$OUT" "$EXPECT"

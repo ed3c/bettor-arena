@@ -44,6 +44,14 @@ CODEX_FIELDS = (
 )
 FIELDS = CLAUDE_FIELDS
 
+# `off` is the baseline every other arm is measured against, so it is named once
+# here rather than being spelled into each loop. `reduce` exists because `on` —
+# the reference document's prescription — measured MORE expensive: narrowing the
+# tool surface moves the cached prefix and forces a rewrite. `reduce` keeps the
+# prefix identical to `off` and changes only what is kept out of reads.
+BASELINE = "off"
+ARMS = ("off", "on", "reduce")
+
 
 def _read_claude(path: Path) -> dict | None:
     try:
@@ -171,7 +179,7 @@ def summarise(rows: list[dict], fields=FIELDS) -> dict:
 def report(base: Path, expect: str, platform: str = "claude") -> int:
     fields = CLAUDE_FIELDS if platform == "claude" else CODEX_FIELDS
     arms = {}
-    for arm in ("off", "on"):
+    for arm in ARMS:
         d = base / arm
         if not d.is_dir():
             continue
@@ -195,7 +203,7 @@ def report(base: Path, expect: str, platform: str = "claude") -> int:
     )
     print(head + " %7s %9s" % ("turns", "cost$"))
     print("-" * len(head))
-    for arm in ("off", "on"):
+    for arm in ARMS:
         if arm not in arms:
             continue
         for r in arms[arm][0] + arms[arm][1]:
@@ -238,22 +246,28 @@ def report(base: Path, expect: str, platform: str = "claude") -> int:
             d = statistics.median(r["denials"] for r in good)
             print("  %s: median permission denials %s" % (arm, d))
 
-    if len(summaries) == 2:
-        off, on = summaries["off"], summaries["on"]
-        print("\ndelta (on - off), median of counted runs:")
-        for key, label in fields:
-            diff = on[key] - off[key]
-            base_v = off[key] or 1
-            print("  %-18s %+9d  (%+.1f%%)" % (label, diff, 100.0 * diff / base_v))
-        if off["cost"] is not None and on["cost"] is not None:
-            print("  %-18s %+9.4f" % ("cost$", on["cost"] - off["cost"]))
-        else:
-            # Codex reports no cost field. Printing a zero delta would read as
-            # "the money was the same", which is a claim, not an absence.
-            print("  %-18s  not reported by this CLI" % "cost$")
+    others = [a for a in summaries if a != BASELINE]
+    if BASELINE in summaries and others:
+        base_s = summaries[BASELINE]
+        # One delta block per guarded arm, each against the same baseline. With
+        # three arms a single block would have to pick two of them, and the whole
+        # point of `reduce` is that it is compared on the same footing as `on`.
+        for arm in others:
+            s = summaries[arm]
+            print("\ndelta (%s - %s), median of counted runs:" % (arm, BASELINE))
+            for key, label in fields:
+                diff = s[key] - base_s[key]
+                base_v = base_s[key] or 1
+                print("  %-18s %+9d  (%+.1f%%)" % (label, diff, 100.0 * diff / base_v))
+            if base_s["cost"] is not None and s["cost"] is not None:
+                print("  %-18s %+9.4f" % ("cost$", s["cost"] - base_s["cost"]))
+            else:
+                # Codex reports no cost field. Printing a zero delta would read as
+                # "the money was the same", which is a claim, not an absence.
+                print("  %-18s  not reported by this CLI" % "cost$")
         # Stated, not implied: three runs cannot separate a small effect from
         # noise, and a table that looks precise invites reading it as if it could.
-        n = min(len(arms["off"][0]), len(arms["on"][0]))
+        n = min(len(arms[a][0]) for a in summaries)
         print("\n  n=%d counted runs per arm. A difference smaller than the spread" % n)
         print("  between runs of the SAME arm is not evidence of anything.")
     elif not summaries:
