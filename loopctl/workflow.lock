@@ -1,22 +1,22 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "54e6f87e78e5dcc21c5d333f4234841bc94b64c4",
+  "workflow_commit": "325183d4a6cec015eb45f0debbfa99eb62043d39",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-54e6f87e78e5-dirty.json",
-    "micro": "micro-54e6f87e78e5-dirty.json",
-    "openwiki": "openwiki-54e6f87e78e5-dirty.json"
+    "macro": "macro-325183d4a6ce-dirty.json",
+    "micro": "micro-325183d4a6ce-dirty.json",
+    "openwiki": "openwiki-325183d4a6ce-dirty.json"
   },
   "counts": {
-    "artifact": 13,
+    "artifact": 19,
     "context": 20,
-    "harness": 26,
+    "harness": 33,
     "optional": 1
   },
-  "workflow_digest": "93aa6cd71361b2a3109c68d9598538c370beb136816b2486d980b91c9d115423",
+  "workflow_digest": "3d626f060ebb62f289dd998eb1bcc9be6a7f664818dcaf1c68c2e1acca2c5a78",
   "files": {
     ".githooks/commit-msg": {
-      "sha256": "daa0a1861b68f5f7011c1bcb171891aa93ec2b4b6cbdae9df4b73ff94cd15369",
+      "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
       "kind": "harness",
       "loop": "macro"
     },
@@ -35,8 +35,13 @@
       "kind": "harness",
       "loop": "macro"
     },
+    ".githooks/prepare-commit-msg": {
+      "sha256": "42fb05fcfa67336951d93902cfe27d4f0a651cc0904d56f9f30424460826b665",
+      "kind": "harness",
+      "loop": "macro"
+    },
     ".grepai/index.gob": {
-      "sha256": "d612539ed4d8e4fa0fd327c620aa9e699b19ccd3127796dcf41d493fc94fe7d1",
+      "sha256": "21e8231dc12c5a7ff5cb3311e7d43d452221733c6d7dadaca43495b8d38e77c1",
       "kind": "optional",
       "loop": "macro"
     },
@@ -46,7 +51,7 @@
       "loop": "macro"
     },
     "ARCHITECTURE.md": {
-      "sha256": "1bd91c8c2af820e9605735280fbea6e853bfae2247ded0bc745db8a395a6e697",
+      "sha256": "f8019d31ad57260543434ef27a07df5e5265b4cd0e60abee0922a0d2dff67330",
       "kind": "context",
       "loop": "macro"
     },
@@ -65,18 +70,33 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-54e6f87e78e5dcc21c5d333f4234841bc94b64c4.json": {
-      "sha256": "30c3f4eea6a81330a091efd8e15b05539ee6a492388cc08188327801380962fd",
+    "data/receipts/post-commit-325183d4a6cec015eb45f0debbfa99eb62043d39.json": {
+      "sha256": "a7862d3b4ef6354ac9f29b980175bd8364c2d227db04ef402408d216f030a49a",
       "kind": "artifact",
       "loop": "macro"
+    },
+    "data/wiki-update/request-ingest-note.json": {
+      "sha256": "f537c0505acbff8d5e7aef5361ea4d707f8d66426413a666d259297db56b2831",
+      "kind": "artifact",
+      "loop": "micro"
     },
     "data/wiki-update/request-issue23-dryrun.json": {
       "sha256": "fc6b1b7e2f4489c9ac5e55204473a808500775c484216427aa5a771936cdbf50",
       "kind": "artifact",
       "loop": "micro"
     },
+    "data/wiki-update/request-pdf-probe.json": {
+      "sha256": "05677e0bd9d67aa362f2b88259e35c287c06dc9499f0e783ff76219dbe6dd8c8",
+      "kind": "artifact",
+      "loop": "micro"
+    },
     "data/wiki-update/request-poweron-2026-08-06.json": {
       "sha256": "3788c59bbd3f2ddeacd4344db71f0b4f69a8642073e313494fe1c55fa457eb4b",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "data/wiki-update/request-repo-probe.json": {
+      "sha256": "b9dcae0f8b8d0d7561692adbe03e9be821f1239a45bed64d1946e0aebca6c7f8",
       "kind": "artifact",
       "loop": "micro"
     },
@@ -195,13 +215,28 @@
       "kind": "artifact",
       "loop": "micro"
     },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.ingest-note.json": {
+      "sha256": "773e5a8a24c53314607a2c2352341e3e36f3597451a78ea4a83625f7f1e5ef6f",
+      "kind": "artifact",
+      "loop": "micro"
+    },
     "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": {
       "sha256": "316a1589249f33b084b043cf3685a68cd51c68afe31dbb4682a6442b13f0c6b6",
       "kind": "artifact",
       "loop": "micro"
     },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.pdf-probe.json": {
+      "sha256": "5c9cd90f18cb98c51e405678c31bcf144046d3058edf6c5959827fd54878d03b",
+      "kind": "artifact",
+      "loop": "micro"
+    },
     "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": {
       "sha256": "3550af48e84dd64b7dbd7c9b94139adb99797a9cb4d672df3dd1a6ebce5180ee",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.repo-probe.json": {
+      "sha256": "21509042a959e8d40c9cc45e96a6cd7ab9f71ec425c9531e754bf920ff0e93f3",
       "kind": "artifact",
       "loop": "micro"
     },
@@ -251,17 +286,47 @@
       "loop": "micro"
     },
     "loopctl/contract.json": {
-      "sha256": "12d69b715f7ffbfe75c0ee536b2292e600b9a63b3c55b4ceb7a5b45c4ca9cef8",
+      "sha256": "665f4f180dd3b086f9f14248ee86b97dd6983bf51207e4791b65a03ab6583859",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/ingest.py": {
+      "sha256": "b03134f20261c4ec8b6c4818f44d17f034bbf7e3a12043d9ffe31e43dc3ce0b1",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/lineage.py": {
+      "sha256": "033ffb3ce339e79a93d00324f1daa8101164cf514b176c39dee26ca6b527c970",
       "kind": "harness",
       "loop": "macro"
     },
     "loopctl/loopctl.sh": {
-      "sha256": "2a7fc16965403fae893c8e344f5b80deceb27c683139e4315c1b8cf15dcdc18e",
+      "sha256": "683a6c00207e1644bca5cd6723d707c0cc41e7d8c9537947eee766d46c3b0d8e",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/replay.sh": {
+      "sha256": "ebcf8db0380820ac357495c273a63560ff9bfe629f0342e79fd439633d9fb1bd",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/selftest.sh": {
+      "sha256": "ef86c9f6f8822aa9174880ec81790c945869bcd23da2d293b38d5a777f4a3471",
       "kind": "harness",
       "loop": "macro"
     },
     "loopctl/surface.lock": {
-      "sha256": "23547acbc9e6ebf19347e702d437321a6cfcf74bbdfe944bd1dffef5f4e36d5f",
+      "sha256": "534a1568eb79942ce55d599773ed1b755594865673d3107140fa1517ece0da7d",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/surface_digest.py": {
+      "sha256": "dd5ff678ef188a1c4243d0f2c1823cea3e114d650d48dec94b6dba7644554021",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/workflow_lock.py": {
+      "sha256": "7b80147ec75249b2059232d531e4dee76fde81cdffe1cd1f5d786c3ffeda5d56",
       "kind": "harness",
       "loop": "macro"
     },

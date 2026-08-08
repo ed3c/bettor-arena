@@ -65,6 +65,9 @@ bettor-arena/
 │   │                  #   bettor-arena-proof-workflow-receipt@1.0.0;檔名 <loop>-<commit12>[-dirty].json,
 │   │                  #   同名重跑 FATAL 64,PROVE_FORCE_RECEIPT=1 顯式覆寫;-dirty=雜訊樹,
 │   │                  #   hash 的位元組不在該 commit 裡,宣稱範圍隨檔名寫死)
+│   ├── ingest/        # loopctl `micro run --source` 的抽取產物(runtime 生成物,gitignore):
+│   │                  #   packet.json + extracted.txt + provenance.json(原檔路徑/sha256、抽取器 argv
+│   │                  #   與版本、抽出後 sha256)。抽取記錄在案才不會讓衍生物頂著原檔的名字
 │   ├── wiki-update/   # 工廠交付終點的 wiki-update 請求+消化站 receipt(runtime 生成物,gitignore;
 │   │                  # schema bettor-arena-wiki-update-request@1.0.0,producer=工廠 trigger.sh,
 │   │                  # consumer=kb-ingest/port/wiki_update_worker.sh;湧現內容不落此處,只落 openwiki backlog)

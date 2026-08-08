@@ -115,5 +115,25 @@ prove_harness loopctl-surface-lock loopctl/surface.lock \
 prove_harness loopctl-cli loopctl/loopctl.sh \
   "caller -> contract check -> dispatch -> target exit code passed through untouched" \
   -- sh loopctl/loopctl.sh --selftest
+prove_harness loopctl-selftest loopctl/selftest.sh \
+  "the CLI's own assertions: surface<->wiring both ways, declared targets exist, usage refused, exit codes passed through"
+prove_harness loopctl-surface-digest loopctl/surface_digest.py \
+  "contract.json -> the promise's canonical digest; internal iteration excluded by construction" \
+  -- python3 loopctl/surface_digest.py --selftest
+prove_harness loopctl-ingest loopctl/ingest.py \
+  ".md/.txt passthrough, .html/.pdf extracted with provenance, directory -> repo kind; unknown format and absent extractor both FATAL" \
+  -- python3 loopctl/ingest.py --selftest
+prove_harness loopctl-lineage loopctl/lineage.py \
+  "workflow.lock + staged paths -> the lineage trailer; kind:loop:path per touched file" \
+  -- python3 loopctl/lineage.py --selftest
+prove_harness loopctl-workflow-lock loopctl/workflow_lock.py \
+  "the three proof receipts -> the manifest of what a traversal is made of" \
+  -- python3 loopctl/workflow_lock.py --selftest
+prove_harness loopctl-replay loopctl/replay.sh \
+  "a commit or tag -> that ref's own CLI and proofs in a disposable worktree -> digest compared against what it recorded (needs a ref and a worktree; not fired here)"
+prove_harness prepare-commit-msg .githooks/prepare-commit-msg \
+  "staged paths -> workflow.lock -> Workflow-Lineage/Version/Touched trailers written into the message"
+prove_note workflow-lock-not-hashed \
+  "not hashed: loopctl/workflow.lock is BUILT FROM these receipts, so hashing it here would make this digest depend on a file that depends on this digest. Its integrity comes from being rebuildable — `loopctl.sh workflow lock` regenerates it from the same receipts"
 
 prove_emit

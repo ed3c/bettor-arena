@@ -60,6 +60,17 @@ case "${1:-}" in
   surface-relock)
     python3 "$HERE/surface_digest.py" relock "$CONTRACT" "$HERE/surface.lock"
     exit $? ;;
+  workflow)
+    # The workflow's own lifecycle: what it is made of, what stamps a commit with
+    # it, and how to run the version a commit or tag names.
+    case "${2:-}" in
+      lock)    python3 "$HERE/workflow_lock.py" build "$ROOT" "$HERE/workflow.lock"; exit $? ;;
+      trailer) python3 "$HERE/lineage.py" trailer "$ROOT" "$HERE/workflow.lock"; exit $? ;;
+      replay)
+        shift 2
+        sh "$HERE/replay.sh" "$@"; exit $? ;;
+      *) echo "usage: loopctl.sh workflow <lock|trailer|replay --at <commit|tag> [--loop <loop>]>" >&2; exit 64 ;;
+    esac ;;
   --selftest) . "$HERE/selftest.sh"; loopctl_selftest; exit $? ;;
   -h|--help|"") usage; exit 64 ;;
 esac
@@ -134,7 +145,36 @@ case "$LOOP/$MODE" in
     if [ -n "$_ollama" ]; then OLLAMA_URL="$_ollama" sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   macro/prove)    if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   macro/test)     sh "$ROOT/$TARGET" ;;
-  micro/run)      sh "$ROOT/$TARGET" "$(value_of --packet "$@")" "$(value_of --output "$@")" ;;
+  micro/run)
+    # Two ways in, and exactly one must be chosen: a packet you already have, or
+    # a source the CLI ingests into one. Accepting both would silently pick a
+    # winner, and accepting neither would reach trigger.sh with empty arguments.
+    _packet=$(value_of --packet "$@")
+    _source=$(value_of --source "$@")
+    if [ -n "$_packet" ] && [ -n "$_source" ]; then
+      fatal "--packet and --source are two ways to say the same thing; give one"
+    fi
+    _out=$(value_of --output "$@")
+    if [ -n "$_source" ]; then
+      _task=$(value_of --task "$@")
+      [ -n "$_task" ] || fatal "--source needs --task: the seed repo is built to answer something"
+      _ingest_dir="$ROOT/data/ingest/$(date -u +%Y%m%dT%H%M%SZ)"
+      _kind=$(value_of --kind "$@")
+      [ -n "$_kind" ] || _kind=dr
+      _pid=$(value_of --packet-id "$@")
+      if [ -n "$_pid" ]; then
+        _packet=$(python3 "$HERE/ingest.py" packet --source "$_source" --task "$_task" \
+          --kind "$_kind" --out "$_ingest_dir" --packet-id "$_pid") || exit $?
+      else
+        _packet=$(python3 "$HERE/ingest.py" packet --source "$_source" --task "$_task" \
+          --kind "$_kind" --out "$_ingest_dir") || exit $?
+      fi
+      echo "loopctl: ingested $_source -> ${_packet#"$ROOT"/} (provenance beside it)"
+      [ -n "$_out" ] || _out="$_ingest_dir/seed"
+    fi
+    [ -n "$_packet" ] || fatal "micro run needs --packet or --source"
+    [ -n "$_out" ] || fatal "micro run needs --output"
+    sh "$ROOT/$TARGET" "$_packet" "$_out" ;;
   micro/prove)    if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   micro/test)     sh "$ROOT/$TARGET" ;;
   openwiki/run)

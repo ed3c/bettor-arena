@@ -6,6 +6,16 @@
 # Exit codes: 0 pass · 2 gate FAIL · 64 missing tool (diagnosable, distinct).
 set -eu
 HOOKS=$(cd "$(dirname "$0")" && pwd)
+ROOT=$(git rev-parse --show-toplevel)
+
+# Workflow lineage: a commit that stages workflow files must record which workflow
+# version it descends from. prepare-commit-msg writes the trailer; this refuses the
+# commit if it is missing, because a helper that can be skipped is not a contract.
+# Absent lock = nothing to check yet, not a silent pass over everything.
+if [ -f "$ROOT/loopctl/workflow.lock" ]; then
+  python3 "$ROOT/loopctl/lineage.py" check "$ROOT" "$ROOT/loopctl/workflow.lock" "$1" || exit $?
+fi
+
 command -v bun >/dev/null 2>&1 || {
   echo "commit-msg FATAL: bun not on PATH (molecular gate cannot run; install from https://bun.sh)" >&2
   exit 64
