@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.3.0",
+  "surface_version": "2.4.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -227,6 +227,94 @@
       "writes": [
         "proof_workflow/data/<run_id>/",
         "data/proof-workflow/control-openwiki-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "run",
+      "target": "notebooklm/workflow.py",
+      "required": [],
+      "optional": [
+        "--dry-run",
+        "--follow",
+        "--json",
+        "--notebook-title",
+        "--out",
+        "--registry",
+        "--source-title",
+        "--target",
+        "--timeout"
+      ],
+      "arg_groups": {
+        "target": "--target NAME — a harvest declared in notebooklm/registry.json, which carries its own notebook title, source pick and follow decision",
+        "adhoc": "--notebook-title TITLE [+ --source-title] — name the notebook directly"
+      },
+      "opt_in": {
+        "--follow": "hop 2: really open a docs.google document linked from inside the harvested sheet. It is the only WRITING path here, and it writes to a scratch notebook it creates and deletes again from `finally` — never to the notebook being harvested. Without it the run is read-only",
+        "--dry-run": "run every READ stage for real (auth, notebook resolution, registry pin check, source pick) and stop before the first fetch, printing the argv of every call point including the ones --follow would make"
+      },
+      "io": {
+        "input": {
+          "--target": "an entry in notebooklm/registry.json — this repo's interaction data for notebooklm-py. Exactly one of --target and --notebook-title must be given: both would silently pick a winner, neither would reach the account with no subject (exit 64 either way)",
+          "--notebook-title": "the EXACT title of the notebook to harvest. A title is not an id: two notebooks sharing one is exit 2 by name, never a silent pick. When the registry pins that title, the pin is still cross-checked against the live account and a disagreement is exit 2",
+          "--source-title": "harvest this exact Doc/Sheet title instead of the default pick. The default is the AI-related ready sources, spreadsheets first, then by title — spreadsheets first because only a sheet plausibly carries the links hop 2 follows",
+          "--registry": "an alternative registry file; default notebooklm/registry.json",
+          "--out": "directory for this run's artifacts; default data/notebooklm/<utc>",
+          "--timeout": "seconds to wait for the followed document to index (default 600)"
+        },
+        "output": [
+          "<out>/module.json — schema bettor-arena-notebooklm-module@1.0.0: the notebook and source it resolved, every candidate it saw, the doc URLs found, and hop 2's state. Carries sha256 and counts, never document text",
+          "<out>/hop1.txt — the harvested source's indexed text (not written by --dry-run)",
+          "<out>/hop2.txt — the followed document's text (--follow only)"
+        ],
+        "exit": "0 ok · 2 a named business absence (not-authenticated, target-not-found, registry-pin-stale, notebook-not-found, notebook-ambiguous, no-harvestable-source, no-ai-related-source, empty-fulltext, no-doc-urls, follow-timeout, follow-not-accessible) · 64 FATAL (absent notebooklm binary, absent registry, unwritable output directory, neither-or-both subjects)",
+        "note": "the notebooklm CLI's --json is only pure for FULL UUIDs — a partial id prepends a human `Matched:` line — so every id is resolved before use AND the purity is asserted afterwards. This loop runs on the HOST, not in the container layer: its input includes a bearer credential the sandbox model would expose to every process inside it, and the image carries no notebooklm binary"
+      },
+      "writes": [
+        "data/notebooklm/<utc>/ (or --out)"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "prove",
+      "target": "proof_workflow/prove_notebooklm.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/notebooklm-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/notebooklm-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "test",
+      "target": "proof_workflow/control_notebooklm_entry.sh",
+      "required": [],
+      "optional": [
+        "--json",
+        "--live"
+      ],
+      "opt_in": {
+        "--live": "sets CONTROL_NOTEBOOKLM_LIVE=1: additionally drives one REAL read-only dry run against the signed-in Google account. Without it that arm reports NOT EXERCISED by name, which is not a pass"
+      },
+      "io": {
+        "input": "none — it plants its own defects into a disposable worktree at HEAD and runs offline",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every planted defect caught · 2 the mechanism missed one · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
       ]
     },
     {

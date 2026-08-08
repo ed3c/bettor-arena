@@ -8,6 +8,10 @@ data/wiki-update/
 proof_workflow/data/
 .grepai/
 data/ingest/
+# One directory per notebooklm harvest. Evidence of a run, and the extracted
+# text belongs to somebody else's Google documents — the receipt beside it
+# carries the sha256, which is what pins a claim to a run without publishing it.
+data/notebooklm/
 # What a sandboxed codex turn wrote, one directory per run. Evidence of a run,
 # not part of the repo: committing it would put an agent's draft on main before
 # anyone read it.
