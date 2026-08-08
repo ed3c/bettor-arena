@@ -1,24 +1,25 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "293cd0afdc23065e960591245b07096b062b8351",
+  "workflow_commit": "956127d50e294282e1db64dbcc16cb4e86286904",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-293cd0afdc23-dirty.json",
-    "harness": "harness-293cd0afdc23-dirty.json",
-    "macro": "macro-293cd0afdc23-dirty.json",
-    "micro": "micro-293cd0afdc23-dirty.json",
-    "notebooklm": "notebooklm-293cd0afdc23-dirty.json",
-    "openwiki": "openwiki-293cd0afdc23-dirty.json",
-    "policy": "policy-293cd0afdc23-dirty.json",
-    "workflow": "workflow-293cd0afdc23-dirty.json"
+    "container": "container-956127d50e29-dirty.json",
+    "equivalence": "equivalence-956127d50e29-dirty.json",
+    "harness": "harness-956127d50e29-dirty.json",
+    "macro": "macro-956127d50e29-dirty.json",
+    "micro": "micro-956127d50e29-dirty.json",
+    "notebooklm": "notebooklm-956127d50e29-dirty.json",
+    "openwiki": "openwiki-956127d50e29-dirty.json",
+    "policy": "policy-956127d50e29-dirty.json",
+    "workflow": "workflow-956127d50e29-dirty.json"
   },
   "counts": {
-    "artifact": 45,
-    "context": 27,
-    "harness": 73,
+    "artifact": 46,
+    "context": 47,
+    "harness": 76,
     "optional": 1
   },
-  "workflow_digest": "16aba1f3f20c8bb28f811bcaa3c4ed61b1686de4181550743928dc8bde4622cd",
+  "workflow_digest": "f31342587c8fa0f392be9606b57154864dc5b2cad67c7de7b8e7ec5f43b6f6c7",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -103,7 +104,7 @@
       ]
     },
     "ARCHITECTURE.md": {
-      "sha256": "8dd9fcbfd45f6334df939417cd7781d473f2f15804ab689f3fe129e6403f6aac",
+      "sha256": "f514805b6497a539d989d9256dfa5062fe7207e3c93dc29f560ec12da03bc5f6",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -134,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-293cd0afdc23065e960591245b07096b062b8351.json": {
+    "data/receipts/post-commit-956127d50e294282e1db64dbcc16cb4e86286904.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -487,6 +488,198 @@
         "micro"
       ]
     },
+    "loop_wiki/evolve-technical-equivalence-research/PROMPT.md": {
+      "sha256": "7b6d76d2642e93e650f67242818232f1c08df817319620054edaa3333491057d",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/_runs/proof/selftest-receipt.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/adapter-registry.json": {
+      "sha256": "04893d0b4bcafa80a5fd05981b6c94121aa2b7f4bff279b95733de2038bf6df0",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/drift.py": {
+      "sha256": "0b026215274d7ae37d004f16eef900b5054543ce5163bb41bf434d4eb30704c4",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/equivalence.py": {
+      "sha256": "aa645889246d21df20aa1a45695a723cfa6f3906956ceb6193d7cb6a353a9b49",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/legacy_compare.py": {
+      "sha256": "fb5a013fbbaf472090180112c5b6c30f4de39a35faed829cd78307b37ebe239f",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md": {
+      "sha256": "403d6f4656dc38ae0226dc74d8514ca6a3b338291f84293fbca50c64797fa73f",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile/legacy-baseline.md": {
+      "sha256": "afce23df160e720718fdfcc66b7ea7b00abe9ad72ac24a758b9c2bab2e031d47",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md": {
+      "sha256": "5e9075b81b60a9b1589de84fff21ed2de1fab93550310c5806ce3dc0662f9bc9",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile_validator.py": {
+      "sha256": "fed644bd00965c4e1eedd32b7e20bc757a96455c88afa6da73d2ceac5b150cd3",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/adapter-receipt.schema.json": {
+      "sha256": "444a3f6943c5c509aeea26f14e1fb9a02c42f05a81cfa1f9d909bd0c971de76b",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/canary-observation.schema.json": {
+      "sha256": "20b01cdf0d5a7c41fbe0d203b68da1f5abfdbd037c24a8d7be92fa8c07f07f2e",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/equivalence-request.schema.json": {
+      "sha256": "51b6c8fbef2637ba478cf6a2cf6d37f7c403e99dc887d51c6c376b1e6276d9e6",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/judge-packet.schema.json": {
+      "sha256": "47ef53296fd7c809e880448539a315e61b801efe47424dc3bc283941800d0cb0",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/judge-result.schema.json": {
+      "sha256": "d8929556427b3b7cb6ce4a5fea71f9b449798186f689861f3e344b4ce0838234",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/research-request.schema.json": {
+      "sha256": "fefede3dbfa54fd55ef89e7f0ed6e4bfaeb6b0ede52c0bb5e1ff50c5c7cddd1c",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/research-result.schema.json": {
+      "sha256": "a57a1270dad961821d4d41581187ec824358bc2859c46353c22c8f45a32878ce",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/route-result.schema.json": {
+      "sha256": "9899818929c6c97975e50e6c436d34f5be4060285894c9d92e32836968f96271",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/sync-bundle.schema.json": {
+      "sha256": "439a95e93ae32c5065813939099ebe3e95a195e8122baedbd403797b7ccdad21",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/verification-bundle.schema.json": {
+      "sha256": "95c3cbe42ed4ade7461dbd67fc1c5d9e7bff161fdb3df881d790f6e257c2a202",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/selftest.py": {
+      "sha256": "bb0796cf8faa7e353faa630aacae07a794c3cb488ccd46bb38dd128b14aa5d51",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/selftest.sh": {
+      "sha256": "f50f2fbaee2ab5de7680296da19037cd25c4e16374ed83b72239c2570eea6a74",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/tests/test_cli.py": {
+      "sha256": "759427206a56987ef9e39bc7d04f92bd4df9a18909bb7c99f6a415bc38190fb6",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/tests/test_drift.py": {
+      "sha256": "4ca1eb68d8755c4f4b80a9b7bde3716bfbcbb918983cdf39052a9a1d043e17e6",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
     "loopctl/Dockerfile": {
       "sha256": "08d03199593ca77d1d65129b4e559659cf2eb3e6e8ff4b672663109030dd1e61",
       "hash_source": "index",
@@ -496,7 +689,7 @@
       ]
     },
     "loopctl/README.md": {
-      "sha256": "05e6a6c3fd519addf5388a95a4eb9f712a0eeebe6ef5eb4057a1753ab8c5538e",
+      "sha256": "bee9238ab74dbbc30384965b6dbcf68f76832e3e9f86eae8481ce7dadbcd94a9",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -544,7 +737,7 @@
       ]
     },
     "loopctl/contract.json": {
-      "sha256": "6ec677f2882bd5eec4df745ca1cca036cd132040e96808e72e98b82fe19718db",
+      "sha256": "917bb9ff42618b9b7cc14b16c1d73037d851d2059159b8555b8f8e76bcc83bdb",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -569,7 +762,7 @@
       ]
     },
     "loopctl/loopctl.sh": {
-      "sha256": "81d8869f154d48cbce3addb1cf74e8d259e3dcd26c6eaed56b336be8a6d23117",
+      "sha256": "4d7a4de5eb84d73b55150d291e95809273a5a5dcb91f86c0a8e0822c067f3cb2",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -619,7 +812,7 @@
       ]
     },
     "loopctl/selftest.sh": {
-      "sha256": "68f900a8ac2c8a0c3f775f650e1ded485075d1e81ba1404432be90caf6a3a67a",
+      "sha256": "3938a649807a61479e305c24f8d21751fbffdc84b62443330067d39722ead30a",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -627,7 +820,7 @@
       ]
     },
     "loopctl/surface.lock": {
-      "sha256": "2dd2110c2b188b77369b08dbb3c66c35cd45bdb4a25ab84e0a53753441b655bc",
+      "sha256": "612e7d22e0b44640b9cba324138dd71aa0d38996c24c1c497d13efc1499b0e38",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -964,7 +1157,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "113587537914c76cb18ea088dfc8cba53401cde8a6a5e84da1184d4b49b67092",
+      "sha256": "719395ef85dfadb744637eef04b3d2e5eef76166c4a16ba3305f08c6d1b113d3",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1068,7 +1261,7 @@
       ]
     },
     "proof_workflow/lib/prove.sh": {
-      "sha256": "0ced1a932d0e839b8c5a87bdb4a1b5ca24327f9fbc05d15195d769cecc68a564",
+      "sha256": "d638a46602c3fbce13cca063e5c0102f17670ee0997baf64d46073fab2e54938",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

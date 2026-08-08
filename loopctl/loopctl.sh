@@ -1,5 +1,5 @@
 #!/bin/sh
-# loopctl.sh — the one CLI over this repo's three loops.
+# loopctl.sh — the one CLI over this repo's declared loops.
 #
 #   loopctl.sh <macro|micro|openwiki> <run|prove|test> [flags]
 #   loopctl.sh contract      print the declared surface and its sha256
@@ -32,7 +32,7 @@ HERE=$(cd "$(dirname "$0")" && pwd -P)
 CONTRACT="$HERE/contract.json"
 
 usage() {
-  echo "usage: loopctl.sh <macro|micro|openwiki> <run|prove|test> [flags]" >&2
+  echo "usage: loopctl.sh <macro|micro|openwiki|equivalence> <run|prove|test> [flags]" >&2
   echo "       loopctl.sh contract | --selftest" >&2
   echo "       flags per command: loopctl.sh contract" >&2
 }
@@ -310,6 +310,19 @@ case "$LOOP/$MODE" in
     python3 "$ROOT/$TARGET" run "$@" ;;
   notebooklm/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   notebooklm/test)  if has_flag --live "$@"; then CONTROL_NOTEBOOKLM_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  equivalence/run)
+    _erequest=$(value_of --request "$@")
+    _etarget=$(value_of --target-peer "$@")
+    _esource=$(value_of --source-peer "$@")
+    _eresult=$(value_of --research-result "$@")
+    _elive=0; has_flag --execute-gemini "$@" && _elive=1
+    set -- run --request "$_erequest" --target-peer "$_etarget"
+    [ -n "$_esource" ] && set -- "$@" --source-peer "$_esource"
+    [ -n "$_eresult" ] && set -- "$@" --research-result "$_eresult"
+    [ "$_elive" -eq 1 ] && set -- "$@" --execute-gemini
+    python3 "$ROOT/$TARGET" "$@" ;;
+  equivalence/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  equivalence/test)  if has_flag --live "$@"; then EQUIVALENCE_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;
 esac
 RC=$?
