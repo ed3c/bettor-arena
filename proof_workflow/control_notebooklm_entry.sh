@@ -132,12 +132,29 @@ if plant empty-link-set \
             "no-doc-urls: --follow was requested'; then
   run_planted empty-link-set
 fi
+# 5. "the library is not installed" and "Drive refused this document" are
+#    repaired in completely different places, so collapsing them must go red.
+if plant library-vs-refusal '        if rc == 3:' '        if False:'; then
+  run_planted library-vs-refusal
+fi
+# 6. the drive helper's stdout gets the same purity rule as the CLI's.
+if plant drive-json-purity '        if not head.startswith("{"):' '        if False:'; then
+  run_planted drive-json-purity
+fi
 
 # --- 5. absent tool must be 64, never 2 --------------------------------------
 # The two absences are repaired at different layers (install vs re-authenticate),
 # so a run that cannot tell them apart sends the repair to the wrong place.
+#
+# The emptied PATH goes through `env` and reaches ONLY the interpreter, hence
+# the absolute python3. Writing `PATH=/nonexistent capture ...` instead looks
+# like a one-command prefix and is not: a variable assignment before a shell
+# FUNCTION persists in the calling shell afterwards, so it emptied PATH for
+# capture.sh's own basename/sha256sum/cut and for every later case, which
+# arrived as exit 127 in two places and read like two broken mechanisms.
+PY3=$(command -v python3) || { echo "control FATAL: no python3 on PATH" >&2; exit 64; }
 CAPTURE_CWD="$WT"
-PATH=/nonexistent capture absent-binary -- python3 "$ENTRY" run \
+capture absent-binary -- env PATH=/nonexistent "$PY3" "$ENTRY" run \
   --notebook-title "control-absent-tool" --out "$BASE/absent"
 ABSENT_RC=$?
 CAPTURE_CWD=""
@@ -178,6 +195,30 @@ print(f"{len(targets)} target(s), {len(titles)} pinned notebook(s)")
 REG_RC=$?
 CAPTURE_CWD=""
 expect "registry-targets-are-pinned" "$REG_RC" 0
+
+# --- 8b. hop 2 must not regress to the anonymous URL path ---------------------
+# A STATIC arrival, deliberately independent of the runs above: the planted
+# defects all exercise stage_follow's error handling, and none of them would
+# notice if `source add <url>` came back as the mechanism. That regression is
+# invisible while the account happens to hold public documents and fails for
+# everyone else — which is exactly the shape that made this path necessary
+# (every linked document answers 401 to an anonymous fetch; a nonexistent id
+# answers 404, which is how "gated" was told apart from "not there").
+CAPTURE_CWD="$WT"
+capture hop2-not-anonymous -- "$PY3" -c '
+import re, sys
+src = open(sys.argv[1], encoding="utf-8").read()
+body = src.split("def stage_follow(", 1)
+assert len(body) == 2, "stage_follow is gone; this assertion is now vacuous"
+body = body[1].split("\ndef ", 1)[0]
+assert "drive" in body.lower(), "stage_follow no longer mentions the Drive path"
+bad = re.search(r"\"source\",\s*\"add\"", body)
+assert not bad, "stage_follow is back on the CLI source-add path, which is an ANONYMOUS fetch and cannot reach a signed-in-only document"
+print("hop2 goes by Drive file id, not by anonymous URL ingestion")
+' "$ENTRY"
+STATIC_RC=$?
+CAPTURE_CWD=""
+expect "hop2-is-not-anonymous-url-ingestion" "$STATIC_RC" 0
 
 # --- 9. the live arm, opt-in --------------------------------------------------
 if [ "${CONTROL_NOTEBOOKLM_LIVE:-0}" = "1" ]; then

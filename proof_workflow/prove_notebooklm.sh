@@ -39,6 +39,10 @@ prove_context module .agents/skills/notebooklm-workflow/modules/ai-monetization-
 prove_harness entry notebooklm/workflow.py \
   "notebook title -> full UUID -> one ready Google Doc/Sheet -> its fulltext -> the docs.google links inside it -> (opt-in) that document opened via a scratch notebook that is deleted from finally. Its selftest drives every named absence against a fake CLI on PATH, with no network" \
   -- python3 notebooklm/workflow.py --selftest
+prove_harness drive-fetch notebooklm/drive_fetch.py \
+  "a docs.google file id -> sources.add_drive over the SIGNED-IN session -> that document's indexed text as JSON. Hashed, not fired: it runs under the CLI's own interpreter and every run of it writes to the account. It exists because the CLI's URL ingestion is anonymous — measured, every document linked from the harvested sheet answers HTTP 401 to an anonymous fetch while a nonexistent id answers 404, and the CLI returned FAILED_PRECONDITION for all of them"
+prove_harness registry notebooklm/registry.json \
+  "the interaction data: account profile, pinned notebook ids, named harvest targets. Hashed rather than run — it is data. A pin here is cross-checked against the live account at run time, never trusted as a shortcut, and the control asserts offline that every target names a notebook this file also declares"
 prove_harness surface loopctl/loopctl.sh \
   "the only way in: flags not on the contract are refused rather than forwarded (hashed, not fired — loopctl --selftest is the macro loop's step)"
 

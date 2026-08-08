@@ -50,7 +50,9 @@ sh loopctl/loopctl.sh contract                         # 旗標全表 + surface_
 | `2` + `no-ai-related-source` | 沒有 ready 的 AI 相關 Doc/Sheet | 用 `--source-title` 具名指定 |
 | `2` + `empty-fulltext` | 來源 READY 但索引出空字串 | 空集合與任何東西相等,所以它有自己的出口而不是往下流 |
 | `2` + `no-doc-urls` | 要了 `--follow` 但 hop1 沒有任何文件連結 | 換一張 Sheet;**空的第二跳不是成功的第二跳** |
-| `2` + `follow-not-accessible` | 連結指的文件沒分享給這個帳號 | 這是權限,不是抓取邏輯 |
+| `2` + `follow-library-absent` | CLI 在,但它那個直譯器 import 不到 notebooklm **套件** | 裝套件本體。**不是權限問題** |
+| `2` + `follow-not-accessible` | Drive 拒了那份文件(沒分享給這個帳號/不是原生 Doc) | 這是權限,不是抓取邏輯 |
+| `2` + `follow-none-accessible` | 每一條連結都被拒 | 看收據 `hop2.attempted`——各條理由不一定同一種修法 |
 | `2` + `PARTIAL id` | 上游 `--json` 被人類行汙染 | 有人把部分 id 傳進去了。全 UUID 才有純 JSON |
 
 **present ≠ authenticated** 是這條迴圈量出來的,不是推論的:`auth check --json` 只證 cookie 檔

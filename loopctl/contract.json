@@ -250,7 +250,7 @@
         "adhoc": "--notebook-title TITLE [+ --source-title] — name the notebook directly"
       },
       "opt_in": {
-        "--follow": "hop 2: really open a docs.google document linked from inside the harvested sheet. It is the only WRITING path here, and it writes to a scratch notebook it creates and deletes again from `finally` — never to the notebook being harvested. Without it the run is read-only",
+        "--follow": "hop 2: really open a docs.google document linked from inside the harvested sheet, BY DRIVE FILE ID over the signed-in session. It is the only WRITING path here, and it writes to a scratch notebook it creates and deletes again from `finally` — never to the notebook being harvested. Without it the run is read-only. It goes through notebooklm/drive_fetch.py under the CLI's own interpreter because the CLI has no authenticated Drive path and its `source add <url>` is an ANONYMOUS fetch: measured, every document linked from this sheet answers HTTP 401 to an anonymous request (a nonexistent id answers 404, which is how gated was told apart from absent) and the CLI returned FAILED_PRECONDITION for all of them",
         "--dry-run": "run every READ stage for real (auth, notebook resolution, registry pin check, source pick) and stop before the first fetch, printing the argv of every call point including the ones --follow would make"
       },
       "io": {
@@ -267,7 +267,7 @@
           "<out>/hop1.txt — the harvested source's indexed text (not written by --dry-run)",
           "<out>/hop2.txt — the followed document's text (--follow only)"
         ],
-        "exit": "0 ok · 2 a named business absence (not-authenticated, target-not-found, registry-pin-stale, notebook-not-found, notebook-ambiguous, no-harvestable-source, no-ai-related-source, empty-fulltext, no-doc-urls, follow-timeout, follow-not-accessible) · 64 FATAL (absent notebooklm binary, absent registry, unwritable output directory, neither-or-both subjects)",
+        "exit": "0 ok · 2 a named business absence (not-authenticated, target-not-found, registry-pin-stale, notebook-not-found, notebook-ambiguous, no-harvestable-source, no-ai-related-source, empty-fulltext, no-doc-urls, follow-library-absent, follow-not-accessible, follow-impure-json, follow-empty, follow-none-accessible) · 64 FATAL (absent notebooklm binary, absent registry, unreadable CLI shebang, unwritable output directory, neither-or-both subjects)",
         "note": "the notebooklm CLI's --json is only pure for FULL UUIDs — a partial id prepends a human `Matched:` line — so every id is resolved before use AND the purity is asserted afterwards. This loop runs on the HOST, not in the container layer: its input includes a bearer credential the sandbox model would expose to every process inside it, and the image carries no notebooklm binary"
       },
       "writes": [

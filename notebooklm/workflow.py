@@ -63,6 +63,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -73,6 +74,7 @@ from pathlib import Path
 SCHEMA = "bettor-arena-notebooklm-module@1.0.0"
 BIN = "notebooklm"
 REGISTRY = Path(__file__).resolve().parent / "registry.json"
+DRIVE_FETCH = Path(__file__).resolve().parent / "drive_fetch.py"
 
 # ASCII-boundary lookarounds, not \b: Python's \b is Unicode-aware, so \bAI\b
 # does NOT match "AI高價值內容知識變現" — the very titles this loop exists to
@@ -83,7 +85,10 @@ AI_TITLE = re.compile(
     r"|(?i:agent|model|prompt|solopreneur|open ?source)"
     r"|人工智慧|大模型|機器學習|智能",
 )
-DOC_URL = re.compile(r"https://docs\.google\.com/document/d/[A-Za-z0-9_-]{20,}")
+# The id is captured, not just matched: hop 2 goes by Drive FILE ID over the
+# signed-in session, because the URL form is fetched anonymously and every one of
+# these documents answers 401 to that.
+DOC_URL = re.compile(r"https://docs\.google\.com/document/d/([A-Za-z0-9_-]{20,})")
 HARVESTABLE = ("google_docs", "google_spreadsheet")
 
 
@@ -290,12 +295,54 @@ def stage_fulltext(notebook_id: str, source_id: str, out: Path) -> dict:
 
 def stage_extract(out: Path) -> dict:
     content = (out / "hop1.txt").read_text(encoding="utf-8")
-    urls = sorted(set(DOC_URL.findall(content)))
-    return {"doc_urls": urls, "count": len(urls)}
+    ids = sorted({m.group(1) for m in DOC_URL.finditer(content)})
+    return {
+        "doc_ids": ids,
+        "doc_urls": [f"https://docs.google.com/document/d/{i}" for i in ids],
+        "count": len(ids),
+    }
 
 
-def stage_follow(url: str, out: Path, timeout: int) -> dict:
+def cli_interpreter() -> str:
+    """The interpreter that can import notebooklm, read off the CLI's shebang.
+
+    The CLI is normally installed into an isolated environment (pipx / uv tool),
+    so the python running THIS file cannot import the library. The interpreter
+    that can is the one the CLI's own launcher names, and reading it from there
+    keeps the absolute path out of a tracked file — the repo refuses those, and
+    a hard-coded one would be wrong on the next machine anyway.
+    """
+    cli = shutil.which(BIN)
+    if cli is None:
+        raise Fatal(f"{BIN} is not on PATH — install notebooklm-py")
+    try:
+        first = Path(cli).read_text(encoding="utf-8", errors="replace").splitlines()[0]
+    except (OSError, IndexError) as exc:
+        raise Fatal(f"cannot read the shebang of {cli}: {exc}") from exc
+    if not first.startswith("#!"):
+        raise Fatal(
+            f"{cli} is not a script with a shebang, so the interpreter that has "
+            "the notebooklm library cannot be derived from it. Hop 2 needs the "
+            "library because the CLI has no authenticated Drive path."
+        )
+    parts = first[2:].strip().split()
+    interp = parts[1] if parts and parts[0].endswith("/env") else parts[0]
+    resolved = shutil.which(interp) or interp
+    if not Path(resolved).exists():
+        raise Fatal(f"the interpreter named by {cli} does not exist: {resolved}")
+    return resolved
+
+
+def stage_follow(url: str, file_id: str, out: Path, timeout: int) -> dict:
     """Really open the linked Google Doc, in a notebook that is thrown away.
+
+    By Drive file id over the SIGNED-IN session, not by URL. Measured: every
+    document linked from the harvested sheet answers 401 to an anonymous fetch
+    (a nonexistent id answers 404, which is how "gated" was told apart from "not
+    there"), and the CLI's URL ingestion is anonymous — it returned
+    FAILED_PRECONDITION for all of them. There is no CLI flag for the Drive
+    path, so this goes through notebooklm/drive_fetch.py under the CLI's own
+    interpreter.
 
     Adding a source is a write, and the only notebook this loop is allowed to
     write to is one it just created. The delete runs from `finally` so a failed
@@ -304,38 +351,45 @@ def stage_follow(url: str, out: Path, timeout: int) -> dict:
     sense the user would recognise.
     """
     created = _json_out(
-        [BIN, "create", f"nblm-workflow-scratch-{_utc()}", "--json"],
+        [BIN, "create", f"notebooklm-workflow-scratch-{_utc()}", "--json"],
         "scratch notebook create",
     )
     scratch = (created.get("notebook") or {}).get("id")
     if not scratch:
         raise Red("scratch-create-failed: `create --json` carried no notebook.id")
     try:
-        added = _json_out(
-            [BIN, "source", "add", url, "-n", scratch, "--type", "url", "--json"],
-            "scratch source add",
+        # Selftest seam, deliberately NOT on the loopctl surface: a surface that
+        # covers most of a target teaches callers to reach past it for the rest.
+        override = os.environ.get("NOTEBOOKLM_DRIVE_FETCH")
+        argv = (
+            shlex.split(override) if override else [cli_interpreter(), str(DRIVE_FETCH)]
         )
-        src = (added.get("source") or {}).get("id")
-        if not src:
-            raise Red("follow-add-failed: `source add --json` carried no source.id")
-        rc, _, err = _run(
-            [BIN, "source", "wait", src, "-n", scratch, "--timeout", str(timeout)]
+        rc, stdout, stderr = _run(
+            [*argv, scratch, file_id, f"followed-{file_id[:8]}", str(timeout)]
         )
-        if rc == 2:
+        if rc == 3:
             raise Red(
-                f"follow-timeout: the linked document did not finish indexing "
-                f"within {timeout}s"
+                "follow-library-absent: the notebooklm LIBRARY is not importable "
+                "under the CLI's own interpreter, so the authenticated Drive path "
+                f"is unavailable. {(stderr or '').strip()[:300]}"
+            )
+        if rc == 4:
+            raise Red(
+                "follow-not-accessible: Drive refused the document. It exists but "
+                "is not shared with this Google account, or it is not a native "
+                f"Google Doc. {(stderr or '').strip()[:300]}"
             )
         if rc != 0:
             raise Red(
-                "follow-not-accessible: the linked document could not be "
-                "processed. The usual cause is that it is not shared with this "
-                f"Google account. {(err or '').strip()[:300]}"
+                f"follow-failed: drive_fetch exited {rc} — {(stderr or stdout).strip()[:300]}"
             )
-        data = _json_out(
-            [BIN, "source", "fulltext", src, "-n", scratch, "--json"],
-            "scratch fulltext",
-        )
+        head = stdout.lstrip()
+        if not head.startswith("{"):
+            raise Red(
+                "follow-impure-json: drive_fetch printed something before its "
+                f"JSON — {head.splitlines()[0][:80]!r}"
+            )
+        data = json.loads(head)
         content = data.get("content") or ""
         if not content.strip():
             raise Red(f"follow-empty: {url} was reachable but indexed to no text")
@@ -343,7 +397,9 @@ def stage_follow(url: str, out: Path, timeout: int) -> dict:
         target.write_text(content, encoding="utf-8")
         return {
             "state": "accessed",
+            "via": "drive-file-id-over-signed-in-session",
             "url": url,
+            "file_id": file_id,
             "title": data.get("title"),
             "path": target.name,
             "chars": len(content),
@@ -391,10 +447,10 @@ def run(args: argparse.Namespace) -> int:
     ]
     if args.follow:
         plan += [
-            f"{BIN} create nblm-workflow-scratch-<utc> --json",
-            f"{BIN} source add <doc-url> -n <scratch-uuid> --type url --json",
-            f"{BIN} source wait <src-uuid> -n <scratch-uuid> --timeout {args.timeout}",
-            f"{BIN} source fulltext <src-uuid> -n <scratch-uuid> --json",
+            f"{BIN} create notebooklm-workflow-scratch-<utc> --json",
+            "<cli-interpreter> notebooklm/drive_fetch.py <scratch-uuid> <doc-file-id> <title>",
+            "    (sources.add_drive over the signed-in session — the CLI's URL",
+            "     ingestion is anonymous and every one of these docs answers 401)",
             f"{BIN} delete -n <scratch-uuid> --yes  (always, from finally)",
         ]
     for line in plan:
@@ -467,14 +523,32 @@ def run(args: argparse.Namespace) -> int:
             "empty set is not a successful second hop."
         )
 
-    url = found["doc_urls"][0]
-    print(f"  [hop2    ] following {url}")
-    try:
-        result["hop2"] = stage_follow(url, out, args.timeout)
-    except Red as exc:
-        result["hop2"] = {"state": "failed", "url": url, "why": str(exc)}
+    # Try the links in order and stop at the first one that opens. A single
+    # attempt would turn "this particular link is dead" into "the second hop does
+    # not work", and those are different facts; every refusal is kept so the
+    # receipt says which documents were tried and why each was refused.
+    attempts: list[dict] = []
+    for file_id, url in zip(found["doc_ids"], found["doc_urls"]):
+        print(f"  [hop2    ] following {url}")
+        try:
+            result["hop2"] = stage_follow(url, file_id, out, args.timeout)
+            break
+        except Red as exc:
+            attempts.append({"url": url, "why": str(exc)})
+            print(f"  [hop2    ] refused — {str(exc)[:120]}")
+    else:
+        result["hop2"] = {
+            "state": "none-accessible",
+            "attempted": attempts,
+            "why": f"all {len(attempts)} linked document(s) were refused",
+        }
         _emit(out, result)
-        raise
+        raise Red(
+            f"follow-none-accessible: every one of the {len(attempts)} linked "
+            "documents was refused. See hop2.attempted in the receipt for each "
+            "reason — they are not all the same repair."
+        )
+    result["hop2"]["earlier_refusals"] = attempts
     hop2 = result["hop2"]
     print(
         f"  [hop2    ] {hop2['chars']} chars -> {hop2['path']} sha={hop2['sha256'][:12]}"
@@ -503,6 +577,32 @@ def _verdict(result: dict) -> int:
 
 
 # ------------------------------------------------------------------ selftest
+
+# Stands in for notebooklm/drive_fetch.py under the CLI's own interpreter, which
+# the selftest cannot have: the real one imports a library installed in a
+# separate environment. Its EXIT CODES are the contract being exercised — 3 the
+# library is absent, 4 Drive refused the file — because those are what the caller
+# turns into two different named states with two different repairs.
+DRIVE_STUB = r"""#!/usr/bin/env python3
+import json, os, sys
+
+mode = os.environ["NOTEBOOKLM_STUB"]
+notebook, file_id, title = sys.argv[1], sys.argv[2], sys.argv[3]
+
+if mode == "no-library":
+    print("no module named notebooklm", file=sys.stderr)
+    raise SystemExit(3)
+if mode == "doc-not-shared":
+    print("PermissionError: not shared", file=sys.stderr)
+    raise SystemExit(4)
+if mode == "first-doc-dead" and file_id.startswith("D"):
+    print("PermissionError: not shared", file=sys.stderr)
+    raise SystemExit(4)
+if mode == "follow-impure":
+    print("Matched: something")
+print(json.dumps({"source_id": "s-follow", "title": "the linked doc",
+                  "content": "the linked document's own text\n"}))
+"""
 
 STUB = r'''#!/usr/bin/env python3
 """Fake notebooklm. Behaviour is chosen by NOTEBOOKLM_STUB, one case per named absence."""
@@ -537,25 +637,18 @@ if a[:2] == ["source", "list"]:
          "title": "grocery list", "type": "google_docs", "status": "ready"},
     ]})
 if a[:2] == ["source", "fulltext"]:
-    body = "row\nhttps://docs.google.com/document/d/" + "D" * 30 + "/edit\nrow\n"
+    # Two links, so "the first one is dead" can be told apart from "hop 2 is broken".
+    body = ("row\nhttps://docs.google.com/document/d/" + "D" * 30 + "/edit\n"
+            "row\nhttps://docs.google.com/document/d/" + "E" * 30 + "/edit\n")
     if mode == "no-links":
         body = "a sheet with no document links at all\n"
     if mode == "impure-json":
         # The real defect: a human line printed before the JSON.
         print("Matched: 2222222 (AI...)")
         body = "x"
-    if a[2].startswith("scratch-"):
-        body = "the linked document's own text\n"
     out({"content": body, "title": "t", "kind": "google_spreadsheet"})
 if a[:1] == ["create"]:
     out({"notebook": {"id": "scratch-99999999"}})
-if a[:2] == ["source", "add"]:
-    if mode == "doc-not-shared":
-        print("permission denied", file=sys.stderr)
-        raise SystemExit(1)
-    out({"source": {"id": "scratch-44444444"}})
-if a[:2] == ["source", "wait"]:
-    raise SystemExit(0)
 if a[:1] == ["delete"]:
     # Recorded so the selftest can prove the scratch notebook is always removed.
     with open(os.environ["NOTEBOOKLM_STUB_LOG"], "a", encoding="utf-8") as fh:
@@ -587,9 +680,17 @@ def _selftest() -> int:
         stub.write_text(STUB, encoding="utf-8")
         stub.chmod(0o755)
         log = base / "delete.log"
+        drive_stub = base / "drive_stub.py"
+        drive_stub.write_text(DRIVE_STUB, encoding="utf-8")
+        fetch_cmd = f"{shlex.quote(sys.executable)} {shlex.quote(str(drive_stub))}"
 
         def drive_argv(mode: str, argv: list[str]) -> tuple[int, str]:
-            env = dict(os.environ, NOTEBOOKLM_STUB=mode, NOTEBOOKLM_STUB_LOG=str(log))
+            env = dict(
+                os.environ,
+                NOTEBOOKLM_STUB=mode,
+                NOTEBOOKLM_STUB_LOG=str(log),
+                NOTEBOOKLM_DRIVE_FETCH=fetch_cmd,
+            )
             env["PATH"] = f"{stub_dir}:{env['PATH']}"
             proc = subprocess.run(
                 [sys.executable, me, "run", *argv],
@@ -601,7 +702,12 @@ def _selftest() -> int:
             return proc.returncode, proc.stdout + proc.stderr
 
         def drive(mode: str, *flags: str, on_path: bool = True) -> tuple[int, str]:
-            env = dict(os.environ, NOTEBOOKLM_STUB=mode, NOTEBOOKLM_STUB_LOG=str(log))
+            env = dict(
+                os.environ,
+                NOTEBOOKLM_STUB=mode,
+                NOTEBOOKLM_STUB_LOG=str(log),
+                NOTEBOOKLM_DRIVE_FETCH=fetch_cmd,
+            )
             env["PATH"] = f"{stub_dir}:{env['PATH']}" if on_path else "/nonexistent"
             outdir = base / f"out-{mode}-{len(flags)}-{int(on_path)}"
             proc = subprocess.run(
@@ -685,12 +791,46 @@ def _selftest() -> int:
         case("receipt-carries-schema", receipt["schema_version"], SCHEMA)
         case("receipt-carries-the-followed-doc", receipt["hop2"]["state"], "accessed")
         case("hop2-really-read-the-linked-doc", receipt["hop2"]["chars"] > 0, True)
-        case("extraction-is-non-empty", receipt["extracted"]["count"], 1)
+        case("extraction-is-non-empty", receipt["extracted"]["count"], 2)
+        case(
+            "hop2-went-by-drive-file-id",
+            receipt["hop2"]["via"],
+            "drive-file-id-over-signed-in-session",
+        )
         case(
             "scratch-notebook-was-deleted",
             "deleted scratch-99999999" in log.read_text(encoding="utf-8"),
             True,
         )
+
+        # A dead first link must not be reported as a broken second hop: the run
+        # moves on to the next document and records why the first was refused.
+        rc, _ = drive("first-doc-dead", "--follow")
+        case("dead-first-link-falls-through", rc, 0)
+        fell = json.loads(
+            (base / "out-first-doc-dead-1-1" / "module.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        case("second-link-was-the-one-opened", fell["hop2"]["state"], "accessed")
+        case("the-refusal-was-kept", len(fell["hop2"]["earlier_refusals"]), 1)
+
+        # Every link refused is its own state, and it is a red — an empty result
+        # is not a successful second hop.
+        rc, txt = drive("doc-not-shared", "--follow")
+        case("all-links-refused-is-2", rc, 2)
+        case("all-refused-is-named", "follow-none-accessible" in txt, True)
+
+        # The library being absent is repaired by installing, not by re-sharing a
+        # document, so it may not wear the same name as a refusal.
+        rc, txt = drive("no-library", "--follow")
+        case("absent-library-is-2", rc, 2)
+        case("absent-library-is-named", "follow-library-absent" in txt, True)
+
+        # The same purity rule applies to the drive helper's own stdout.
+        rc, txt = drive("follow-impure", "--follow")
+        case("impure-drive-output-is-refused", rc, 2)
+        case("impure-drive-output-is-named", "follow-impure-json" in txt, True)
 
         # Absent tool and present-but-unauthenticated must not wear each other's
         # exit code: one is repaired by installing, the other by refreshing.
@@ -811,7 +951,7 @@ def _selftest() -> int:
         # Dry run exercises every read and writes no fetch.
         rc, txt = drive("happy", "--dry-run", "--follow")
         case("dry-run-is-green", rc, 0)
-        case("dry-run-plans-the-write-calls", "source add <doc-url>" in txt, True)
+        case("dry-run-plans-the-write-calls", "drive_fetch.py" in txt, True)
         case(
             "dry-run-fetched-nothing",
             (base / "out-happy-2-1" / "hop1.txt").exists(),
