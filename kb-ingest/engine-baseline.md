@@ -4,7 +4,8 @@
 > pre-verifier）已隨 L1 回歸 langchain-ai/openwiki 官方程序而退役，**不再新增行**。保留的理由是下方
 > §三假設實測判定 是「錨定成本擠壓覆蓋廣度」這個結論的唯一證據，且記錄了 Flash 捏造具體值
 > （100k files／50k lines／errno 13）這個失效模式——官方三閘抓不到這一類，人 admit 時要自己獵。
-> 退役帳本 → `.agents/skills/repo-wiki-converge/modules/official-port-map.md` §4。
+> 退役帳本 → `skill/modules/official-port-map.md` §4（模組相對；host 的 skill 名是
+> `openwiki-port`，但名字會被 retarget，模組相對路徑跟著模組搬家）。
 
 > 目標函數＝**Fable(判官) token / 每認證產物**，質量閘（≥90 protocol）**不可簡化**＝verdicts intact。
 > 這張表是「架構優化引擎」立案 gate 的 baseline 計量基座（gate 條件見

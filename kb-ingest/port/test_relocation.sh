@@ -112,20 +112,20 @@ chmod +x "$MODULE/port/openwiki_subagent.sh"
 
 echo "--- host-skill-links profile, on a host that is not skill-bettor ---"
 mkdir -p "$HOST/.agents/skills" "$HOST/.claude/skills"
-ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.agents/skills/repo-wiki-converge"
-ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.claude/skills/repo-wiki-converge"
+ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.agents/skills/openwiki-port"
+ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.claude/skills/openwiki-port"
 declare_profiles '{"profiles":["host-skill-links"]}'
 expect "both host links are symlinks into the module" 0
 
 # The failure this profile exists to catch: a copy instead of a link. Two files that agree
 # today and silently diverge the first time someone edits one.
-rm "$HOST/.claude/skills/repo-wiki-converge"
-cp -R "$MODULE/skill" "$HOST/.claude/skills/repo-wiki-converge"
+rm "$HOST/.claude/skills/openwiki-port"
+cp -R "$MODULE/skill" "$HOST/.claude/skills/openwiki-port"
 expect "a host link replaced by a real copy" 1
-rm -rf "$HOST/.claude/skills/repo-wiki-converge"
-ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.claude/skills/repo-wiki-converge"
+rm -rf "$HOST/.claude/skills/openwiki-port"
+ln -s ../../vendor/third_party/wiki-port/skill "$HOST/.claude/skills/openwiki-port"
 
-rm "$HOST/.agents/skills/repo-wiki-converge"
+rm "$HOST/.agents/skills/openwiki-port"
 expect "a declared host link missing entirely" 1
 
 echo "--- skill-bettor-layout profile: stale-root scan derives from ALLOWED_ROOTS ---"

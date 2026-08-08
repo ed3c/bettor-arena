@@ -1,18 +1,25 @@
 ---
-name: repo-wiki-converge
+name: openwiki-port
 description: |
   把「任意可讀 repo → agent 可當記憶讀的 wiki」變一鍵流程時使用 — langchain-ai/openwiki 官方
   code-mode init/update 程序的 host-native 移植：官方提示詞逐字、官方三閘（skeleton_critic ×
   question_finder × answer_verifier）以硬隔離子進程執行、官方確定性後處理以 stdlib Python 重建。
   NO API KEY：推理全在 Claude Code 或 Codex CLI 自己的訂閱 session，不裝 node、不設任何 provider key。
-  觸發詞：repo wiki、任意 repo 生 wiki、openwiki、repo 理解文檔、kb-ingest repo wiki、wiki 收斂。
+  觸發詞：repo wiki、任意 repo 生 wiki、openwiki、repo 理解文檔、kb-ingest repo wiki、openwiki-port。
   何時用：要對一個可讀 repo 產 agent-grade 理解 wiki 並進 KB 時。
-  NOT for：抽源碼級不變量／隱含依賴（repo-agent-native）；抽 Gemini 對話（gemini-conversation-research）；
-  查證單一外部 claim（external-verify）；造或改 skill（skill-authoring）。
+  NOT for：在本層之上跑「Opus 判官 × Gemini 作者」收斂迴圈（共用 skill `repo-wiki-converge`，它的 S0
+  就是呼叫本層的 check_repo_wiki_converge.py）；抽源碼級不變量／隱含依賴（repo-agent-native）；
+  抽 Gemini 對話（gemini-conversation-research）；查證單一外部 claim（external-verify）；
+  造或改 skill（skill-authoring）。
   官方↔本地逐機制映射與誠實缺口在 modules/official-port-map.md。
 ---
 
-# Skill: repo-wiki-converge — 官方 OpenWiki 程序的 host-native 移植
+# Skill: openwiki-port — 官方 OpenWiki 程序的 host-native 移植
+
+> **改名沿革（2026-08-08 人裁）**: 本層原名 `repo-wiki-converge`，與共用 checkout 裡的收斂迴圈
+>   skill 同名。同名不是重複——那一支是**建在本層之上**的 judge-loop（它的 S0 就是跑本模組的
+>   `check_repo_wiki_converge.py`）。一個名字只能屬於一件事，故本層改名分家：host 的
+>   `repo-wiki-converge` 指共用 checkout，`openwiki-port` 指本模組。
 
 > **Role**: 對一個**可讀的 repo** 跑 langchain-ai/openwiki 的官方 code-mode 程序，產出 OKF v0.1
 >   wiki 落 `<TARGET>/openwiki/`，再快照進 skill-bettor RepoDoc lane。

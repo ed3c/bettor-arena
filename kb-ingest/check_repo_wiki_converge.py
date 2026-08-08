@@ -16,12 +16,18 @@ repo under another name at another depth. HOST_ROOT is the checkout the module i
 installed in, and only host-profile checks may touch it. Collapsing the two -- which is
 what parents[1] used to do -- is what pinned this lane to one repo at one depth.
 
+There is deliberately NO third root here. The machine-global shared-skills checkout holds
+the judge-loop skill that runs on top of this port (see HOST_SKILL_NAME); where that name
+resolves is the shared registry's contract. Asserting it from this gate would make a
+module that must survive `cp` into any repo depend on a checkout no repo owns.
+
 Exit 3 is not a worse 1. It means the gate could not establish what it was supposed to
 check (no host declaration, unparseable declaration, unknown profile name, no git
 worktree). Those must never collapse into "fail" or, worse, into a silent pass: a
 forgotten configuration would otherwise read as "this host legitimately has no such
 profile" and the check would disappear while the banner stayed green.
 """
+
 from __future__ import annotations
 
 import json
@@ -32,6 +38,7 @@ import tempfile
 from pathlib import Path
 
 MODULE_ROOT = Path(__file__).resolve().parent
+
 
 def fail(msg: str) -> None:
     print(f"FAIL: {msg}", file=sys.stderr)
@@ -48,7 +55,14 @@ def _git_root(flag: str) -> Path | None:
     """Ask git for a root, or None outside a work tree."""
     try:
         result = subprocess.run(
-            ["git", "-C", str(MODULE_ROOT), "rev-parse", "--path-format=absolute", flag],
+            [
+                "git",
+                "-C",
+                str(MODULE_ROOT),
+                "rev-parse",
+                "--path-format=absolute",
+                flag,
+            ],
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
@@ -149,13 +163,16 @@ def foreign_home_paths(text: str) -> list[str]:
     for marker in HOME_ROOT_MARKERS:
         idx = text.find(marker)
         while idx != -1:
-            if not any(text.startswith(prefix, idx) for prefix in ALLOWED_ROOT_PREFIXES):
+            if not any(
+                text.startswith(prefix, idx) for prefix in ALLOWED_ROOT_PREFIXES
+            ):
                 end = idx
                 while end < len(text) and text[end] not in _PATH_END_CHARS:
                     end += 1
                 hits.append(text[idx:end])
             idx = text.find(marker, idx + 1)
     return sorted(set(hits))
+
 
 KB = MODULE_ROOT
 # The operating manual ships inside the module: installing is `cp` the module plus one
@@ -164,14 +181,20 @@ KB = MODULE_ROOT
 SKILL_DIR = KB / "skill"
 SKILL = SKILL_DIR / "SKILL.md"
 MODULE = SKILL_DIR / "modules" / "official-port-map.md"
+# The host name this module answers to. Renamed from `repo-wiki-converge` by human ruling
+# (2026-08-08): that name belongs to the judge-loop skill in the shared skills checkout,
+# which sits ON TOP of this port (its S0 runs this very gate). Two layers, two names.
+# Where the shared name points is the shared registry's contract, not this gate's — a
+# module that asserted it would stop being copyable into a repo that has no such checkout.
+HOST_SKILL_NAME = "openwiki-port"
 HOST_SKILL_LINKS = [
-    HOST_ROOT / ".agents" / "skills" / "repo-wiki-converge",
-    HOST_ROOT / ".claude" / "skills" / "repo-wiki-converge",
+    HOST_ROOT / ".agents" / "skills" / HOST_SKILL_NAME,
+    HOST_ROOT / ".claude" / "skills" / HOST_SKILL_NAME,
 ]
 INDEXING = HOST_ROOT / "indexing"
 
-OW = KB / "openwiki"        # upstream bytes ONLY — enforced by check_official_purity()
-PORT = KB / "port"     # everything skill-bettor added
+OW = KB / "openwiki"  # upstream bytes ONLY — enforced by check_official_purity()
+PORT = KB / "port"  # everything skill-bettor added
 
 # The seven machine-generated prompt assets. Each must carry the verbatim markers
 # and the generator's do-not-edit banner.
@@ -271,7 +294,12 @@ PROFILE_TEXT = {
 # Stale-root scanning is a host concern: it asks whether committed docs name a checkout that
 # is not this one. With no host profile there is no such expectation to violate.
 PROFILE_NO_OLD_ABSOLUTE_PATHS = {
-    "skill-bettor-layout": [SKILL, MODULE, KB / "setup-repo.sh", KB / "setup-prototype.sh"],
+    "skill-bettor-layout": [
+        SKILL,
+        MODULE,
+        KB / "setup-repo.sh",
+        KB / "setup-prototype.sh",
+    ],
 }
 
 CORE_EXECUTABLES = [PORT / "openwiki_subagent.sh", KB / "setup-repo.sh"]
@@ -296,8 +324,14 @@ def read(path: Path) -> str:
 
 
 def run(argv: list[str], cwd: Path = MODULE_ROOT) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(argv, cwd=cwd, text=True, stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, check=False)
+    return subprocess.run(
+        argv,
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
 
 
 def check_files() -> None:
@@ -315,11 +349,19 @@ def check_files() -> None:
 
 
 def check_skill_symlink() -> None:
-    """Every host skill location must be a symlink into the module, never a second copy.
+    """Every host entry for HOST_SKILL_NAME must be a symlink into the module, never a copy.
 
     Two copies previously drifted apart through a botched find-and-replace, which is why
     this is a link check and not a diff: a diff passes right up until someone edits one
     side, whereas there is only ever one file to edit here.
+
+    The name is `openwiki-port`, not `repo-wiki-converge` (human ruling 2026-08-08). The
+    earlier name collided with the shared judge-loop skill that runs ON TOP of this port,
+    and a project-level directory outranks the user-level one on both hosts — so the
+    collision did not duplicate that skill, it replaced it. Splitting the names is what
+    lets both checks be true at once; asserting where the OTHER name points is the shared
+    registry's job, and doing it here would make this module require a checkout it does
+    not own.
     """
     target = SKILL_DIR.resolve()
     for link in HOST_SKILL_LINKS:
@@ -369,7 +411,9 @@ def check_official_purity() -> None:
             f"found non-official file(s): {intruders}. Move them to kb-ingest/port/."
         )
     if found != expected:
-        fail(f"kb-ingest/openwiki/ is missing generated asset(s): {sorted(expected - found)}")
+        fail(
+            f"kb-ingest/openwiki/ is missing generated asset(s): {sorted(expected - found)}"
+        )
 
 
 def check_prompt_assets() -> None:
@@ -377,28 +421,41 @@ def check_prompt_assets() -> None:
     for path in PROMPT_ASSETS:
         text = read(path)
         shown = rel(path)
-        for needle in ("DO NOT EDIT BY HAND", "<!-- OPENWIKI-OFFICIAL:BEGIN -->",
-                       "<!-- OPENWIKI-OFFICIAL:END -->", "upstream: langchain-ai/openwiki @"):
+        for needle in (
+            "DO NOT EDIT BY HAND",
+            "<!-- OPENWIKI-OFFICIAL:BEGIN -->",
+            "<!-- OPENWIKI-OFFICIAL:END -->",
+            "upstream: langchain-ai/openwiki @",
+        ):
             if needle not in text:
-                fail(f"{shown} is missing {needle!r} — regenerate with {rel(PORT / 'sync_prompts.py')}")
+                fail(
+                    f"{shown} is missing {needle!r} — regenerate with {rel(PORT / 'sync_prompts.py')}"
+                )
         body = text.split("<!-- OPENWIKI-OFFICIAL:BEGIN -->", 1)[1]
         # An unresolved {PLACEHOLDER} would be shipped to the model as literal text.
         # User-prompt templates keep theirs on purpose; system prompts must have none.
         if "system.md" in path.name:
             import re
+
             leftover = re.findall(r"\{[A-Z][A-Z_]{3,}\}", body)
             if leftover:
-                fail(f"{shown} has unresolved placeholders {sorted(set(leftover))} — extend PLACEHOLDERS in sync_prompts.py")
+                fail(
+                    f"{shown} has unresolved placeholders {sorted(set(leftover))} — extend PLACEHOLDERS in sync_prompts.py"
+                )
 
     init = read(OW / "init.system.md")
     # Spot-check that this really is the official init prompt and not a re-summarized one.
     # These three lines are exactly what the retired distilled workflow had dropped or inverted.
-    for needle in ("Do not document every file or target a page count",
-                   "invoke the 'skeleton_critic' subagent",
-                   "'wiki_question_finder' and 'wiki_answer_verifier' subagents",
-                   "Do not draft wiki prose until every planned substantive page has an evidence brief"):
+    for needle in (
+        "Do not document every file or target a page count",
+        "invoke the 'skeleton_critic' subagent",
+        "'wiki_question_finder' and 'wiki_answer_verifier' subagents",
+        "Do not draft wiki prose until every planned substantive page has an evidence brief",
+    ):
         if needle not in init:
-            fail(f"init.system.md does not look like the official prompt (missing: {needle!r})")
+            fail(
+                f"init.system.md does not look like the official prompt (missing: {needle!r})"
+            )
 
     update = read(OW / "update.system.md")
     if "do not target a page count or page length" not in update:
@@ -425,31 +482,51 @@ def check_subagent_boundaries() -> None:
         (target / "openwiki").mkdir()
         (target / "src" / "app.py").write_text("x = 1\n", encoding="utf-8")
         (target / "openwiki" / "quickstart.md").write_text(
-            "---\ntype: Playbook\n---\n\n# Quickstart\n", encoding="utf-8")
-        for argv in (["init", "-q"], ["add", "-A"],
-                     ["-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init"]):
+            "---\ntype: Playbook\n---\n\n# Quickstart\n", encoding="utf-8"
+        )
+        for argv in (
+            ["init", "-q"],
+            ["add", "-A"],
+            ["-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init"],
+        ):
             if run(["git", "-C", str(target), *argv], cwd=target).returncode != 0:
                 fail("could not build the boundary-test fixture repository")
-        (target / "openwiki" / "_skeleton.md").write_text("- page: overview.md\n", encoding="utf-8")
+        (target / "openwiki" / "_skeleton.md").write_text(
+            "- page: overview.md\n", encoding="utf-8"
+        )
 
         env = {**os.environ, "OPENWIKI_DRY_RUN": "1"}
         seen = {}
         for role in ("finder", "critic", "verifier"):
             result = subprocess.run(
                 ["bash", str(script), role, str(target)],
-                input="payload\n", env=env, text=True,
-                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+                input="payload\n",
+                env=env,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                check=False,
+            )
             if result.returncode != 0:
                 fail(f"{role} dry-run failed:\n{result.stdout}")
             seen[role] = result.stdout
 
         if "openwiki" in seen["finder"].split("sandbox top level:")[1]:
-            fail("BOUNDARY LEAK: the question finder can see the generated wiki\n" + seen["finder"])
+            fail(
+                "BOUNDARY LEAK: the question finder can see the generated wiki\n"
+                + seen["finder"]
+            )
         if "src" in seen["verifier"].split("sandbox top level:")[1]:
-            fail("BOUNDARY LEAK: the answer verifier can see repository source\n" + seen["verifier"])
+            fail(
+                "BOUNDARY LEAK: the answer verifier can see repository source\n"
+                + seen["verifier"]
+            )
         critic_sandbox = seen["critic"].split("sandbox top level:")[1]
         if "src" not in critic_sandbox or "openwiki" not in critic_sandbox:
-            fail("the skeleton critic must see both repository source and the skeleton\n" + seen["critic"])
+            fail(
+                "the skeleton critic must see both repository source and the skeleton\n"
+                + seen["critic"]
+            )
 
         worktrees = run(["git", "-C", str(target), "worktree", "list"]).stdout
         if worktrees.count("\n") != 1:
@@ -461,12 +538,24 @@ def check_repodoc_ingest_dry_run() -> None:
     fixture = INDEXING / "tests" / "fixtures" / "repowiki"
     with tempfile.TemporaryDirectory(prefix="repo-wiki-converge-") as tmp:
         graph = Path(tmp) / "graph.json"
-        result = run([sys.executable, "-m", "indexing.ingest_repodoc_cli",
-                      str(fixture), "--dry-run", "--graph", str(graph)],
-                     cwd=HOST_ROOT)
+        result = run(
+            [
+                sys.executable,
+                "-m",
+                "indexing.ingest_repodoc_cli",
+                str(fixture),
+                "--dry-run",
+                "--graph",
+                str(graph),
+            ],
+            cwd=HOST_ROOT,
+        )
     if result.returncode != 0:
         fail(f"RepoDoc dry-run ingest failed:\n{result.stdout}")
-    if "RepoDoc=6" not in result.stdout or "[dry-run] no changes written." not in result.stdout:
+    if (
+        "RepoDoc=6" not in result.stdout
+        or "[dry-run] no changes written." not in result.stdout
+    ):
         fail(f"RepoDoc dry-run did not report expected fixture shape:\n{result.stdout}")
 
 
@@ -496,14 +585,18 @@ def main() -> int:
 
     declared = ", ".join(PROFILES) if PROFILES else "none (core only)"
     skipped = [p for p in KNOWN_PROFILES if p not in PROFILES]
-    print("PASS: repo-wiki-converge official-openwiki port "
-          "(openwiki/ pure upstream · prompt assets verbatim · post-passes self-tested · "
-          "read boundaries proven)")
+    print(
+        "PASS: repo-wiki-converge official-openwiki port "
+        "(openwiki/ pure upstream · prompt assets verbatim · post-passes self-tested · "
+        "read boundaries proven)"
+    )
     print(f"      module={MODULE_ROOT}")
     print(f"      host profiles run: {declared}")
     if skipped:
         # Naming what did NOT run keeps a narrowed gate from reading as a full one.
-        print(f"      host profiles NOT declared (their checks did not run): {', '.join(skipped)}")
+        print(
+            f"      host profiles NOT declared (their checks did not run): {', '.join(skipped)}"
+        )
     return 0
 
 

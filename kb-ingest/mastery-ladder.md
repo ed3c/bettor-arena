@@ -7,7 +7,8 @@
 > **2026-08-04 起 L1 換引擎**：L1 從「Gemini 作者 × Opus 判官 ≥90 protocol」改為 langchain-ai/openwiki 官方
 > code-mode 程序的 host-native 移植（官方提示詞逐字 + 官方三閘 + 官方確定性後處理，NO API KEY）。升層決策
 > 不再由判官 protocol 觸發，改為 **demand-pull**：L1 收斂後由人／goal 決定升不升層（見不變量 4）。
-> 逐機制映射與退役帳本 → `.agents/skills/repo-wiki-converge/modules/official-port-map.md`。
+> 逐機制映射與退役帳本 → `skill/modules/official-port-map.md`（模組相對；host 的 skill 名是
+> `openwiki-port`，但名字會被 retarget，模組相對路徑跟著模組搬家）。
 
 ## The ladder (each `kind` stays non-overlapping in the KG)
 
@@ -42,4 +43,4 @@ goal = runtime-only 黑盒反覆失敗           → repo-fullstack-debugger。
 3. **`kind` 保持不重疊**：RepoDoc(prose) / invariants / specs 各自 kind，KG 不打架。
 4. **升層是 demand-pull，非自動**：L1 收斂後由人/goal 決定升不升層,不自動 chain。
 
-> SSOT 交叉引用：L1 = `.agents/skills/repo-wiki-converge/`(`.claude/` 為 symlink) + `kb-ingest/openwiki/`(官方提示詞資產) + `kb-ingest/{openwiki_post.py,openwiki_subagent.sh}`；L2/L3 = `.claude/skills/repo-agent-native/` + `modules/{extraction-methodology,codebase-mastery-methodology,specs-as-code-prompt}.md` + `/specs-as-code`。
+> SSOT 交叉引用：L1 = `kb-ingest/skill/`(host 名 `openwiki-port`，`.agents/` 與 `.claude/` 皆為指向它的 symlink) + `kb-ingest/openwiki/`(官方提示詞資產) + `kb-ingest/port/{openwiki_post.py,openwiki_subagent.sh}`；L2/L3 = `.claude/skills/repo-agent-native/` + `modules/{extraction-methodology,codebase-mastery-methodology,specs-as-code-prompt}.md` + `/specs-as-code`。
