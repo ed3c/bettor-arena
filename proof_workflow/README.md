@@ -266,6 +266,44 @@ access token 壽命 **10 天**（不是一小時），host 上的 codex 會自�
 session 快到期時（剩不到 24 小時）在 `--dry-run` 就警告並給出續期指令。真正的失效模式不是「跑到
 一半過期」，是**兩週沒在 host 上跑過 codex**——趁還免費的時候講，別等到需要它的那天早上變 FATAL。
 
+### 自動許可的 token 成本：量出來的方向與參考文件相反
+
+```
+sh loopctl/automode-bench.sh --dry-run
+sh loopctl/automode-bench.sh --runs 3          # 兩個沙盒，只差一個變因
+```
+
+參考文件預測自動許可會炸 token（Import Cascade／全量測試日誌／巨型 `find` payload），防法是
+`.claudeignore` ＋ 細粒度授權。**同一任務、同一棵樹、兩個沙盒各跑三次，結果是有機制的那組比較貴**：
+
+```
+arm  run     cache-w   cache-r  output  turns   cost$
+off  1–3    8.9–14.8k  334–385k  1520–1789   9–10  0.177–0.231
+on   1–3   23.7–28.6k  267–339k  1188–1642    6–8  0.241–0.283
+```
+
+**三個欄位完全不重疊**：cache-write（on 約 2×）、turns（on 較少）、cost（on 高約 22%）。六次全部答對，
+兩組 `permission_denials` **都是 0**。
+
+兩個推翻：
+
+- **帳單由 cache-WRITE 主導，不是由讀進多少 context 主導。** 文件用「Context Window 被塞滿」推論成本，
+  但 cache 寫入計價遠高於讀取——**讀得多而能重用 cache 的那組反而便宜**。ON 組工具面變窄→prefix 變了→
+  重寫 cache，讀得少卻付得多。
+- **限制工具不等於省錢**，它換的是策略：沒有 Bash 的那組改用 Read/Glob/Grep，turn 數反而較少但每次
+  都在寫新 cache。
+
+**適用範圍要講清楚**：這個任務**沒有觸發**文件講的那三顆炸彈（denials 全 0、沒有跑全量測試、沒有全域
+`find`）。所以量到的是「在這個 repo 的這個任務上，該機制較貴」，**不是**「文件錯了」。要驗它的宣稱得
+換一個真的會誘發貪婪探勘的任務。
+
+n=1 時中位數有兩個欄位指反方向，n=3 才翻正——所以報表**先印每一次的原始數字再印中位數**：
+**組內散布比組間差異大的時候，中位數是騙人的。**
+
+還有一個陷阱：文件的 `.claudeignore` 模板封鎖 `*.lock`，照抄會連 `loopctl/workflow.lock` 與
+`surface.lock` 一起封掉——那兩個是 manifest 與表面契約，**不是依賴鎖檔，而且正是這個任務要找的東西**。
+ON 組改用具名鎖檔，`--selftest` 有一條專門擋這個萬用字元回來。
+
 ### 邊界（這些不在證明裡，而且是刻意的）
 
 - **`loopctl/workflow.lock` 不入任何證明。** 它由收據長出；hash 它會讓 digest 依賴一個依賴

@@ -46,6 +46,20 @@ prove_harness upload-boundary .gitignore \
 prove_harness codex-writing-role loopctl/codex-sandbox.sh \
   "host ChatGPT session -> --env -> ~/.codex/auth.json inside an OpenShell sandbox -> one write turn -> changed files back out; its selftest gives each way of having no usable session its own exit" \
   -- sh loopctl/codex-sandbox.sh --selftest
+
+# The paired auto-permission experiment. It has no control group of its own, and
+# that is the proportionate call rather than an omission: the script IS a
+# control — two sandboxes differing in one variable — and what could silently
+# invert its verdict is the grader and the report, both of which carry selftests
+# that run here. A second control spending real model turns to check an
+# experiment that spends real model turns would buy nothing.
+prove_harness automode-bench loopctl/automode-bench.sh \
+  "one task x two sandboxes differing only in the guard -> per-run result json; a run is graded before it is counted, so an arm cannot win by failing cheaply" \
+  -- sh loopctl/automode-bench.sh --selftest
+prove_harness automode-report loopctl/automode_report.py \
+  "per-run usage -> per-field medians and a delta; refuses to print a comparison when only one arm answered, and names 'neither answered' differently from 'one answered'" \
+  -- python3 loopctl/automode_report.py --selftest
+
 prove_note control-owned-by-harness proof_workflow/control_container_surface.sh \
   "declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests"
 
