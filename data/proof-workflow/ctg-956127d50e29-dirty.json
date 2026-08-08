@@ -1,0 +1,18 @@
+{
+  "schema_version": "bettor-arena-proof-workflow-receipt@1.0.0",
+  "loop": "ctg",
+  "entry_point": "loopctl ctg run -> closed packet -> verified snapshot/profile -> graph + route-result",
+  "utc": "2026-08-08T18:42:46Z",
+  "status": "passed",
+  "commit": "956127d50e294282e1db64dbcc16cb4e86286904",
+  "tree": "dcd9c0f453350700b01d72ad15f6d110399a29e6",
+  "worktree_dirty": true,
+  "counts": { "steps": 8, "harness_ran": 1, "harness_hashed_not_run": 5, "hashed_files": 6 },
+  "molecular_hardening": {
+    "algo": "sha256",
+    "digest_input": "the sorted, LF-terminated '<sha256>  <repo-relative path>' lines of every context/harness/artifact file traversed below; context and harness bytes come from the worktree (that is what was read and what ran), tracked artifact bytes come from HEAD (state present-at-head) so a harness step cannot move its own evidence",
+    "proof_digest": "c1aaa7a65b96d4cc8a7751e07b1d797f4342c5695a0be9eaf9efefc05ba9e9cf"
+  },
+  "claim_boundary": "traversal-of-the-mechanism-at-this-commit-not-a-quality-axis-claim",
+  "steps": [{"seq":1,"kind":"harness","id":"input-schema","path":"loop_wiki/code-truth-graph/schemas/ctg-input.schema.json","sha256":"c0a69a47dcf6818e7da6c3734d5353cdc9698cdc3bbbfdde8dac8946c6e6c9da","exit":null,"state":"hashed-not-run","dataflow":"external packet -> closed semantic envelope (hashed; json readability is exercised by the public contract test)"},{"seq":2,"kind":"harness","id":"result-schema","path":"loop_wiki/code-truth-graph/schemas/ctg-route-result.schema.json","sha256":"41af8367d384c86c296a2eb80586e990368101a9b387aa0d4da4698a0141e24d","exit":null,"state":"hashed-not-run","dataflow":"runtime stages and artifact digests -> closed route-result envelope (hashed; json readability is exercised by the public contract test)"},{"seq":3,"kind":"harness","id":"runtime-ref","path":"loop_wiki/code-truth-graph/src/code_truth_graph/__init__.py","sha256":"b59ea7a5e382a88588547441321746b2ab76fbb1d00443d4e2aaf552a03ca54a","exit":null,"state":"hashed-not-run","dataflow":"immutable runtime identity -> expected_runner comparison"},{"seq":4,"kind":"harness","id":"runtime","path":"loop_wiki/code-truth-graph/src/code_truth_graph/cli.py","sha256":"e973a50897685b45ebb1fdbeac356c409f551445245de48e9e7e5fd8a7702214","exit":null,"state":"hashed-not-run","dataflow":"packet bundle -> digest verification -> graph/result materialization"},{"seq":5,"kind":"harness","id":"entry","path":"loop_wiki/code-truth-graph/run.sh","sha256":"619300d101d28e3ad2e83285dd0bfd39f6575a68f7adf4959eb74f26eff8b0dd","exit":null,"state":"hashed-not-run","dataflow":"stdin EOF + sandbox-local Python path -> one-shot runtime (hashed, not fired because the contract test fires the public CLI)"},{"seq":6,"kind":"harness","id":"public-contract","path":"tests/test_ctg_cli.sh","sha256":"20b9bfc1b8662e1c0935e46c814f72a1d5527e09eaabd3370125abe3c4c6b852","exit":0,"state":"ran","dataflow":"good/unknown/duplicate/unsafe/stale packets -> exact 0/64/2 exits and durable outputs"},{"seq":7,"kind":"note","id":"per-run-output-not-hashed","path":null,"sha256":null,"exit":null,"state":"excluded","dataflow":"CTG output is caller-selected and content-addressed; the public contract test verifies its graph/result digests in a disposable directory, so a previous run cannot stand in for this traversal"},{"seq":8,"kind":"note","id":"control-owned-by-harness","path":"proof_workflow/control_ctg_entry.sh","sha256":null,"exit":null,"state":"excluded","dataflow":"the behavioral control is part of the proof instrument and is hashed by prove_harness.sh, never fired from its traversal proof"}]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.4.0",
+  "surface_version": "2.5.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -613,6 +613,55 @@
       },
       "writes": [
         "data/proof-workflow/policy-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "run",
+      "target": "loop_wiki/code-truth-graph/run.sh",
+      "required": [
+        "--packet",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "--packet: closed ctg-input@1.0.0 bundle manifest; --output: fresh absolute output directory",
+        "output": [
+          "<output>/ctg-route-result.json — ctg-route-result@1.0.0",
+          "<output>/code-truth-graph.json — content-addressed graph artifact"
+        ],
+        "exit": "0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input"
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "prove",
+      "target": "proof_workflow/prove_ctg_loop.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/ctg-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "test",
+      "target": "proof_workflow/control_ctg_entry.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-ctg-<commit12>.json"
       ]
     },
     {
