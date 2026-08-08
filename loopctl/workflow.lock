@@ -1,11 +1,11 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "d1cf3410ad763cdb425238b2dd74436577319074",
+  "workflow_commit": "d6086c4c4618d26d05e7339275fcf812574f918b",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-d1cf3410ad76-dirty.json",
-    "micro": "micro-d1cf3410ad76-dirty.json",
-    "openwiki": "openwiki-d1cf3410ad76-dirty.json"
+    "macro": "macro-d6086c4c4618-dirty.json",
+    "micro": "micro-d6086c4c4618-dirty.json",
+    "openwiki": "openwiki-d6086c4c4618-dirty.json"
   },
   "counts": {
     "artifact": 19,
@@ -13,7 +13,7 @@
     "harness": 36,
     "optional": 1
   },
-  "workflow_digest": "cd92da244c0a294b7e4282a8f4033a563c064533293ef890d815d37f0dfa1c3c",
+  "workflow_digest": "83f7682cce7303024da81e96a1f5a29ef1cea81b83632c6c80881b564c966961",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -81,7 +81,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-d1cf3410ad763cdb425238b2dd74436577319074.json": {
+    "data/receipts/post-commit-d6086c4c4618d26d05e7339275fcf812574f918b.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -334,7 +334,7 @@
       "loop": "micro"
     },
     "loopctl/Dockerfile": {
-      "sha256": "18558f24001f391b9adf1051fe813fe20e031f3f8dd02da6b815e0a56a144aa1",
+      "sha256": "cbabf0839716ac27cdf9b69d12715afc9ef5c8a34ef39d60f5b908316a640008",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -430,7 +430,7 @@
       "loop": "openwiki"
     },
     "proof_workflow/README.md": {
-      "sha256": "b86df31a38bccb4adcf7c64f06deacaf98bf682a8e8299927f9e79accd0db349",
+      "sha256": "093266543da6c47d061226faf3630bd3a594d640a001647c4a86d9cfaf7113ba",
       "hash_source": "index",
       "kind": "context",
       "loop": "macro"

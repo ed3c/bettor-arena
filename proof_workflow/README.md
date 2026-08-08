@@ -42,6 +42,10 @@
 11. **present ≠ authenticated。** 問 `--version` 只證明 binary 在。憑證要**花一個真 turn** 驗，否則
     「有裝但沒 session」會在請求中途長成模型拒絕的樣子，而那是完全不同的修法。
 
+12. **先消費失敗物件自己的輸出，再做差異比對。** 跟已知可用的東西比差異，會給你一堆**真的不同但
+    無關**的候選，而每個候選都像答案。失敗的東西通常自己就在說原因——log、stderr、它自己的 spec。
+    這條在容器那一輪被連續違反兩次（見 §3），代價是四趟重建。
+
 ## §2 -test 模式：發現抖動的迴圈
 
 ```sh
@@ -117,18 +121,32 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 
 **兩種隔離模型，風險面不同**——選錯不是效能問題是安全問題：
 
-| | bind-mount（Docker） | upload（OpenShell） |
+| | bind-mount（Docker） | upload（OpenShell sandbox） |
 |---|---|---|
 | 主機樹 | 容器可達，靠 `--user` 避免 root 檔案污染你的 `.git` | **不可達**，容器拿到的是副本 |
-| 代價 | 「掛進去然後小心」 | `.gitignore` 會吃掉 `node_modules` 與各帳本；pin 版本要改成上傳 `git archive <tag>` |
+| **`.git`** | 在 | **不在**（實測：上傳含所有原始碼與 dotfile，唯獨沒有 `.git`） |
 | 網路 | 無管制 | YAML policy，proxy 在 HTTP method/path 層強制，**且能對 MCP `tools/call` 的 tool 名與 params 下規則** |
+
+**因此分工是硬的，不是偏好**——loopctl 的身份模型整個建在 git 上（證明蓋 commit、replay checkout ref、
+lineage 讀 index、收據判 HEAD 位元組）：
+
+| 用途 | 用哪個 | 為什麼 |
+|---|---|---|
+| 證明／對照組／replay／lineage | **bind-mount** | 需要 `.git`。**沒有 git 的樹上長不出 git 錨定的證明** |
+| 跑 agent turn（外部客戶調用） | **OpenShell sandbox** | 那才是它解的問題：網路政策、MCP 工具層規則、主機樹不可達 |
+
+把證明機制塞進上傳模型，等於為了「上傳比較安全」拆掉 git 錨定——那是把整套可追溯性換掉。
 
 ### 容器真跑抓到的缺陷
 
 | 缺陷 | 怎麼被發現 | 修法 |
 |---|---|---|
 | `failed to query local Docker daemon` 但 `docker ps` 兩行前才成功 | openshell `--from` 建映像 | OrbStack 靠 docker **context**（CLI 層概念）導向自己的 socket；直接說協議的東西走 `/var/run/docker.sock`，而跑過 Docker Desktop 的機器那裡是**死 socket → refused 不是 absent** → wrapper 自動導向並註明 |
-| `ContainerRestarting`，沒有任何一行說原因 | OpenShell provisioning；基準 sandbox 成功 → 一變因證明問題在我的映像 | `node:22` **自帶 `ENTRYPOINT docker-entrypoint.sh`**，我繼承卻不知道。`docker run` 從不顯形（它會 exec 非 node 命令），OpenShell 注入 supervisor 才撞上 → `ENTRYPOINT []` |
+| `ContainerRestarting`，沒有任何一行說原因 | 基準 sandbox 成功 → 一變因證明問題在我的映像；**但差異比對連錯兩次**（ENTRYPOINT、CMD——都是真差異，都不是原因，因為 runtime 本來就覆寫 entrypoint） | 讀失敗容器的 log，它第一次就寫著：`sandbox user 'sandbox' not found in image` → 加 user／group（法則 12） |
+| 同上，下一輪 | 同樣讀 log | `trusted ip helper not found; checked /usr/sbin/ip` → proxy 模式需要 `iproute2` |
+| 上傳 `Permission denied`，但那是 0644 人人可讀的檔 | 進運行中的 sandbox 看實際權限 | **不是 unix 權限，是政策層拒絕**：home 不在受管 workspace。OPA 治理的沙盒會拒絕它沒被告知的路徑 → home 設為 `/sandbox` |
+| `cannot open loopctl/…`（猜路徑兩次） | 開一個只 `ls` 的 sandbox 看檔案落在哪 | 絕對 `WorkingDir` 會變成 agent workspace，而上傳落在 **HOME**——我把兩者拆成兩處 → `WORKDIR /sandbox` |
+| `preflight FATAL: not inside a git work tree` | 列出上傳內容 | **上傳不含 `.git`**。不是參數能繞過的事，見上方分工表 |
 | `error: unzip is required to install bun` | build 失敗 | 錯誤訊息直接指名 → 補 `unzip` |
 | `curl \| bash` 吞掉 curl 的失敗 | 修上一條時發現 | 管線只回報最後一段，下載失敗會把空腳本餵給 bash 而該層照樣成功 → 拆成下載、執行兩步 |
 | `pdftotext not found` → ingest FATAL | 容器內跑 macro 證明 | 主機有 poppler、映像沒有（法則 10）→ 補 `poppler-utils` |

@@ -37,6 +37,7 @@ FROM node:22-bookworm-slim
 # required to install bun` is how this image failed to build the first time.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git python3 python3-pip ca-certificates curl unzip ripgrep poppler-utils \
+        iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
 # ruff drives the Python lane of the fast-quality gate. Absent, that gate FATALs
@@ -76,18 +77,61 @@ RUN set -eu; \
 RUN git config --system --add safe.directory /repo \
  && git config --system --add safe.directory '*'
 
-WORKDIR /repo
+# A sandbox runtime requires this user by name. Its supervisor refuses outright:
+#   "sandbox user 'sandbox' not found in image; all sandbox images must include
+#    a 'sandbox' user and group"
+# That line was in the failing container's own logs from the first attempt. It
+# was found only after TWO rounds of differential guessing against a known-good
+# image — inherited ENTRYPOINT, then the default CMD — each of which was a real
+# difference and neither of which was the cause. The runtime replaces the
+# entrypoint with its own supervisor anyway, so neither guess could have mattered.
+# Read the failing thing's output before comparing it to a working one.
+# Home is /sandbox rather than the distro's default per-user home (spelled out
+# would trip the root-coupling gate, which cannot tell a container path from a
+# machine's), and the shell is bash — matched to the
+# known-good community image rather than invented. /sandbox is the runtime's
+# MANAGED workspace: it creates and owns it, and its default policy admits it.
+# With home elsewhere the upload died on "Permission denied" for a 0644 file
+# readable by everyone, which is the tell that the refusal came from POLICY and
+# not from unix permissions — an OPA-governed sandbox denies paths it was not
+# told about, so the fix is to use the workspace it governs, not to widen modes.
+RUN groupadd --system sandbox \
+ && useradd --system --home-dir /sandbox --create-home --shell /bin/bash --gid sandbox sandbox
 
-# Clear the entrypoint INHERITED from node:22, which ships docker-entrypoint.sh.
-# Nothing here wrote it and `docker run … <cmd>` never showed it, because that
-# script execs a non-node command straight through. It only surfaced when
-# something else drove the container: OpenShell injects its own supervisor as the
-# workload process, that inherited entrypoint got in front of it, and the sandbox
-# died as "ContainerRestarting" with nothing naming the cause. An inherited
-# coupling stays invisible until a second driver appears — which is the whole
-# reason to run the image under one.
+# The rest of the sandbox contract, taken from the runtime's own reference rather
+# than discovered one retry at a time (docs/reference/sandbox-compute-drivers.mdx
+# §Sandbox User Identity, architecture/compute-runtimes.md §Images):
+#   * the driver reads the image's OCI USER as a per-field identity fallback;
+#   * an absolute WorkingDir becomes the agent workspace, must already exist in
+#     the image, and the resolved UID/GID must be able to traverse every parent
+#     and write and enter it — the runtime does NOT chown it;
+#   * proxy mode needs network-namespace isolation, hence iproute2 above
+#     ("trusted ip helper not found; checked /usr/sbin/ip").
+# Reading the spec once beat three more rounds of retry-as-probe.
+RUN mkdir -p /repo && chown sandbox:sandbox /repo
+USER sandbox
+
+# /sandbox, not /repo. An absolute WorkingDir becomes the agent workspace, while
+# uploads land in HOME — so naming /repo here split the two: the upload arrived
+# at ~/bettor-arena and the command ran in an empty /repo, reported only as
+# "cannot open loopctl/container_preflight.sh". Two path guesses later, looking
+# at the sandbox instead of guessing showed it in one run. /sandbox is home,
+# workspace and the policy-admitted path at once.
+#
+# The bind-mount path is unaffected: container-run.sh passes -w /repo explicitly
+# alongside its mount, which overrides this.
+WORKDIR /sandbox
+
+# Cleared because node:22 ships docker-entrypoint.sh and nothing here wants it —
+# hygiene, not a fix. A sandbox runtime overrides the entrypoint regardless.
 ENTRYPOINT []
 
-# No CMD that serves by default: an image whose default action is to start
-# answering external calls is one `docker run` away from serving unpinned.
-CMD ["sh", "loopctl/container_preflight.sh"]
+# A long-lived shell that depends on nothing: under `docker run` the repo is
+# mounted, but a sandbox runtime uploads it into an already-running container, so
+# a default command referencing the repo would exit instantly against an empty
+# /repo. Also the second guess that was not the cause — kept because it is right,
+# not because it fixed anything.
+#
+# Nothing served by default: bash serves nothing, so no `run` of this image can
+# start answering external calls by accident.
+CMD ["/bin/bash"]
