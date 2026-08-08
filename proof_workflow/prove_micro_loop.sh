@@ -53,6 +53,13 @@ prove_context emergent-packet "$PACKET" \
   "emergent lane -> engine turn: the physical packet field (emergent prompts ride the packet, never a standards module)"
 prove_context sandbox-agents "$F/AGENTS.md" \
   "sandbox root -> engine session passive context (sandbox is its own host dir, §3 鐵律 3)"
+# The iteration lane. trigger.sh writes this file itself before the engine turn,
+# and the header above has always named it as one of the three lanes — but it was
+# not hashed until control_micro_entry.sh ran the entry point for real and showed
+# the whole _engine-run ledger uncovered. A lane described and not covered is the
+# gap a step list cannot see in itself.
+prove_context iteration-exchange-context "$F/_engine-run/exchange-context.dr-example.md" \
+  "trigger.sh -> iteration lane: packet id, source_refs, refs_status, human_gate, target output"
 
 # --- deterministic harness: the input contract trigger.sh runs first ---------
 prove_harness cli-validate-packet "$F/src/cli.ts" \
@@ -74,6 +81,16 @@ prove_harness selftest-good-hollow "$F/selftest.sh" \
 prove_harness verify-t0 "$F/verify.sh" \
   "sandbox -> quality:fast + tests + migrate + build + operator + validator + governed-baseline byte compare -> exit" \
   -- sh "$F/verify.sh"
+
+# --- the stages trigger.sh drives, hashed because only it can fire them ------
+# Both were found by the control group, not by reading: removing either changes
+# trigger.sh's exit to 2, so they are load-bearing by measurement, and neither
+# was on this list before. They are not run standalone — they take a materialized
+# seed repo that only a trigger run produces.
+prove_harness generated-fast-quality "$F/src/run_generated_fast_quality.ts" \
+  "materialized seed -> quality mount 2 over the GENERATED repo -> fast_quality_exit"
+prove_harness generated-validator "$F/src/verify_generated_repo.ts" \
+  "materialized seed -> module contract over the GENERATED repo -> validator_exit (the check selftest.sh drives hollow)"
 
 # --- hashed, deliberately not fired ------------------------------------------
 prove_harness trigger "$F/trigger.sh" \
@@ -108,5 +125,7 @@ for rq in "$PROVE_ROOT"/data/wiki-update/request-*.json; do
 done
 prove_artifact governed-baseline "$F/baselines/seed-stats.json" \
   "update_baseline.ts -> governed baseline verify.sh byte-compares against"
+prove_note engine-run-build-logs \
+  "not hashed: _engine-run/build.<id>.{out,err} are the raw stdout/stderr of one build, rewritten every trigger run and carrying per-run temp paths — no claim rides on their bytes, unlike the exchange-context lane above"
 
 prove_emit

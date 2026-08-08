@@ -28,45 +28,13 @@
 #        64 FATAL (no macro receipt at this commit to compare against, etc.)
 set -u
 
-HERE=$(cd "$(dirname "$0")" && pwd -P)
-ROOT=$(git -C "$HERE" rev-parse --show-toplevel) || {
-  echo "control FATAL: not inside a git work tree" >&2; exit 64; }
-COMMIT=$(git -C "$ROOT" rev-parse HEAD)
-SHORT=$(printf %.12s "$COMMIT")
-UTC=$(date -u +%Y%m%dT%H%M%SZ)
-RUN_ID="$UTC-$SHORT"
-RUNDIR="$ROOT/proof_workflow/data/$RUN_ID"
-mkdir -p "$RUNDIR/streams"
-
-sha256() {
-  if command -v shasum >/dev/null 2>&1; then shasum -a 256 "$1" | cut -d' ' -f1
-  else sha256sum "$1" | cut -d' ' -f1; fi
-}
-esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
-
-SEQ=0
-# capture <id> -- cmd... : run it for real, keep both streams, record the fact.
-capture() {
-  _id=$1; shift
-  [ "${1:-}" = "--" ] && shift
-  SEQ=$((SEQ + 1))
-  _out="$RUNDIR/streams/$SEQ-$_id.out"
-  _err="$RUNDIR/streams/$SEQ-$_id.err"
-  _argv=""
-  for _a in "$@"; do _argv="$_argv\"$(esc "$_a")\","; done
-  _started=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-  ( cd "$ROOT" && "$@" ) >"$_out" 2>"$_err"
-  _rc=$?
-  printf '{"seq":%d,"id":"%s","utc":"%s","cwd":"repo-root","argv":[%s],"exit":%d,"stdout":{"path":"streams/%s","sha256":"%s","bytes":%s},"stderr":{"path":"streams/%s","sha256":"%s","bytes":%s}}\n' \
-    "$SEQ" "$_id" "$_started" "${_argv%,}" "$_rc" \
-    "$(basename "$_out")" "$(sha256 "$_out")" "$(wc -c <"$_out" | tr -d ' ')" \
-    "$(basename "$_err")" "$(sha256 "$_err")" "$(wc -c <"$_err" | tr -d ' ')" \
-    >>"$RUNDIR/run.jsonl"
-  echo "  [ran] $_id — exit $_rc"
-  return "$_rc"
-}
-
-echo "control[macro-entry] run_id=$RUN_ID commit=$COMMIT"
+CAPTURE_HOME=$(cd "$(dirname "$0")" && pwd -P)
+HERE=$CAPTURE_HOME
+. "$CAPTURE_HOME/lib/capture.sh"
+capture_init macro-entry
+ROOT=$CAPTURE_ROOT
+COMMIT=$CAPTURE_COMMIT
+SHORT=$CAPTURE_SHORT
 
 # --- the real run, plus the state it is supposed to move ---------------------
 capture hookspath-before -- git config core.hooksPath
@@ -144,8 +112,9 @@ fi
   exit 64; }
 
 RECEIPT="$ROOT/data/proof-workflow/control-macro-$SHORT.json"
+CONTROL_MODE=macro \
 CONTROL_RUN_ID="$RUN_ID" CONTROL_RUNDIR="$RUNDIR" CONTROL_COMMIT="$COMMIT" \
-CONTROL_BOOTSTRAP_RC="$BOOTSTRAP_RC" CONTROL_RECEIPT="$RECEIPT" \
+CONTROL_ENTRY_RC="$BOOTSTRAP_RC" CONTROL_RECEIPT="$RECEIPT" \
 CONTROL_MACRO_RECEIPT="$MACRO_RECEIPT" \
 python3 "$HERE/lib/compare_control.py"
 exit $?

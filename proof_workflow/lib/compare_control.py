@@ -106,6 +106,70 @@ def compare(rundir: Path, macro_receipt: Path, receipt_dir: Path, short: str) ->
     }
 
 
+def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
+    """What the micro entry point really produced and consumed, versus coverage.
+
+    The micro proof marks trigger.sh hashed-not-run on purpose, so its coverage
+    of the entry point is entirely indirect. That makes two classes of hole
+    possible, and both are checked here: an OUTPUT the entry point really writes
+    that no proof treats as a terminus, and an INPUT whose removal changes the
+    exit code — load-bearing by measurement — that no proof hashes.
+    """
+    covered_by = proof_coverage(receipt_dir, short)
+    proof_paths = set(covered_by)
+
+    classes: dict[str, tuple[str, int]] = {}
+    for line in read_lines(rundir / "input-class.txt"):
+        rel, cls, rc = line.split("\t")
+        classes[rel] = (cls, int(rc))
+    inputs = read_lines(rundir / "input-paths.txt")
+    unclassified = [p for p in inputs if p not in classes]
+    if unclassified:
+        raise ValueError(
+            f"the probe produced no classification for {unclassified}; "
+            "an unclassified input must never default to optional"
+        )
+
+    produced = read_lines(rundir / "produced-paths.txt")
+
+    # Produced paths carry a per-run id (route-result.<packet>.json,
+    # request-<packet>.json), and the proof covers instances written by OTHER
+    # packets, so instance equality would invent a gap on every control run.
+    # Coverage is therefore asked at the LEDGER, i.e. the containing directory:
+    # the proof's claim is over the ledger, not over one packet's entry. This is
+    # deliberately coarse — one covered file vouches for its whole directory —
+    # which is right for ledgers and would be wrong for a source tree; the entry
+    # point only ever writes into ledgers, and inputs are matched exactly above.
+    #
+    # An earlier version matched on the basename up to the first dot, which
+    # silently worked for route-result.<id>.json and failed for request-<id>.json
+    # because that one separates with a hyphen. It reported a covered file as a
+    # gap, which is the kind of finding that wastes a fix on the wrong file.
+    def ledger(p: str) -> str:
+        return p.rsplit("/", 1)[0] if "/" in p else ""
+
+    covered_ledgers = {ledger(p) for p in proof_paths}
+    produced_uncovered = sorted(
+        {p for p in produced if ledger(p) not in covered_ledgers}
+    )
+    required_uncovered = [
+        p for p in inputs if classes[p][0] == "required" and not covered(p, proof_paths)
+    ]
+    optional_uncovered = [
+        p for p in inputs if classes[p][0] == "optional" and not covered(p, proof_paths)
+    ]
+    return {
+        "entry_point_inputs": {
+            p: {"class": classes[p][0], "probe_exit": classes[p][1]} for p in inputs
+        },
+        "entry_point_produced": produced,
+        "proof_covered_paths": {p: covered_by[p] for p in sorted(proof_paths)},
+        "produced_uncovered": produced_uncovered,
+        "required_uncovered": required_uncovered,
+        "optional_uncovered": optional_uncovered,
+    }
+
+
 def stream_manifest(rundir: Path) -> list[dict]:
     records = []
     for line in read_lines(rundir / "run.jsonl"):
@@ -129,28 +193,35 @@ def main() -> int:
         receipt_path = Path(os.environ["CONTROL_RECEIPT"])
         run_id = os.environ["CONTROL_RUN_ID"]
         commit = os.environ["CONTROL_COMMIT"]
-        bootstrap_rc = int(os.environ["CONTROL_BOOTSTRAP_RC"])
+        bootstrap_rc = int(os.environ["CONTROL_ENTRY_RC"])
     except (KeyError, ValueError) as exc:
         print(f"control FATAL: bad invocation environment: {exc}", file=sys.stderr)
         return 64
 
+    mode = os.environ.get("CONTROL_MODE", "macro")
     short = commit[:12]
     try:
-        result = compare(rundir, macro_receipt, macro_receipt.parent, short)
+        if mode == "micro":
+            result = compare_micro(rundir, macro_receipt.parent, short)
+        else:
+            result = compare(rundir, macro_receipt, macro_receipt.parent, short)
     except ValueError as exc:
         print(f"control FATAL: {exc}", file=sys.stderr)
         return 64
     streams = stream_manifest(rundir)
     failed = (
         result["required_uncovered"]
-        or not result["tools_covered_transitively_by_bootstrap_step"]
+        or result.get("produced_uncovered")
+        or not result.get("tools_covered_transitively_by_bootstrap_step", True)
         or bootstrap_rc != 0
     )
     status = "failed" if failed else "passed"
 
     receipt = {
-        "schema_version": "bettor-arena-control-macro-receipt@1.0.0",
-        "control_of": "prove_macro_loop.sh",
+        "schema_version": f"bettor-arena-control-{mode}-receipt@1.0.0",
+        "control_of": "prove_micro_loop.sh"
+        if mode == "micro"
+        else "prove_macro_loop.sh",
         "method": "run the entry point for real, keep the trace, derive what it "
         "touches from its own source and its own output, compare against the "
         "macro receipt's covered paths",
@@ -173,26 +244,55 @@ def main() -> int:
     )
 
     print(
-        f"control[macro-entry] captured {len(streams)} stream(s) under proof_workflow/data/{run_id}"
+        f"control[{mode}-entry] captured {len(streams)} stream(s) under proof_workflow/data/{run_id}"
     )
-    for lane in result["message_lanes_fired"]:
+    for lane in result.get("message_lanes_fired", []):
         print(f"  [fired] {lane}")
     if bootstrap_rc != 0:
-        print(f"FAIL: bootstrap.sh exited {bootstrap_rc}", file=sys.stderr)
-    for p, meta in result["entry_point_named_paths"].items():
-        where = result["proof_covered_paths"].get(p)
-        if where is None:
-            where = next(
-                (
-                    v
-                    for k, v in result["proof_covered_paths"].items()
-                    if k.startswith(p.rstrip("/") + "/")
-                ),
-                None,
-            )
-        mark = f"covered by {where} proof" if where else "NOT covered"
-        print(f"  [{meta['class']:8}] {p} — {mark}")
-    if not result["tools_covered_transitively_by_bootstrap_step"]:
+        print(f"FAIL: the entry point exited {bootstrap_rc}", file=sys.stderr)
+
+    def where_covered(p: str) -> str | None:
+        hit = result["proof_covered_paths"].get(p)
+        if hit:
+            return hit
+        return next(
+            (
+                v
+                for k, v in result["proof_covered_paths"].items()
+                if k.startswith(p.rstrip("/") + "/")
+            ),
+            None,
+        )
+
+    inputs = (
+        result.get("entry_point_named_paths") or result.get("entry_point_inputs") or {}
+    )
+    for p, meta in inputs.items():
+        where = where_covered(p)
+        print(
+            f"  [{meta['class']:8}] {p} — {'covered by ' + where + ' proof' if where else 'NOT covered'}"
+        )
+    # Produced paths are judged at the ledger, so they must be DISPLAYED that way
+    # too. Printing exact-path coverage next to a ledger-based verdict puts "NOT
+    # covered" beside status=passed, which is the same defect as a green run that
+    # prints FAIL lines: the reader has to know which rule was used to know
+    # whether to worry.
+    uncovered_produced = set(result.get("produced_uncovered", []))
+    for p in result.get("entry_point_produced", []):
+        if p in uncovered_produced:
+            print(f"  [produced] {p} — NOT covered (no proof covers its ledger)")
+            continue
+        ledger = p.rsplit("/", 1)[0] if "/" in p else ""
+        where = next(
+            (
+                v
+                for k, v in result["proof_covered_paths"].items()
+                if k.rsplit("/", 1)[0] == ledger
+            ),
+            None,
+        )
+        print(f"  [produced] {p} — ledger covered by {where} proof")
+    if not result.get("tools_covered_transitively_by_bootstrap_step", True):
         print(
             "  GAP: the macro receipt has no green bootstrap step, so the doctor-gated "
             f"tools {result['doctor_gated_tools']} are covered by nothing",
@@ -200,14 +300,19 @@ def main() -> int:
         )
     for p in result["required_uncovered"]:
         print(
-            f"  GAP: {p} is REQUIRED (removing it changes bootstrap's exit) and no proof covers it",
+            f"  GAP: {p} is REQUIRED (removing it changes the entry point's exit) and no proof covers it",
+            file=sys.stderr,
+        )
+    for p in result.get("produced_uncovered", []):
+        print(
+            f"  GAP: {p} is really produced by the entry point and no proof treats it as a terminus",
             file=sys.stderr,
         )
     for p in result["optional_uncovered"]:
         print(
             f"  note: {p} is optional by the program's own behaviour and no proof covers it — reported, not a failure"
         )
-    print(f"control[macro-entry] receipt={receipt_path.name} status={status}")
+    print(f"control[{mode}-entry] receipt={receipt_path.name} status={status}")
     return 0 if status == "passed" else 2
 
 
@@ -325,6 +430,69 @@ def _selftest() -> int:
             case("unclassified-path-raises", False, True)
         except ValueError:
             case("unclassified-path-raises", True, True)
+
+    # --- micro mode: ledger coverage, and the hyphen-id bug that hid in it ---
+    with tempfile.TemporaryDirectory() as td:
+        rundir = Path(td) / "run"
+        (rundir / "streams").mkdir(parents=True)
+        rdir = Path(td) / "receipts"
+        rdir.mkdir()
+        short = "0123456789ab"
+        (rundir / "input-paths.txt").write_text(
+            "f/needed.ts\nf/spare.ts\n", encoding="utf-8"
+        )
+        (rundir / "input-class.txt").write_text(
+            "f/needed.ts\trequired\t2\nf/spare.ts\toptional\t0\n", encoding="utf-8"
+        )
+        (rundir / "produced-paths.txt").write_text(
+            # dot-separated id, hyphen-separated id, and an output in a ledger
+            # the proof does not touch at all.
+            "led/route-result.pkt-a.json\nled2/request-pkt-a.json\nscratch/build.pkt-a.out\n",
+            encoding="utf-8",
+        )
+        (rundir / "run.jsonl").write_text("", encoding="utf-8")
+        (rdir / f"micro-{short}.json").write_text(
+            json.dumps(
+                {
+                    "steps": [
+                        {"id": "a", "state": "ran", "exit": 0, "path": "f/needed.ts"},
+                        # instances written by OTHER packets, never this one
+                        {
+                            "id": "b",
+                            "state": "present-untracked",
+                            "exit": None,
+                            "path": "led/route-result.pkt-b.json",
+                        },
+                        {
+                            "id": "c",
+                            "state": "present-untracked",
+                            "exit": None,
+                            "path": "led2/request-pkt-b.json",
+                        },
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        out = compare_micro(rundir, rdir, short)
+        case(
+            "dot-id-instance-covered-by-ledger",
+            "led/route-result.pkt-a.json" in out["produced_uncovered"],
+            False,
+        )
+        # The regression: a hyphen-separated id must not read as a different family.
+        case(
+            "hyphen-id-instance-covered-by-ledger",
+            "led2/request-pkt-a.json" in out["produced_uncovered"],
+            False,
+        )
+        case(
+            "untouched-ledger-is-a-gap",
+            out["produced_uncovered"],
+            ["scratch/build.pkt-a.out"],
+        )
+        case("required-input-covered", out["required_uncovered"], [])
+        case("optional-uncovered-reported", out["optional_uncovered"], ["f/spare.ts"])
 
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red
