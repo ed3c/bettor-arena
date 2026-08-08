@@ -69,8 +69,8 @@ prove_harness iteration-exchange-context - \
             # -e is load-bearing: every field name starts with "- ", and without it
             # grep parses the pattern as options and reports a file that plainly
             # contains the field as missing.
-prove_note iteration-lane-bytes-not-hashed \
-  "not hashed: exchange-context.<id>.md is regenerated per run and embeds that run's output path, so its bytes are a fact about the last run rather than about the loop. The lane is covered by the field assertion above; the producer (trigger.sh) is hashed"
+prove_note iteration-lane-bytes-not-hashed "$F/_engine-run" \
+  "declared out of scope: this ledger holds per-run scratch — exchange-context.<id>.md is regenerated every run and embeds that run's output path, and build.<id>.{out,err} are one build's raw streams. Their bytes are facts about the last run, not about the loop. The lane itself is covered by the field assertion above and its producer (trigger.sh) is hashed"
 
 # --- deterministic harness: the input contract trigger.sh runs first ---------
 prove_harness cli-validate-packet "$F/src/cli.ts" \

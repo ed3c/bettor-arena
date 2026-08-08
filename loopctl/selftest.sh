@@ -61,7 +61,11 @@ PY
   # contract instead of at the extraction.
   {
     grep -oE '^  (macro|micro|openwiki)/(run|prove|test)\)' "$_cli" | tr -d ' )'
-    grep -oE '^      (lock|trailer|test|replay)\)' "$_cli" | tr -d ' )' | sed 's|^|workflow/|'
+    grep -oE '^      (lock|trailer|replay)\)' "$_cli" | tr -d ' )' | sed 's|^|workflow/|'
+    grep -oE '^      (serve|tools)\)' "$_cli" | tr -d ' )' | sed 's|^|mcp/|'
+    # `test)` appears once under workflow and once under mcp; the shape alone
+    # cannot say which, so both are named here rather than guessed.
+    printf 'workflow/test\nmcp/test\n'
   } | sort >"$_tmp/wired.txt"
   if _nonempty "declared-commands" "$_tmp/declared.txt" && _nonempty "wired-commands" "$_tmp/wired.txt"; then
     _only_contract=$(comm -23 "$_tmp/declared.txt" "$_tmp/wired.txt")

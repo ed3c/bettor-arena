@@ -216,11 +216,24 @@ prove_optional() { # id repo-relative-path dataflow
   return 0
 }
 
-prove_note() { # id why-this-path-is-not-hashed
+prove_note() { # id [repo-relative-path-or-ledger] why-this-path-is-not-hashed
+  # With two arguments the note is prose. With three, the middle one is the path
+  # or ledger being excluded, and it lands in the receipt as a DECLARED exclusion
+  # rather than as a sentence — which is what lets the control group tell "this
+  # output is deliberately out of scope, here is why" apart from "nobody noticed
+  # this output exists". The control honours the declaration for produced paths
+  # only; a required input can never be declared away, or the kind would become a
+  # way to stay green.
   PROVE_SEQ=$((PROVE_SEQ + 1))
-  printf '{"seq":%d,"kind":"note","id":"%s","path":null,"sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
-    "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" >>"$PROVE_TMP/steps"
-  echo "  [note    ] $1 — excluded — $2"
+  if [ "$#" -ge 3 ]; then
+    printf '{"seq":%d,"kind":"note","id":"%s","path":"%s","sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
+      "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" "$(_prove_esc "$3")" >>"$PROVE_TMP/steps"
+    echo "  [note    ] $1 — excluded — $2 — $3"
+  else
+    printf '{"seq":%d,"kind":"note","id":"%s","path":null,"sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
+      "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" >>"$PROVE_TMP/steps"
+    echo "  [note    ] $1 — excluded — $2"
+  fi
   return 0
 }
 

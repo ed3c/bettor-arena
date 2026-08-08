@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -48,7 +49,7 @@ def proof_states(receipt_dir: Path, short: str) -> dict[str, str]:
     """
     states: dict[str, str] = {}
     for name in ("macro", "micro", "openwiki"):
-        for candidate in (f"{name}-{short}.json", f"{name}-{short}-dirty.json"):
+        for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
                 continue
@@ -71,6 +72,53 @@ def misdeclared_optional(
     )
 
 
+def _candidates(receipt_dir: Path, name: str, short: str) -> tuple[str, ...]:
+    """Which receipt describes the CURRENT tree, clean or dirty, in that order.
+
+    Preferring the clean stamp unconditionally made a stale receipt from an
+    earlier commit-state answer for a freshly re-proved dirty tree — the control
+    then reported gaps the current proofs had already closed, and the fix went
+    looking in the wrong place twice. The tree's own state decides, exactly as
+    prove.sh decides which name to write.
+    """
+    root = receipt_dir.parent.parent
+    dirty = bool(
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(root),
+                "status",
+                "--porcelain",
+                "--",
+                ".",
+                ":(exclude)data/proof-workflow/",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout.strip()
+    )
+    clean_first = (f"{name}-{short}.json", f"{name}-{short}-dirty.json")
+    return tuple(reversed(clean_first)) if dirty else clean_first
+
+
+def excluded_ledgers(receipt_dir: Path, short: str) -> set[str]:
+    """Paths a proof declared out of scope by name, via a note carrying a path."""
+    out: set[str] = set()
+    for name in ("macro", "micro", "openwiki"):
+        for candidate in _candidates(receipt_dir, name, short):
+            path = receipt_dir / candidate
+            if not path.is_file():
+                continue
+            data = json.loads(path.read_text(encoding="utf-8"))
+            for step in data["steps"]:
+                if step.get("kind") == "note" and step.get("path"):
+                    out.add(step["path"].rstrip("/"))
+            break
+    return out
+
+
 def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
     """Every path covered by ANY proof at this commit, mapped to which proof.
 
@@ -81,13 +129,16 @@ def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
     """
     covered_by: dict[str, str] = {}
     for name in ("macro", "micro", "openwiki"):
-        for candidate in (f"{name}-{short}.json", f"{name}-{short}-dirty.json"):
+        for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
                 continue
             data = json.loads(path.read_text(encoding="utf-8"))
             for step in data["steps"]:
-                if step.get("path"):
+                # A note is a DECLARATION, never coverage. Counting it here would
+                # let "we chose not to cover this" answer for "this is covered",
+                # which is the one thing the note kind must never be able to do.
+                if step.get("path") and step.get("kind") != "note":
                     covered_by.setdefault(step["path"], name)
             break
     return covered_by
@@ -183,7 +234,14 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
     def ledger(p: str) -> str:
         return p.rsplit("/", 1)[0] if "/" in p else ""
 
-    covered_ledgers = {ledger(p) for p in proof_paths}
+    # A ledger a proof DECLARES out of scope, with its reason on the receipt, is
+    # not a gap — it is a bounded claim, which is the difference between "we chose
+    # not to cover this and said so" and "nobody noticed this output exists".
+    # Declarations silence produced paths only; required inputs are matched
+    # exactly above and can never be declared away, or the note kind would become
+    # the way to stay green.
+    excluded = excluded_ledgers(receipt_dir, short)
+    covered_ledgers = {ledger(p) for p in proof_paths} | excluded
     produced_uncovered = sorted(
         {p for p in produced if ledger(p) not in covered_ledgers}
     )
@@ -592,6 +650,54 @@ def _selftest() -> int:
         )
         case("required-input-covered", out["required_uncovered"], [])
         case("optional-uncovered-reported", out["optional_uncovered"], ["f/spare.ts"])
+
+        # A ledger DECLARED out of scope, by a note carrying its path, is a
+        # bounded claim rather than a gap.
+        (rdir / f"macro-{short}.json").write_text(
+            json.dumps(
+                {
+                    "steps": [
+                        {
+                            "id": "n",
+                            "kind": "note",
+                            "state": "excluded",
+                            "exit": None,
+                            "path": "scratch",
+                            "sha256": None,
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        out = compare_micro(rundir, rdir, short)
+        case("declared-exclusion-silences-produced", out["produced_uncovered"], [])
+
+        # The line that keeps the kind from becoming a way to stay green: the same
+        # declaration over a REQUIRED input must not cover it.
+        (rdir / f"micro-{short}.json").write_text(
+            json.dumps(
+                {
+                    "steps": [
+                        {
+                            "id": "n",
+                            "kind": "note",
+                            "state": "excluded",
+                            "exit": None,
+                            "path": "f/needed.ts",
+                            "sha256": None,
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        out = compare_micro(rundir, rdir, short)
+        case(
+            "declared-exclusion-cannot-cover-a-required-input",
+            out["required_uncovered"],
+            ["f/needed.ts"],
+        )
 
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red

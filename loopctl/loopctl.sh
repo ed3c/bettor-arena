@@ -76,6 +76,19 @@ case "${1:-}" in
         sh "$ROOT/proof_workflow/control_workflow_lineage.sh"; exit $? ;;
       *) echo "usage: loopctl.sh workflow <lock|trailer|test|replay --at <commit|tag> [--loop <loop>]>" >&2; exit 64 ;;
     esac ;;
+  mcp)
+    # The external-facing layer. serve is long-lived on purpose: isolation comes
+    # from the per-call worktree, not from restarting the process, and a fresh
+    # process per call would throw away every cached prefix.
+    case "${2:-}" in
+      serve)
+        _ref=HEAD
+        [ "${3:-}" = "--ref" ] && [ -n "${4:-}" ] && _ref=$4
+        exec python3 "$HERE/mcp_server.py" --ref "$_ref" ;;
+      test)  sh "$ROOT/proof_workflow/control_mcp_surface.sh"; exit $? ;;
+      tools) python3 "$HERE/mcp_tools.py" "$CONTRACT"; exit $? ;;
+      *) echo "usage: loopctl.sh mcp <serve [--ref <commit|tag>]|test|tools>" >&2; exit 64 ;;
+    esac ;;
   --selftest) . "$HERE/selftest.sh"; loopctl_selftest; exit $? ;;
   -h|--help|"") usage; exit 64 ;;
 esac
@@ -144,6 +157,19 @@ has_flag() {
   return 1
 }
 
+# --json turns the whole invocation into one machine-readable result. Without it
+# a wrapper has to parse the human line, which is the same reaching-past-the-CLI
+# this file exists to stop — just one layer up. With it, the target's streams are
+# captured into the result rather than dropped, because a caller that only gets
+# an exit code cannot tell a red gate from a crash.
+JSON=0
+has_flag --json "$@" && JSON=1
+if [ "$JSON" -eq 1 ]; then
+  CAPTURE=$(mktemp -d "${TMPDIR:-/tmp}/loopctl-json.XXXXXX")
+  exec 3>&1
+  exec 1>"$CAPTURE/out" 2>"$CAPTURE/err"
+fi
+
 case "$LOOP/$MODE" in
   macro/run)
     _ollama=$(value_of --ollama-url "$@")
@@ -195,6 +221,14 @@ case "$LOOP/$MODE" in
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;
 esac
 RC=$?
+
+if [ "$JSON" -eq 1 ]; then
+  exec 1>&3
+  LOOPCTL_LOOP="$LOOP" LOOPCTL_MODE="$MODE" LOOPCTL_TARGET="$TARGET" \
+  LOOPCTL_EXIT="$RC" LOOPCTL_CAPTURE="$CAPTURE" LOOPCTL_ROOT="$ROOT" \
+    python3 "$HERE/result_json.py"
+  exit "$RC"
+fi
 
 echo "loopctl: loop=$LOOP mode=$MODE target=$TARGET exit=$RC"
 exit "$RC"

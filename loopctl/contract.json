@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "1.5.0",
+  "surface_version": "1.7.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -37,7 +37,8 @@
     "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof",
     "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
     "trailer": "print the lineage trailer this commit should carry (empty when no workflow file is staged)",
-    "replay": "check a commit or tag out into a disposable worktree and run THAT version's CLI"
+    "replay": "check a commit or tag out into a disposable worktree and run THAT version's CLI",
+    "serve": "run the stateless MCP server on stdio, one disposable worktree per call"
   },
   "commands": [
     {
@@ -46,6 +47,7 @@
       "target": "bootstrap.sh",
       "required": [],
       "optional": [
+        "--json",
         "--ollama-url"
       ],
       "opt_in": {
@@ -70,7 +72,8 @@
       "target": "proof_workflow/prove_macro_loop.sh",
       "required": [],
       "optional": [
-        "--force-receipt"
+        "--force-receipt",
+        "--json"
       ],
       "writes": [
         "data/proof-workflow/macro-<commit12>[-dirty].json"
@@ -81,7 +84,9 @@
       "mode": "test",
       "target": "proof_workflow/control_macro_entry.sh",
       "required": [],
-      "optional": [],
+      "optional": [
+        "--json"
+      ],
       "writes": [
         "proof_workflow/data/<run_id>/",
         "data/proof-workflow/control-macro-<commit12>.json"
@@ -93,12 +98,13 @@
       "target": "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh",
       "required": [],
       "optional": [
-        "--packet",
-        "--output",
-        "--source",
+        "--json",
         "--kind",
-        "--task",
-        "--packet-id"
+        "--output",
+        "--packet",
+        "--packet-id",
+        "--source",
+        "--task"
       ],
       "arg_groups": {
         "packet": "--packet + --output — hand it a packet you already have",
@@ -135,7 +141,8 @@
       "target": "proof_workflow/prove_micro_loop.sh",
       "required": [],
       "optional": [
-        "--force-receipt"
+        "--force-receipt",
+        "--json"
       ],
       "writes": [
         "data/proof-workflow/micro-<commit12>[-dirty].json"
@@ -146,7 +153,9 @@
       "mode": "test",
       "target": "proof_workflow/control_micro_entry.sh",
       "required": [],
-      "optional": [],
+      "optional": [
+        "--json"
+      ],
       "writes": [
         "proof_workflow/data/<run_id>/",
         "data/proof-workflow/control-micro-<commit12>.json"
@@ -160,9 +169,10 @@
         "--request"
       ],
       "optional": [
-        "--full",
+        "--defer-partials",
         "--force-receipt",
-        "--defer-partials"
+        "--full",
+        "--json"
       ],
       "opt_in": {
         "--full": "spends real model turns and rewrites openwiki/ in place; without it the run is --dry-run and the probabilistic segment is skipped by name",
@@ -194,7 +204,8 @@
       "target": "proof_workflow/prove_openwiki.sh",
       "required": [],
       "optional": [
-        "--force-receipt"
+        "--force-receipt",
+        "--json"
       ],
       "writes": [
         "data/proof-workflow/openwiki-<commit12>[-dirty].json"
@@ -206,7 +217,8 @@
       "target": "proof_workflow/control_openwiki_entry.sh",
       "required": [],
       "optional": [
-        "--full"
+        "--full",
+        "--json"
       ],
       "opt_in": {
         "--full": "sets CONTROL_OPENWIKI_FULL=1: after every probe, exercises the model turn once inside the disposable worktree as an existence proof only, never read back into the classification"
@@ -221,7 +233,9 @@
       "mode": "lock",
       "target": "loopctl/workflow_lock.py",
       "required": [],
-      "optional": [],
+      "optional": [
+        "--json"
+      ],
       "io": {
         "input": "none — it reads the three proof receipts at HEAD",
         "output": [
@@ -238,7 +252,9 @@
       "mode": "trailer",
       "target": "loopctl/lineage.py",
       "required": [],
-      "optional": [],
+      "optional": [
+        "--json"
+      ],
       "io": {
         "input": "the staged path list and workflow.lock",
         "output": [
@@ -255,7 +271,9 @@
       "mode": "test",
       "target": "proof_workflow/control_workflow_lineage.sh",
       "required": [],
-      "optional": [],
+      "optional": [
+        "--json"
+      ],
       "io": {
         "input": "none — it plants its own defects in a disposable worktree at HEAD",
         "output": [
@@ -275,6 +293,7 @@
         "--at"
       ],
       "optional": [
+        "--json",
         "--loop"
       ],
       "io": {
@@ -287,6 +306,67 @@
       "writes": [
         "nothing in this tree; the replay runs inside a disposable worktree"
       ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "serve",
+      "target": "loopctl/mcp_server.py",
+      "required": [],
+      "optional": [
+        "--json",
+        "--ref"
+      ],
+      "io": {
+        "input": "--ref <commit|tag> pins which workflow answers every external call; default HEAD",
+        "output": [
+          "nothing in this tree — each call runs in a disposable worktree"
+        ],
+        "exit": "0 clean shutdown · 64 the pinned ref has no CLI, or its surface predates --json"
+      },
+      "writes": [
+        "nothing in this tree — each call runs in a disposable worktree"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "test",
+      "target": "proof_workflow/control_mcp_surface.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it drives the server over real stdio and plants its own defects",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every property held · 2 one did not · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "tools",
+      "target": "loopctl/mcp_tools.py",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — generated from contract.json",
+        "output": [
+          "stdout: the MCP tool list"
+        ],
+        "exit": "0 ok · 64 usage"
+      },
+      "writes": [
+        "stdout: the MCP tool list"
+      ]
     }
-  ]
+  ],
+  "opt_in_global": {
+    "--json": "emit one machine-readable result instead of the human line: exit (never re-mapped), the artifacts the run announced, the proof digest when there is one, and both captured streams with truncation declared. Every command takes it, because a wrapper that has to parse human output for some commands will parse it for all of them."
+  }
 }
