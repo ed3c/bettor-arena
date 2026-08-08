@@ -33,6 +33,17 @@ bettor-arena/
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
 │                      #   目錄不存在=未 retarget,是缺席不是缺陷
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
+├── notebooklm/        # NotebookLM 業務迴圈模組(README.md=法則層+抖動迴圈+已抓到的缺陷,開這個目錄的
+│                      #   agent 先讀它;workflow.py=唯一入口,drive_fetch.py=認證過的 Drive 路徑,
+│                      #   registry.json=互動資料(notebook pin/harvest target;憑證只留指針,絕不落值),
+│                      #   自有 `--selftest` 零網路)。
+│                      #   兩跳:hop1 從具名 notebook 取一個 Google Doc/Sheet 的 fulltext,
+│                      #   hop2(`--follow` opt-in)拿 hop1 抽出的 docs.google 文件 URL 真去存取——
+│                      #   走**丟棄式 scratch notebook**,來源 notebook 永不被寫。
+│                      #   外部組件=notebooklm CLI(github_projects/notebooklm-py);binary 缺席=64,
+│                      #   present-but-NOT-authenticated=2,兩者不得互相冒充。
+│                      #   `--json` 純度是量出來的契約:partial ID 會讓 CLI 在 JSON 前多印一行
+│                      #   `Matched: ...`,所以每個 id 先解析成完整 UUID 再呼叫,且解析後仍斷言純度
 ├── loop_wiki/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)
 ├── mcp/               # MCP adapter 層(context-pack+production 引擎;S10 落地)
@@ -65,6 +76,10 @@ bettor-arena/
 │   │                  #   bettor-arena-proof-workflow-receipt@1.0.0;檔名 <loop>-<commit12>[-dirty].json,
 │   │                  #   同名重跑 FATAL 64,PROVE_FORCE_RECEIPT=1 顯式覆寫;-dirty=雜訊樹,
 │   │                  #   hash 的位元組不在該 commit 裡,宣稱範圍隨檔名寫死)
+│   ├── notebooklm/    # notebooklm 迴圈的每趟業務收據(runtime 生成物,gitignore;schema
+│   │                  #   bettor-arena-notebooklm-module@1.0.0)。內容是他人 Google 文件的抽取物,
+│   │                  #   位元組不進版控也不進任何 proof digest——每趟都變的東西進 digest,
+│   │                  #   追蹤的就變成「上次跑在哪」而不是「機制是什麼」。收據只記 sha256 與計數
 │   ├── ingest/        # loopctl `micro run --source` 的抽取產物(runtime 生成物,gitignore):
 │   │                  #   packet.json + extracted.txt + provenance.json(原檔路徑/sha256、抽取器 argv
 │   │                  #   與版本、抽出後 sha256)。抽取記錄在案才不會讓衍生物頂著原檔的名字

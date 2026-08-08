@@ -55,7 +55,7 @@ prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
 # --- every traversal proof --------------------------------------------------
 # Hashed, never fired: a proof run from inside a proof would write receipts about
 # receipts, and the outer digest would then depend on when the inner one last ran.
-for p in macro_loop micro_loop openwiki container policy workflow harness; do
+for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm; do
   case "$p" in
     macro_loop|micro_loop) f="proof_workflow/prove_$p.sh" ;;
     *) f="proof_workflow/prove_$p.sh" ;;
@@ -66,7 +66,7 @@ for p in macro_loop micro_loop openwiki container policy workflow harness; do
 done
 
 # --- every control ----------------------------------------------------------
-for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage; do
+for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry; do
   f="proof_workflow/control_$c.sh"
   [ -f "$PROVE_ROOT/$f" ] || continue
   prove_harness "control-$c" "$f" \

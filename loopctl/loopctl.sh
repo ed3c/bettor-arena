@@ -284,6 +284,32 @@ case "$LOOP/$MODE" in
     env $_env sh "$ROOT/$TARGET" "$(value_of --request "$@")" $_mode ;;
   openwiki/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   openwiki/test)  if has_flag --full "$@"; then CONTROL_OPENWIKI_FULL=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  notebooklm/run)
+    # Values are read out first, then the argument list is rebuilt from scratch,
+    # so nothing the contract does not name can ride through into the target.
+    # Two ways in and exactly one must be chosen; that check lives in the target
+    # rather than here, so a direct call and a call through the CLI get the same
+    # refusal and the same exit code.
+    _ntarget=$(value_of --target "$@")
+    _title=$(value_of --notebook-title "$@")
+    _stitle=$(value_of --source-title "$@")
+    _nreg=$(value_of --registry "$@")
+    _nout=$(value_of --out "$@")
+    _ntimeout=$(value_of --timeout "$@")
+    _follow=0; has_flag --follow "$@" && _follow=1
+    _nb_dry=0; has_flag --dry-run "$@" && _nb_dry=1
+    set --
+    [ -n "$_ntarget" ] && set -- "$@" --target "$_ntarget"
+    [ -n "$_title" ] && set -- "$@" --notebook-title "$_title"
+    [ -n "$_stitle" ] && set -- "$@" --source-title "$_stitle"
+    [ -n "$_nreg" ] && set -- "$@" --registry "$_nreg"
+    [ -n "$_nout" ] && set -- "$@" --out "$_nout"
+    [ -n "$_ntimeout" ] && set -- "$@" --timeout "$_ntimeout"
+    [ "$_follow" -eq 1 ] && set -- "$@" --follow
+    [ "$_nb_dry" -eq 1 ] && set -- "$@" --dry-run
+    python3 "$ROOT/$TARGET" run "$@" ;;
+  notebooklm/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  notebooklm/test)  if has_flag --live "$@"; then CONTROL_NOTEBOOKLM_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;
 esac
 RC=$?
