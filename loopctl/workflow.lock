@@ -1,0 +1,319 @@
+{
+  "schema_version": "bettor-arena-workflow-lock@1.0.0",
+  "workflow_commit": "54e6f87e78e5dcc21c5d333f4234841bc94b64c4",
+  "workflow_tags": [],
+  "built_from": {
+    "macro": "macro-54e6f87e78e5-dirty.json",
+    "micro": "micro-54e6f87e78e5-dirty.json",
+    "openwiki": "openwiki-54e6f87e78e5-dirty.json"
+  },
+  "counts": {
+    "artifact": 13,
+    "context": 20,
+    "harness": 26,
+    "optional": 1
+  },
+  "workflow_digest": "93aa6cd71361b2a3109c68d9598538c370beb136816b2486d980b91c9d115423",
+  "files": {
+    ".githooks/commit-msg": {
+      "sha256": "daa0a1861b68f5f7011c1bcb171891aa93ec2b4b6cbdae9df4b73ff94cd15369",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    ".githooks/lib/validate_molecular_message.ts": {
+      "sha256": "1018ea21ed174a9db75d098f38a281e1d17493d55ba062a0da798b20a5d4ef3f",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    ".githooks/post-commit": {
+      "sha256": "e0e628b4a79c8caf6993b23bdfad2c95219790c28fa737d203c7677adec38028",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    ".githooks/pre-commit": {
+      "sha256": "97f33b7c8520644bb0adb7c16f0f247265f627612f20c322eb32cbdeb21e4648",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    ".grepai/index.gob": {
+      "sha256": "d612539ed4d8e4fa0fd327c620aa9e699b19ccd3127796dcf41d493fc94fe7d1",
+      "kind": "optional",
+      "loop": "macro"
+    },
+    "AGENTS.md": {
+      "sha256": "09cb52feb7b23f0e6599e21e1fac34c63669a8e8b1af116604c827bbdd84e34d",
+      "kind": "context",
+      "loop": "macro"
+    },
+    "ARCHITECTURE.md": {
+      "sha256": "1bd91c8c2af820e9605735280fbea6e853bfae2247ded0bc745db8a395a6e697",
+      "kind": "context",
+      "loop": "macro"
+    },
+    "CLAUDE.md": {
+      "sha256": "18e6dd53bb6ca9e845262c86877331de1a669b2f4fe763e180b20a7532e10857",
+      "kind": "context",
+      "loop": "macro"
+    },
+    "CONTEXT.md": {
+      "sha256": "99c0aec92e45d1dfa626f310356c6f3913d47301d9733b8b4a9efe1f83741621",
+      "kind": "context",
+      "loop": "macro"
+    },
+    "bootstrap.sh": {
+      "sha256": "27e1f14705aae3d759839cabc6494bc0ea3e95fb50e0fc461ce756665a584130",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "data/receipts/post-commit-54e6f87e78e5dcc21c5d333f4234841bc94b64c4.json": {
+      "sha256": "30c3f4eea6a81330a091efd8e15b05539ee6a492388cc08188327801380962fd",
+      "kind": "artifact",
+      "loop": "macro"
+    },
+    "data/wiki-update/request-issue23-dryrun.json": {
+      "sha256": "fc6b1b7e2f4489c9ac5e55204473a808500775c484216427aa5a771936cdbf50",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "data/wiki-update/request-poweron-2026-08-06.json": {
+      "sha256": "3788c59bbd3f2ddeacd4344db71f0b4f69a8642073e313494fe1c55fa457eb4b",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "data/wiki-update/request-review-i23.json": {
+      "sha256": "793896b5c3b5fcc7b5b6c034ada78b1fc1766aa1d46040294107ae013d49d990",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "delivery.json": {
+      "sha256": "50c62f5fd059566a50252b439f2d244240c05cbfd950598452e71394288837b6",
+      "kind": "artifact",
+      "loop": "macro"
+    },
+    "kb-ingest/check_repo_wiki_converge.py": {
+      "sha256": "5121b6523010f1f67c58af0ed65db85ed7eee2177e8e51813401afa8ed8d3fdb",
+      "kind": "harness",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/init.system.md": {
+      "sha256": "5b593bc50502709e2e83fdc4db66d9bd45cd3e36e85a9aa7bc4b48c121ef92b1",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/subagents/answer-verifier.md": {
+      "sha256": "75ce90d7d7dba63cd95c8f792b72d3ba1168bdac7f1d1330cc0e08cc8d011407",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/subagents/question-finder.md": {
+      "sha256": "1d7226bbfb4f25fd5c5637377c3a1a1ad916fc2726625eb598e4f63f2909379f",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/subagents/skeleton-critic.md": {
+      "sha256": "ff95d5d926f684ac96b51ccfba0541403c82490da79c4e2be8ff9101916e51a1",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/update.system.md": {
+      "sha256": "b5294f29eba92ece529d39891bd9de0d5ad9ba6789b59ee73bfbb867995eb314",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/user.init.md": {
+      "sha256": "5c804008518c4694b2ed7fe05df38eea1f68f8647843e133af7664a675e7ed9d",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/openwiki/user.update.md": {
+      "sha256": "057222b1f24e8a3dfa877725003743648d443af6d0d7529caf38344548855b71",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/port/host-runtime.md": {
+      "sha256": "1b2d83bdafefff8102209b048a1015e0472ba4708ec32a80c3dc8ceb201a6b5a",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "kb-ingest/port/openwiki_post.py": {
+      "sha256": "395cc2ea452e01564f303a758921207cb0879ba190e1f12cebe52cca6204ef9f",
+      "kind": "harness",
+      "loop": "openwiki"
+    },
+    "kb-ingest/port/openwiki_subagent.sh": {
+      "sha256": "17d678e2055b4d17a958a744aa05cbe85dbe922fd3a0ba84df479bc4a44abf7f",
+      "kind": "harness",
+      "loop": "openwiki"
+    },
+    "kb-ingest/port/wiki_update_worker.sh": {
+      "sha256": "b64d79c7877f1a38bcf2185be7451126bef31f6cfc24556b5ed1445496c1b43e",
+      "kind": "harness",
+      "loop": "openwiki"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md": {
+      "sha256": "4b7d037c3f88ac43840ef8fa1695a862e62cc3f5ee3c01c6fae1d04ead28e78a",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md": {
+      "sha256": "a7b6371f84fac089eb92fd21cd7365526efb0fe01e154a9b130cef40a01fe14c",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/exchange-context.dr-example.md": {
+      "sha256": "cd70137f27bdcb4de8f8b39d99329e5225e8551d0a6cf738332f59d00f8e45b0",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/baselines/seed-stats.json": {
+      "sha256": "1fe1b043a2a9dc181132df6937b1421dc51c7d94d2704d5cfe427eaeacf64e97",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md": {
+      "sha256": "467ae7ee0d0e82b0ac4f5673a1b97cc0bafa5f4012b898b3c86e5abf3416762c",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md": {
+      "sha256": "f6a617e998ee9a6090752238c0f6ac4534da84065307cca7422afa3f4abb699a",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/modules/semantic-truth-context.md": {
+      "sha256": "6e13393d01086ff4bb17682610f62c258b6645c82d4b3dad6873091b42713938",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/inbox/dr-example.json": {
+      "sha256": "f89c8fbb4950dcd70489d2ff0967f2e32c57e415ab3fb8ccea2e82b54d568f8d",
+      "kind": "context",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": {
+      "sha256": "bc3aab30e40f0c6208113cff83d66d72b70f421acd2eacbba74a16a61da6f13e",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": {
+      "sha256": "316a1589249f33b084b043cf3685a68cd51c68afe31dbb4682a6442b13f0c6b6",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": {
+      "sha256": "3550af48e84dd64b7dbd7c9b94139adb99797a9cb4d672df3dd1a6ebce5180ee",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.review-i23.json": {
+      "sha256": "360c6013983c5c97354cc0e2238d6b3497911c89ec95930a97f6343ac7a7f9af",
+      "kind": "artifact",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh": {
+      "sha256": "0beb4c2b50534afc8927d5615c06d8b3500a61900361a15cb5f5a99ea9a0d454",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/run.sh": {
+      "sha256": "38e00ce56adb2358d15ac91bc8c26aba42e730fdf70e35f6e3109b248904df36",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh": {
+      "sha256": "aab49f12d8a366fd983b0b3e69e0c8058fb132693a4bc57bc66556a950a52b92",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/src/cli.ts": {
+      "sha256": "94b1525f2a725d81f0a2cf7c84baa46aaa058f788fd9a402b4e16c5454669e47",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/src/run_generated_fast_quality.ts": {
+      "sha256": "be3ec8899d3e693b1af7e59f3704540900a854829995c1d979df852dc80ce199",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/src/verify_generated_repo.ts": {
+      "sha256": "ddd60a8ac0db74da97891f4bf442ca08178a58ec98131c8d0c71055614faf3d4",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh": {
+      "sha256": "1092fa2d73eeb37afac824ad7396dab91aaf328c830c5ce84d8381f913251537",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/verify.sh": {
+      "sha256": "61d36f5199d15856258d79e28e9565ed66c9866892ecf4c34ed1a13a10edd3c9",
+      "kind": "harness",
+      "loop": "micro"
+    },
+    "loopctl/contract.json": {
+      "sha256": "12d69b715f7ffbfe75c0ee536b2292e600b9a63b3c55b4ceb7a5b45c4ca9cef8",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/loopctl.sh": {
+      "sha256": "2a7fc16965403fae893c8e344f5b80deceb27c683139e4315c1b8cf15dcdc18e",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "loopctl/surface.lock": {
+      "sha256": "23547acbc9e6ebf19347e702d437321a6cfcf74bbdfe944bd1dffef5f4e36d5f",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "openwiki/.last-update.json": {
+      "sha256": "9badc5a7f37f12da17ef2011782f50f38ee5d1ccf5b22e2e1a67d0bdcf80d3a0",
+      "kind": "artifact",
+      "loop": "openwiki"
+    },
+    "openwiki/architecture.md": {
+      "sha256": "a88b7fd385cd8f1fb4ef7a046a12be3182b599152cd5adba2f16ac13678f735b",
+      "kind": "artifact",
+      "loop": "openwiki"
+    },
+    "openwiki/index.md": {
+      "sha256": "674028940cf435a59c488d7076608aa25823bc72198635f0a3de014c06acad38",
+      "kind": "artifact",
+      "loop": "openwiki"
+    },
+    "openwiki/quickstart.md": {
+      "sha256": "4bc3f0899bf5b569c86c21bc6a135e5ba85b51bca96fe7313dc01423a881370e",
+      "kind": "context",
+      "loop": "openwiki"
+    },
+    "scripts/gates/check_credential_hygiene.py": {
+      "sha256": "7dd0c4e38682e8b903549c503c326997445ded4be6be4719f5a180733cfbffa5",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "scripts/gates/check_delivery_receipt.py": {
+      "sha256": "d57325a2d94e73be23cb9f5473062e5da1ed807841e18d3d37d21b132f25530f",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "scripts/gates/check_placement.py": {
+      "sha256": "00ffac508e3a9e458722be6ca9fb6c533dd43da5d9a33e84f79a2fedf9760781",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "scripts/gates/check_root_coupling.py": {
+      "sha256": "5bddf432932d031b7c143f2b5b3f328b6e1349d40a742749a88f5f3d8626ccce",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "scripts/gates/check_skill_pointers.py": {
+      "sha256": "af0df09f9195d0a3d13848715c9bdbcd9ae44ab4e60d2d629636ad34e7ed3a44",
+      "kind": "harness",
+      "loop": "macro"
+    },
+    "scripts/gates/fast_quality.sh": {
+      "sha256": "bd05b590fa1bd919a24457ef7c3cf48be5646eefe08351f9e947c982828b31b9",
+      "kind": "harness",
+      "loop": "macro"
+    }
+  }
+}

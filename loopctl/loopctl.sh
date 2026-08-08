@@ -129,7 +129,9 @@ has_flag() {
 }
 
 case "$LOOP/$MODE" in
-  macro/run)      sh "$ROOT/$TARGET" ;;
+  macro/run)
+    _ollama=$(value_of --ollama-url "$@")
+    if [ -n "$_ollama" ]; then OLLAMA_URL="$_ollama" sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   macro/prove)    if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   macro/test)     sh "$ROOT/$TARGET" ;;
   micro/run)      sh "$ROOT/$TARGET" "$(value_of --packet "$@")" "$(value_of --output "$@")" ;;

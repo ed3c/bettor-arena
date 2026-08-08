@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "1.1.0",
+  "surface_version": "1.2.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -42,7 +42,19 @@
       "mode": "run",
       "target": "bootstrap.sh",
       "required": [],
-      "optional": [],
+      "optional": ["--ollama-url"],
+      "opt_in": {
+        "--ollama-url": "OLLAMA_URL — the endpoint the doctor probes for grepai embeddings; unreachable is a WARN, never FATAL. Default http://localhost:11434"
+      },
+      "io": {
+        "input": "none. The loop's inputs are the checkout itself: .githooks/ and scripts/gates/check_root_coupling.py are load-bearing (removing either takes the exit to 64, measured by the control), while openwiki/.last-update.json and .grepai/index.gob are read for WARNs only",
+        "output": [
+          "git config core.hooksPath=.githooks (the activation; idempotent)",
+          "stdout: one `bootstrap OK:` line, plus `bootstrap WARN:` per unmet optional condition",
+          "no file is written; the loop's own artifacts come later, from the hooks it registers"
+        ],
+        "exit": "0 activated · 64 FATAL (missing tool, not a work tree, empty .githooks, root-coupling selftest red)"
+      },
       "writes": ["git config core.hooksPath"]
     },
     {
@@ -70,6 +82,21 @@
       "target": "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh",
       "required": ["--packet", "--output"],
       "optional": [],
+      "io": {
+        "input": {
+          "--packet": "path to an input packet JSON, schema perfect-seed-input-packet; validated by src/cli.ts `validate` before anything runs. Must carry packet_id and source_refs; refs_status must be declared|sentinel|resolved, and stale is refused (exit 2)",
+          "--output": "ABSOLUTE path for the seed repo to be materialized at. It must NOT already exist — cli.ts:23 refuses an existing path, so every run needs a fresh one. This is the single most common caller mistake and it fails at step one, not halfway"
+        },
+        "output": [
+          "<output>/ — the materialized seed repo",
+          "packets/outbox/route-result.<packet_id>.json — schema perfect-seed-route-result@1.0.0, carrying four separate stage exits (build, fast_quality, operator, validator) and next_edge=human_required_before_seed_admit",
+          "data/wiki-update/request-<packet_id>.json — schema bettor-arena-wiki-update-request@1.0.0; this is the openwiki loop's input, which is how the two loops are chained",
+          "_engine-run/exchange-context.<packet_id>.md — the iteration context lane",
+          "_engine-run/build.<packet_id>.{out,err} — raw build streams"
+        ],
+        "exit": "0 all four stages green · 2 a stage failed (the route-result still lands, carrying which one) · 64 usage",
+        "note": "outside a git repo the wiki-update request is a NAMED skip rather than a failure, so the factory stays relocatable"
+      },
       "writes": [
         "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.<packet>.json",
         "data/wiki-update/request-<packet>.json",
@@ -107,6 +134,19 @@
         "--defer-partials": "WIKI_UPDATE_DEFER_PARTIALS=1 — bounded-round policy: PARTIAL verifier findings defer into the wiki backlog instead of blocking; a FAIL still stays red"
       },
       "surface_note": "these are the worker's only two caller-facing env switches, both on the surface on purpose. WIKI_WORKER_ROOT and WIKI_UPDATE_CLAUDE_BIN are selftest seams and are deliberately NOT exposed: a surface that covers most of a target teaches callers to reach past it for the rest.",
+      "io": {
+        "input": {
+          "--request": "path to a wiki-update request JSON, schema bettor-arena-wiki-update-request@1.0.0 — normally the one `micro run` just produced. It carries three separate context lanes: fixed (pointers to the official prompt assets, never copied text), iteration (the deterministic delta from the last documented gitHead), emergent (a pointer to openwiki/quickstart.md#backlog). Every field is checked before any work: a missing one is exit 2 by name, and delta_status must be computed|no-last-update|unresolvable-last-head"
+        },
+        "output": [
+          "data/wiki-update/receipt-<packet_id>.json — per-stage record back-linking request_id; refuses to overwrite without --force-receipt",
+          "--full only: openwiki/*.md rewritten in place, guarded by a git-status boundary check that fails if the model strayed outside openwiki/",
+          "--full only: openwiki/.last-update.json restamped to HEAD, asserted before the run is announced",
+          "--full only: data/wiki-update/regen-<packet_id>.json — the model turn's transcript"
+        ],
+        "exit": "0 ok · 2 contract fail, including a red verifier gate · 64 FATAL (absent request, absent tool, receipt collision)",
+        "note": "without --full the run is --dry-run: every deterministic seam executes with the REAL components and the model turn is skipped BY NAME, with the live wiki byte-compared before and after to prove it was untouched"
+      },
       "writes": ["data/wiki-update/receipt-<packet>.json", "openwiki/ (--full only)"]
     },
     {
