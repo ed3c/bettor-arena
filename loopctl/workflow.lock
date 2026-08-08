@@ -1,15 +1,15 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "5e94e05e85e154a5f4d18465660826a5443d3efc",
+  "workflow_commit": "ecca48a324d8e31ab46b8c9b01365fb8e37478ca",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-5e94e05e85e1-dirty.json",
-    "harness": "harness-5e94e05e85e1-dirty.json",
-    "macro": "macro-5e94e05e85e1-dirty.json",
-    "micro": "micro-5e94e05e85e1-dirty.json",
-    "openwiki": "openwiki-5e94e05e85e1-dirty.json",
-    "policy": "policy-5e94e05e85e1-dirty.json",
-    "workflow": "workflow-5e94e05e85e1-dirty.json"
+    "container": "container-ecca48a324d8-dirty.json",
+    "harness": "harness-ecca48a324d8-dirty.json",
+    "macro": "macro-ecca48a324d8-dirty.json",
+    "micro": "micro-ecca48a324d8-dirty.json",
+    "openwiki": "openwiki-ecca48a324d8-dirty.json",
+    "policy": "policy-ecca48a324d8-dirty.json",
+    "workflow": "workflow-ecca48a324d8-dirty.json"
   },
   "counts": {
     "artifact": 19,
@@ -17,7 +17,7 @@
     "harness": 63,
     "optional": 1
   },
-  "workflow_digest": "9931ebe4c04df65817ce486934102a9105c08273148340938c8398e3cba32b45",
+  "workflow_digest": "0f4d7caf85b5b3ed7e94cec85077941b3bd50fb6b51ed5b660171564eeaf1087",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-5e94e05e85e154a5f4d18465660826a5443d3efc.json": {
+    "data/receipts/post-commit-ecca48a324d8e31ab46b8c9b01365fb8e37478ca.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -463,7 +463,7 @@
       ]
     },
     "loopctl/automode-bench.sh": {
-      "sha256": "3b8c54c8c90f2765dca4db91619105773c4263aedd0638645fa82b2d61e3ab8d",
+      "sha256": "f782ea758871561494748693665c244422af93e6b08aa2e632837fd143b36453",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -471,7 +471,7 @@
       ]
     },
     "loopctl/automode_report.py": {
-      "sha256": "131574440a686e73bc52fdb3c0123f1069e5938be1c6d90568c7f1b8d89d4bc8",
+      "sha256": "06f04fb17b3b1acbf67fd2c1534daaee90684e7acae474848f9f88bcad3875a4",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -642,7 +642,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "6deb60ab5f1324fe811e73783c7921c311730ce2b05c86df69314e8ef4897307",
+      "sha256": "1ae63bc8f98a2be2da94b74465ecef794aabedcc38cd568019c208c520bdc8ee",
       "hash_source": "index",
       "kind": "context",
       "loops": [

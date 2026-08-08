@@ -300,6 +300,44 @@ on   1–3   23.7–28.6k  267–339k  1188–1642    6–8  0.241–0.283
 n=1 時中位數有兩個欄位指反方向，n=3 才翻正——所以報表**先印每一次的原始數字再印中位數**：
 **組內散布比組間差異大的時候，中位數是騙人的。**
 
+#### Codex CLI：同樣的實驗，結論是「量不到」
+
+```
+sh loopctl/automode-bench.sh --platform codex --runs 3
+```
+
+```
+arm  run   input(incl cached)   cached-in   output  turns
+off  1–3   82738/82024/59876    37/39/47k   235/220/224   1
+on   1–3   86841/67715/49519    76/59/42k   480/378/239   1
+```
+
+**每個欄位都重疊**，中位數差 -17.4% 而組內散布遠大於它。六次全答對、全部一個 turn。所以 codex 這邊
+的誠實結論是**沒有可偵測的差異**，不是「機制沒用」也不是「機制有用」——n=3 分不開。
+
+兩個平台的差異本身才是重點：**claude 有三個欄位完全不重疊、codex 一個都沒有**。claude 的成本被
+cache-write 主導，而 **codex 這六次的 `cache_write_input_tokens` 全是 0**——讓 claude 那組變貴的
+那個機制在 codex 的帳上根本不存在。
+
+#### 三個只有真跑才看得見的（codex）
+
+| 症狀 | 真因 |
+|---|---|
+| guarded 那組三次全空 | `-a never` **不是 `codex exec` 的旗標**。我從 help 裡 `--json` 附近的 `always\|never\|auto` 推論它——**那是 `--color` 的**。正解是 `-c approval_policy=never`。讀 grep 命中的鄰近行不等於讀介面 |
+| 報表在印出正確表格「之後」當掉 | codex **沒有 cost 欄位**，`statistics.median` 對空集合拋例外。讀取端我寫了 `cost=None` 的案例，**彙總端沒有**——一個實例修好不等於那一類修好 |
+| PDF 的 `[output_limits]` 設不上去 | `max_stdout_lines` / `max_stdout_bytes` 在 codex 0.147 **不存在**。真正的槓桿是 `tool_output_token_limit` |
+
+**`--strict-config` 是 load-bearing 的**：少了它，拼錯的 guard 鍵會被靜默忽略，guarded 那組偷偷變成
+第二份 unguarded，**而每個數字都還是合理的**。selftest 有一條專門守它。
+
+**沙盒那個軸在 OpenShell 內量不到，而這是量出來的**：四格各跑一次，`-s read-only` 與
+`-s workspace-write` 都死在 `bwrap: No permissions to create a new namespace`，只有
+`danger-full-access` 與 bypass 旗標會執行。所以兩組的沙盒模式**釘死不變**，dry-run 直接把
+「NOT VARIED」印出來——只跑活著的格子卻宣稱做了 2×2，是報告一個從未發生的比較。
+
+還有一個省下三次 turn 的小機制：**第一次跑出空結果就中止該組**。旗標被拒的那次產生了三份一模一樣的
+空檔案，而原因就躺在旁邊的 `.err` 裡沒人讀。
+
 還有一個陷阱：文件的 `.claudeignore` 模板封鎖 `*.lock`，照抄會連 `loopctl/workflow.lock` 與
 `surface.lock` 一起封掉——那兩個是 manifest 與表面契約，**不是依賴鎖檔，而且正是這個任務要找的東西**。
 ON 組改用具名鎖檔，`--selftest` 有一條專門擋這個萬用字元回來。
