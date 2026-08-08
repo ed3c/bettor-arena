@@ -6,7 +6,8 @@
     workflow_lock.py --selftest
 
 The manifest is not written by hand and is not a second list to keep in sync. It
-is assembled from the three proof receipts at the current commit, which already
+is assembled from the proof receipts at the current commit — every loop the
+contract declares a `prove` for, never a list written here — which already
 record every path a traversal walked and what kind it was — deterministic harness
 or the documents the probabilistic lane reads. Deriving it means the manifest
 cannot describe a workflow different from the one the proofs measured.
@@ -30,7 +31,52 @@ import subprocess
 import sys
 from pathlib import Path
 
-LOOPS = ("macro", "micro", "openwiki", "container", "policy")
+
+def _loops(repo: Path) -> tuple[str, ...]:
+    """Every loop that declares a `prove` command, read from the contract.
+
+    This was a hard-coded five-tuple while the CLI grew to seven, and the two it
+    missed were `workflow` and `harness` — which between them own the lineage
+    machinery and EVERY file under proof_workflow/. So the manifest silently did
+    not contain the recorder, the comparator, or any of the eight controls, and
+    editing them moved no stamp: exactly the gap prove_harness.sh was written to
+    close, closed on the proof side and still open here.
+
+    It is the second copy of this same defect. control_workflow_lineage.sh
+    carried its own three-loop list and failed on its own staleness; deriving
+    that one from the contract fixed the symptom in the control while leaving
+    the cause in the builder it was testing.
+
+    Derived from what each command WRITES, not from its name. `mcp prove` and
+    `policy prove` are the same proof under two names and leave one receipt
+    between them, so a list of command names asks for an `mcp` receipt that no
+    run will ever produce and the build FATALs on a file that is not missing.
+    """
+    contract = json.loads(
+        (repo / "loopctl" / "contract.json").read_text(encoding="utf-8")
+    )
+    marker = "-<commit12>"
+    loops = set()
+    for cmd in contract["commands"]:
+        if cmd["mode"] != "prove":
+            continue
+        for written in cmd["writes"]:
+            name = Path(written).name
+            if marker not in name:
+                raise SystemExit(
+                    f"workflow-lock FATAL: {cmd['loop']} prove declares a receipt path "
+                    f"'{written}' that does not carry '{marker}', so the receipt name cannot "
+                    "be derived from it. Guessing one would build a manifest from the wrong file."
+                )
+            loops.add(name.split(marker)[0])
+    loops = tuple(sorted(loops))
+    if not loops:
+        raise SystemExit(
+            "workflow-lock FATAL: the contract declares no `prove` command, so the loop "
+            "list came back empty. An empty list builds an empty manifest, which declares "
+            "that nothing belongs to the workflow while looking green."
+        )
+    return loops
 
 
 def _receipt(repo: Path, loop: str, short: str) -> Path | None:
@@ -123,7 +169,7 @@ def build(repo: Path) -> dict:
 
     files: dict[str, dict] = {}
     sources: dict[str, str] = {}
-    for loop in LOOPS:
+    for loop in _loops(repo):
         receipt = _receipt(repo, loop, short)
         if receipt is None:
             raise SystemExit(

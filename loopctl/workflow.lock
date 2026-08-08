@@ -1,21 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "39d81dd4b340faa842a74e23be9a2f282c971c21",
+  "workflow_commit": "33cb462a263112efc19b4e604aea0c1d8c3c420e",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-39d81dd4b340-dirty.json",
-    "micro": "micro-39d81dd4b340-dirty.json",
-    "openwiki": "openwiki-39d81dd4b340-dirty.json",
-    "container": "container-39d81dd4b340-dirty.json",
-    "policy": "policy-39d81dd4b340-dirty.json"
+    "container": "container-33cb462a2631-dirty.json",
+    "harness": "harness-33cb462a2631-dirty.json",
+    "macro": "macro-33cb462a2631-dirty.json",
+    "micro": "micro-33cb462a2631-dirty.json",
+    "openwiki": "openwiki-33cb462a2631-dirty.json",
+    "policy": "policy-33cb462a2631-dirty.json",
+    "workflow": "workflow-33cb462a2631-dirty.json"
   },
   "counts": {
     "artifact": 19,
     "context": 20,
-    "harness": 40,
+    "harness": 59,
     "optional": 1
   },
-  "workflow_digest": "cb2152b13d128f5532a5750ede545fb0b3007b629929d374c1c4bff124e0d44e",
+  "workflow_digest": "d175a28fa4812ca061dacc70b894bef5bd383d0d71fba8fdced07954ad273216",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -83,7 +85,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-39d81dd4b340faa842a74e23be9a2f282c971c21.json": {
+    "data/receipts/post-commit-33cb462a263112efc19b4e604aea0c1d8c3c420e.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -426,7 +428,7 @@
       "loop": "macro"
     },
     "loopctl/workflow_lock.py": {
-      "sha256": "e5577f3be920a9d76db51c3444d2d2f6fb31f9ac328998c4aaac914b1af18acf",
+      "sha256": "af3421c74aefbb9b583042fc15cfef264fdf063b9caf8908c27fd15ccb48ecfd",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -456,10 +458,124 @@
       "loop": "openwiki"
     },
     "proof_workflow/README.md": {
-      "sha256": "d9f4dee52c91e863b5d9f72a4219831dc6bdf39d23e55bbbe4fa67aac3fd2991",
+      "sha256": "adf71b3523ce9b055d9d984e62748bc50ac2020c74c78617b2d4deb34a4251ef",
       "hash_source": "index",
       "kind": "context",
       "loop": "macro"
+    },
+    "proof_workflow/control_container_surface.sh": {
+      "sha256": "7a2ca0364ef613b0e9c0d873dc5c7ab20f28f029d71bb5ff1b5bcc51be1a60eb",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_harness_coverage.sh": {
+      "sha256": "21f8ea9401566f332b38a366591ea478f6bbb72d6af213f11184d57db4f1c175",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_macro_entry.sh": {
+      "sha256": "48b2ffedbe9cb44fa86e979ec654da41dd51e16b9fe90aa368ee05a57e7eb34e",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_mcp_surface.sh": {
+      "sha256": "050ddde4c7227323e6476cacec0ae40411b07c9b66bcc6ca49acb46f1a01f1dd",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_micro_entry.sh": {
+      "sha256": "f34f24b1f78c0bd4ff757fc8c940ef64f0e454fe3d8b6c14226d6fd5b8e9c867",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_openwiki_entry.sh": {
+      "sha256": "74cbc50bbe00bd2a0ef58649eb14227b991795faa8d5ae41aa794904f552073b",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_sandbox_policy.sh": {
+      "sha256": "3f4334e3f70d0aaf88935e3fc6e7e415a9ef356e6848c33c00e8a4e80c20635f",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/control_workflow_lineage.sh": {
+      "sha256": "ca62df06f0aa9cfc2e8d7dfc3297bef6baa0baa56a14d5939cec46cd3c39e118",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/lib/capture.sh": {
+      "sha256": "1c65a1f0d6d7ff17263ba936e24889215a07f19512b41590e5930445788b9c41",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/lib/compare_control.py": {
+      "sha256": "a2dbb18a67c3f972be6cc9daaadce9e2b41cedb5a2826eec0426ab0bda7466f7",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/lib/harness_coverage.py": {
+      "sha256": "70fcf734c36fa9fd13233c7aa33d5e8a62ef006197853ecddfb0010d6e7a7d4c",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/lib/prove.sh": {
+      "sha256": "0ced1a932d0e839b8c5a87bdb4a1b5ca24327f9fbc05d15195d769cecc68a564",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_container.sh": {
+      "sha256": "8b7f3a02b2878d91c7fd65d9c823c59cb82d9a8064e2a42d2f57144e675808a1",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_harness.sh": {
+      "sha256": "871779ce831260c480e834c113663de6b9181894e6fb0fe917e909b47cfcad23",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_macro_loop.sh": {
+      "sha256": "a28d249e8684ee6535f9be53cbf6b9c28430a5dbf943541d69f6b22ca63e31b5",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_micro_loop.sh": {
+      "sha256": "1ed1f0ddfe19c12d08101f1136b2cd32719edb507b0e5d876f30853290b1db3a",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_openwiki.sh": {
+      "sha256": "a5e22f0c6f93badd4b9027246625405a47adb64842030394d9bd4b0058cde63b",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_policy.sh": {
+      "sha256": "2cc050771dd5072107e546d70e7b513d7ff19b1d2c51d7cb715a3c0af3e3e78a",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
+    },
+    "proof_workflow/prove_workflow.sh": {
+      "sha256": "7a45ca70069ff42997ed4b4432496e0383cb27490500276872d223cf514fe896",
+      "hash_source": "index",
+      "kind": "harness",
+      "loop": "harness"
     },
     "scripts/gates/check_credential_hygiene.py": {
       "sha256": "7dd0c4e38682e8b903549c503c326997445ded4be6be4719f5a180733cfbffa5",

@@ -108,6 +108,8 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | grep 把 pattern 當選項 | 欄位明明在檔裡卻報缺失 | 每個欄位名以 `- ` 開頭 → `grep -Fq -e` |
 | lock 與同一個 commit 內容不符 | replay 的 verify | lock 建完後檔案又被改，卻一起出貨 → 雜湊改讀 **index**，並加 staleness 閘 |
 | 釘舊 tag 時每次調用 exit 64 | 真跑 MCP | 該表面早於 `--json` → **啟動時**檢查並具名版本與修法 |
+| 改了兩支對照組，lineage trailer 卻沒點名 | commit 後讀 trailer | manifest builder 的 `LOOPS` 寫死五個而 CLI 長到七個，漏掉 `workflow` 與 `harness` → **proof_workflow 全部 20 檔不在 manifest 內，改了不動任何戳記** |
+| 從 contract 取 loop 名字仍 FATAL | 換掉寫死清單後重建 | `mcp prove` 與 `policy prove` 是同一份證明、共用一份收據 → 改成**從 `writes` 推收據名**，不從命令名推 |
 
 ### 容器與沙盒（OrbStack / Apple container / OpenShell）
 
