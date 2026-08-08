@@ -126,7 +126,12 @@ def main() -> int:
         source_peer = Path(
             os.environ.get("ANTIGRAVITY_PEER", ROOT.parents[2] / "antigravity")
         ).resolve()
-        live_root = ROOT / "_runs" / "live" / str(time.time_ns())
+        configured_live_root = os.environ.get("EQUIVALENCE_LIVE_RUN_ROOT")
+        live_root = (
+            Path(configured_live_root).resolve()
+            if configured_live_root
+            else ROOT / "_runs" / "live" / str(time.time_ns())
+        )
         request = {
             "schema_version": "technical-equivalence-request@1.0.0",
             "request_id": "gemini-live-canary",

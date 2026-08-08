@@ -21,7 +21,9 @@ from equivalence import (  # noqa: E402
     VerificationFailure,
     assert_head_bound,
     collect_live_research,
+    completed_adapter_run,
     extract_structured_candidates,
+    load_resume_cache,
     plan_gap_prompts,
 )
 
@@ -789,6 +791,90 @@ class EquivalenceCliTest(unittest.TestCase):
             collect_live_research(
                 "PRIMARY", lambda _label, _prompt: "no fenced candidate JSON"
             )
+
+    def test_resume_cache_reuses_only_digest_bound_successes(self) -> None:
+        run_dir = self.base / "resume"
+        run_dir.mkdir()
+        raw = run_dir / "gemini-primary-result.md"
+        raw.write_text("completed report", encoding="utf-8")
+        prompt = "BOUND PROMPT"
+        (run_dir / "gemini-primary-prompt.md").write_text(prompt, encoding="utf-8")
+        receipt = {
+            "schema_version": "technical-equivalence-adapter-receipt@1.0.0",
+            "research_request_digest": "sha256:request",
+            "status": "failed",
+            "invocations": [
+                {
+                    "label": "primary",
+                    "prompt_sha256": "sha256:"
+                    + hashlib.sha256(prompt.encode()).hexdigest(),
+                    "output_sha256": "sha256:"
+                    + hashlib.sha256(raw.read_bytes()).hexdigest(),
+                    "raw_exit": 0,
+                },
+                {
+                    "label": "gap-01",
+                    "prompt_sha256": "sha256:failed",
+                    "output_sha256": None,
+                    "raw_exit": 1,
+                },
+            ],
+        }
+        receipt_path = run_dir / "adapter-receipt.json"
+        receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+        cache = load_resume_cache(run_dir, "sha256:request")
+        self.assertEqual(cache["primary"]["raw"], "completed report")
+        self.assertEqual(cache["primary"]["prompt"], prompt)
+        self.assertNotIn("gap-01", cache)
+
+    def test_resume_cache_rejects_tampered_output(self) -> None:
+        run_dir = self.base / "tampered-resume"
+        run_dir.mkdir()
+        (run_dir / "gemini-primary-prompt.md").write_text("p", encoding="utf-8")
+        (run_dir / "gemini-primary-result.md").write_text("tampered", encoding="utf-8")
+        receipt = {
+            "schema_version": "technical-equivalence-adapter-receipt@1.0.0",
+            "research_request_digest": "sha256:request",
+            "status": "failed",
+            "invocations": [
+                {
+                    "label": "primary",
+                    "prompt_sha256": "sha256:bad",
+                    "output_sha256": "sha256:bad",
+                    "raw_exit": 0,
+                }
+            ],
+        }
+        (run_dir / "adapter-receipt.json").write_text(
+            json.dumps(receipt), encoding="utf-8"
+        )
+        with self.assertRaisesRegex(Exception, "resume evidence digest mismatch"):
+            load_resume_cache(run_dir, "sha256:request")
+
+    def test_completed_adapter_run_is_reused_without_a_new_attempt(self) -> None:
+        run_dir = self.base / "completed-run"
+        run_dir.mkdir()
+        receipt_path = run_dir / "adapter-receipt.attempt-02.json"
+        receipt_path.write_text(
+            json.dumps(
+                {"status": "passed", "adapter_receipt_digest": "sha256:receipt"}
+            ),
+            encoding="utf-8",
+        )
+        result_path = run_dir / "research-result.json"
+        result_path.write_text(
+            json.dumps(
+                {
+                    "upstream_research_request_digest": "sha256:request",
+                    "adapter_receipt_digest": "sha256:receipt",
+                }
+            ),
+            encoding="utf-8",
+        )
+        self.assertEqual(
+            completed_adapter_run(run_dir, [receipt_path], "sha256:request"),
+            (result_path, receipt_path),
+        )
 
     def test_sync_source_bytes_must_exist_unchanged_at_head(self) -> None:
         repo = self.base / "source-lineage"

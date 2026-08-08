@@ -6,6 +6,12 @@ owns the apply authority and generated mirror. This separation keeps browser
 selectors/login state out of the semantic contract and prevents arena `run` from
 cross-repo mutation.
 
+Long Gemini runs resume only at digest-bound invocation boundaries. A prior
+successful primary/gap result is reusable only when the request, source,
+dependency, prompt, and output identities still match its immutable receipt.
+Failed edges always rerun, every attempt gets a new receipt, and a run directory
+fails closed after three receipts.
+
 Hard drift (schema, digest, owner, required clause, dangling pointer) blocks on
 one observation. Soft provider jitter is measured only by live canaries: three
 initial runs, then against the median of the last five admitted runs; two

@@ -762,6 +762,79 @@ def build_sync_bundle(
     return path
 
 
+def load_resume_cache(
+    run_dir: Path,
+    research_request_digest: str,
+    expected_identity: dict[str, Any] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Load digest-bound successful invocations; never reuse a failed edge."""
+    cache: dict[str, dict[str, Any]] = {}
+    for receipt_path in sorted(run_dir.glob("adapter-receipt*.json")):
+        receipt = load_json(receipt_path)
+        if receipt.get("research_request_digest") != research_request_digest:
+            raise ContractError(f"resume receipt request mismatch: {receipt_path}")
+        if expected_identity is not None:
+            for field, expected in expected_identity.items():
+                if receipt.get(field) != expected:
+                    raise ContractError(
+                        f"resume receipt {field} mismatch: {receipt_path}"
+                    )
+        for invocation in receipt.get("invocations", []):
+            if not isinstance(invocation, dict) or invocation.get("raw_exit") != 0:
+                continue
+            label = str(invocation.get("label") or "")
+            prompt_path = run_dir / f"gemini-{label}-prompt.md"
+            raw_path = run_dir / f"gemini-{label}-result.md"
+            if not prompt_path.is_file() or not raw_path.is_file():
+                raise ContractError(
+                    f"resume evidence file missing for successful invocation: {label}"
+                )
+            prompt = prompt_path.read_text(encoding="utf-8")
+            raw = raw_path.read_text(encoding="utf-8")
+            prompt_sha = "sha256:" + hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+            output_sha = "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
+            if prompt_sha != invocation.get(
+                "prompt_sha256"
+            ) or output_sha != invocation.get("output_sha256"):
+                raise ContractError(
+                    f"resume evidence digest mismatch for successful invocation: {label}"
+                )
+            cache[label] = {
+                "prompt": prompt,
+                "raw": raw,
+                "prompt_sha256": prompt_sha,
+                "output_sha256": output_sha,
+                "receipt": str(receipt_path),
+            }
+    return cache
+
+
+def completed_adapter_run(
+    run_dir: Path, prior_receipts: list[Path], research_request_digest: str
+) -> tuple[Path, Path] | None:
+    """Return an already completed, bound live run without creating a new attempt."""
+    for receipt_path in reversed(prior_receipts):
+        receipt = load_json(receipt_path)
+        if receipt.get("status") != "passed":
+            continue
+        result_path = run_dir / "research-result.json"
+        if not result_path.is_file():
+            raise ContractError(
+                f"passed adapter receipt has no research result: {receipt_path}"
+            )
+        result = load_json(result_path)
+        if result.get(
+            "upstream_research_request_digest"
+        ) != research_request_digest or result.get(
+            "adapter_receipt_digest"
+        ) != receipt.get("adapter_receipt_digest"):
+            raise ContractError(
+                f"passed adapter result binding mismatch: {receipt_path}"
+            )
+        return result_path, receipt_path
+    return None
+
+
 def execute_gemini_adapter(
     source_peer: Path,
     research: dict[str, Any],
@@ -830,7 +903,30 @@ def execute_gemini_adapter(
             "adapter installed dependency versions drift; live revalidation required"
         )
     run_dir.mkdir(parents=True, exist_ok=True)
-    receipt_path = run_dir / "adapter-receipt.json"
+    prior_receipts = sorted(run_dir.glob("adapter-receipt*.json"))
+    if len(prior_receipts) >= 3:
+        raise ContractError(
+            "adapter retry budget exhausted after three immutable receipts"
+        )
+    receipt_path = (
+        run_dir / "adapter-receipt.json"
+        if not prior_receipts
+        else run_dir / f"adapter-receipt.attempt-{len(prior_receipts) + 1:02d}.json"
+    )
+    resume_cache = load_resume_cache(
+        run_dir,
+        research["research_request_digest"],
+        {
+            "source_commit": source_head,
+            "source_files": source_files,
+            "top_level_dependencies": actual_dependencies,
+        },
+    )
+    completed = completed_adapter_run(
+        run_dir, prior_receipts, research["research_request_digest"]
+    )
+    if completed is not None:
+        return completed
     invocations: list[dict[str, Any]] = []
     gap_ledger: dict[str, Any] | None = None
 
@@ -839,6 +935,25 @@ def execute_gemini_adapter(
         raw_path = run_dir / f"gemini-{label}-result.md"
         if prompt_path.exists() and prompt_path.read_text(encoding="utf-8") != prompt:
             raise ContractError(f"immutable prompt collision: {prompt_path}")
+        cached = resume_cache.get(label)
+        if cached is not None:
+            if cached["prompt"] != prompt:
+                raise ContractError(f"resume prompt mismatch: {label}")
+            raw = cached["raw"]
+            invocations.append(
+                {
+                    "label": label,
+                    "argv": ["resume", label],
+                    "prompt_sha256": cached["prompt_sha256"],
+                    "output_sha256": cached["output_sha256"],
+                    "raw_exit": 0,
+                    "structured_candidate_count": len(
+                        extract_structured_candidates(raw)
+                    ),
+                    "reused_from_receipt": cached["receipt"],
+                }
+            )
+            return raw
         prompt_path.write_text(prompt, encoding="utf-8")
         argv = [
             "node",
