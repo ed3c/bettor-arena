@@ -19,6 +19,7 @@ CLI = ARENA / "loopctl" / "loopctl.sh"
 sys.path.insert(0, str(ROOT))
 from equivalence import (  # noqa: E402
     VerificationFailure,
+    assert_head_bound,
     collect_live_research,
     extract_structured_candidates,
     plan_gap_prompts,
@@ -788,6 +789,28 @@ class EquivalenceCliTest(unittest.TestCase):
             collect_live_research(
                 "PRIMARY", lambda _label, _prompt: "no fenced candidate JSON"
             )
+
+    def test_sync_source_bytes_must_exist_unchanged_at_head(self) -> None:
+        repo = self.base / "source-lineage"
+        repo.mkdir()
+        subprocess.run(["git", "init", "-q", str(repo)], check=True)
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "user.email", "test@example.invalid"],
+            check=True,
+        )
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "user.name", "test"], check=True
+        )
+        tracked = repo / "PROFILE.md"
+        tracked.write_text("at head\n", encoding="utf-8")
+        subprocess.run(["git", "-C", str(repo), "add", "PROFILE.md"], check=True)
+        subprocess.run(["git", "-C", str(repo), "commit", "-qm", "profile"], check=True)
+        self.assertIsNone(
+            assert_head_bound(repo, Path("PROFILE.md"), tracked.read_bytes())
+        )
+        tracked.write_text("dirty replacement\n", encoding="utf-8")
+        with self.assertRaisesRegex(Exception, "not the bytes at HEAD"):
+            assert_head_bound(repo, Path("PROFILE.md"), tracked.read_bytes())
 
 
 def canonical_digest_field(payload: dict, field: str) -> str:

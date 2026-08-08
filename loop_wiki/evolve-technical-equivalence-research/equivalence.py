@@ -115,6 +115,18 @@ def git_head(repo: Path) -> str:
     return result.stdout.strip()
 
 
+def assert_head_bound(repo: Path, relative_path: Path, current_bytes: bytes) -> None:
+    result = subprocess.run(
+        ["git", "-C", str(repo), "show", f"HEAD:{relative_path.as_posix()}"],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0 or result.stdout != current_bytes:
+        raise ContractError(
+            f"canonical source {relative_path} is not the bytes at HEAD; commit it before sync"
+        )
+
+
 def write_immutable(path: Path, payload: dict[str, Any]) -> None:
     encoded = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -655,7 +667,9 @@ def build_sync_bundle(
 ) -> Path:
     arena = ROOT.parents[1]
     source_head = git_head(arena)
-    profile = PROFILE.read_text(encoding="utf-8")
+    profile_bytes = PROFILE.read_bytes()
+    assert_head_bound(arena, PROFILE.relative_to(arena), profile_bytes)
+    profile = profile_bytes.decode("utf-8")
     prefix = ".skill-bindings/dr-research-loop/technical-equivalence"
     manifest = {
         "schema_version": "technical-equivalence-mirror-manifest@1.0.0",
