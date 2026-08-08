@@ -8,12 +8,27 @@ import hashlib
 import json
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 from . import RUNTIME_REF
+from .graphrag import compute_communities, export_graphrag
+from .java_ast import JavaAstError, extract_java_records, ingest_java_ast
+from .model import (
+    add_evidence,
+    attach_evidence_to_node,
+    ensure_edge,
+    ensure_node,
+    new_graph,
+    validate_graph,
+)
+from .render import render_html
+from .settlement import add_invariants_and_events, evaluate_all
+from .util import stable_id
 
 SURFACE_VERSION = "2.5.0"
 SAFE_ARTIFACT_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
+TOOL_PROFILES = {"builtin-text-v1", "java-compiler-v1"}
 
 
 class ContractError(ValueError):
@@ -233,6 +248,13 @@ def write_json(path: Path, value: object) -> str:
     return sha256(path)
 
 
+def manifest_digest(files: list[dict[str, object]]) -> str:
+    rows = []
+    for item in sorted(files, key=lambda value: str(value["path"])):
+        rows.append(f"{item['path']}\0{item['sha256']}\n")
+    return hashlib.sha256("".join(rows).encode("utf-8")).hexdigest()
+
+
 def stage(
     name: str, state: str, exit_code: int | None, artifacts: list[dict[str, str]]
 ) -> dict[str, object]:
@@ -281,6 +303,10 @@ def run(packet_path: Path, output: Path) -> int:
         )
     if profile.get("schema_version") != "ctg-domain-profile@1.0.0":
         raise ContractError("domain profile schema must be ctg-domain-profile@1.0.0")
+    if profile.get("tool_profile") not in TOOL_PROFILES:
+        raise ContractError(
+            f"domain profile tool_profile must be pinned to one of {sorted(TOOL_PROFILES)}"
+        )
     files = validate_snapshot_shape(snapshot)
     invariants = validate_profile_shape(profile)
     assert isinstance(subject_descriptor, dict)
@@ -290,7 +316,7 @@ def run(packet_path: Path, output: Path) -> int:
                 f"stale subject identity: {identity_key} does not match snapshot"
             )
 
-    graph_nodes: list[dict[str, object]] = []
+    snapshot_files: list[tuple[dict[str, object], str, Path]] = []
     for entry in files:
         if not isinstance(entry, dict):
             raise ContractError("subject snapshot file entry must be an object")
@@ -298,43 +324,205 @@ def run(packet_path: Path, output: Path) -> int:
         actual = sha256(source)
         if entry.get("sha256") != actual:
             raise ContractError(f"subject file digest mismatch: {entry.get('path')}")
-        graph_nodes.append({"kind": "file", "path": entry["path"], "sha256": actual})
-
-    for invariant in invariants:
-        if not isinstance(invariant, dict) or not isinstance(
-            invariant.get("invariant_id"), str
-        ):
-            raise ContractError("domain profile invariant requires invariant_id")
-        graph_nodes.append(
-            {
-                "kind": "invariant",
-                "invariant_id": invariant["invariant_id"],
-                "outcome": "DEMO_ONLY",
-            }
+        snapshot_files.append((entry, actual, source))
+    if subject_descriptor.get("file_manifest_digest") != manifest_digest(files):
+        raise MeasurementError(
+            "stale subject identity: file_manifest_digest does not match snapshot"
         )
+
+    evidence_records: list[dict[str, object]] = []
+    for item in packet["evidence"]:
+        assert isinstance(item, dict)
+        artifact = resolve_artifact(bundle, item["artifact_ref"])
+        actual = sha256(artifact)
+        if item["sha256"] != actual:
+            raise MeasurementError(f"evidence digest mismatch: {item['evidence_id']}")
+        evidence_records.append(item)
 
     requirements = packet.get("reach_requirements")
     if not isinstance(requirements, dict) or requirements.get("STATIC") != "required":
         raise ContractError("this runtime requires reach_requirements.STATIC=required")
 
     output.mkdir(parents=True)
-    graph_path = output / "code-truth-graph.json"
-    graph_sha = write_json(
-        graph_path,
-        {
-            "schema_version": "code-truth-graph@1.0.0",
-            "packet_id": packet.get("packet_id"),
-            "observation_id": packet.get("observation_id"),
-            "nodes": graph_nodes,
-            "edges": [],
-            "claim_boundary": "structure-only demo",
+    observed = sorted(
+        str(item["observed_at"]) for item in evidence_records if item.get("observed_at")
+    )
+    graph = new_graph(
+        title=str(profile["profile_id"]),
+        snapshot={
+            "repo": snapshot["repo_id"],
+            "sha": snapshot["commit"],
+            "tree": snapshot["tree"],
+            "dirty": snapshot["dirty"],
+            "manifest_sha256": subject_descriptor["file_manifest_digest"],
+        },
+        scope={
+            "mode": "demo",
+            "repo": snapshot["repo_id"],
+            "files": [str(item["path"]) for item in files],
+            "synthetic": True,
         },
     )
+    graph["generated_at"] = observed[0] if observed else "1970-01-01T00:00:00Z"
+
+    file_node_ids: list[str] = []
+    for entry, actual, _source in snapshot_files:
+        path = str(entry["path"])
+        node_id = stable_id("file", snapshot["repo_id"], path, actual)
+        file_node_ids.append(node_id)
+        ensure_node(
+            graph,
+            node_id=node_id,
+            kind="file",
+            label=Path(path).name,
+            location={
+                "repo": snapshot["repo_id"],
+                "path": path,
+                "start_line": 1,
+                "end_line": 1,
+                "symbol": "",
+                "sha": snapshot["commit"],
+            },
+            metadata={"sha256": actual, "extractor": profile["tool_profile"]},
+        )
+        evidence_id = add_evidence(
+            graph,
+            method="DOCUMENT",
+            status="documented",
+            source=f"{snapshot['repo_id']}@{snapshot['commit']}:{path}",
+            summary="Content-addressed subject file admitted for static measurement",
+            authority="snapshot",
+            environment_class="source",
+            details={"sha256": actual},
+        )
+        attach_evidence_to_node(graph, node_id, evidence_id)
+
+    if profile["tool_profile"] == "java-compiler-v1":
+        java_sources = [source for _entry, _sha, source in snapshot_files]
+        if any(source.suffix != ".java" for source in java_sources):
+            raise ContractError("java-compiler-v1 accepts only .java snapshot files")
+        tool_source = (
+            Path(__file__).resolve().parents[2]
+            / "tools/java/CodeGraphAstExtractor.java"
+        )
+        try:
+            with tempfile.TemporaryDirectory(prefix="ctg-java-") as build_dir:
+                records = extract_java_records(
+                    root=bundle,
+                    source_files=java_sources,
+                    tool_source=tool_source,
+                    build_dir=Path(build_dir),
+                )
+            ingest_java_ast(
+                graph,
+                root=bundle,
+                repo=str(snapshot["repo_id"]),
+                sha=str(snapshot["commit"]),
+                records=records,
+            )
+        except JavaAstError as exc:
+            if "not found" in str(exc):
+                raise ContractError(str(exc)) from exc
+            raise MeasurementError(str(exc)) from exc
+
+    packet_evidence_ids: list[str] = []
+    for item in evidence_records:
+        evidence_id = add_evidence(
+            graph,
+            evidence_id=str(item["evidence_id"]),
+            method="DOCUMENT",
+            status="documented",
+            source=str(item["artifact_ref"]),
+            summary=f"Typed {item['kind']} evidence admitted by the packet",
+            authority=str(item["authority"]),
+            environment_class=str(item["environment_class"]),
+            observed_at=str(item["observed_at"]),
+            details={"freshness": item["freshness"], "sha256": item["sha256"]},
+        )
+        packet_evidence_ids.append(evidence_id)
+
+    invariant_rows: list[dict[str, object]] = []
+    event_rows: list[dict[str, object]] = []
+    for invariant in invariants:
+        invariant_id = str(invariant["invariant_id"])
+        invariant_node = f"invariant:{invariant_id}"
+        ensure_node(
+            graph,
+            node_id=invariant_node,
+            kind="business_invariant",
+            label=invariant_id,
+            critical=False,
+            metadata={"description": invariant["statement"]},
+        )
+        for node_id in file_node_ids:
+            ensure_edge(
+                graph,
+                source=node_id,
+                target=invariant_node,
+                kind="AFFECTS_INVARIANT",
+            )
+        invariant_rows.append(
+            {
+                "id": invariant_id,
+                "statement": invariant["statement"],
+                "critical": False,
+                "repeat_sensitive": False,
+                "subject_ids": file_node_ids,
+                "settlement_policy": {
+                    "min_independent_reaches": 2,
+                    "min_independence_groups": 2,
+                    "require_prod": False,
+                },
+            }
+        )
+        event_rows.append(
+            {
+                "id": stable_id("event", invariant_id, packet["observation_id"]),
+                "invariant_id": invariant_id,
+                "sequence": 1,
+                "action": "ASSERTED",
+                "reach": "TEXT",
+                "independence_group": "packet-declared-evidence",
+                "evidence_ids": packet_evidence_ids,
+                "note": invariant["claim_boundary"],
+            }
+        )
+    add_invariants_and_events(graph, invariants=invariant_rows, events=event_rows)
+    evaluate_all(graph)
+    compute_communities(graph)
+    graph_errors = validate_graph(graph)
+    if graph_errors:
+        raise MeasurementError(f"graph validation failed: {graph_errors}")
+
+    graph_path = output / "code-truth-graph.json"
+    graph["packet_id"] = packet["packet_id"]
+    graph["observation_id"] = packet["observation_id"]
+    graph["claim_boundary"] = "structure-only demo"
+    graph_sha = write_json(graph_path, graph)
+    graphrag_dir = output / "graphrag"
+    export_graphrag(graph, graphrag_dir)
+    report_path = output / "report.html"
+    render_html(graph, report_path)
     graph_artifact = {
         "kind": "code_truth_graph",
         "artifact_ref": graph_path.name,
         "sha256": graph_sha,
     }
+    exported_artifacts = [
+        {
+            "kind": f"graphrag_{name.removesuffix('.csv')}",
+            "artifact_ref": f"graphrag/{name}",
+            "sha256": sha256(graphrag_dir / name),
+        }
+        for name in ("entities.csv", "relationships.csv", "text_units.csv")
+    ]
+    exported_artifacts.append(
+        {
+            "kind": "html_report",
+            "artifact_ref": report_path.name,
+            "sha256": sha256(report_path),
+        }
+    )
     stages = [
         stage("STATIC", "PASSED", 0, [graph_artifact]),
         stage("SANDBOX", "NOT_REQUESTED", None, []),
@@ -356,14 +544,18 @@ def run(packet_path: Path, output: Path) -> int:
         },
         "refs_status": "resolved",
         "stages": stages,
-        "artifacts": [graph_artifact],
+        "artifacts": [graph_artifact, *exported_artifacts],
         "graph_summary": {
-            "node_count": len(graph_nodes),
-            "edge_count": 0,
+            "node_count": len(graph["nodes"]),
+            "edge_count": len(graph["edges"]),
         },
         "settlement_summary": {
-            "invariant_outcome": "DEMO_ONLY",
-            "evidence_availability": "DECLARED_NOT_CONSUMED",
+            "invariant_outcome": (
+                graph["invariants"][0]["current_status"]
+                if graph["invariants"]
+                else "UNCHALLENGED"
+            ),
+            "evidence_availability": "CONSUMED",
         },
         "next_edge": "human_review",
         "human_gate": packet.get("human_gate"),

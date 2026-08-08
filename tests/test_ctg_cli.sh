@@ -110,7 +110,7 @@ write_json(
                 "artifact_ref": "evidence/inv-demo.txt",
                 "sha256": sha256(evidence),
                 "observed_at": "2026-08-09T00:00:00Z",
-                "environment_class": "deterministic-fixture",
+                "environment_class": "synthetic",
                 "authority": "control-group",
                 "freshness": "current",
             }
@@ -146,7 +146,7 @@ if [ "$RC" -ne 0 ]; then
   exit 1
 fi
 
-python3 - "$RESPONSE" "$OUTPUT" <<'PY'
+python3 - "$RESPONSE" "$OUTPUT" <<'PY' || exit 1
 import json
 import sys
 from pathlib import Path
@@ -163,6 +163,15 @@ graph_path = output / "code-truth-graph.json"
 assert result_path.is_file(), result_path
 assert graph_path.is_file(), graph_path
 
+graph = json.loads(graph_path.read_text(encoding="utf-8"))
+assert graph["schema_version"] == "1.1.0", graph
+assert graph["invariants"][0]["id"] == "INV-DEMO", graph
+assert graph["invariants"][0]["current_status"] == "DEMO_ONLY", graph
+assert graph["closure"]["invariants"] == {"DEMO_ONLY": 1}, graph
+for name in ("entities.csv", "relationships.csv", "text_units.csv"):
+    assert (output / "graphrag" / name).is_file(), name
+assert (output / "report.html").is_file(), output
+
 result = json.loads(result_path.read_text(encoding="utf-8"))
 assert result["schema_version"] == "ctg-route-result@1.0.0", result
 assert result["packet_id"] == "ctg-fixture-001", result
@@ -175,7 +184,21 @@ assert stages["STATIC"]["state"] == "PASSED", stages
 assert stages["SANDBOX"]["state"] == "NOT_REQUESTED", stages
 assert stages["PROD"]["state"] == "NOT_REQUESTED", stages
 assert all("bettor-arena-ctg-runtime" not in item["artifact_ref"] for item in result["artifacts"]), result
+assert any(item["artifact_ref"] == "report.html" for item in result["artifacts"]), result
 PY
+
+OUTPUT_REPEAT="$TMP/output-repeat"
+sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$BUNDLE/ctg-input.json" \
+  --output "$OUTPUT_REPEAT" >/dev/null || exit 1
+cmp "$OUTPUT/code-truth-graph.json" "$OUTPUT_REPEAT/code-truth-graph.json" >/dev/null || {
+  echo "CTG CLI case failed — identical input produced a different graph" >&2
+  exit 1
+}
+cmp "$OUTPUT/ctg-route-result.json" "$OUTPUT_REPEAT/ctg-route-result.json" >/dev/null || {
+  echo "CTG CLI case failed — identical input produced a different route-result" >&2
+  exit 1
+}
 
 UNKNOWN_PACKET="$BUNDLE/ctg-input-unknown-key.json"
 python3 - "$BUNDLE/ctg-input.json" "$UNKNOWN_PACKET" <<'PY'
@@ -226,6 +249,35 @@ else
 fi
 [ "$RC" -eq 64 ] || {
   echo "CTG CLI case failed — unsafe artifact_ref exited $RC, want 64" >&2
+  exit 1
+}
+
+UNPINNED_PROFILE="$BUNDLE/domain-profile-unpinned.json"
+UNPINNED_PACKET="$BUNDLE/ctg-input-unpinned-tool.json"
+python3 - "$BUNDLE/domain-profile.json" "$UNPINNED_PROFILE" "$BUNDLE/ctg-input.json" "$UNPINNED_PACKET" <<'PY'
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+profile = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+profile["tool_profile"] = "shell-command:curl example.invalid"
+Path(sys.argv[2]).write_text(json.dumps(profile) + "\n", encoding="utf-8")
+packet = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8"))
+packet["domain_profile"]["artifact_ref"] = Path(sys.argv[2]).name
+packet["domain_profile"]["sha256"] = hashlib.sha256(Path(sys.argv[2]).read_bytes()).hexdigest()
+Path(sys.argv[4]).write_text(json.dumps(packet) + "\n", encoding="utf-8")
+PY
+if sh "$ROOT/loopctl/loopctl.sh" ctg run \
+  --packet "$UNPINNED_PACKET" \
+  --output "$TMP/unpinned-tool-output" >/dev/null 2>&1; then
+  echo "CTG CLI case failed — unpinned tool profile was accepted" >&2
+  exit 1
+else
+  RC=$?
+fi
+[ "$RC" -eq 64 ] || {
+  echo "CTG CLI case failed — unpinned tool profile exited $RC, want 64" >&2
   exit 1
 }
 
@@ -310,5 +362,10 @@ for name in ("ctg-input.schema.json", "ctg-route-result.schema.json"):
     assert schema["additionalProperties"] is False, (name, schema)
     assert set(schema["required"]) == set(schema["properties"]), (name, schema)
 PY
+
+sh "$ROOT/loop_wiki/code-truth-graph/portability.sh" >/dev/null || {
+  echo "CTG CLI case failed — relocated runtime did not pass" >&2
+  exit 1
+}
 
 echo "CTG CLI TEST GREEN"

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/invariant-reach-graph/code-truth-graph.schema.json",
+  "title": "Multi-Reach Code Truth Graph",
+  "type": "object",
+  "required": ["schema_version", "scope", "nodes", "edges", "evidence", "invariants", "invariant_events", "closure"],
+  "properties": {
+    "schema_version": {"const": "1.1.0"},
+    "scope": {
+      "type": "object",
+      "required": ["mode", "repo"],
+      "properties": {
+        "mode": {"enum": ["demo", "synthetic", "live"]},
+        "repo": {"type": "string"},
+        "synthetic": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "invariants": {"type": "array", "items": {"type": "object", "required": ["id", "statement", "current_status"]}},
+    "invariant_events": {"type": "array", "items": {"type": "object", "required": ["id", "invariant_id", "sequence", "action"]}},
+    "closure": {"type": "object"}
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["id", "kind", "label", "critical", "reach", "evidence_ids"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"type": "string"},
+        "label": {"type": "string"},
+        "critical": {"type": "boolean"},
+        "reach": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "target", "kind", "critical", "reach", "evidence_ids"],
+      "properties": {
+        "id": {"type": "string"},
+        "source": {"type": "string"},
+        "target": {"type": "string"},
+        "kind": {"type": "string"},
+        "critical": {"type": "boolean"},
+        "reach": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "method", "reach", "status", "source", "authority", "environment_class"],
+      "properties": {
+        "id": {"type": "string"},
+        "method": {"type": "string"},
+        "reach": {"type": "string"},
+        "status": {"type": "string"},
+        "source": {"type": "string"},
+        "authority": {"type": "string"},
+        "environment_class": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  }
+}
