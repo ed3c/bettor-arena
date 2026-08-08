@@ -76,6 +76,15 @@ case "${1:-}" in
         sh "$ROOT/proof_workflow/control_workflow_lineage.sh"; exit $? ;;
       *) echo "usage: loopctl.sh workflow <lock|trailer|test|replay --at <commit|tag> [--loop <loop>]>" >&2; exit 64 ;;
     esac ;;
+  container)
+    # The second driver. Everything here goes through container-run.sh so the
+    # socket selection and mount decisions live in exactly one place.
+    case "${2:-}" in
+      build)     sh "$ROOT/loopctl/container-run.sh" build; exit $? ;;
+      preflight) sh "$ROOT/loopctl/container-run.sh" preflight; exit $? ;;
+      test)      sh "$ROOT/proof_workflow/control_container_surface.sh"; exit $? ;;
+      *) echo "usage: loopctl.sh container <build|preflight|test>" >&2; exit 64 ;;
+    esac ;;
   mcp)
     # The external-facing layer. serve is long-lived on purpose: isolation comes
     # from the per-call worktree, not from restarting the process, and a fresh

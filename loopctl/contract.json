@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "1.7.0",
+  "surface_version": "1.8.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -38,7 +38,8 @@
     "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
     "trailer": "print the lineage trailer this commit should carry (empty when no workflow file is staged)",
     "replay": "check a commit or tag out into a disposable worktree and run THAT version's CLI",
-    "serve": "run the stateless MCP server on stdio, one disposable worktree per call"
+    "serve": "run the stateless MCP server on stdio, one disposable worktree per call",
+    "build": "build the OCI image the container layer serves from"
   },
   "commands": [
     {
@@ -363,6 +364,63 @@
       },
       "writes": [
         "stdout: the MCP tool list"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "build",
+      "target": "loopctl/Dockerfile",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — the Dockerfile is the source",
+        "output": [
+          "a local OCI image tagged loopctl (override with LOOPCTL_IMAGE)"
+        ],
+        "exit": "0 built · non-zero from the runtime, passed through"
+      },
+      "writes": [
+        "a local OCI image tagged loopctl (override with LOOPCTL_IMAGE)"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "preflight",
+      "target": "loopctl/container_preflight.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — run INSIDE the container",
+        "output": [
+          "stdout: per-tool and per-driver state"
+        ],
+        "exit": "0 ready for the roles reported · 2 the deterministic base is broken or a driver is present-but-unauthenticated · 64 not a work tree"
+      },
+      "writes": [
+        "stdout: per-tool and per-driver state"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "test",
+      "target": "proof_workflow/control_container_surface.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it plants a dead driver on PATH and inspects the image if one exists",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every property held · 2 one did not · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
       ]
     }
   ],

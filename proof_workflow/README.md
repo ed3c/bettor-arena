@@ -30,7 +30,17 @@
    迭代而不動它。承諾要變就升版並重鎖，重鎖在版本未升時拒絕。
 
 8. **exit code 一路原樣傳到底。** 0／2／64 意義不同；折疊它們的包裝層會讓呼叫端分不出「閘判紅」
-   與「工具不在」。
+   與「工具不在」。管線只回報最後一段，`a | b` 會吞掉 a 的失敗；`cmd; echo $?` 會吞掉 cmd 的失敗。
+
+9. **第二個驅動者才看得見繼承來的耦合。** 只被一種 runtime 驅動過的映像，不知道自己繼承了什麼；
+   基底映像的 `ENTRYPOINT`、主機的 docker context、外掛的 session，在原地全是隱形的。**要證明可攜，
+   就得讓第二個東西真的驅動它一次。**
+
+10. **主機綠不等於容器綠。** 工具存在性隨環境變（主機有 poppler、容器沒有），而 shell 也不是同一支
+    （macOS 的 `sh` 吞掉的錯，Debian 的 `sh` 會吼出來）。跨環境的差異只有跨環境跑才會現形。
+
+11. **present ≠ authenticated。** 問 `--version` 只證明 binary 在。憑證要**花一個真 turn** 驗，否則
+    「有裝但沒 session」會在請求中途長成模型拒絕的樣子，而那是完全不同的修法。
 
 ## §2 -test 模式：發現抖動的迴圈
 
@@ -49,6 +59,8 @@ sh loopctl/loopctl.sh <loop> test                    # 對照組驗行為
 | digest 兩次不同 | 有 harness 在改自己的證據，或有 per-run 位元組進了 digest。查 §3 的漂移案例 |
 | `NOT EXERCISED` | 該條**沒跑**。找出為什麼跑不到（多半是被測機制還沒提交），不要當它綠 |
 | selftest 綠但你剛植入了缺陷 | 儀器沒接上。先修儀器再信任何綠 |
+| 容器裡紅、主機上綠 | **不是環境噪音**。工具缺席、shell 不同、繼承的 ENTRYPOINT——查 §3「容器真跑抓到的缺陷」 |
+| `present but NOT authenticated` | 有 binary 沒 session。修的是憑證怎麼進容器，不是 driver 選型 |
 
 **兩條不可違反的處理原則**
 
@@ -92,6 +104,49 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | grep 把 pattern 當選項 | 欄位明明在檔裡卻報缺失 | 每個欄位名以 `- ` 開頭 → `grep -Fq -e` |
 | lock 與同一個 commit 內容不符 | replay 的 verify | lock 建完後檔案又被改，卻一起出貨 → 雜湊改讀 **index**，並加 staleness 閘 |
 | 釘舊 tag 時每次調用 exit 64 | 真跑 MCP | 該表面早於 `--json` → **啟動時**檢查並具名版本與修法 |
+
+### 容器與沙盒（OrbStack / Apple container / OpenShell）
+
+外部調用走容器，所以容器**是第二個驅動者**（法則 9）：它會照出主機上永遠看不見的耦合。
+
+| 機制 | 它是什麼 |
+|---|---|
+| `loopctl/Dockerfile` | OCI 映像。確定性基座（git／python3／bun／node／ruff／poppler）**build 時就檢查**；兩支 driver 不 build-check，因為安裝管道與認證都不是 build 時能判定的事 |
+| `loopctl/container-run.sh` | runtime 無關的 wrapper。`LOOPCTL_RUNTIME` 可覆寫，否則 Apple `container` 優先、退 docker、都沒有即 FATAL。旗標對照過 Apple container 自己的 command reference，不是猜的 |
+| `loopctl/container_preflight.sh` | 容器內的預檢。**driver 各花一個真 turn**，把 absent／present-but-unauthenticated／authenticated 分成三種狀態 |
+
+**兩種隔離模型，風險面不同**——選錯不是效能問題是安全問題：
+
+| | bind-mount（Docker） | upload（OpenShell） |
+|---|---|---|
+| 主機樹 | 容器可達，靠 `--user` 避免 root 檔案污染你的 `.git` | **不可達**，容器拿到的是副本 |
+| 代價 | 「掛進去然後小心」 | `.gitignore` 會吃掉 `node_modules` 與各帳本；pin 版本要改成上傳 `git archive <tag>` |
+| 網路 | 無管制 | YAML policy，proxy 在 HTTP method/path 層強制，**且能對 MCP `tools/call` 的 tool 名與 params 下規則** |
+
+### 容器真跑抓到的缺陷
+
+| 缺陷 | 怎麼被發現 | 修法 |
+|---|---|---|
+| `failed to query local Docker daemon` 但 `docker ps` 兩行前才成功 | openshell `--from` 建映像 | OrbStack 靠 docker **context**（CLI 層概念）導向自己的 socket；直接說協議的東西走 `/var/run/docker.sock`，而跑過 Docker Desktop 的機器那裡是**死 socket → refused 不是 absent** → wrapper 自動導向並註明 |
+| `ContainerRestarting`，沒有任何一行說原因 | OpenShell provisioning；基準 sandbox 成功 → 一變因證明問題在我的映像 | `node:22` **自帶 `ENTRYPOINT docker-entrypoint.sh`**，我繼承卻不知道。`docker run` 從不顯形（它會 exec 非 node 命令），OpenShell 注入 supervisor 才撞上 → `ENTRYPOINT []` |
+| `error: unzip is required to install bun` | build 失敗 | 錯誤訊息直接指名 → 補 `unzip` |
+| `curl \| bash` 吞掉 curl 的失敗 | 修上一條時發現 | 管線只回報最後一段，下載失敗會把空腳本餵給 bash 而該層照樣成功 → 拆成下載、執行兩步 |
+| `pdftotext not found` → ingest FATAL | 容器內跑 macro 證明 | 主機有 poppler、映像沒有（法則 10）→ 補 `poppler-utils` |
+| 收據裡的說明文字被吃掉，且執行了一個雜散命令 | 容器的 `sh` 吼出 `loopctl.sh: not found` | `prove_note` 文字裡的**反引號在雙引號參數裡是命令替換**；macOS 上靜默、Debian 上現形 → 改單引號，全 harness 掃過只有這一處 |
+| 背景任務回報 exit 0 而實際 exit 1 | 對照 build log | 我自己用 `cmd; echo EXIT=$?` 收尾，**把狀態碼吞掉**（法則 8）→ 用 `&&` 串接 |
+
+### 認證：實測結果（不是推論）
+
+容器內掛載 host session 後，`container_preflight.sh` 各花一個真 turn：
+
+```
+codex exec (read-only role)   authenticated — 真的答了一個 turn
+claude -p  (writing role)     present but NOT authenticated (exit 1)
+```
+
+掛 `~/.codex` 帶得進 session，掛 `~/.claude` ＋ `~/.claude.json` **帶不進**。所以現階段容器
+**只能服務唯讀角色**（finder／verifier／critic），寫入角色缺一步。這正是 §1 法則 11 的實例：
+兩支都 `present`，只有真跑才分得出來。
 
 ### 邊界（這些不在證明裡，而且是刻意的）
 
