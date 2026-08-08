@@ -57,6 +57,15 @@ prove_note mcp-control-owned-by-harness proof_workflow/control_mcp_surface.sh \
 prove_harness authorization-split-is-real - \
   "the policy must NOT claim per-tool rules while the server owns them: a `tool:` matcher in the YAML would be silently unenforced on the running gateway" \
   -- sh -c '! grep -qE "^\s+tool:" loopctl/sandbox-policy.yaml'
+# The subscription backend is NOT api.openai.com, and a policy that admits only
+# the latter denies every codex turn while reading as though codex is allowed.
+# Asserted statically here because the real turn that would catch it is opt-in
+# (CONTROL_CODEX_TURN=1) and therefore absent from a default run — one arrival
+# that always runs, one that proves it end to end, and neither is fooled by what
+# fools the other.
+prove_harness codex-subscription-backend-admitted - \
+  "codex on a ChatGPT session dials chatgpt.com/backend-api/codex, so the policy must name that host AND bind it to codex's binary — an endpoint without the binding would let anything in the sandbox spend the session" \
+  -- python3 -c 'import sys, yaml; p = yaml.safe_load(open("loopctl/sandbox-policy.yaml"))["network_policies"]; ok = any(any(e["host"] == "chatgpt.com" for e in v["endpoints"]) and any("codex" in b["path"] for b in v.get("binaries", [])) for v in p.values()); sys.exit(0 if ok else 2)'
 prove_harness denials-carry-reasons - \
   "every entry in DENIED_TOOLS carries a reason — a refusal that cannot say why is indistinguishable from a bug to whoever hits it" \
   -- python3 -c 'import sys; sys.path.insert(0, "loopctl"); import mcp_server as m; sys.exit(0 if m.DENIED_TOOLS and all(v.strip() for v in m.DENIED_TOOLS.values()) else 2)'

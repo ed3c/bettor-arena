@@ -36,6 +36,13 @@ prove_harness wrapper loopctl/container-run.sh \
   "caller -> live-socket selection (a dead /var/run/docker.sock is refused, not absent) -> host uid -> session mounts -> no default ref for serve"
 prove_harness preflight loopctl/container_preflight.sh \
   "inside the container -> deterministic base, worktree isolation, and ONE REAL TURN per driver to tell present from authenticated"
+# .gitignore decides what `--upload` carries into a sandbox — OpenShell filters by
+# it unless told otherwise — and equally what a commit carries. Nothing hashed it
+# until an audit asked which of this layer's files were actually measured: editing
+# it moved no digest and the lineage hook stayed silent about a change to the rule
+# that governs which bytes ever reach a sandbox.
+prove_harness upload-boundary .gitignore \
+  "the ignore rules -> what `openshell sandbox --upload` sends and what a commit carries; per-run evidence (data/codex-sandbox/, proof_workflow/data/) is excluded here so an agent's draft never lands on main by default"
 prove_harness codex-writing-role loopctl/codex-sandbox.sh \
   "host ChatGPT session -> --env -> ~/.codex/auth.json inside an OpenShell sandbox -> one write turn -> changed files back out; its selftest gives each way of having no usable session its own exit" \
   -- sh loopctl/codex-sandbox.sh --selftest

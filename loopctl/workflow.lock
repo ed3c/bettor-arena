@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "c548b85ff2d4f419976cbbb9fdb68dbe5586f46c",
+  "workflow_commit": "164c3fe9079fadc821284f337c69c05da6c37dba",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-c548b85ff2d4-dirty.json",
-    "harness": "harness-c548b85ff2d4-dirty.json",
-    "macro": "macro-c548b85ff2d4-dirty.json",
-    "micro": "micro-c548b85ff2d4-dirty.json",
-    "openwiki": "openwiki-c548b85ff2d4-dirty.json",
-    "policy": "policy-c548b85ff2d4-dirty.json",
-    "workflow": "workflow-c548b85ff2d4-dirty.json"
+    "container": "container-164c3fe9079f-dirty.json",
+    "harness": "harness-164c3fe9079f-dirty.json",
+    "macro": "macro-164c3fe9079f-dirty.json",
+    "micro": "micro-164c3fe9079f-dirty.json",
+    "openwiki": "openwiki-164c3fe9079f-dirty.json",
+    "policy": "policy-164c3fe9079f-dirty.json",
+    "workflow": "workflow-164c3fe9079f-dirty.json"
   },
   "counts": {
     "artifact": 19,
     "context": 20,
-    "harness": 60,
+    "harness": 61,
     "optional": 1
   },
-  "workflow_digest": "f4aa4d82f67a4d5e1353896800dd2d9bdf5616c187c6aad4590a79326b20b4a8",
+  "workflow_digest": "e4384349042ee15955e28b20567a644ed23b58f1f8d40b63a04243266b0b874a",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -59,6 +59,14 @@
       "loops": [
         "macro",
         "workflow"
+      ]
+    },
+    ".gitignore": {
+      "sha256": "bc1c57015012ae7e9afe66a813d37d1da3bdb4c190b29132eaa70f2fc129b8eb",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "container"
       ]
     },
     ".grepai/index.gob": {
@@ -109,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-c548b85ff2d4f419976cbbb9fdb68dbe5586f46c.json": {
+    "data/receipts/post-commit-164c3fe9079fadc821284f337c69c05da6c37dba.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -618,7 +626,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "0a9a34024ee3bb826975e20059ab8685fc2bd5003cfeb0476895c2bd9085eef7",
+      "sha256": "054c0c3fc2326cd95865c12595f6b5d7e3b6e562bb34c79136cf057cdde4c1ab",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -722,7 +730,7 @@
       ]
     },
     "proof_workflow/prove_container.sh": {
-      "sha256": "ec9b38bf4114653c4ceb9ed80fa7ef2d7326e8a7d809b8d2dddec4e7a628f163",
+      "sha256": "5a8105162fb0112f0992d9286a7162e383ef82657c9c75a8a9abc9edb9b74416",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -762,7 +770,7 @@
       ]
     },
     "proof_workflow/prove_policy.sh": {
-      "sha256": "2cc050771dd5072107e546d70e7b513d7ff19b1d2c51d7cb715a3c0af3e3e78a",
+      "sha256": "5510b42eaed372e0d115749e0c105e42d3cf730b58c3c40e6e0ec8ba42bd24fd",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
