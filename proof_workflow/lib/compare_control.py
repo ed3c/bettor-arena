@@ -48,7 +48,7 @@ def proof_states(receipt_dir: Path, short: str) -> dict[str, str]:
     but whether it is optional is decided by the probe, not by the declaration.
     """
     states: dict[str, str] = {}
-    for name in ("macro", "micro", "openwiki", "container"):
+    for name in ("macro", "micro", "openwiki", "container", "policy"):
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
@@ -106,7 +106,7 @@ def _candidates(receipt_dir: Path, name: str, short: str) -> tuple[str, ...]:
 def excluded_ledgers(receipt_dir: Path, short: str) -> set[str]:
     """Paths a proof declared out of scope by name, via a note carrying a path."""
     out: set[str] = set()
-    for name in ("macro", "micro", "openwiki", "container"):
+    for name in ("macro", "micro", "openwiki", "container", "policy"):
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
@@ -128,7 +128,7 @@ def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
     fix in the wrong direction.
     """
     covered_by: dict[str, str] = {}
-    for name in ("macro", "micro", "openwiki", "container"):
+    for name in ("macro", "micro", "openwiki", "container", "policy"):
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():

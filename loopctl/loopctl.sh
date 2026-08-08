@@ -65,6 +65,13 @@ case "${1:-}" in
     # it, and how to run the version a commit or tag names.
     case "${2:-}" in
       lock)    python3 "$HERE/workflow_lock.py" build "$ROOT" "$HERE/workflow.lock"; exit $? ;;
+      prove)
+        if [ "${3:-}" = "--force-receipt" ]; then
+          PROVE_FORCE_RECEIPT=1 sh "$ROOT/proof_workflow/prove_workflow.sh"
+        else
+          sh "$ROOT/proof_workflow/prove_workflow.sh"
+        fi
+        exit $? ;;
       trailer) python3 "$HERE/lineage.py" trailer "$ROOT" "$HERE/workflow.lock"; exit $? ;;
       replay)
         shift 2
@@ -98,8 +105,18 @@ case "${1:-}" in
     esac ;;
   policy)
     case "${2:-}" in
+      prove)
+        # Flags arrive unparsed in this pre-contract branch; --force-receipt is
+        # honoured rather than dropped, since a dropped flag collides the receipt
+        # and reads as the proof failing.
+        if [ "${3:-}" = "--force-receipt" ]; then
+          PROVE_FORCE_RECEIPT=1 sh "$ROOT/proof_workflow/prove_policy.sh"
+        else
+          sh "$ROOT/proof_workflow/prove_policy.sh"
+        fi
+        exit $? ;;
       test) sh "$ROOT/proof_workflow/control_sandbox_policy.sh"; exit $? ;;
-      *) echo "usage: loopctl.sh policy test" >&2; exit 64 ;;
+      *) echo "usage: loopctl.sh policy <prove|test>" >&2; exit 64 ;;
     esac ;;
   mcp)
     # The external-facing layer. serve is long-lived on purpose: isolation comes
@@ -114,6 +131,14 @@ case "${1:-}" in
         exec python3 "$HERE/mcp_server.py" "$@" ;;
       test)  sh "$ROOT/proof_workflow/control_mcp_surface.sh"; exit $? ;;
       tools) python3 "$HERE/mcp_tools.py" "$CONTRACT"; exit $? ;;
+      # The same proof as `policy prove`: the authorization surface is one unit.
+      prove)
+        if [ "${3:-}" = "--force-receipt" ]; then
+          PROVE_FORCE_RECEIPT=1 sh "$ROOT/proof_workflow/prove_policy.sh"
+        else
+          sh "$ROOT/proof_workflow/prove_policy.sh"
+        fi
+        exit $? ;;
       *) echo "usage: loopctl.sh mcp <serve [--ref <commit|tag>]|test|tools>" >&2; exit 64 ;;
     esac ;;
   --selftest) . "$HERE/selftest.sh"; loopctl_selftest; exit $? ;;

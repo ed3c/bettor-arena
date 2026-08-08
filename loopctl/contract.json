@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.0.0",
+  "surface_version": "2.2.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -464,6 +464,67 @@
       },
       "writes": [
         "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "policy",
+      "mode": "prove",
+      "target": "proof_workflow/prove_policy.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/policy-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/policy-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "prove",
+      "target": "proof_workflow/prove_workflow.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/workflow-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/workflow-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "prove",
+      "target": "proof_workflow/prove_policy.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/policy-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL",
+        "note": "the SAME proof as `policy prove`: the sandbox policy governs the network and the MCP server governs which tools exist, and an authorization claim covering only one of them is false by omission"
+      },
+      "writes": [
+        "data/proof-workflow/policy-<commit12>[-dirty].json"
       ]
     }
   ],

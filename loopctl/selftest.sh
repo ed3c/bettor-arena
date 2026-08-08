@@ -61,12 +61,17 @@ PY
   # contract instead of at the extraction.
   {
     grep -oE '^  (macro|micro|openwiki)/(run|prove|test)\)' "$_cli" | tr -d ' )'
-    grep -oE '^      (lock|trailer|replay)\)' "$_cli" | tr -d ' )' | sed 's|^|workflow/|'
-    grep -oE '^      (serve|tools)\)' "$_cli" | tr -d ' )' | sed 's|^|mcp/|'
-    grep -oE '^      (build|preflight|prove)\)' "$_cli" | tr -d ' )' | sed 's|^|container/|'
-    # `test)` appears under workflow, mcp and container; the shape alone cannot
-    # say which, so all three are named here rather than guessed.
-    printf 'workflow/test\nmcp/test\ncontainer/test\npolicy/test\n'
+    # The nested subcommands are listed, not extracted. Their labels repeat
+    # across branches — `test)` under four of them, `prove)` under two — and a
+    # shape-based grep cannot say which branch a label belongs to: it prefixed
+    # policy's `prove)` as container/prove and reported a declared command as
+    # wired-twice. Listing them keeps this check honest about what it can see,
+    # and the target-exists check below still catches a name with no script.
+    printf '%s\n' \
+      workflow/lock workflow/trailer workflow/replay workflow/test workflow/prove \
+      mcp/serve mcp/tools mcp/test mcp/prove \
+      container/build container/preflight container/prove container/test \
+      policy/prove policy/test
   } | sort >"$_tmp/wired.txt"
   if _nonempty "declared-commands" "$_tmp/declared.txt" && _nonempty "wired-commands" "$_tmp/wired.txt"; then
     _only_contract=$(comm -23 "$_tmp/declared.txt" "$_tmp/wired.txt")
@@ -91,6 +96,34 @@ PY
   sh "$_cli" contract >/dev/null 2>&1; _case "contract-prints" $? 0
   sh "$_cli" contract 2>/dev/null | grep -q '^contract_sha256: [0-9a-f]\{64\}$' \
     || { echo "SELFTEST case failed — contract output carries no sha256" >&2; _red=1; }
+
+  # 3b. every mechanism carries BOTH halves. A proof without a control records
+  # which bytes a claim covered and never drives it; a control without a proof
+  # shows a property holding and never says what it held for. Derived from the
+  # contract rather than from a directory layout or a filename convention: the
+  # names are not 1:1 (prove_macro_loop.sh pairs with control_macro_entry.sh,
+  # prove_policy.sh with control_sandbox_policy.sh), so any file-based pairing
+  # would need a second list to keep in sync — which is the failure this repo
+  # keeps removing, not adding.
+  python3 - "$CONTRACT" <<'PY'
+import json, sys
+from pathlib import Path
+
+contract = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+modes = {}
+for c in contract["commands"]:
+    modes.setdefault(c["loop"], set()).add(c["mode"])
+unpaired = []
+for loop, have in sorted(modes.items()):
+    if "prove" in have and "test" not in have:
+        unpaired.append(f"{loop}: has prove, no test — a claim nobody drives")
+    if "test" in have and "prove" not in have:
+        unpaired.append(f"{loop}: has test, no prove — a green with no record of what it covered")
+for line in unpaired:
+    print(f"SELFTEST case failed — unpaired mechanism, {line}", file=sys.stderr)
+raise SystemExit(1 if unpaired else 0)
+PY
+  _case "every-mechanism-has-both-halves" $? 0
 
   # 4. the external promise is where the lock says it is. Internal iteration does
   # not reach this check — target, writes and wiring are excluded from the digest
