@@ -124,6 +124,48 @@ AFTER_RC=$?
 grep -l '"mode": *"full"' "$ROOT"/data/wiki-update/receipt-*.json 2>/dev/null \
   | sed "s|$ROOT/||" | sort >"$RUNDIR/full-mode-receipts.txt" || true
 
+# --- opt-in: exercise the probabilistic segment once, as an existence proof ---
+# CONTROL_OPENWIKI_FULL=1 runs the worker in full mode inside the same worktree.
+# It runs AFTER every probe and after the damage check, and its output is never
+# read back into the classification: a segment whose result varies per run cannot
+# take part in an exit-code comparison, which is exactly why the probes are
+# dry-run. The only claim this run makes is that the path executes end to end.
+#
+# That claim is checked on the worker's own stage line, not on its exit code. A
+# red verifier gate exits 2 while having genuinely spent a model turn, so exit
+# alone cannot distinguish "the segment ran and found problems" from "the segment
+# never ran". Absence of the [regenerate] line means it never ran, and with the
+# flag set that is a failure of the thing that was asked for.
+: >"$RUNDIR/full-run.txt"
+if [ "${CONTROL_OPENWIKI_FULL:-0}" = "1" ]; then
+  command -v claude >/dev/null 2>&1 || {
+    echo "control FATAL: CONTROL_OPENWIKI_FULL=1 but the claude CLI is not on PATH — the segment cannot be exercised, and skipping it silently is what the flag exists to stop" >&2
+    exit 64; }
+  echo "  [full] exercising the probabilistic segment — real model turns, worktree only"
+  CAPTURE_CWD="$WT"
+  capture worker-full -- env WIKI_UPDATE_FORCE_RECEIPT=1 sh "$WT/$WORKER_REL" "$REQUEST"
+  FULL_RC=$?
+  CAPTURE_CWD=""
+  FULL_LOG="$RUNDIR/streams/$CAPTURE_SEQ-worker-full.out"
+  if grep -q '^\[regenerate\] model=' "$FULL_LOG" 2>/dev/null; then
+    FULL_EXERCISED=true
+  else
+    FULL_EXERCISED=false
+  fi
+  # Which stage it reached last, from the worker's own progress lines.
+  FULL_STAGE=$(grep -oE '^\[(parse|preflight|regenerate|gates|post|backlog)\]' "$FULL_LOG" 2>/dev/null | tail -1 | tr -d '[]')
+  {
+    printf 'exercised=%s\n' "$FULL_EXERCISED"
+    printf 'worker_exit=%s\n' "$FULL_RC"
+    printf 'last_stage=%s\n' "${FULL_STAGE:-none}"
+    printf 'regenerate_line=%s\n' "$(grep -m1 '^\[regenerate\] model=' "$FULL_LOG" 2>/dev/null || echo none)"
+  } >"$RUNDIR/full-run.txt"
+  echo "  [full] exercised=$FULL_EXERCISED worker_exit=$FULL_RC last_stage=${FULL_STAGE:-none}"
+  [ "$FULL_EXERCISED" = true ] || {
+    echo "control FATAL: full mode was requested but the model turn never happened (last stage: ${FULL_STAGE:-none}) — see $FULL_LOG" >&2
+    exit 64; }
+fi
+
 RECEIPT_SRC="$ROOT/data/proof-workflow/openwiki-$SHORT.json"
 [ -f "$RECEIPT_SRC" ] || RECEIPT_SRC="$ROOT/data/proof-workflow/openwiki-$SHORT-dirty.json"
 [ -f "$RECEIPT_SRC" ] || {

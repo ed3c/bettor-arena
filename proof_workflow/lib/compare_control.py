@@ -245,15 +245,32 @@ def main() -> int:
         if mode in ("micro", "openwiki"):
             result = compare_micro(rundir, macro_receipt.parent, short)
             if mode == "openwiki":
-                full = read_lines(rundir / "full-mode-receipts.txt")
-                result["probabilistic_segment"] = {
-                    "exercised_by_this_control": False,
-                    "why": "the run is --dry-run: the claude -p regeneration turn and the "
-                    "finder/verifier subagent turns are skipped by name, because a segment "
-                    "whose output varies per run makes the probe's exit-code comparison "
-                    "meaningless",
-                    "full_mode_receipts_found": full,
+                full_run = dict(
+                    line.split("=", 1) for line in read_lines(rundir / "full-run.txt")
+                )
+                segment = {
+                    "exercised_by_this_control": full_run.get("exercised") == "true",
+                    "why": "the probes are --dry-run: a segment whose output varies per "
+                    "run cannot take part in an exit-code comparison. CONTROL_OPENWIKI_FULL=1 "
+                    "runs it once afterwards as an existence proof only — never read back "
+                    "into the classification",
+                    "full_mode_receipts_found": read_lines(
+                        rundir / "full-mode-receipts.txt"
+                    ),
                 }
+                if full_run:
+                    # The exit code cannot carry this claim: a red verifier gate
+                    # exits 2 having genuinely spent a model turn. The worker's own
+                    # [regenerate] line is what distinguishes ran-and-found-problems
+                    # from never-ran.
+                    segment["existence_proof"] = {
+                        "worker_exit": int(full_run.get("worker_exit", -1)),
+                        "last_stage_reached": full_run.get("last_stage", "none"),
+                        "regenerate_line": full_run.get("regenerate_line", "none"),
+                        "claim_boundary": "the path executes end to end at this commit; "
+                        "says nothing about the quality of what the model wrote",
+                    }
+                result["probabilistic_segment"] = segment
         else:
             result = compare(rundir, macro_receipt, macro_receipt.parent, short)
     except ValueError as exc:
