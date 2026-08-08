@@ -1,19 +1,19 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f1ae7cd7037f050ab6ae6fbe9b6a2f687c0b2f85",
+  "workflow_commit": "9ea5270da6eed47619acc4f28e0651972dee5cc2",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-f1ae7cd7037f.json",
-    "micro": "micro-f1ae7cd7037f.json",
-    "openwiki": "openwiki-f1ae7cd7037f.json"
+    "macro": "macro-9ea5270da6ee-dirty.json",
+    "micro": "micro-9ea5270da6ee-dirty.json",
+    "openwiki": "openwiki-9ea5270da6ee-dirty.json"
   },
   "counts": {
     "artifact": 19,
-    "context": 19,
+    "context": 20,
     "harness": 33,
     "optional": 1
   },
-  "workflow_digest": "a99bf6c78444e5689b619a7b2724e70a5108cabec2dcb7f1c91bd5519fc1fbb0",
+  "workflow_digest": "476f1b77e0602b88e5c5a313dfa9c966675c5ef62bcebfecf7c08b4e8db6af43",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -81,7 +81,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-f1ae7cd7037f050ab6ae6fbe9b6a2f687c0b2f85.json": {
+    "data/receipts/post-commit-9ea5270da6eed47619acc4f28e0651972dee5cc2.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -382,7 +382,7 @@
       "loop": "macro"
     },
     "loopctl/workflow_lock.py": {
-      "sha256": "3f7e7db7766f090de28fd9e59b6037c9e35f41f29003dda44e21ef2d8f8cac91",
+      "sha256": "c09e510bacc79aa813f918b8e3324e18510a29ad028731a3ebace2430fc462ab",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -410,6 +410,12 @@
       "hash_source": "index",
       "kind": "context",
       "loop": "openwiki"
+    },
+    "proof_workflow/README.md": {
+      "sha256": "3e9a35c42b7b3d1189dfe09e003a0a595b6d628a0fdd431acdec8c9452213f68",
+      "hash_source": "index",
+      "kind": "context",
+      "loop": "macro"
     },
     "scripts/gates/check_credential_hygiene.py": {
       "sha256": "7dd0c4e38682e8b903549c503c326997445ded4be6be4719f5a180733cfbffa5",

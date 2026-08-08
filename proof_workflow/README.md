@@ -1,0 +1,102 @@
+# proof_workflow — 抖動偵測的法則與 Harness
+
+> **讀到這個目錄的 agent：先讀完 §1 法則，再照 §2 的迴圈做事。**§3 Harness 是已實作的
+> 機制與它們真的抓到過的缺陷——遇到形似的訊號時查那一節，不要重新發明。
+> 法則層只留判準，實例一律住 §3。
+
+## §1 法則
+
+1. **收據是宣稱，對照組是行為。** 收據記「我宣稱走過這些路徑」，對照組真跑入口再看它實際碰
+   了什麼。兩者必須**不會被同一個錯誤同時騙到**才算兩種獨立抵達；同一隻手寫的描述與覆蓋不算。
+
+2. **缺席永不讀成綠。** 未執行、未分類、未覆蓋、未涵蓋各有具名出口，且必須與「真的判定為否」
+   長得不一樣。對照組報 `NOT EXERCISED` **不是 pass**；抽取失敗產生的空集合會與任何東西相等，
+   所以每個推導在比較前先斷言非空。
+
+3. **量測不得擾動被量測物。** tracked artifact 判 **HEAD 位元組**，因為同一趟的 harness 步驟
+   可能改寫它；每次執行都會變的位元組（暫存路徑、per-run log）**不進 digest**，否則 digest 追蹤
+   的是「上次跑在哪」而不是「機制是什麼」。同一棵樹跑兩次，digest 必須相同。
+
+4. **required 由實驗決定，不由宣告決定。** 移走它、再跑一次、看 exit 變不變。`fatal` 與 `warn`
+   在原始碼裡只隔三行，讀出來的分類看起來很對而且會錯。分不出來的一律 FATAL，不得預設成 optional。
+
+5. **宣告只能消音產出，不能消音必要輸入。** `prove_note` 可以帶路徑把一個帳本宣告為範圍外並附
+   理由（機器可讀），但同樣的宣告套在必要輸入上必須無效——否則 note 就成了保綠的後門。
+
+6. **每個新機制自帶會紅的負控。** 只被看過同意的機制，不等於已知它會不同意。**把修復擋掉再跑
+   一次，必須紅**；不紅就是儀器沒接上。
+
+7. **表面與接線分家。** 對外承諾（loop × mode × 旗標）鎖在 `surface.lock`，內部怎麼接線可以自由
+   迭代而不動它。承諾要變就升版並重鎖，重鎖在版本未升時拒絕。
+
+8. **exit code 一路原樣傳到底。** 0／2／64 意義不同；折疊它們的包裝層會讓呼叫端分不出「閘判紅」
+   與「工具不在」。
+
+## §2 -test 模式：發現抖動的迴圈
+
+```sh
+sh loopctl/loopctl.sh <loop> prove --force-receipt   # 重戳宣稱
+sh loopctl/loopctl.sh <loop> test                    # 對照組驗行為
+```
+
+**訊號 → 動作**
+
+| 看到 | 做什麼 |
+|---|---|
+| `GAP: <path> is REQUIRED … no proof covers it` | 真洞。把它加進該迴圈的證明，**不要**改對照組 |
+| `GAP: <path> is really produced … no proof treats it as a terminus` | 若是交付終點就覆蓋它；若是 per-run scratch，用 `prove_note <id> <ledger> <理由>` **具名宣告**範圍外 |
+| `misdeclared_optional` | 被實驗判為 required 卻標成 optional。改標記，不是改實驗 |
+| digest 兩次不同 | 有 harness 在改自己的證據，或有 per-run 位元組進了 digest。查 §3 的漂移案例 |
+| `NOT EXERCISED` | 該條**沒跑**。找出為什麼跑不到（多半是被測機制還沒提交），不要當它綠 |
+| selftest 綠但你剛植入了缺陷 | 儀器沒接上。先修儀器再信任何綠 |
+
+**兩條不可違反的處理原則**
+
+- **修機制或修儀器，不調鈍儀器。** 把斷言放寬讓紅變綠是把問題藏起來。
+- **對照組測的是「已提交的機制」**（它在 HEAD 的丟棄式 worktree 裡跑）。所以修完必須提交，
+  才會看到轉綠——提交前的紅是誠實的。
+
+**修完的收尾**（缺一步下次就會以陳舊狀態誤判）
+
+```sh
+for l in macro micro openwiki; do sh loopctl/loopctl.sh $l prove --force-receipt; done
+git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lock
+```
+
+---
+
+## §3 Harness
+
+### 已實作的機制
+
+| 檔案 | 它證明什麼 |
+|---|---|
+| `lib/prove.sh` | 遍歷記錄器。步驟四種：`harness`（真跑記 exit／會改帳的只 hash 記 `hashed-not-run`）、`context`（概率側讀的文檔，缺席即 FATAL）、`artifact`（末端產物，tracked 判 HEAD）、`optional`（可容忍缺席的 host 資產）、`note`（具名排除）。`--selftest` 是它自己的負控 |
+| `prove_{macro,micro,openwiki}_loop.sh` | 三條迴圈各自的遍歷；收據落 `data/proof-workflow/<loop>-<commit12>[-dirty].json`，帶 `proof_digest` |
+| `control_{macro,micro,openwiki}_entry.sh` | 三個入口的對照組：真跑入口、丟棄式 worktree 內逐一移走輸入分類 required／optional、比對三份收據的聯集 |
+| `control_workflow_lineage.sh` | lineage 機制自己的對照組（感知／stale lock／未蓋章／局外檔靜默／tag 重放） |
+| `control_mcp_surface.sh` | MCP 包裝的對照組（pin 是否真擋住未提交工作／活樹零變動／無 worktree 殘留／未宣告參數被拒） |
+| `lib/capture.sh` | 真跑的物理痕跡：每條 argv／exit／stdout／stderr 落 `proof_workflow/data/<run_id>/`，各自 sha256 |
+| `lib/compare_control.py` | 宣稱與行為的比對；`--selftest` 兩個方向都驗 |
+
+### 真的抓到過的缺陷（形似訊號時先查這裡）
+
+| 缺陷 | 怎麼被發現 | 修法 |
+|---|---|---|
+| micro digest 兩次不同 | 連跑兩次比對 | `verify.sh` 的測試改寫 `route-result.fixture-dr.json`，且其 `output` 是每次新的 mktemp 路徑 → tracked artifact 改判 HEAD，該檔具名排除 |
+| 迭代 lane 覆蓋錯兩次 | 對照組報 `_engine-run` 無覆蓋 | 先 hash 一個實例（gitignore 故不可重放、且位元組含執行路徑）→ 改成**欄位斷言** ＋ 帳本具名排除 |
+| 比對器誤報已覆蓋的檔 | `request-<id>.json` 被報成 gap | family 規則取「basename 到第一個點」，對連字號 id 失效 → 改在 **ledger（目錄）層**判覆蓋 |
+| 陳舊收據替新樹作答 | 修好的東西仍報紅 | 一律優先 clean 收據 → 改成**跟著樹的髒淨狀態**選 |
+| selftest 假綠 | 植入缺陷後仍印 GREEN | BSD sed 無 `\|`，抽取靜默失敗產生空集合 → **每個推導比較前先斷言非空** |
+| 「一變因實驗」動了兩個變因 | 七個輸入全判 required 且 exit 全相同 | 探針共用 output 目錄，`cli.ts:23` 拒絕已存在路徑 → 每次 run 獨立 output ＋ 基線前後各驗一次可重現 |
+| grep 把 pattern 當選項 | 欄位明明在檔裡卻報缺失 | 每個欄位名以 `- ` 開頭 → `grep -Fq -e` |
+| lock 與同一個 commit 內容不符 | replay 的 verify | lock 建完後檔案又被改，卻一起出貨 → 雜湊改讀 **index**，並加 staleness 閘 |
+| 釘舊 tag 時每次調用 exit 64 | 真跑 MCP | 該表面早於 `--json` → **啟動時**檢查並具名版本與修法 |
+
+### 邊界（這些不在證明裡，而且是刻意的）
+
+- **`loopctl/workflow.lock` 不入任何證明。** 它由收據長出；hash 它會讓 digest 依賴一個依賴
+  digest 的檔，每次重建都動且**永不收斂而全程看起來是綠的**。builder 會直接拒絕這種循環。
+- **概率性段落預設不跑。** openwiki 對照組的探針靠比對 exit code，而每跑每變的輸出會讓整份分類
+  失去意義。要存在性證明用 `--full`（opt-in，且只當存在性證明，不參與分類）。
+- **死鎖出口**：機制自己壞掉時，`Workflow-Lineage-Override: <理由>` 寫進 commit message，理由必填。

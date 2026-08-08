@@ -34,7 +34,38 @@ LOOPS = ("macro", "micro", "openwiki")
 
 
 def _receipt(repo: Path, loop: str, short: str) -> Path | None:
-    for name in (f"{loop}-{short}.json", f"{loop}-{short}-dirty.json"):
+    """The receipt describing the CURRENT tree, clean or dirty.
+
+    Preferring the clean stamp unconditionally lets a receipt from an earlier
+    tree-state answer for a freshly re-proved dirty one — the lock then describes
+    a workflow nobody is holding, and a newly covered file never reaches the
+    manifest, so the lineage hook stays silent about a change it should sense.
+    Found here after the identical defect was fixed in compare_control.py: one
+    instance repaired is not the class repaired.
+    """
+    dirty = bool(
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repo),
+                "status",
+                "--porcelain",
+                "--",
+                ".",
+                ":(exclude)data/proof-workflow/",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout.strip()
+    )
+    names = (
+        (f"{loop}-{short}-dirty.json", f"{loop}-{short}.json")
+        if dirty
+        else (f"{loop}-{short}.json", f"{loop}-{short}-dirty.json")
+    )
+    for name in names:
         candidate = repo / "data" / "proof-workflow" / name
         if candidate.is_file():
             return candidate

@@ -39,6 +39,11 @@ prove_context agents-tier AGENTS.md \
   "ARCHITECTURE.md -> Codex/cross-host passive context + rule->evidence routing"
 prove_context glossary CONTEXT.md \
   "repo -> agent session: canonical terms (admit / Intent-Slice / receipt)"
+# The document that tells an agent how to detect drift is itself a thing that can
+# drift. Covering it here is not tidiness: an unstamped edit to the laws would
+# change how every future reader interprets a red, and nothing would have said so.
+prove_context proof-workflow-laws proof_workflow/README.md \
+  "proof_workflow -> agent session: the laws, the -test loop, and the Harness of defects already found"
 
 # --- deterministic harness: activation ---------------------------------------
 prove_harness bootstrap bootstrap.sh \
