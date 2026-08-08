@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repo_id": "bettor-arena",
-  "engine_sha256": "fe5066b1707d9cc24b92468fc88ff78bd3819dc4bb2091d3c6b4c833ceb143ac",
+  "engine_sha256": "fca9fc11347867c06348d7afacbd25ae04eb51ea37e75f1952df60d88465b929",
   "protected_branches": ["main", "master"],
   "receipt_dir": "mcp/production/receipts",
   "backup_dir": ".mcp-production/backups",

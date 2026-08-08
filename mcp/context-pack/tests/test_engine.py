@@ -44,12 +44,22 @@ class Ledger:
         kinds = {item["kind"] for item in pack["evidence"]}
         self.assertEqual(
             kinds,
-            {"signature", "guard", "raise", "mutation", "unresolved_dynamic_call", "call", "return"},
+            {
+                "signature",
+                "guard",
+                "raise",
+                "mutation",
+                "unresolved_dynamic_call",
+                "call",
+                "return",
+            },
         )
         self.assertEqual(pack["completeness"], "partial")
         self.assertEqual(len(pack["source_sha256"]), 64)
         self.assertLessEqual(pack["context_bytes"], pack["max_bytes"])
-        self.assertTrue(all(item["source_ref"].startswith("service.py:") for item in pack["evidence"]))
+        self.assertTrue(
+            all(item["source_ref"].startswith("service.py:") for item in pack["evidence"])
+        )
 
     def test_rejects_absolute_traversal_and_symlink_escape(self) -> None:
         outside = Path(self.tempdir.name).parent / "context-pack-outside.py"
@@ -97,7 +107,9 @@ class Ledger:
         calls = "\n".join(f"    step_{index}()" for index in range(40))
         self.write(
             "service.py",
-            "def run(name: str):\n    callback = getattr(registry, name)\n" + calls + "\n    return callback()\n",
+            "def run(name: str):\n    callback = getattr(registry, name)\n"
+            + calls
+            + "\n    return callback()\n",
         )
         pack = self.engine.build_python_context_pack("service.py", symbol="run", max_bytes=1_500)
         kinds = [item["kind"] for item in pack["evidence"]]

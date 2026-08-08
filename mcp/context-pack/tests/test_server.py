@@ -31,7 +31,9 @@ class MCPServerTests(unittest.TestCase):
                 payload = result.structured_content
                 self.assertIsNotNone(payload)
                 assert payload is not None
-                self.assertEqual(payload["relative_path"], "mcp/context-pack/tests/fixtures/sample_service.py")
+                self.assertEqual(
+                    payload["relative_path"], "mcp/context-pack/tests/fixtures/sample_service.py"
+                )
                 self.assertEqual(payload["completeness"], "partial")
 
         asyncio.run(exercise())
@@ -57,9 +59,7 @@ class MCPServerTests(unittest.TestCase):
     def test_host_configured_command_from_nested_directory(self) -> None:
         async def exercise() -> None:
             root = Path(__file__).resolve().parents[3]
-            config = json.loads((root / ".mcp.json").read_text())["mcpServers"][
-                "repo-context-pack"
-            ]
+            config = json.loads((root / ".mcp.json").read_text())["mcpServers"]["repo-context-pack"]
             parameters = StdioServerParameters(
                 command=config["command"],
                 args=config["args"],
@@ -84,9 +84,7 @@ class MCPServerTests(unittest.TestCase):
 
     def test_codex_and_claude_use_same_context_pack_launcher(self) -> None:
         root = Path(__file__).resolve().parents[3]
-        claude = json.loads((root / ".mcp.json").read_text())["mcpServers"][
-            "repo-context-pack"
-        ]
+        claude = json.loads((root / ".mcp.json").read_text())["mcpServers"]["repo-context-pack"]
         with (root / ".codex/config.toml").open("rb") as config_file:
             codex = tomllib.load(config_file)["mcp_servers"]["repo-context-pack"]
 

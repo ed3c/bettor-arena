@@ -47,7 +47,9 @@ def load_server(config_path: Path, server_name: str) -> Server:
         raise ProbeError(f"cannot parse Codex config {config_path}: {exc}") from exc
     payload = config.get("mcp_servers", {}).get(server_name)
     _require(isinstance(payload, dict), f"missing MCP server config: {server_name}")
-    _require(payload.get("enabled") is True, f"MCP server is not enabled: {server_name}")
+    _require(
+        payload.get("enabled") is True, f"MCP server is not enabled: {server_name}"
+    )
     command = payload.get("command")
     args = payload.get("args")
     enabled_tools = payload.get("enabled_tools")
@@ -66,7 +68,10 @@ def load_server(config_path: Path, server_name: str) -> Server:
     env = payload.get("env", {})
     _require(
         isinstance(env, dict)
-        and all(isinstance(key, str) and isinstance(value, str) for key, value in env.items()),
+        and all(
+            isinstance(key, str) and isinstance(value, str)
+            for key, value in env.items()
+        ),
         f"invalid env: {server_name}",
     )
     startup_timeout = payload.get("startup_timeout_sec")
@@ -139,13 +144,18 @@ class Client:
                 try:
                     response = json.loads(line)
                 except json.JSONDecodeError as exc:
-                    raise ProbeError(f"MCP stdout is not JSON-RPC: {line[:200]!r}") from exc
+                    raise ProbeError(
+                        f"MCP stdout is not JSON-RPC: {line[:200]!r}"
+                    ) from exc
                 if response.get("id") != request_id:
                     continue
                 if "error" in response:
                     raise ProbeError(f"MCP id={request_id} failed: {response['error']}")
                 result = response.get("result")
-                _require(isinstance(result, dict), f"MCP id={request_id} result is not an object")
+                _require(
+                    isinstance(result, dict),
+                    f"MCP id={request_id} result is not an object",
+                )
                 return result
         finally:
             selector.close()
@@ -215,7 +225,10 @@ def probe(
     root = repo_root.resolve(strict=True)
     server = load_server(config_path.resolve(strict=True), server_name)
     if tool_name:
-        _require(tool_name in server.enabled_tools, f"called tool is not allowlisted: {tool_name}")
+        _require(
+            tool_name in server.enabled_tools,
+            f"called tool is not allowlisted: {tool_name}",
+        )
     process = _spawn(root, server)
     client = Client(process)
     try:
@@ -229,7 +242,9 @@ def probe(
         )
         initialized = client.receive(initialize_id, server.startup_timeout)
         protocol = initialized.get("protocolVersion")
-        _require(isinstance(protocol, str) and protocol, "initialize omitted protocolVersion")
+        _require(
+            isinstance(protocol, str) and protocol, "initialize omitted protocolVersion"
+        )
         client.notify("notifications/initialized")
 
         tools_id = client.send("tools/list")

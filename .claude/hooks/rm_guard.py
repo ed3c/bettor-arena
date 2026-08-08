@@ -80,7 +80,7 @@ def targets_of(tokens: list[str]) -> list[str]:
         return []
 
     out, only_paths = [], False
-    for tok in tokens[start + 1:]:
+    for tok in tokens[start + 1 :]:
         if tok == "--":
             only_paths = True
         elif not only_paths and tok.startswith("-"):
@@ -121,8 +121,10 @@ def violations(command: str, cwd: Path) -> list[str]:
     if not DELETER_WORD.search(command):
         return []  # cheap exit: no deleter word, no work to do
     if SUBSTITUTION.search(command):
-        return [f"{command!r} may delete through a substitution; what it expands "
-                "to is unknown until the shell runs"]
+        return [
+            f"{command!r} may delete through a substitution; what it expands "
+            "to is unknown until the shell runs"
+        ]
     try:
         parsed = segments(command)
     except ValueError as e:  # unbalanced quote — any reading of it is a guess
@@ -131,8 +133,10 @@ def violations(command: str, cwd: Path) -> list[str]:
     for segment in parsed:
         for t in targets_of(segment):
             if UNRESOLVABLE.search(t):
-                out.append(f"{t!r} is a deletion target the shell resolves; "
-                           "its real path is unknown here")
+                out.append(
+                    f"{t!r} is a deletion target the shell resolves; "
+                    "its real path is unknown here"
+                )
             elif r := escapes(t, cwd):
                 out.append(r)
     return out
@@ -158,7 +162,9 @@ def main() -> int:
 def selftest() -> int:
     """Both directions. A gate only proved to pass is not proved to be a gate."""
     outside = REPO_ROOT.parent
-    v = lambda cmd: violations(cmd, REPO_ROOT)
+
+    def v(cmd: str):
+        return violations(cmd, REPO_ROOT)
 
     # Allowed: every target inside the repo.
     assert not v("rm foo.txt"), "plain relative delete inside must pass"
@@ -170,7 +176,9 @@ def selftest() -> int:
     assert not v("rm ./sub/../foo"), ".. that stays inside must pass"
     # Regression: naming a deleter inside a search pattern is not invoking one.
     # This shape blocked a plain grep on 2026-08-05, which is how it was found.
-    assert not v("""grep -n 'def .*rm|tier1' "$F" """), "deleter named in a pattern must pass"
+    assert not v("""grep -n 'def .*rm|tier1' "$F" """), (
+        "deleter named in a pattern must pass"
+    )
     assert not v("""ls -la "$F" """), "a $ with no deleter at all must pass"
     assert not v("echo 'rm is a word here'"), "a quoted phrase must not read as a call"
 

@@ -112,13 +112,13 @@ class MigrationEngineTests(unittest.TestCase):
         )
         targets = {mirror["target"] for mirror in repository_profile["mirrors"]}
         self.assertNotIn(".codex/config.toml", targets)
-        managed = {
-            item["path"]: item for item in repository_profile["managed_files"]
-        }
+        managed = {item["path"]: item for item in repository_profile["managed_files"]}
         self.assertIn("[mcp_servers.grepai]", managed[".codex/config.toml"]["contains"])
 
     def test_apply_refuses_dirty_destination(self) -> None:
-        (self.root / "target.json").write_text('{"locally":"edited"}\n', encoding="utf-8")
+        (self.root / "target.json").write_text(
+            '{"locally":"edited"}\n', encoding="utf-8"
+        )
         with self.assertRaisesRegex(MODULE.MigrationError, "dirty destination"):
             MODULE.apply_plan(self.load())
 
@@ -197,7 +197,9 @@ class MigrationEngineTests(unittest.TestCase):
         MODULE.rollback(self.load(), apply_receipt)
         self.assertEqual((self.root / "target.json").read_bytes(), before)
         self.assertEqual(
-            json.loads(sorted((self.root / "receipts").glob("*.json"))[-1].read_text())["action"],
+            json.loads(sorted((self.root / "receipts").glob("*.json"))[-1].read_text())[
+                "action"
+            ],
             "rollback",
         )
 
@@ -225,14 +227,18 @@ class MigrationEngineTests(unittest.TestCase):
             MODULE.rollback(self.load(), forged)
 
     def test_verify_passes_technical_checks_but_keeps_human_gate_pending(self) -> None:
-        (self.root / "target.json").write_bytes((self.root / "source.json").read_bytes())
+        (self.root / "target.json").write_bytes(
+            (self.root / "source.json").read_bytes()
+        )
         report = MODULE.verify_profile(self.load(), run_probes=True)
         self.assertEqual(report["status"], "technical_pass_human_pending")
         self.assertEqual(report["human_gates"][0]["status"], "pending")
         self.assertEqual(report["probes"][0]["status"], "pass")
 
     def test_verify_rejects_probe_that_mutates_a_managed_mirror(self) -> None:
-        (self.root / "target.json").write_bytes((self.root / "source.json").read_bytes())
+        (self.root / "target.json").write_bytes(
+            (self.root / "source.json").read_bytes()
+        )
         payload = json.loads(self.profile_path.read_text())
         payload["probes"][0]["argv"] = [
             "{python}",
@@ -247,7 +253,9 @@ class MigrationEngineTests(unittest.TestCase):
         self.assertEqual(report["post_probe_mirrors"][0]["status"], "drift")
 
     def test_verify_rejects_probe_that_creates_a_forbidden_path(self) -> None:
-        (self.root / "target.json").write_bytes((self.root / "source.json").read_bytes())
+        (self.root / "target.json").write_bytes(
+            (self.root / "source.json").read_bytes()
+        )
         payload = json.loads(self.profile_path.read_text())
         payload["probes"][0]["argv"] = [
             "{python}",
@@ -262,7 +270,9 @@ class MigrationEngineTests(unittest.TestCase):
         self.assertEqual(report["post_probe_forbidden_paths"], [".mcp.json"])
 
     def test_skipping_declared_probes_is_not_a_pass(self) -> None:
-        (self.root / "target.json").write_bytes((self.root / "source.json").read_bytes())
+        (self.root / "target.json").write_bytes(
+            (self.root / "source.json").read_bytes()
+        )
         report = MODULE.verify_profile(self.load(), run_probes=False)
         self.assertEqual(report["status"], "not_run")
 
@@ -280,9 +290,7 @@ class MigrationEngineTests(unittest.TestCase):
             encoding="utf-8",
         )
         payload = json.loads(self.profile_path.read_text())
-        payload["managed_files"].append(
-            {"path": "settings.yml", "format": "text"}
-        )
+        payload["managed_files"].append({"path": "settings.yml", "format": "text"})
         self.profile_path.write_text(json.dumps(payload), encoding="utf-8")
         with self.assertRaisesRegex(MODULE.MigrationError, "secret-like literal"):
             MODULE.verify_profile(self.load(), run_probes=False)
@@ -369,7 +377,9 @@ class MigrationEngineTests(unittest.TestCase):
 
         self.assertFalse((outside / "value.txt").exists())
 
-    def test_exclusive_receipt_write_removes_partial_file_on_fsync_failure(self) -> None:
+    def test_exclusive_receipt_write_removes_partial_file_on_fsync_failure(
+        self,
+    ) -> None:
         receipt = self.root.resolve() / "receipts" / "partial.json"
         fsync = MODULE.os.fsync
         failed = False

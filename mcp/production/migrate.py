@@ -24,7 +24,9 @@ from typing import Any
 
 SCHEMA_VERSION = 1
 SECRET_KEY = re.compile(r"(?:api[_-]?key|token|secret|password)", re.IGNORECASE)
-SAFE_SECRET_REFERENCE = re.compile(r"^(?:\$\{?[A-Za-z_][A-Za-z0-9_]*\}?|env:[A-Za-z_][A-Za-z0-9_]*)$")
+SAFE_SECRET_REFERENCE = re.compile(
+    r"^(?:\$\{?[A-Za-z_][A-Za-z0-9_]*\}?|env:[A-Za-z_][A-Za-z0-9_]*)$"
+)
 TEXT_SECRET_ASSIGNMENT = re.compile(
     r"(?im)^\s*(?:--)?[A-Za-z0-9_-]*(?:api[_-]?key|token|secret|password)"
     r"[A-Za-z0-9_-]*\s*(?:=|:)\s*"
@@ -99,18 +101,25 @@ def _sha256_file(path: Path) -> str:
 
 
 def _repo_path(root: Path, relative: str, *, must_exist: bool = False) -> Path:
-    _require(isinstance(relative, str) and relative not in {"", "."}, "profile path must be non-empty")
+    _require(
+        isinstance(relative, str) and relative not in {"", "."},
+        "profile path must be non-empty",
+    )
     candidate = root / relative
     resolved = candidate.resolve(strict=must_exist)
     try:
         resolved.relative_to(root)
     except ValueError as exc:
         raise MigrationError(f"profile path escapes repository: {relative}") from exc
-    _require(not candidate.is_symlink(), f"profile path must not be a symlink: {relative}")
+    _require(
+        not candidate.is_symlink(), f"profile path must not be a symlink: {relative}"
+    )
     return resolved
 
 
-def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+def _git(
+    root: Path, *args: str, check: bool = True
+) -> subprocess.CompletedProcess[str]:
     try:
         return subprocess.run(
             ["git", *args],
@@ -120,7 +129,11 @@ def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
             text=True,
         )
     except (OSError, subprocess.CalledProcessError) as exc:
-        detail = exc.stderr.strip() if isinstance(exc, subprocess.CalledProcessError) else str(exc)
+        detail = (
+            exc.stderr.strip()
+            if isinstance(exc, subprocess.CalledProcessError)
+            else str(exc)
+        )
         raise MigrationError(f"git {' '.join(args)} failed: {detail}") from exc
 
 
@@ -137,7 +150,10 @@ def _validate_residency(capabilities: Any) -> None:
     for capability in capabilities:
         _require(isinstance(capability, dict), "each capability must be an object")
         capability_id = capability.get("id")
-        _require(isinstance(capability_id, str) and capability_id, "capability id is required")
+        _require(
+            isinstance(capability_id, str) and capability_id,
+            "capability id is required",
+        )
         _require(capability_id not in seen, f"duplicate capability id: {capability_id}")
         seen.add(capability_id)
         registration = capability.get("registration")
@@ -170,7 +186,9 @@ def load_profile(repo_root: Path, profile_path: Path) -> Profile:
         resolved_path = raw_path.resolve(strict=True)
         path = _repo_path(root, str(resolved_path.relative_to(root)), must_exist=True)
     except ValueError as exc:
-        raise MigrationError(f"profile path escapes repository: {profile_path}") from exc
+        raise MigrationError(
+            f"profile path escapes repository: {profile_path}"
+        ) from exc
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -180,8 +198,14 @@ def load_profile(repo_root: Path, profile_path: Path) -> Profile:
     unknown_fields = sorted(set(payload) - PROFILE_FIELDS)
     _require(not missing_fields, f"missing required profile fields: {missing_fields}")
     _require(not unknown_fields, f"unknown profile fields: {unknown_fields}")
-    _require(payload.get("schema_version") == SCHEMA_VERSION, "unsupported migration profile schema")
-    _require(isinstance(payload.get("repo_id"), str) and payload["repo_id"], "repo_id is required")
+    _require(
+        payload.get("schema_version") == SCHEMA_VERSION,
+        "unsupported migration profile schema",
+    )
+    _require(
+        isinstance(payload.get("repo_id"), str) and payload["repo_id"],
+        "repo_id is required",
+    )
     engine_sha256 = payload.get("engine_sha256")
     _require(
         isinstance(engine_sha256, str) and re.fullmatch(r"[0-9a-f]{64}", engine_sha256),
@@ -191,7 +215,10 @@ def load_profile(repo_root: Path, profile_path: Path) -> Profile:
         engine_sha256 == _sha256_file(Path(__file__).resolve()),
         "migration engine hash mismatch",
     )
-    _require(isinstance(payload.get("protected_branches", []), list), "protected_branches must be a list")
+    _require(
+        isinstance(payload.get("protected_branches", []), list),
+        "protected_branches must be a list",
+    )
     _repo_path(root, payload.get("receipt_dir", "mcp/production/receipts"))
     _repo_path(root, payload.get("backup_dir", ".mcp-production/backups"))
 
@@ -199,22 +226,43 @@ def load_profile(repo_root: Path, profile_path: Path) -> Profile:
     _require(isinstance(managed, list), "managed_files must be a list")
     for item in managed:
         _require(isinstance(item, dict), "each managed file must be an object")
-        _require(not (set(item) - MANAGED_FILE_FIELDS), f"unknown managed file fields: {sorted(set(item) - MANAGED_FILE_FIELDS)}")
-        _require({"path", "format"} <= set(item), "managed file requires path and format")
+        _require(
+            not (set(item) - MANAGED_FILE_FIELDS),
+            f"unknown managed file fields: {sorted(set(item) - MANAGED_FILE_FIELDS)}",
+        )
+        _require(
+            {"path", "format"} <= set(item), "managed file requires path and format"
+        )
         _repo_path(root, item.get("path", ""))
-        _require(item.get("format", "text") in {"json", "toml", "text"}, "unsupported file format")
+        _require(
+            item.get("format", "text") in {"json", "toml", "text"},
+            "unsupported file format",
+        )
         contains = item.get("contains", [])
-        _require(isinstance(contains, list) and all(isinstance(value, str) for value in contains), "contains must be a string list")
-        _require(isinstance(item.get("secret_scan", True), bool), "secret_scan must be boolean")
+        _require(
+            isinstance(contains, list)
+            and all(isinstance(value, str) for value in contains),
+            "contains must be a string list",
+        )
+        _require(
+            isinstance(item.get("secret_scan", True), bool),
+            "secret_scan must be boolean",
+        )
 
     mirrors = payload.get("mirrors", [])
     _require(isinstance(mirrors, list), "mirrors must be a list")
     for item in mirrors:
         _require(isinstance(item, dict), "each mirror must be an object")
-        _require(set(item) == MIRROR_FIELDS, f"mirror fields must be exactly: {sorted(MIRROR_FIELDS)}")
+        _require(
+            set(item) == MIRROR_FIELDS,
+            f"mirror fields must be exactly: {sorted(MIRROR_FIELDS)}",
+        )
         _repo_path(root, item.get("source", ""))
         _repo_path(root, item.get("target", ""))
-        _require(item.get("comparison", "bytes") in {"bytes", "json"}, "unsupported mirror comparison")
+        _require(
+            item.get("comparison", "bytes") in {"bytes", "json"},
+            "unsupported mirror comparison",
+        )
 
     forbidden = payload.get("forbidden_paths", [])
     _require(isinstance(forbidden, list), "forbidden_paths must be a list")
@@ -226,24 +274,49 @@ def load_profile(repo_root: Path, profile_path: Path) -> Profile:
     probe_ids: set[str] = set()
     for probe in probes:
         _require(isinstance(probe, dict), "each probe must be an object")
-        _require(not (set(probe) - PROBE_FIELDS), f"unknown probe fields: {sorted(set(probe) - PROBE_FIELDS)}")
-        _require({"id", "argv", "cwd", "timeout_sec"} <= set(probe), "probe is missing required fields")
+        _require(
+            not (set(probe) - PROBE_FIELDS),
+            f"unknown probe fields: {sorted(set(probe) - PROBE_FIELDS)}",
+        )
+        _require(
+            {"id", "argv", "cwd", "timeout_sec"} <= set(probe),
+            "probe is missing required fields",
+        )
         probe_id = probe.get("id")
         argv = probe.get("argv")
         _require(isinstance(probe_id, str) and probe_id, "probe id is required")
         _require(probe_id not in probe_ids, f"duplicate probe id: {probe_id}")
         probe_ids.add(probe_id)
-        _require(isinstance(argv, list) and argv and all(isinstance(value, str) for value in argv), f"probe argv must be a non-empty string list: {probe_id}")
-        _repo_path(root, probe.get("cwd", ".") if probe.get("cwd", ".") != "." else "__root_marker__")
+        _require(
+            isinstance(argv, list)
+            and argv
+            and all(isinstance(value, str) for value in argv),
+            f"probe argv must be a non-empty string list: {probe_id}",
+        )
+        _repo_path(
+            root,
+            probe.get("cwd", ".")
+            if probe.get("cwd", ".") != "."
+            else "__root_marker__",
+        )
         timeout = probe.get("timeout_sec")
-        _require(isinstance(timeout, (int, float)) and 0 < timeout <= 3600, f"invalid probe timeout: {probe_id}")
+        _require(
+            isinstance(timeout, (int, float)) and 0 < timeout <= 3600,
+            f"invalid probe timeout: {probe_id}",
+        )
 
     gates = payload.get("human_gates", [])
     _require(isinstance(gates, list), "human_gates must be a list")
     gate_ids: set[str] = set()
     for gate in gates:
-        _require(isinstance(gate, dict) and isinstance(gate.get("id"), str), "human gate id is required")
-        _require(set(gate) == HUMAN_GATE_FIELDS, f"human gate fields must be exactly: {sorted(HUMAN_GATE_FIELDS)}")
+        _require(
+            isinstance(gate, dict) and isinstance(gate.get("id"), str),
+            "human gate id is required",
+        )
+        _require(
+            set(gate) == HUMAN_GATE_FIELDS,
+            f"human gate fields must be exactly: {sorted(HUMAN_GATE_FIELDS)}",
+        )
         _require(gate["id"] not in gate_ids, f"duplicate human gate id: {gate['id']}")
         gate_ids.add(gate["id"])
 
@@ -267,7 +340,9 @@ def _equivalent(source: Path, target: Path, comparison: str) -> bool:
             target.read_text(encoding="utf-8")
         )
     except json.JSONDecodeError as exc:
-        raise MigrationError(f"cannot compare JSON mirror {source} -> {target}: {exc}") from exc
+        raise MigrationError(
+            f"cannot compare JSON mirror {source} -> {target}: {exc}"
+        ) from exc
 
 
 def build_plan(profile: Profile) -> list[PlanItem]:
@@ -281,7 +356,9 @@ def build_plan(profile: Profile) -> list[PlanItem]:
                 source=mirror["source"],
                 target=mirror["target"],
                 comparison=comparison,
-                status="in_sync" if _equivalent(source, target, comparison) else "drift",
+                status="in_sync"
+                if _equivalent(source, target, comparison)
+                else "drift",
                 source_sha256=_sha256_file(source),
                 target_sha256=_sha256_file(target) if target.exists() else None,
             )
@@ -293,7 +370,9 @@ def _assert_mutation_branch(profile: Profile) -> None:
     branch = _git_info(profile.root)["branch"]
     protected = set(profile.payload.get("protected_branches", []))
     _require(branch is not None, "apply and rollback require a named Git branch")
-    _require(branch not in protected, f"refusing mutation on protected branch: {branch}")
+    _require(
+        branch not in protected, f"refusing mutation on protected branch: {branch}"
+    )
 
 
 def _assert_clean_destination(profile: Profile, relative: str) -> None:
@@ -325,7 +404,9 @@ def _open_parent_dir(repo_root: Path, path: Path) -> tuple[int, str]:
             directory_fd = next_fd
     except OSError as exc:
         os.close(directory_fd)
-        raise MigrationError(f"write directory contains a symlink or is unsafe: {path.parent}") from exc
+        raise MigrationError(
+            f"write directory contains a symlink or is unsafe: {path.parent}"
+        ) from exc
     return directory_fd, relative.name
 
 
@@ -378,7 +459,9 @@ def _assert_parent_binding(
     try:
         verification_fd, verification_name = _open_parent_dir(repo_root, path)
     except MigrationError as exc:
-        raise MigrationError(f"write namespace changed during publication: {path}") from exc
+        raise MigrationError(
+            f"write namespace changed during publication: {path}"
+        ) from exc
     try:
         verification_identity = os.fstat(verification_fd)
         _require(
@@ -499,8 +582,14 @@ def check_receipt_chain(profile: Profile) -> dict[str, Any]:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise MigrationError(f"invalid receipt {path}: {exc}") from exc
-        _require(payload.get("previous_receipt_sha256") == previous, f"broken receipt chain at {path.name}")
-        _require(payload.get("repo_id") == profile.payload["repo_id"], f"receipt repo mismatch: {path.name}")
+        _require(
+            payload.get("previous_receipt_sha256") == previous,
+            f"broken receipt chain at {path.name}",
+        )
+        _require(
+            payload.get("repo_id") == profile.payload["repo_id"],
+            f"receipt repo mismatch: {path.name}",
+        )
         previous = _sha256_file(path)
         count += 1
     return {"status": "pass", "receipt_count": count, "tip_sha256": previous}
@@ -514,10 +603,13 @@ def apply_plan(profile: Profile) -> list[PlanItem]:
         _assert_clean_destination(profile, item.target)
 
     run_id = _new_run_id("backup")
-    backup_root = _repo_path(
-        profile.root,
-        profile.payload.get("backup_dir", ".mcp-production/backups"),
-    ) / run_id
+    backup_root = (
+        _repo_path(
+            profile.root,
+            profile.payload.get("backup_dir", ".mcp-production/backups"),
+        )
+        / run_id
+    )
     prepared: list[dict[str, Any]] = []
     for item in changes:
         source = _repo_path(profile.root, item.source, must_exist=True)
@@ -578,7 +670,9 @@ def apply_plan(profile: Profile) -> list[PlanItem]:
         for entry in reversed(written):
             try:
                 if entry["before_exists"]:
-                    _atomic_write(profile.root, entry["target"], entry["before_content"])
+                    _atomic_write(
+                        profile.root, entry["target"], entry["before_content"]
+                    )
                 else:
                     entry["target"].unlink(missing_ok=True)
             except OSError as restore_exc:
@@ -587,7 +681,9 @@ def apply_plan(profile: Profile) -> list[PlanItem]:
             raise MigrationError(
                 f"apply transaction failed ({exc}); restoration also failed: {restore_errors}"
             ) from exc
-        raise MigrationError(f"apply transaction failed and was restored: {exc}") from exc
+        raise MigrationError(
+            f"apply transaction failed and was restored: {exc}"
+        ) from exc
     return applied
 
 
@@ -639,28 +735,45 @@ def _validate_managed_file(profile: Profile, item: dict[str, Any]) -> dict[str, 
         elif file_format == "toml":
             parsed = tomllib.loads(text)
     except (json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
-        raise MigrationError(f"invalid {file_format} file {item['path']}: {exc}") from exc
+        raise MigrationError(
+            f"invalid {file_format} file {item['path']}: {exc}"
+        ) from exc
     if file_format in {"json", "toml"} and item.get("secret_scan", True):
         _scan_secret_literals(parsed)
     elif file_format == "text" and item.get("secret_scan", True):
         _scan_text_secret_literals(text, item["path"])
     for required_text in item.get("contains", []):
-        _require(required_text in text, f"managed file {item['path']} is missing required text: {required_text}")
+        _require(
+            required_text in text,
+            f"managed file {item['path']} is missing required text: {required_text}",
+        )
     return {"path": item["path"], "sha256": _sha256_file(path), "status": "pass"}
 
 
 def _expand(value: str, profile: Profile) -> str:
-    return value.replace("{repo_root}", str(profile.root)).replace("{python}", sys.executable)
+    return value.replace("{repo_root}", str(profile.root)).replace(
+        "{python}", sys.executable
+    )
 
 
 def _run_probe(profile: Profile, probe: dict[str, Any]) -> dict[str, Any]:
     argv = [_expand(value, profile) for value in probe["argv"]]
     cwd_value = probe.get("cwd", ".")
-    cwd = profile.root if cwd_value == "." else _repo_path(profile.root, cwd_value, must_exist=True)
+    cwd = (
+        profile.root
+        if cwd_value == "."
+        else _repo_path(profile.root, cwd_value, must_exist=True)
+    )
     env = os.environ.copy()
     for key, value in probe.get("env", {}).items():
-        _require(isinstance(key, str) and isinstance(value, str), f"invalid probe env: {probe['id']}")
-        _require(not SECRET_KEY.search(key), f"probe profile must not carry secret env: {key}")
+        _require(
+            isinstance(key, str) and isinstance(value, str),
+            f"invalid probe env: {probe['id']}",
+        )
+        _require(
+            not SECRET_KEY.search(key),
+            f"probe profile must not carry secret env: {key}",
+        )
         env[key] = _expand(value, profile)
     started = time.monotonic()
     try:
@@ -711,10 +824,11 @@ def verify_profile(profile: Profile, *, run_probes: bool) -> dict[str, Any]:
     drift = [item.target for item in plan if item.status != "in_sync"]
     _require(not drift, f"MCP configuration mirror drift: {drift}")
     chain = check_receipt_chain(profile)
-    probes = [
-        _run_probe(profile, probe)
-        for probe in profile.payload.get("probes", [])
-    ] if run_probes else []
+    probes = (
+        [_run_probe(profile, probe) for probe in profile.payload.get("probes", [])]
+        if run_probes
+        else []
+    )
     probe_failed = any(item["status"] != "pass" for item in probes)
     post_probe_files: list[dict[str, Any]] = []
     post_probe_plan: list[PlanItem] = []
@@ -728,7 +842,12 @@ def verify_profile(profile: Profile, *, run_probes: bool) -> dict[str, Any]:
                 for item in profile.payload.get("managed_files", [])
             ]
             post_probe_plan = build_plan(profile)
-        except (MigrationError, OSError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
+        except (
+            MigrationError,
+            OSError,
+            json.JSONDecodeError,
+            tomllib.TOMLDecodeError,
+        ) as exc:
             post_probe_error = str(exc)
         post_probe_forbidden = [
             relative
@@ -743,9 +862,7 @@ def verify_profile(profile: Profile, *, run_probes: bool) -> dict[str, Any]:
         bool(post_probe_error)
         or bool(post_probe_forbidden)
         or post_probe_chain.get("status") != "pass"
-        or any(
-        item.status != "in_sync" for item in post_probe_plan
-        )
+        or any(item.status != "in_sync" for item in post_probe_plan)
     )
     gates = [
         {
@@ -784,7 +901,9 @@ def verify_profile(profile: Profile, *, run_probes: bool) -> dict[str, Any]:
 
 def rollback(profile: Profile, receipt_path: Path) -> Path:
     _assert_mutation_branch(profile)
-    raw_path = receipt_path if receipt_path.is_absolute() else profile.root / receipt_path
+    raw_path = (
+        receipt_path if receipt_path.is_absolute() else profile.root / receipt_path
+    )
     try:
         resolved_path = raw_path.resolve(strict=True)
         path = _repo_path(
@@ -793,17 +912,28 @@ def rollback(profile: Profile, receipt_path: Path) -> Path:
             must_exist=True,
         )
     except ValueError as exc:
-        raise MigrationError(f"rollback receipt escapes repository: {receipt_path}") from exc
+        raise MigrationError(
+            f"rollback receipt escapes repository: {receipt_path}"
+        ) from exc
     receipt_dir = _repo_path(
         profile.root,
         profile.payload.get("receipt_dir", "mcp/production/receipts"),
     )
-    _require(path.parent == receipt_dir, "rollback receipt is outside the configured receipt directory")
-    _require(path in sorted(receipt_dir.glob("*.json")), "rollback receipt is not in the receipt chain")
+    _require(
+        path.parent == receipt_dir,
+        "rollback receipt is outside the configured receipt directory",
+    )
+    _require(
+        path in sorted(receipt_dir.glob("*.json")),
+        "rollback receipt is not in the receipt chain",
+    )
     check_receipt_chain(profile)
     payload = json.loads(path.read_text(encoding="utf-8"))
     _require(payload.get("action") == "apply", "rollback requires an apply receipt")
-    _require(payload.get("repo_id") == profile.payload["repo_id"], "rollback receipt repo mismatch")
+    _require(
+        payload.get("repo_id") == profile.payload["repo_id"],
+        "rollback receipt repo mismatch",
+    )
     _require(
         payload.get("profile_sha256") == _sha256_file(profile.path),
         "rollback receipt profile hash mismatch",
@@ -812,17 +942,32 @@ def rollback(profile: Profile, receipt_path: Path) -> Path:
     for change in payload.get("details", {}).get("changes", []):
         target = _repo_path(profile.root, change["target"])
         _require(target.exists(), f"rollback target is missing: {change['target']}")
-        _require(_sha256_file(target) == change["after_sha256"], f"rollback target changed after apply: {change['target']}")
+        _require(
+            _sha256_file(target) == change["after_sha256"],
+            f"rollback target changed after apply: {change['target']}",
+        )
         if change["before_exists"]:
             backup_value = change.get("backup")
-            _require(isinstance(backup_value, str), f"rollback backup missing: {change['target']}")
+            _require(
+                isinstance(backup_value, str),
+                f"rollback backup missing: {change['target']}",
+            )
             backup = _repo_path(profile.root, backup_value, must_exist=True)
-            _require(_sha256_file(backup) == change["before_sha256"], f"rollback backup hash mismatch: {change['target']}")
+            _require(
+                _sha256_file(backup) == change["before_sha256"],
+                f"rollback backup hash mismatch: {change['target']}",
+            )
             _atomic_write(profile.root, target, backup.read_bytes())
         else:
             target.unlink()
-        restored.append({"target": change["target"], "restored_sha256": change["before_sha256"]})
-    return write_receipt(profile, "rollback", {"apply_receipt": str(path.relative_to(profile.root)), "restored": restored})
+        restored.append(
+            {"target": change["target"], "restored_sha256": change["before_sha256"]}
+        )
+    return write_receipt(
+        profile,
+        "rollback",
+        {"apply_receipt": str(path.relative_to(profile.root)), "restored": restored},
+    )
 
 
 def _profile_from_args(args: argparse.Namespace) -> Profile:
@@ -834,7 +979,11 @@ def _profile_from_args(args: argparse.Namespace) -> Profile:
 
 
 def _print(payload: Any) -> None:
-    print(json.dumps(payload, indent=2, sort_keys=True, default=lambda value: value.__dict__))
+    print(
+        json.dumps(
+            payload, indent=2, sort_keys=True, default=lambda value: value.__dict__
+        )
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -868,14 +1017,22 @@ def main(argv: list[str] | None = None) -> int:
         if args.action == "verify":
             report = verify_profile(profile, run_probes=not args.no_probes)
             if args.receipt:
-                report["receipt"] = str(write_receipt(profile, "verify", report).relative_to(profile.root))
+                report["receipt"] = str(
+                    write_receipt(profile, "verify", report).relative_to(profile.root)
+                )
             _print(report)
             return 0 if report["status"].startswith("technical_pass") else 1
         if args.action == "check-receipts":
             _print(check_receipt_chain(profile))
             return 0
         if args.action == "rollback":
-            _print({"receipt": str(rollback(profile, Path(args.receipt)).relative_to(profile.root))})
+            _print(
+                {
+                    "receipt": str(
+                        rollback(profile, Path(args.receipt)).relative_to(profile.root)
+                    )
+                }
+            )
             return 0
     except (MigrationError, OSError, json.JSONDecodeError) as exc:
         print(f"MCP production migration failed: {exc}", file=sys.stderr)

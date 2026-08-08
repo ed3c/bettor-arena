@@ -45,6 +45,7 @@ but never rewritten by these passes.
 `wiki_root` is the generated `openwiki/` directory itself.
 Exit codes: 0 ok · 1 failure · 2 bad usage
 """
+
 from __future__ import annotations
 
 import json
@@ -70,8 +71,16 @@ GENERATED_FIELD = "openwiki_generated"
 # upstream keeps only the first entry.
 PRESERVED_EXTENSION_FIELDS = (
     "openwiki_translation_pending",
-    "node_kind", "ingest_lane", "repo", "repo_url", "commit",
-    "covers", "libraries", "generated_by", "generated_at", "source",
+    "node_kind",
+    "ingest_lane",
+    "repo",
+    "repo_url",
+    "commit",
+    "covers",
+    "libraries",
+    "generated_by",
+    "generated_at",
+    "source",
 )
 
 FRONTMATTER_LABELS = {"files": "Files", "directories": "Directories"}
@@ -91,6 +100,7 @@ PROTECTED: set[str] = set()
 def protected(path: Path, root: Path) -> bool:
     return path.relative_to(root).as_posix() in PROTECTED
 
+
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
 STAMP_RE = re.compile(r"^\s*<!--\s*openwiki:\s*broken internal link\b.*?-->\s*$")
@@ -102,6 +112,7 @@ FENCE_RE = re.compile(r"^(\s*)(`{3,})\s*(\S*)\s*$")
 # front matter
 # --------------------------------------------------------------------------
 
+
 def split_frontmatter(content: str) -> tuple[list[str] | None, str]:
     """Split a leading `---` block into (block_lines, body).
 
@@ -112,7 +123,7 @@ def split_frontmatter(content: str) -> tuple[list[str] | None, str]:
         return None, content
     for idx in range(1, len(lines)):
         if lines[idx].rstrip("\r") == "---":
-            return lines[1:idx], "\n".join(lines[idx + 1:])
+            return lines[1:idx], "\n".join(lines[idx + 1 :])
     return None, content
 
 
@@ -155,7 +166,11 @@ def field_lines(block: list[str], key: str) -> list[str]:
             out.append(line)
             continue
         if capturing:
-            if line.strip() and not line[0].isspace() and not line.lstrip().startswith("-"):
+            if (
+                line.strip()
+                and not line[0].isspace()
+                and not line.lstrip().startswith("-")
+            ):
                 capturing = False
                 continue
             if not line.strip():
@@ -189,8 +204,11 @@ def normalize_concept_content(content: str, rel_path: str) -> tuple[bool, str]:
 
     block, body = split_frontmatter(content)
     heading = next(
-        (m.group(1).strip() for m in
-         (re.match(r"^#\s+(.+?)\s*$", line) for line in body.split("\n")) if m),
+        (
+            m.group(1).strip()
+            for m in (re.match(r"^#\s+(.+?)\s*$", line) for line in body.split("\n"))
+            if m
+        ),
         None,
     )
     rebuilt = [
@@ -209,6 +227,7 @@ def normalize_concept_content(content: str, rel_path: str) -> tuple[bool, str]:
 # --------------------------------------------------------------------------
 # mermaid
 # --------------------------------------------------------------------------
+
 
 class Fence:
     """One ```mermaid fence located in a Markdown document."""
@@ -232,7 +251,11 @@ def extract_mermaid_fences(markdown: str) -> list[Fence]:
     for idx, line in enumerate(markdown.split("\n")):
         match = FENCE_RE.match(line)
         if open_fence is not None:
-            if match and len(match.group(2)) >= len(open_fence.marker) and not match.group(3):
+            if (
+                match
+                and len(match.group(2)) >= len(open_fence.marker)
+                and not match.group(3)
+            ):
                 open_fence.close_line = idx
                 fences.append(open_fence)
                 open_fence = None
@@ -240,7 +263,11 @@ def extract_mermaid_fences(markdown: str) -> list[Fence]:
                 open_fence.body_lines.append(line)
             continue
         if generic_marker is not None:
-            if match and len(match.group(2)) >= len(generic_marker) and not match.group(3):
+            if (
+                match
+                and len(match.group(2)) >= len(generic_marker)
+                and not match.group(3)
+            ):
                 generic_marker = None
             continue
         if match and match.group(3).lower() == "mermaid":
@@ -259,32 +286,43 @@ def heuristic_error(body: str) -> str | None:
     first = (body.strip().split() or [""])[0].lower()
     is_flowchart = first in {"flowchart", "graph"}
 
-    if is_flowchart and (re.search(r"(?:^|\n|\s)end\s*[\[({]", body)
-                         or re.search(r"-->\s*end\s*(?:$|\n|;)", body, re.MULTILINE)):
-        return ("Heuristic: `end` is a reserved word and cannot be a flowchart node id; "
-                "rename the node.")
+    if is_flowchart and (
+        re.search(r"(?:^|\n|\s)end\s*[\[({]", body)
+        or re.search(r"-->\s*end\s*(?:$|\n|;)", body, re.MULTILINE)
+    ):
+        return (
+            "Heuristic: `end` is a reserved word and cannot be a flowchart node id; "
+            "rename the node."
+        )
     if re.search(r"[\[({][^)\]}]*;[^)\]}]*[)\]}]", body):
         return "Heuristic: a semicolon inside a label breaks rendering; rephrase the label."
     if re.search(r"[\[({][^)\]}]*[<>][^)\]}]*[)\]}]", body):
-        return ("Heuristic: an unescaped angle bracket inside a label breaks rendering; "
-                "rephrase the label.")
+        return (
+            "Heuristic: an unescaped angle bracket inside a label breaks rendering; "
+            "rephrase the label."
+        )
     return None
 
 
 def degrade_invalid_mermaid(markdown: str) -> tuple[str, int]:
     """Convert unparseable mermaid fences to text fences, stamping the reason."""
-    failures = [(f, err) for f in extract_mermaid_fences(markdown)
-                if (err := heuristic_error(f.body)) is not None]
+    failures = [
+        (f, err)
+        for f in extract_mermaid_fences(markdown)
+        if (err := heuristic_error(f.body)) is not None
+    ]
     if not failures:
         return markdown, 0
 
     lines = markdown.split("\n")
     for fence, error in reversed(failures):
-        comment = (f"{fence.indent}<!-- openwiki: mermaid parse failed and this diagram "
-                   f"was converted to a text fence so it does not break rendering. Fix the "
-                   f"diagram source and restore the mermaid fence. Parser error: "
-                   f"{error.replace('--', '-')[:400]} -->")
-        lines[fence.open_line:fence.close_line + 1] = [
+        comment = (
+            f"{fence.indent}<!-- openwiki: mermaid parse failed and this diagram "
+            f"was converted to a text fence so it does not break rendering. Fix the "
+            f"diagram source and restore the mermaid fence. Parser error: "
+            f"{error.replace('--', '-')[:400]} -->"
+        )
+        lines[fence.open_line : fence.close_line + 1] = [
             comment,
             f"{fence.indent}{fence.marker}text",
             *fence.body_lines,
@@ -296,6 +334,7 @@ def degrade_invalid_mermaid(markdown: str) -> tuple[str, int]:
 # --------------------------------------------------------------------------
 # internal links
 # --------------------------------------------------------------------------
+
 
 def slugify_heading(text: str) -> str:
     """GitHub-style anchor slug: lowercased, punctuation dropped, spaces hyphenated."""
@@ -331,7 +370,9 @@ def parse_destination(href: str) -> tuple[str, str | None]:
     return path, (anchor if sep else None)
 
 
-def validate_links(wiki_root: Path, source: Path, content: str) -> list[tuple[int, str, str]]:
+def validate_links(
+    wiki_root: Path, source: Path, content: str
+) -> list[tuple[int, str, str]]:
     """Return (line, href, reason) for every broken relative link in one page."""
     anchors = heading_anchors(content)
     issues: list[tuple[int, str, str]] = []
@@ -347,22 +388,34 @@ def validate_links(wiki_root: Path, source: Path, content: str) -> list[tuple[in
 
             if not link_path:
                 if anchor and urllib.parse.unquote(anchor) not in anchors:
-                    issues.append((lineno, href,
-                                   f'heading anchor "{anchor}" does not exist in {source.name}'))
+                    issues.append(
+                        (
+                            lineno,
+                            href,
+                            f'heading anchor "{anchor}" does not exist in {source.name}',
+                        )
+                    )
                 continue
 
             is_dir = link_path.endswith("/")
             base = wiki_root if link_path.startswith("/") else source.parent
             target = Path(os.path.normpath(base / link_path.lstrip("/")))
             if not str(target).startswith(str(wiki_root)):
-                issues.append((lineno, href, f'link "{link_path}" is outside the wiki root'))
+                issues.append(
+                    (lineno, href, f'link "{link_path}" is outside the wiki root')
+                )
                 continue
-            if (target.is_dir() if is_dir else target.is_file()):
+            if target.is_dir() if is_dir else target.is_file():
                 if anchor and not is_dir:
                     target_anchors = heading_anchors(target.read_text(encoding="utf-8"))
                     if urllib.parse.unquote(anchor) not in target_anchors:
-                        issues.append((lineno, href,
-                                       f'heading anchor "{anchor}" does not exist in "{link_path}"'))
+                        issues.append(
+                            (
+                                lineno,
+                                href,
+                                f'heading anchor "{anchor}" does not exist in "{link_path}"',
+                            )
+                        )
                 continue
             kind = "directory" if is_dir else "file"
             issues.append((lineno, href, f'{kind} "{link_path}" does not exist'))
@@ -378,9 +431,10 @@ def stamp_links(content: str, issues: list[tuple[int, str, str]]) -> str:
     for lineno, href, message in issues:
         by_line.setdefault(lineno, []).append(
             f"<!-- openwiki: broken internal link [{href}] {message}. "
-            f"Fix the href or restore the target, then delete this comment. -->")
+            f"Fix the href or restore the target, then delete this comment. -->"
+        )
     for lineno in sorted(by_line, reverse=True):
-        lines[lineno - 1:lineno - 1] = by_line[lineno]
+        lines[lineno - 1 : lineno - 1] = by_line[lineno]
     return "\n".join(lines)
 
 
@@ -388,28 +442,40 @@ def stamp_links(content: str, issues: list[tuple[int, str, str]]) -> str:
 # index synchronization
 # --------------------------------------------------------------------------
 
+
 def escape_label(value: str) -> str:
     return value.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
 
 
-def render_links(heading: str, links: list[tuple[str, str, str | None]],
-                 with_description: bool) -> str:
+def render_links(
+    heading: str, links: list[tuple[str, str, str | None]], with_description: bool
+) -> str:
     """Render one sorted index section; empty string when there is nothing to list."""
     if not links:
         return ""
     items = []
     for href, label, description in sorted(links):
         item = f"- [{escape_label(label)}]({href})"
-        items.append(f"{item} - {description}" if with_description and description else item)
+        items.append(
+            f"{item} - {description}" if with_description and description else item
+        )
     return f"# {heading}\n\n" + "\n".join(items)
 
 
-def render_index(files: list[tuple[str, str, str | None]],
-                 directories: list[tuple[str, str, str | None]], is_root: bool) -> str:
-    sections = "\n\n".join(filter(None, [
-        render_links(FRONTMATTER_LABELS["files"], files, True),
-        render_links(FRONTMATTER_LABELS["directories"], directories, False),
-    ]))
+def render_index(
+    files: list[tuple[str, str, str | None]],
+    directories: list[tuple[str, str, str | None]],
+    is_root: bool,
+) -> str:
+    sections = "\n\n".join(
+        filter(
+            None,
+            [
+                render_links(FRONTMATTER_LABELS["files"], files, True),
+                render_links(FRONTMATTER_LABELS["directories"], directories, False),
+            ],
+        )
+    )
     version = '---\nokf_version: "0.1"\n---\n\n' if is_root else ""
     fallback = "# " + FRONTMATTER_LABELS["files"]
     return f"{version}{sections or fallback}\n"
@@ -419,18 +485,26 @@ def render_index(files: list[tuple[str, str, str | None]],
 # passes
 # --------------------------------------------------------------------------
 
+
 def concept_pages(directory: Path) -> list[Path]:
     """Immediate concept pages of a directory, sorted, excluding reserved files."""
-    return sorted(p for p in directory.iterdir()
-                  if p.is_file() and p.suffix.lower() == ".md"
-                  and not p.name.startswith(".") and p.name not in EXCLUDED_FILES)
+    return sorted(
+        p
+        for p in directory.iterdir()
+        if p.is_file()
+        and p.suffix.lower() == ".md"
+        and not p.name.startswith(".")
+        and p.name not in EXCLUDED_FILES
+    )
 
 
 def walk_directories(root: Path) -> list[Path]:
     """Every visible wiki directory, root included."""
     found = [root]
     for path in sorted(root.rglob("*")):
-        if path.is_dir() and not any(part.startswith(".") for part in path.relative_to(root).parts):
+        if path.is_dir() and not any(
+            part.startswith(".") for part in path.relative_to(root).parts
+        ):
             found.append(path)
     return found
 
@@ -442,7 +516,9 @@ def normalize_file(path: Path, root: Path) -> str:
     if not changed:
         return content
     if protected(path, root):
-        print(f"  [okf] SKIPPED (protected, generated elsewhere): {path.relative_to(root)}")
+        print(
+            f"  [okf] SKIPPED (protected, generated elsewhere): {path.relative_to(root)}"
+        )
         return original
     path.write_text(content, encoding="utf-8")
     return content
@@ -469,7 +545,9 @@ def pass_mermaid(root: Path) -> int:
             if count and not protected(page, root):
                 page.write_text(content, encoding="utf-8")
                 degraded += count
-                print(f"  [mermaid] degraded {count} fence(s): {page.relative_to(root)}")
+                print(
+                    f"  [mermaid] degraded {count} fence(s): {page.relative_to(root)}"
+                )
     return degraded
 
 
@@ -480,18 +558,24 @@ def pass_indexes(root: Path) -> int:
         for page in concept_pages(directory):
             content = normalize_file(page, root)
             block, _ = split_frontmatter(content)
-            files.append((
-                urllib.parse.quote(page.name, safe=""),
-                (read_field(block, "title") if block else None) or page.stem,
-                read_field(block, "description") if block else None,
-            ))
-        directories = [(urllib.parse.quote(child.name, safe="") + "/", child.name, None)
-                       for child in sorted(directory.iterdir())
-                       if child.is_dir() and not child.name.startswith(".")]
+            files.append(
+                (
+                    urllib.parse.quote(page.name, safe=""),
+                    (read_field(block, "title") if block else None) or page.stem,
+                    read_field(block, "description") if block else None,
+                )
+            )
+        directories = [
+            (urllib.parse.quote(child.name, safe="") + "/", child.name, None)
+            for child in sorted(directory.iterdir())
+            if child.is_dir() and not child.name.startswith(".")
+        ]
 
         index_path = directory / INDEX_FILE
         content = render_index(files, directories, directory == root)
-        existing = index_path.read_text(encoding="utf-8") if index_path.is_file() else None
+        existing = (
+            index_path.read_text(encoding="utf-8") if index_path.is_file() else None
+        )
         if existing != content:
             index_path.write_text(content, encoding="utf-8")
             written += 1
@@ -515,8 +599,9 @@ def pass_links(root: Path) -> int:
     return found
 
 
-def write_last_update(root: Path, target: Path | None, command: str,
-                      model: str, status: str) -> None:
+def write_last_update(
+    root: Path, target: Path | None, command: str, model: str, status: str
+) -> None:
     """Record run metadata the update prompt reads back as `gitHead`."""
     metadata = {
         "updatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -525,13 +610,18 @@ def write_last_update(root: Path, target: Path | None, command: str,
         "status": status,
     }
     if target is not None:
-        head = subprocess.run(["git", "-C", str(target), "rev-parse", "HEAD"],
-                              text=True, stdout=subprocess.PIPE,
-                              stderr=subprocess.DEVNULL, check=False).stdout.strip()
+        head = subprocess.run(
+            ["git", "-C", str(target), "rev-parse", "HEAD"],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).stdout.strip()
         if head:
             metadata["gitHead"] = head
     (root / ".last-update.json").write_text(
-        json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+        json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
+    )
 
 
 # --------------------------------------------------------------------------
@@ -563,13 +653,20 @@ def pass_backlog_heading(root: Path) -> int:
     if not match or not match.group(2).strip():
         return 0
     suffix = match.group(2).strip().lstrip("-—–:").strip()
-    after = before[:match.start()] + "## Backlog" + (f"\n\n{suffix}" if suffix else "") \
-        + before[match.end():]
+    after = (
+        before[: match.start()]
+        + "## Backlog"
+        + (f"\n\n{suffix}" if suffix else "")
+        + before[match.end() :]
+    )
     # Asserted, never announced. The bug this pass exists to prevent was a
     # success message printed by a removal that had silently matched nothing.
     canonical = BACKLOG_HEADING.search(after)
     if not canonical or canonical.group(2).strip():
-        print(f"[FAIL] backlog heading not canonical after rewrite: {page}", file=sys.stderr)
+        print(
+            f"[FAIL] backlog heading not canonical after rewrite: {page}",
+            file=sys.stderr,
+        )
         return 0
     page.write_text(after, encoding="utf-8")
     print(f"[backlog] heading normalized, title text kept: {suffix!r}")
@@ -577,7 +674,11 @@ def pass_backlog_heading(root: Path) -> int:
 
 
 def option(argv: list[str], name: str, default: str | None = None) -> str | None:
-    return argv[argv.index(name) + 1] if name in argv and argv.index(name) + 1 < len(argv) else default
+    return (
+        argv[argv.index(name) + 1]
+        if name in argv and argv.index(name) + 1 < len(argv)
+        else default
+    )
 
 
 def main(argv: list[str]) -> int:
@@ -589,7 +690,11 @@ def main(argv: list[str]) -> int:
         print(f"[FAIL] wiki root not found: {root}", file=sys.stderr)
         return 1
 
-    PROTECTED.update(argv[i + 1] for i, a in enumerate(argv) if a == "--protect" and i + 1 < len(argv))
+    PROTECTED.update(
+        argv[i + 1]
+        for i, a in enumerate(argv)
+        if a == "--protect" and i + 1 < len(argv)
+    )
     if PROTECTED:
         print(f"[protect] never rewritten: {sorted(PROTECTED)}")
 
@@ -599,7 +704,10 @@ def main(argv: list[str]) -> int:
         return 0
 
     if command != "finalize":
-        print(f"[FAIL] unknown command {command!r} (expected migrate|finalize)", file=sys.stderr)
+        print(
+            f"[FAIL] unknown command {command!r} (expected migrate|finalize)",
+            file=sys.stderr,
+        )
         return 2
 
     target = option(argv, "--target")
@@ -607,15 +715,22 @@ def main(argv: list[str]) -> int:
     degraded = pass_mermaid(root)
     indexes = pass_indexes(root)
     broken = pass_links(root)
-    write_last_update(root, Path(target).expanduser().resolve() if target else None,
-                      option(argv, "--command", "init"),
-                      option(argv, "--model", "host-agent"),
-                      option(argv, "--status", "success"))
+    write_last_update(
+        root,
+        Path(target).expanduser().resolve() if target else None,
+        option(argv, "--command", "init"),
+        option(argv, "--model", "host-agent"),
+        option(argv, "--status", "success"),
+    )
     backlog = pass_backlog_heading(root) if "--normalize-backlog" in argv else 0
-    print(f"[report] mermaid degraded={degraded}  indexes written={indexes}  broken links={broken}"
-          f"  backlog heading normalized={backlog}")
-    print("         broken links and degraded diagrams are stamped in place, not fatal;"
-          " the next update run repairs them from the inline comments.")
+    print(
+        f"[report] mermaid degraded={degraded}  indexes written={indexes}  broken links={broken}"
+        f"  backlog heading normalized={backlog}"
+    )
+    print(
+        "         broken links and degraded diagrams are stamped in place, not fatal;"
+        " the next update run repairs them from the inline comments."
+    )
     return 0
 
 
@@ -629,7 +744,8 @@ def _selftest() -> None:
     # rebuild derives the title from the first H1 and preserves RepoDoc routing
     changed, out = normalize_concept_content(
         "---\ntitle: old\ncovers:\n  - retry-backoff\n  - budgets\nrepo: o/n\n---\n\n# Real Title\nbody\n",
-        "arch/overview.md")
+        "arch/overview.md",
+    )
     assert changed and 'type: "Reference"' in out and 'title: "Real Title"' in out
     assert "openwiki_generated: true" in out
     assert "  - retry-backoff" in out and "repo: o/n" in out, out
@@ -642,10 +758,16 @@ def _selftest() -> None:
     assert degrade_invalid_mermaid(ok_doc) == (ok_doc, 0)
     bad_doc = "```mermaid\nflowchart TD\n  end[Done]\n```\n"
     degraded, count = degrade_invalid_mermaid(bad_doc)
-    assert count == 1 and "```text" in degraded and "openwiki: mermaid parse failed" in degraded
+    assert (
+        count == 1
+        and "```text" in degraded
+        and "openwiki: mermaid parse failed" in degraded
+    )
     assert "flowchart TD" in degraded, "degrading must preserve the diagram source"
     # a mermaid example nested in a longer fence is not a real diagram
-    assert extract_mermaid_fences("````markdown\n```mermaid\nbroken(\n```\n````\n") == []
+    assert (
+        extract_mermaid_fences("````markdown\n```mermaid\nbroken(\n```\n````\n") == []
+    )
 
     # heading anchors follow GitHub's duplicate-suffix rule
     assert heading_anchors("# A B\n## A B\n") == {"a-b", "a-b-1"}
@@ -654,12 +776,15 @@ def _selftest() -> None:
         root = Path(tmp) / "openwiki"
         (root / "arch").mkdir(parents=True)
         (root / "quickstart.md").write_text(
-            '---\ntype: Playbook\ntitle: Quickstart\ndescription: Entry point.\n---\n\n'
-            '# Quickstart\n\n[arch](arch/overview.md) [gone](arch/missing.md) '
-            '[anchor](arch/overview.md#nope) [ext](https://example.com)\n',
-            encoding="utf-8")
+            "---\ntype: Playbook\ntitle: Quickstart\ndescription: Entry point.\n---\n\n"
+            "# Quickstart\n\n[arch](arch/overview.md) [gone](arch/missing.md) "
+            "[anchor](arch/overview.md#nope) [ext](https://example.com)\n",
+            encoding="utf-8",
+        )
         (root / "arch/overview.md").write_text(
-            '---\ntype: Architecture\ntitle: Overview\n---\n\n# Overview\n', encoding="utf-8")
+            "---\ntype: Architecture\ntitle: Overview\n---\n\n# Overview\n",
+            encoding="utf-8",
+        )
 
         assert pass_links(root) == 2, "one missing file + one missing anchor"
         body = (root / "quickstart.md").read_text(encoding="utf-8")
@@ -673,7 +798,9 @@ def _selftest() -> None:
         assert index.startswith('---\nokf_version: "0.1"\n---'), index
         assert "- [Quickstart](quickstart.md) - Entry point." in index
         assert "# Directories\n\n- [arch](arch/)" in index
-        assert not (root / "arch/index.md").read_text(encoding="utf-8").startswith("---")
+        assert (
+            not (root / "arch/index.md").read_text(encoding="utf-8").startswith("---")
+        )
 
         write_last_update(root, None, "init", "m", "success")
         assert json.loads((root / ".last-update.json").read_text())["command"] == "init"
@@ -693,12 +820,16 @@ def _selftest() -> None:
         # backlog heading: a decorated heading is normalized and its title kept...
         quick = root / "quickstart.md"
         original = quick.read_text(encoding="utf-8")
-        quick.write_text(original + "\n## Backlog — known gaps, with anchors\n\n1. thing\n",
-                         encoding="utf-8")
+        quick.write_text(
+            original + "\n## Backlog — known gaps, with anchors\n\n1. thing\n",
+            encoding="utf-8",
+        )
         assert pass_backlog_heading(root) == 1
         fixed = quick.read_text(encoding="utf-8")
         assert "\n## Backlog\n" in fixed, fixed
-        assert "known gaps, with anchors" in fixed, "title text must survive, not be discarded"
+        assert "known gaps, with anchors" in fixed, (
+            "title text must survive, not be discarded"
+        )
         assert "1. thing" in fixed
         # ...and re-running is a no-op, so it cannot claim work it did not do
         assert pass_backlog_heading(root) == 0

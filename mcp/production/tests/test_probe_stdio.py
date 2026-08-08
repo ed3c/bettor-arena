@@ -17,7 +17,7 @@ sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 
-FAKE_SERVER = r'''#!/usr/bin/env python3
+FAKE_SERVER = r"""#!/usr/bin/env python3
 import json
 import sys
 
@@ -54,7 +54,7 @@ for line in sys.stdin:
             ]
         }
     print(json.dumps({"jsonrpc": "2.0", "id": request["id"], "result": result}), flush=True)
-'''
+"""
 
 
 class StdioProbeTests(unittest.TestCase):

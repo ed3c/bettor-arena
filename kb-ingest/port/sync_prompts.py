@@ -20,6 +20,7 @@ Usage:
 
 Exit codes: 0 ok · 1 stale (--check) or extraction failure · 2 bad usage
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -78,7 +79,7 @@ SUBAGENTS = [
     (
         "subagents/skeleton-critic.md",
         "src/agent/skeleton_critic.ts",
-        "const SKELETON_CRITIC_DESCRIPTION =\n  \"",
+        'const SKELETON_CRITIC_DESCRIPTION =\n  "',
         "const SKELETON_CRITIC_SYSTEM_PROMPT = `",
     ),
     (
@@ -102,7 +103,11 @@ def read_template_literal(text: str, start: int) -> str:
         ch = text[i]
         if ch == "\\":
             nxt = text[i + 1] if i + 1 < len(text) else ""
-            out.append({"`": "`", "\\": "\\", "$": "$", "n": "\n", "t": "\t"}.get(nxt, "\\" + nxt))
+            out.append(
+                {"`": "`", "\\": "\\", "$": "$", "n": "\n", "t": "\t"}.get(
+                    nxt, "\\" + nxt
+                )
+            )
             i += 2
             continue
         if ch == "`":
@@ -116,7 +121,9 @@ def literal_after(text: str, anchor: str, source: str) -> str:
     """Extract the template literal that follows `anchor` (which ends with a backtick)."""
     idx = text.find(anchor)
     if idx == -1:
-        raise ValueError(f"anchor {anchor!r} not found in {source} — openwiki layout changed")
+        raise ValueError(
+            f"anchor {anchor!r} not found in {source} — openwiki layout changed"
+        )
     return read_template_literal(text, idx + len(anchor))
 
 
@@ -124,7 +131,9 @@ def double_quoted_after(text: str, anchor: str, source: str) -> str:
     """Extract a plain double-quoted string literal that starts at `anchor`'s quote."""
     idx = text.find(anchor)
     if idx == -1:
-        raise ValueError(f"anchor {anchor!r} not found in {source} — openwiki layout changed")
+        raise ValueError(
+            f"anchor {anchor!r} not found in {source} — openwiki layout changed"
+        )
     start = text.index('"', idx + len(anchor) - 1) + 1
     out: list[str] = []
     i = start
@@ -172,40 +181,65 @@ def build(repo: Path) -> dict[str, str]:
         body = apply_placeholders(literal_after(sys_block, f"  {key}: `", "code.ts"))
         body = f"{body}\n\n{LINK_INTEGRITY.strip()}"
         files[name] = wrap(
-            body, sha, f"src/agent/prompts/code.ts CODE_SYSTEM_PROMPTS.{key}"
-            " + createLinkIntegrityInstructions()")
+            body,
+            sha,
+            f"src/agent/prompts/code.ts CODE_SYSTEM_PROMPTS.{key}"
+            " + createLinkIntegrityInstructions()",
+        )
 
     for name, key in (("user.init.md", "init"), ("user.update.md", "update")):
         files[name] = wrap(
             literal_after(user_block, f"  {key}: `", "code.ts").strip(),
-            sha, f"src/agent/prompts/code.ts CODE_USER_PROMPTS.{key}")
+            sha,
+            f"src/agent/prompts/code.ts CODE_USER_PROMPTS.{key}",
+        )
 
     files["subagents/skeleton-critic.md"] = subagent(
-        sha, "src/agent/skeleton_critic.ts",
-        double_quoted_after(critic_src, "const SKELETON_CRITIC_DESCRIPTION =\n  \"", "skeleton_critic.ts"),
-        literal_after(critic_src, "const SKELETON_CRITIC_SYSTEM_PROMPT = `", "skeleton_critic.ts"))
+        sha,
+        "src/agent/skeleton_critic.ts",
+        double_quoted_after(
+            critic_src, 'const SKELETON_CRITIC_DESCRIPTION =\n  "', "skeleton_critic.ts"
+        ),
+        literal_after(
+            critic_src, "const SKELETON_CRITIC_SYSTEM_PROMPT = `", "skeleton_critic.ts"
+        ),
+    )
 
     finder_start = qa_src.index("const WIKI_QUESTION_FINDER")
     verifier_start = qa_src.index("const WIKI_ANSWER_VERIFIER")
-    finder_src, verifier_src = qa_src[finder_start:verifier_start], qa_src[verifier_start:]
+    finder_src, verifier_src = (
+        qa_src[finder_start:verifier_start],
+        qa_src[verifier_start:],
+    )
 
     files["subagents/question-finder.md"] = subagent(
-        sha, "src/agent/wiki_qa_subagents.ts WIKI_QUESTION_FINDER",
-        double_quoted_after(finder_src, "  description:\n    \"", "wiki_qa_subagents.ts"),
-        literal_after(finder_src, "  systemPrompt: `", "wiki_qa_subagents.ts"))
+        sha,
+        "src/agent/wiki_qa_subagents.ts WIKI_QUESTION_FINDER",
+        double_quoted_after(
+            finder_src, '  description:\n    "', "wiki_qa_subagents.ts"
+        ),
+        literal_after(finder_src, "  systemPrompt: `", "wiki_qa_subagents.ts"),
+    )
 
     files["subagents/answer-verifier.md"] = subagent(
-        sha, "src/agent/wiki_qa_subagents.ts WIKI_ANSWER_VERIFIER",
-        double_quoted_after(verifier_src, "  description:\n    \"", "wiki_qa_subagents.ts"),
-        literal_after(verifier_src, "  systemPrompt: `", "wiki_qa_subagents.ts"))
+        sha,
+        "src/agent/wiki_qa_subagents.ts WIKI_ANSWER_VERIFIER",
+        double_quoted_after(
+            verifier_src, '  description:\n    "', "wiki_qa_subagents.ts"
+        ),
+        literal_after(verifier_src, "  systemPrompt: `", "wiki_qa_subagents.ts"),
+    )
 
     return files
 
 
 def subagent(sha: str, source: str, description: str, prompt: str) -> str:
     """Render a subagent asset: its dispatch description plus its system prompt."""
-    return wrap(f"## description\n\n{description.strip()}\n\n## systemPrompt\n\n{prompt.strip()}",
-                sha, source)
+    return wrap(
+        f"## description\n\n{description.strip()}\n\n## systemPrompt\n\n{prompt.strip()}",
+        sha,
+        source,
+    )
 
 
 def wrap(body: str, sha: str, source: str) -> str:
@@ -224,13 +258,17 @@ def wrap(body: str, sha: str, source: str) -> str:
 def extract_official(content: str) -> str:
     """Return just the verbatim region of a generated asset."""
     start = content.index(BEGIN) + len(BEGIN) + 1
-    return content[start:content.index(END)].rstrip("\n")
+    return content[start : content.index(END)].rstrip("\n")
 
 
 def git_sha(repo: Path) -> str:
     result = subprocess.run(
         ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
     return result.stdout.strip() or "unknown"
 
 
@@ -263,12 +301,17 @@ def main(argv: list[str]) -> int:
 
     if check:
         if stale:
-            print(f"[STALE] regenerate with sync_prompts.py: {', '.join(stale)}", file=sys.stderr)
+            print(
+                f"[STALE] regenerate with sync_prompts.py: {', '.join(stale)}",
+                file=sys.stderr,
+            )
             return 1
         print(f"[ok] {len(files)} prompt assets match openwiki @ {git_sha(repo)}")
         return 0
 
-    print(f"[ok] wrote {len(stale)} / {len(files)} assets from openwiki @ {git_sha(repo)}")
+    print(
+        f"[ok] wrote {len(stale)} / {len(files)} assets from openwiki @ {git_sha(repo)}"
+    )
     return 0
 
 
