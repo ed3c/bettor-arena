@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "c187934ff44ab615ae6613d5f81bdb803c778f8f",
+  "workflow_commit": "77ce9e424c78619af70aaab878c882c9a0dcf0b9",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-c187934ff44a-dirty.json",
-    "harness": "harness-c187934ff44a-dirty.json",
-    "macro": "macro-c187934ff44a-dirty.json",
-    "micro": "micro-c187934ff44a-dirty.json",
-    "openwiki": "openwiki-c187934ff44a-dirty.json",
-    "policy": "policy-c187934ff44a-dirty.json",
-    "workflow": "workflow-c187934ff44a-dirty.json"
+    "container": "container-77ce9e424c78-dirty.json",
+    "harness": "harness-77ce9e424c78-dirty.json",
+    "macro": "macro-77ce9e424c78-dirty.json",
+    "micro": "micro-77ce9e424c78-dirty.json",
+    "openwiki": "openwiki-77ce9e424c78-dirty.json",
+    "policy": "policy-77ce9e424c78-dirty.json",
+    "workflow": "workflow-77ce9e424c78-dirty.json"
   },
   "counts": {
-    "artifact": 20,
+    "artifact": 45,
     "context": 24,
     "harness": 68,
     "optional": 1
   },
-  "workflow_digest": "a0baae7401426cafa54c2b93c6f1838cea4778f1bfae9fb039b7f6586463d322",
+  "workflow_digest": "18fbc9bef280d7d9178358c8e6b43b8fba03974ff16e3307a9a9c29cf4c257cf",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-c187934ff44ab615ae6613d5f81bdb803c778f8f.json": {
+    "data/receipts/post-commit-77ce9e424c78619af70aaab878c882c9a0dcf0b9.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -183,7 +183,7 @@
       ]
     },
     "kb-ingest/README.md": {
-      "sha256": "1035beb590209afaa7e96a80b540ea7b579ad07b3b75e6d990f1be84b36af8fb",
+      "sha256": "1512eee4129e6b302c8efc7a8f257bbfdfd4c750db9624e7859b98f152fe671f",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -697,8 +697,192 @@
         "openwiki"
       ]
     },
+    "openwiki/data-ledgers.md": {
+      "sha256": "8eb000f524ed14f6a57631182167a6d95ca446fcb54bdaacc768905f74a9d46b",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/build-pipeline.md": {
+      "sha256": "626e6e40b05a5e22120c683b6f8d8c25f028b0aa6f44a05a1b23bef849a60a9c",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/generated-repo.md": {
+      "sha256": "eb4b2240ee19f141b3f368de68f3bb03e5e293656d309eb9827224c66792bcda",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/index.md": {
+      "sha256": "2d2538db29a55126dff11ede16d87f8a2cfb0401dc438c263b5ac93445608693",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/overview.md": {
+      "sha256": "a82f7fa25be9b6db1ab535bc0930e09a77b49326b683c8d15fe11aee90ef8ee7",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/packet-contract.md": {
+      "sha256": "7f46974863805eba78874e4c0411eac01ac047bf4e7aabf8975f84fb363fc976",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/v2-plan.md": {
+      "sha256": "5c8513d480ef50fa4dd9b37ffaa26b284627b5410510e4736deee804ce757e75",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/factory/verification.md": {
+      "sha256": "da1e3025d2e81484dc390e8093b3b4b302b2506a7b66ca4f90292b4ee9d34f37",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/gates/fast-quality.md": {
+      "sha256": "473ed92cde909432bfc324d7072cf773323142b80f9e3bfb92c9f22f0dd4c72a",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/gates/index.md": {
+      "sha256": "136e45266ea5fe5f286db5e411b1a6dd31c856f9ce8961a24dabeb1f2fc43032",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/gates/structure-gates.md": {
+      "sha256": "453ed9a5d489979de890cf47b27a81883754c4cdd4467c8ecf316af7c8344737",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/bootstrap.md": {
+      "sha256": "2127cf70b10e4fec0fbde24076a3a50351d493ad1e1a074bcacdb2d6633c4a93",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/claude-host.md": {
+      "sha256": "ebce821e4689ef98c68363c4f1a6a21bedfb09caf654db4a1907df894c57c82e",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/git-hooks.md": {
+      "sha256": "b4d90c22f11ad462fded2bb590e5bcc8d80bc860a0f67a6382da38819d4b9daf",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/index.md": {
+      "sha256": "35d36ddba97f2bffc813674a1a3884e2b04ec6cdd62aca6c7e30821f310736db",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/mcp-surface.md": {
+      "sha256": "9e2dc12c5d362cd35c7e25f201f3e23dd6a3ea30f8f3bd439036bbc97e658fb6",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/host-loop/molecular-messages.md": {
+      "sha256": "7effa1d739353778b6f6d276d5abaf38ff703994c2366df68bb2b73fd588fd3b",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
     "openwiki/index.md": {
       "sha256": "674028940cf435a59c488d7076608aa25823bc72198635f0a3de014c06acad38",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/kb-ingest/index.md": {
+      "sha256": "a89fd4c9b1f9a823e97d67bdc1951202663d859f20dba27db1f7be7e99ba10b0",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/kb-ingest/official-port.md": {
+      "sha256": "d5b4781b91f85359c33a8765def0636e98e94fb6c283671c8b75fa21233ac294",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/kb-ingest/overview.md": {
+      "sha256": "15ffcd95611114e7477d14a9dc50272028c3acb0e3e3625fa0c11530ac477705",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/migration/engine.md": {
+      "sha256": "4cb38da89785f71e2fbce4ff09e8132acda7935e6e707564d4815dd54669dbb7",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/migration/history.md": {
+      "sha256": "d87646c3a48d8b87d409fb119bb4b38036e577f349bb866b91c1b7ef0b3dbe42",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/migration/index.md": {
+      "sha256": "289d3bc875e1f0b9e76620012ae3cf1b3337835a3bab1ec73965ecba65e3074d",
       "hash_source": "index",
       "kind": "artifact",
       "loops": [
@@ -709,6 +893,22 @@
       "sha256": "4bc3f0899bf5b569c86c21bc6a135e5ba85b51bca96fe7313dc01423a881370e",
       "hash_source": "index",
       "kind": "context",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/skills-surface.md": {
+      "sha256": "763a01efb35e396c04158f67551b621100e19bc8a792b7794bcdded78d8af198",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "openwiki"
+      ]
+    },
+    "openwiki/testing.md": {
+      "sha256": "7d6abc51e1e99d765198b05f77694edead4ba2f149025d7b8856bbf792c37571",
+      "hash_source": "index",
+      "kind": "artifact",
       "loops": [
         "openwiki"
       ]
@@ -858,7 +1058,7 @@
       ]
     },
     "proof_workflow/prove_openwiki.sh": {
-      "sha256": "daffd26ebdce1250447c962a3e9880c1cee0cc61a1434c53f1702b425c70dc1a",
+      "sha256": "164bc709a7260a1f6bd1565e5dda2c890360e868236d730d17dc0b67153e5c01",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

@@ -112,6 +112,25 @@ prove_artifact wiki-architecture openwiki/architecture.md \
 prove_artifact last-update openwiki/.last-update.json \
   "finalize -> gitHead stamp; bootstrap.sh reads it to decide wiki freshness"
 
+# EVERY other tracked page, not just the three named above. Measured before it
+# was fixed: 29 files live under openwiki/ and 4 were in the manifest, so a
+# regeneration that rewrote the other 25 moved no digest and drew no lineage
+# trailer — in the loop whose entire purpose is producing those pages. A wiki
+# whose terminal artifact is mostly unmeasured cannot answer "did the rewrite
+# land", which is the question this loop exists to answer.
+#
+# Derived from `git ls-files`, never listed here: pages are added and removed by
+# the regeneration itself, and a written-out list would be stale on the next run.
+# The four already named above are skipped, because hashing a path twice inside
+# one proof records one claim as two and makes a single edit look like two moves.
+for _p in $(git -C "$PROVE_ROOT" ls-files 'openwiki/*'); do
+  case "$_p" in
+    openwiki/index.md|openwiki/architecture.md|openwiki/.last-update.json|openwiki/quickstart.md) continue ;;
+  esac
+  prove_artifact "wiki-$(printf '%s' "${_p#openwiki/}" | tr '/.' '--')" "$_p" \
+    "regenerated as-built page: a rewrite of it must move this digest and name it in the commit trailer"
+done
+
 # Commit traceability of the wiki itself: the gitHead it was generated at must
 # resolve in this repository, and its distance to HEAD is the staleness fact
 # bootstrap.sh warns on. Undecidable is a named red, not a shrug.

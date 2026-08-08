@@ -77,6 +77,7 @@ sh      loopctl/loopctl.sh openwiki test                         # 入口對照�
 | skill 名字撞到本地 fork | `.agents/skills/repo-wiki-converge` 應該是指向單一 checkout 的 symlink。**同名不同源＝幻覺等價** → 改名分家為 `openwiki-port` |
 | dry-run 全綠、真跑 `changed_wiki_paths=0` | **量測缺陷，不是管線缺陷。** 舊的邊界閘比對兩份 `git status --porcelain`，而一個**本來就髒**的檔案不論被改寫多少，porcelain 行都是同一行 ` M path` → 新增行為空 → 計數 0。收據裡那次跑了 **53 個 turn**、模型回報 17 頁全部完成。改成比對**內容雜湊** |
 | 同一個盲點的另一半（更嚴重） | 擋「寫到 `openwiki/` 之外」的 stray 檢查用的是同一份差集：**目標檔案只要本來就髒，這道防線就直接被繞過**。內容雜湊修掉兩半 |
+| 改寫 wiki 卻沒有任何 digest 動 | **29 個檔只有 4 個在 manifest 裡**（index／architecture／quickstart／.last-update）。其餘 25 頁改了不動 digest、不畫 trailer——**在一個以產出這些頁為唯一目的的迴圈裡**。改成從 `git ls-files` 導出全部頁面（頁面由重生流程自己增刪，寫死清單下一輪就過期）|
 
 ### 邊界（刻意不做的）
 
