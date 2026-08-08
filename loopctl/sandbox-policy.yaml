@@ -63,15 +63,43 @@ network_policies:
     binaries:
       - path: /usr/local/bin/codex
 
+  # The loops, as MCP. host.docker.internal is the runtime's alias for this
+  # machine and is named ONLY for this port — Forgejo on :3000 and everything
+  # else local stay unreachable, which control_sandbox_policy.sh proves rather
+  # than assumes.
+  #
+  # PER-TOOL RULES ARE NOT HERE, and their absence is the point. The installed
+  # gateway (0.0.59) matches MCP by method only: its policy parser rejects a
+  # `tool:` matcher outright ("field `tool`, expected one of `method`, `path`,
+  # `command`, `query`"). The newer source checkout documents per-tool matching,
+  # which is how it came to be written here first — a spec read from a newer tree
+  # than the one that is running.
+  #
+  # So this endpoint can only allow or deny tools/call AS A WHOLE, and the tool
+  # allowlist lives in mcp_server.py's DENIED_TOOLS instead. Authorization must
+  # not depend on a capability the running version lacks; when the gateway gains
+  # per-tool rules they become defence in depth over the server's check, never a
+  # replacement for it.
+  loopctl_mcp:
+    name: loopctl-mcp
+    endpoints:
+      - host: host.docker.internal
+        port: 8765
+        path: /mcp
+        protocol: rest
+        enforcement: enforce
+        access: full
+    binaries:
+      - path: /usr/bin/python3
+      - path: /usr/local/bin/codex
+
 # Deliberately absent, each for a stated reason rather than an oversight:
 #
 #   * no git remote, no package registry. A turn that needs to fetch is a turn
 #     whose inputs were not uploaded, and silently allowing the fetch would hide
 #     that the packet was incomplete.
-#   * no localhost egress. The gateway, the Forgejo instance and the databases on
-#     this machine are exactly the infrastructure an external caller must not
-#     reach; they are unreachable here because nothing names them.
-#   * no MCP endpoint yet. The proxy can enforce MCP method, tool and params
-#     rules, and pointing a sandbox at the loopctl MCP server without those rules
-#     written would hand it every tool the contract declares. That belongs in a
-#     policy of its own, after the tool-level rules are decided.
+#   * NO Forgejo, and no other localhost service. The issue tracker, the gateway
+#     and the databases on this machine are exactly the infrastructure an
+#     external caller must not reach. Naming host.docker.internal for the MCP
+#     port above does NOT open the host: the endpoint is per host-AND-port, and
+#     control_sandbox_policy.sh asserts :3000 still answers 403 to a sandbox.

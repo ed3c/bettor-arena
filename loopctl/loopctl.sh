@@ -96,15 +96,22 @@ case "${1:-}" in
       test)      sh "$ROOT/proof_workflow/control_container_surface.sh"; exit $? ;;
       *) echo "usage: loopctl.sh container <build|preflight|prove|test>" >&2; exit 64 ;;
     esac ;;
+  policy)
+    case "${2:-}" in
+      test) sh "$ROOT/proof_workflow/control_sandbox_policy.sh"; exit $? ;;
+      *) echo "usage: loopctl.sh policy test" >&2; exit 64 ;;
+    esac ;;
   mcp)
     # The external-facing layer. serve is long-lived on purpose: isolation comes
     # from the per-call worktree, not from restarting the process, and a fresh
     # process per call would throw away every cached prefix.
     case "${2:-}" in
       serve)
-        _ref=HEAD
-        [ "${3:-}" = "--ref" ] && [ -n "${4:-}" ] && _ref=$4
-        exec python3 "$HERE/mcp_server.py" --ref "$_ref" ;;
+        shift 2
+        # Flags forwarded as given: --ref pins the workflow, --http switches from
+        # stdio to a governable transport. Parsing them again here would be a
+        # second copy of the server's own argument handling.
+        exec python3 "$HERE/mcp_server.py" "$@" ;;
       test)  sh "$ROOT/proof_workflow/control_mcp_surface.sh"; exit $? ;;
       tools) python3 "$HERE/mcp_tools.py" "$CONTRACT"; exit $? ;;
       *) echo "usage: loopctl.sh mcp <serve [--ref <commit|tag>]|test|tools>" >&2; exit 64 ;;

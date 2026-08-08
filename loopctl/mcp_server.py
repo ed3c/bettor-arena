@@ -46,6 +46,21 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PROTOCOL = "2024-11-05"
 
+# Tools an external caller may not reach, each with the reason it is refused.
+# A denial that cannot say why is indistinguishable from a bug to whoever hits it.
+DENIED_TOOLS = {
+    "loopctl_openwiki_run": "it can spend real model turns and rewrite openwiki/ "
+    "in place; the CLI makes that opt-in behind --full, and an authorization layer "
+    "that cannot see flags must refuse the whole tool rather than trust the caller",
+    "loopctl_macro_run": "it registers git hooks and mutates git config in whatever "
+    "tree it runs in",
+    "loopctl_mcp_serve": "a caller able to start another server, unpinned, can "
+    "escape the pin it was given",
+    "loopctl_container_build": "it drives the host's container runtime",
+    "loopctl_container_preflight": "it spends a real model turn per driver to test "
+    "credentials, which is a host-operator action rather than a caller's",
+}
+
 
 def repo_root() -> Path:
     out = subprocess.run(
@@ -162,6 +177,21 @@ def handle(request: dict, root: Path, ref: str, tools: list[dict]) -> dict | Non
         tool = next((t for t in tools if t["name"] == params.get("name")), None)
         if tool is None:
             return error(rid, -32602, f"unknown tool {params.get('name')!r}")
+        if tool["name"] in DENIED_TOOLS:
+            # Authorization lives here, not only in the proxy. The installed
+            # OpenShell (0.0.59) matches MCP by method and has no per-TOOL
+            # matcher — its policy parser rejects `tool:` outright — so a policy
+            # can only allow or deny tools/call as a whole. Depending on a
+            # capability the running version lacks would mean exposing every
+            # declared tool while a comment claimed otherwise. When the proxy
+            # gains per-tool rules they become defence in depth over this, not a
+            # replacement for it.
+            return error(
+                rid,
+                -32602,
+                f"{tool['name']} is not available to external callers: "
+                f"{DENIED_TOOLS[tool['name']]}",
+            )
         try:
             argv = to_argv(tool, params.get("arguments") or {})
         except ValueError as exc:
@@ -223,6 +253,67 @@ def assert_ref_serves_json(root: Path, ref: str) -> None:
             "caller gets structured output, and that ref would refuse it as undeclared on every "
             "call. Pin a ref whose surface carries --json, or serve HEAD."
         )
+
+
+def serve_http(ref: str, port: int) -> int:
+    """The same handler over HTTP POST /mcp, so a policy can see the traffic.
+
+    stdio is unreachable from a sandbox and, more importantly, ungovernable: an
+    OpenShell policy inspects MCP over HTTP and can allow or deny per method and
+    per tool. A stdio server hands every declared tool to whoever spawns it,
+    because there is nothing in between to judge the call. This transport exists
+    so the authorization surface can be the policy rather than the client's good
+    manners.
+
+    Deliberately minimal and deliberately local: one path, POST only, JSON in and
+    JSON out. It binds to 127.0.0.1 — a sandbox reaches it through the runtime's
+    host alias, and anything wider would expose the loops to the network at large,
+    which is the opposite of the point.
+    """
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    root = repo_root()
+    assert_ref_serves_json(root, ref)
+    tools = load_tools(HERE / "contract.json")
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self) -> None:  # noqa: N802 - stdlib naming
+            if self.path.rstrip("/") != "/mcp":
+                self.send_error(404, "only /mcp is served")
+                return
+            length = int(self.headers.get("Content-Length") or 0)
+            try:
+                request = json.loads(self.rfile.read(length) or b"{}")
+            except json.JSONDecodeError as exc:
+                self._json(error(None, -32700, f"parse error: {exc}"))
+                return
+            response = handle(request, root, ref, tools)
+            # A notification has no reply; 202 says "accepted, nothing to read"
+            # rather than returning an empty body a client would try to parse.
+            if response is None:
+                self.send_response(202)
+                self.end_headers()
+                return
+            self._json(response)
+
+        def _json(self, payload: dict) -> None:
+            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *args) -> None:  # noqa: ANN002 - stdlib signature
+            return  # the trace that matters is the proxy's, not this one's
+
+    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    print(f"mcp: serving ref={ref} on http://127.0.0.1:{port}/mcp", file=sys.stderr)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    return 0
 
 
 def serve(ref: str) -> int:
@@ -343,6 +434,30 @@ def _selftest() -> int:
         True,
     )
 
+    # Server-side authorization, because the proxy on the installed version
+    # cannot do it. Both directions: a denied tool is refused WITH ITS REASON,
+    # and an allowed one is not caught by the same check — a deny list that
+    # catches everything is indistinguishable from a broken server.
+    denied = handle(
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {"name": "loopctl_openwiki_run", "arguments": {"request": "/r"}},
+        },
+        root,
+        "HEAD",
+        tools,
+    )
+    case("denied-tool-is-refused", "error" in denied, True)
+    case(
+        "denial-carries-its-reason",
+        "model turns" in denied.get("error", {}).get("message", ""),
+        True,
+    )
+    case("every-denial-has-a-reason", all(bool(v) for v in DENIED_TOOLS.values()), True)
+    case("allowed-tool-is-not-denied", "loopctl_micro_run" in DENIED_TOOLS, False)
+
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red
 
@@ -352,8 +467,14 @@ if __name__ == "__main__":
     if argv[:1] == ["--selftest"]:
         raise SystemExit(_selftest())
     ref = "HEAD"
-    if argv[:1] == ["--ref"] and len(argv) > 1:
-        ref = argv[1]
-    elif os.environ.get("LOOPCTL_REF"):
+    port = None
+    rest = list(argv)
+    while rest:
+        flag = rest.pop(0)
+        if flag == "--ref" and rest:
+            ref = rest.pop(0)
+        elif flag == "--http" and rest:
+            port = int(rest.pop(0))
+    if ref == "HEAD" and os.environ.get("LOOPCTL_REF"):
         ref = os.environ["LOOPCTL_REF"]
-    raise SystemExit(serve(ref))
+    raise SystemExit(serve_http(ref, port) if port else serve(ref))

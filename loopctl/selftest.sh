@@ -66,7 +66,7 @@ PY
     grep -oE '^      (build|preflight|prove)\)' "$_cli" | tr -d ' )' | sed 's|^|container/|'
     # `test)` appears under workflow, mcp and container; the shape alone cannot
     # say which, so all three are named here rather than guessed.
-    printf 'workflow/test\nmcp/test\ncontainer/test\n'
+    printf 'workflow/test\nmcp/test\ncontainer/test\npolicy/test\n'
   } | sort >"$_tmp/wired.txt"
   if _nonempty "declared-commands" "$_tmp/declared.txt" && _nonempty "wired-commands" "$_tmp/wired.txt"; then
     _only_contract=$(comm -23 "$_tmp/declared.txt" "$_tmp/wired.txt")

@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "1.9.0",
+  "surface_version": "2.0.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -314,6 +314,7 @@
       "target": "loopctl/mcp_server.py",
       "required": [],
       "optional": [
+        "--http",
         "--json",
         "--ref"
       ],
@@ -326,7 +327,10 @@
       },
       "writes": [
         "nothing in this tree — each call runs in a disposable worktree"
-      ]
+      ],
+      "opt_in": {
+        "--http": "serve MCP over HTTP on 127.0.0.1:<port> instead of stdio. Required for a sandbox to reach it AND for a policy to govern it: over stdio nothing sits between caller and server, so every declared tool is handed over"
+      }
     },
     {
       "loop": "mcp",
@@ -441,6 +445,25 @@
       },
       "writes": [
         "data/proof-workflow/container-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "policy",
+      "mode": "test",
+      "target": "proof_workflow/control_sandbox_policy.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it drives real denials from inside a sandbox",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every denial held · 2 something reachable that must not be · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
       ]
     }
   ],

@@ -1,12 +1,12 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "ca8049f7e040c614d498ef97321d56bf09dccc48",
+  "workflow_commit": "10d424626094ded055dd39da8f7f5c88ddb6f426",
   "workflow_tags": [],
   "built_from": {
-    "macro": "macro-ca8049f7e040-dirty.json",
-    "micro": "micro-ca8049f7e040-dirty.json",
-    "openwiki": "openwiki-ca8049f7e040-dirty.json",
-    "container": "container-ca8049f7e040-dirty.json"
+    "macro": "macro-10d424626094-dirty.json",
+    "micro": "micro-10d424626094-dirty.json",
+    "openwiki": "openwiki-10d424626094-dirty.json",
+    "container": "container-10d424626094-dirty.json"
   },
   "counts": {
     "artifact": 19,
@@ -14,7 +14,7 @@
     "harness": 37,
     "optional": 1
   },
-  "workflow_digest": "b655338a58b4b71fa8f96c5da440de6be15f779928a4db4750156092bc6130be",
+  "workflow_digest": "f74f2180037a8bdfa3178129c894ed7dd10c297a1057a706e7f1863ee6dba7b2",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -82,7 +82,7 @@
       "kind": "harness",
       "loop": "macro"
     },
-    "data/receipts/post-commit-ca8049f7e040c614d498ef97321d56bf09dccc48.json": {
+    "data/receipts/post-commit-10d424626094ded055dd39da8f7f5c88ddb6f426.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -353,7 +353,7 @@
       "loop": "container"
     },
     "loopctl/contract.json": {
-      "sha256": "44e539dc296dabe5de281d41ec9e8da704de218b15d048529be8933521cf3aa8",
+      "sha256": "36c7c3461065d4d1912ee7db034689407c651847eb7c1807362f37bf258c063e",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -371,7 +371,7 @@
       "loop": "macro"
     },
     "loopctl/loopctl.sh": {
-      "sha256": "177a7b87aa2dfa7ef55c1848556b881447364afb8207b2fbcdbab1bb65fa27ae",
+      "sha256": "9c0f3787f072093d662670bb97b0e28ff0ecb84f1cc2a6a535149fe14298e881",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
@@ -383,13 +383,13 @@
       "loop": "macro"
     },
     "loopctl/selftest.sh": {
-      "sha256": "4286e3971e83903562bc29624711c5e8a48b2cd28fab0016420d4ce6e3be1243",
+      "sha256": "84817f2bbd67396a5305bc7f27ca4cf4b2fbfad3a9a99d075fc736f9a4652545",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
     },
     "loopctl/surface.lock": {
-      "sha256": "1f37c040fce26de9f69d1f0c3c4372d08ba42e9174f996da8caac7d5a4d0570e",
+      "sha256": "6e788b55ef7cfb20c8e27952a473b075b09190a6fd6888c3d15b10425d22d115",
       "hash_source": "index",
       "kind": "harness",
       "loop": "macro"
