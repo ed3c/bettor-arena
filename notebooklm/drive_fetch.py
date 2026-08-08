@@ -21,8 +21,10 @@ reaches exactly those documents. There is no CLI flag for it; that is the whole
 reason this file exists.
 
 Exit: 0 with JSON on stdout · 3 the library is not importable under this
-interpreter · 4 Drive refused the file (not shared with this account, wrong id,
-or not a native Doc). Distinct codes because they are repaired in different
+interpreter · 4 Drive refused the file on the SIGNED-IN path (session no longer
+has access, wrong id, or not a native Doc — measured: an anonymous 401 says
+nothing about sharing, so the caller must not read this as "ask to be added").
+Distinct codes because they are repaired in different
 places, and the caller turns each into its own named state.
 """
 

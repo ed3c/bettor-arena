@@ -374,10 +374,22 @@ def stage_follow(url: str, file_id: str, out: Path, timeout: int) -> dict:
                 f"is unavailable. {(stderr or '').strip()[:300]}"
             )
         if rc == 4:
+            # Do NOT lead with "not shared". Measured 2026-08-08 against Drive as
+            # a second arrival: all eleven documents linked from the harvested
+            # sheet are owned by this very account, and an anonymous fetch still
+            # 401s on them. The gate is authentication, not sharing — so naming
+            # sharing first sent a reader to ask a colleague for permission on a
+            # file they already own. This message is the SIGNED-IN path failing,
+            # which is a different and narrower set of causes.
             raise Red(
-                "follow-not-accessible: Drive refused the document. It exists but "
-                "is not shared with this Google account, or it is not a native "
-                f"Google Doc. {(stderr or '').strip()[:300]}"
+                "follow-not-accessible: Drive refused the document on the "
+                "AUTHENTICATED path. Discriminate before repairing — `curl` the "
+                "URL: 404 means the id itself is wrong (go back and check what "
+                "produced hop1), while 401 only means sign-in is required and "
+                "says NOTHING about sharing. Real causes here are a session that "
+                "no longer has access, a file this account genuinely cannot "
+                "reach, or a file that is not a native Google Doc. "
+                f"{(stderr or '').strip()[:300]}"
             )
         if rc != 0:
             raise Red(
@@ -864,8 +876,8 @@ def _selftest() -> int:
         rc, _ = drive("no-links")
         case("empty-extraction-without-follow-is-green", rc, 0)
 
-        # A document that exists but is not shared with this account fails as
-        # its own state, and STILL takes the scratch notebook with it.
+        # A document the signed-in path cannot reach fails as its own state, and
+        # STILL takes the scratch notebook with it.
         log.write_text("", encoding="utf-8")
         rc, txt = drive("doc-not-shared", "--follow")
         case("unreachable-doc-is-2", rc, 2)
