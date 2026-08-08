@@ -87,7 +87,7 @@ prove_harness subagent-runner kb-ingest/port/openwiki_subagent.sh \
   "role + target -> isolated child process whose READ BOUNDARY is the directory it can see (worktree / wiki-only copy)"
 prove_harness worker-selftest kb-ingest/port/wiki_update_worker.sh \
   "fixture requests -> absent 64 / non-JSON 2 / foreign schema 2 / missing field 2 / good dry-run receipt / collision 64" \
-  -- sh kb-ingest/port/wiki_update_worker.sh --selftest
+  -- bash kb-ingest/port/wiki_update_worker.sh --selftest
 
 # --- deterministic harness: a real request through the real chain ------------
 # The newest request the micro loop left in the ledger, chosen by name so the
@@ -98,7 +98,7 @@ if [ -n "$REQUEST" ]; then
     "micro loop trigger.sh -> arena ledger -> this proof's dry-run input"
   prove_harness worker-dry-run kb-ingest/port/wiki_update_worker.sh \
     "real request -> parse + preflight + gate sandbox assembly (OPENWIKI_DRY_RUN) + post passes on a scratch copy, live wiki byte-compared untouched -> receipt" \
-    -- env WIKI_UPDATE_FORCE_RECEIPT=1 sh kb-ingest/port/wiki_update_worker.sh "$REQUEST" --dry-run
+    -- env WIKI_UPDATE_FORCE_RECEIPT=1 bash kb-ingest/port/wiki_update_worker.sh "$REQUEST" --dry-run
 else
   prove_artifact consumed-request "data/wiki-update/request-*.json" \
     "micro loop trigger.sh -> arena ledger (absent: run the micro loop's trigger.sh first)"

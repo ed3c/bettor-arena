@@ -42,6 +42,12 @@ prove_harness capture proof_workflow/lib/capture.sh \
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written
 # afterwards — which is exactly how the eleven-file gap happened, one file at a time.
+prove_harness shebang-match proof_workflow/lib/shebang_match.py \
+  "every proof/control invocation x the target's shebang -> a bash script run with sh is exit 2; a variable target is REPORTED as uncheckable rather than passed over" \
+  -- python3 proof_workflow/lib/shebang_match.py --selftest
+prove_harness no-bash-script-run-with-sh - \
+  "the scan itself, over the live tree: it caught prove_openwiki.sh running the bash worker with sh, which had been silent until a selftest case used process substitution" \
+  -- python3 proof_workflow/lib/shebang_match.py
 prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
   "tracked proof_workflow files x proof receipts at this commit -> covered / declared / UNCOVERED; a control receipt is refused as a source" \
   -- python3 proof_workflow/lib/harness_coverage.py --selftest

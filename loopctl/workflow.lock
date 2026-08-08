@@ -1,23 +1,23 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "6b5320bb80d43a2aa1dd276094f80cdf7f68af81",
+  "workflow_commit": "c187934ff44ab615ae6613d5f81bdb803c778f8f",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-6b5320bb80d4-dirty.json",
-    "harness": "harness-6b5320bb80d4-dirty.json",
-    "macro": "macro-6b5320bb80d4-dirty.json",
-    "micro": "micro-6b5320bb80d4-dirty.json",
-    "openwiki": "openwiki-6b5320bb80d4-dirty.json",
-    "policy": "policy-6b5320bb80d4-dirty.json",
-    "workflow": "workflow-6b5320bb80d4-dirty.json"
+    "container": "container-c187934ff44a-dirty.json",
+    "harness": "harness-c187934ff44a-dirty.json",
+    "macro": "macro-c187934ff44a-dirty.json",
+    "micro": "micro-c187934ff44a-dirty.json",
+    "openwiki": "openwiki-c187934ff44a-dirty.json",
+    "policy": "policy-c187934ff44a-dirty.json",
+    "workflow": "workflow-c187934ff44a-dirty.json"
   },
   "counts": {
     "artifact": 20,
     "context": 24,
-    "harness": 67,
+    "harness": 68,
     "optional": 1
   },
-  "workflow_digest": "cade453fd6543cdfd6c77bb790019a8f7475a0e75b91a489b7fdf0f07cc52f0c",
+  "workflow_digest": "a0baae7401426cafa54c2b93c6f1838cea4778f1bfae9fb039b7f6586463d322",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -117,7 +117,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-6b5320bb80d43a2aa1dd276094f80cdf7f68af81.json": {
+    "data/receipts/post-commit-c187934ff44ab615ae6613d5f81bdb803c778f8f.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -183,7 +183,7 @@
       ]
     },
     "kb-ingest/README.md": {
-      "sha256": "dbd6e3a47b0a1fd739173fee4350fe2e97411a2c6747c861c78d1e6354fab6fb",
+      "sha256": "1035beb590209afaa7e96a80b540ea7b579ad07b3b75e6d990f1be84b36af8fb",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -279,7 +279,7 @@
       ]
     },
     "kb-ingest/port/wiki_update_worker.sh": {
-      "sha256": "b64d79c7877f1a38bcf2185be7451126bef31f6cfc24556b5ed1445496c1b43e",
+      "sha256": "02179cd530dd68a682a58dec1647e4cf789907040dd12585943ef568750ddb31",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -762,7 +762,7 @@
       ]
     },
     "proof_workflow/control_openwiki_entry.sh": {
-      "sha256": "74cbc50bbe00bd2a0ef58649eb14227b991795faa8d5ae41aa794904f552073b",
+      "sha256": "f80c6421d491862ba5b956233a77d078583bba025f21513175eafc05478fdf52",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -794,7 +794,7 @@
       ]
     },
     "proof_workflow/lib/compare_control.py": {
-      "sha256": "a2dbb18a67c3f972be6cc9daaadce9e2b41cedb5a2826eec0426ab0bda7466f7",
+      "sha256": "7b68d190dfa288574fc066392d55ed85a49efecdadd01c87a6e08d2287a9a58a",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -817,6 +817,14 @@
         "harness"
       ]
     },
+    "proof_workflow/lib/shebang_match.py": {
+      "sha256": "fdf1addf31e5abda099108624658b27b30427fe181f51a2320cb85559dac8eaa",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "harness"
+      ]
+    },
     "proof_workflow/prove_container.sh": {
       "sha256": "1890da298ad57dff21e30f6dfb01313b7f2fce1bfff47585be2ba4097b021f22",
       "hash_source": "index",
@@ -826,7 +834,7 @@
       ]
     },
     "proof_workflow/prove_harness.sh": {
-      "sha256": "871779ce831260c480e834c113663de6b9181894e6fb0fe917e909b47cfcad23",
+      "sha256": "636fdabc562171d37a6ad31c7b6ae4c2e80232370a95f84b40ec35df637c3458",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -850,7 +858,7 @@
       ]
     },
     "proof_workflow/prove_openwiki.sh": {
-      "sha256": "665b7a3932eb09c4ce75e19991f9c5ccd082e53be116593d2b00be27896a25d4",
+      "sha256": "daffd26ebdce1250447c962a3e9880c1cee0cc61a1434c53f1702b425c70dc1a",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

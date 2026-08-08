@@ -40,7 +40,9 @@ def covered(path: str, proof_paths: set[str]) -> bool:
     return any(p == path or p.startswith(path.rstrip("/") + "/") for p in proof_paths)
 
 
-def proof_states(receipt_dir: Path, short: str) -> dict[str, str]:
+def proof_states(
+    receipt_dir: Path, short: str, loops: tuple[str, ...]
+) -> dict[str, str]:
     """Each covered path mapped to the STATE the proof recorded for it.
 
     Needed for one check only, and it is the check that keeps `prove_optional`
@@ -48,7 +50,7 @@ def proof_states(receipt_dir: Path, short: str) -> dict[str, str]:
     but whether it is optional is decided by the probe, not by the declaration.
     """
     states: dict[str, str] = {}
-    for name in ("macro", "micro", "openwiki", "container", "policy"):
+    for name in loops:
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
@@ -103,10 +105,107 @@ def _candidates(receipt_dir: Path, name: str, short: str) -> tuple[str, ...]:
     return tuple(reversed(clean_first)) if dirty else clean_first
 
 
-def excluded_ledgers(receipt_dir: Path, short: str) -> set[str]:
+def sibling_loops(repo: Path) -> tuple[str, ...]:
+    """Every loop that writes a receipt, read from the contract.
+
+    This was `("macro", "micro", "openwiki", "container", "policy")` written out
+    three times in this file — the THIRD copy of a list already deleted from
+    control_workflow_lineage.sh and from workflow_lock.py. Derived from what each
+    prove command writes, so `mcp` (which shares policy's receipt) resolves to
+    one name and a new loop cannot be missed by whoever forgets this file.
+    """
+    # Walk up to find the contract rather than assuming a fixed depth: the
+    # selftest hands in a temp fixture, and `receipt_dir.parent.parent` is only
+    # the repo root in the live layout. A wrong assumption there raised
+    # FileNotFoundError on a path nobody had written.
+    contract_path = None
+    for base in (repo, *repo.parents):
+        candidate = base / "loopctl" / "contract.json"
+        if candidate.is_file():
+            contract_path = candidate
+            break
+    if contract_path is None:
+        # Named, not defaulted: falling back to a written-out list is precisely
+        # the thing this function exists to delete.
+        raise SystemExit(
+            "compare FATAL: no loopctl/contract.json above %s — the loop list "
+            "cannot be derived, and guessing one would reintroduce the drift" % repo
+        )
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    marker = "-<commit12>"
+    names = set()
+    for cmd in contract["commands"]:
+        if cmd["mode"] != "prove":
+            continue
+        for written in cmd["writes"]:
+            base = Path(written).name
+            if marker in base:
+                names.add(base.split(marker)[0])
+    return tuple(sorted(names))
+
+
+def _fixture_contract(
+    base: Path,
+    names: tuple[str, ...] | None = None,
+    rdir: Path | None = None,
+    short: str = "",
+) -> None:
+    """A minimal contract for the selftest, so the derivation runs for real.
+
+    With `rdir`, the loop list is taken from the receipts that exist RIGHT NOW.
+    The sub-cases write their receipts progressively, so a contract fixed at the
+    top would name a loop whose receipt has not been created yet and trip the
+    missing-receipt FATAL on a fixture rather than on a defect.
+    """
+    if rdir is not None:
+        names = tuple(
+            sorted({p.name.split("-" + short)[0] for p in rdir.glob("*.json")})
+        )
+    d = base / "loopctl"
+    d.mkdir(exist_ok=True)
+    (d / "contract.json").write_text(
+        json.dumps(
+            {
+                "commands": [
+                    {
+                        "loop": n,
+                        "mode": "prove",
+                        "writes": [
+                            "data/proof-workflow/%s-<commit12>[-dirty].json" % n
+                        ],
+                    }
+                    for n in names
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def missing_receipts(
+    receipt_dir: Path, short: str, loops: tuple[str, ...]
+) -> list[str]:
+    """Loops with no receipt at this commit, clean or dirty.
+
+    A sibling proof that was never stamped used to read as a proof that declares
+    nothing, so a ledger the micro proof excludes by name came back "NOT covered"
+    and the openwiki control failed for something micro owns. That is an absence
+    collapsing into a verdict — the exact shape every gate here refuses — and it
+    cost a full diagnosis before the answer turned out to be "stamp micro too".
+    """
+    return [
+        name
+        for name in loops
+        if not any(
+            (receipt_dir / c).is_file() for c in _candidates(receipt_dir, name, short)
+        )
+    ]
+
+
+def excluded_ledgers(receipt_dir: Path, short: str, loops: tuple[str, ...]) -> set[str]:
     """Paths a proof declared out of scope by name, via a note carrying a path."""
     out: set[str] = set()
-    for name in ("macro", "micro", "openwiki", "container", "policy"):
+    for name in loops:
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
@@ -119,7 +218,9 @@ def excluded_ledgers(receipt_dir: Path, short: str) -> set[str]:
     return out
 
 
-def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
+def proof_coverage(
+    receipt_dir: Path, short: str, loops: tuple[str, ...]
+) -> dict[str, str]:
     """Every path covered by ANY proof at this commit, mapped to which proof.
 
     Not the macro receipt alone: the question is whether proof_workflow covers
@@ -128,7 +229,7 @@ def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
     fix in the wrong direction.
     """
     covered_by: dict[str, str] = {}
-    for name in ("macro", "micro", "openwiki", "container", "policy"):
+    for name in loops:
         for candidate in _candidates(receipt_dir, name, short):
             path = receipt_dir / candidate
             if not path.is_file():
@@ -146,7 +247,24 @@ def proof_coverage(receipt_dir: Path, short: str) -> dict[str, str]:
 
 def compare(rundir: Path, macro_receipt: Path, receipt_dir: Path, short: str) -> dict:
     macro = json.loads(macro_receipt.read_text(encoding="utf-8"))
-    covered_by = proof_coverage(receipt_dir, short)
+    loops = sibling_loops(receipt_dir)
+    absent = missing_receipts(receipt_dir, short, loops)
+    if absent:
+        # 64, never a coverage verdict. Without a sibling's receipt this cannot
+        # see what that sibling declares, and answering "not covered" would blame
+        # the wrong loop — which is exactly what happened: micro was unstamped,
+        # so a ledger micro excludes by name came back as an openwiki gap.
+        raise SystemExit(
+            "compare FATAL: no receipt at %s for %s — the sibling declarations "
+            "cannot be read, and reporting 'not covered' would blame the wrong "
+            "loop. Stamp them first: %s"
+            % (
+                short,
+                ", ".join(absent),
+                " ".join("sh loopctl/loopctl.sh %s prove" % a for a in absent),
+            )
+        )
+    covered_by = proof_coverage(receipt_dir, short, loops)
     proof_paths = set(covered_by)
 
     classes: dict[str, tuple[str, int]] = {}
@@ -186,7 +304,7 @@ def compare(rundir: Path, macro_receipt: Path, receipt_dir: Path, short: str) ->
         "proof_covered_paths": {p: covered_by[p] for p in sorted(proof_paths)},
         "required_uncovered": required_uncovered,
         "misdeclared_optional": misdeclared_optional(
-            classes, proof_states(receipt_dir, short)
+            classes, proof_states(receipt_dir, short, loops)
         ),
         "optional_uncovered": optional_uncovered,
     }
@@ -201,7 +319,24 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
     that no proof treats as a terminus, and an INPUT whose removal changes the
     exit code — load-bearing by measurement — that no proof hashes.
     """
-    covered_by = proof_coverage(receipt_dir, short)
+    loops = sibling_loops(receipt_dir)
+    absent = missing_receipts(receipt_dir, short, loops)
+    if absent:
+        # 64, never a coverage verdict. Without a sibling's receipt this cannot
+        # see what that sibling declares, and answering "not covered" would blame
+        # the wrong loop — which is exactly what happened: micro was unstamped,
+        # so a ledger micro excludes by name came back as an openwiki gap.
+        raise SystemExit(
+            "compare FATAL: no receipt at %s for %s — the sibling declarations "
+            "cannot be read, and reporting 'not covered' would blame the wrong "
+            "loop. Stamp them first: %s"
+            % (
+                short,
+                ", ".join(absent),
+                " ".join("sh loopctl/loopctl.sh %s prove" % a for a in absent),
+            )
+        )
+    covered_by = proof_coverage(receipt_dir, short, loops)
     proof_paths = set(covered_by)
 
     classes: dict[str, tuple[str, int]] = {}
@@ -240,7 +375,7 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
     # Declarations silence produced paths only; required inputs are matched
     # exactly above and can never be declared away, or the note kind would become
     # the way to stay green.
-    excluded = excluded_ledgers(receipt_dir, short)
+    excluded = excluded_ledgers(receipt_dir, short, loops)
     covered_ledgers = {ledger(p) for p in proof_paths} | excluded
     produced_uncovered = sorted(
         {p for p in produced if ledger(p) not in covered_ledgers}
@@ -260,7 +395,7 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
         "produced_uncovered": produced_uncovered,
         "required_uncovered": required_uncovered,
         "misdeclared_optional": misdeclared_optional(
-            classes, proof_states(receipt_dir, short)
+            classes, proof_states(receipt_dir, short, loops)
         ),
         "optional_uncovered": optional_uncovered,
     }
@@ -480,6 +615,9 @@ def _selftest() -> int:
         (rundir / "streams").mkdir(parents=True)
         rdir = Path(td) / "receipts"
         rdir.mkdir()
+        # A real contract inside the fixture, so sibling_loops() is exercised
+        # here too instead of being bypassed by a list written into the test.
+        _fixture_contract(Path(td), ("macro", "openwiki"))
         short = "0123456789ab"
         (rundir / "named-paths.txt").write_text(
             "a\nz/z.py\nopt/thing\n", encoding="utf-8"
@@ -509,6 +647,7 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare(rundir, macro, rdir, short)
         case("required-gap-detected", out["required_uncovered"], ["z/z.py"])
         case("covered-required-not-a-gap", "a" in out["required_uncovered"], False)
@@ -539,6 +678,7 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare(rundir, macro, rdir, short)
         case("sibling-proof-coverage-counts", out["required_uncovered"], [])
 
@@ -549,6 +689,7 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare(rundir, macro, rdir, short)
         case(
             "tools-uncovered-without-bootstrap-step",
@@ -559,7 +700,9 @@ def _selftest() -> int:
         # An unclassified path must FATAL, never default to optional.
         (rundir / "path-class.txt").write_text("a\trequired\t64\n", encoding="utf-8")
         try:
-            compare(rundir, macro, rdir, short)
+            _fixture_contract(Path(td), rdir=rdir, short=short) or compare(
+                rundir, macro, rdir, short
+            )
             case("unclassified-path-raises", False, True)
         except ValueError:
             case("unclassified-path-raises", True, True)
@@ -570,6 +713,9 @@ def _selftest() -> int:
         (rundir / "streams").mkdir(parents=True)
         rdir = Path(td) / "receipts"
         rdir.mkdir()
+        # A real contract inside the fixture, so sibling_loops() is exercised
+        # here too instead of being bypassed by a list written into the test.
+        _fixture_contract(Path(td), ("macro", "micro"))
         short = "0123456789ab"
         (rundir / "input-paths.txt").write_text(
             "f/needed.ts\nf/spare.ts\n", encoding="utf-8"
@@ -631,6 +777,7 @@ def _selftest() -> int:
             [],
         )
 
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare_micro(rundir, rdir, short)
         case(
             "dot-id-instance-covered-by-ledger",
@@ -670,6 +817,7 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare_micro(rundir, rdir, short)
         case("declared-exclusion-silences-produced", out["produced_uncovered"], [])
 
@@ -692,12 +840,38 @@ def _selftest() -> int:
             ),
             encoding="utf-8",
         )
+        _fixture_contract(Path(td), rdir=rdir, short=short)
         out = compare_micro(rundir, rdir, short)
         case(
             "declared-exclusion-cannot-cover-a-required-input",
             out["required_uncovered"],
             ["f/needed.ts"],
         )
+
+    # An unstamped sibling must FATAL, not answer. This is the case that would
+    # have caught the real one: micro was unstamped, its ledger declaration was
+    # unreadable, and the openwiki control reported micro's ledger as an openwiki
+    # gap — an absence turned into a verdict about the wrong loop.
+    with tempfile.TemporaryDirectory() as td:
+        rundir = Path(td) / "run"
+        (rundir / "streams").mkdir(parents=True)
+        rdir = Path(td) / "receipts"
+        rdir.mkdir()
+        short = "0123456789ab"
+        (rdir / f"macro-{short}.json").write_text(
+            json.dumps({"steps": []}), encoding="utf-8"
+        )
+        # The contract names a loop whose receipt was never written.
+        _fixture_contract(Path(td), ("macro", "micro"))
+        try:
+            compare_micro(rundir, rdir, short)
+            case("unstamped-sibling-is-fatal-not-a-verdict", "returned", "SystemExit")
+        except SystemExit as exc:
+            case(
+                "unstamped-sibling-is-fatal-not-a-verdict",
+                "micro" in str(exc) and "Stamp them first" in str(exc),
+                True,
+            )
 
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red

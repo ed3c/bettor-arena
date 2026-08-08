@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""No proof or control may run a bash-shebang script with `sh`.
+
+    shebang_match.py            scan the repo, exit 2 on any mismatch
+    shebang_match.py --selftest
+
+It works right up until the exercised path uses bash-only syntax, and then it
+fails as a syntax error inside a step that is about something else entirely. That
+is how it presented here: a new selftest case used process substitution, and the
+openwiki proof went red with `syntax error near unexpected token '('` against a
+worker whose shebang had said bash all along. Six sibling scripts were invoked
+the same way and were fine only because they really are `#!/bin/sh`.
+"""
+
+from __future__ import annotations
+
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+# `sh path/to/x.sh` but not `bash path/to/x.sh` — the negative lookbehind is the
+# whole point, since "sh " is a suffix of "bash ".
+# The lookbehind must exclude `.` and `/` as well as `-` and word characters, or
+# the `sh` ending `worker.sh` reads as the `sh` command and every line that
+# passes an argument after a script path becomes a hit.
+INVOKE = re.compile(r"(?<![-\w./])sh\s+(?:\"?\$?[\w{}/.\"-]*?)([\w.-]+\.sh)")
+
+# `sh "$SOME_VAR"` — the target is a variable, so no basename can be resolved and
+# the check above simply does not apply. Reported rather than passed over: a
+# blind spot nobody can see is worse than one that announces itself every run.
+UNRESOLVED = re.compile(r"(?<![-\w./])sh\s+\"?\$[\w{]")
+
+# `docker run --entrypoint sh <image>` is sh being made the container's entry
+# point, not sh being handed a host script. Named specifically rather than
+# widening the patterns, which would blind them to the real shape.
+ENTRYPOINT = re.compile(r"--entrypoint\s+sh\b")
+
+
+def bash_scripts(root: Path) -> set[str]:
+    out = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "*.sh"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.split()
+    named = set()
+    for rel in out:
+        p = root / rel
+        try:
+            first = p.read_text(encoding="utf-8", errors="replace").splitlines()[0]
+        except (OSError, IndexError):
+            continue
+        if "bash" in first:
+            named.add(Path(rel).name)
+    return named
+
+
+def scan(root: Path) -> tuple[list[str], list[str]]:
+    bash = bash_scripts(root)
+    bad, unresolved = [], []
+    for caller in sorted((root / "proof_workflow").glob("*.sh")):
+        for n, line in enumerate(caller.read_text(encoding="utf-8").splitlines(), 1):
+            if line.lstrip().startswith("#") or ENTRYPOINT.search(line):
+                continue
+            hits = list(INVOKE.finditer(line))
+            for hit in hits:
+                if hit.group(1) in bash:
+                    bad.append(
+                        "%s:%d runs %s (a bash script) with sh"
+                        % (caller.relative_to(root), n, hit.group(1))
+                    )
+            # Only when nothing WAS resolvable: `sh "$ROOT/loopctl/x.sh"` carries
+            # a literal basename after the variable and is fully checkable, so
+            # reporting it as unchecked would bury the genuine blind spots.
+            if not hits and UNRESOLVED.search(line):
+                unresolved.append(
+                    "%s:%d runs a VARIABLE target with sh — not checkable here"
+                    % (caller.relative_to(root), n)
+                )
+    return bad, unresolved
+
+
+def _selftest() -> int:
+    red = 0
+
+    def case(name, got, want):
+        nonlocal red
+        if got == want:
+            print("  [ok]   %s" % name)
+        else:
+            print("  [RED]  %s — got %r, want %r" % (name, got, want), file=sys.stderr)
+            red = 1
+
+    # The regex is the whole mechanism, so it is what gets planted against.
+    case(
+        "plain-sh-invocation-is-caught",
+        bool(INVOKE.search("  -- sh kb/worker.sh --selftest")),
+        True,
+    )
+    case(
+        "bash-invocation-is-not-caught",
+        bool(INVOKE.search("  -- bash kb/worker.sh --selftest")),
+        False,
+    )
+    # A variable target cannot be resolved to a basename, so it is REPORTED
+    # instead of checked. The first version asserted the opposite and went red
+    # against its own mechanism — the fix was to state the limit, not loosen it.
+    case(
+        "variable-target-is-reported-not-checked",
+        (
+            bool(INVOKE.search('capture x -- sh "$WT/$WORKER"')),
+            bool(UNRESOLVED.search('capture x -- sh "$WT/$WORKER"')),
+        ),
+        (False, True),
+    )
+    case(
+        "literal-target-is-not-reported-as-unresolved",
+        bool(UNRESOLVED.search("  -- sh kb/worker.sh")),
+        False,
+    )
+    # Three shapes that each produced a false positive in the live scan.
+    case(
+        "script-path-argument-is-not-an-sh-command",
+        bool(INVOKE.search('-- bash port/worker.sh "$REQUEST" --dry-run')),
+        False,
+    )
+    case(
+        "entrypoint-sh-is-a-container-entry-not-a-script",
+        bool(ENTRYPOINT.search('docker run --rm --entrypoint sh "$IMAGE" -c ...')),
+        True,
+    )
+    m2 = INVOKE.search('capture x -- sh "$ROOT/loopctl/container-run.sh" serve')
+    case(
+        "variable-prefix-with-literal-basename-is-still-checkable",
+        m2.group(1) if m2 else None,
+        "container-run.sh",
+    )
+    m = INVOKE.search("  -- sh proof_workflow/lib/prove.sh --selftest")
+    case("basename-is-extracted", m.group(1) if m else None, "prove.sh")
+    # `sh` inside a word must not fire, or every mention of a *.sh path would.
+    case(
+        "dash-sh-suffix-is-not-a-match",
+        bool(INVOKE.search("use --dry-run-sh worker.sh")),
+        False,
+    )
+
+    if red == 0:
+        print("SELFTEST GREEN")
+        return 0
+    print("SELFTEST RED", file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    if sys.argv[1:2] == ["--selftest"]:
+        sys.exit(_selftest())
+    root = Path(
+        subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    )
+    problems, unresolved = scan(root)
+    for p in problems:
+        print("shebang-mismatch: %s" % p, file=sys.stderr)
+    for u in unresolved:
+        print("shebang-unchecked: %s" % u)
+    if problems:
+        sys.exit(2)
+    print(
+        "no proof or control runs a bash script with sh (%d variable target(s) not checkable)"
+        % len(unresolved)
+    )

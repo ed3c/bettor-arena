@@ -50,7 +50,7 @@ sh      loopctl/loopctl.sh openwiki test                         # 入口對照�
 | `sync_prompts --check` 非零 | 要嘛 upstream 升級了，要嘛有人手改了 `openwiki/`。**看 `git diff`，別重抄** |
 | gate 在別的 repo 綠、在這裡紅（或反過來） | 你把 MODULE_ROOT 與 HOST_ROOT 塌成一個了（法則 1） |
 | 搬移測試某一格回錯 exit code | 那個失敗模式**不再可辨識**——修出口，不要放寬斷言 |
-| dry-run 全綠但真跑什麼都沒改 | 先看 `changed_wiki_paths`；0 是訊號不是成功 |
+| dry-run 全綠但真跑什麼都沒改 | 看 `changed_wiki_paths`，並確認你讀的是**內容**差異不是 status 差異（§3 有這個缺陷的全貌） |
 | skill 名字解析到本地 fork | 指回單一 checkout；同名不同源是幻覺等價 |
 
 ## §3 Harness
@@ -75,7 +75,8 @@ sh      loopctl/loopctl.sh openwiki test                         # 入口對照�
 | gate 綠但其實什麼都沒檢查到 | 只有正控制。**「通過」與「解析不到卻回傳成功」不可分辨** → 每個失敗模式各給一個 exit code |
 | worker 以降級狀態默默跑完 | 它應該 re-exec 進 bash 而不是繼續跑（`ca72a92`）——**降級不可以是靜默的** |
 | skill 名字撞到本地 fork | `.agents/skills/repo-wiki-converge` 應該是指向單一 checkout 的 symlink。**同名不同源＝幻覺等價** → 改名分家為 `openwiki-port` |
-| dry-run 全綠、真跑 `changed_wiki_paths=0` | **未查明，仍開著。** `openwiki/` 落後主線 27 個 commit／224 檔。0 是訊號，不是成功 |
+| dry-run 全綠、真跑 `changed_wiki_paths=0` | **量測缺陷，不是管線缺陷。** 舊的邊界閘比對兩份 `git status --porcelain`，而一個**本來就髒**的檔案不論被改寫多少，porcelain 行都是同一行 ` M path` → 新增行為空 → 計數 0。收據裡那次跑了 **53 個 turn**、模型回報 17 頁全部完成。改成比對**內容雜湊** |
+| 同一個盲點的另一半（更嚴重） | 擋「寫到 `openwiki/` 之外」的 stray 檢查用的是同一份差集：**目標檔案只要本來就髒，這道防線就直接被繞過**。內容雜湊修掉兩半 |
 
 ### 邊界（刻意不做的）
 
