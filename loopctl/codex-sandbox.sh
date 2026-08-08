@@ -100,6 +100,16 @@ if exp is None:
 left = exp - time.time()
 if left <= 0:
     sys.exit("FATAL: the codex session expired %d hours ago — run any codex command on the host to refresh it" % (-left // 3600))
+# The session lasts ~10 days and the host's codex renews it lazily, so the
+# failure mode is not "it expires mid-turn" but "nobody ran codex on the host for
+# a fortnight". Warning inside the last day turns that into something visible
+# while it is still free to fix, instead of a FATAL on the morning it matters.
+if left < 24 * 3600:
+    print(
+        "WARNING: %d hours of session left. Run any codex turn on the host to renew it "
+        "(`codex exec -s read-only 'ok'`) before it becomes a FATAL here." % (left // 3600),
+        file=sys.stderr,
+    )
 print("session ok: %d hours of validity left" % (left // 3600), file=sys.stderr)
 print(json.dumps(d, separators=(",", ":")))
 PY
@@ -182,17 +192,33 @@ mkdir -p "$HOME/.codex"
 printenv CODEX_AUTH_JSON >"$HOME/.codex/auth.json"
 chmod 600 "$HOME/.codex/auth.json"
 cd '"$WORK"' || exit 64
-touch /tmp/codex-stamp
+
+# A hashed manifest either side of the turn, not a timestamp sweep. `find -newer`
+# cannot see a DELETION, and a packet that silently drops removals is worse than
+# one that admits it: whoever applies it re-creates the file the agent decided to
+# remove. 504 tracked files makes hashing twice free, so there is no reason to
+# take the lossy reading.
+manifest() { find . -type f -not -path "./.git/*" -not -name codex-changes.tar -exec sha256sum {} + 2>/dev/null | sort; }
+manifest >/tmp/before.txt
+
 codex exec --skip-git-repo-check -s danger-full-access "$CODEX_PROMPT"
 rc=$?
-# Changed files only. Deletions are NOT captured — stated so the packet is not
-# read as a complete diff. There is no .git in an upload sandbox to diff against.
-find . -type f -newer /tmp/codex-stamp -not -name codex-changes.tar >/tmp/changed.txt
-if [ -s /tmp/changed.txt ]; then
-  tar cf /sandbox/codex-changes.tar -T /tmp/changed.txt
-  echo "changed files: $(wc -l </tmp/changed.txt)"
-else
-  echo "changed files: 0"
+
+manifest >/tmp/after.txt
+# Only-in-after by whole line = created or edited. Only-in-before by PATH =
+# deleted; comparing paths rather than lines here, or every edit would also
+# read as a deletion.
+comm -13 /tmp/before.txt /tmp/after.txt | sed "s/^[0-9a-f]*  //" >/tmp/changed.txt
+sed "s/^[0-9a-f]*  //" /tmp/before.txt | sort >/tmp/bp.txt
+sed "s/^[0-9a-f]*  //" /tmp/after.txt  | sort >/tmp/ap.txt
+comm -23 /tmp/bp.txt /tmp/ap.txt >/tmp/_codex_deleted.txt
+
+echo "changed files: $(wc -l </tmp/changed.txt)"
+echo "deleted files: $(wc -l </tmp/_codex_deleted.txt)"
+if [ -s /tmp/changed.txt ] || [ -s /tmp/_codex_deleted.txt ]; then
+  cp /tmp/_codex_deleted.txt ./_codex_deleted.txt
+  tar cf /sandbox/codex-changes.tar -T /tmp/changed.txt ./_codex_deleted.txt
+  rm -f ./_codex_deleted.txt
 fi
 exit $rc
 '
@@ -210,7 +236,14 @@ if openshell sandbox download "$NAME" /sandbox/codex-changes.tar "$OUT" >/dev/nu
    [ -f "$OUT/codex-changes.tar" ]; then
   ( cd "$OUT" && tar xf codex-changes.tar && rm -f codex-changes.tar )
   echo "changes -> $OUT"
-  find "$OUT" -type f | sed 's|^|  |'
+  find "$OUT" -type f -not -name _codex_deleted.txt | sed 's|^|  +|'
+  # Deletions travel as a LIST, not as absences: a tar cannot carry a file that
+  # is not there, so applying this packet without reading it would restore
+  # whatever the turn removed.
+  if [ -s "$OUT/_codex_deleted.txt" ]; then
+    echo "deleted by the turn (not applied automatically — remove these yourself):"
+    sed 's|^|  -|' "$OUT/_codex_deleted.txt"
+  fi
 else
   echo "no changed files came back (the turn wrote nothing, or it never got that far)"
 fi

@@ -1,15 +1,15 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "58355f68a560b6f4ae3e4b1da6a69e226bc6b4bf",
+  "workflow_commit": "c548b85ff2d4f419976cbbb9fdb68dbe5586f46c",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-58355f68a560-dirty.json",
-    "harness": "harness-58355f68a560-dirty.json",
-    "macro": "macro-58355f68a560-dirty.json",
-    "micro": "micro-58355f68a560-dirty.json",
-    "openwiki": "openwiki-58355f68a560-dirty.json",
-    "policy": "policy-58355f68a560-dirty.json",
-    "workflow": "workflow-58355f68a560-dirty.json"
+    "container": "container-c548b85ff2d4-dirty.json",
+    "harness": "harness-c548b85ff2d4-dirty.json",
+    "macro": "macro-c548b85ff2d4-dirty.json",
+    "micro": "micro-c548b85ff2d4-dirty.json",
+    "openwiki": "openwiki-c548b85ff2d4-dirty.json",
+    "policy": "policy-c548b85ff2d4-dirty.json",
+    "workflow": "workflow-c548b85ff2d4-dirty.json"
   },
   "counts": {
     "artifact": 19,
@@ -17,7 +17,7 @@
     "harness": 60,
     "optional": 1
   },
-  "workflow_digest": "72879fe5c9962822d7dc17096565c04cd6bcadf10e821077a1b8484e6b4955c9",
+  "workflow_digest": "f4aa4d82f67a4d5e1353896800dd2d9bdf5616c187c6aad4590a79326b20b4a8",
   "files": {
     ".githooks/commit-msg": {
       "sha256": "ef00e571d655216dae0e365cea36477aecda16030b43abc5e402f04917240a26",
@@ -109,7 +109,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-58355f68a560b6f4ae3e4b1da6a69e226bc6b4bf.json": {
+    "data/receipts/post-commit-c548b85ff2d4f419976cbbb9fdb68dbe5586f46c.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -455,7 +455,7 @@
       ]
     },
     "loopctl/codex-sandbox.sh": {
-      "sha256": "7d252ddbd04978f0909ed32b4c0fc2a7800c850e4284f3c072178a06162881fe",
+      "sha256": "715e53126a0ab7cfd4bda997d4940e5f29a841b789beb87f777bce6c60cebd4c",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -618,7 +618,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "9c3ab3867f99eaa6980e134b465841c8849d67f6c4209e677e5c965930f0ee15",
+      "sha256": "0a9a34024ee3bb826975e20059ab8685fc2bd5003cfeb0476895c2bd9085eef7",
       "hash_source": "index",
       "kind": "context",
       "loops": [
