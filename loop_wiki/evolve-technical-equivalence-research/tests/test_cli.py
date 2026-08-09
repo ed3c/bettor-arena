@@ -19,6 +19,7 @@ CLI = ARENA / "loopctl" / "loopctl.sh"
 sys.path.insert(0, str(ROOT))
 from equivalence import (  # noqa: E402
     ContractError,
+    JsonlAdapterSession,
     VerificationFailure,
     assert_head_bound,
     collect_live_research,
@@ -259,6 +260,70 @@ class EquivalenceCliTest(unittest.TestCase):
             )
         self.assertFalse(run_dir.joinpath("adapter-execution-mirror").exists())
         self.assertFalse(run_dir.joinpath("adapter-side-effects").exists())
+
+    def test_jsonl_adapter_session_keeps_one_provider_connection(self) -> None:
+        source = self.base / "session-source"
+        source.mkdir()
+        (source / "state.js").write_text(
+            "export const SCREENSHOT_DIR = '/outside-screens';\n"
+            "export const GEMINI_RESEARCH_DIR = '/outside-research';\n"
+            "export const CHROME_PORT = 9333;\n",
+            encoding="utf-8",
+        )
+        (source / "ui.js").write_text(
+            "export async function runGeminiDeepResearch(page, text) {\n"
+            "  console.log(`provider:${text}`);\n"
+            "  return { reportMd: `${text}|connections=${page.connections}` };\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (source / "package.json").write_text('{"type":"module"}\n', encoding="utf-8")
+        module = source / "node_modules" / "puppeteer-core"
+        module.mkdir(parents=True)
+        (module / "package.json").write_text(
+            '{"name":"puppeteer-core","type":"module","exports":"./index.js"}\n',
+            encoding="utf-8",
+        )
+        (module / "index.js").write_text(
+            "let connections = 0;\n"
+            "export default { connect: async () => {\n"
+            "  connections += 1;\n"
+            "  return {\n"
+            "    newPage: async () => ({ connections, close: async () => {} }),\n"
+            "    disconnect: async () => {},\n"
+            "  };\n"
+            "} };\n",
+            encoding="utf-8",
+        )
+        run_dir = self.base / "session-run"
+        run_dir.mkdir()
+        mirror, evidence = materialize_adapter_mirror(
+            source,
+            run_dir,
+            ["ui.js", "state.js", "package.json"],
+            ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"],
+            ROOT / "gemini_session.mjs",
+        )
+        self.assertIn("gemini_session.mjs", evidence["mirror_files"])
+        session = JsonlAdapterSession(
+            ["node", str(mirror / "gemini_session.mjs"), "--stdio-jsonl"],
+            mirror,
+            5,
+        )
+        try:
+            for index in (1, 2):
+                prompt = run_dir / f"prompt-{index}.md"
+                output = run_dir / f"output-{index}.md"
+                prompt.write_text(f"topic-{index}", encoding="utf-8")
+                response = session.invoke(f"gap-{index:02d}", prompt, output)
+                self.assertEqual(response["raw_exit"], 0)
+                self.assertIn(f"provider:topic-{index}", response["stdout_tail"])
+                self.assertEqual(
+                    output.read_text(encoding="utf-8"),
+                    f"topic-{index}|connections=1",
+                )
+        finally:
+            session.close(require_clean=True)
 
     def write_evidence(self, name: str, payload: dict) -> dict:
         path = self.base / f"{name}-receipt.json"

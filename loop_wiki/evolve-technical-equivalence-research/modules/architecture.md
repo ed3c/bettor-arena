@@ -1,7 +1,7 @@
 # Architecture
 
 The arena owns the host-neutral profile and compiler. Antigravity is a read-only
-historical baseline plus the allowlisted Gemini `--dr-once` carrier. Skill-bettor
+historical baseline plus the pinned Gemini provider implementation. Skill-bettor
 owns the apply authority and generated mirror. This separation keeps browser
 selectors/login state out of the semantic contract and prevents arena `run` from
 cross-repo mutation.
@@ -14,6 +14,13 @@ each is redirected into the run directory. The policy digest, transformed file
 digests and dependency link are retained in adapter-receipt v1.1. Missing or
 ambiguous exports fail before the mirror is created, and unlisted exports keep
 their pinned bytes.
+
+Primary and gap queries share one bettor-owned JSONL runner and one CDP
+connection. The runner is copied into the same mirror and its digest is part of
+the execution-policy identity; it calls the pinned `ui.js` provider entry and
+returns one response per prompt, so invocation receipts remain distinct. This
+avoids reconnecting to a Chrome debug endpoint that can stop answering HTTP
+after a completed Deep Research page disconnects.
 
 Long Gemini runs resume only at digest-bound invocation boundaries. A prior
 successful primary/gap result is reusable only when the request, source,

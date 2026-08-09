@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import selectors
 import shutil
 import subprocess
 import sys
@@ -850,6 +851,7 @@ def materialize_adapter_mirror(
     run_dir: Path,
     required_files: list[str],
     redirected_exports: list[str],
+    session_runner: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Copy pinned adapter bytes and redirect declared write paths inside the run."""
     source_peer = source_peer.resolve()
@@ -863,6 +865,12 @@ def materialize_adapter_mirror(
             raise ContractError(
                 f"adapter mirror source is not a regular file: {source}"
             )
+    if session_runner is not None and (
+        not session_runner.is_file() or session_runner.is_symlink()
+    ):
+        raise ContractError(
+            f"adapter session runner is not a regular file: {session_runner}"
+        )
 
     state_source = source_peer / "state.js"
     if "state.js" not in required_files:
@@ -899,11 +907,18 @@ def materialize_adapter_mirror(
         shutil.copyfile(source, target)
     state_path = mirror / "state.js"
     state_path.write_text(state_text, encoding="utf-8")
+    if session_runner is not None:
+        shutil.copyfile(session_runner, mirror / session_runner.name)
     (mirror / "node_modules").symlink_to(dependencies, target_is_directory=True)
     mirror_files = {
         name: "sha256:" + hashlib.sha256((mirror / name).read_bytes()).hexdigest()
         for name in required_files
     }
+    if session_runner is not None:
+        mirror_files[session_runner.name] = (
+            "sha256:"
+            + hashlib.sha256((mirror / session_runner.name).read_bytes()).hexdigest()
+        )
     evidence = {
         "mirror_root": str(mirror),
         "side_effect_root": str(side_effects),
@@ -914,6 +929,102 @@ def materialize_adapter_mirror(
     }
     evidence["execution_mirror_digest"] = digest(evidence, "execution_mirror_digest")
     return mirror, evidence
+
+
+class JsonlAdapterSession:
+    """One long-lived Node/CDP connection with one receipt edge per request."""
+
+    def __init__(self, argv: list[str], cwd: Path, timeout: int) -> None:
+        self.argv = argv
+        self.timeout = timeout
+        try:
+            self.process = subprocess.Popen(
+                argv,
+                cwd=cwd,
+                text=True,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                bufsize=1,
+            )
+        except OSError as exc:
+            raise ContractError(f"adapter session could not execute: {exc}") from exc
+
+    def invoke(self, label: str, prompt_path: Path, raw_path: Path) -> dict[str, Any]:
+        process = self.process
+        if process.stdin is None or process.stdout is None or process.stderr is None:
+            raise ContractError("adapter session pipes are absent")
+        request = {
+            "label": label,
+            "prompt_path": str(prompt_path),
+            "output_path": str(raw_path),
+        }
+        try:
+            process.stdin.write(json.dumps(request, ensure_ascii=False) + "\n")
+            process.stdin.flush()
+        except (BrokenPipeError, OSError) as exc:
+            stderr = process.stderr.read()[-8000:]
+            raise ContractError(
+                f"adapter session request pipe failed: {exc}; stderr={stderr}"
+            ) from exc
+        selector = selectors.DefaultSelector()
+        try:
+            selector.register(process.stdout, selectors.EVENT_READ)
+            ready = selector.select(self.timeout)
+        finally:
+            selector.close()
+        if not ready:
+            process.kill()
+            process.wait()
+            raise subprocess.TimeoutExpired(self.argv, self.timeout)
+        line = process.stdout.readline()
+        if not line:
+            returncode = process.wait()
+            stderr = process.stderr.read()[-8000:]
+            raise ContractError(
+                f"adapter session exited before response ({returncode}); stderr={stderr}"
+            )
+        try:
+            response = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ContractError("adapter session returned invalid JSONL") from exc
+        if (
+            not isinstance(response, dict)
+            or response.get("label") != label
+            or not isinstance(response.get("raw_exit"), int)
+        ):
+            raise ContractError(f"adapter session response contract mismatch: {label}")
+        return response
+
+    def close(self, *, require_clean: bool) -> None:
+        process = self.process
+        if process.stdin is not None and not process.stdin.closed:
+            try:
+                process.stdin.close()
+            except OSError:
+                pass
+        try:
+            returncode = process.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait()
+            if process.stdout:
+                process.stdout.close()
+            if process.stderr:
+                process.stderr.close()
+            if require_clean:
+                raise ContractError("adapter session did not close within 30 seconds")
+            return
+        failure = ""
+        if require_clean and returncode != 0:
+            stderr = process.stderr.read()[-8000:] if process.stderr else ""
+            failure = f"adapter session close failed ({returncode}); stderr={stderr}"
+        if process.stdout:
+            process.stdout.close()
+        if process.stderr:
+            process.stderr.close()
+        if failure:
+            raise ContractError(failure)
 
 
 def execute_gemini_adapter(
@@ -928,7 +1039,7 @@ def execute_gemini_adapter(
     declared = registry.get("adapters", {}).get(adapter_id)
     if (
         not isinstance(declared, dict)
-        or declared.get("allowlisted_entry") != "automate.js"
+        or declared.get("allowlisted_entry") != "gemini_session.mjs"
     ):
         raise ContractError(f"adapter is not allowlisted: {adapter_id}")
     required = declared.get("required_files")
@@ -996,11 +1107,21 @@ def execute_gemini_adapter(
         raise ContractError(
             f"adapter execution mirror has invalid redirected exports: {adapter_id}"
         )
+    runner_name = declared.get("session_runner")
+    runner_path = ROOT / str(runner_name)
+    if runner_name != "gemini_session.mjs" or not runner_path.is_file():
+        raise ContractError(f"adapter session runner is not allowlisted: {adapter_id}")
+    runner_sha256 = "sha256:" + hashlib.sha256(runner_path.read_bytes()).hexdigest()
     execution_policy_digest = digest(
         {
             "schema_version": "technical-equivalence-adapter-execution-policy@1.0.0",
             "adapter_id": adapter_id,
             "execution_mirror": mirror_policy,
+            "session_runner": {
+                "path": runner_name,
+                "sha256": runner_sha256,
+                "transport": "persistent-jsonl-v1",
+            },
         }
     )
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -1043,9 +1164,21 @@ def execute_gemini_adapter(
         attempt_root,
         [str(name) for name in required],
         redirected_exports,
+        runner_path,
     )
     invocations: list[dict[str, Any]] = []
     gap_ledger: dict[str, Any] | None = None
+    session: JsonlAdapterSession | None = None
+
+    def adapter_session() -> JsonlAdapterSession:
+        nonlocal session
+        if session is None:
+            session = JsonlAdapterSession(
+                ["node", str(execution_mirror / runner_path.name), "--stdio-jsonl"],
+                execution_mirror,
+                ADAPTER_TIMEOUT_SECONDS,
+            )
+        return session
 
     def invoke(label: str, prompt: str) -> str:
         prompt_path = run_dir / f"gemini-{label}-prompt.md"
@@ -1072,22 +1205,9 @@ def execute_gemini_adapter(
             )
             return raw
         prompt_path.write_text(prompt, encoding="utf-8")
-        argv = [
-            "node",
-            str(execution_mirror / "automate.js"),
-            "--dr-once",
-            str(prompt_path),
-            str(raw_path),
-        ]
+        argv = ["node", str(execution_mirror / runner_path.name), "--stdio-jsonl"]
         try:
-            completed = subprocess.run(
-                argv,
-                cwd=execution_mirror,
-                text=True,
-                capture_output=True,
-                check=False,
-                timeout=ADAPTER_TIMEOUT_SECONDS,
-            )
+            response = adapter_session().invoke(label, prompt_path, raw_path)
         except subprocess.TimeoutExpired as exc:
             invocations.append(
                 {
@@ -1102,6 +1222,20 @@ def execute_gemini_adapter(
                 }
             )
             raise AdapterExit(124, receipt_path) from exc
+        except ContractError as exc:
+            invocations.append(
+                {
+                    "label": label,
+                    "argv": argv,
+                    "prompt_sha256": "sha256:"
+                    + hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+                    "output_sha256": None,
+                    "raw_exit": 64,
+                    "stdout_tail": "",
+                    "stderr_tail": str(exc)[-8000:],
+                }
+            )
+            raise
         except OSError as exc:
             invocations.append(
                 {
@@ -1128,17 +1262,18 @@ def execute_gemini_adapter(
                     if raw
                     else None
                 ),
-                "raw_exit": completed.returncode,
+                "raw_exit": response["raw_exit"],
                 "structured_candidate_count": len(extract_structured_candidates(raw))
                 if raw
                 else 0,
                 "execution_mirror_digest": mirror_evidence["execution_mirror_digest"],
-                "stdout_tail": completed.stdout[-8000:],
-                "stderr_tail": completed.stderr[-8000:],
+                "transport": "persistent-jsonl-v1",
+                "stdout_tail": str(response.get("stdout_tail") or "")[-8000:],
+                "stderr_tail": str(response.get("stderr_tail") or "")[-8000:],
             }
         )
-        if completed.returncode != 0:
-            raise AdapterExit(completed.returncode, receipt_path)
+        if response["raw_exit"] != 0:
+            raise AdapterExit(response["raw_exit"], receipt_path)
         return raw
 
     def write_receipt(status: str, failure: str | None = None) -> dict[str, Any]:
@@ -1166,13 +1301,21 @@ def execute_gemini_adapter(
         reports, candidates, gap_ledger = collect_live_research(
             research["prompt"], invoke
         )
+        if session is not None:
+            session.close(require_clean=True)
     except AdapterExit as exc:
+        if session is not None:
+            session.close(require_clean=False)
         write_receipt("failed", str(exc))
         raise
     except VerificationFailure as exc:
+        if session is not None:
+            session.close(require_clean=False)
         write_receipt("failed", str(exc))
         raise VerificationFailure(f"{exc}; receipt={receipt_path}") from exc
     except ContractError as exc:
+        if session is not None:
+            session.close(require_clean=False)
         write_receipt("failed", str(exc))
         raise
 
@@ -1222,7 +1365,7 @@ def run(args: argparse.Namespace) -> int:
         "request_id": request["request_id"],
         "upstream_request_digest": request["request_digest"],
         "provider": "gemini-deep-research",
-        "adapter_id": "antigravity-dr-once-v1",
+        "adapter_id": "antigravity-dr-session-v1",
         "max_gap_topics": 6,
         "prompt": prompt,
         "prompt_digest": "sha256:" + hashlib.sha256(prompt.encode("utf-8")).hexdigest(),

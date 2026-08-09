@@ -1,8 +1,11 @@
 {
   "schema_version": "technical-equivalence-adapter-registry@1.0.0",
   "adapters": {
-    "antigravity-dr-once-v1": {
-      "allowlisted_entry": "automate.js",
+    "antigravity-dr-session-v1": {
+      "allowlisted_entry": "gemini_session.mjs",
+      "session_runner": "gemini_session.mjs",
+      "provider_entry": "ui.js#runGeminiDeepResearch",
+      "reference_entry": "automate.js#runDrOnce",
       "required_files": ["automate.js", "ui.js", "data.js", "state.js", "package.json", "package-lock.json"],
       "pinned_source": {
         "commit": "c151ac49b6d4dd664e61d7050e14a91e5dce3327",
@@ -23,8 +26,8 @@
       "execution_mirror": {
         "redirected_write_exports": ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"]
       },
-      "argv": ["node", "{execution_mirror}/automate.js", "--dr-once", "{prompt_file}", "{output_file}"],
-      "notes": "External browser/login runtime. Pinned source bytes execute from a disposable mirror; only declared write-path exports are redirected into the run. Source or policy drift requires explicit re-admission."
+      "argv": ["node", "{execution_mirror}/gemini_session.mjs", "--stdio-jsonl"],
+      "notes": "External browser/login runtime. A bettor-owned, digest-bound JSONL runner keeps one CDP connection across primary and gap invocations while calling the pinned ui.js provider entry. Only declared write-path exports are redirected into the run. Source, runner, or policy drift requires explicit re-admission."
     }
   }
 }

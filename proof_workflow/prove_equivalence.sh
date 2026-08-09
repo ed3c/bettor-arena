@@ -29,6 +29,8 @@ prove_context selftest-runner loop_wiki/evolve-technical-equivalence-research/se
 prove_context profile-validator loop_wiki/evolve-technical-equivalence-research/profile_validator.py "profile controls -> planted omissions and swaps"
 prove_context legacy-compare loop_wiki/evolve-technical-equivalence-research/legacy_compare.py "historical source -> byte and behavior comparison"
 prove_harness evidence-ledger-ignore loop_wiki/evolve-technical-equivalence-research/.gitignore "per-run evidence confinement -> canonical digest stability"
+prove_harness gemini-session-runner loop_wiki/evolve-technical-equivalence-research/gemini_session.mjs "prompt sequence -> one persistent CDP session with per-invocation JSONL responses" \
+  -- node --check loop_wiki/evolve-technical-equivalence-research/gemini_session.mjs
 prove_harness equivalence-runner loop_wiki/evolve-technical-equivalence-research/equivalence.py "request/result/evidence -> route state" \
   -- python3 loop_wiki/evolve-technical-equivalence-research/tests/test_cli.py
 prove_harness equivalence-drift loop_wiki/evolve-technical-equivalence-research/drift.py "mirror/provider observations -> hard block or rolling jitter state" \
