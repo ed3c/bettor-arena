@@ -555,6 +555,17 @@ class EquivalenceCliTest(unittest.TestCase):
         self.assertEqual(research["upstream_request_digest"], route["request_digest"])
         self.assertIn("技術實現等價物（必做）", research["prompt"])
         self.assertIn("P9 可觀測性", research["prompt"])
+        self.assertEqual(
+            research["candidate_contract"]["version"],
+            "technical-equivalence-candidate-contract@1.0.0",
+        )
+        self.assertRegex(
+            research["candidate_contract"]["digest"], r"^sha256:[0-9a-f]{64}$"
+        )
+        self.assertIn(
+            '`falsification_conditions:["non-empty falsifier"]`',
+            research["prompt"],
+        )
 
     def test_route_receipt_filename_is_bound_to_its_content_digest(self) -> None:
         route = self.first_route()
@@ -628,6 +639,154 @@ class EquivalenceCliTest(unittest.TestCase):
             },
         )
         self.assertEqual(verification["semantic_judge"]["status"], "NOT_EXERCISED")
+
+    def test_inference_shape_variants_are_losslessly_normalized_before_grounding(
+        self,
+    ) -> None:
+        first = self.first_route()
+        research = json.loads(
+            Path(first["artifacts"]["research_request"]).read_text(encoding="utf-8")
+        )
+        fixture = json.loads(
+            (ROOT / "tests/fixtures/provider-shape-drift.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(fixture["candidate_indexes"], [3, 7, 11])
+        payload = {
+            "schema_version": "technical-equivalence-research-result@1.0.0",
+            "upstream_research_request_digest": research["research_request_digest"],
+            "provider": "fixture-gemini",
+            "raw_markdown": "Provider returned inference candidates with shape-only drift.",
+            "candidates": fixture["candidates"],
+        }
+        payload["research_result_digest"] = canonical_digest_field(
+            payload, "research_result_digest"
+        )
+        result_path = self.base / "shape-variant-research-result.json"
+        original = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+        result_path.write_text(original, encoding="utf-8")
+
+        result = self.run_cli(
+            "equivalence",
+            "run",
+            "--request",
+            str(self.request()),
+            "--target-peer",
+            str(self.target),
+            "--research-result",
+            str(result_path),
+            "--json",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        route = json.loads(
+            Path(json.loads(result.stdout)["artifacts"][-1]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(route["state"], "candidate_ready")
+        verification = json.loads(
+            Path(route["artifacts"]["verification_bundle"]).read_text(encoding="utf-8")
+        )
+        candidates = {item["candidate_id"]: item for item in verification["candidates"]}
+        for source in fixture["candidates"]:
+            condition = source.get(
+                "falsification_conditions", source.get("falsifiable_conditions")
+            )
+            self.assertEqual(
+                candidates[source["candidate_id"]]["falsification_conditions"],
+                [condition],
+            )
+        self.assertEqual(
+            verification["candidate_normalization"],
+            [
+                {
+                    "candidate_id": "inferred-overlayfs-isolation-wrapper",
+                    "operations": [
+                        "rename:falsifiable_conditions->falsification_conditions",
+                        "wrap:falsification_conditions:string->array",
+                    ],
+                },
+                {
+                    "candidate_id": "kernel_lazytime_ima_evm_anchor",
+                    "operations": ["wrap:falsification_conditions:string->array"],
+                },
+                {
+                    "candidate_id": "inferred-ephemeral-mtime-wrapper",
+                    "operations": [
+                        "rename:falsifiable_conditions->falsification_conditions",
+                        "wrap:falsification_conditions:string->array",
+                    ],
+                },
+            ],
+        )
+        self.assertEqual(result_path.read_text(encoding="utf-8"), original)
+
+    def test_semantically_incomplete_candidate_lands_terminal_invalid_route(
+        self,
+    ) -> None:
+        first = self.first_route()
+        research = json.loads(
+            Path(first["artifacts"]["research_request"]).read_text(encoding="utf-8")
+        )
+        payload = {
+            "schema_version": "technical-equivalence-research-result@1.0.0",
+            "upstream_research_request_digest": research["research_request_digest"],
+            "provider": "fixture-gemini",
+            "raw_markdown": "The candidate contains no falsification content.",
+            "candidates": [
+                {
+                    "candidate_id": "missing-content",
+                    "claim": "No shape conversion can invent the missing condition.",
+                    "source_urls": ["https://example.com/missing"],
+                    "inference": True,
+                }
+            ],
+        }
+        payload["research_result_digest"] = canonical_digest_field(
+            payload, "research_result_digest"
+        )
+        result_path = self.base / "incomplete-research-result.json"
+        result_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        result = self.run_cli(
+            "equivalence",
+            "run",
+            "--request",
+            str(self.request()),
+            "--target-peer",
+            str(self.target),
+            "--research-result",
+            str(result_path),
+            "--json",
+        )
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        route = json.loads(
+            Path(json.loads(result.stdout)["artifacts"][-1]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(route["state"], "candidate_invalid")
+        self.assertEqual(
+            route["next_edge"],
+            "repair_candidate_contract_once_or_supply_a_new_research_result",
+        )
+        verification = json.loads(
+            Path(route["artifacts"]["verification_bundle"]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(verification["candidate_validation"]["status"], "failed")
+        self.assertEqual(
+            verification["candidate_validation"]["errors"],
+            [
+                {
+                    "candidate_id": "missing-content",
+                    "candidate_index": 0,
+                    "error": "inference candidate missing field: falsification_conditions",
+                }
+            ],
+        )
+        self.assertEqual(verification["candidates"][0]["grounding_state"], "invalid")
 
     def test_passed_fresh_judge_emits_candidate_sync_bundle_without_applying(
         self,
@@ -1008,9 +1167,13 @@ class EquivalenceCliTest(unittest.TestCase):
                 "candidate_id": label,
                 "claim": "fixture",
                 "inference": True,
+                "falsification_conditions": ["A public implementation is found"],
             }
             if label == "gap-02":
                 candidate["candidate_id"] = "gap-01"
+            candidate["source_urls"] = [
+                f"https://example.com/{candidate['candidate_id']}"
+            ]
             return (
                 topics
                 + "\n```json\n"
@@ -1033,6 +1196,94 @@ class EquivalenceCliTest(unittest.TestCase):
             collect_live_research(
                 "PRIMARY", lambda _label, _prompt: "no fenced candidate JSON"
             )
+
+    def test_live_collection_repairs_invalid_candidates_once(self) -> None:
+        calls: list[str] = []
+
+        def report(candidate: dict) -> str:
+            return (
+                "unparseable gap prose\n```json\n"
+                + json.dumps({"technical_equivalence_candidates": [candidate]})
+                + "\n```"
+            )
+
+        def invoke(label: str, _prompt: str) -> str:
+            calls.append(label)
+            if label == "repair-01":
+                return report(
+                    {
+                        "candidate_id": "repair-me",
+                        "claim": "The repair tried to replace the original claim.",
+                        "source_urls": ["https://example.com/repair"],
+                        "inference": True,
+                        "falsification_conditions": [
+                            "A public audited implementation is found"
+                        ],
+                        "code_audit": {
+                            "status": "passed",
+                            "receipt": "invented-by-repair",
+                        },
+                    }
+                )
+            return report(
+                {
+                    "candidate_id": "repair-me",
+                    "claim": "The repaired candidate retains its original claim.",
+                    "source_urls": ["https://example.com/repair"],
+                    "inference": True,
+                }
+            )
+
+        _reports, candidates, ledger = collect_live_research("PRIMARY", invoke)
+
+        self.assertEqual(calls, ["primary", "gap-01", "repair-01"])
+        self.assertEqual(
+            candidates[0]["falsification_conditions"],
+            ["A public audited implementation is found"],
+        )
+        self.assertEqual(
+            candidates[0]["claim"],
+            "The repaired candidate retains its original claim.",
+        )
+        self.assertNotIn("code_audit", candidates[0])
+        self.assertEqual(ledger["candidate_repair"]["max_attempts"], 1)
+        self.assertEqual(ledger["candidate_repair"]["attempts"], 1)
+        self.assertTrue(ledger["candidate_repair"]["errors_before"])
+        self.assertEqual(ledger["candidate_repair"]["errors_after"], [])
+        self.assertEqual(
+            ledger["candidate_repair"]["patches"],
+            [
+                {
+                    "candidate_id": "repair-me",
+                    "added_fields": ["falsification_conditions"],
+                }
+            ],
+        )
+
+    def test_live_collection_stops_after_one_unsuccessful_candidate_repair(
+        self,
+    ) -> None:
+        calls: list[str] = []
+
+        def invoke(label: str, _prompt: str) -> str:
+            calls.append(label)
+            candidate = {
+                "candidate_id": "still-invalid",
+                "claim": "No repair response may invent missing evidence silently.",
+                "source_urls": ["https://example.com/still-invalid"],
+                "inference": True,
+            }
+            return (
+                "unparseable gap prose\n```json\n"
+                + json.dumps({"technical_equivalence_candidates": [candidate]})
+                + "\n```"
+            )
+
+        _reports, _candidates, ledger = collect_live_research("PRIMARY", invoke)
+
+        self.assertEqual(calls, ["primary", "gap-01", "repair-01"])
+        self.assertEqual(ledger["candidate_repair"]["attempts"], 1)
+        self.assertEqual(len(ledger["candidate_repair"]["errors_after"]), 1)
 
     def test_resume_cache_reuses_only_digest_bound_successes(self) -> None:
         run_dir = self.base / "resume"
@@ -1138,6 +1389,41 @@ class EquivalenceCliTest(unittest.TestCase):
                 [receipt_path],
                 "sha256:request",
                 {"adapter_execution_policy_digest": "sha256:new"},
+            )
+
+    def test_completed_adapter_run_rejects_a_result_from_an_old_candidate_contract(
+        self,
+    ) -> None:
+        run_dir = self.base / "completed-old-candidate-contract"
+        run_dir.mkdir()
+        receipt_path = run_dir / "adapter-receipt.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "status": "passed",
+                    "adapter_receipt_digest": "sha256:receipt",
+                    "candidate_contract_digest": "sha256:new-contract",
+                }
+            ),
+            encoding="utf-8",
+        )
+        (run_dir / "research-result.json").write_text(
+            json.dumps(
+                {
+                    "upstream_research_request_digest": "sha256:request",
+                    "adapter_receipt_digest": "sha256:receipt",
+                    "candidate_contract_digest": "sha256:old-contract",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ContractError, "candidate contract mismatch"):
+            completed_adapter_run(
+                run_dir,
+                [receipt_path],
+                "sha256:request",
+                {"candidate_contract_digest": "sha256:new-contract"},
             )
 
     def test_sync_source_bytes_must_exist_unchanged_at_head(self) -> None:

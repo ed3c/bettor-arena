@@ -29,6 +29,17 @@ immutable receipt.
 Failed edges always rerun, every attempt gets a new receipt, and a run directory
 fails closed after three receipts.
 
+Provider transport completion and candidate-contract completion remain separate.
+The candidate contract has its own version/digest in the research request,
+execution-policy identity, adapter receipt and live result. Shape-only aliases
+are normalized with a ledger; semantic omissions receive one repair invocation.
+That repair may only add a missing `falsification_conditions` field: it cannot
+create or overwrite an identity, claim, source, audit, or probe field. If the
+candidate remains invalid, the loop writes
+`candidate_invalid` and stops. A passed
+carrier receipt is therefore reusable evidence, but never an instruction to
+replay an invalid result without a new edge.
+
 Hard drift (schema, digest, owner, required clause, dangling pointer) blocks on
 one observation. Soft provider jitter is measured only by live canaries: three
 initial runs, then against the median of the last five admitted runs; two

@@ -1,0 +1,62 @@
+{
+  "schema_version": "technical-equivalence-provider-shape-fixture@1.0.0",
+  "source_commit": "0b991629f9e121382bfd7aba6bad8dee3a22f6e9",
+  "source_result_sha256": "sha256:a1b60ad6b7c33c3087c0f7ad4c09c2bccecf37c3087d1c832cd195c5ee8f2542",
+  "candidate_indexes": [3, 7, 11],
+  "candidates": [
+    {
+      "candidate_id": "inferred-overlayfs-isolation-wrapper",
+      "claim": "Enforcing read-only OverlayFS mounts for input dependencies during stage execution eliminates race conditions where commands modify their own inputs prior to digest verification.",
+      "code_anchors": ["dvc/stage/__init__.py [推論]"],
+      "code_audit": {"status": "not_exercised"},
+      "commit": "c151ac49b6d4dd664e61d7050e14a91e5dce3327",
+      "equivalence_uncertain": true,
+      "falsifiable_conditions": "Falsified if an unprivileged user execution environment lacks kernel OverlayFS mount permissions or if file system read-only locks introduce unacceptable IOPS latency overhead.",
+      "inference": true,
+      "load_bearing": false,
+      "probe": {"status": "not_exercised"},
+      "repo_url": "https://github.com/treeverse/dvc",
+      "source_urls": ["https://github.com/treeverse/dvc/issues/11058"],
+      "spdx": "Apache-2.0",
+      "wrong_decision_costly": true
+    },
+    {
+      "candidate_id": "kernel_lazytime_ima_evm_anchor",
+      "claim": "在開啟 lazytime 掛載選項的 ext4 檔案系統上，結合 Linux IMA/EVM 擴充屬性 (xattr) 與 fanotify 事件，構建核心級物理鐵錨，實現免於 I/O 寫入風暴的即時雜湊一致性校驗。",
+      "code_anchors": [
+        "fs/ext4/inode.c:ext4_update_time",
+        "security/integrity/ima/ima_api.c:ima_collect_measurement"
+      ],
+      "code_audit": {"status": "not_exercised"},
+      "commit": "2e34b429a404675dc4fc4ad2ee339eea028da3ca",
+      "equivalence_uncertain": true,
+      "falsification_conditions": "若在非同步寫回（async writeback）及 lazytime 掛載模式下，突發斷電導致 Inode Disk Block 未刷盤，而資料區塊已寫入，系統重新開機後 lstat 返回舊 mtime 但檔內容已變更，若 IMA 雜湊未強制重新計算而直接信任舊 mtime，則驗證推論成立；反之若核心透過 i_version 或 journal 重新整理觸發強制失效，則推論被證偽。",
+      "inference": true,
+      "load_bearing": true,
+      "probe": {"status": "not_exercised"},
+      "repo_url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "source_urls": [
+        "https://patchwork.ozlabs.org/patch/409844/",
+        "https://kernel-internals.org/vfs/xattr/"
+      ],
+      "spdx": "GPL-2.0-only",
+      "wrong_decision_costly": true
+    },
+    {
+      "candidate_id": "inferred-ephemeral-mtime-wrapper",
+      "claim": "Applying a post-checkout mtime preservation wrapper with os.utime() restores pre-checkout POSIX timestamps on hardlinked workspace paths, neutralizing Snakemake DAG misjudgments.",
+      "code_anchors": ["dvc/repo/checkout.py [推論]"],
+      "code_audit": {"status": "not_exercised"},
+      "commit": "c151ac49b6d4dd664e61d7050e14a91e5dce3327",
+      "equivalence_uncertain": true,
+      "falsifiable_conditions": "Falsified if workspace file counts exceed 10^6 causing os.utime batch execution to violate the 30-second SLO, or if non-privileged container environments lack filesystem permission to alter symlink mtimes.",
+      "inference": true,
+      "load_bearing": false,
+      "probe": {"status": "not_exercised"},
+      "repo_url": "https://github.com/treeverse/dvc",
+      "source_urls": ["https://github.com/treeverse/dvc/issues/8602"],
+      "spdx": "Apache-2.0",
+      "wrong_decision_costly": true
+    }
+  ]
+}
