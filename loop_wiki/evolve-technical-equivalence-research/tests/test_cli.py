@@ -26,6 +26,7 @@ from equivalence import (  # noqa: E402
     load_resume_cache,
     plan_gap_prompts,
 )
+from profile_validator import validate_schema_inventory  # noqa: E402
 
 
 def canonical_digest(payload: dict) -> str:
@@ -171,6 +172,12 @@ class EquivalenceCliTest(unittest.TestCase):
                 "decision": "equivalent-on-measured-fixture",
             },
         )
+
+    def test_empty_schema_inventory_is_rejected(self) -> None:
+        empty = self.base / "empty-schemas"
+        empty.mkdir()
+        errors = validate_schema_inventory(empty)
+        self.assertIn("schema inventory is empty", errors)
 
     def write_evidence(self, name: str, payload: dict) -> dict:
         path = self.base / f"{name}-receipt.json"

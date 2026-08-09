@@ -15,3 +15,7 @@
 - A carrier-only live canary stops at `candidate_ready`; it is not an end-to-end
   admission and cannot enter the rolling jitter baseline until a fresh judge
   and external Human admit bind the observation.
+- `selftest` and the independent control receipt carry four separate assurance
+  states: `offline_surface`, `live_carrier`, `fresh_semantic_judge`, and
+  `human_admit`. Only the first is expected to pass without explicit live and
+  external-authority operations; `maximum_claim` is computed from these states.

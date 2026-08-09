@@ -89,7 +89,7 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 |---|---|
 | `lib/prove.sh` | 遍歷記錄器。步驟四種：`harness`（真跑記 exit／會改帳的只 hash 記 `hashed-not-run`）、`context`（概率側讀的文檔，缺席即 FATAL）、`artifact`（末端產物，tracked 判 HEAD）、`optional`（可容忍缺席的 host 資產）、`note`（具名排除）。`--selftest` 是它自己的負控 |
 | `prove_*.sh` | contract 宣告機制各自的遍歷；收據落 `data/proof-workflow/<loop>-<commit12>[-dirty].json`，帶 `proof_digest` |
-| `control_{macro,micro,openwiki}_entry.sh` | 三個入口的對照組：真跑入口、丟棄式 worktree 內逐一移走輸入分類 required／optional、比對三份收據的聯集 |
+| `control_{macro,micro,openwiki,equivalence}_entry.sh` | 四個入口的對照組：真跑入口、丟棄式 worktree 內逐一移走輸入分類 required／optional；equivalence 另以 Git inventory 對 proof 並把 offline/live/judge/Human 四態分記 |
 | `control_workflow_lineage.sh` | lineage 機制自己的對照組（感知／stale lock／未蓋章／局外檔靜默／tag 重放） |
 | `control_mcp_surface.sh` | MCP 包裝的對照組（pin 是否真擋住未提交工作／活樹零變動／無 worktree 殘留／未宣告參數被拒） |
 | `lib/capture.sh` | 真跑的物理痕跡：每條 argv／exit／stdout／stderr 落 `proof_workflow/data/<run_id>/`，各自 sha256 |

@@ -61,7 +61,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | `sandbox-policy.yaml` | deny-by-default 出口 ＋ binary 綁定 |
 | `codex-sandbox.sh` | codex 寫入角色（**真憑證進沙盒**，比 claude 那條弱，header 有寫） |
 | `automode-bench.sh` / `automode_report.py` | 成對自動許可實驗；跑之前先讀報表的判準 |
-| `evolve-technical-equivalence-research/` | hash-bound 技術觀點→實作等價物；Gemini live 明確 opt-in，sync bundle 停在人閘 |
+| `evolve-technical-equivalence-research/` | hash-bound 技術觀點→實作等價物；獨立 control 在 disposable HEAD 做消融與 planted defects；offline/live/judge/Human 四態分記，sync bundle 停在人閘 |
 
 ### 真的抓到過的缺陷（形似訊號時先查這裡）
 

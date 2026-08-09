@@ -14,3 +14,7 @@ independent audit/probe/rebuild step; only then can `judge_required` be reached.
 Exit 0 means a valid route state, including pending/human-required. Exit 2 means
 a declared check failed. Exit 64 means malformed contracts or absent required
 tools. A provider's non-zero exit is recorded verbatim in its adapter receipt.
+
+Assurance axes are not route aliases. Offline surface, live carrier, fresh
+semantic judge calibration, and external Human admit are recorded separately;
+an unexercised later edge never inherits an earlier green.

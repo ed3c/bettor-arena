@@ -322,7 +322,7 @@ case "$LOOP/$MODE" in
     [ "$_elive" -eq 1 ] && set -- "$@" --execute-gemini
     python3 "$ROOT/$TARGET" "$@" ;;
   equivalence/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
-  equivalence/test)  if has_flag --live "$@"; then EQUIVALENCE_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  equivalence/test)  if has_flag --live "$@"; then CONTROL_EQUIVALENCE_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;
 esac
 RC=$?

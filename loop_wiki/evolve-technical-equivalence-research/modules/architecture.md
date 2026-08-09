@@ -28,3 +28,10 @@ cryptographic proof against an actor that can rewrite both artifact and digest.
 Authority therefore comes from actor separation (researcher / fresh judge /
 external Human admit) and target-side revalidation. A hostile local writer is
 outside this receipt threat model and must be contained by the host sandbox.
+
+The traversal proof and behavior control are separate programs. The proof hashes
+the canonical path and runs deterministic seams; the control checks committed
+HEAD in a disposable worktree, derives the complete loop inventory from Git,
+ablates core inputs, and plants defects in digest, judge-authority, and committed-
+source guards. Both may be green while live carrier, fresh judge, or Human admit
+remain explicitly NOT_EXERCISED.

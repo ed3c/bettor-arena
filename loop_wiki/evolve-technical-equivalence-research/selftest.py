@@ -98,6 +98,24 @@ def load_history(path: Path) -> list[dict]:
     return value
 
 
+def assurance_states(*, red: bool, live: str) -> dict[str, str]:
+    live_state = live
+    maximum = (
+        "carrier_exercised_candidate_ready"
+        if live == "CARRIER_EXERCISED_PASS" and not red
+        else "offline_surface_implemented"
+        if not red
+        else "no_positive_claim"
+    )
+    return {
+        "offline_surface": "EXERCISED_FAIL" if red else "EXERCISED_PASS",
+        "live_carrier": live_state,
+        "fresh_semantic_judge": "NOT_EXERCISED_REQUIRES_TWO_BLINDED_BATCHES",
+        "human_admit": "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN",
+        "maximum_claim": maximum,
+    }
+
+
 def main() -> int:
     target_peer = Path(
         os.environ.get("SKILL_BETTOR_PEER", ROOT.parents[2] / "skill-bettor")
@@ -120,6 +138,7 @@ def main() -> int:
             "state": hard["state"],
         },
     ]
+    offline_red = any(check["exit"] != 0 for check in checks)
     live = "NOT_EXERCISED"
     live_root: Path | None = None
     if os.environ.get("EQUIVALENCE_LIVE") == "1":
@@ -218,9 +237,10 @@ def main() -> int:
         (ROOT / "profile" / "technical-equivalence.md").read_bytes()
     ).hexdigest()
     receipt = {
-        "schema_version": "technical-equivalence-selftest-receipt@1.0.0",
+        "schema_version": "technical-equivalence-selftest-receipt@1.1.0",
         "status": "failed" if red else "passed",
         "live_gemini": live,
+        "assurance": assurance_states(red=offline_red, live=live),
         "hard_drift": hard,
         "profile_sha256": f"sha256:{profile_sha}",
         "checks": checks,

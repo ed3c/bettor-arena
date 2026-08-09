@@ -4,10 +4,14 @@ PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
 . "$PROVE_HOME/lib/prove.sh"
 
 prove_init equivalence "hash-bound request -> research/verification/judge packets -> candidate sync bundle -> Human admit boundary"
+prove_context equivalence-agents loop_wiki/evolve-technical-equivalence-research/AGENTS.md "loop ownership and authority boundaries -> agent execution"
 prove_context equivalence-prompt loop_wiki/evolve-technical-equivalence-research/PROMPT.md "accepted intent -> task contract"
+prove_context equivalence-routes loop_wiki/evolve-technical-equivalence-research/ROUTES.md "packet state -> legal next edges and exit meanings"
 prove_context equivalence-profile loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md "technical viewpoint -> Gemini prompt and target mirror"
 prove_context legacy-prompt-baseline loop_wiki/evolve-technical-equivalence-research/profile/legacy-baseline.md "antigravity prompt bodies -> byte-exact migration comparison"
 prove_context exchange-formats loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md "packet state -> hash-bound next state"
+prove_context equivalence-architecture loop_wiki/evolve-technical-equivalence-research/modules/architecture.md "actor separation and resumability -> runtime boundaries"
+prove_context equivalence-readiness loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md "offline/live/judge/Human axes -> maximum honest claim"
 prove_context adapter-registry loop_wiki/evolve-technical-equivalence-research/adapter-registry.json "adapter id -> pinned source, package lock and installed dependency versions"
 prove_context request-schema loop_wiki/evolve-technical-equivalence-research/schemas/equivalence-request.schema.json "request bytes -> contract"
 prove_context research-request-schema loop_wiki/evolve-technical-equivalence-research/schemas/research-request.schema.json "research request bytes -> contract"
@@ -24,6 +28,7 @@ prove_context drift-tests loop_wiki/evolve-technical-equivalence-research/tests/
 prove_context selftest-runner loop_wiki/evolve-technical-equivalence-research/selftest.py "offline/live controls -> aggregate receipt and honest live state"
 prove_context profile-validator loop_wiki/evolve-technical-equivalence-research/profile_validator.py "profile controls -> planted omissions and swaps"
 prove_context legacy-compare loop_wiki/evolve-technical-equivalence-research/legacy_compare.py "historical source -> byte and behavior comparison"
+prove_harness evidence-ledger-ignore loop_wiki/evolve-technical-equivalence-research/.gitignore "per-run evidence confinement -> canonical digest stability"
 prove_harness equivalence-runner loop_wiki/evolve-technical-equivalence-research/equivalence.py "request/result/evidence -> route state" \
   -- python3 loop_wiki/evolve-technical-equivalence-research/tests/test_cli.py
 prove_harness equivalence-drift loop_wiki/evolve-technical-equivalence-research/drift.py "mirror/provider observations -> hard block or rolling jitter state" \

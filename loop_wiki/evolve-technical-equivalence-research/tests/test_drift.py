@@ -12,7 +12,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from drift import assess_hard_drift, assess_soft_jitter  # noqa: E402
-from selftest import live_observation  # noqa: E402
+from selftest import assurance_states, live_observation  # noqa: E402
 
 
 class DriftTest(unittest.TestCase):
@@ -26,6 +26,17 @@ class DriftTest(unittest.TestCase):
             },
             "critical_false_pass": critical,
         }
+
+    def test_offline_pass_does_not_promote_unexercised_authority_edges(self) -> None:
+        states = assurance_states(red=False, live="NOT_EXERCISED")
+        self.assertEqual(states["offline_surface"], "EXERCISED_PASS")
+        self.assertEqual(states["live_carrier"], "NOT_EXERCISED")
+        self.assertEqual(
+            states["fresh_semantic_judge"],
+            "NOT_EXERCISED_REQUIRES_TWO_BLINDED_BATCHES",
+        )
+        self.assertEqual(states["human_admit"], "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN")
+        self.assertEqual(states["maximum_claim"], "offline_surface_implemented")
 
     def test_first_three_observations_only_build_baseline(self) -> None:
         result = assess_soft_jitter(

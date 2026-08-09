@@ -696,7 +696,7 @@
     {
       "loop": "equivalence",
       "mode": "test",
-      "target": "loop_wiki/evolve-technical-equivalence-research/selftest.sh",
+      "target": "proof_workflow/control_equivalence_entry.sh",
       "required": [],
       "optional": [
         "--json",
@@ -706,7 +706,8 @@
         "--live": "execute the allowlisted antigravity Gemini Deep Research adapter; without it live behavior is NOT_EXERCISED"
       },
       "writes": [
-        "loop_wiki/evolve-technical-equivalence-research/_runs/"
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-equivalence-<commit12>.json"
       ]
     }
   ],
