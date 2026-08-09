@@ -1,24 +1,25 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f9dd6581e9c39cff732985be06dfe301833d71a1",
+  "workflow_commit": "950f74d4d78cc4d88121507ec224da50bcedab7d",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-f9dd6581e9c3-dirty.json",
-    "ctg": "ctg-f9dd6581e9c3-dirty.json",
-    "harness": "harness-f9dd6581e9c3-dirty.json",
-    "macro": "macro-f9dd6581e9c3-dirty.json",
-    "micro": "micro-f9dd6581e9c3-dirty.json",
-    "notebooklm": "notebooklm-f9dd6581e9c3-dirty.json",
-    "openwiki": "openwiki-f9dd6581e9c3-dirty.json",
-    "policy": "policy-f9dd6581e9c3-dirty.json",
-    "workflow": "workflow-f9dd6581e9c3-dirty.json"
+    "container": "container-950f74d4d78c-dirty.json",
+    "equivalence": "equivalence-950f74d4d78c-dirty.json",
+    "harness": "harness-950f74d4d78c-dirty.json",
+    "macro": "macro-950f74d4d78c-dirty.json",
+    "micro": "micro-950f74d4d78c-dirty.json",
+    "notebooklm": "notebooklm-950f74d4d78c-dirty.json",
+    "openwiki": "openwiki-950f74d4d78c-dirty.json",
+    "policy": "policy-950f74d4d78c-dirty.json",
+    "workflow": "workflow-950f74d4d78c-dirty.json"
   },
   "counts": {
-    "artifact": 34,
-    "context": 34,
-    "harness": 111
+    "artifact": 45,
+    "context": 51,
+    "harness": 80,
+    "optional": 1
   },
-  "workflow_digest": "4cb5c64cf50aaf44c85efeb9d4a93ca27af7b8180a2cd988e826a55667c7d10a",
+  "workflow_digest": "612bc7ad337ac69767547128a85807e840db4ebea9c0c62b16f5e35a8596cab0",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -86,6 +87,14 @@
         "container"
       ]
     },
+    ".grepai/index.gob": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "optional",
+      "loops": [
+        "macro"
+      ]
+    },
     "AGENTS.md": {
       "sha256": "0dd461e9776fd7d1dfb601a05f73ba6e888c755905c84328670453668fedc255",
       "hash_source": "index",
@@ -95,7 +104,7 @@
       ]
     },
     "ARCHITECTURE.md": {
-      "sha256": "937102e626f079f646f543c5dd8281a813f2a892fe7073b60ebc55b5e7aa6189",
+      "sha256": "f514805b6497a539d989d9256dfa5062fe7207e3c93dc29f560ec12da03bc5f6",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -126,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-f9dd6581e9c39cff732985be06dfe301833d71a1.json": {
+    "data/receipts/post-commit-950f74d4d78cc4d88121507ec224da50bcedab7d.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -134,7 +143,47 @@
         "macro"
       ]
     },
-    "data/wiki-update/request-dr-example.json": {
+    "data/wiki-update/request-ingest-note.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-issue23-dryrun.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-pdf-probe.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-poweron-2026-08-06.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-repo-probe.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-review-i23.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -263,318 +312,6 @@
         "micro"
       ]
     },
-    "loop_wiki/code-truth-graph/.agents/agents/verifier.md": {
-      "sha256": "aeb860538416cb521539f475828ad41edee96ba7614373a2a45af99e0d6ac951",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/.agents/skills/code-truth-graph-runtime/SKILL.md": {
-      "sha256": "e4b16f87d4681380439fb44a8b1e435ec718b2b92d351a40ad4b86ba7f7ce9ab",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/AGENTS.md": {
-      "sha256": "45e91b58999fa06cf3572bc317268af24c6d4f1fd4dd2e80313eddd1bf031ee2",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/CLAUDE.md": {
-      "sha256": "e37ec2a405c8bbc9dd0af3875b9603fc1ad4b0e3fca03ebc71ac5d8a2858d878",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/PLAN.md": {
-      "sha256": "d19206d39ed32e9d3ac1de6ebce5535319ca8d1b3b3d35a2f206b09adf458c98",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/PROMPT.md": {
-      "sha256": "327bc0940a82f26485bb872a5bd813f038bd3566d19d9fb5c8879253f73a8acd",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/ROUTES.md": {
-      "sha256": "5a516435656c99c841d65d3811fe75f0621d950d1b9efcf903f8c08d59e5ac4d",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/anti/README.md": {
-      "sha256": "af486bc4c11f207502009ece9cbfdbaa98ebd1d5560226559cc9fdbaedc65094",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/local-trigger.sh": {
-      "sha256": "f7d9fd79992c59b82248c4422c25b214a3390569dfd9d05d3bffe7b0d3c8aca9",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/logs/README.md": {
-      "sha256": "49971f6c25e65faa1c1fd91682d0cb9653f86e8936d4e998d3816ab72bead50a",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/modules/eight-base-laws.md": {
-      "sha256": "8b0e1790c12c72e40357ad339665d5771291f67235c0927913ee338056699d97",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/modules/exchange-formats.md": {
-      "sha256": "578645444f3857914370522102e263c43632dcfbe18986cf1c0da67ca864e1ee",
-      "hash_source": "index",
-      "kind": "context",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/portability.sh": {
-      "sha256": "8e786e0cf8dda77d2bb2cb05869ca2932ea393debdd75b462d90ef7dca96e90f",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/run.sh": {
-      "sha256": "619300d101d28e3ad2e83285dd0bfd39f6575a68f7adf4959eb74f26eff8b0dd",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/code-truth-graph.schema.json": {
-      "sha256": "6cf819bfdea53490af8095d64daf3c61df3b410211c22c58442ba824582bf8b0",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/ctg-control.schema.json": {
-      "sha256": "3debe471622765f9cd60831b0d7519646dc272a2623d3bae5b7bad5928a5c898",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/ctg-input.schema.json": {
-      "sha256": "667bd81780f7902f6e58ad7d290380e5df3b895f84b90b97502347fb10f6ce68",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/ctg-local-build-receipt.schema.json": {
-      "sha256": "e86fef39d1ee70f934436d025a24ef269b1b4a0647a4c1a050147664cabe733d",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/ctg-route-result.schema.json": {
-      "sha256": "5ed37b2e64fc9b89eb8453939dfd73872675fabacb20dd36bd65cabf59b11057",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/schemas/runtime-receipt.schema.json": {
-      "sha256": "1e88c964295941c5ad3c665173d072eb21717490e07b98e9b6a7860bcd70edce",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/selftest.sh": {
-      "sha256": "598cb9115a89e362e08a0dade9a90466f205caaa30908dbe71f7bc4ae8dcfdcc",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/__init__.py": {
-      "sha256": "16dbd73ac8ded110ae0677573ca1fe5be4be56a158fa5ffa81411d55b101f24a",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/build.py": {
-      "sha256": "1700832a3d9f05defc122c19f6c3a23231516a9506ec674d094e429958560ec8",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/cli.py": {
-      "sha256": "8aa35909188475462bf282c38bba495b713b400160b50a805d1140de86cb24d4",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/evidence.py": {
-      "sha256": "5d8a11f3670874f0269f4df8e1bfc000ca6eac4d9fc6dbef9ff60ca38df76176",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/fixture.py": {
-      "sha256": "728246e7749f88ec7feef8849a212bcafc02292439580aea9295c31c0c5d4cbd",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/graphrag.py": {
-      "sha256": "035e208a6f0d0c28f09015c6de9392398da3e469b42db0d5f29365374d6f75fe",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/identity.py": {
-      "sha256": "a06db2036746bcc7146dffd3894230b9786c8d1724bcdc9d94fa5fef23adca55",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/java_ast.py": {
-      "sha256": "33b640cbc3df06225988a5fcffb52093840c0975427aef2d44709639bc738917",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/local_cli.py": {
-      "sha256": "ccbee3226081f7f5add95c124dd6eaecb1752e6aa654e1c09c54770d7a4c2edf",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/model.py": {
-      "sha256": "d5a7f39c53bf5428e8da9bb543f4be71d96e70480041ed215d202627cc7e66c7",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/render.py": {
-      "sha256": "1642500cf88575a65bf874a147b596338ecadbbb7a3cc83f95cfed1ab9faa59c",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/sessions.py": {
-      "sha256": "99fe655296ed6c360928f5594816df774c88242b290c53d7ff519183d6c0409f",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/settlement.py": {
-      "sha256": "5642b12a93370a4b5b4b41d021711192df8961d30ddf5664492c13a0fd98b80a",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/util.py": {
-      "sha256": "86c8c28070621bdd52d1e744b235063845141102522957ea5375106aee543043",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/src/code_truth_graph/verify_artifacts.py": {
-      "sha256": "f4f88724aa5e3693e05fa47b352f9500a9a3599983397708cd40c870d22d6b29",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/tools/java/CodeGraphAstExtractor.java": {
-      "sha256": "fe6a6de23760a165283e57f1eab9843ae621e96e2931db72b0ede510d9cf7676",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/trigger.sh": {
-      "sha256": "b7fa55e42274fca141dc1f5ce87aedb7bd5280286956237e5e2e81d9c90540e1",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "loop_wiki/code-truth-graph/verify.sh": {
-      "sha256": "db69b6147e7eae9a942ac0495c5c4ea8243af8ca31678b6fb5ec1b4e4a90bbbb",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
     "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md": {
       "sha256": "4b7d037c3f88ac43840ef8fa1695a862e62cc3f5ee3c01c6fae1d04ead28e78a",
       "hash_source": "index",
@@ -632,6 +369,54 @@
       ]
     },
     "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.ingest-note.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.pdf-probe.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.repo-probe.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.review-i23.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -703,6 +488,230 @@
         "micro"
       ]
     },
+    "loop_wiki/evolve-technical-equivalence-research/.gitignore": {
+      "sha256": "20a8fb45f2c02ad3290dad02f73ae114fff21cbe00aa7d41f46570a161518cfe",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/AGENTS.md": {
+      "sha256": "bc28f873c999d6a7f0f3bbdcd1feb33c3a72bf940001434b06ed76d99754c44c",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/PROMPT.md": {
+      "sha256": "7b6d76d2642e93e650f67242818232f1c08df817319620054edaa3333491057d",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/ROUTES.md": {
+      "sha256": "5958369622a4cd500150876ef6f373ae712afc3197b3891b2e8d5bcc910311e8",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/adapter-registry.json": {
+      "sha256": "98e01aac0bdb6c683477e84f9a245b4ae712f1614239bc88b4a75dec9474c8a1",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/drift.py": {
+      "sha256": "0b026215274d7ae37d004f16eef900b5054543ce5163bb41bf434d4eb30704c4",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/equivalence.py": {
+      "sha256": "076cefd1375afda02554b87e237f542d83c49e896e0fd82601d7724394cc1f13",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/legacy_compare.py": {
+      "sha256": "fb5a013fbbaf472090180112c5b6c30f4de39a35faed829cd78307b37ebe239f",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/modules/architecture.md": {
+      "sha256": "d10f35fa2703c58ec6ed99d0a9f6ff1ce779efb7e564bf4dae60f43051fd7188",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md": {
+      "sha256": "c06e293148b755cae253866e9eb33d7191dd11166edfbce44efc92537829c8b4",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md": {
+      "sha256": "f5b7a1e40af30fa9b10c2cf2275498beb34c07eb5269a2c99ab70856686ad501",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile/legacy-baseline.md": {
+      "sha256": "afce23df160e720718fdfcc66b7ea7b00abe9ad72ac24a758b9c2bab2e031d47",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md": {
+      "sha256": "5e9075b81b60a9b1589de84fff21ed2de1fab93550310c5806ce3dc0662f9bc9",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/profile_validator.py": {
+      "sha256": "3596b8026ec99b73b2d9a160e3458695e8a48c812badef39cae64f5b124f6f4b",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/adapter-receipt.schema.json": {
+      "sha256": "bc68b176cb10b7ae1da2db5bdc0c2905141e563dfc67b5f98a6365605d43d970",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/canary-observation.schema.json": {
+      "sha256": "20b01cdf0d5a7c41fbe0d203b68da1f5abfdbd037c24a8d7be92fa8c07f07f2e",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/equivalence-request.schema.json": {
+      "sha256": "51b6c8fbef2637ba478cf6a2cf6d37f7c403e99dc887d51c6c376b1e6276d9e6",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/judge-packet.schema.json": {
+      "sha256": "47ef53296fd7c809e880448539a315e61b801efe47424dc3bc283941800d0cb0",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/judge-result.schema.json": {
+      "sha256": "d8929556427b3b7cb6ce4a5fea71f9b449798186f689861f3e344b4ce0838234",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/research-request.schema.json": {
+      "sha256": "fefede3dbfa54fd55ef89e7f0ed6e4bfaeb6b0ede52c0bb5e1ff50c5c7cddd1c",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/research-result.schema.json": {
+      "sha256": "a57a1270dad961821d4d41581187ec824358bc2859c46353c22c8f45a32878ce",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/route-result.schema.json": {
+      "sha256": "9899818929c6c97975e50e6c436d34f5be4060285894c9d92e32836968f96271",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/sync-bundle.schema.json": {
+      "sha256": "439a95e93ae32c5065813939099ebe3e95a195e8122baedbd403797b7ccdad21",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/schemas/verification-bundle.schema.json": {
+      "sha256": "95c3cbe42ed4ade7461dbd67fc1c5d9e7bff161fdb3df881d790f6e257c2a202",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/selftest.py": {
+      "sha256": "b5719ec6005cfe78371ea3074038a7f32e910f33a9363408d2f62ca8ab4056d2",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/selftest.sh": {
+      "sha256": "49a31e84cb5757969b820d10274cd0590282938fc7697244a6b4ba1d9d16bedf",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/tests/test_cli.py": {
+      "sha256": "89ad7b00c280a40128f677e25e0e68216c3bdcd730184f5cc7a36d7359c67535",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
+    "loop_wiki/evolve-technical-equivalence-research/tests/test_drift.py": {
+      "sha256": "eea1a88e4e680d5ab23358cb8eef33866b1db2be7098d44d031ddf7c29b8bfab",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "equivalence"
+      ]
+    },
     "loopctl/Dockerfile": {
       "sha256": "08d03199593ca77d1d65129b4e559659cf2eb3e6e8ff4b672663109030dd1e61",
       "hash_source": "index",
@@ -712,7 +721,7 @@
       ]
     },
     "loopctl/README.md": {
-      "sha256": "05e6a6c3fd519addf5388a95a4eb9f712a0eeebe6ef5eb4057a1753ab8c5538e",
+      "sha256": "f909a0039b140543dcacc3852879b74ce325219336ab48907430d6663b60a865",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -760,7 +769,7 @@
       ]
     },
     "loopctl/contract.json": {
-      "sha256": "8b4b72f2a5a4dd63c4469df973a598bb4ca23d1b16130f64f24c04db310097f1",
+      "sha256": "a5736bd69f7f72c246a4c96658ebe904ad109aee094ef57676830309a67ccec6",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -785,7 +794,7 @@
       ]
     },
     "loopctl/loopctl.sh": {
-      "sha256": "0f53329be70aca383e190260995816ca6e87e3094a6a8be6457ac1f9b950704d",
+      "sha256": "35997f2b5f9b271d3ba630dc475b7a35a6ab2a5621565bd2f161ceab4a67261c",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -794,7 +803,7 @@
       ]
     },
     "loopctl/mcp_server.py": {
-      "sha256": "d62dc0a27df8af94100152fd61545a0d331e954fe17a8a787b7ce260822f108c",
+      "sha256": "d6fdf7127131ed6b558859fceb0e60f253d6ffb61175aec7c8aa5c6027b9b855",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -802,7 +811,7 @@
       ]
     },
     "loopctl/mcp_tools.py": {
-      "sha256": "58ac5e1b5ddeaf8ea9f317ee3c6faac18506c3e947e6f3bac2050fe739277ee2",
+      "sha256": "132ae26dc1f979eb48550bae5a5945e07fd11dffe2d07c4b68c4836d28bb3b72",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -835,7 +844,7 @@
       ]
     },
     "loopctl/selftest.sh": {
-      "sha256": "51c27af134ee3d528f6b2e4eb28ca65652e66d49f9374dd34d654d90a262cc56",
+      "sha256": "a30928d3b19fb33574ebebcef4a9a8ddf68df97974657f133bbddcc3480d8c23",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -843,7 +852,7 @@
       ]
     },
     "loopctl/surface.lock": {
-      "sha256": "8caf2361e9a814b0b7333b6e4f3d5afb30c46ca4f90b37429693dac98ca51490",
+      "sha256": "a51fadac1a1bd0e07db836aa96c07eb0b4e7afde6373d1f3e2e36798b52e43a7",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -851,7 +860,7 @@
       ]
     },
     "loopctl/surface_digest.py": {
-      "sha256": "2eb6936f14ac70fb216b5c4abf4a78402b634a6e98373df81345f5bec5b483f6",
+      "sha256": "dd5ff678ef188a1c4243d0f2c1823cea3e114d650d48dec94b6dba7644554021",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1180,7 +1189,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "113587537914c76cb18ea088dfc8cba53401cde8a6a5e84da1184d4b49b67092",
+      "sha256": "25a4e2d122ba5d61d7e04bd61c7c6c4eeee235086815ff6c6e88754e01184fdc",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1195,8 +1204,8 @@
         "harness"
       ]
     },
-    "proof_workflow/control_ctg_entry.sh": {
-      "sha256": "617aeea4f71366f6c4dab2cd218531b475584cd3b605b83d5902d64396f719f5",
+    "proof_workflow/control_equivalence_entry.sh": {
+      "sha256": "f07a9034310993710b50f8746987da8b4cb6c5831d42f981cf4153ebd3e8ebe4",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1220,7 +1229,7 @@
       ]
     },
     "proof_workflow/control_mcp_surface.sh": {
-      "sha256": "84dce6031e80f79b16aa63b79774aeada566005b4dd9d7016af4cf01f962791a",
+      "sha256": "050ddde4c7227323e6476cacec0ae40411b07c9b66bcc6ca49acb46f1a01f1dd",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1267,16 +1276,8 @@
         "harness"
       ]
     },
-    "proof_workflow/ctg_control.py": {
-      "sha256": "8024fd00bce2b3d6cbc5b4b006170eced695df021057d819a86e864ab7e5f98c",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "harness"
-      ]
-    },
     "proof_workflow/lib/capture.sh": {
-      "sha256": "e675c2def484f292e35fd746ce8caf2e733827a5c9cf926216a20a844c55f9c4",
+      "sha256": "21379632b4aa2bd4668afe91538b6373e1488071539d896c7d9b693da36d1655",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1284,7 +1285,15 @@
       ]
     },
     "proof_workflow/lib/compare_control.py": {
-      "sha256": "7b68d190dfa288574fc066392d55ed85a49efecdadd01c87a6e08d2287a9a58a",
+      "sha256": "4af82158235343495f2c266ada657b39885a089d0c7db46fbd93ef7b99567735",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "harness"
+      ]
+    },
+    "proof_workflow/lib/equivalence_control.py": {
+      "sha256": "35497314410c7f3dff1252f00b1ae12a5e4e9acebe4e83d2e610b7df58342675",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1300,7 +1309,7 @@
       ]
     },
     "proof_workflow/lib/prove.sh": {
-      "sha256": "0ced1a932d0e839b8c5a87bdb4a1b5ca24327f9fbc05d15195d769cecc68a564",
+      "sha256": "d638a46602c3fbce13cca063e5c0102f17670ee0997baf64d46073fab2e54938",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1323,8 +1332,8 @@
         "harness"
       ]
     },
-    "proof_workflow/prove_ctg_loop.sh": {
-      "sha256": "461bc22a9143e02047ad09c4c07131e6257c9f3f52b81b58a389df0953e19ede",
+    "proof_workflow/prove_equivalence.sh": {
+      "sha256": "0d8a0978068481f0e881d566de0e9b5b83274870bad5dcffd12719f3e56aa093",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1332,7 +1341,7 @@
       ]
     },
     "proof_workflow/prove_harness.sh": {
-      "sha256": "2a360b48e1bca5f39b24dde7c3807aaedb6bef4e4d2add012991cb78e49ea579",
+      "sha256": "02e7ebc64cc8f30bb125a1cbb8326bde94ad004259e258d7eb981eb26d663283",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1433,30 +1442,6 @@
       "kind": "harness",
       "loops": [
         "macro"
-      ]
-    },
-    "tests/test_ctg_cli.sh": {
-      "sha256": "7e5aa64a3a69362078627b738c90f213e39aebd8c6dc5256027b9cf1941ae671",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "tests/test_ctg_java_core.sh": {
-      "sha256": "3eb6fd6b15318ef7c8ce620dbbcc796db3f3fbd44f3201079b61b3212f561ccb",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
-      ]
-    },
-    "tests/test_ctg_local_build.sh": {
-      "sha256": "d971965af17c797a6430277d7396db2779c4579f3bf9960d8fccad87093a7019",
-      "hash_source": "index",
-      "kind": "harness",
-      "loops": [
-        "ctg"
       ]
     }
   }

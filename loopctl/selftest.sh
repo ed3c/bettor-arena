@@ -60,7 +60,7 @@ PY
   # first shape made a declared command look unwired and sent the fix at the
   # contract instead of at the extraction.
   {
-    grep -oE '^  (macro|micro|openwiki|notebooklm|ctg)/(run|prove|test|build-local)\)' "$_cli" | tr -d ' )'
+    grep -oE '^  (macro|micro|openwiki|notebooklm|equivalence|ctg)/(run|prove|test|build-local)\)' "$_cli" | tr -d ' )'
     # The nested subcommands are listed, not extracted. Their labels repeat
     # across branches — `test)` under four of them, `prove)` under two — and a
     # shape-based grep cannot say which branch a label belongs to: it prefixed
@@ -112,14 +112,25 @@ from pathlib import Path
 
 contract = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 modes = {}
+targets = {}
 for c in contract["commands"]:
     modes.setdefault(c["loop"], set()).add(c["mode"])
+    targets.setdefault(c["loop"], {})[c["mode"]] = c["target"]
 unpaired = []
 for loop, have in sorted(modes.items()):
     if "prove" in have and "test" not in have:
         unpaired.append(f"{loop}: has prove, no test — a claim nobody drives")
     if "test" in have and "prove" not in have:
         unpaired.append(f"{loop}: has test, no prove — a green with no record of what it covered")
+    if {"prove", "test"}.issubset(have):
+        proof_target = targets[loop]["prove"]
+        control_target = targets[loop]["test"]
+        if proof_target == control_target:
+            unpaired.append(f"{loop}: prove and test share {proof_target} — one implementation can fool both halves")
+        if not control_target.startswith("proof_workflow/control_"):
+            unpaired.append(
+                f"{loop}: test target {control_target} is not an independent proof_workflow control group"
+            )
 for line in unpaired:
     print(f"SELFTEST case failed — unpaired mechanism, {line}", file=sys.stderr)
 raise SystemExit(1 if unpaired else 0)

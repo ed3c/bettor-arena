@@ -32,7 +32,7 @@ HERE=$(cd "$(dirname "$0")" && pwd -P)
 CONTRACT="$HERE/contract.json"
 
 usage() {
-  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|ctg> <mode> [flags]" >&2
+  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|equivalence|ctg> <mode> [flags]" >&2
   echo "       loopctl.sh contract | --selftest" >&2
   echo "       flags per command: loopctl.sh contract" >&2
 }
@@ -320,6 +320,30 @@ case "$LOOP/$MODE" in
     sh "$ROOT/$TARGET" "$_ctg_manifest" "$_ctg_output" ;;
   ctg/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   ctg/test) sh "$ROOT/$TARGET" ;;
+  equivalence/run)
+    _erequest=$(value_of --request "$@")
+    _etarget=$(value_of --target-peer "$@")
+    _esource=$(value_of --source-peer "$@")
+    _eresult=$(value_of --research-result "$@")
+    _elive=0; has_flag --execute-gemini "$@" && _elive=1
+    set -- run --request "$_erequest" --target-peer "$_etarget"
+    [ -n "$_esource" ] && set -- "$@" --source-peer "$_esource"
+    [ -n "$_eresult" ] && set -- "$@" --research-result "$_eresult"
+    [ "$_elive" -eq 1 ] && set -- "$@" --execute-gemini
+    python3 "$ROOT/$TARGET" "$@" ;;
+  equivalence/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  equivalence/test)
+    _control_live=0; has_flag --live "$@" && _control_live=1
+    _control_force=0; has_flag --force-receipt "$@" && _control_force=1
+    if [ "$_control_live" -eq 1 ] && [ "$_control_force" -eq 1 ]; then
+      CONTROL_EQUIVALENCE_LIVE=1 CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"
+    elif [ "$_control_live" -eq 1 ]; then
+      CONTROL_EQUIVALENCE_LIVE=1 sh "$ROOT/$TARGET"
+    elif [ "$_control_force" -eq 1 ]; then
+      CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"
+    else
+      sh "$ROOT/$TARGET"
+    fi ;;
   *) fatal "no dispatch for $LOOP/$MODE — the contract lists it and this file does not (--selftest exists to catch exactly this)" ;;
 esac
 RC=$?

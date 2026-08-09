@@ -18,6 +18,7 @@ has only ever been seen agreeing is not known to be able to disagree.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -403,9 +404,18 @@ def compare_micro(rundir: Path, receipt_dir: Path, short: str) -> dict:
 
 def stream_manifest(rundir: Path) -> list[dict]:
     records = []
-    for line in read_lines(rundir / "run.jsonl"):
+    runlog = rundir / "run.jsonl"
+    lines = read_lines(runlog)
+    if not lines:
+        raise ValueError(f"control trace is absent or empty: {runlog}")
+    for line in lines:
         rec = json.loads(line)
         for lane in ("stdout", "stderr"):
+            stream = rundir / rec[lane]["path"]
+            payload = stream.read_bytes()
+            actual_sha = hashlib.sha256(payload).hexdigest()
+            if actual_sha != rec[lane]["sha256"] or len(payload) != rec[lane]["bytes"]:
+                raise ValueError(f"captured stream changed after recording: {stream}")
             records.append(
                 {
                     "step": rec["id"],
@@ -414,6 +424,8 @@ def stream_manifest(rundir: Path) -> list[dict]:
                     "bytes": rec[lane]["bytes"],
                 }
             )
+    if not records:
+        raise ValueError(f"control trace has no captured streams: {runlog}")
     return records
 
 
@@ -466,10 +478,10 @@ def main() -> int:
                 result["probabilistic_segment"] = segment
         else:
             result = compare(rundir, macro_receipt, macro_receipt.parent, short)
-    except ValueError as exc:
+        streams = stream_manifest(rundir)
+    except (OSError, ValueError) as exc:
         print(f"control FATAL: {exc}", file=sys.stderr)
         return 64
-    streams = stream_manifest(rundir)
     failed = (
         result["required_uncovered"]
         or result.get("produced_uncovered")
@@ -601,6 +613,18 @@ def _selftest() -> int:
             )
             red = 1
 
+    def call_main_with(values: dict[str, str]) -> int:
+        previous = {key: os.environ.get(key) for key in values}
+        try:
+            os.environ.update(values)
+            return main()
+        finally:
+            for key, value in previous.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
+
     proof = {"a/b.py", "c/d.txt"}
     case("exact-path-covered", covered("a/b.py", proof), True)
     case("directory-covered-by-child", covered("a", proof), True)
@@ -609,6 +633,106 @@ def _selftest() -> int:
     # The failure that matters: a prefix that is not a path boundary must NOT
     # count as coverage, or `.grep` would be "covered" by `.grepai/index.gob`.
     case("prefix-is-not-coverage", covered("a/b", proof), False)
+
+    with tempfile.TemporaryDirectory() as td:
+        rundir = Path(td) / "run"
+        streams = rundir / "streams"
+        streams.mkdir(parents=True)
+        out = streams / "1-probe.out"
+        err = streams / "1-probe.err"
+        out.write_bytes(b"out\n")
+        err.write_bytes(b"")
+        record = {
+            "id": "probe",
+            "stdout": {
+                "path": "streams/1-probe.out",
+                "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+                "bytes": 4,
+            },
+            "stderr": {
+                "path": "streams/1-probe.err",
+                "sha256": hashlib.sha256(err.read_bytes()).hexdigest(),
+                "bytes": 0,
+            },
+        }
+        (rundir / "run.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+        case("recorded-stream-verifies", len(stream_manifest(rundir)), 2)
+        out.write_bytes(b"forged\n")
+        try:
+            stream_manifest(rundir)
+        except ValueError:
+            pass
+        else:
+            print("SELFTEST case failed — mutated stream was accepted", file=sys.stderr)
+            red = 1
+
+    # Exercise the actual main boundary: trace failures must become FATAL 64,
+    # never an uncaught Python exit 1 or a receipt with an empty stream list.
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td)
+        rundir = base / "run"
+        streams = rundir / "streams"
+        streams.mkdir(parents=True)
+        rdir = base / "receipts"
+        rdir.mkdir()
+        short = "0123456789ab"
+        commit = short + "0" * 28
+        macro = rdir / f"macro-{short}.json"
+        macro.write_text(
+            json.dumps(
+                {
+                    "steps": [
+                        {
+                            "id": "bootstrap",
+                            "state": "ran",
+                            "exit": 0,
+                            "path": "bootstrap.sh",
+                        },
+                        {"id": "covered", "state": "ran", "exit": 0, "path": "a"},
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        _fixture_contract(base, rdir=rdir, short=short)
+        (rundir / "named-paths.txt").write_text("a\n", encoding="utf-8")
+        (rundir / "path-class.txt").write_text("a\trequired\t2\n", encoding="utf-8")
+        (rundir / "tools-named.txt").write_text("git\n", encoding="utf-8")
+        (rundir / "fired-lanes.txt").write_text(
+            "bootstrap OK: fixture\n", encoding="utf-8"
+        )
+        (rundir / "run.jsonl").write_text("", encoding="utf-8")
+        env = {
+            "CONTROL_RUNDIR": str(rundir),
+            "CONTROL_MACRO_RECEIPT": str(macro),
+            "CONTROL_RECEIPT": str(base / "control.json"),
+            "CONTROL_RUN_ID": "fixture-run",
+            "CONTROL_COMMIT": commit,
+            "CONTROL_ENTRY_RC": "0",
+            "CONTROL_MODE": "macro",
+        }
+        case("main-empty-trace-is-fatal", call_main_with(env), 64)
+
+        out = streams / "1-probe.out"
+        err = streams / "1-probe.err"
+        out.write_bytes(b"out\n")
+        err.write_bytes(b"")
+        record = {
+            "id": "probe",
+            "stdout": {
+                "path": "streams/1-probe.out",
+                "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+                "bytes": 4,
+            },
+            "stderr": {
+                "path": "streams/1-probe.err",
+                "sha256": hashlib.sha256(err.read_bytes()).hexdigest(),
+                "bytes": 0,
+            },
+        }
+        (rundir / "run.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+        out.write_bytes(b"forged\n")
+        case("main-mutated-trace-is-fatal", call_main_with(env), 64)
 
     with tempfile.TemporaryDirectory() as td:
         rundir = Path(td) / "run"

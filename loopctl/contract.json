@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.6.0",
+  "surface_version": "2.7.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -762,6 +762,64 @@
       },
       "writes": [
         "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "run",
+      "target": "loop_wiki/evolve-technical-equivalence-research/equivalence.py",
+      "required": [
+        "--request",
+        "--target-peer"
+      ],
+      "optional": [
+        "--execute-gemini",
+        "--json",
+        "--research-result",
+        "--source-peer"
+      ],
+      "io": {
+        "input": "hash-bound technical-equivalence request; optional Gemini result or explicit live adapter execution",
+        "output": [
+          "loop_wiki/evolve-technical-equivalence-research/_runs/<request>/<digest>/route-result.json",
+          "research request, adapter execution mirror/receipt, verification bundle and candidate sync bundle as the state advances"
+        ],
+        "exit": "0 valid route state, including research/human pending · 2 declared verification failure · 64 contract/tool failure"
+      },
+      "writes": [
+        "loop_wiki/evolve-technical-equivalence-research/_runs/ (including per-attempt redirected adapter side effects)"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "prove",
+      "target": "proof_workflow/prove_equivalence.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/equivalence-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "test",
+      "target": "proof_workflow/control_equivalence_entry.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json",
+        "--live"
+      ],
+      "opt_in": {
+        "--force-receipt": "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 — same-HEAD control receipts are frozen, so replacement must be explicit",
+        "--live": "execute the allowlisted antigravity Gemini Deep Research adapter; without it live behavior is NOT_EXERCISED"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-equivalence-<commit12>.json"
       ]
     }
   ],
