@@ -11,6 +11,7 @@ green.
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import subprocess
 import sys
@@ -44,6 +45,67 @@ def tracked_inventory(repo: Path) -> set[str]:
     if not paths:
         raise ValueError("tracked equivalence inventory is empty")
     return paths
+
+
+def git_output(repo: Path, *args: str) -> bytes:
+    return subprocess.run(
+        ["git", "-C", str(repo), *args],
+        capture_output=True,
+        check=True,
+    ).stdout
+
+
+def validate_proof_binding(repo: Path, proof: dict) -> set[str]:
+    """Independently bind every equivalence proof hash and digest to HEAD."""
+    head = git_output(repo, "rev-parse", "HEAD").decode().strip()
+    tree = git_output(repo, "rev-parse", "HEAD^{tree}").decode().strip()
+    if proof.get("commit") != head:
+        raise ValueError(
+            f"proof is stale: receipt={proof.get('commit')} current={head}"
+        )
+    if proof.get("tree") != tree:
+        raise ValueError(
+            f"proof tree is stale or forged: receipt={proof.get('tree')} current={tree}"
+        )
+
+    tracked = tracked_inventory(repo)
+    hashed_steps = [
+        step
+        for step in proof.get("steps", [])
+        if step.get("path") and step.get("sha256") and step.get("kind") != "note"
+    ]
+    paths = [step["path"] for step in hashed_steps]
+    if len(paths) != len(set(paths)):
+        raise ValueError("proof hashes one or more equivalence paths more than once")
+    if set(paths) != tracked:
+        missing = sorted(tracked - set(paths))
+        foreign = sorted(set(paths) - tracked)
+        raise ValueError(
+            f"proof hashed-path inventory mismatch: missing={missing} foreign={foreign}"
+        )
+
+    manifest: list[str] = []
+    for step in hashed_steps:
+        path = step["path"]
+        actual = hashlib.sha256(
+            git_output(repo, "cat-file", "blob", f"HEAD:{path}")
+        ).hexdigest()
+        if step["sha256"] != actual:
+            raise ValueError(f"proof SHA does not match HEAD bytes: {path}")
+        manifest.append(f"{actual}  {path}\n")
+    manifest.sort()
+    actual_digest = hashlib.sha256("".join(manifest).encode()).hexdigest()
+    declared_digest = proof.get("molecular_hardening", {}).get("proof_digest")
+    if declared_digest != actual_digest:
+        raise ValueError(
+            f"proof digest does not match independently rebuilt HEAD manifest: receipt={declared_digest} actual={actual_digest}"
+        )
+    counts = proof.get("counts", {})
+    if counts.get("hashed_files") != len(manifest) or counts.get("steps") != len(
+        proof.get("steps", [])
+    ):
+        raise ValueError("proof counts do not match its independently verified steps")
+    return tracked
 
 
 def stream_manifest(rundir: Path) -> list[dict]:
@@ -89,12 +151,29 @@ def verdict_exit(control_rc: int, failed: bool) -> int:
     return 2 if failed else 0
 
 
-def ensure_receipt_writable(path: Path, *, force: bool) -> None:
-    if path.exists() and not force:
-        raise ValueError(
-            f"receipt already exists: {path}; set "
-            "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 to overwrite explicitly"
-        )
+def write_receipt(path: Path, encoded: str, *, force: bool) -> None:
+    """Create once by default; force replacement is atomic within the directory."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not force:
+        try:
+            with path.open("x", encoding="utf-8") as handle:
+                handle.write(encoded)
+        except FileExistsError as exc:
+            raise ValueError(
+                f"receipt already exists: {path}; rerun through loopctl with --force-receipt to overwrite explicitly"
+            ) from exc
+        return
+
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(encoded)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def build(
@@ -107,18 +186,9 @@ def build(
     live_state: str,
 ) -> int:
     proof = json.loads(proof_path.read_text(encoding="utf-8"))
-    head = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        text=True,
-        capture_output=True,
-        check=True,
-    ).stdout.strip()
+    head = git_output(repo, "rev-parse", "HEAD").decode().strip()
     if proof.get("loop") != "equivalence":
         raise ValueError("comparison receipt is not an equivalence proof")
-    if proof.get("commit") != head:
-        raise ValueError(
-            f"proof is stale: receipt={proof.get('commit')} current={head}"
-        )
     if proof.get("status") != "passed":
         raise ValueError("equivalence traversal proof is not passed")
     if proof.get("worktree_dirty") is not False or proof_path.name.endswith(
@@ -130,7 +200,7 @@ def build(
     if offline_rc not in {0, 2, 64} or control_rc not in {0, 2, 64}:
         raise ValueError("offline and control exits must be one of 0, 2, 64")
 
-    tracked = tracked_inventory(repo)
+    tracked = validate_proof_binding(repo, proof)
     missing = missing_from_proof(tracked, proof)
     classes: dict[str, dict[str, int | str]] = {}
     class_path = rundir / "path-class.txt"
@@ -168,14 +238,10 @@ def build(
         },
         "assurance": states,
     }
-    ensure_receipt_writable(
+    write_receipt(
         receipt_path,
-        force=os.environ.get("CONTROL_EQUIVALENCE_FORCE_RECEIPT") == "1",
-    )
-    receipt_path.parent.mkdir(parents=True, exist_ok=True)
-    receipt_path.write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
+        force=os.environ.get("CONTROL_EQUIVALENCE_FORCE_RECEIPT") == "1",
     )
     print(f"control[equivalence-entry] receipt={receipt_path.relative_to(repo)}")
     for path in missing:
@@ -229,9 +295,9 @@ def selftest() -> int:
             failed = True
     with tempfile.TemporaryDirectory() as tmp:
         receipt = Path(tmp) / "receipt.json"
-        receipt.write_text("frozen\n", encoding="utf-8")
+        write_receipt(receipt, "frozen\n", force=False)
         try:
-            ensure_receipt_writable(receipt, force=False)
+            write_receipt(receipt, "forged\n", force=False)
         except ValueError:
             pass
         else:
@@ -240,7 +306,58 @@ def selftest() -> int:
                 file=sys.stderr,
             )
             failed = True
-        ensure_receipt_writable(receipt, force=True)
+        write_receipt(receipt, "replacement\n", force=True)
+        if receipt.read_text(encoding="utf-8") != "replacement\n":
+            print("SELFTEST case failed: forced-receipt-replacement", file=sys.stderr)
+            failed = True
+
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = Path(tmp)
+        subprocess.run(["git", "-C", str(repo), "init", "-q"], check=True)
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "user.name", "test"], check=True
+        )
+        subprocess.run(
+            ["git", "-C", str(repo), "config", "user.email", "test@test"], check=True
+        )
+        path = repo / LOOP_PREFIX / "a.txt"
+        path.parent.mkdir(parents=True)
+        path.write_text("bound\n", encoding="utf-8")
+        subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+        subprocess.run(["git", "-C", str(repo), "commit", "-qm", "fixture"], check=True)
+        rel = f"{LOOP_PREFIX}a.txt"
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        manifest_digest = hashlib.sha256(f"{digest}  {rel}\n".encode()).hexdigest()
+        bound = {
+            "commit": git_output(repo, "rev-parse", "HEAD").decode().strip(),
+            "tree": git_output(repo, "rev-parse", "HEAD^{tree}").decode().strip(),
+            "counts": {"hashed_files": 1, "steps": 1},
+            "molecular_hardening": {"proof_digest": manifest_digest},
+            "steps": [{"kind": "context", "path": rel, "sha256": digest}],
+        }
+        validate_proof_binding(repo, bound)
+        for label, mutate in (
+            ("forged-tree-is-rejected", lambda value: value.update(tree="0" * 40)),
+            (
+                "forged-sha-is-rejected",
+                lambda value: value["steps"][0].update(sha256="0" * 64),
+            ),
+            (
+                "forged-digest-is-rejected",
+                lambda value: value["molecular_hardening"].update(
+                    proof_digest="0" * 64
+                ),
+            ),
+        ):
+            forged = json.loads(json.dumps(bound))
+            mutate(forged)
+            try:
+                validate_proof_binding(repo, forged)
+            except ValueError:
+                pass
+            else:
+                print(f"SELFTEST case failed: {label}", file=sys.stderr)
+                failed = True
     print("SELFTEST " + ("RED" if failed else "GREEN"))
     return 2 if failed else 0
 

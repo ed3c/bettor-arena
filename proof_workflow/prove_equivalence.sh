@@ -37,6 +37,6 @@ EQUIVALENCE_RECEIPT_PATH="$PROVE_ROOT/loop_wiki/evolve-technical-equivalence-res
 EQUIVALENCE_FORCE_RECEIPT=1 \
 prove_harness equivalence-controls loop_wiki/evolve-technical-equivalence-research/selftest.sh "profile/legacy/planted defects -> control verdict" \
   -- sh loop_wiki/evolve-technical-equivalence-research/selftest.sh
-prove_artifact equivalence-selftest loop_wiki/evolve-technical-equivalence-research/_runs/proof/selftest-receipt.json "real controls -> physical receipt"
+prove_note equivalence-selftest loop_wiki/evolve-technical-equivalence-research/_runs/proof/selftest-receipt.json "generated physical receipt from the harness step above; per-run evidence is deliberately outside the canonical HEAD digest"
 prove_note per-run-evidence loop_wiki/evolve-technical-equivalence-research/_runs/ "raw research and execution receipts are runtime evidence, excluded from canonical digest"
 prove_emit

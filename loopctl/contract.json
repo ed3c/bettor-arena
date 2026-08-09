@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.5.0",
+  "surface_version": "2.6.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -699,10 +699,12 @@
       "target": "proof_workflow/control_equivalence_entry.sh",
       "required": [],
       "optional": [
+        "--force-receipt",
         "--json",
         "--live"
       ],
       "opt_in": {
+        "--force-receipt": "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 — same-HEAD control receipts are frozen, so replacement must be explicit",
         "--live": "execute the allowlisted antigravity Gemini Deep Research adapter; without it live behavior is NOT_EXERCISED"
       },
       "writes": [

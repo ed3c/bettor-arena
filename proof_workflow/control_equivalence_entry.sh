@@ -125,7 +125,10 @@ PY
   run_offline "planted-$_id" "$BASE/planted-receipt.json"
   _rc=$?
   git -C "$WT" restore -- loop_wiki/evolve-technical-equivalence-research/equivalence.py
-  if [ "$_rc" -eq 0 ]; then expect "planted-$_id-goes-red" green red
+  if [ "$_rc" -eq 64 ]; then
+    echo "control FATAL: planted $_id run returned 64" >&2
+    return 64
+  elif [ "$_rc" -eq 0 ]; then expect "planted-$_id-goes-red" green red
   else expect "planted-$_id-goes-red" red red; fi
 }
 

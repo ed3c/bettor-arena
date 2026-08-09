@@ -22,4 +22,4 @@
 - The control's aggregate health is not an assurance axis. A planted-control or
   live-carrier failure may make the overall control red, but it must not rewrite
   the independently observed offline baseline. Same-HEAD control receipts are
-  frozen unless `CONTROL_EQUIVALENCE_FORCE_RECEIPT=1` is explicitly set.
+  frozen unless `loopctl equivalence test --force-receipt` is explicitly used.
