@@ -1,17 +1,17 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "797818e21065a4e7107d87b497a3684f1aa62165",
+  "workflow_commit": "29e9e03935833a60150b802ef702ab5647d651b7",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-797818e21065-dirty.json",
-    "equivalence": "equivalence-797818e21065-dirty.json",
-    "harness": "harness-797818e21065-dirty.json",
-    "macro": "macro-797818e21065-dirty.json",
-    "micro": "micro-797818e21065-dirty.json",
-    "notebooklm": "notebooklm-797818e21065-dirty.json",
-    "openwiki": "openwiki-797818e21065-dirty.json",
-    "policy": "policy-797818e21065-dirty.json",
-    "workflow": "workflow-797818e21065-dirty.json"
+    "container": "container-29e9e0393583-dirty.json",
+    "equivalence": "equivalence-29e9e0393583-dirty.json",
+    "harness": "harness-29e9e0393583-dirty.json",
+    "macro": "macro-29e9e0393583-dirty.json",
+    "micro": "micro-29e9e0393583-dirty.json",
+    "notebooklm": "notebooklm-29e9e0393583-dirty.json",
+    "openwiki": "openwiki-29e9e0393583-dirty.json",
+    "policy": "policy-29e9e0393583-dirty.json",
+    "workflow": "workflow-29e9e0393583-dirty.json"
   },
   "counts": {
     "artifact": 46,
@@ -19,7 +19,7 @@
     "harness": 80,
     "optional": 1
   },
-  "workflow_digest": "a43111098c2b0ed880575b52613cbcae7116f8fe245c723a3dedb08c98e9fb8a",
+  "workflow_digest": "3abbdc05bb2dbd223ffa276440d90bb03b484a5ea53616627e5cfffe33efd73e",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -135,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-797818e21065a4e7107d87b497a3684f1aa62165.json": {
+    "data/receipts/post-commit-29e9e03935833a60150b802ef702ab5647d651b7.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -705,7 +705,7 @@
       ]
     },
     "loop_wiki/evolve-technical-equivalence-research/tests/test_cli.py": {
-      "sha256": "69dbb037900b7e71712cac962acc4bf89e7bda71fbd6be7b956e659fb113df21",
+      "sha256": "75ba66f0469cb2a2ebcaff143c170e7fd40d92968b800bcfc33f59122cb890bd",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1213,7 +1213,7 @@
       ]
     },
     "proof_workflow/control_equivalence_entry.sh": {
-      "sha256": "8bd834f8af76c1291e310a439de5e8a36af6c25ddd5ef83d6f857a857fa8a09a",
+      "sha256": "fc25d46d36a120c2e6fbbb4f1aa71835e22a348436ad1271d5106ce0c94bd33d",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

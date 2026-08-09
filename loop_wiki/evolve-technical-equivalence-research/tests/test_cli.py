@@ -637,6 +637,81 @@ class EquivalenceCliTest(unittest.TestCase):
         self.assertEqual(result.returncode, 64)
         self.assertIn("execution_receipt", json.loads(result.stdout)["stderr"])
 
+    def test_judge_execution_receipt_bound_to_another_packet_is_rejected(
+        self,
+    ) -> None:
+        first = self.first_route()
+        research = json.loads(
+            Path(first["artifacts"]["research_request"]).read_text(encoding="utf-8")
+        )
+        result_path = self.research_result(research["research_request_digest"])
+        pending = self.run_cli(
+            "equivalence",
+            "run",
+            "--request",
+            str(self.request()),
+            "--target-peer",
+            str(self.target),
+            "--research-result",
+            str(result_path),
+            "--json",
+        )
+        route = json.loads(
+            Path(json.loads(pending.stdout)["artifacts"][-1]).read_text(
+                encoding="utf-8"
+            )
+        )
+        verification = json.loads(
+            Path(route["artifacts"]["verification_bundle"]).read_text(encoding="utf-8")
+        )
+        judge_packet = json.loads(
+            Path(route["artifacts"]["judge_packet"]).read_text(encoding="utf-8")
+        )
+        wrong_execution = self.write_evidence(
+            "judge-execution-wrong-packet",
+            {
+                "schema_version": "technical-equivalence-judge-execution-receipt@1.0.0",
+                "judge_packet_digest": "sha256:" + "0" * 64,
+                "judge_id": "codex",
+                "carrier": "codex-cli-fresh-session",
+                "session_id": "fixture-fresh-session",
+                "independence_contract": "fresh-zero-context",
+                "verdict": "PASS",
+            },
+        )
+        forged = {
+            "schema_version": "technical-equivalence-judge-result@1.0.0",
+            "upstream_verification_bundle_digest": verification[
+                "verification_bundle_digest"
+            ],
+            "upstream_judge_packet_digest": judge_packet["judge_packet_digest"],
+            "judge_id": "codex",
+            "independence_contract": "fresh-zero-context",
+            "verdict": "PASS",
+            "findings": [],
+            "quality_status": "operational_substitute",
+            "execution_receipt": wrong_execution,
+        }
+        forged["judge_result_digest"] = canonical_digest_field(
+            forged, "judge_result_digest"
+        )
+        Path(route["artifacts"]["expected_judge_result"]).write_text(
+            json.dumps(forged, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        result = self.run_cli(
+            "equivalence",
+            "run",
+            "--request",
+            str(self.request()),
+            "--target-peer",
+            str(self.target),
+            "--research-result",
+            str(result_path),
+            "--json",
+        )
+        self.assertEqual(result.returncode, 64)
+        self.assertIn("bindings mismatch", json.loads(result.stdout)["stderr"])
+
     def test_judge_fail_lands_route_result_and_returns_declared_failure(self) -> None:
         first = self.first_route()
         research = json.loads(

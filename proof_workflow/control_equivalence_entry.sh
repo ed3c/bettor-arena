@@ -126,9 +126,10 @@ plant_and_require_red request-digest \
   '    if request["request_digest"] != expected:' \
   '    if False:'
 plant_and_require_red judge-authority \
-  '    execution, execution_error = verified_evidence(' \
-  '    return result
-    execution, execution_error = verified_evidence('
+  '    if (
+        execution.get("judge_packet_digest") != judge_packet_digest' \
+  '    if False and (
+        execution.get("judge_packet_digest") != judge_packet_digest'
 plant_and_require_red committed-source-binding \
   '    if result.returncode != 0 or result.stdout != current_bytes:' \
   '    if False:'
