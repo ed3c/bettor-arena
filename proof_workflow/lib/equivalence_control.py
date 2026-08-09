@@ -11,8 +11,10 @@ green.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -81,12 +83,27 @@ def assurance(offline_rc: int, live_state: str) -> dict[str, str]:
     }
 
 
+def verdict_exit(control_rc: int, failed: bool) -> int:
+    if control_rc == 64:
+        return 64
+    return 2 if failed else 0
+
+
+def ensure_receipt_writable(path: Path, *, force: bool) -> None:
+    if path.exists() and not force:
+        raise ValueError(
+            f"receipt already exists: {path}; set "
+            "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 to overwrite explicitly"
+        )
+
+
 def build(
     repo: Path,
     rundir: Path,
     proof_path: Path,
     receipt_path: Path,
     offline_rc: int,
+    control_rc: int,
     live_state: str,
 ) -> int:
     proof = json.loads(proof_path.read_text(encoding="utf-8"))
@@ -104,6 +121,14 @@ def build(
         )
     if proof.get("status") != "passed":
         raise ValueError("equivalence traversal proof is not passed")
+    if proof.get("worktree_dirty") is not False or proof_path.name.endswith(
+        "-dirty.json"
+    ):
+        raise ValueError(
+            "equivalence traversal proof is dirty; control requires clean HEAD bytes"
+        )
+    if offline_rc not in {0, 2, 64} or control_rc not in {0, 2, 64}:
+        raise ValueError("offline and control exits must be one of 0, 2, 64")
 
     tracked = tracked_inventory(repo)
     missing = missing_from_proof(tracked, proof)
@@ -119,7 +144,7 @@ def build(
         path for path, result in classes.items() if result["class"] != "required"
     )
     states = assurance(offline_rc, live_state)
-    failed = bool(offline_rc or missing or optional_core)
+    failed = bool(control_rc or missing or optional_core)
     receipt = {
         "schema_version": "bettor-arena-control-equivalence-receipt@1.0.0",
         "control_of": "prove_equivalence.sh",
@@ -127,8 +152,9 @@ def build(
         "run_id": rundir.name,
         "commit": head,
         "status": "failed" if failed else "passed",
+        "control_exit": control_rc,
         "compared_against": proof_path.name,
-        "compared_against_dirty_stamp": proof_path.name.endswith("-dirty.json"),
+        "compared_against_dirty_stamp": False,
         "proof_digest": proof["molecular_hardening"]["proof_digest"],
         "capture_dir": f"proof_workflow/data/{rundir.name}",
         "capture_dir_tracked": False,
@@ -142,6 +168,10 @@ def build(
         },
         "assurance": states,
     }
+    ensure_receipt_writable(
+        receipt_path,
+        force=os.environ.get("CONTROL_EQUIVALENCE_FORCE_RECEIPT") == "1",
+    )
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     receipt_path.write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -158,7 +188,7 @@ def build(
             f"GAP: core input removal did not turn the loop red: {path}",
             file=sys.stderr,
         )
-    return 2 if failed else 0
+    return verdict_exit(control_rc, failed)
 
 
 def selftest() -> int:
@@ -182,6 +212,12 @@ def selftest() -> int:
             assurance(0, "NOT_EXERCISED")["human_admit"],
             "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN",
         ),
+        (
+            "live-failure-does-not-downgrade-offline",
+            assurance(0, "CARRIER_EXERCISED_FAIL")["offline_surface"],
+            "EXERCISED_PASS",
+        ),
+        ("fatal-exit-is-preserved", verdict_exit(64, True), 64),
     ]
     failed = False
     for name, got, want in checks:
@@ -191,6 +227,20 @@ def selftest() -> int:
                 file=sys.stderr,
             )
             failed = True
+    with tempfile.TemporaryDirectory() as tmp:
+        receipt = Path(tmp) / "receipt.json"
+        receipt.write_text("frozen\n", encoding="utf-8")
+        try:
+            ensure_receipt_writable(receipt, force=False)
+        except ValueError:
+            pass
+        else:
+            print(
+                "SELFTEST case failed: receipt-collision-is-fatal",
+                file=sys.stderr,
+            )
+            failed = True
+        ensure_receipt_writable(receipt, force=True)
     print("SELFTEST " + ("RED" if failed else "GREEN"))
     return 2 if failed else 0
 
@@ -198,9 +248,9 @@ def selftest() -> int:
 def main(argv: list[str]) -> int:
     if argv == ["--selftest"]:
         return selftest()
-    if len(argv) != 6:
+    if len(argv) != 7:
         print(
-            "usage: equivalence_control.py <repo> <rundir> <proof> <receipt> <offline-rc> <live-state>",
+            "usage: equivalence_control.py <repo> <rundir> <proof> <receipt> <offline-rc> <control-rc> <live-state>",
             file=sys.stderr,
         )
         return 64
@@ -211,7 +261,8 @@ def main(argv: list[str]) -> int:
             Path(argv[2]).resolve(),
             Path(argv[3]).resolve(),
             int(argv[4]),
-            argv[5],
+            int(argv[5]),
+            argv[6],
         )
     except (
         OSError,

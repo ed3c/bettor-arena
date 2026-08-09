@@ -19,3 +19,7 @@
   states: `offline_surface`, `live_carrier`, `fresh_semantic_judge`, and
   `human_admit`. Only the first is expected to pass without explicit live and
   external-authority operations; `maximum_claim` is computed from these states.
+- The control's aggregate health is not an assurance axis. A planted-control or
+  live-carrier failure may make the overall control red, but it must not rewrite
+  the independently observed offline baseline. Same-HEAD control receipts are
+  frozen unless `CONTROL_EQUIVALENCE_FORCE_RECEIPT=1` is explicitly set.

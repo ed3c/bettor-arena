@@ -1,17 +1,17 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "29e9e03935833a60150b802ef702ab5647d651b7",
+  "workflow_commit": "3bbb9946805528c2e2483c438382f594e92da79c",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-29e9e0393583-dirty.json",
-    "equivalence": "equivalence-29e9e0393583-dirty.json",
-    "harness": "harness-29e9e0393583-dirty.json",
-    "macro": "macro-29e9e0393583-dirty.json",
-    "micro": "micro-29e9e0393583-dirty.json",
-    "notebooklm": "notebooklm-29e9e0393583-dirty.json",
-    "openwiki": "openwiki-29e9e0393583-dirty.json",
-    "policy": "policy-29e9e0393583-dirty.json",
-    "workflow": "workflow-29e9e0393583-dirty.json"
+    "container": "container-3bbb99468055-dirty.json",
+    "equivalence": "equivalence-3bbb99468055-dirty.json",
+    "harness": "harness-3bbb99468055-dirty.json",
+    "macro": "macro-3bbb99468055-dirty.json",
+    "micro": "micro-3bbb99468055-dirty.json",
+    "notebooklm": "notebooklm-3bbb99468055-dirty.json",
+    "openwiki": "openwiki-3bbb99468055-dirty.json",
+    "policy": "policy-3bbb99468055-dirty.json",
+    "workflow": "workflow-3bbb99468055-dirty.json"
   },
   "counts": {
     "artifact": 46,
@@ -19,7 +19,7 @@
     "harness": 80,
     "optional": 1
   },
-  "workflow_digest": "3abbdc05bb2dbd223ffa276440d90bb03b484a5ea53616627e5cfffe33efd73e",
+  "workflow_digest": "35b07f9e992301670390eb1cc38627098a74af60f8f5f260f582ebc91f8445c1",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -135,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-29e9e03935833a60150b802ef702ab5647d651b7.json": {
+    "data/receipts/post-commit-3bbb9946805528c2e2483c438382f594e92da79c.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -577,7 +577,7 @@
       ]
     },
     "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md": {
-      "sha256": "e3bdb3e38452091a0454833ccab3cee261ba58e4a588f30a7629a116ef06dd97",
+      "sha256": "70245a8d20b4376e7358f03d92d3070c2f8ef812e4ff75c37cef8daf880e0b54",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1197,7 +1197,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "2f80b4eab945493c409cc4ffd38c0835b00554d26a5e12f305cda2781826c42f",
+      "sha256": "13aab01d506bca8508252b2c6a33cce2d988053e07b8117b2a010ec6441bba94",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1213,7 +1213,7 @@
       ]
     },
     "proof_workflow/control_equivalence_entry.sh": {
-      "sha256": "fc25d46d36a120c2e6fbbb4f1aa71835e22a348436ad1271d5106ce0c94bd33d",
+      "sha256": "a9b9603d7ce43f51fa50a512f4017cd7cba93f59f071c1b58a178631a17c23a1",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1301,7 +1301,7 @@
       ]
     },
     "proof_workflow/lib/equivalence_control.py": {
-      "sha256": "51137955a9fd9f51f16a9739199413f8a37156ec00aa38b66f1352ebc621bbfc",
+      "sha256": "7d92f93f7943aebd661fb543ad56ecb4e7b0c03a93331fffb0acbdad1f76ac3d",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

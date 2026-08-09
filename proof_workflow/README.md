@@ -53,6 +53,12 @@ sh loopctl/loopctl.sh <loop> prove --force-receipt   # 重戳宣稱
 sh loopctl/loopctl.sh <loop> test                    # 對照組驗行為
 ```
 
+同一個 commit 的 equivalence control receipt 預設不可覆寫；真的要重跑同一個 HEAD，必須顯式設
+`CONTROL_EQUIVALENCE_FORCE_RECEIPT=1`。control 只接受 clean、commit 綁定目前 HEAD 的 proof，
+不得拿 `-dirty` receipt 去比 detached HEAD。命名目前 HEAD 的 clean receipts 會先是 working-tree
+runtime evidence；把它們 commit 後 HEAD 必然前進，所以它們在下一個 commit 裡只可能是歷史證據，
+不能把「tracked」與「仍命名目前 HEAD」假裝成可同時成立。
+
 **訊號 → 動作**
 
 | 看到 | 做什麼 |
@@ -112,6 +118,7 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | 從 contract 取 loop 名字仍 FATAL | 換掉寫死清單後重建 | `mcp prove` 與 `policy prove` 是同一份證明、共用一份收據 → 改成**從 `writes` 推收據名**，不從命令名推 |
 | `.gitignore` 不在任何收據裡 | 被問「以上機制都有收據與對照組嗎」後，把改過的檔跟 manifest 對一次 | 沒人想過要 hash 它，但它**同時決定 `--upload` 帶什麼進沙盒、以及什麼進得了 commit**——改它不動任何 digest。**「編輯過」不等於「被涵蓋」，「對照組有提到」也不等於**；唯一算數的是有收據雜湊過它 |
 | `chatgpt.com` 被放行只有 opt-in 才驗到 | 同一次比對 | 真跑的 codex turn 是 opt-in，預設 `policy test` 完全碰不到它 → 補一條**靜態斷言**（host ＋ binary 綁定都要在），與那條真跑各是一種抵達，**不會被同一個錯誤同時騙過** |
+| equivalence control 的 live／負控紅把 offline 軸一起標紅 | `control-equivalence-29e9e0393583.json` 抓到 judge 負控沒接上後，回讀四軸欄位 | 當初用一個 `ENTRY_RC` 同時代表「offline baseline」與「整個 control health」，所以會信是因為總 verdict 的確該紅，卻忽略欄位語義已混軸。歷史 failed receipt 凍結不改；改成分傳 `offline_rc`／`control_rc`，並加 live fail 不得降級 offline 的 selftest |
 | trailer 把檔案歸錯 loop | 讀 `harness:macro:loopctl/workflow_lock.py` | `setdefault` 讓字母序最前的 loop 佔位。**收據裡沒有任何欄位陳述擁有權**（macro 真的在 commit 路徑上跑 lineage.py，workflow 真的是它的證明，兩邊都 `ran`、位元組相同）→ 不換更好的裁決規則，改成**列出全部認領者** `macro+workflow`；六個檔如此，而這也把單一標籤藏起來的事實掀出來：改它們會動**兩份** digest |
 
 ### 容器與沙盒（OrbStack / Apple container / OpenShell）

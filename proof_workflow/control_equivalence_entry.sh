@@ -15,11 +15,15 @@ ROOT=$CAPTURE_ROOT
 SHORT=$CAPTURE_SHORT
 
 PROOF="$ROOT/data/proof-workflow/equivalence-$SHORT.json"
-[ -f "$PROOF" ] || PROOF="$ROOT/data/proof-workflow/equivalence-$SHORT-dirty.json"
 [ -f "$PROOF" ] || {
-  echo "control FATAL: no equivalence proof at current HEAD $SHORT; run equivalence prove first" >&2
+  echo "control FATAL: no clean equivalence proof at current HEAD $SHORT; commit first, then run equivalence prove" >&2
   exit 64
 }
+CONTROL_RECEIPT="$ROOT/data/proof-workflow/control-equivalence-$SHORT.json"
+if [ -e "$CONTROL_RECEIPT" ] && [ "${CONTROL_EQUIVALENCE_FORCE_RECEIPT:-0}" != "1" ]; then
+  echo "control FATAL: receipt already exists: ${CONTROL_RECEIPT#"$ROOT"/}; set CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 to overwrite explicitly" >&2
+  exit 64
+fi
 
 BASE=$(mktemp -d "${TMPDIR:-/tmp}/control-equivalence.XXXXXX")
 WT="$BASE/repo"
@@ -59,6 +63,10 @@ run_offline() {
 run_offline offline-unplanted "$BASE/offline-receipt.json"
 OFFLINE_RC=$?
 expect "unplanted-offline-surface-is-green" "$OFFLINE_RC" 0
+[ "$OFFLINE_RC" -ne 64 ] || {
+  echo "control FATAL: unplanted offline entry returned 64" >&2
+  exit 64
+}
 
 # The selftest receipt must keep all authority edges distinct.
 CAPTURE_CWD="$WT"
@@ -111,9 +119,8 @@ p.write_text(changed, encoding="utf-8")
 PY
   _plant_rc=$?
   if [ "$_plant_rc" -ne 0 ]; then
-    echo "  [RED]  $_id — plant failed" >&2
-    RED=1
-    return
+    echo "control FATAL: $_id plant could not be installed" >&2
+    return 64
   fi
   run_offline "planted-$_id" "$BASE/planted-receipt.json"
   _rc=$?
@@ -124,15 +131,15 @@ PY
 
 plant_and_require_red request-digest \
   '    if request["request_digest"] != expected:' \
-  '    if False:'
+  '    if False:' || exit $?
 plant_and_require_red judge-authority \
   '    if (
         execution.get("judge_packet_digest") != judge_packet_digest' \
   '    if False and (
-        execution.get("judge_packet_digest") != judge_packet_digest'
+        execution.get("judge_packet_digest") != judge_packet_digest' || exit $?
 plant_and_require_red committed-source-binding \
   '    if result.returncode != 0 or result.stdout != current_bytes:' \
-  '    if False:'
+  '    if False:' || exit $?
 
 LIVE_STATE=NOT_EXERCISED
 if [ "${CONTROL_EQUIVALENCE_LIVE:-0}" = "1" ]; then
@@ -147,17 +154,19 @@ if [ "${CONTROL_EQUIVALENCE_LIVE:-0}" = "1" ]; then
   LIVE_RC=$?
   CAPTURE_CWD=""
   if [ "$LIVE_RC" -eq 0 ]; then LIVE_STATE=CARRIER_EXERCISED_PASS
+  elif [ "$LIVE_RC" -eq 64 ]; then
+    echo "control FATAL: live carrier returned 64" >&2
+    exit 64
   else LIVE_STATE=CARRIER_EXERCISED_FAIL; RED=1; fi
 else
   echo "  [note] live carrier NOT EXERCISED — pass --live to spend the Gemini turn"
   echo "         fresh judge and Human admit remain separate regardless of this arm"
 fi
 
-ENTRY_RC=$OFFLINE_RC
-[ "$RED" -eq 0 ] || ENTRY_RC=2
-CONTROL_RECEIPT="$ROOT/data/proof-workflow/control-equivalence-$SHORT.json"
+CONTROL_RC=$OFFLINE_RC
+[ "$RED" -eq 0 ] || CONTROL_RC=2
 "$PY3" "$ROOT/proof_workflow/lib/equivalence_control.py" \
-  "$ROOT" "$RUNDIR" "$PROOF" "$CONTROL_RECEIPT" "$ENTRY_RC" "$LIVE_STATE"
+  "$ROOT" "$RUNDIR" "$PROOF" "$CONTROL_RECEIPT" "$OFFLINE_RC" "$CONTROL_RC" "$LIVE_STATE"
 COMPARE_RC=$?
 echo "control[equivalence-entry] trace=proof_workflow/data/$RUN_ID"
 exit "$COMPARE_RC"
