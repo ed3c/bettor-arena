@@ -120,6 +120,7 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | `chatgpt.com` 被放行只有 opt-in 才驗到 | 同一次比對 | 真跑的 codex turn 是 opt-in，預設 `policy test` 完全碰不到它 → 補一條**靜態斷言**（host ＋ binary 綁定都要在），與那條真跑各是一種抵達，**不會被同一個錯誤同時騙過** |
 | equivalence control 的 live／負控紅把 offline 軸一起標紅 | `control-equivalence-29e9e0393583.json` 抓到 judge 負控沒接上後，回讀四軸欄位 | 當初用一個 `ENTRY_RC` 同時代表「offline baseline」與「整個 control health」，所以會信是因為總 verdict 的確該紅，卻忽略欄位語義已混軸。歷史 failed receipt 凍結不改；改成分傳 `offline_rc`／`control_rc`，並加 live fail 不得降級 offline 的 selftest |
 | equivalence control 從 Git 導 inventory，卻仍信 proof 自述的 SHA／digest | `1a32221` 後的獨立 standards review 偽造同名 proof 思考實驗 | 當初會信是因為「檔名集合由 Git 推導」確實堵住漏檔，卻沒堵住 proof 對同一批路徑謊報位元組。歷史 receipts 凍結不改；control 現在獨立重算 HEAD tree、逐檔 SHA、排序 manifest digest 與 counts，per-run selftest receipt 也退出 canonical digest |
+| 同 HEAD 同秒並行 controls 共用 capture 目錄；缺檔的 Python exit 1 被當合格紅 | `ecce2d9` 後的獨立 standards review 併行／exit-domain 審查 | 當初會信是因為時間戳加 commit 看似唯一、而「非零就是紅」對單機序列跑也碰巧成立。改為 `mktemp` nonce 目錄、落 receipt 前重驗 stream SHA/bytes；equivalence 負控只收 2，0 是沒抓到，64 或未宣告碼都是 FATAL |
 | trailer 把檔案歸錯 loop | 讀 `harness:macro:loopctl/workflow_lock.py` | `setdefault` 讓字母序最前的 loop 佔位。**收據裡沒有任何欄位陳述擁有權**（macro 真的在 commit 路徑上跑 lineage.py，workflow 真的是它的證明，兩邊都 `ran`、位元組相同）→ 不換更好的裁決規則，改成**列出全部認領者** `macro+workflow`；六個檔如此，而這也把單一標籤藏起來的事實掀出來：改它們會動**兩份** digest |
 
 ### 容器與沙盒（OrbStack / Apple container / OpenShell）

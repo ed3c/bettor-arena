@@ -39,9 +39,11 @@ capture_init() { # label
     rev-parse --show-toplevel) || { echo "capture FATAL: not a git work tree" >&2; exit 64; }
   CAPTURE_COMMIT=$(git -C "$CAPTURE_ROOT" rev-parse HEAD)
   CAPTURE_SHORT=$(printf %.12s "$CAPTURE_COMMIT")
-  RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$CAPTURE_SHORT"
-  RUNDIR="$CAPTURE_ROOT/proof_workflow/data/$RUN_ID"
-  mkdir -p "$RUNDIR/streams"
+  mkdir -p "$CAPTURE_ROOT/proof_workflow/data"
+  RUNDIR=$(mktemp -d "$CAPTURE_ROOT/proof_workflow/data/$(date -u +%Y%m%dT%H%M%SZ)-$CAPTURE_SHORT.XXXXXX") \
+    || { echo "capture FATAL: could not allocate unique run directory" >&2; exit 64; }
+  RUN_ID=${RUNDIR##*/}
+  mkdir "$RUNDIR/streams"
   CAPTURE_SEQ=0
   # OrbStack redirects the docker CLI through a context, so `docker ps` works
   # while /var/run/docker.sock refuses — and OpenShell, which dials the socket
@@ -80,3 +82,21 @@ capture() { # id -- cmd...
   echo "  [ran] $_cid — exit $_crc"
   return "$_crc"
 }
+
+_capture_selftest() {
+  CAPTURE_HOME=$(cd "$(dirname "$0")/.." && pwd -P)
+  capture_init collision-a >/dev/null
+  _first=$RUNDIR
+  capture_init collision-b >/dev/null
+  _second=$RUNDIR
+  if [ "$_first" = "$_second" ]; then
+    echo "SELFTEST RED: two same-HEAD allocations collided" >&2
+    return 2
+  fi
+  echo "SELFTEST GREEN"
+  return 0
+}
+
+case "$0" in
+  */capture.sh) [ "${1:-}" = "--selftest" ] && _capture_selftest ;;
+esac

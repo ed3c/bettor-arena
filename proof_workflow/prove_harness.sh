@@ -37,7 +37,8 @@ prove_harness comparator proof_workflow/lib/compare_control.py \
   "claim vs behaviour: required/optional by measurement, ledger-level coverage, declared exclusions, receipt selection by tree state" \
   -- python3 proof_workflow/lib/compare_control.py --selftest
 prove_harness capture proof_workflow/lib/capture.sh \
-  "physical trace of a real run: argv, cwd, exit, both streams to disk with a sha256 each (sourced, so hashed rather than fired)"
+  "physical trace of a real run: unique directory, argv, cwd, exit, both streams to disk with a sha256 each" \
+  -- sh proof_workflow/lib/capture.sh --selftest
 # The coverage checker, which caught its own absence the moment it became tracked:
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written

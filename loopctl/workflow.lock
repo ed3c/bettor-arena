@@ -1,17 +1,17 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "1a32221095cf37cc1ceaa69bbfdd017ca471d89c",
+  "workflow_commit": "ecce2d9db018cfcf147f8bd5c66ddd52367fc1fa",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-1a32221095cf-dirty.json",
-    "equivalence": "equivalence-1a32221095cf-dirty.json",
-    "harness": "harness-1a32221095cf-dirty.json",
-    "macro": "macro-1a32221095cf-dirty.json",
-    "micro": "micro-1a32221095cf-dirty.json",
-    "notebooklm": "notebooklm-1a32221095cf-dirty.json",
-    "openwiki": "openwiki-1a32221095cf-dirty.json",
-    "policy": "policy-1a32221095cf-dirty.json",
-    "workflow": "workflow-1a32221095cf-dirty.json"
+    "container": "container-ecce2d9db018-dirty.json",
+    "equivalence": "equivalence-ecce2d9db018-dirty.json",
+    "harness": "harness-ecce2d9db018-dirty.json",
+    "macro": "macro-ecce2d9db018-dirty.json",
+    "micro": "micro-ecce2d9db018-dirty.json",
+    "notebooklm": "notebooklm-ecce2d9db018-dirty.json",
+    "openwiki": "openwiki-ecce2d9db018-dirty.json",
+    "policy": "policy-ecce2d9db018-dirty.json",
+    "workflow": "workflow-ecce2d9db018-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -19,7 +19,7 @@
     "harness": 80,
     "optional": 1
   },
-  "workflow_digest": "cdc8d5d69afbb69b00b8ea5a707cec4cb5c0dc0b85d1d1d707b17f86a5dba1c1",
+  "workflow_digest": "40ed5b91a66857d85132a9a723f38a58cea320b113c90d87da0c31adb2e5a21f",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -135,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-1a32221095cf37cc1ceaa69bbfdd017ca471d89c.json": {
+    "data/receipts/post-commit-ecce2d9db018cfcf147f8bd5c66ddd52367fc1fa.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -689,7 +689,7 @@
       ]
     },
     "loop_wiki/evolve-technical-equivalence-research/selftest.sh": {
-      "sha256": "f50f2fbaee2ab5de7680296da19037cd25c4e16374ed83b72239c2570eea6a74",
+      "sha256": "49a31e84cb5757969b820d10274cd0590282938fc7697244a6b4ba1d9d16bedf",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1189,7 +1189,7 @@
       ]
     },
     "proof_workflow/README.md": {
-      "sha256": "2794cc380353d9e39d4f5b26a844ff68c739f3b7903469ef69f2ff147eca3855",
+      "sha256": "25a4e2d122ba5d61d7e04bd61c7c6c4eeee235086815ff6c6e88754e01184fdc",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1205,7 +1205,7 @@
       ]
     },
     "proof_workflow/control_equivalence_entry.sh": {
-      "sha256": "3f4f6154d70366ffe80ccb93fe9c2a9f3924cec0b550a89b4101f85d02171dd7",
+      "sha256": "f07a9034310993710b50f8746987da8b4cb6c5831d42f981cf4153ebd3e8ebe4",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1277,7 +1277,7 @@
       ]
     },
     "proof_workflow/lib/capture.sh": {
-      "sha256": "e675c2def484f292e35fd746ce8caf2e733827a5c9cf926216a20a844c55f9c4",
+      "sha256": "21379632b4aa2bd4668afe91538b6373e1488071539d896c7d9b693da36d1655",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1285,7 +1285,7 @@
       ]
     },
     "proof_workflow/lib/compare_control.py": {
-      "sha256": "7b68d190dfa288574fc066392d55ed85a49efecdadd01c87a6e08d2287a9a58a",
+      "sha256": "f264af9bde00bae1081b995c0ef13f9c90d7e669466cd9e29270221ee013bc7b",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1293,7 +1293,7 @@
       ]
     },
     "proof_workflow/lib/equivalence_control.py": {
-      "sha256": "3263d1ff31ad1e9bf938efca33dc641172c6a15c9cffb262ce6be9f7e5307f5e",
+      "sha256": "35497314410c7f3dff1252f00b1ae12a5e4e9acebe4e83d2e610b7df58342675",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1341,7 +1341,7 @@
       ]
     },
     "proof_workflow/prove_harness.sh": {
-      "sha256": "de45af12288a3be81df390a92237b69935afc5910fc9c1660f2f96a205b4c770",
+      "sha256": "02e7ebc64cc8f30bb125a1cbb8326bde94ad004259e258d7eb981eb26d663283",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

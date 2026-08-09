@@ -18,6 +18,7 @@ has only ever been seen agreeing is not known to be able to disagree.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -406,6 +407,11 @@ def stream_manifest(rundir: Path) -> list[dict]:
     for line in read_lines(rundir / "run.jsonl"):
         rec = json.loads(line)
         for lane in ("stdout", "stderr"):
+            stream = rundir / rec[lane]["path"]
+            payload = stream.read_bytes()
+            actual_sha = hashlib.sha256(payload).hexdigest()
+            if actual_sha != rec[lane]["sha256"] or len(payload) != rec[lane]["bytes"]:
+                raise ValueError(f"captured stream changed after recording: {stream}")
             records.append(
                 {
                     "step": rec["id"],
@@ -609,6 +615,38 @@ def _selftest() -> int:
     # The failure that matters: a prefix that is not a path boundary must NOT
     # count as coverage, or `.grep` would be "covered" by `.grepai/index.gob`.
     case("prefix-is-not-coverage", covered("a/b", proof), False)
+
+    with tempfile.TemporaryDirectory() as td:
+        rundir = Path(td) / "run"
+        streams = rundir / "streams"
+        streams.mkdir(parents=True)
+        out = streams / "1-probe.out"
+        err = streams / "1-probe.err"
+        out.write_bytes(b"out\n")
+        err.write_bytes(b"")
+        record = {
+            "id": "probe",
+            "stdout": {
+                "path": "streams/1-probe.out",
+                "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+                "bytes": 4,
+            },
+            "stderr": {
+                "path": "streams/1-probe.err",
+                "sha256": hashlib.sha256(err.read_bytes()).hexdigest(),
+                "bytes": 0,
+            },
+        }
+        (rundir / "run.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+        case("recorded-stream-verifies", len(stream_manifest(rundir)), 2)
+        out.write_bytes(b"forged\n")
+        try:
+            stream_manifest(rundir)
+        except ValueError:
+            pass
+        else:
+            print("SELFTEST case failed — mutated stream was accepted", file=sys.stderr)
+            red = 1
 
     with tempfile.TemporaryDirectory() as td:
         rundir = Path(td) / "run"

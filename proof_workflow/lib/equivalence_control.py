@@ -116,6 +116,14 @@ def stream_manifest(rundir: Path) -> list[dict]:
     for line in runlog.read_text(encoding="utf-8").splitlines():
         item = json.loads(line)
         for lane in ("stdout", "stderr"):
+            stream = rundir / item[lane]["path"]
+            payload = stream.read_bytes()
+            actual_sha = hashlib.sha256(payload).hexdigest()
+            if (
+                actual_sha != item[lane]["sha256"]
+                or len(payload) != item[lane]["bytes"]
+            ):
+                raise ValueError(f"captured stream changed after recording: {stream}")
             records.append(
                 {
                     "step": item["id"],
@@ -309,6 +317,38 @@ def selftest() -> int:
         write_receipt(receipt, "replacement\n", force=True)
         if receipt.read_text(encoding="utf-8") != "replacement\n":
             print("SELFTEST case failed: forced-receipt-replacement", file=sys.stderr)
+            failed = True
+
+    with tempfile.TemporaryDirectory() as tmp:
+        rundir = Path(tmp) / "run"
+        stream_dir = rundir / "streams"
+        stream_dir.mkdir(parents=True)
+        out = stream_dir / "1-probe.out"
+        err = stream_dir / "1-probe.err"
+        out.write_bytes(b"out\n")
+        err.write_bytes(b"")
+        record = {
+            "id": "probe",
+            "stdout": {
+                "path": "streams/1-probe.out",
+                "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+                "bytes": 4,
+            },
+            "stderr": {
+                "path": "streams/1-probe.err",
+                "sha256": hashlib.sha256(err.read_bytes()).hexdigest(),
+                "bytes": 0,
+            },
+        }
+        (rundir / "run.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+        stream_manifest(rundir)
+        out.write_bytes(b"forged\n")
+        try:
+            stream_manifest(rundir)
+        except ValueError:
+            pass
+        else:
+            print("SELFTEST case failed: mutated-stream-is-rejected", file=sys.stderr)
             failed = True
 
     with tempfile.TemporaryDirectory() as tmp:
