@@ -11,8 +11,8 @@ stay in `_runs/`; they are not promoted into the skill mirror.
 
 Multiple research results for one request are legal (for example, raw Gemini
 candidate output followed by independently enriched evidence). Verification,
-judge, and sync filenames include their immediate upstream digest prefix, so
-the immutable artifacts coexist rather than overwrite each other.
+judge, sync, and route-result filenames include a binding digest prefix, so the
+immutable artifacts coexist rather than overwrite each other.
 
 Adapter receipt v1.1 binds two additional identities. The execution-policy
 digest identifies which external write-path exports may be redirected. The

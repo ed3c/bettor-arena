@@ -781,7 +781,7 @@
       "io": {
         "input": "hash-bound technical-equivalence request; optional Gemini result or explicit live adapter execution",
         "output": [
-          "loop_wiki/evolve-technical-equivalence-research/_runs/<request>/<digest>/route-result.json",
+          "loop_wiki/evolve-technical-equivalence-research/_runs/<request>/<digest>/route-result.<state>.<digest12>.json",
           "research request, adapter execution mirror/receipt, verification bundle and candidate sync bundle as the state advances"
         ],
         "exit": "0 valid route state, including research/human pending · 2 declared verification failure · 64 contract/tool failure"

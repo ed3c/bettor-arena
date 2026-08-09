@@ -1288,7 +1288,8 @@ def run(args: argparse.Namespace) -> int:
         "exit_semantics": "0=valid state;2=declared verification failure;64=contract/tool failure",
     }
     route["route_result_digest"] = digest(route, "route_result_digest")
-    route_path = run_dir / f"route-result.{state.replace('_', '-')}.json"
+    route_key = route["route_result_digest"].split(":", 1)[1][:12]
+    route_path = run_dir / f"route-result.{state.replace('_', '-')}.{route_key}.json"
     write_immutable(route_path, route)
     print(f"PASS: route_result={route_path}")
     return route_exit

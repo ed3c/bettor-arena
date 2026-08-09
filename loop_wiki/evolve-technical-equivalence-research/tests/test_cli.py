@@ -491,6 +491,20 @@ class EquivalenceCliTest(unittest.TestCase):
         self.assertIn("技術實現等價物（必做）", research["prompt"])
         self.assertIn("P9 可觀測性", research["prompt"])
 
+    def test_route_receipt_filename_is_bound_to_its_content_digest(self) -> None:
+        route = self.first_route()
+        expected_suffix = route["route_result_digest"].split(":", 1)[1][:12]
+        route_files = list(
+            (
+                self.base
+                / "runs"
+                / "fixture-viewpoint"
+                / route["request_digest"].split(":", 1)[1][:12]
+            ).glob("route-result.research-required.*.json")
+        )
+        self.assertEqual(len(route_files), 1)
+        self.assertTrue(route_files[0].name.endswith(f".{expected_suffix}.json"))
+
     def test_tampered_request_fails_closed(self) -> None:
         request = self.request()
         data = json.loads(request.read_text(encoding="utf-8"))
