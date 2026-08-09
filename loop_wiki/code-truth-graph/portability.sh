@@ -13,7 +13,7 @@ PACKET=$(PYTHONPATH="$RELOCATED/src" python3 -m code_truth_graph.fixture --out "
 sh "$RELOCATED/run.sh" --packet "$PACKET" --output "$TMP/output" >/dev/null || exit $?
 PYTHONPATH="$RELOCATED/src" python3 -m code_truth_graph.verify_artifacts \
   --output "$TMP/output" >/dev/null || exit 2
-python3 - "$TMP/output/ctg-route-result.json" <<'PY'
+python3 - "$TMP/output/ctg-route-result.json" <<'PY' || exit 2
 import json
 import sys
 from pathlib import Path
@@ -63,7 +63,7 @@ git -C "$SUBJECT" add manifest.json
 git -C "$SUBJECT" commit -qm 'fixture: pin relocated local manifest' || exit 64
 sh "$RELOCATED/local-trigger.sh" \
   "$SUBJECT/manifest.json" "$SUBJECT/output" >/dev/null || exit $?
-python3 - "$SUBJECT/output/ctg-local-build-receipt.json" <<'PY'
+python3 - "$SUBJECT/output/ctg-local-build-receipt.json" <<'PY' || exit 2
 import json
 import sys
 from pathlib import Path

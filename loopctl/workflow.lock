@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "66140a649b13895291c548220c1eeaba752b9a2b",
+  "workflow_commit": "bad9f3aabef84ae8d5b7ba22057c3da37eaac63c",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-66140a649b13-dirty.json",
-    "ctg": "ctg-66140a649b13-dirty.json",
-    "equivalence": "equivalence-66140a649b13-dirty.json",
-    "harness": "harness-66140a649b13-dirty.json",
-    "macro": "macro-66140a649b13-dirty.json",
-    "micro": "micro-66140a649b13-dirty.json",
-    "notebooklm": "notebooklm-66140a649b13-dirty.json",
-    "openwiki": "openwiki-66140a649b13-dirty.json",
-    "policy": "policy-66140a649b13-dirty.json",
-    "workflow": "workflow-66140a649b13-dirty.json"
+    "container": "container-bad9f3aabef8-dirty.json",
+    "ctg": "ctg-bad9f3aabef8-dirty.json",
+    "equivalence": "equivalence-bad9f3aabef8-dirty.json",
+    "harness": "harness-bad9f3aabef8-dirty.json",
+    "macro": "macro-bad9f3aabef8-dirty.json",
+    "micro": "micro-bad9f3aabef8-dirty.json",
+    "notebooklm": "notebooklm-bad9f3aabef8-dirty.json",
+    "openwiki": "openwiki-bad9f3aabef8-dirty.json",
+    "policy": "policy-bad9f3aabef8-dirty.json",
+    "workflow": "workflow-bad9f3aabef8-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "fb3ffe75cdb169dc07f7e457d83652d62cd301ef9b5c83e6cad4bb3352fca7b3",
+  "workflow_digest": "e6f3dd551c05ffd2e30d30250485e58ed00849d6e8650fa7f3dd7e9b3e27fa13",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-66140a649b13895291c548220c1eeaba752b9a2b.json": {
+    "data/receipts/post-commit-bad9f3aabef84ae8d5b7ba22057c3da37eaac63c.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -418,7 +418,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/portability.sh": {
-      "sha256": "8e786e0cf8dda77d2bb2cb05869ca2932ea393debdd75b462d90ef7dca96e90f",
+      "sha256": "5d4fd8ea73d85b4f9ef73a9cfc7b50bc311ec118bbeb1ad7a442383f056f38e2",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1546,7 +1546,7 @@
       ]
     },
     "proof_workflow/control_ctg_entry.sh": {
-      "sha256": "d8aeb8aaac8dae8bbe433af8842def6d02d4647a4fefc1538fb2493e67932731",
+      "sha256": "8b1111a02a6922afbed6833c40c58625803a6d61896a0742dc2f7e25246db8be",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

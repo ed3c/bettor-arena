@@ -42,14 +42,7 @@ run_case() { # id bundle-dir output-dir
 
 run_contract_test() { # id script
   CAPTURE_CWD="$WT"
-  capture "$1" -- sh -c '
-    sh "$1"
-    rc=$?
-    case "$rc" in
-      0|2|64) exit "$rc" ;;
-      *) exit 2 ;;
-    esac
-  ' sh "$2"
+  capture "$1" -- sh -c 'sh "$1"; rc=$?; case "$rc" in 0|2|64) exit "$rc" ;; *) exit 2 ;; esac' sh "$2"
   _rc=$?
   CAPTURE_CWD=""
   return "$_rc"
