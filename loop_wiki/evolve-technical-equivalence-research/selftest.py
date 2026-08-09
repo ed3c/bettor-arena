@@ -101,7 +101,7 @@ def load_history(path: Path) -> list[dict]:
 def assurance_states(*, red: bool, live: str) -> dict[str, str]:
     live_state = live
     maximum = (
-        "carrier_exercised_candidate_ready"
+        "carrier_exercised_research_collected"
         if live == "CARRIER_EXERCISED_PASS" and not red
         else "offline_surface_implemented"
         if not red
@@ -114,6 +114,26 @@ def assurance_states(*, red: bool, live: str) -> dict[str, str]:
         "human_admit": "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN",
         "maximum_claim": maximum,
     }
+
+
+def carrier_state_from_run(live_root: Path) -> str:
+    """Classify provider transport independently from candidate validation."""
+    receipts = sorted((live_root / "runs").glob("**/adapter-receipt*.json"))
+    for receipt_path in reversed(receipts):
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt.get("status") != "passed":
+            continue
+        result_path = receipt_path.parent / "research-result.json"
+        if not result_path.is_file():
+            continue
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        if result.get("adapter_receipt_digest") == receipt.get(
+            "adapter_receipt_digest"
+        ) and result.get("upstream_research_request_digest") == receipt.get(
+            "research_request_digest"
+        ):
+            return "CARRIER_EXERCISED_PASS"
+    return "CARRIER_EXERCISED_FAIL"
 
 
 def main() -> int:
@@ -229,9 +249,7 @@ def main() -> int:
                 "carrier_exercised; semantic_false_pass_and_human_admitted_jitter_baseline_not_exercised"
             )
         checks.append(check)
-        live = (
-            "CARRIER_EXERCISED_PASS" if check["exit"] == 0 else "CARRIER_EXERCISED_FAIL"
-        )
+        live = carrier_state_from_run(live_root)
     red = any(check["exit"] != 0 for check in checks)
     profile_sha = hashlib.sha256(
         (ROOT / "profile" / "technical-equivalence.md").read_bytes()

@@ -327,7 +327,7 @@ def grounding(candidate: dict[str, Any]) -> tuple[str, list[str]]:
             "falsification_conditions",
         ):
             if field not in candidate:
-                raise ContractError(f"inference candidate missing field: {field}")
+                raise VerificationFailure(f"inference candidate missing field: {field}")
         if not str(candidate["claim"]).strip():
             raise ContractError("inference candidate claim must be non-empty")
         urls = candidate["source_urls"]

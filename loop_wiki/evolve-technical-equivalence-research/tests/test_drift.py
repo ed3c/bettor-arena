@@ -12,7 +12,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from drift import assess_hard_drift, assess_soft_jitter  # noqa: E402
-from selftest import assurance_states, live_observation  # noqa: E402
+from selftest import assurance_states, carrier_state_from_run, live_observation  # noqa: E402
 
 
 class DriftTest(unittest.TestCase):
@@ -37,6 +37,34 @@ class DriftTest(unittest.TestCase):
         )
         self.assertEqual(states["human_admit"], "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN")
         self.assertEqual(states["maximum_claim"], "offline_surface_implemented")
+
+    def test_passed_carrier_is_distinct_from_candidate_validation(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="carrier-state.") as raw:
+            live = Path(raw) / "live"
+            run = live / "runs" / "canary" / "digest"
+            run.mkdir(parents=True)
+            receipt = {
+                "status": "passed",
+                "research_request_digest": "sha256:request",
+                "adapter_receipt_digest": "sha256:receipt",
+            }
+            (run / "adapter-receipt.json").write_text(
+                json.dumps(receipt), encoding="utf-8"
+            )
+            (run / "research-result.json").write_text(
+                json.dumps(
+                    {
+                        "upstream_research_request_digest": "sha256:request",
+                        "adapter_receipt_digest": "sha256:receipt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(carrier_state_from_run(live), "CARRIER_EXERCISED_PASS")
+        states = assurance_states(red=False, live="CARRIER_EXERCISED_PASS")
+        self.assertEqual(
+            states["maximum_claim"], "carrier_exercised_research_collected"
+        )
 
     def test_first_three_observations_only_build_baseline(self) -> None:
         result = assess_soft_jitter(

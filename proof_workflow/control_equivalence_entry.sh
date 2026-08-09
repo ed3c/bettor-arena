@@ -187,11 +187,28 @@ if [ "${CONTROL_EQUIVALENCE_LIVE:-0}" = "1" ]; then
   LIVE_RC=$?
   CAPTURE_CWD=""
   require_contract_exit "live carrier" "$LIVE_RC" || exit $?
-  if [ "$LIVE_RC" -eq 0 ]; then LIVE_STATE=CARRIER_EXERCISED_PASS
-  elif [ "$LIVE_RC" -eq 64 ]; then
+  LIVE_STATE=$("$PY3" - "$LIVE_RUN_ROOT/selftest-receipt.json" <<'PY'
+import json, sys
+try:
+    state = json.load(open(sys.argv[1], encoding="utf-8"))["assurance"]["live_carrier"]
+    assert state in {"CARRIER_EXERCISED_PASS", "CARRIER_EXERCISED_FAIL"}
+except (AssertionError, KeyError, OSError, ValueError):
+    raise SystemExit(64)
+print(state)
+PY
+  )
+  LIVE_STATE_RC=$?
+  [ "$LIVE_STATE_RC" -eq 0 ] || {
+    echo "control FATAL: live selftest receipt has no valid carrier state" >&2
+    exit 64
+  }
+  if [ "$LIVE_RC" -eq 64 ]; then
     echo "control FATAL: live carrier returned 64" >&2
     exit 64
-  else LIVE_STATE=CARRIER_EXERCISED_FAIL; RED=1; fi
+  elif [ "$LIVE_RC" -eq 0 ] && [ "$LIVE_STATE" != "CARRIER_EXERCISED_PASS" ]; then
+    echo "control FATAL: live selftest exited 0 without a passed carrier" >&2
+    exit 64
+  elif [ "$LIVE_RC" -ne 0 ]; then RED=1; fi
 else
   echo "  [note] live carrier NOT EXERCISED — pass --live to spend the Gemini turn"
   echo "         fresh judge and Human admit remain separate regardless of this arm"

@@ -138,7 +138,7 @@ def stream_manifest(rundir: Path) -> list[dict]:
 def assurance(offline_rc: int, live_state: str) -> dict[str, str]:
     offline = "EXERCISED_PASS" if offline_rc == 0 else "EXERCISED_FAIL"
     maximum = (
-        "carrier_exercised_candidate_ready"
+        "carrier_exercised_research_collected"
         if offline_rc == 0 and live_state == "CARRIER_EXERCISED_PASS"
         else "offline_surface_implemented"
         if offline_rc == 0

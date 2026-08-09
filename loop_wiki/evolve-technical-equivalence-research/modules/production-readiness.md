@@ -33,3 +33,7 @@
   live-carrier failure may make the overall control red, but it must not rewrite
   the independently observed offline baseline. Same-HEAD control receipts are
   frozen unless `loopctl equivalence test --force-receipt` is explicitly used.
+- Provider transport and candidate validation are also separate. A digest-bound
+  adapter receipt may prove all Gemini turns completed while the aggregate stays
+  red because a candidate omitted a required grounding field; that state is
+  `carrier_exercised_research_collected`, never `candidate_ready`.
