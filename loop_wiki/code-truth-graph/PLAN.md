@@ -15,6 +15,7 @@ STATUS: candidate
 | 6 | RED | packet-only ingress could not reproduce legacy GraphRAG because 16 raw-derived evidence records stayed at the ix boundary |
 | 7 | GREEN | CLI-only `build-local` moved the generic mechanism to bettor while the same ix-owned frozen corpus reproduced all three legacy GraphRAG CSV files byte-for-byte |
 | 8 | RED | the loop had one portable-input ablation receipt, but verifier, relocation, trusted-local and MCP carrier did not each prove an unmodified green plus a byte-guarded planted red; current-HEAD proof was also not required before control |
+| 9 | GREEN | commit `31bce1b3c680` produced a clean same-HEAD proof/control pair: portable closure classified, five offline axes passed, and verifier/relocation/trusted-local/MCP planted defects each exited 2; live PROD/device and Human admit stayed `NOT_EXERCISED` |
 
 Rows are append-only. A later correction adds a row; it does not rewrite why an earlier belief existed.
 

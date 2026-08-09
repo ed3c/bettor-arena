@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "bad9f3aabef84ae8d5b7ba22057c3da37eaac63c",
+  "workflow_commit": "31bce1b3c680746e1af28b3bc06d6b122e135c6e",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-bad9f3aabef8-dirty.json",
-    "ctg": "ctg-bad9f3aabef8-dirty.json",
-    "equivalence": "equivalence-bad9f3aabef8-dirty.json",
-    "harness": "harness-bad9f3aabef8-dirty.json",
-    "macro": "macro-bad9f3aabef8-dirty.json",
-    "micro": "micro-bad9f3aabef8-dirty.json",
-    "notebooklm": "notebooklm-bad9f3aabef8-dirty.json",
-    "openwiki": "openwiki-bad9f3aabef8-dirty.json",
-    "policy": "policy-bad9f3aabef8-dirty.json",
-    "workflow": "workflow-bad9f3aabef8-dirty.json"
+    "container": "container-31bce1b3c680-dirty.json",
+    "ctg": "ctg-31bce1b3c680-dirty.json",
+    "equivalence": "equivalence-31bce1b3c680-dirty.json",
+    "harness": "harness-31bce1b3c680-dirty.json",
+    "macro": "macro-31bce1b3c680-dirty.json",
+    "micro": "micro-31bce1b3c680-dirty.json",
+    "notebooklm": "notebooklm-31bce1b3c680-dirty.json",
+    "openwiki": "openwiki-31bce1b3c680-dirty.json",
+    "policy": "policy-31bce1b3c680-dirty.json",
+    "workflow": "workflow-31bce1b3c680-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "e6f3dd551c05ffd2e30d30250485e58ed00849d6e8650fa7f3dd7e9b3e27fa13",
+  "workflow_digest": "a114383c6212159be3b6453fde2a28ca529280af8e9a81ef47482aadcafdda69",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-bad9f3aabef84ae8d5b7ba22057c3da37eaac63c.json": {
+    "data/receipts/post-commit-31bce1b3c680746e1af28b3bc06d6b122e135c6e.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -354,7 +354,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/PLAN.md": {
-      "sha256": "d2060af73d81e7c065f1cc1b1da4cebc6cabc73b6e9b0d4590b1c21c6242800a",
+      "sha256": "ca642d544acaa3de15a8ae835e4b9967f1f4f6d6e762447be1abd40616e8e206",
       "hash_source": "index",
       "kind": "context",
       "loops": [
