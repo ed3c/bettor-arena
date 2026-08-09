@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.4.0",
+  "surface_version": "2.7.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -33,6 +33,7 @@
   ],
   "modes": {
     "run": "execute the loop's real entry point",
+    "build-local": "run a trusted-local manifest through the generic CTG builder; never exposed through MCP",
     "prove": "traverse it and write a proof receipt under data/proof-workflow/",
     "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof",
     "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
@@ -616,6 +617,115 @@
       ]
     },
     {
+      "loop": "ctg",
+      "mode": "run",
+      "target": "loop_wiki/code-truth-graph/trigger.sh",
+      "required": [
+        "--packet",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "--packet: closed ctg-input@1.0.0 bundle manifest; --output: fresh absolute output directory",
+        "output": [
+          "<output>/ctg-route-result.json — ctg-route-result@1.0.0",
+          "<output>/code-truth-graph.json — content-addressed graph artifact"
+        ],
+        "exit": "0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input"
+      },
+      "mcp_carrier": {
+        "kind": "ctg-inline-bundle@1.0.0",
+        "max_request_bytes": 1048576,
+        "description": "MCP accepts no local path. Supply one closed content-addressed bundle; the server materializes it only inside the call and returns bounded artifacts inline without disposable paths.",
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bundle"],
+          "properties": {
+            "bundle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["packet_ref", "files"],
+              "properties": {
+                "packet_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                "files": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["artifact_ref", "sha256", "content_base64"],
+                    "properties": {
+                      "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                      "content_base64": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "build-local",
+      "target": "loop_wiki/code-truth-graph/local-trigger.sh",
+      "required": [
+        "--manifest",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "mcp_exposed": false,
+      "io": {
+        "input": "trusted-local only: --manifest is an absolute subject-owned manifest path; --output is a fresh absolute directory",
+        "output": [
+          "<output>/code-truth-graph.json",
+          "<output>/graphrag/*.csv",
+          "<output>/verification-report.json",
+          "<output>/ctg-local-build-receipt.json"
+        ],
+        "exit": "0 graph verified · 2 a build or graph validation stage failed · 64 usage, invalid path, or malformed manifest"
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "prove",
+      "target": "proof_workflow/prove_ctg_loop.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/ctg-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "test",
+      "target": "proof_workflow/control_ctg_entry.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-ctg-<commit12>.json"
+      ]
+    },
+    {
       "loop": "harness",
       "mode": "prove",
       "target": "proof_workflow/prove_harness.sh",
@@ -652,6 +762,64 @@
       },
       "writes": [
         "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "run",
+      "target": "loop_wiki/evolve-technical-equivalence-research/equivalence.py",
+      "required": [
+        "--request",
+        "--target-peer"
+      ],
+      "optional": [
+        "--execute-gemini",
+        "--json",
+        "--research-result",
+        "--source-peer"
+      ],
+      "io": {
+        "input": "hash-bound technical-equivalence request; optional Gemini result or explicit live adapter execution",
+        "output": [
+          "loop_wiki/evolve-technical-equivalence-research/_runs/<request>/<digest>/route-result.<state>.<digest12>.json",
+          "research request, adapter execution mirror/receipt, verification bundle and candidate sync bundle as the state advances"
+        ],
+        "exit": "0 valid route state, including research/human pending · 2 declared verification failure · 64 contract/tool failure"
+      },
+      "writes": [
+        "loop_wiki/evolve-technical-equivalence-research/_runs/ (including per-attempt redirected adapter side effects)"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "prove",
+      "target": "proof_workflow/prove_equivalence.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/equivalence-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "test",
+      "target": "proof_workflow/control_equivalence_entry.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json",
+        "--live"
+      ],
+      "opt_in": {
+        "--force-receipt": "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 — same-HEAD control receipts are frozen, so replacement must be explicit",
+        "--live": "execute the allowlisted antigravity Gemini Deep Research adapter; without it live behavior is NOT_EXERCISED"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-equivalence-<commit12>.json"
       ]
     }
   ],

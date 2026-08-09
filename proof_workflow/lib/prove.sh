@@ -1,9 +1,9 @@
 #!/bin/sh
 # prove.sh — shared recorder for the proof_workflow traversal proofs.
 #
-# The three loop proofs (macro / micro / openwiki) each walk their own
-# mechanism from its entry point to its terminal artifact. This file owns the
-# one thing all three must do identically: record every step, hash every file
+# The contract-declared loop proofs each walk their own mechanism from its entry
+# point to its terminal artifact. This file owns the one thing all of them must
+# do identically: record every step, hash every file
 # on the path, and fold those hashes into a single molecular digest that moves
 # if any traversed byte moves.
 #

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ctg-input@1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "packet_state",
+    "observation_id",
+    "expected_runner",
+    "subject_snapshot",
+    "domain_profile",
+    "source_refs",
+    "evidence",
+    "reach_requirements",
+    "context",
+    "human_gate"
+  ],
+  "properties": {
+    "schema_version": {"const": "ctg-input@1.0.0"},
+    "packet_id": {"type": "string", "minLength": 1},
+    "packet_state": {"const": "admitted_for_measurement"},
+    "observation_id": {"type": "string", "minLength": 1},
+    "expected_runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface_version", "runtime_ref"],
+      "properties": {
+        "surface_version": {"type": "string", "minLength": 1},
+        "runtime_ref": {"type": "string", "minLength": 1}
+      }
+    },
+    "subject_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "sha256", "repo_id", "commit", "tree", "dirty", "dirty_digest", "scope", "file_manifest_digest"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/artifact_ref"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "repo_id": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "minLength": 1},
+        "tree": {"type": "string", "minLength": 1},
+        "dirty": {"type": "boolean"},
+        "dirty_digest": {"type": ["string", "null"]},
+        "scope": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifact_ref"}},
+        "file_manifest_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "domain_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "artifact_ref", "sha256"],
+      "properties": {
+        "schema_version": {
+          "enum": ["ctg-domain-profile@1.0.0", "ctg-domain-profile@1.1.0"]
+        },
+        "artifact_ref": {"$ref": "#/$defs/artifact_ref"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["repo", "commit", "path", "anchor", "sha256"],
+        "properties": {
+          "repo": {"type": "string", "minLength": 1},
+          "commit": {"type": "string", "minLength": 1},
+          "path": {"$ref": "#/$defs/artifact_ref"},
+          "anchor": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidence_id", "kind", "artifact_ref", "sha256", "observed_at", "environment_class", "authority", "freshness"],
+        "properties": {
+          "evidence_id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "artifact_ref": {"$ref": "#/$defs/artifact_ref"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "observed_at": {"type": "string", "minLength": 1},
+          "environment_class": {"type": "string", "minLength": 1},
+          "authority": {"type": "string", "minLength": 1},
+          "freshness": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "reach_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["STATIC", "SANDBOX", "PROD"],
+      "properties": {
+        "STATIC": {"$ref": "#/$defs/reach_requirement"},
+        "SANDBOX": {"$ref": "#/$defs/reach_requirement"},
+        "PROD": {"$ref": "#/$defs/reach_requirement"}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixed", "iteration", "emergent"],
+      "properties": {
+        "fixed": {"type": "array", "items": {"type": "string"}},
+        "iteration": {"type": "string"},
+        "emergent": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "human_gate": {"const": "required_before_invariant_admit"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+    "reach_requirement": {"enum": ["required", "optional", "not_requested"]}
+  }
+}

@@ -43,7 +43,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | 對照組報 `NOT EXERCISED` | 那格**沒有通過**，只是沒跑。補齊條件或在輸出裡具名 |
 | 一支證明 FATAL 說沒有收據 | 樹是髒的而收據是乾淨的（或反之）——先蓋章再驗 |
 
-**收尾**：改動 → 重蓋七份收據 → `workflow lock` → 一條命令內 `git add` ＋ `commit`。
+**收尾**：改動 → 重蓋 contract 宣告的全部 prove 收據 → `workflow lock` → 一條命令內 `git add` ＋ `commit`。
 被閘拒絕時**第一個動作是退出暫存**，不是重試（共用 tree 的暫存區是公共狀態）。
 
 ## §3 Harness
@@ -61,6 +61,8 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | `sandbox-policy.yaml` | deny-by-default 出口 ＋ binary 綁定 |
 | `codex-sandbox.sh` | codex 寫入角色（**真憑證進沙盒**，比 claude 那條弱，header 有寫） |
 | `automode-bench.sh` / `automode_report.py` | 三臂自動許可實驗（`off`／`on`／`reduce`）× 兩個 venue（`sandbox`／`direct`）；跑之前先讀報表的判準 |
+| `skills-bundle.sh` | 共用 skills 以**具名 commit** 進沙盒；canonical 髒即拒絕，覆寫出口把 id 蓋成 `-dirty` |
+| `evolve-technical-equivalence-research/` | hash-bound 技術觀點→實作等價物；獨立 control 在 disposable HEAD 做消融與 planted defects；offline/live/judge/Human 四態分記，sync bundle 停在人閘 |
 
 ### 真的抓到過的缺陷（形似訊號時先查這裡）
 

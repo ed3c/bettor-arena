@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ctg-local-build-receipt@1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "runner", "subject", "artifacts", "overall", "claim_boundary"],
+  "properties": {
+    "schema_version": {"const": "ctg-local-build-receipt@1.0.0"},
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo_commit", "repo_tree", "dirty_before_run", "runtime_ref", "surface_version"],
+      "properties": {
+        "repo_commit": {"type": "string", "minLength": 1},
+        "repo_tree": {"type": "string", "minLength": 1},
+        "dirty_before_run": {"type": ["boolean", "null"]},
+        "runtime_ref": {"type": "string", "minLength": 1},
+        "surface_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo_commit", "repo_tree", "dirty_before_run", "manifest_ref", "manifest_sha256", "input_files", "input_closure_sha256"],
+      "properties": {
+        "repo_commit": {"type": "string", "minLength": 1},
+        "repo_tree": {"type": "string", "minLength": 1},
+        "dirty_before_run": {"type": "boolean"},
+        "manifest_ref": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\.git(?:/|$)).+$"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "input_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["input_ref", "sha256"],
+            "properties": {
+              "input_ref": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\.git(?:/|$)).+$"},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "input_closure_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_ref", "sha256"],
+        "properties": {
+          "artifact_ref": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\.git(?:/|$)).+$"},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {"state": {"enum": ["PASSED", "FAILED"]}}
+    },
+    "claim_boundary": {
+      "const": "trusted-local artifacts remain subject-owned and are not MCP-deliverable"
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

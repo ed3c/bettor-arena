@@ -53,6 +53,12 @@ sh loopctl/loopctl.sh <loop> prove --force-receipt   # 重戳宣稱
 sh loopctl/loopctl.sh <loop> test                    # 對照組驗行為
 ```
 
+同一個 commit 的 equivalence control receipt 預設不可覆寫；真的要重跑同一個 HEAD，必須透過
+`loopctl equivalence test --force-receipt` 顯式要求。control 只接受 clean、commit 綁定目前 HEAD 的 proof，
+不得拿 `-dirty` receipt 去比 detached HEAD。命名目前 HEAD 的 clean receipts 會先是 working-tree
+runtime evidence；把它們 commit 後 HEAD 必然前進，所以它們在下一個 commit 裡只可能是歷史證據，
+不能把「tracked」與「仍命名目前 HEAD」假裝成可同時成立。
+
 **訊號 → 動作**
 
 | 看到 | 做什麼 |
@@ -88,8 +94,8 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | 檔案 | 它證明什麼 |
 |---|---|
 | `lib/prove.sh` | 遍歷記錄器。步驟四種：`harness`（真跑記 exit／會改帳的只 hash 記 `hashed-not-run`）、`context`（概率側讀的文檔，缺席即 FATAL）、`artifact`（末端產物，tracked 判 HEAD）、`optional`（可容忍缺席的 host 資產）、`note`（具名排除）。`--selftest` 是它自己的負控 |
-| `prove_{macro,micro,openwiki}_loop.sh` | 三條迴圈各自的遍歷；收據落 `data/proof-workflow/<loop>-<commit12>[-dirty].json`，帶 `proof_digest` |
-| `control_{macro,micro,openwiki}_entry.sh` | 三個入口的對照組：真跑入口、丟棄式 worktree 內逐一移走輸入分類 required／optional、比對三份收據的聯集 |
+| `prove_*.sh` | contract 宣告機制各自的遍歷；收據落 `data/proof-workflow/<loop>-<commit12>[-dirty].json`，帶 `proof_digest` |
+| `control_{macro,micro,openwiki,equivalence}_entry.sh` | 四個入口的對照組：真跑入口、丟棄式 worktree 內逐一移走輸入分類 required／optional；equivalence 另以 Git inventory 對 proof 並把 offline/live/judge/Human 四態分記 |
 | `control_workflow_lineage.sh` | lineage 機制自己的對照組（感知／stale lock／未蓋章／局外檔靜默／tag 重放） |
 | `control_mcp_surface.sh` | MCP 包裝的對照組（pin 是否真擋住未提交工作／活樹零變動／無 worktree 殘留／未宣告參數被拒） |
 | `lib/capture.sh` | 真跑的物理痕跡：每條 argv／exit／stdout／stderr 落 `proof_workflow/data/<run_id>/`，各自 sha256 |
@@ -112,6 +118,9 @@ git add -A && sh loopctl/loopctl.sh workflow lock && git add loopctl/workflow.lo
 | 從 contract 取 loop 名字仍 FATAL | 換掉寫死清單後重建 | `mcp prove` 與 `policy prove` 是同一份證明、共用一份收據 → 改成**從 `writes` 推收據名**，不從命令名推 |
 | `.gitignore` 不在任何收據裡 | 被問「以上機制都有收據與對照組嗎」後，把改過的檔跟 manifest 對一次 | 沒人想過要 hash 它，但它**同時決定 `--upload` 帶什麼進沙盒、以及什麼進得了 commit**——改它不動任何 digest。**「編輯過」不等於「被涵蓋」，「對照組有提到」也不等於**；唯一算數的是有收據雜湊過它 |
 | `chatgpt.com` 被放行只有 opt-in 才驗到 | 同一次比對 | 真跑的 codex turn 是 opt-in，預設 `policy test` 完全碰不到它 → 補一條**靜態斷言**（host ＋ binary 綁定都要在），與那條真跑各是一種抵達，**不會被同一個錯誤同時騙過** |
+| equivalence control 的 live／負控紅把 offline 軸一起標紅 | `control-equivalence-29e9e0393583.json` 抓到 judge 負控沒接上後，回讀四軸欄位 | 當初用一個 `ENTRY_RC` 同時代表「offline baseline」與「整個 control health」，所以會信是因為總 verdict 的確該紅，卻忽略欄位語義已混軸。歷史 failed receipt 凍結不改；改成分傳 `offline_rc`／`control_rc`，並加 live fail 不得降級 offline 的 selftest |
+| equivalence control 從 Git 導 inventory，卻仍信 proof 自述的 SHA／digest | `1a32221` 後的獨立 standards review 偽造同名 proof 思考實驗 | 當初會信是因為「檔名集合由 Git 推導」確實堵住漏檔，卻沒堵住 proof 對同一批路徑謊報位元組。歷史 receipts 凍結不改；control 現在獨立重算 HEAD tree、逐檔 SHA、排序 manifest digest 與 counts，per-run selftest receipt 也退出 canonical digest |
+| 同 HEAD 同秒並行 controls 共用 capture 目錄；缺檔的 Python exit 1 被當合格紅 | `ecce2d9` 後的獨立 standards review 併行／exit-domain 審查 | 當初會信是因為時間戳加 commit 看似唯一、而「非零就是紅」對單機序列跑也碰巧成立。改為 `mktemp` nonce 目錄、落 receipt 前重驗 stream SHA/bytes；equivalence 負控只收 2，0 是沒抓到，64 或未宣告碼都是 FATAL |
 | trailer 把檔案歸錯 loop | 讀 `harness:macro:loopctl/workflow_lock.py` | `setdefault` 讓字母序最前的 loop 佔位。**收據裡沒有任何欄位陳述擁有權**（macro 真的在 commit 路徑上跑 lineage.py，workflow 真的是它的證明，兩邊都 `ran`、位元組相同）→ 不換更好的裁決規則，改成**列出全部認領者** `macro+workflow`；六個檔如此，而這也把單一標籤藏起來的事實掀出來：改它們會動**兩份** digest |
 
 ### 容器與沙盒（OrbStack / Apple container / OpenShell）

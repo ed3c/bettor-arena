@@ -51,6 +51,9 @@ def describe(command: dict, contract: dict) -> str:
 
 
 def schema(command: dict) -> dict:
+    carrier = command.get("mcp_carrier")
+    if carrier:
+        return carrier["input_schema"]
     io_input = (command.get("io") or {}).get("input")
     per_flag = io_input if isinstance(io_input, dict) else {}
     opt_in = command.get("opt_in") or {}
@@ -84,8 +87,10 @@ def build(contract: dict) -> list[dict]:
                 "mode": c["mode"],
                 "flags": sorted(set(c["required"]) | set(c["optional"])),
             },
+            **({"_carrier": c["mcp_carrier"]} if c.get("mcp_carrier") else {}),
         }
         for c in sorted(contract["commands"], key=lambda c: (c["loop"], c["mode"]))
+        if c.get("mcp_exposed", True)
     ]
 
 
@@ -139,18 +144,47 @@ def _selftest() -> int:
                 "optional": [],
                 "writes": ["receipt.json"],
             },
+            {
+                "loop": "ctg",
+                "mode": "run",
+                "target": "ctg.sh",
+                "required": ["--packet", "--output"],
+                "optional": ["--json"],
+                "mcp_carrier": {
+                    "kind": "fixture-inline@1.0.0",
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {"bundle": {"type": "object"}},
+                        "required": ["bundle"],
+                        "additionalProperties": False,
+                    },
+                },
+            },
+            {
+                "loop": "ctg",
+                "mode": "build-local",
+                "target": "local.sh",
+                "required": ["--manifest", "--output"],
+                "optional": ["--json"],
+                "mcp_exposed": False,
+            },
         ],
     }
     tools = build(contract)
-    case("one-tool-per-command", len(tools), 2)
+    case("local-only-command-is-not-an-mcp-tool", len(tools), 3)
     case(
         "names-are-stable-and-sorted",
         [t["name"] for t in tools],
-        ["loopctl_macro_prove", "loopctl_micro_run"],
+        ["loopctl_ctg_run", "loopctl_macro_prove", "loopctl_micro_run"],
     )
 
     micro = next(t for t in tools if t["name"] == "loopctl_micro_run")
+    ctg = next(t for t in tools if t["name"] == "loopctl_ctg_run")
     case("required-flag-is-required", micro["inputSchema"]["required"], ["packet"])
+    case("carrier-overrides-path-flags", ctg["inputSchema"]["required"], ["bundle"])
+    case(
+        "carrier-is-kept-for-dispatch", ctg["_carrier"]["kind"], "fixture-inline@1.0.0"
+    )
     case(
         "documented-flag-is-a-string",
         micro["inputSchema"]["properties"]["packet"]["type"],

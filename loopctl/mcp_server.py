@@ -12,8 +12,8 @@ be affected by an edit in flight. Stateless is structural here, not a promise.
 
 --ref pins which workflow answers. A tag is the point: `--ref v1.0` means every
 external call is served by the version that tag names, no matter what HEAD is
-doing, so customer traffic and internal iteration stop sharing a fate. Without
-it the server serves HEAD, which is fine for a dev box and wrong for a service.
+doing, so customer traffic and internal iteration stop sharing a fate. The server
+requires an exact commit or immutable tag and refuses mutable `HEAD`.
 
 The tool list is GENERATED from contract.json (see mcp_tools.py), so the MCP
 surface cannot drift from the CLI surface and surface.lock guards both.
@@ -36,7 +36,10 @@ runs this.
 from __future__ import annotations
 
 import json
+import base64
+import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -45,6 +48,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PROTOCOL = "2024-11-05"
+MAX_REQUEST_BYTES = 1024 * 1024
+MAX_INLINE_OUTPUT_BYTES = 1024 * 1024
+SAFE_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 
 # Tools an external caller may not reach, each with the reason it is refused.
 # A denial that cannot say why is indistinguishable from a bug to whoever hits it.
@@ -72,11 +78,47 @@ def repo_root() -> Path:
     return Path(out)
 
 
+def resolve_commit(root: Path, ref: str) -> str:
+    """Resolve a caller ref once so contract lookup and every call use one commit."""
+    result = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", f"{ref}^{{commit}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    commit = result.stdout.strip()
+    if result.returncode != 0 or re.fullmatch(r"[0-9a-f]{40,64}", commit) is None:
+        raise ValueError(f"ref {ref!r} does not resolve to one commit")
+    return commit
+
+
 def load_tools(contract: Path) -> list[dict]:
     sys.path.insert(0, str(HERE))
     import mcp_tools  # noqa: PLC0415 - resolved from this file's own directory
 
     return mcp_tools.build(json.loads(contract.read_text(encoding="utf-8")))
+
+
+def contract_at_ref(root: Path, ref: str) -> dict:
+    blob = subprocess.run(
+        ["git", "-C", str(root), "show", f"{ref}:loopctl/contract.json"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if blob.returncode != 0:
+        raise ValueError(f"{ref!r} has no loopctl/contract.json")
+    value = json.loads(blob.stdout)
+    if not isinstance(value, dict):
+        raise ValueError(f"{ref!r} contract is not an object")
+    return value
+
+
+def load_tools_at_ref(root: Path, ref: str) -> list[dict]:
+    sys.path.insert(0, str(HERE))
+    import mcp_tools  # noqa: PLC0415
+
+    return mcp_tools.build(contract_at_ref(root, ref))
 
 
 def to_argv(tool: dict, arguments: dict) -> list[str]:
@@ -108,7 +150,103 @@ def to_argv(tool: dict, arguments: dict) -> list[str]:
     return argv
 
 
-def run_isolated(root: Path, ref: str, argv: list[str]) -> dict:
+def safe_artifact_ref(value: object) -> str:
+    if not isinstance(value, str) or not SAFE_REF.fullmatch(value):
+        raise ValueError(f"unsafe artifact_ref: {value!r}")
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"artifact_ref escapes the inline bundle: {value!r}")
+    return value
+
+
+def materialize_inline_bundle(base: Path, arguments: dict) -> Path:
+    if set(arguments) != {"bundle"} or not isinstance(arguments["bundle"], dict):
+        raise ValueError(
+            "CTG MCP accepts exactly one bundle object; local packet/output paths are forbidden"
+        )
+    bundle = arguments["bundle"]
+    if set(bundle) != {"packet_ref", "files"} or not isinstance(bundle["files"], list):
+        raise ValueError("bundle must be closed: packet_ref + non-empty files")
+    if not bundle["files"]:
+        raise ValueError("bundle.files must be non-empty")
+    packet_ref = safe_artifact_ref(bundle["packet_ref"])
+    target = base / "input"
+    seen: set[str] = set()
+    decoded_total = 0
+    for index, item in enumerate(bundle["files"]):
+        if not isinstance(item, dict) or set(item) != {
+            "artifact_ref",
+            "sha256",
+            "content_base64",
+        }:
+            raise ValueError(f"bundle.files[{index}] is not closed")
+        artifact_ref = safe_artifact_ref(item["artifact_ref"])
+        if artifact_ref in seen:
+            raise ValueError(f"duplicate inline artifact_ref: {artifact_ref}")
+        seen.add(artifact_ref)
+        try:
+            content = base64.b64decode(item["content_base64"], validate=True)
+        except (ValueError, TypeError) as exc:
+            raise ValueError(f"bundle.files[{index}] has invalid base64") from exc
+        decoded_total += len(content)
+        if decoded_total > MAX_REQUEST_BYTES:
+            raise ValueError("decoded CTG inline bundle exceeds 1 MiB")
+        actual = hashlib.sha256(content).hexdigest()
+        if item["sha256"] != actual:
+            raise ValueError(f"inline artifact digest mismatch: {artifact_ref}")
+        destination = target / artifact_ref
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(content)
+    if packet_ref not in seen:
+        raise ValueError(f"packet_ref is not present in bundle.files: {packet_ref}")
+    return target / packet_ref
+
+
+def inline_ctg_delivery(output: Path, payload: dict) -> dict:
+    result_path = output / "ctg-route-result.json"
+    if not result_path.is_file():
+        payload["stdout"] = "[CTG MCP streams redacted]"
+        payload["stderr"] = "[CTG MCP streams redacted]"
+        payload["artifacts"] = []
+        return payload
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    delivered = []
+    total = len(result_path.read_bytes())
+    for item in result.get("artifacts", []):
+        artifact_ref = safe_artifact_ref(item.get("artifact_ref"))
+        artifact = (output / artifact_ref).resolve()
+        try:
+            artifact.relative_to(output.resolve())
+        except ValueError as exc:
+            raise ValueError(f"result artifact escapes output: {artifact_ref}") from exc
+        content = artifact.read_bytes()
+        if hashlib.sha256(content).hexdigest() != item.get("sha256"):
+            raise ValueError(f"result artifact digest mismatch: {artifact_ref}")
+        total += len(content)
+        if total > MAX_INLINE_OUTPUT_BYTES:
+            raise ValueError("CTG output exceeds bounded 1 MiB inline delivery")
+        delivered.append(
+            {
+                "kind": item.get("kind"),
+                "sha256": item.get("sha256"),
+                "content_base64": base64.b64encode(content).decode("ascii"),
+            }
+        )
+    payload["artifacts"] = []
+    payload["stdout"] = "[CTG MCP streams redacted; typed artifacts delivered inline]"
+    payload["stderr"] = ""
+    payload["ctg_delivery"] = {"route_result": result, "artifacts": delivered}
+    return payload
+
+
+def run_isolated(
+    root: Path,
+    ref: str,
+    argv: list[str] | None = None,
+    *,
+    carrier: dict | None = None,
+    arguments: dict | None = None,
+) -> dict:
     base = Path(tempfile.mkdtemp(prefix="loopctl-mcp-"))
     worktree = base / "repo"
     try:
@@ -130,6 +268,21 @@ def run_isolated(root: Path, ref: str, argv: list[str]) -> dict:
         if (root / factory).is_dir() and not (worktree / factory).exists():
             (worktree / factory).parent.mkdir(parents=True, exist_ok=True)
             (worktree / factory).symlink_to(root / factory)
+        ctg_output = None
+        if carrier and carrier.get("kind") == "ctg-inline-bundle@1.0.0":
+            packet = materialize_inline_bundle(base, arguments or {})
+            ctg_output = base / "output"
+            argv = [
+                "ctg",
+                "run",
+                "--packet",
+                str(packet),
+                "--output",
+                str(ctg_output),
+                "--json",
+            ]
+        if argv is None:
+            raise ValueError("isolated call has neither argv nor a supported carrier")
         proc = subprocess.run(
             ["sh", "loopctl/loopctl.sh", *argv],
             cwd=str(worktree),
@@ -138,7 +291,8 @@ def run_isolated(root: Path, ref: str, argv: list[str]) -> dict:
             check=False,
         )
         try:
-            return json.loads(proc.stdout)
+            payload = json.loads(proc.stdout)
+            return inline_ctg_delivery(ctg_output, payload) if ctg_output else payload
         except json.JSONDecodeError:
             # --json failed to produce a result: report the raw streams rather
             # than a parse error, or the caller sees the wrapper's problem
@@ -193,10 +347,23 @@ def handle(request: dict, root: Path, ref: str, tools: list[dict]) -> dict | Non
                 f"{DENIED_TOOLS[tool['name']]}",
             )
         try:
-            argv = to_argv(tool, params.get("arguments") or {})
+            arguments = params.get("arguments") or {}
+            if tool.get("_carrier"):
+                argv = None
+            else:
+                argv = to_argv(tool, arguments)
         except ValueError as exc:
             return error(rid, -32602, str(exc))
-        payload = run_isolated(root, ref, argv)
+        try:
+            payload = run_isolated(
+                root,
+                ref,
+                argv,
+                carrier=tool.get("_carrier"),
+                arguments=arguments,
+            )
+        except (ValueError, OSError, json.JSONDecodeError) as exc:
+            payload = {"error": str(exc), "exit": 64}
         # isError follows the run's own exit code, so a red gate reaches the
         # caller as a failure rather than as a success carrying bad news.
         result = {
@@ -228,18 +395,13 @@ def assert_ref_serves_json(root: Path, ref: str) -> None:
     with no hint that the REF is what is wrong. Checked once, at startup, naming
     the fix, instead of being rediscovered per call.
     """
-    blob = subprocess.run(
-        ["git", "-C", str(root), "show", f"{ref}:loopctl/contract.json"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if blob.returncode != 0:
+    try:
+        contract = contract_at_ref(root, ref)
+    except (ValueError, json.JSONDecodeError):
         raise SystemExit(
             f"mcp FATAL: {ref!r} has no loopctl/contract.json — that ref predates the CLI, "
             "so there is no surface to serve."
         )
-    contract = json.loads(blob.stdout)
     missing = [
         f"{c['loop']} {c['mode']}"
         for c in contract["commands"]
@@ -251,7 +413,7 @@ def assert_ref_serves_json(root: Path, ref: str) -> None:
             f"{contract.get('surface_version', 'unknown')}) does not declare --json for "
             f"{missing[:3]}{'…' if len(missing) > 3 else ''}. This server forces --json so its "
             "caller gets structured output, and that ref would refuse it as undeclared on every "
-            "call. Pin a ref whose surface carries --json, or serve HEAD."
+            "call. Pin a commit whose surface carries --json."
         )
 
 
@@ -273,8 +435,9 @@ def serve_http(ref: str, port: int) -> int:
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
     root = repo_root()
+    ref = resolve_commit(root, ref)
     assert_ref_serves_json(root, ref)
-    tools = load_tools(HERE / "contract.json")
+    tools = load_tools_at_ref(root, ref)
 
     class Handler(BaseHTTPRequestHandler):
         def do_POST(self) -> None:  # noqa: N802 - stdlib naming
@@ -282,6 +445,9 @@ def serve_http(ref: str, port: int) -> int:
                 self.send_error(404, "only /mcp is served")
                 return
             length = int(self.headers.get("Content-Length") or 0)
+            if length > MAX_REQUEST_BYTES:
+                self._json(error(None, -32602, "request exceeds 1 MiB"))
+                return
             try:
                 request = json.loads(self.rfile.read(length) or b"{}")
             except json.JSONDecodeError as exc:
@@ -318,9 +484,13 @@ def serve_http(ref: str, port: int) -> int:
 
 def serve(ref: str) -> int:
     root = repo_root()
+    ref = resolve_commit(root, ref)
     assert_ref_serves_json(root, ref)
-    tools = load_tools(HERE / "contract.json")
+    tools = load_tools_at_ref(root, ref)
     for line in sys.stdin:
+        if len(line.encode("utf-8")) > MAX_REQUEST_BYTES:
+            print(json.dumps(error(None, -32602, "request exceeds 1 MiB")), flush=True)
+            continue
         line = line.strip()
         if not line:
             continue
@@ -362,6 +532,19 @@ def _selftest() -> int:
     # A false boolean must not appear at all: `--full false` would be parsed as
     # --full with a positional, which is a different request than the caller made.
     ow = next(t for t in tools if t["name"] == "loopctl_openwiki_run")
+    ctg = next(t for t in tools if t["name"] == "loopctl_ctg_run")
+    case("ctg-mcp-requires-inline-bundle", ctg["inputSchema"]["required"], ["bundle"])
+    case(
+        "ctg-mcp-hides-local-packet-path",
+        "packet" in ctg["inputSchema"]["properties"],
+        False,
+    )
+    try:
+        with tempfile.TemporaryDirectory() as temp:
+            materialize_inline_bundle(Path(temp), {"packet": "/tmp/packet.json"})
+        case("ctg-local-path-carrier-is-refused", "returned", "ValueError")
+    except ValueError:
+        case("ctg-local-path-carrier-is-refused", "ValueError", "ValueError")
     case(
         "false-boolean-is-omitted",
         "--full" in to_argv(ow, {"request": "/r", "full": False}),
@@ -382,6 +565,12 @@ def _selftest() -> int:
         case("undeclared-argument-is-refused", "ValueError", "ValueError")
 
     root = repo_root()
+    resolved_head = resolve_commit(root, "HEAD")
+    case(
+        "ref-resolves-once-to-a-commit",
+        bool(re.fullmatch(r"[0-9a-f]{40,64}", resolved_head)),
+        True,
+    )
     case(
         "initialize-answers",
         handle(
@@ -457,24 +646,67 @@ def _selftest() -> int:
     )
     case("every-denial-has-a-reason", all(bool(v) for v in DENIED_TOOLS.values()), True)
     case("allowed-tool-is-not-denied", "loopctl_micro_run" in DENIED_TOOLS, False)
+    case("ctg-inline-tool-is-not-denied", "loopctl_ctg_run" in DENIED_TOOLS, False)
+
+    parser_cases = (
+        ("missing-ref-is-fatal", [], {}, True),
+        ("mutable-head-is-fatal", ["--ref", "HEAD"], {}, True),
+        ("unknown-flag-is-fatal", ["--ref", "abc123", "--reff"], {}, True),
+        ("missing-ref-value-is-fatal", ["--ref"], {}, True),
+        (
+            "exact-ref-and-http-parse",
+            ["--ref", "abc123", "--http", "8765"],
+            {},
+            False,
+        ),
+    )
+    for name, arguments, environment, want_error in parser_cases:
+        try:
+            parsed = parse_server_args(arguments, environment)
+        except (TypeError, ValueError):
+            got_error = True
+            parsed = None
+        else:
+            got_error = False
+        case(name, got_error, want_error)
+        if name == "exact-ref-and-http-parse":
+            case("exact-ref-and-http-values", parsed, ("abc123", 8765))
 
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red
+
+
+def parse_server_args(
+    argv: list[str], environment: dict[str, str] | None = None
+) -> tuple[str, int | None]:
+    environment = os.environ if environment is None else environment
+    ref = environment.get("LOOPCTL_REF", "")
+    port = None
+    rest = list(argv)
+    while rest:
+        flag = rest.pop(0)
+        if flag == "--ref":
+            if not rest:
+                raise ValueError("--ref requires an exact commit or immutable tag")
+            ref = rest.pop(0)
+        elif flag == "--http":
+            if not rest:
+                raise ValueError("--http requires a port")
+            port = int(rest.pop(0))
+        else:
+            raise ValueError(f"unknown argument: {flag}")
+    if not ref or ref == "HEAD":
+        raise ValueError("an exact --ref or LOOPCTL_REF is required; HEAD is mutable")
+    return ref, port
 
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if argv[:1] == ["--selftest"]:
         raise SystemExit(_selftest())
-    ref = "HEAD"
-    port = None
-    rest = list(argv)
-    while rest:
-        flag = rest.pop(0)
-        if flag == "--ref" and rest:
-            ref = rest.pop(0)
-        elif flag == "--http" and rest:
-            port = int(rest.pop(0))
-    if ref == "HEAD" and os.environ.get("LOOPCTL_REF"):
-        ref = os.environ["LOOPCTL_REF"]
+    try:
+        ref, port = parse_server_args(argv)
+    except (TypeError, ValueError) as exc:
+        print(f"mcp-server FATAL: {exc}", file=sys.stderr)
+        raise SystemExit(64) from exc
     raise SystemExit(serve_http(ref, port) if port else serve(ref))

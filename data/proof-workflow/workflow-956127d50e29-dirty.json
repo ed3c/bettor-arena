@@ -2,7 +2,7 @@
   "schema_version": "bettor-arena-proof-workflow-receipt@1.0.0",
   "loop": "workflow",
   "entry_point": "staged paths -> workflow.lock -> Workflow-Lineage trailer -> commit-msg gate; and <commit|tag> -> replay",
-  "utc": "2026-08-08T19:16:24Z",
+  "utc": "2026-08-08T18:41:56Z",
   "status": "passed",
   "commit": "956127d50e294282e1db64dbcc16cb4e86286904",
   "tree": "dcd9c0f453350700b01d72ad15f6d110399a29e6",

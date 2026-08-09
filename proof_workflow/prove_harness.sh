@@ -37,7 +37,10 @@ prove_harness comparator proof_workflow/lib/compare_control.py \
   "claim vs behaviour: required/optional by measurement, ledger-level coverage, declared exclusions, receipt selection by tree state" \
   -- python3 proof_workflow/lib/compare_control.py --selftest
 prove_harness capture proof_workflow/lib/capture.sh \
-  "physical trace of a real run: argv, cwd, exit, both streams to disk with a sha256 each (sourced, so hashed rather than fired)"
+  "physical trace of a real run: unique directory, argv, cwd, exit, both streams to disk with a sha256 each" \
+  -- sh proof_workflow/lib/capture.sh --selftest
+prove_harness ctg-control-helper proof_workflow/ctg_control.py \
+  "closed packet closure + canonical projection + proof linkage for the CTG behavioral control"
 # The coverage checker, which caught its own absence the moment it became tracked:
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written
@@ -51,11 +54,14 @@ prove_harness no-bash-script-run-with-sh - \
 prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
   "tracked proof_workflow files x proof receipts at this commit -> covered / declared / UNCOVERED; a control receipt is refused as a source" \
   -- python3 proof_workflow/lib/harness_coverage.py --selftest
+prove_harness equivalence-control-comparator proof_workflow/lib/equivalence_control.py \
+  "Git-derived equivalence inventory and four independent assurance states -> control receipt" \
+  -- python3 proof_workflow/lib/equivalence_control.py --selftest
 
 # --- every traversal proof --------------------------------------------------
 # Hashed, never fired: a proof run from inside a proof would write receipts about
 # receipts, and the outer digest would then depend on when the inner one last ran.
-for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm; do
+for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm equivalence ctg_loop; do
   case "$p" in
     macro_loop|micro_loop) f="proof_workflow/prove_$p.sh" ;;
     *) f="proof_workflow/prove_$p.sh" ;;
@@ -66,7 +72,7 @@ for p in macro_loop micro_loop openwiki container policy workflow harness notebo
 done
 
 # --- every control ----------------------------------------------------------
-for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry; do
+for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry equivalence_entry ctg_entry; do
   f="proof_workflow/control_$c.sh"
   [ -f "$PROVE_ROOT/$f" ] || continue
   prove_harness "control-$c" "$f" \

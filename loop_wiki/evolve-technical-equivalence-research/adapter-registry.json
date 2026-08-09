@@ -1,0 +1,33 @@
+{
+  "schema_version": "technical-equivalence-adapter-registry@1.0.0",
+  "adapters": {
+    "antigravity-dr-session-v1": {
+      "allowlisted_entry": "gemini_session.mjs",
+      "session_runner": "gemini_session.mjs",
+      "provider_entry": "ui.js#runGeminiDeepResearch",
+      "reference_entry": "automate.js#runDrOnce",
+      "required_files": ["automate.js", "ui.js", "data.js", "state.js", "package.json", "package-lock.json"],
+      "pinned_source": {
+        "commit": "c151ac49b6d4dd664e61d7050e14a91e5dce3327",
+        "files": {
+          "automate.js": "sha256:331ea353d5d2f0c437ac1b70f3e08f5fbb96c7e7c35dc049c638c0899ec10917",
+          "ui.js": "sha256:70cbd292aa7444ca2a4106c442dbc07a891bab4d54a658ac89e8c4814c1f8ff1",
+          "data.js": "sha256:ce177bb4752fb2ea2a14e9a406c118fac2e9caac6aed57725052a1344abfb94a",
+          "state.js": "sha256:453b78ca6c3232dff1e02820423af5f4d1783f2c3e9d6a7271cd6013da9659d1",
+          "package.json": "sha256:f5d0063792aa136f3fc134dbc8cd7ea00356b9aedcbcda20347a1a3b98eb9a97",
+          "package-lock.json": "sha256:deeb6c4a20c571f375efc45e40872ccd57f9a1ee51c76dc618f89b99b0815ec2"
+        },
+        "top_level_dependencies": {
+          "puppeteer-core": "22.15.0",
+          "turndown-plugin-gfm": "1.0.2",
+          "turndown": "7.2.4"
+        }
+      },
+      "execution_mirror": {
+        "redirected_write_exports": ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"]
+      },
+      "argv": ["node", "{execution_mirror}/gemini_session.mjs", "--stdio-jsonl"],
+      "notes": "External browser/login runtime. A bettor-owned, digest-bound JSONL runner keeps one CDP connection across primary and gap invocations while calling the pinned ui.js provider entry. Only declared write-path exports are redirected into the run. Source, runner, or policy drift requires explicit re-admission."
+    }
+  }
+}
