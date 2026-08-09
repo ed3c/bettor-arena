@@ -1,24 +1,24 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f3ee7189cf44d838c3c039b3237091fce0394eb0",
+  "workflow_commit": "f9dd6581e9c39cff732985be06dfe301833d71a1",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-f3ee7189cf44-dirty.json",
-    "ctg": "ctg-f3ee7189cf44-dirty.json",
-    "harness": "harness-f3ee7189cf44-dirty.json",
-    "macro": "macro-f3ee7189cf44-dirty.json",
-    "micro": "micro-f3ee7189cf44-dirty.json",
-    "notebooklm": "notebooklm-f3ee7189cf44-dirty.json",
-    "openwiki": "openwiki-f3ee7189cf44-dirty.json",
-    "policy": "policy-f3ee7189cf44-dirty.json",
-    "workflow": "workflow-f3ee7189cf44-dirty.json"
+    "container": "container-f9dd6581e9c3-dirty.json",
+    "ctg": "ctg-f9dd6581e9c3-dirty.json",
+    "harness": "harness-f9dd6581e9c3-dirty.json",
+    "macro": "macro-f9dd6581e9c3-dirty.json",
+    "micro": "micro-f9dd6581e9c3-dirty.json",
+    "notebooklm": "notebooklm-f9dd6581e9c3-dirty.json",
+    "openwiki": "openwiki-f9dd6581e9c3-dirty.json",
+    "policy": "policy-f9dd6581e9c3-dirty.json",
+    "workflow": "workflow-f9dd6581e9c3-dirty.json"
   },
   "counts": {
     "artifact": 34,
     "context": 34,
     "harness": 111
   },
-  "workflow_digest": "ded16905db537a01ea8b0e2a1de1fdbe2efcf77287f49f3ab4209b25a1de9aa4",
+  "workflow_digest": "4cb5c64cf50aaf44c85efeb9d4a93ca27af7b8180a2cd988e826a55667c7d10a",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -126,7 +126,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-f3ee7189cf44d838c3c039b3237091fce0394eb0.json": {
+    "data/receipts/post-commit-f9dd6581e9c39cff732985be06dfe301833d71a1.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -400,7 +400,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/schemas/ctg-local-build-receipt.schema.json": {
-      "sha256": "5e2cfcce67875d3ba9cf8b2d90cefc7942b80ad21f3041a9d5e1ad3e599e93e8",
+      "sha256": "e86fef39d1ee70f934436d025a24ef269b1b4a0647a4c1a050147664cabe733d",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
