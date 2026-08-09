@@ -12,7 +12,7 @@ from code_truth_graph.cli import (
     ingest_redacted_availability,
     resolve_profile_invariants,
 )
-from code_truth_graph.model import new_graph
+from code_truth_graph.model import ensure_node, new_graph
 from code_truth_graph.settlement import add_invariants_and_events, evaluate_all
 
 
@@ -78,6 +78,13 @@ def definitions() -> list[dict[str, object]]:
                     "independence_group": "prod-group",
                     "evidence_ids": ["ev-prod"],
                     "note": "synthetic production-shaped observation",
+                    "affected_edge_selectors": [
+                        {
+                            "source": {"id": "payload:test"},
+                            "target": {"id": "store:test"},
+                            "kind": "WRITES_TO",
+                        }
+                    ],
                 },
             ],
         }
@@ -92,6 +99,8 @@ def main() -> None:
         receipt_path = evidence_dir / "redacted.json"
         receipt_path.write_text(json.dumps(receipt()) + "\n", encoding="utf-8")
         graph = new_graph(title="projection", snapshot={}, scope={})
+        ensure_node(graph, node_id="payload:test", kind="payload", label="payload")
+        ensure_node(graph, node_id="store:test", kind="store", label="store")
         rows = definitions()
         ingest_redacted_availability(
             graph,
@@ -106,6 +115,8 @@ def main() -> None:
         assert invariant["current_status"] == "DEMO_ONLY", invariant
         assert invariant["settlement"]["reach_classes"] == ["SANDBOX", "PROD"]
         assert invariant["settlement"]["production_run_ids"] == ["prod-1"]
+        assert graph["edges"][0]["kind"] == "WRITES_TO", graph["edges"]
+        assert graph["edges"][0]["evidence_ids"] == ["ev-prod"], graph["edges"]
 
         receipt_path.write_text(
             json.dumps(receipt(raw_content_embedded=True)) + "\n", encoding="utf-8"

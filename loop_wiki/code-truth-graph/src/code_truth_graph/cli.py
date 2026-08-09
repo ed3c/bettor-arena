@@ -23,6 +23,7 @@ from .graphrag import compute_communities, export_graphrag
 from .java_ast import MINIMAL_ENV, JavaAstError, extract_java_records, ingest_java_ast
 from .model import (
     add_evidence,
+    attach_evidence_to_edge,
     attach_evidence_to_node,
     ensure_edge,
     ensure_node,
@@ -285,8 +286,37 @@ def resolve_profile_invariants(
                 ),
             )
             event["invariant_id"] = invariant_id
-            event.pop("affected_edge_selectors", None)
-            event["affected_edge_ids"] = []
+            affected_edge_ids = []
+            for raw_edge_selector in event.pop("affected_edge_selectors", []):
+                edge_selector = require_object(
+                    raw_edge_selector, "invariant affected edge selector"
+                )
+                source = select_one_node(
+                    graph,
+                    require_object(edge_selector.get("source"), "edge source selector"),
+                )
+                target = select_one_node(
+                    graph,
+                    require_object(edge_selector.get("target"), "edge target selector"),
+                )
+                if source is None or target is None:
+                    continue
+                edge = ensure_edge(
+                    graph,
+                    source=str(source["id"]),
+                    target=str(target["id"]),
+                    kind=str(edge_selector.get("kind", "RUNTIME_FLOW")),
+                    critical=bool(invariant.get("critical")),
+                    metadata=(
+                        {"runtime_receipt": True}
+                        if event.get("reach") in {"SANDBOX", "PROD"}
+                        else {}
+                    ),
+                )
+                for evidence_id in event.get("evidence_ids", []):
+                    attach_evidence_to_edge(graph, edge["id"], str(evidence_id))
+                affected_edge_ids.append(edge["id"])
+            event["affected_edge_ids"] = affected_edge_ids
             events.append(event)
     return invariants, events
 
