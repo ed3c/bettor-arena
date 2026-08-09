@@ -13,6 +13,12 @@ import tempfile
 from pathlib import Path
 
 from . import RUNTIME_REF
+from .evidence import (
+    add_manual_static,
+    add_selector_bindings,
+    compute_static_paths,
+    mark_critical_path,
+)
 from .graphrag import compute_communities, export_graphrag
 from .java_ast import MINIMAL_ENV, JavaAstError, extract_java_records, ingest_java_ast
 from .model import (
@@ -21,6 +27,7 @@ from .model import (
     ensure_edge,
     ensure_node,
     new_graph,
+    select_one_node,
     validate_graph,
 )
 from .render import render_html
@@ -93,6 +100,37 @@ SNAPSHOT_KEYS = {
 SNAPSHOT_FILE_KEYS = {"path", "sha256"}
 PROFILE_KEYS = {"schema_version", "profile_id", "tool_profile", "invariants"}
 INVARIANT_KEYS = {"invariant_id", "statement", "claim_boundary"}
+PROFILE_V11_KEYS = {
+    "schema_version",
+    "profile_id",
+    "tool_profile",
+    "graph_identity",
+    "manual_static",
+    "post_static_bindings",
+    "critical_path",
+    "invariants",
+}
+GRAPH_IDENTITY_KEYS = {"title", "snapshot", "scope"}
+REDACTED_RECEIPT_KEYS = {
+    "schema_version",
+    "policy_id",
+    "policy_sha256",
+    "observation_id",
+    "source_count",
+    "sources",
+    "derived_environment_class",
+    "derived_authority",
+    "observed_at",
+    "raw_content_embedded",
+}
+REDACTED_SOURCE_KEYS = {
+    "source_class",
+    "source_sha256",
+    "observed_at",
+    "authority",
+    "run_id",
+    "evidence_ids",
+}
 
 
 def require_closed(value: dict[str, object], allowed: set[str], label: str) -> None:
@@ -169,6 +207,23 @@ def validate_snapshot_shape(snapshot: dict[str, object]) -> list[dict[str, objec
 
 
 def validate_profile_shape(profile: dict[str, object]) -> list[dict[str, object]]:
+    if profile.get("schema_version") == "ctg-domain-profile@1.1.0":
+        require_closed(profile, PROFILE_V11_KEYS, "domain profile")
+        identity = require_object(profile["graph_identity"], "graph_identity")
+        require_closed(identity, GRAPH_IDENTITY_KEYS, "graph_identity")
+        for key in ("snapshot", "scope"):
+            require_object(identity[key], f"graph_identity.{key}")
+        for key in ("manual_static", "critical_path"):
+            require_object(profile[key], f"domain profile {key}")
+        if not isinstance(profile["post_static_bindings"], list):
+            raise ContractError("domain profile post_static_bindings must be an array")
+        invariants = profile["invariants"]
+        if not isinstance(invariants, list):
+            raise ContractError("domain profile invariants must be an array")
+        return [
+            require_object(item, f"domain profile invariants[{index}]")
+            for index, item in enumerate(invariants)
+        ]
     require_closed(profile, PROFILE_KEYS, "domain profile")
     invariants = profile["invariants"]
     if not isinstance(invariants, list):
@@ -179,6 +234,128 @@ def validate_profile_shape(profile: dict[str, object]) -> list[dict[str, object]
         require_closed(item, INVARIANT_KEYS, f"domain profile invariants[{index}]")
         result.append(item)
     return result
+
+
+def resolve_profile_invariants(
+    graph: dict[str, object], definitions: list[dict[str, object]]
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    invariants: list[dict[str, object]] = []
+    events: list[dict[str, object]] = []
+    for definition in definitions:
+        invariant = {key: value for key, value in definition.items() if key != "events"}
+        invariant_id = str(invariant["id"])
+        subject_ids = []
+        for raw_selector in invariant.pop("subject_selectors", []):
+            selector = require_object(raw_selector, "invariant subject selector")
+            node = select_one_node(graph, selector)
+            if node is not None:
+                node["critical"] = bool(
+                    invariant.get("critical") or node.get("critical")
+                )
+                subject_ids.append(str(node["id"]))
+        invariant["subject_ids"] = sorted(set(subject_ids))
+        invariant_node = f"invariant:{invariant_id}"
+        ensure_node(
+            graph,
+            node_id=invariant_node,
+            kind="business_invariant",
+            label=invariant_id,
+            critical=bool(invariant.get("critical")),
+            metadata={"description": invariant.get("statement", ""), "visual_stage": 7},
+        )
+        for subject_id in invariant["subject_ids"]:
+            ensure_edge(
+                graph,
+                source=subject_id,
+                target=invariant_node,
+                kind="AFFECTS_INVARIANT",
+                critical=bool(invariant.get("critical")),
+            )
+        invariants.append(invariant)
+        for raw_event in definition.get("events", []):
+            event = dict(require_object(raw_event, "invariant event"))
+            event.setdefault(
+                "id",
+                stable_id(
+                    "inv-event",
+                    invariant_id,
+                    event.get("sequence"),
+                    event.get("action"),
+                    event.get("note"),
+                ),
+            )
+            event["invariant_id"] = invariant_id
+            event.pop("affected_edge_selectors", None)
+            event["affected_edge_ids"] = []
+            events.append(event)
+    return invariants, events
+
+
+def ingest_redacted_availability(
+    graph: dict[str, object],
+    *,
+    bundle: Path,
+    evidence_records: list[dict[str, object]],
+    definitions: list[dict[str, object]],
+) -> None:
+    event_by_evidence: dict[str, dict[str, object]] = {}
+    for definition in definitions:
+        for raw_event in definition.get("events", []):
+            event = require_object(raw_event, "invariant event")
+            for evidence_id in event.get("evidence_ids", []):
+                event_by_evidence[str(evidence_id)] = event
+    for descriptor in evidence_records:
+        artifact = resolve_artifact(bundle, descriptor["artifact_ref"])
+        try:
+            receipt = read_json(artifact)
+        except ContractError:
+            continue
+        if receipt.get("schema_version") != "ix-ctg-redacted-evidence@1.1.0":
+            continue
+        require_closed(receipt, REDACTED_RECEIPT_KEYS, "redacted evidence receipt")
+        if receipt["raw_content_embedded"] is not False:
+            raise ContractError("redacted evidence receipt contains raw content")
+        if not isinstance(receipt["sources"], list):
+            raise ContractError("redacted evidence sources must be an array")
+        if receipt["source_count"] != len(receipt["sources"]):
+            raise ContractError("redacted evidence source_count does not match sources")
+        for raw_source in receipt.get("sources", []):
+            source = require_object(raw_source, "redacted evidence source")
+            require_closed(source, REDACTED_SOURCE_KEYS, "redacted evidence source")
+            if not isinstance(source["evidence_ids"], list):
+                raise ContractError(
+                    "redacted evidence source evidence_ids must be an array"
+                )
+            for evidence_id in source.get("evidence_ids", []):
+                evidence_id = str(evidence_id)
+                event = event_by_evidence.get(evidence_id)
+                if event is None:
+                    continue
+                reach = str(event.get("reach", "TEXT"))
+                method = {
+                    "STATIC": "STATIC_DATAFLOW",
+                    "SANDBOX": "SANDBOX_STATE_RECEIPT",
+                    "PROD": "PROD_STATE_RECEIPT",
+                }.get(reach, "DOCUMENT")
+                add_evidence(
+                    graph,
+                    evidence_id=evidence_id,
+                    method=method,
+                    status="observed",
+                    source=f"redacted:{source.get('source_sha256')}",
+                    summary="Evidence availability admitted by the ix redaction boundary",
+                    authority=str(source.get("authority")),
+                    environment_class=(
+                        "synthetic"
+                        if str(source.get("source_class", "")).startswith("synthetic")
+                        else "redacted"
+                    ),
+                    observed_at=str(source.get("observed_at")),
+                    details={
+                        "run_id": source.get("run_id"),
+                        "independence_group": event.get("independence_group"),
+                    },
+                )
 
 
 def sha256(path: Path) -> str:
@@ -440,8 +617,14 @@ def run(packet_path: Path, output: Path) -> int:
         raise ContractError(
             "subject snapshot schema must be ctg-subject-snapshot@1.0.0"
         )
-    if profile.get("schema_version") != "ctg-domain-profile@1.0.0":
-        raise ContractError("domain profile schema must be ctg-domain-profile@1.0.0")
+    if profile.get("schema_version") not in {
+        "ctg-domain-profile@1.0.0",
+        "ctg-domain-profile@1.1.0",
+    }:
+        raise ContractError("unsupported domain profile schema")
+    profile_descriptor = require_object(packet["domain_profile"], "domain_profile")
+    if profile_descriptor["schema_version"] != profile["schema_version"]:
+        raise MeasurementError("stale domain profile schema identity")
     if profile.get("tool_profile") not in TOOL_PROFILES:
         raise ContractError(
             f"domain profile tool_profile must be pinned to one of {sorted(TOOL_PROFILES)}"
@@ -517,26 +700,41 @@ def run(packet_path: Path, output: Path) -> int:
     observed = sorted(
         str(item["observed_at"]) for item in evidence_records if item.get("observed_at")
     )
-    graph = new_graph(
-        title=str(profile["profile_id"]),
-        snapshot={
-            "repo": snapshot["repo_id"],
-            "sha": snapshot["commit"],
-            "tree": snapshot["tree"],
-            "dirty": snapshot["dirty"],
-            "manifest_sha256": subject_descriptor["file_manifest_digest"],
-        },
-        scope={
-            "mode": "demo",
-            "repo": snapshot["repo_id"],
-            "files": [str(item["path"]) for item in files],
-            "synthetic": True,
-        },
-    )
+    projection_profile = profile["schema_version"] == "ctg-domain-profile@1.1.0"
+    if projection_profile:
+        graph_identity = require_object(profile["graph_identity"], "graph_identity")
+        graph = new_graph(
+            title=str(graph_identity["title"]),
+            snapshot=dict(require_object(graph_identity["snapshot"], "graph snapshot")),
+            scope=dict(require_object(graph_identity["scope"], "graph scope")),
+        )
+        add_manual_static(
+            graph,
+            require_object(profile["manual_static"], "domain profile manual_static"),
+        )
+    else:
+        graph = new_graph(
+            title=str(profile["profile_id"]),
+            snapshot={
+                "repo": snapshot["repo_id"],
+                "sha": snapshot["commit"],
+                "tree": snapshot["tree"],
+                "dirty": snapshot["dirty"],
+                "manifest_sha256": subject_descriptor["file_manifest_digest"],
+            },
+            scope={
+                "mode": "demo",
+                "repo": snapshot["repo_id"],
+                "files": [str(item["path"]) for item in files],
+                "synthetic": True,
+            },
+        )
     graph["generated_at"] = observed[0] if observed else "1970-01-01T00:00:00Z"
 
     file_node_ids: list[str] = []
     for entry, actual, _source in snapshot_files:
+        if projection_profile:
+            continue
         path = str(entry["path"])
         node_id = stable_id("file", snapshot["repo_id"], path, actual)
         file_node_ids.append(node_id)
@@ -575,19 +773,20 @@ def run(packet_path: Path, output: Path) -> int:
             Path(__file__).resolve().parents[2]
             / "tools/java/CodeGraphAstExtractor.java"
         )
+        ast_root = bundle / "subject/files" if projection_profile else bundle
         try:
             with tempfile.TemporaryDirectory(prefix="ctg-java-") as build_dir:
                 records = extract_java_records(
-                    root=bundle,
+                    root=ast_root,
                     source_files=java_sources,
                     tool_source=tool_source,
                     build_dir=Path(build_dir),
                 )
             ingest_java_ast(
                 graph,
-                root=bundle,
-                repo=str(snapshot["repo_id"]),
-                sha=str(snapshot["commit"]),
+                root=ast_root,
+                repo=str(graph["scope"].get("repo", snapshot["repo_id"])),
+                sha=str(graph["snapshot"].get("sha", snapshot["commit"])),
                 records=records,
             )
         except JavaAstError as exc:
@@ -597,6 +796,8 @@ def run(packet_path: Path, output: Path) -> int:
 
     packet_evidence_ids: list[str] = []
     for item in evidence_records:
+        if projection_profile:
+            continue
         evidence_id = add_evidence(
             graph,
             evidence_id=str(item["evidence_id"]),
@@ -611,9 +812,31 @@ def run(packet_path: Path, output: Path) -> int:
         )
         packet_evidence_ids.append(evidence_id)
 
-    invariant_rows: list[dict[str, object]] = []
-    event_rows: list[dict[str, object]] = []
-    for invariant in invariants:
+    if projection_profile:
+        add_selector_bindings(graph, profile["post_static_bindings"])
+        critical_path = require_object(profile["critical_path"], "critical_path")
+        mark_critical_path(graph, critical_path.get("node_selectors", []))
+        graph["closure"]["static_critical_paths"] = {
+            "paths": compute_static_paths(
+                graph,
+                require_object(critical_path.get("source_selector"), "source_selector"),
+                require_object(critical_path.get("target_selector"), "target_selector"),
+            )
+        }
+        graph["closure"]["static_critical_paths"]["count"] = len(
+            graph["closure"]["static_critical_paths"]["paths"]
+        )
+        ingest_redacted_availability(
+            graph,
+            bundle=bundle,
+            evidence_records=evidence_records,
+            definitions=invariants,
+        )
+        invariant_rows, event_rows = resolve_profile_invariants(graph, invariants)
+    else:
+        invariant_rows = []
+        event_rows = []
+    for invariant in [] if projection_profile else invariants:
         invariant_id = str(invariant["invariant_id"])
         invariant_node = f"invariant:{invariant_id}"
         ensure_node(
@@ -665,9 +888,10 @@ def run(packet_path: Path, output: Path) -> int:
         raise MeasurementError(f"graph validation failed: {graph_errors}")
 
     graph_path = output / "code-truth-graph.json"
-    graph["packet_id"] = packet["packet_id"]
-    graph["observation_id"] = packet["observation_id"]
-    graph["claim_boundary"] = "structure-only demo"
+    if not projection_profile:
+        graph["packet_id"] = packet["packet_id"]
+        graph["observation_id"] = packet["observation_id"]
+        graph["claim_boundary"] = "structure-only demo"
     graph_sha = write_json(graph_path, graph)
     graphrag_dir = output / "graphrag"
     export_graphrag(graph, graphrag_dir)

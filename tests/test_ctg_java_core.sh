@@ -86,4 +86,6 @@ assert any(item["method"] == "JAVA_AST" for item in graph["evidence"]), graph
 assert any(edge["kind"] == "AFFECTS_INVARIANT" for edge in graph["edges"]), graph
 PY
 
+PYTHONPATH="$F/src" python3 "$ROOT/tests/test_ctg_domain_projection.py" || exit 1
+
 echo "CTG JAVA CORE TEST GREEN"
