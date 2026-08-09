@@ -13,6 +13,8 @@
 Trusted-local parity takes a separate ingress edge, `L0 MANIFEST → C2 EXTRACT`, and rejoins the same
 generic graph/evidence/settlement/export mechanism. `L0` may resolve subject-owned host paths, so it is
 CLI-only and its outputs remain inside the subject boundary; MCP starts only at `C0` with a bounded bundle.
+The MCP carrier materializes that bundle in a disposable directory, runs a pinned immutable ref, returns typed
+artifacts inline, and refuses local packet/output paths and mismatched content digests.
 
 `STATIC`, `SANDBOX`, and `PROD` are lanes, not progressively stronger aliases for the same observation.
 Domain-specific payloads remain versioned profile/evidence artifacts outside the common envelope.

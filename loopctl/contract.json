@@ -708,6 +708,13 @@
         "--force-receipt",
         "--json"
       ],
+      "io": {
+        "input": "clean committed CTG mechanism and public carrier surfaces",
+        "output": [
+          "data/proof-workflow/ctg-<commit12>.json"
+        ],
+        "exit": "0 traversal passed · 2 a mechanism step went red · 64 missing tool/context or invalid receipt state"
+      },
       "writes": [
         "data/proof-workflow/ctg-<commit12>[-dirty].json"
       ]
@@ -720,6 +727,14 @@
       "optional": [
         "--json"
       ],
+      "io": {
+        "input": "clean same-HEAD ctg proof receipt; committed portable, verifier, relocation, trusted-local and MCP carrier mechanisms",
+        "output": [
+          "data/proof-workflow/control-ctg-<commit12>.json"
+        ],
+        "exit": "0 five offline axes passed and four planted defects were caught · 2 a behavioral axis went red · 64 proof/environment/contract failure",
+        "note": "live PROD/device and Human admit remain explicit NOT_EXERCISED states"
+      },
       "writes": [
         "proof_workflow/data/<run_id>/",
         "data/proof-workflow/control-ctg-<commit12>.json"

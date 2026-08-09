@@ -20,5 +20,6 @@ sh "$HERE/portability.sh" || exit $?
 sh "$HERE/../../tests/test_ctg_cli.sh" || exit $?
 sh "$HERE/../../tests/test_ctg_java_core.sh" || exit $?
 sh "$HERE/../../tests/test_ctg_local_build.sh" || exit $?
+sh "$HERE/../../tests/test_ctg_mcp_carrier.sh" || exit $?
 
 echo "PASS: Code Truth Graph candidate verified"
