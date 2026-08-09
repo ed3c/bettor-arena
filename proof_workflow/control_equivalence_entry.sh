@@ -27,6 +27,11 @@ fi
 
 BASE=$(mktemp -d "${TMPDIR:-/tmp}/control-equivalence.XXXXXX")
 WT="$BASE/repo"
+PROOF_SNAPSHOT="$BASE/${PROOF##*/}"
+cp "$PROOF" "$PROOF_SNAPSHOT" || {
+  echo "control FATAL: could not snapshot the equivalence proof before the long-running control" >&2
+  exit 64
+}
 cleanup() { git -C "$ROOT" worktree remove --force "$WT" >/dev/null 2>&1; }
 trap cleanup EXIT
 git -C "$ROOT" worktree add --detach "$WT" HEAD >/dev/null 2>&1 || {
@@ -165,12 +170,18 @@ plant_and_require_red committed-source-binding \
 
 LIVE_STATE=NOT_EXERCISED
 if [ "${CONTROL_EQUIVALENCE_LIVE:-0}" = "1" ]; then
+  # This path is stable for one mechanism commit. A failed provider edge leaves
+  # an immutable adapter receipt here, so the next explicit live run can reuse
+  # successful digest-bound invocations instead of spending the primary turn
+  # again. HEAD is part of the path, so changed mechanism bytes never inherit it.
+  LIVE_RUN_ROOT=${EQUIVALENCE_CONTROL_LIVE_RUN_ROOT:-$ROOT/proof_workflow/data/equivalence-live-$SHORT}
   CAPTURE_CWD="$WT"
   capture live-carrier -- env \
     ANTIGRAVITY_PEER="$SOURCE_PEER" \
     SKILL_BETTOR_PEER="$TARGET_PEER" \
     EQUIVALENCE_LIVE=1 \
-    EQUIVALENCE_LIVE_RUN_ROOT="$BASE/live" \
+    EQUIVALENCE_LIVE_RUN_ROOT="$LIVE_RUN_ROOT" \
+    EQUIVALENCE_RECEIPT_PATH="$LIVE_RUN_ROOT/selftest-receipt.json" \
     EQUIVALENCE_FORCE_RECEIPT=1 \
     sh "$LOOP/selftest.sh"
   LIVE_RC=$?
@@ -189,7 +200,7 @@ fi
 CONTROL_RC=$OFFLINE_RC
 [ "$RED" -eq 0 ] || CONTROL_RC=2
 "$PY3" "$ROOT/proof_workflow/lib/equivalence_control.py" \
-  "$ROOT" "$RUNDIR" "$PROOF" "$CONTROL_RECEIPT" "$OFFLINE_RC" "$CONTROL_RC" "$LIVE_STATE"
+  "$ROOT" "$RUNDIR" "$PROOF_SNAPSHOT" "$CONTROL_RECEIPT" "$OFFLINE_RC" "$CONTROL_RC" "$LIVE_STATE"
 COMPARE_RC=$?
 echo "control[equivalence-entry] trace=proof_workflow/data/$RUN_ID"
 exit "$COMPARE_RC"

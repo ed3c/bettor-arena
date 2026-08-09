@@ -18,6 +18,12 @@
 - A carrier-only live canary stops at `candidate_ready`; it is not an end-to-end
   admission and cannot enter the rolling jitter baseline until a fresh judge
   and external Human admit bind the observation.
+- The independent live control keeps its run root stable per bettor-arena HEAD.
+  Failed adapter attempts are immutable, and a later explicit live run may reuse
+  only successful prompt/output pairs whose request, pinned source, dependencies,
+  and execution policy still match. The proof receipt is snapshotted before this
+  long-running edge so concurrent receipt rotation cannot erase its comparison
+  input halfway through the run.
 - `selftest` and the independent control receipt carry four separate assurance
   states: `offline_surface`, `live_carrier`, `fresh_semantic_judge`, and
   `human_admit`. Only the first is expected to pass without explicit live and

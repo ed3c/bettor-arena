@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "63c3b004f6b5579aaa080dd81ca0baeda2a2f384",
+  "workflow_commit": "bfda18a3ca1b4e19285105dea6f9d214c26bf0ba",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-63c3b004f6b5-dirty.json",
-    "ctg": "ctg-63c3b004f6b5-dirty.json",
-    "equivalence": "equivalence-63c3b004f6b5-dirty.json",
-    "harness": "harness-63c3b004f6b5-dirty.json",
-    "macro": "macro-63c3b004f6b5-dirty.json",
-    "micro": "micro-63c3b004f6b5-dirty.json",
-    "notebooklm": "notebooklm-63c3b004f6b5-dirty.json",
-    "openwiki": "openwiki-63c3b004f6b5-dirty.json",
-    "policy": "policy-63c3b004f6b5-dirty.json",
-    "workflow": "workflow-63c3b004f6b5-dirty.json"
+    "container": "container-bfda18a3ca1b-dirty.json",
+    "ctg": "ctg-bfda18a3ca1b-dirty.json",
+    "equivalence": "equivalence-bfda18a3ca1b-dirty.json",
+    "harness": "harness-bfda18a3ca1b-dirty.json",
+    "macro": "macro-bfda18a3ca1b-dirty.json",
+    "micro": "micro-bfda18a3ca1b-dirty.json",
+    "notebooklm": "notebooklm-bfda18a3ca1b-dirty.json",
+    "openwiki": "openwiki-bfda18a3ca1b-dirty.json",
+    "policy": "policy-bfda18a3ca1b-dirty.json",
+    "workflow": "workflow-bfda18a3ca1b-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 118,
     "optional": 1
   },
-  "workflow_digest": "f2ff05b273583dfadb9636d4c6505dee466e1b3f3869eb209e94c436088e6b37",
+  "workflow_digest": "fe2eb508debe53a2c1d73231e46ef192a26c0e245044da49de389a19251aed14",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-63c3b004f6b5579aaa080dd81ca0baeda2a2f384.json": {
+    "data/receipts/post-commit-bfda18a3ca1b4e19285105dea6f9d214c26bf0ba.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -882,7 +882,7 @@
       ]
     },
     "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md": {
-      "sha256": "f5b7a1e40af30fa9b10c2cf2275498beb34c07eb5269a2c99ab70856686ad501",
+      "sha256": "13d95cc10940cbbf564d214beee5f0030985099d4c9e3ccc7ca5f0c03f71db84",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -1526,7 +1526,7 @@
       ]
     },
     "proof_workflow/control_equivalence_entry.sh": {
-      "sha256": "f07a9034310993710b50f8746987da8b4cb6c5831d42f981cf4153ebd3e8ebe4",
+      "sha256": "3a83c0207e85c5b7c5af04b8b2067fff9881cfe3de24c49fd45afe4faf8be29f",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
