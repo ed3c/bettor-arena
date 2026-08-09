@@ -78,6 +78,20 @@ def repo_root() -> Path:
     return Path(out)
 
 
+def resolve_commit(root: Path, ref: str) -> str:
+    """Resolve a caller ref once so contract lookup and every call use one commit."""
+    result = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", f"{ref}^{{commit}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    commit = result.stdout.strip()
+    if result.returncode != 0 or re.fullmatch(r"[0-9a-f]{40,64}", commit) is None:
+        raise ValueError(f"ref {ref!r} does not resolve to one commit")
+    return commit
+
+
 def load_tools(contract: Path) -> list[dict]:
     sys.path.insert(0, str(HERE))
     import mcp_tools  # noqa: PLC0415 - resolved from this file's own directory
@@ -399,7 +413,7 @@ def assert_ref_serves_json(root: Path, ref: str) -> None:
             f"{contract.get('surface_version', 'unknown')}) does not declare --json for "
             f"{missing[:3]}{'…' if len(missing) > 3 else ''}. This server forces --json so its "
             "caller gets structured output, and that ref would refuse it as undeclared on every "
-            "call. Pin a ref whose surface carries --json, or serve HEAD."
+            "call. Pin a commit whose surface carries --json."
         )
 
 
@@ -421,6 +435,7 @@ def serve_http(ref: str, port: int) -> int:
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
     root = repo_root()
+    ref = resolve_commit(root, ref)
     assert_ref_serves_json(root, ref)
     tools = load_tools_at_ref(root, ref)
 
@@ -469,6 +484,7 @@ def serve_http(ref: str, port: int) -> int:
 
 def serve(ref: str) -> int:
     root = repo_root()
+    ref = resolve_commit(root, ref)
     assert_ref_serves_json(root, ref)
     tools = load_tools_at_ref(root, ref)
     for line in sys.stdin:
@@ -549,6 +565,12 @@ def _selftest() -> int:
         case("undeclared-argument-is-refused", "ValueError", "ValueError")
 
     root = repo_root()
+    resolved_head = resolve_commit(root, "HEAD")
+    case(
+        "ref-resolves-once-to-a-commit",
+        bool(re.fullmatch(r"[0-9a-f]{40,64}", resolved_head)),
+        True,
+    )
     case(
         "initialize-answers",
         handle(

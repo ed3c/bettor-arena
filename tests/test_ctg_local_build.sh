@@ -111,6 +111,52 @@ for node_id in ("rule:generic", "generic:target"):
     assert "ev-generic-semantic" in node["evidence_ids"], node
 PY
 
+PYTHONPATH="$ROOT/loop_wiki/code-truth-graph/src" python3 - "$TMP/output/ctg-local-build-receipt.json" <<'PY' || exit 1
+import copy
+import json
+import sys
+from pathlib import Path
+
+from code_truth_graph.local_cli import validate_local_receipt
+
+receipt = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+for label, mutate in (
+    ("extra", lambda value: value.__setitem__("unexpected", True)),
+    ("missing", lambda value: value.pop("claim_boundary")),
+    ("wrong-type", lambda value: value["subject"].__setitem__("dirty_before_run", "false")),
+):
+    candidate = copy.deepcopy(receipt)
+    mutate(candidate)
+    try:
+        validate_local_receipt(candidate)
+    except ValueError:
+        continue
+    raise AssertionError(f"local receipt schema accepted {label} mutation")
+PY
+
+cp "$MANIFEST" "$TMP/toctou.json"
+PYTHONPATH="$ROOT/loop_wiki/code-truth-graph/src" python3 - \
+  "$TMP/toctou.json" "$TMP/toctou-output" <<'PY' || exit 1
+import sys
+from pathlib import Path
+
+from code_truth_graph import local_cli
+
+original = local_cli.build_graph
+
+
+def mutate_after_read(manifest: Path, *, output_dir: Path):
+    report = original(manifest, output_dir=output_dir)
+    manifest.write_text(manifest.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    return report
+
+
+local_cli.build_graph = mutate_after_read
+rc = local_cli.main(["--manifest", sys.argv[1], "--output", sys.argv[2]])
+assert rc == 64, rc
+assert not (Path(sys.argv[2]) / "ctg-local-build-receipt.json").exists()
+PY
+
 if sh "$ROOT/loopctl/loopctl.sh" ctg build-local \
   --manifest relative.json \
   --output "$TMP/relative-output" >/dev/null 2>&1; then

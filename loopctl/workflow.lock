@@ -1,24 +1,24 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f8c30d87ab11bf17d94bdd31534446b4763cbfc9",
+  "workflow_commit": "f3ee7189cf44d838c3c039b3237091fce0394eb0",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-f8c30d87ab11-dirty.json",
-    "ctg": "ctg-f8c30d87ab11-dirty.json",
-    "harness": "harness-f8c30d87ab11-dirty.json",
-    "macro": "macro-f8c30d87ab11-dirty.json",
-    "micro": "micro-f8c30d87ab11-dirty.json",
-    "notebooklm": "notebooklm-f8c30d87ab11-dirty.json",
-    "openwiki": "openwiki-f8c30d87ab11-dirty.json",
-    "policy": "policy-f8c30d87ab11-dirty.json",
-    "workflow": "workflow-f8c30d87ab11-dirty.json"
+    "container": "container-f3ee7189cf44-dirty.json",
+    "ctg": "ctg-f3ee7189cf44-dirty.json",
+    "harness": "harness-f3ee7189cf44-dirty.json",
+    "macro": "macro-f3ee7189cf44-dirty.json",
+    "micro": "micro-f3ee7189cf44-dirty.json",
+    "notebooklm": "notebooklm-f3ee7189cf44-dirty.json",
+    "openwiki": "openwiki-f3ee7189cf44-dirty.json",
+    "policy": "policy-f3ee7189cf44-dirty.json",
+    "workflow": "workflow-f3ee7189cf44-dirty.json"
   },
   "counts": {
     "artifact": 34,
     "context": 34,
     "harness": 111
   },
-  "workflow_digest": "67458e8b033806128dfc49121ddba8f5fd5d56744a7909b239265cb0b6ca3f90",
+  "workflow_digest": "ded16905db537a01ea8b0e2a1de1fdbe2efcf77287f49f3ab4209b25a1de9aa4",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -126,7 +126,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-f8c30d87ab11bf17d94bdd31534446b4763cbfc9.json": {
+    "data/receipts/post-commit-f3ee7189cf44d838c3c039b3237091fce0394eb0.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -496,7 +496,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/src/code_truth_graph/local_cli.py": {
-      "sha256": "95204a461c30940aed376cf5a512aeaa81e695d5eb78aa671210b6e205ed3403",
+      "sha256": "ccbee3226081f7f5add95c124dd6eaecb1752e6aa654e1c09c54770d7a4c2edf",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -794,7 +794,7 @@
       ]
     },
     "loopctl/mcp_server.py": {
-      "sha256": "a93bbea51fc850050eb35ec9274a25f8aef884d73e1cb953f41f56235c2f5eff",
+      "sha256": "d62dc0a27df8af94100152fd61545a0d331e954fe17a8a787b7ce260822f108c",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1452,7 +1452,7 @@
       ]
     },
     "tests/test_ctg_local_build.sh": {
-      "sha256": "0984d43bc838370b4c8f7339be8c969566606f9dbce0aaf5045fc6a596cc6a6e",
+      "sha256": "d971965af17c797a6430277d7396db2779c4579f3bf9960d8fccad87093a7019",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

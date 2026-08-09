@@ -10,9 +10,11 @@ import argparse
 import glob
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 from .build import build_graph, load_manifest
 from .identity import RUNTIME_REF, SURFACE_VERSION
@@ -179,14 +181,94 @@ def closure_sha256(records: list[dict[str, str]]) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def _schema_type_matches(value: object, declared: str) -> bool:
+    return {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "boolean": isinstance(value, bool),
+        "null": value is None,
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+    }.get(declared, False)
+
+
+def _validate_schema(
+    value: object, schema: dict[str, Any], root: dict[str, Any], path: str = "$"
+) -> None:
+    reference = schema.get("$ref")
+    if reference:
+        if not isinstance(reference, str) or not reference.startswith("#/"):
+            raise ValueError(f"{path}: only local schema references are supported")
+        target: object = root
+        for part in reference[2:].split("/"):
+            if not isinstance(target, dict) or part not in target:
+                raise ValueError(f"{path}: unresolved schema reference {reference}")
+            target = target[part]
+        if not isinstance(target, dict):
+            raise ValueError(f"{path}: schema reference does not resolve to an object")
+        _validate_schema(value, target, root, path)
+        return
+    if "const" in schema and value != schema["const"]:
+        raise ValueError(f"{path}: value differs from schema const")
+    if "enum" in schema and value not in schema["enum"]:
+        raise ValueError(f"{path}: value is outside schema enum")
+    declared = schema.get("type")
+    if declared is not None:
+        types = declared if isinstance(declared, list) else [declared]
+        if not any(_schema_type_matches(value, item) for item in types):
+            raise ValueError(f"{path}: value does not match schema type {declared}")
+    if isinstance(value, dict):
+        required = schema.get("required", [])
+        missing = sorted(set(required) - set(value))
+        if missing:
+            raise ValueError(f"{path}: missing required keys {missing}")
+        properties = schema.get("properties", {})
+        if schema.get("additionalProperties") is False:
+            extra = sorted(set(value) - set(properties))
+            if extra:
+                raise ValueError(f"{path}: unknown keys {extra}")
+        for key, item in value.items():
+            child_schema = properties.get(key)
+            if isinstance(child_schema, dict):
+                _validate_schema(item, child_schema, root, f"{path}.{key}")
+    elif isinstance(value, list):
+        if len(value) < int(schema.get("minItems", 0)):
+            raise ValueError(f"{path}: array has fewer than minItems")
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                _validate_schema(item, item_schema, root, f"{path}[{index}]")
+    elif isinstance(value, str):
+        if len(value) < int(schema.get("minLength", 0)):
+            raise ValueError(f"{path}: string has fewer than minLength characters")
+        pattern = schema.get("pattern")
+        if pattern and re.fullmatch(str(pattern), value) is None:
+            raise ValueError(f"{path}: string does not match schema pattern")
+
+
+def validate_local_receipt(receipt: dict[str, object]) -> None:
+    schema_path = (
+        Path(__file__).resolve().parents[2]
+        / "schemas/ctg-local-build-receipt.schema.json"
+    )
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    if not isinstance(schema, dict):
+        raise ValueError("local receipt schema must be a JSON object")
+    _validate_schema(receipt, schema, schema)
+
+
 def write_receipt(
     *,
     output: Path,
     root: Path,
     manifest: Path,
+    manifest_sha256: str,
     report: dict[str, object],
     dirty: bool,
-    consumed_inputs: list[Path],
+    consumed_inputs: list[dict[str, str]],
+    subject_commit: str,
+    subject_tree: str,
+    runner: dict[str, object],
 ) -> None:
     artifacts = []
     for path in sorted(item for item in output.rglob("*") if item.is_file()):
@@ -196,23 +278,23 @@ def write_receipt(
                 "sha256": sha256(path),
             }
         )
-    inputs = input_records(root, consumed_inputs)
     receipt = {
         "schema_version": "ctg-local-build-receipt@1.0.0",
-        "runner": runner_identity(),
+        "runner": runner,
         "subject": {
-            "repo_commit": git(root, "rev-parse", "HEAD"),
-            "repo_tree": git(root, "rev-parse", "HEAD^{tree}"),
+            "repo_commit": subject_commit,
+            "repo_tree": subject_tree,
             "dirty_before_run": dirty,
             "manifest_ref": manifest.relative_to(root).as_posix(),
-            "manifest_sha256": sha256(manifest),
-            "input_files": inputs,
-            "input_closure_sha256": closure_sha256(inputs),
+            "manifest_sha256": manifest_sha256,
+            "input_files": consumed_inputs,
+            "input_closure_sha256": closure_sha256(consumed_inputs),
         },
         "artifacts": artifacts,
         "overall": {"state": "PASSED" if report.get("ok") else "FAILED"},
         "claim_boundary": "trusted-local artifacts remain subject-owned and are not MCP-deliverable",
     }
+    validate_local_receipt(receipt)
     write_json(output / "ctg-local-build-receipt.json", receipt)
 
 
@@ -233,16 +315,34 @@ def main(argv: list[str] | None = None) -> int:
         root = subject_root(manifest)
         require_within(root, manifest, "manifest")
         require_within(root, output, "output")
-        consumed_inputs = validate_local_inputs(root, manifest)
+        manifest_digest = sha256(manifest)
+        consumed_inputs = input_records(root, validate_local_inputs(root, manifest))
+        subject_commit = git(root, "rev-parse", "HEAD")
+        subject_tree = git(root, "rev-parse", "HEAD^{tree}")
         dirty = bool(git(root, "status", "--porcelain", "--untracked-files=all"))
+        runner = runner_identity()
         report = build_graph(manifest, output_dir=output)
+        after_manifest_digest = sha256(manifest)
+        after_inputs = input_records(root, validate_local_inputs(root, manifest))
+        if manifest_digest != after_manifest_digest or consumed_inputs != after_inputs:
+            raise ValueError(
+                "manifest or consumed input closure changed during local build; result is not publishable"
+            )
+        if subject_commit != git(root, "rev-parse", "HEAD") or subject_tree != git(
+            root, "rev-parse", "HEAD^{tree}"
+        ):
+            raise ValueError("subject Git identity changed during local build")
         write_receipt(
             output=output,
             root=root,
             manifest=manifest,
+            manifest_sha256=manifest_digest,
             report=report,
             dirty=dirty,
             consumed_inputs=consumed_inputs,
+            subject_commit=subject_commit,
+            subject_tree=subject_tree,
+            runner=runner,
         )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"ctg local FATAL: {exc}", file=sys.stderr)
