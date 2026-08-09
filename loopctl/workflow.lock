@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f3ebf425e1a4c917a85e0d598c17e7cea10c935d",
+  "workflow_commit": "978c5c602fcb125abe945ddf4ab893fbb492b53e",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-f3ebf425e1a4-dirty.json",
-    "ctg": "ctg-f3ebf425e1a4-dirty.json",
-    "equivalence": "equivalence-f3ebf425e1a4-dirty.json",
-    "harness": "harness-f3ebf425e1a4-dirty.json",
-    "macro": "macro-f3ebf425e1a4-dirty.json",
-    "micro": "micro-f3ebf425e1a4-dirty.json",
-    "notebooklm": "notebooklm-f3ebf425e1a4-dirty.json",
-    "openwiki": "openwiki-f3ebf425e1a4-dirty.json",
-    "policy": "policy-f3ebf425e1a4-dirty.json",
-    "workflow": "workflow-f3ebf425e1a4-dirty.json"
+    "container": "container-978c5c602fcb-dirty.json",
+    "ctg": "ctg-978c5c602fcb-dirty.json",
+    "equivalence": "equivalence-978c5c602fcb-dirty.json",
+    "harness": "harness-978c5c602fcb-dirty.json",
+    "macro": "macro-978c5c602fcb-dirty.json",
+    "micro": "micro-978c5c602fcb-dirty.json",
+    "notebooklm": "notebooklm-978c5c602fcb-dirty.json",
+    "openwiki": "openwiki-978c5c602fcb-dirty.json",
+    "policy": "policy-978c5c602fcb-dirty.json",
+    "workflow": "workflow-978c5c602fcb-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "841fb9641c1b2ca0780eb611408cdccc4804444de10afa82ef3a133fc511d258",
+  "workflow_digest": "25da0304aa799a6c7a70bc9deefe827842ae754b41573a8307472e6a15262c4a",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-f3ebf425e1a4c917a85e0d598c17e7cea10c935d.json": {
+    "data/receipts/post-commit-978c5c602fcb125abe945ddf4ab893fbb492b53e.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -914,7 +914,7 @@
       ]
     },
     "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md": {
-      "sha256": "5e9075b81b60a9b1589de84fff21ed2de1fab93550310c5806ce3dc0662f9bc9",
+      "sha256": "2da174e3da2ce091e0f93c40c77daf577097e9d121cac798c3b12bbdbe35d000",
       "hash_source": "index",
       "kind": "context",
       "loops": [

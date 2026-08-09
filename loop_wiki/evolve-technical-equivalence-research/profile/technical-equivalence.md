@@ -60,4 +60,6 @@ Card-box v6.6 and browser/login mechanics are explicitly outside this profile.
 repo_url、精確 commit、SPDX、source_urls、code_anchors、三個 rebuild-trigger
 布林值與 inference:false；研究階段的 code_audit/probe 必須明示
 `not_exercised`，不得假造本機 receipt。沒有公開實作時仍須輸出至少一個
-inference:true 候選及可證偽條件，空陣列是 declared verification failure。
+inference:true 候選；它必須帶 candidate_id、claim、非空 source_urls，以及
+精確鍵名 `falsification_conditions` 的非空字串陣列。不得改用
+`falsifiable_conditions` 或單一字串。空陣列是 declared verification failure。
