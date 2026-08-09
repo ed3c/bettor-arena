@@ -12,8 +12,8 @@ be affected by an edit in flight. Stateless is structural here, not a promise.
 
 --ref pins which workflow answers. A tag is the point: `--ref v1.0` means every
 external call is served by the version that tag names, no matter what HEAD is
-doing, so customer traffic and internal iteration stop sharing a fate. Without
-it the server serves HEAD, which is fine for a dev box and wrong for a service.
+doing, so customer traffic and internal iteration stop sharing a fate. The server
+requires an exact commit or immutable tag and refuses mutable `HEAD`.
 
 The tool list is GENERATED from contract.json (see mcp_tools.py), so the MCP
 surface cannot drift from the CLI surface and surface.lock guards both.

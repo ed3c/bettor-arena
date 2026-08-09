@@ -60,7 +60,7 @@ PY
   # first shape made a declared command look unwired and sent the fix at the
   # contract instead of at the extraction.
   {
-    grep -oE '^  (macro|micro|openwiki|notebooklm|ctg)/(run|prove|test)\)' "$_cli" | tr -d ' )'
+    grep -oE '^  (macro|micro|openwiki|notebooklm|ctg)/(run|prove|test|build-local)\)' "$_cli" | tr -d ' )'
     # The nested subcommands are listed, not extracted. Their labels repeat
     # across branches — `test)` under four of them, `prove)` under two — and a
     # shape-based grep cannot say which branch a label belongs to: it prefixed

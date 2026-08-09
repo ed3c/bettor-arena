@@ -33,6 +33,16 @@ def surface(contract: dict) -> list[dict]:
                 "mode": c["mode"],
                 "required": sorted(c["required"]),
                 "optional": sorted(c["optional"]),
+                "mcp_exposed": c.get("mcp_exposed", True),
+                "mcp_carrier": (
+                    {
+                        key: c["mcp_carrier"][key]
+                        for key in ("kind", "max_request_bytes", "input_schema")
+                        if key in c["mcp_carrier"]
+                    }
+                    if c.get("mcp_carrier")
+                    else None
+                ),
             }
             for c in contract["commands"]
         ),
@@ -170,6 +180,20 @@ def _selftest() -> int:
             lambda c: c["commands"].append({**c["commands"][0], "mode": "test"}),
         ),
         ("renamed-loop", lambda c: c["commands"][0].__setitem__("loop", "b")),
+        (
+            "changed-mcp-exposure",
+            lambda c: c["commands"][0].__setitem__("mcp_exposed", False),
+        ),
+        (
+            "changed-mcp-carrier",
+            lambda c: c["commands"][0].__setitem__(
+                "mcp_carrier",
+                {
+                    "kind": "inline_bundle_v1",
+                    "input_schema": {"type": "object", "required": ["bundle"]},
+                },
+            ),
+        ),
     ):
         mutated = json.loads(json.dumps(base))
         mutate(mutated)

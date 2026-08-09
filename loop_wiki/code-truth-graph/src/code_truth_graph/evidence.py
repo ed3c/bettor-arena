@@ -351,7 +351,10 @@ def compute_static_paths(
 
 
 def add_selector_bindings(
-    graph: dict[str, Any], entries: list[dict[str, Any]]
+    graph: dict[str, Any],
+    entries: list[dict[str, Any]],
+    *,
+    attach_endpoint_evidence: bool = False,
 ) -> dict[str, Any]:
     """Add declared semantic bridges after AST/LSP extraction, resolving endpoints by selectors.
 
@@ -397,5 +400,8 @@ def add_selector_bindings(
             evidence_id=item.get("evidence_id"),
         )
         attach_evidence_to_edge(graph, edge["id"], evidence_id)
+        if attach_endpoint_evidence:
+            attach_evidence_to_node(graph, source["id"], evidence_id)
+            attach_evidence_to_node(graph, target["id"], evidence_id)
         added += 1
     return {"added": added, "blocked": len(blocked), "blocked_entries": blocked}

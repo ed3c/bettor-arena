@@ -6,7 +6,7 @@ PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
 . "$PROVE_HOME/lib/prove.sh"
 
 F=loop_wiki/code-truth-graph
-prove_init ctg "loopctl ctg run -> closed packet -> verified snapshot/profile -> graph + route-result"
+prove_init ctg "loopctl ctg run/build-local -> portable packet or trusted-local manifest -> verified graph artifacts"
 
 prove_context sandbox-agents "$F/AGENTS.md" \
   "sandbox -> agent read order, eight-base ownership, and execution boundary"
@@ -26,13 +26,15 @@ prove_harness input-schema "$F/schemas/ctg-input.schema.json" \
   "external packet -> closed semantic envelope (hashed; json readability is exercised by the public contract test)"
 prove_harness result-schema "$F/schemas/ctg-route-result.schema.json" \
   "runtime stages and artifact digests -> closed route-result envelope (hashed; json readability is exercised by the public contract test)"
+prove_harness local-result-schema "$F/schemas/ctg-local-build-receipt.schema.json" \
+  "trusted-local runner/subject/artifact identity -> closed non-egress receipt"
 prove_harness control-schema "$F/schemas/ctg-control.schema.json" \
   "copied-input behavior probes -> closed control receipt"
 prove_harness runtime-ref "$F/src/code_truth_graph/__init__.py" \
   "immutable runtime identity -> expected_runner comparison"
 prove_harness runtime "$F/src/code_truth_graph/cli.py" \
   "packet bundle -> digest verification -> graph/result materialization"
-for module in model evidence settlement graphrag java_ast render util fixture verify_artifacts; do
+for module in identity model evidence settlement graphrag java_ast sessions build local_cli render util fixture verify_artifacts; do
   prove_harness "core-$module" "$F/src/code_truth_graph/$module.py" \
     "ported generic CTG core -> the closed runtime adapter (hashed here; exercised by the public and Java fixtures)"
 done
@@ -46,6 +48,8 @@ prove_harness entry "$F/run.sh" \
   "stdin EOF + sandbox-local Python path -> one-shot runtime (hashed, not fired because the contract test fires the public CLI)"
 prove_harness trigger "$F/trigger.sh" \
   "two positional carrier arguments -> one-shot run.sh with stdin EOF (hashed; fired by public-contract)"
+prove_harness local-trigger "$F/local-trigger.sh" \
+  "trusted-local manifest/output arguments -> generic builder with stdin EOF (hashed; fired by local-build)"
 prove_harness verify "$F/verify.sh" \
   "whole candidate -> format/lint/good/hollow/relocation/public behavior gates (hashed; run directly by CI/operator)"
 prove_harness selftest "$F/selftest.sh" \
@@ -59,6 +63,9 @@ prove_harness public-contract tests/test_ctg_cli.sh \
 prove_harness java-core tests/test_ctg_java_core.sh \
   "java-compiler-v1 -> compiler AST nodes and evidence through the public CLI" \
   -- sh tests/test_ctg_java_core.sh
+prove_harness local-build tests/test_ctg_local_build.sh \
+  "trusted-local manifest -> generic graph while MCP retains the raw-evidence non-egress boundary" \
+  -- sh tests/test_ctg_local_build.sh
 prove_harness verifier-agent "$F/.agents/agents/verifier.md" \
   "output directory -> read-only verifier route"
 prove_harness runtime-skill "$F/.agents/skills/code-truth-graph-runtime/SKILL.md" \

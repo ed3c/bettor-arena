@@ -8,6 +8,8 @@ import hashlib
 import json
 from pathlib import Path
 
+from .identity import RUNTIME_REF, SURFACE_VERSION
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -67,8 +69,8 @@ def materialize(bundle: Path) -> Path:
             "packet_state": "admitted_for_measurement",
             "observation_id": "obs-fixture-001",
             "expected_runner": {
-                "surface_version": "2.5.0",
-                "runtime_ref": "ctg-runtime@1.0.0",
+                "surface_version": SURFACE_VERSION,
+                "runtime_ref": RUNTIME_REF,
             },
             "subject_snapshot": {
                 "artifact_ref": "subject-snapshot.json",

@@ -90,6 +90,7 @@ def build(contract: dict) -> list[dict]:
             **({"_carrier": c["mcp_carrier"]} if c.get("mcp_carrier") else {}),
         }
         for c in sorted(contract["commands"], key=lambda c: (c["loop"], c["mode"]))
+        if c.get("mcp_exposed", True)
     ]
 
 
@@ -159,10 +160,18 @@ def _selftest() -> int:
                     },
                 },
             },
+            {
+                "loop": "ctg",
+                "mode": "build-local",
+                "target": "local.sh",
+                "required": ["--manifest", "--output"],
+                "optional": ["--json"],
+                "mcp_exposed": False,
+            },
         ],
     }
     tools = build(contract)
-    case("one-tool-per-command", len(tools), 3)
+    case("local-only-command-is-not-an-mcp-tool", len(tools), 3)
     case(
         "names-are-stable-and-sorted",
         [t["name"] for t in tools],

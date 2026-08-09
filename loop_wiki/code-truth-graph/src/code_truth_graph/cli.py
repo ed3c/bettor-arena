@@ -12,7 +12,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from . import RUNTIME_REF
+from .identity import RUNTIME_REF, SURFACE_VERSION
 from .evidence import (
     add_manual_static,
     add_selector_bindings,
@@ -35,7 +35,6 @@ from .render import render_html
 from .settlement import add_invariants_and_events, evaluate_all
 from .util import stable_id
 
-SURFACE_VERSION = "2.5.0"
 SAFE_ARTIFACT_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 TOOL_PROFILES = {"builtin-text-v1", "java-compiler-v1"}
 

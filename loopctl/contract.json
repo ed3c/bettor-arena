@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.5.0",
+  "surface_version": "2.6.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -33,6 +33,7 @@
   ],
   "modes": {
     "run": "execute the loop's real entry point",
+    "build-local": "run a trusted-local manifest through the generic CTG builder; never exposed through MCP",
     "prove": "traverse it and write a proof receipt under data/proof-workflow/",
     "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof",
     "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
@@ -667,6 +668,32 @@
             }
           }
         }
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "build-local",
+      "target": "loop_wiki/code-truth-graph/local-trigger.sh",
+      "required": [
+        "--manifest",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "mcp_exposed": false,
+      "io": {
+        "input": "trusted-local only: --manifest is an absolute subject-owned manifest path; --output is a fresh absolute directory",
+        "output": [
+          "<output>/code-truth-graph.json",
+          "<output>/graphrag/*.csv",
+          "<output>/verification-report.json",
+          "<output>/ctg-local-build-receipt.json"
+        ],
+        "exit": "0 graph verified · 2 a build or graph validation stage failed · 64 usage, invalid path, or malformed manifest"
       },
       "writes": [
         "<output>/"

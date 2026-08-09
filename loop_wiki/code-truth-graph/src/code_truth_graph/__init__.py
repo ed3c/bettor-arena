@@ -1,3 +1,5 @@
 """Bettor Arena's Code Truth Graph runtime."""
 
-RUNTIME_REF = "ctg-runtime@1.0.0"
+from .identity import RUNTIME_REF
+
+__all__ = ["RUNTIME_REF"]

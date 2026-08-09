@@ -75,8 +75,8 @@ write_json(
         "packet_state": "admitted_for_measurement",
         "observation_id": "obs-fixture-001",
         "expected_runner": {
-            "surface_version": "2.5.0",
-            "runtime_ref": "ctg-runtime@1.0.0",
+            "surface_version": "2.6.0",
+            "runtime_ref": "ctg-runtime@1.1.0",
         },
         "subject_snapshot": {
             "artifact_ref": "subject-snapshot.json",
