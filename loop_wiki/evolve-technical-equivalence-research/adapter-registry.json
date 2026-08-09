@@ -20,8 +20,11 @@
           "turndown": "7.2.4"
         }
       },
-      "argv": ["node", "{source_peer}/automate.js", "--dr-once", "{prompt_file}", "{output_file}"],
-      "notes": "External browser/login runtime. Commit and all executable module bytes are pinned; drift requires explicit registry re-admission."
+      "execution_mirror": {
+        "redirected_write_exports": ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"]
+      },
+      "argv": ["node", "{execution_mirror}/automate.js", "--dr-once", "{prompt_file}", "{output_file}"],
+      "notes": "External browser/login runtime. Pinned source bytes execute from a disposable mirror; only declared write-path exports are redirected into the run. Source or policy drift requires explicit re-admission."
     }
   }
 }

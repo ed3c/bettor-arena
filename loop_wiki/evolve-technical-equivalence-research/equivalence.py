@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -810,13 +811,22 @@ def load_resume_cache(
 
 
 def completed_adapter_run(
-    run_dir: Path, prior_receipts: list[Path], research_request_digest: str
+    run_dir: Path,
+    prior_receipts: list[Path],
+    research_request_digest: str,
+    expected_identity: dict[str, Any] | None = None,
 ) -> tuple[Path, Path] | None:
     """Return an already completed, bound live run without creating a new attempt."""
     for receipt_path in reversed(prior_receipts):
         receipt = load_json(receipt_path)
         if receipt.get("status") != "passed":
             continue
+        if expected_identity is not None:
+            for field, expected in expected_identity.items():
+                if receipt.get(field) != expected:
+                    raise ContractError(
+                        f"completed adapter identity mismatch for {field}: {receipt_path}"
+                    )
         result_path = run_dir / "research-result.json"
         if not result_path.is_file():
             raise ContractError(
@@ -833,6 +843,77 @@ def completed_adapter_run(
             )
         return result_path, receipt_path
     return None
+
+
+def materialize_adapter_mirror(
+    source_peer: Path,
+    run_dir: Path,
+    required_files: list[str],
+    redirected_exports: list[str],
+) -> tuple[Path, dict[str, Any]]:
+    """Copy pinned adapter bytes and redirect declared write paths inside the run."""
+    source_peer = source_peer.resolve()
+    mirror = run_dir / "adapter-execution-mirror"
+    side_effects = run_dir / "adapter-side-effects"
+    if mirror.exists() or side_effects.exists():
+        raise ContractError(f"adapter execution mirror collision: {run_dir}")
+    for name in required_files:
+        source = source_peer / name
+        if not source.is_file() or source.is_symlink():
+            raise ContractError(
+                f"adapter mirror source is not a regular file: {source}"
+            )
+
+    state_source = source_peer / "state.js"
+    if "state.js" not in required_files:
+        raise ContractError("adapter execution mirror requires state.js")
+    state_text = state_source.read_text(encoding="utf-8")
+    targets: dict[str, str] = {}
+    for export_name in redirected_exports:
+        pattern = re.compile(
+            rf"^(export const {re.escape(export_name)}\s*=\s*)(['\"])([^\r\n]*?)\2;[ \t]*$",
+            re.MULTILINE,
+        )
+        destination = side_effects / export_name
+        replacement = json.dumps(str(destination), ensure_ascii=False)
+        state_text, count = pattern.subn(
+            lambda match: f"{match.group(1)}{replacement};", state_text
+        )
+        if count != 1:
+            raise ContractError(
+                f"declared write export absent or ambiguous: {export_name}"
+            )
+        targets[export_name] = str(destination)
+
+    dependencies = source_peer / "node_modules"
+    if not dependencies.is_dir() or dependencies.is_symlink():
+        raise ContractError(
+            f"adapter dependency directory absent or indirect: {dependencies}"
+        )
+    mirror.mkdir(parents=True)
+    side_effects.mkdir()
+    for name in required_files:
+        source = source_peer / name
+        target = mirror / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    state_path = mirror / "state.js"
+    state_path.write_text(state_text, encoding="utf-8")
+    (mirror / "node_modules").symlink_to(dependencies, target_is_directory=True)
+    mirror_files = {
+        name: "sha256:" + hashlib.sha256((mirror / name).read_bytes()).hexdigest()
+        for name in required_files
+    }
+    evidence = {
+        "mirror_root": str(mirror),
+        "side_effect_root": str(side_effects),
+        "redirected_exports": list(redirected_exports),
+        "redirect_targets": targets,
+        "mirror_files": mirror_files,
+        "dependencies": str(dependencies),
+    }
+    evidence["execution_mirror_digest"] = digest(evidence, "execution_mirror_digest")
+    return mirror, evidence
 
 
 def execute_gemini_adapter(
@@ -902,6 +983,26 @@ def execute_gemini_adapter(
         raise ContractError(
             "adapter installed dependency versions drift; live revalidation required"
         )
+    mirror_policy = declared.get("execution_mirror")
+    if not isinstance(mirror_policy, dict):
+        raise ContractError(f"adapter has no execution mirror policy: {adapter_id}")
+    redirected_exports = mirror_policy.get("redirected_write_exports")
+    if (
+        not isinstance(redirected_exports, list)
+        or not redirected_exports
+        or not all(isinstance(value, str) and value for value in redirected_exports)
+        or len(set(redirected_exports)) != len(redirected_exports)
+    ):
+        raise ContractError(
+            f"adapter execution mirror has invalid redirected exports: {adapter_id}"
+        )
+    execution_policy_digest = digest(
+        {
+            "schema_version": "technical-equivalence-adapter-execution-policy@1.0.0",
+            "adapter_id": adapter_id,
+            "execution_mirror": mirror_policy,
+        }
+    )
     run_dir.mkdir(parents=True, exist_ok=True)
     prior_receipts = sorted(run_dir.glob("adapter-receipt*.json"))
     if len(prior_receipts) >= 3:
@@ -920,13 +1021,29 @@ def execute_gemini_adapter(
             "source_commit": source_head,
             "source_files": source_files,
             "top_level_dependencies": actual_dependencies,
+            "adapter_execution_policy_digest": execution_policy_digest,
         },
     )
     completed = completed_adapter_run(
-        run_dir, prior_receipts, research["research_request_digest"]
+        run_dir,
+        prior_receipts,
+        research["research_request_digest"],
+        {
+            "source_commit": source_head,
+            "source_files": source_files,
+            "top_level_dependencies": actual_dependencies,
+            "adapter_execution_policy_digest": execution_policy_digest,
+        },
     )
     if completed is not None:
         return completed
+    attempt_root = run_dir / f"adapter-attempt-{len(prior_receipts) + 1:02d}"
+    execution_mirror, mirror_evidence = materialize_adapter_mirror(
+        source_peer,
+        attempt_root,
+        [str(name) for name in required],
+        redirected_exports,
+    )
     invocations: list[dict[str, Any]] = []
     gap_ledger: dict[str, Any] | None = None
 
@@ -957,7 +1074,7 @@ def execute_gemini_adapter(
         prompt_path.write_text(prompt, encoding="utf-8")
         argv = [
             "node",
-            str(source_peer / "automate.js"),
+            str(execution_mirror / "automate.js"),
             "--dr-once",
             str(prompt_path),
             str(raw_path),
@@ -965,7 +1082,7 @@ def execute_gemini_adapter(
         try:
             completed = subprocess.run(
                 argv,
-                cwd=source_peer,
+                cwd=execution_mirror,
                 text=True,
                 capture_output=True,
                 check=False,
@@ -1015,6 +1132,7 @@ def execute_gemini_adapter(
                 "structured_candidate_count": len(extract_structured_candidates(raw))
                 if raw
                 else 0,
+                "execution_mirror_digest": mirror_evidence["execution_mirror_digest"],
                 "stdout_tail": completed.stdout[-8000:],
                 "stderr_tail": completed.stderr[-8000:],
             }
@@ -1025,12 +1143,14 @@ def execute_gemini_adapter(
 
     def write_receipt(status: str, failure: str | None = None) -> dict[str, Any]:
         receipt: dict[str, Any] = {
-            "schema_version": "technical-equivalence-adapter-receipt@1.0.0",
+            "schema_version": "technical-equivalence-adapter-receipt@1.1.0",
             "adapter_id": adapter_id,
             "source_peer": str(source_peer),
             "source_commit": source_head,
             "source_files": source_files,
             "top_level_dependencies": actual_dependencies,
+            "adapter_execution_policy_digest": execution_policy_digest,
+            "execution_mirror": mirror_evidence,
             "research_request_digest": research["research_request_digest"],
             "status": status,
             "gap_ledger": gap_ledger,

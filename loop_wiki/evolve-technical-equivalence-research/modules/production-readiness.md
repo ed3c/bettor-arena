@@ -4,7 +4,10 @@
   fragments and topic extraction compare; planted hollow controls turn red.
 - Provider carrier: explicit `--execute-gemini`; allowlisted antigravity adapter;
   source HEAD, JS/package/lock digests, installed top-level dependency versions
-  and raw exit retained. Each invocation has a 45-minute fail-closed timeout.
+  and raw exit retained. Pinned modules execute from a per-attempt mirror whose
+  declared write exports are redirected into the run and digest-bound in receipt
+  v1.1; the sibling checkout remains read-only. Each invocation has a 45-minute
+  fail-closed timeout.
 - Semantic independence: Opus preferred, Codex operational substitute; quality
   equivalence remains NOT_EXERCISED until two blinded batches (40 total) meet
   agreement ≥90%, Cohen's κ ≥0.80 and zero critical false-pass.

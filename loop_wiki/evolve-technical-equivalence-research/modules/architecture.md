@@ -6,9 +6,19 @@ owns the apply authority and generated mirror. This separation keeps browser
 selectors/login state out of the semantic contract and prevents arena `run` from
 cross-repo mutation.
 
+The live carrier never executes from the sibling checkout directly. After its
+HEAD, required-file digests, package lock and installed dependency versions are
+verified, the runner copies those exact modules into a per-attempt execution
+mirror. The registry names the `state.js` write-path exports that may be changed;
+each is redirected into the run directory. The policy digest, transformed file
+digests and dependency link are retained in adapter-receipt v1.1. Missing or
+ambiguous exports fail before the mirror is created, and unlisted exports keep
+their pinned bytes.
+
 Long Gemini runs resume only at digest-bound invocation boundaries. A prior
 successful primary/gap result is reusable only when the request, source,
-dependency, prompt, and output identities still match its immutable receipt.
+dependency, execution-policy, prompt, and output identities still match its
+immutable receipt.
 Failed edges always rerun, every attempt gets a new receipt, and a run directory
 fails closed after three receipts.
 

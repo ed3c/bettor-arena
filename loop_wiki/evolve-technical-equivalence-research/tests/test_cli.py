@@ -18,12 +18,14 @@ ARENA = ROOT.parents[1]
 CLI = ARENA / "loopctl" / "loopctl.sh"
 sys.path.insert(0, str(ROOT))
 from equivalence import (  # noqa: E402
+    ContractError,
     VerificationFailure,
     assert_head_bound,
     collect_live_research,
     completed_adapter_run,
     extract_structured_candidates,
     load_resume_cache,
+    materialize_adapter_mirror,
     plan_gap_prompts,
 )
 from profile_validator import validate_schema_inventory  # noqa: E402
@@ -178,6 +180,85 @@ class EquivalenceCliTest(unittest.TestCase):
         empty.mkdir()
         errors = validate_schema_inventory(empty)
         self.assertIn("schema inventory is empty", errors)
+
+    def test_adapter_execution_mirror_redirects_only_declared_write_exports(
+        self,
+    ) -> None:
+        source = self.base / "mirror-source"
+        source.mkdir()
+        (source / "state.js").write_text(
+            f"export const SCREENSHOT_DIR = {json.dumps(str(source / 'outside-screens'))};\n"
+            f"export const GEMINI_RESEARCH_DIR = {json.dumps(str(source / 'outside-research'))};\n"
+            "export const CHROME_PORT = 9333;\n",
+            encoding="utf-8",
+        )
+        (source / "automate.js").write_text(
+            "import fs from 'node:fs';\n"
+            "import path from 'node:path';\n"
+            "import { GEMINI_RESEARCH_DIR } from './state.js';\n"
+            "fs.mkdirSync(GEMINI_RESEARCH_DIR, { recursive: true });\n"
+            "fs.writeFileSync(path.join(GEMINI_RESEARCH_DIR, 'report.md'), 'executed');\n",
+            encoding="utf-8",
+        )
+        (source / "package.json").write_text('{"type":"module"}\n', encoding="utf-8")
+        (source / "node_modules").mkdir()
+        run_dir = self.base / "mirror-run"
+        run_dir.mkdir()
+        mirror, evidence = materialize_adapter_mirror(
+            source,
+            run_dir,
+            ["automate.js", "state.js", "package.json"],
+            ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"],
+        )
+        patched = (mirror / "state.js").read_text(encoding="utf-8")
+        self.assertIn(str(run_dir / "adapter-side-effects" / "SCREENSHOT_DIR"), patched)
+        self.assertIn(
+            str(run_dir / "adapter-side-effects" / "GEMINI_RESEARCH_DIR"), patched
+        )
+        self.assertIn("export const CHROME_PORT = 9333;", patched)
+        self.assertIn(
+            str(source / "outside-research"),
+            (source / "state.js").read_text(encoding="utf-8"),
+        )
+        self.assertTrue((mirror / "node_modules").is_symlink())
+        self.assertEqual(
+            evidence["redirected_exports"],
+            ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"],
+        )
+        executed = subprocess.run(
+            ["node", str(mirror / "automate.js")],
+            cwd=mirror,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(executed.returncode, 0, executed.stderr)
+        self.assertEqual(
+            (
+                run_dir / "adapter-side-effects" / "GEMINI_RESEARCH_DIR" / "report.md"
+            ).read_text(encoding="utf-8"),
+            "executed",
+        )
+        self.assertFalse((source / "outside-research" / "report.md").exists())
+
+    def test_adapter_execution_mirror_rejects_an_absent_declared_export(self) -> None:
+        source = self.base / "invalid-mirror-source"
+        source.mkdir()
+        (source / "state.js").write_text(
+            "export const SCREENSHOT_DIR = '/outside';\n", encoding="utf-8"
+        )
+        (source / "node_modules").mkdir()
+        run_dir = self.base / "invalid-mirror-run"
+        run_dir.mkdir()
+        with self.assertRaisesRegex(ContractError, "declared write export absent"):
+            materialize_adapter_mirror(
+                source,
+                run_dir,
+                ["state.js"],
+                ["GEMINI_RESEARCH_DIR"],
+            )
+        self.assertFalse(run_dir.joinpath("adapter-execution-mirror").exists())
+        self.assertFalse(run_dir.joinpath("adapter-side-effects").exists())
 
     def write_evidence(self, name: str, payload: dict) -> dict:
         path = self.base / f"{name}-receipt.json"
@@ -957,6 +1038,28 @@ class EquivalenceCliTest(unittest.TestCase):
             completed_adapter_run(run_dir, [receipt_path], "sha256:request"),
             (result_path, receipt_path),
         )
+
+    def test_completed_adapter_run_rejects_an_old_execution_policy(self) -> None:
+        run_dir = self.base / "completed-old-policy"
+        run_dir.mkdir()
+        receipt_path = run_dir / "adapter-receipt.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "status": "passed",
+                    "adapter_receipt_digest": "sha256:receipt",
+                    "adapter_execution_policy_digest": "sha256:old",
+                }
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(ContractError, "identity mismatch"):
+            completed_adapter_run(
+                run_dir,
+                [receipt_path],
+                "sha256:request",
+                {"adapter_execution_policy_digest": "sha256:new"},
+            )
 
     def test_sync_source_bytes_must_exist_unchanged_at_head(self) -> None:
         repo = self.base / "source-lineage"
