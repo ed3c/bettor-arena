@@ -64,7 +64,7 @@ OUTN=0
 worker_run() { # id
   OUTN=$((OUTN + 1))
   CAPTURE_CWD="$WT"
-  capture "$1" -- env WIKI_UPDATE_FORCE_RECEIPT=1 sh "$WT/$WORKER_REL" "$REQUEST" --dry-run
+  capture "$1" -- env WIKI_UPDATE_FORCE_RECEIPT=1 bash "$WT/$WORKER_REL" "$REQUEST" --dry-run
   _wrc=$?
   CAPTURE_CWD=""
   return "$_wrc"
@@ -143,7 +143,7 @@ if [ "${CONTROL_OPENWIKI_FULL:-0}" = "1" ]; then
     exit 64; }
   echo "  [full] exercising the probabilistic segment — real model turns, worktree only"
   CAPTURE_CWD="$WT"
-  capture worker-full -- env WIKI_UPDATE_FORCE_RECEIPT=1 sh "$WT/$WORKER_REL" "$REQUEST"
+  capture worker-full -- env WIKI_UPDATE_FORCE_RECEIPT=1 bash "$WT/$WORKER_REL" "$REQUEST"
   FULL_RC=$?
   CAPTURE_CWD=""
   FULL_LOG="$RUNDIR/streams/$CAPTURE_SEQ-worker-full.out"

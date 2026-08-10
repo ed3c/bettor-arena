@@ -1,0 +1,844 @@
+{
+  "schema_version": "bettor-arena-loopctl-contract@1.0.0",
+  "surface_version": "2.7.0",
+  "stability": [
+    "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
+    "of modes, and each command's required and optional flags. That is the promise, and it",
+    "is pinned in surface.lock — --selftest recomputes it and goes red on any drift, so the",
+    "promise cannot move by accident. Changing it means bumping surface_version and running",
+    "`loopctl.sh surface-relock`, which refuses to relock while the version is unchanged.",
+    "",
+    "Everything else is internal and free to iterate without touching that promise: which",
+    "file implements a command (target), what it writes, how it is invoked, and the whole",
+    "of loopctl.sh's dispatch. Move a target, rewrite an entry point, change its private",
+    "flags -- the surface digest does not move, and external callers keep working.",
+    "",
+    "The two are separately visible on purpose. Internal drift shows up in each loop's own",
+    "proof receipt; surface drift shows up here. Collapsing them into one number would make",
+    "ordinary internal iteration indistinguishable from a broken promise."
+  ],
+  "purpose": [
+    "The only surface an outside caller is meant to touch. Each loop has one entry point,",
+    "and reaching past this file into the entry point's own flags -- or worse, editing the",
+    "entry point to make a call site work -- is the jitter this exists to stop.",
+    "",
+    "This file is the SURFACE and is machine-readable on purpose: `loopctl.sh contract`",
+    "prints it with a sha256, so a changed surface is a visible event rather than a quiet",
+    "one. How each target is invoked is wiring and lives in loopctl.sh; the two are held",
+    "together by --selftest, which fails if either side gains an entry the other lacks.",
+    "",
+    "Exit codes are passed through from the target verbatim, never re-mapped:",
+    "0 ok - 2 the loop's own check failed - 64 usage, contract violation, or a FATAL",
+    "(absent tool, absent input) from the target itself."
+  ],
+  "modes": {
+    "run": "execute the loop's real entry point",
+    "build-local": "run a trusted-local manifest through the generic CTG builder; never exposed through MCP",
+    "prove": "traverse it and write a proof receipt under data/proof-workflow/",
+    "test": "run the control group: execute the entry point in isolation and compare what it really touches against the proof",
+    "lock": "rebuild the manifest of what a traversal is made of, from the proof receipts",
+    "trailer": "print the lineage trailer this commit should carry (empty when no workflow file is staged)",
+    "replay": "check a commit or tag out into a disposable worktree and run THAT version's CLI",
+    "serve": "run the stateless MCP server on stdio, one disposable worktree per call",
+    "build": "build the OCI image the container layer serves from"
+  },
+  "commands": [
+    {
+      "loop": "macro",
+      "mode": "run",
+      "target": "bootstrap.sh",
+      "required": [],
+      "optional": [
+        "--json",
+        "--ollama-url"
+      ],
+      "opt_in": {
+        "--ollama-url": "OLLAMA_URL — the endpoint the doctor probes for grepai embeddings; unreachable is a WARN, never FATAL. Default http://localhost:11434"
+      },
+      "io": {
+        "input": "none. The loop's inputs are the checkout itself: .githooks/ and scripts/gates/check_root_coupling.py are load-bearing (removing either takes the exit to 64, measured by the control), while openwiki/.last-update.json and .grepai/index.gob are read for WARNs only",
+        "output": [
+          "git config core.hooksPath=.githooks (the activation; idempotent)",
+          "stdout: one `bootstrap OK:` line, plus `bootstrap WARN:` per unmet optional condition",
+          "no file is written; the loop's own artifacts come later, from the hooks it registers"
+        ],
+        "exit": "0 activated · 64 FATAL (missing tool, not a work tree, empty .githooks, root-coupling selftest red)"
+      },
+      "writes": [
+        "git config core.hooksPath"
+      ]
+    },
+    {
+      "loop": "macro",
+      "mode": "prove",
+      "target": "proof_workflow/prove_macro_loop.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/macro-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "macro",
+      "mode": "test",
+      "target": "proof_workflow/control_macro_entry.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-macro-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "micro",
+      "mode": "run",
+      "target": "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh",
+      "required": [],
+      "optional": [
+        "--json",
+        "--kind",
+        "--output",
+        "--packet",
+        "--packet-id",
+        "--source",
+        "--task"
+      ],
+      "arg_groups": {
+        "packet": "--packet + --output — hand it a packet you already have",
+        "source": "--source + --task [+ --kind, --packet-id, --output] — hand it a document or a repo and let the CLI build the packet"
+      },
+      "io": {
+        "input": {
+          "--packet": "path to an input packet JSON, schema perfect-seed-input-packet; validated by src/cli.ts `validate` before anything runs. Must carry packet_id and source_refs; refs_status must be declared|sentinel|resolved, and stale is refused (exit 2)",
+          "--source": "a document or a directory to ingest instead of writing a packet by hand. .md/.txt go in as they are; .html/.htm and .pdf are extracted first; a directory becomes --kind repo. Any other format is refused rather than decoded — a .docx read as utf-8 yields lines that look exactly like evidence and are noise. Extraction records the original path and sha256, the extractor argv and version, and the extracted sha256 in provenance.json next to the packet, so an evidence line pointing at extracted.txt stays resolvable back to the original",
+          "--kind": "dr (default) | gcr | grill-me | repo — the SEMANTIC kind, orthogonal to the file format, which is detected from the extension",
+          "--task": "required with --source: the one-line task the seed repo is being built to answer",
+          "--packet-id": "override the id derived from the source's name",
+          "--output": "ABSOLUTE path for the seed repo to be materialized at. It must NOT already exist — cli.ts:23 refuses an existing path, so every run needs a fresh one. This is the single most common caller mistake and it fails at step one, not halfway"
+        },
+        "output": [
+          "<output>/ — the materialized seed repo",
+          "packets/outbox/route-result.<packet_id>.json — schema perfect-seed-route-result@1.0.0, carrying four separate stage exits (build, fast_quality, operator, validator) and next_edge=human_required_before_seed_admit",
+          "data/wiki-update/request-<packet_id>.json — schema bettor-arena-wiki-update-request@1.0.0; this is the openwiki loop's input, which is how the two loops are chained",
+          "_engine-run/exchange-context.<packet_id>.md — the iteration context lane",
+          "_engine-run/build.<packet_id>.{out,err} — raw build streams"
+        ],
+        "exit": "0 all four stages green · 2 a stage failed (the route-result still lands, carrying which one) · 64 usage",
+        "note": "outside a git repo the wiki-update request is a NAMED skip rather than a failure, so the factory stays relocatable"
+      },
+      "writes": [
+        "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.<packet>.json",
+        "data/wiki-update/request-<packet>.json",
+        "<output>"
+      ]
+    },
+    {
+      "loop": "micro",
+      "mode": "prove",
+      "target": "proof_workflow/prove_micro_loop.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/micro-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "micro",
+      "mode": "test",
+      "target": "proof_workflow/control_micro_entry.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-micro-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "run",
+      "target": "kb-ingest/port/wiki_update_worker.sh",
+      "required": [
+        "--request"
+      ],
+      "optional": [
+        "--defer-partials",
+        "--force-receipt",
+        "--full",
+        "--json"
+      ],
+      "opt_in": {
+        "--full": "spends real model turns and rewrites openwiki/ in place; without it the run is --dry-run and the probabilistic segment is skipped by name",
+        "--force-receipt": "WIKI_UPDATE_FORCE_RECEIPT=1 — receipts are frozen evidence, so a rerun over an existing one must declare itself",
+        "--defer-partials": "WIKI_UPDATE_DEFER_PARTIALS=1 — bounded-round policy: PARTIAL verifier findings defer into the wiki backlog instead of blocking; a FAIL still stays red"
+      },
+      "surface_note": "these are the worker's only two caller-facing env switches, both on the surface on purpose. WIKI_WORKER_ROOT and WIKI_UPDATE_CLAUDE_BIN are selftest seams and are deliberately NOT exposed: a surface that covers most of a target teaches callers to reach past it for the rest.",
+      "io": {
+        "input": {
+          "--request": "path to a wiki-update request JSON, schema bettor-arena-wiki-update-request@1.0.0 — normally the one `micro run` just produced. It carries three separate context lanes: fixed (pointers to the official prompt assets, never copied text), iteration (the deterministic delta from the last documented gitHead), emergent (a pointer to openwiki/quickstart.md#backlog). Every field is checked before any work: a missing one is exit 2 by name, and delta_status must be computed|no-last-update|unresolvable-last-head"
+        },
+        "output": [
+          "data/wiki-update/receipt-<packet_id>.json — per-stage record back-linking request_id; refuses to overwrite without --force-receipt",
+          "--full only: openwiki/*.md rewritten in place, guarded by a git-status boundary check that fails if the model strayed outside openwiki/",
+          "--full only: openwiki/.last-update.json restamped to HEAD, asserted before the run is announced",
+          "--full only: data/wiki-update/regen-<packet_id>.json — the model turn's transcript"
+        ],
+        "exit": "0 ok · 2 contract fail, including a red verifier gate · 64 FATAL (absent request, absent tool, receipt collision)",
+        "note": "without --full the run is --dry-run: every deterministic seam executes with the REAL components and the model turn is skipped BY NAME, with the live wiki byte-compared before and after to prove it was untouched"
+      },
+      "writes": [
+        "data/wiki-update/receipt-<packet>.json",
+        "openwiki/ (--full only)"
+      ]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "prove",
+      "target": "proof_workflow/prove_openwiki.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/openwiki-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "openwiki",
+      "mode": "test",
+      "target": "proof_workflow/control_openwiki_entry.sh",
+      "required": [],
+      "optional": [
+        "--full",
+        "--json"
+      ],
+      "opt_in": {
+        "--full": "sets CONTROL_OPENWIKI_FULL=1: after every probe, exercises the model turn once inside the disposable worktree as an existence proof only, never read back into the classification"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-openwiki-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "run",
+      "target": "notebooklm/workflow.py",
+      "required": [],
+      "optional": [
+        "--dry-run",
+        "--follow",
+        "--json",
+        "--notebook-title",
+        "--out",
+        "--registry",
+        "--source-title",
+        "--target",
+        "--timeout"
+      ],
+      "arg_groups": {
+        "target": "--target NAME — a harvest declared in notebooklm/registry.json, which carries its own notebook title, source pick and follow decision",
+        "adhoc": "--notebook-title TITLE [+ --source-title] — name the notebook directly"
+      },
+      "opt_in": {
+        "--follow": "hop 2: really open a docs.google document linked from inside the harvested sheet, BY DRIVE FILE ID over the signed-in session. It is the only WRITING path here, and it writes to a scratch notebook it creates and deletes again from `finally` — never to the notebook being harvested. Without it the run is read-only. It goes through notebooklm/drive_fetch.py under the CLI's own interpreter because the CLI has no authenticated Drive path and its `source add <url>` is an ANONYMOUS fetch: measured, every document linked from this sheet answers HTTP 401 to an anonymous request (a nonexistent id answers 404, which is how gated was told apart from absent) and the CLI returned FAILED_PRECONDITION for all of them",
+        "--dry-run": "run every READ stage for real (auth, notebook resolution, registry pin check, source pick) and stop before the first fetch, printing the argv of every call point including the ones --follow would make"
+      },
+      "io": {
+        "input": {
+          "--target": "an entry in notebooklm/registry.json — this repo's interaction data for notebooklm-py. Exactly one of --target and --notebook-title must be given: both would silently pick a winner, neither would reach the account with no subject (exit 64 either way)",
+          "--notebook-title": "the EXACT title of the notebook to harvest. A title is not an id: two notebooks sharing one is exit 2 by name, never a silent pick. When the registry pins that title, the pin is still cross-checked against the live account and a disagreement is exit 2",
+          "--source-title": "harvest this exact Doc/Sheet title instead of the default pick. The default is the AI-related ready sources, spreadsheets first, then by title — spreadsheets first because only a sheet plausibly carries the links hop 2 follows",
+          "--registry": "an alternative registry file; default notebooklm/registry.json",
+          "--out": "directory for this run's artifacts; default data/notebooklm/<utc>",
+          "--timeout": "seconds to wait for the followed document to index (default 600)"
+        },
+        "output": [
+          "<out>/module.json — schema bettor-arena-notebooklm-module@1.0.0: the notebook and source it resolved, every candidate it saw, the doc URLs found, and hop 2's state. Carries sha256 and counts, never document text",
+          "<out>/hop1.txt — the harvested source's indexed text (not written by --dry-run)",
+          "<out>/hop2.txt — the followed document's text (--follow only)"
+        ],
+        "exit": "0 ok · 2 a named business absence (not-authenticated, target-not-found, registry-pin-stale, notebook-not-found, notebook-ambiguous, no-harvestable-source, no-ai-related-source, empty-fulltext, no-doc-urls, follow-library-absent, follow-not-accessible, follow-impure-json, follow-empty, follow-none-accessible) · 64 FATAL (absent notebooklm binary, absent registry, unreadable CLI shebang, unwritable output directory, neither-or-both subjects)",
+        "note": "the notebooklm CLI's --json is only pure for FULL UUIDs — a partial id prepends a human `Matched:` line — so every id is resolved before use AND the purity is asserted afterwards. This loop runs on the HOST, not in the container layer: its input includes a bearer credential the sandbox model would expose to every process inside it, and the image carries no notebooklm binary"
+      },
+      "writes": [
+        "data/notebooklm/<utc>/ (or --out)"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "prove",
+      "target": "proof_workflow/prove_notebooklm.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/notebooklm-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/notebooklm-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "notebooklm",
+      "mode": "test",
+      "target": "proof_workflow/control_notebooklm_entry.sh",
+      "required": [],
+      "optional": [
+        "--json",
+        "--live"
+      ],
+      "opt_in": {
+        "--live": "sets CONTROL_NOTEBOOKLM_LIVE=1: additionally drives one REAL read-only dry run against the signed-in Google account. Without it that arm reports NOT EXERCISED by name, which is not a pass"
+      },
+      "io": {
+        "input": "none — it plants its own defects into a disposable worktree at HEAD and runs offline",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every planted defect caught · 2 the mechanism missed one · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "lock",
+      "target": "loopctl/workflow_lock.py",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it reads the three proof receipts at HEAD",
+        "output": [
+          "loopctl/workflow.lock"
+        ],
+        "exit": "0 built · 64 FATAL when a receipt is missing, because a manifest built from nothing would declare that nothing belongs to the workflow"
+      },
+      "writes": [
+        "loopctl/workflow.lock"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "trailer",
+      "target": "loopctl/lineage.py",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "the staged path list and workflow.lock",
+        "output": [
+          "stdout only"
+        ],
+        "exit": "0 always; empty output means no workflow file is staged"
+      },
+      "writes": [
+        "stdout only"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "test",
+      "target": "proof_workflow/control_workflow_lineage.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it plants its own defects in a disposable worktree at HEAD",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every planted defect caught · 2 the machinery missed one · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "replay",
+      "target": "loopctl/replay.sh",
+      "required": [
+        "--at"
+      ],
+      "optional": [
+        "--json",
+        "--loop"
+      ],
+      "io": {
+        "input": "--at <commit|tag>, and optionally --loop to replay one loop",
+        "output": [
+          "nothing in this tree; the replay runs inside a disposable worktree"
+        ],
+        "exit": "0 tracked content matches and that version still executes · 2 drift or a failed run · 64 FATAL"
+      },
+      "writes": [
+        "nothing in this tree; the replay runs inside a disposable worktree"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "serve",
+      "target": "loopctl/mcp_server.py",
+      "required": [],
+      "optional": [
+        "--http",
+        "--json",
+        "--ref"
+      ],
+      "io": {
+        "input": "--ref <commit|tag> pins which workflow answers every external call; default HEAD",
+        "output": [
+          "nothing in this tree — each call runs in a disposable worktree"
+        ],
+        "exit": "0 clean shutdown · 64 the pinned ref has no CLI, or its surface predates --json"
+      },
+      "writes": [
+        "nothing in this tree — each call runs in a disposable worktree"
+      ],
+      "opt_in": {
+        "--http": "serve MCP over HTTP on 127.0.0.1:<port> instead of stdio. Required for a sandbox to reach it AND for a policy to govern it: over stdio nothing sits between caller and server, so every declared tool is handed over"
+      }
+    },
+    {
+      "loop": "mcp",
+      "mode": "test",
+      "target": "proof_workflow/control_mcp_surface.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it drives the server over real stdio and plants its own defects",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every property held · 2 one did not · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "tools",
+      "target": "loopctl/mcp_tools.py",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — generated from contract.json",
+        "output": [
+          "stdout: the MCP tool list"
+        ],
+        "exit": "0 ok · 64 usage"
+      },
+      "writes": [
+        "stdout: the MCP tool list"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "build",
+      "target": "loopctl/Dockerfile",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — the Dockerfile is the source",
+        "output": [
+          "a local OCI image tagged loopctl (override with LOOPCTL_IMAGE)"
+        ],
+        "exit": "0 built · non-zero from the runtime, passed through"
+      },
+      "writes": [
+        "a local OCI image tagged loopctl (override with LOOPCTL_IMAGE)"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "preflight",
+      "target": "loopctl/container_preflight.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — run INSIDE the container",
+        "output": [
+          "stdout: per-tool and per-driver state"
+        ],
+        "exit": "0 ready for the roles reported · 2 the deterministic base is broken or a driver is present-but-unauthenticated · 64 not a work tree"
+      },
+      "writes": [
+        "stdout: per-tool and per-driver state"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "test",
+      "target": "proof_workflow/control_container_surface.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it plants a dead driver on PATH and inspects the image if one exists",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every property held · 2 one did not · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "container",
+      "mode": "prove",
+      "target": "proof_workflow/prove_container.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/container-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/container-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "policy",
+      "mode": "test",
+      "target": "proof_workflow/control_sandbox_policy.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it drives real denials from inside a sandbox",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every denial held · 2 something reachable that must not be · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "policy",
+      "mode": "prove",
+      "target": "proof_workflow/prove_policy.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/policy-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/policy-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "workflow",
+      "mode": "prove",
+      "target": "proof_workflow/prove_workflow.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/workflow-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/workflow-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "mcp",
+      "mode": "prove",
+      "target": "proof_workflow/prove_policy.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/policy-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL",
+        "note": "the SAME proof as `policy prove`: the sandbox policy governs the network and the MCP server governs which tools exist, and an authorization claim covering only one of them is false by omission"
+      },
+      "writes": [
+        "data/proof-workflow/policy-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "run",
+      "target": "loop_wiki/code-truth-graph/trigger.sh",
+      "required": [
+        "--packet",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "--packet: closed ctg-input@1.0.0 bundle manifest; --output: fresh absolute output directory",
+        "output": [
+          "<output>/ctg-route-result.json — ctg-route-result@1.0.0",
+          "<output>/code-truth-graph.json — content-addressed graph artifact"
+        ],
+        "exit": "0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input"
+      },
+      "mcp_carrier": {
+        "kind": "ctg-inline-bundle@1.0.0",
+        "max_request_bytes": 1048576,
+        "description": "MCP accepts no local path. Supply one closed content-addressed bundle; the server materializes it only inside the call and returns bounded artifacts inline without disposable paths.",
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bundle"],
+          "properties": {
+            "bundle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["packet_ref", "files"],
+              "properties": {
+                "packet_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                "files": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["artifact_ref", "sha256", "content_base64"],
+                    "properties": {
+                      "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                      "content_base64": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "build-local",
+      "target": "loop_wiki/code-truth-graph/local-trigger.sh",
+      "required": [
+        "--manifest",
+        "--output"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "mcp_exposed": false,
+      "io": {
+        "input": "trusted-local only: --manifest is an absolute subject-owned manifest path; --output is a fresh absolute directory",
+        "output": [
+          "<output>/code-truth-graph.json",
+          "<output>/graphrag/*.csv",
+          "<output>/verification-report.json",
+          "<output>/ctg-local-build-receipt.json"
+        ],
+        "exit": "0 graph verified · 2 a build or graph validation stage failed · 64 usage, invalid path, or malformed manifest"
+      },
+      "writes": [
+        "<output>/"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "prove",
+      "target": "proof_workflow/prove_ctg_loop.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "clean committed CTG mechanism and public carrier surfaces",
+        "output": [
+          "data/proof-workflow/ctg-<commit12>.json"
+        ],
+        "exit": "0 traversal passed · 2 a mechanism step went red · 64 missing tool/context or invalid receipt state"
+      },
+      "writes": [
+        "data/proof-workflow/ctg-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "ctg",
+      "mode": "test",
+      "target": "proof_workflow/control_ctg_entry.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "clean same-HEAD ctg proof receipt; committed portable, verifier, relocation, trusted-local and MCP carrier mechanisms",
+        "output": [
+          "data/proof-workflow/control-ctg-<commit12>.json"
+        ],
+        "exit": "0 five offline axes passed and four planted defects were caught · 2 a behavioral axis went red · 64 proof/environment/contract failure",
+        "note": "live PROD/device and Human admit remain explicit NOT_EXERCISED states"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-ctg-<commit12>.json"
+      ]
+    },
+    {
+      "loop": "harness",
+      "mode": "prove",
+      "target": "proof_workflow/prove_harness.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "none",
+        "output": [
+          "data/proof-workflow/harness-<commit12>[-dirty].json"
+        ],
+        "exit": "0 pass · 2 a step went red · 64 FATAL"
+      },
+      "writes": [
+        "data/proof-workflow/harness-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "harness",
+      "mode": "test",
+      "target": "proof_workflow/control_harness_coverage.sh",
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "none — it plants an uncovered file and requires the scan to catch it",
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
+        "exit": "0 every harness file covered or declared · 2 something is hashed by nothing · 64 FATAL"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "run",
+      "target": "loop_wiki/evolve-technical-equivalence-research/equivalence.py",
+      "required": [
+        "--request",
+        "--target-peer"
+      ],
+      "optional": [
+        "--execute-gemini",
+        "--json",
+        "--research-result",
+        "--source-peer"
+      ],
+      "io": {
+        "input": "hash-bound technical-equivalence request; optional Gemini result or explicit live adapter execution",
+        "output": [
+          "loop_wiki/evolve-technical-equivalence-research/_runs/<request>/<digest>/route-result.<state>.<digest12>.json",
+          "research request, adapter execution mirror/receipt, verification bundle and candidate sync bundle as the state advances"
+        ],
+        "exit": "0 valid route state, including research/human pending · 2 declared verification failure · 64 contract/tool failure"
+      },
+      "writes": [
+        "loop_wiki/evolve-technical-equivalence-research/_runs/ (including per-attempt redirected adapter side effects)"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "prove",
+      "target": "proof_workflow/prove_equivalence.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "writes": [
+        "data/proof-workflow/equivalence-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "equivalence",
+      "mode": "test",
+      "target": "proof_workflow/control_equivalence_entry.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json",
+        "--live"
+      ],
+      "opt_in": {
+        "--force-receipt": "CONTROL_EQUIVALENCE_FORCE_RECEIPT=1 — same-HEAD control receipts are frozen, so replacement must be explicit",
+        "--live": "execute the allowlisted antigravity Gemini Deep Research adapter; without it live behavior is NOT_EXERCISED"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/",
+        "data/proof-workflow/control-equivalence-<commit12>.json"
+      ]
+    }
+  ],
+  "opt_in_global": {
+    "--json": "emit one machine-readable result instead of the human line: exit (never re-mapped), the artifacts the run announced, the proof digest when there is one, and both captured streams with truncation declared. Every command takes it, because a wrapper that has to parse human output for some commands will parse it for all of them."
+  }
+}

@@ -60,15 +60,24 @@ if git -C "$R" commit -q -F "$TMP/hollow.msg" 2>/dev/null; then
 fi
 [ "$(git -C "$R" rev-list --count HEAD)" = "1" ] || fail "hollow molecular commit exists"
 
-# 3) Protected gate surface + ordinary message → must fail.
+# 3) Protected gate surface alone is a macro-maintenance commit → ordinary passes.
 echo '# gate' > "$R/scripts/gates/g.py"
 git -C "$R" add scripts/gates/g.py
-if git -C "$R" commit -q -m "bad: ordinary message touching gate surface" 2>/dev/null; then
-  fail "protected-surface commit with ordinary message was accepted"
-fi
-[ "$(git -C "$R" rev-list --count HEAD)" = "1" ] || fail "protected-surface bad commit exists"
+git -C "$R" commit -q -m "good: macro maintenance on gate surface" \
+  || fail "macro protected-surface commit rejected"
+[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "macro protected-surface commit absent"
 
-# 4) Full molecular message on protected surface → must pass.
+# 4) Small-loop + protected gate surface → ordinary must fail.
+mkdir -p "$R/loop_wiki/some-loop"
+echo '# gate changed by small loop' >> "$R/scripts/gates/g.py"
+echo '#!/bin/sh' > "$R/loop_wiki/some-loop/run.sh"
+git -C "$R" add scripts/gates/g.py loop_wiki/some-loop/run.sh
+if git -C "$R" commit -q -m "bad: small loop touching gate surface" 2>/dev/null; then
+  fail "small-loop protected-surface commit with ordinary message was accepted"
+fi
+[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "small-loop protected-surface bad commit exists"
+
+# 5) Full molecular message for that combined role → must pass.
 cat > "$TMP/good.msg" <<'EOF'
 good: molecular message touching gate surface
 
@@ -87,12 +96,12 @@ docs/plan-package.yaml
   -> repo/
 EOF
 git -C "$R" commit -q -F "$TMP/good.msg" || fail "good molecular commit rejected"
-[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "good molecular commit not created"
+[ "$(git -C "$R" rev-list --count HEAD)" = "3" ] || fail "good molecular commit not created"
 
-# 5) bun-absent negative control: FATAL 64, diagnostic names bun.
+# 6) bun-absent negative control: FATAL 64, diagnostic names bun.
 printf 'any message\n' > "$TMP/any.msg"
 set +e
-ERR=$(env PATH=/usr/bin:/bin sh "$R/.githooks/commit-msg" "$TMP/any.msg" 2>&1)
+ERR=$(cd "$R" && env PATH=/usr/bin:/bin sh .githooks/commit-msg "$TMP/any.msg" 2>&1)
 RC=$?
 set -e
 [ "$RC" -eq 64 ] || fail "bun-absent hook exited $RC, want 64"
@@ -113,8 +122,9 @@ cat > "$TMP/receipts/molecular-gate-smoke.json" <<EOF
     "ordinary-commit-passes",
     "post-commit-stage-request-receipt",
     "hollow-molecular-commit-rejected-and-absent",
-    "protected-surface-ordinary-message-rejected",
-    "full-molecular-commit-passes",
+    "macro-protected-surface-ordinary-message-passes",
+    "small-loop-plus-protected-surface-ordinary-message-rejected",
+    "full-molecular-combined-role-commit-passes",
     "bun-absent-exit-64-names-bun"
   ],
   "result": "PASS"

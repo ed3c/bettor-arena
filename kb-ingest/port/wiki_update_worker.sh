@@ -42,6 +42,40 @@ CLAUDE_BIN="${WIKI_UPDATE_CLAUDE_BIN:-claude}"
 fail() { echo "FAIL: $*" >&2; exit 2; }
 fatal() { echo "FATAL: $*" >&2; exit 64; }
 
+# A CONTENT snapshot of the worktree, not a status snapshot.
+#
+# The boundary gate below used to diff two `git status --porcelain` listings and
+# take the newly-appearing lines as "what this run wrote". A file that was
+# ALREADY dirty keeps the identical porcelain line no matter how much the run
+# rewrites it, so:
+#
+#   * changed_wiki_paths reported 0 for a run that had rewritten the wiki — the
+#     recorded transcript shows 53 turns and a model reporting all 17 pages
+#     finalized, against a counter that said nothing happened; and
+#   * the stray check, which is what stops a regeneration writing OUTSIDE
+#     openwiki/, could be walked straight past by editing a file that was
+#     already dirty. That is the security-relevant half.
+#
+# Hashing the bytes cannot be fooled that way. openwiki/ is a handful of pages,
+# and the dirty set outside it is small, so this costs nothing.
+worktree_snapshot() { # <root>  -> "<sha256>  <path>" per line, sorted
+  local root=$1 f p
+  {
+    find "$root/openwiki" -type f 2>/dev/null | while IFS= read -r f; do
+      printf '%s  %s\n' "$(sha256_of "$f")" "${f#"$root"/}"
+    done
+    git -C "$root" status --porcelain | cut -c4- | while IFS= read -r p; do
+      case "$p" in openwiki/*) continue ;; esac
+      [ -f "$root/$p" ] && printf '%s  %s\n' "$(sha256_of "$root/$p")" "$p"
+    done
+  } | sort
+}
+
+sha256_of() { # portable: macOS ships shasum, Debian ships sha256sum
+  if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1
+  else shasum -a 256 "$1" | cut -d' ' -f1; fi
+}
+
 run_worker() {
   local request="$1" mode="$2"
   [ -f "$request" ] || fatal "request file not found: $request"
@@ -161,7 +195,7 @@ user = user.replace("{ADDITIONAL_USER_REQUEST}", "")
 user = user.replace("{RUNTIME_CONTEXT}", runtime)
 (outdir / "user.md").write_text(user, encoding="utf-8")
 PY
-    dirty_before=$(git -C "$root" status --porcelain | sort)
+    dirty_before=$(worktree_snapshot "$root")
     # Authorization rides CLI flags per loop_wiki convention (acceptEdits +
     # wiki dir); read-only git/rg allowlist mirrors openwiki_subagent.sh so the
     # official prompt's git-evidence path works without a blanket Bash grant.
@@ -178,9 +212,9 @@ PY
       rm -rf "$prompts"
       fail "LLM regeneration run failed (exit $regen_rc)"
     fi
-    dirty_after=$(git -C "$root" status --porcelain | sort)
-    # porcelain v1 = 2 status chars + space + path; cut -c4- yields the path.
-    new_changes=$(comm -13 <(printf '%s\n' "$dirty_before") <(printf '%s\n' "$dirty_after") | cut -c4-)
+    dirty_after=$(worktree_snapshot "$root")
+    # Lines whose CONTENT differs (or that appeared) between the two snapshots.
+    new_changes=$(comm -13 <(printf '%s\n' "$dirty_before") <(printf '%s\n' "$dirty_after") | sed 's/^[0-9a-f]*  //' | sort -u)
     stray=$(printf '%s\n' "$new_changes" | grep -v -e '^$' -e '^openwiki/' || true)
     if [ -n "$stray" ]; then
       rm -rf "$prompts"
@@ -490,6 +524,29 @@ EOF
   expect "receipt-collision-refused" 64 $?
   (WIKI_WORKER_ROOT="$fixture" WIKI_UPDATE_FORCE_RECEIPT=1 "$0" "$request" --dry-run) >/dev/null 2>&1
   expect "receipt-collision-forced" 0 $?
+
+  # The boundary gate must see a rewrite of an ALREADY-DIRTY file. The previous
+  # instrument diffed `git status --porcelain` listings, and ` M path` stays
+  # ` M path` however much the file is rewritten — so a run that regenerated the
+  # whole wiki reported changed_wiki_paths=0, and, worse, a write that strayed
+  # outside openwiki/ into an already-dirty file raised nothing at all.
+  # Driven here rather than argued: dirty a file, snapshot, rewrite it, snapshot.
+  local snap_before snap_after seen
+  printf 'edited by an earlier run\n' >"$fixture/openwiki/index.md"
+  printf 'also already dirty\n' >"$fixture/kb-ingest/port/host-runtime.md"
+  snap_before=$(worktree_snapshot "$fixture")
+  printf 'rewritten by THIS run, substantially longer than before\n' >"$fixture/openwiki/index.md"
+  printf 'strayed into by THIS run\n' >"$fixture/kb-ingest/port/host-runtime.md"
+  snap_after=$(worktree_snapshot "$fixture")
+  seen=$(comm -13 <(printf '%s\n' "$snap_before") <(printf '%s\n' "$snap_after") | sed 's/^[0-9a-f]*  //' | sort -u)
+  expect "rewrite-of-already-dirty-wiki-file-is-seen" 1 \
+    "$(printf '%s\n' "$seen" | grep -c '^openwiki/' || true)"
+  expect "stray-into-already-dirty-file-is-seen" 1 \
+    "$(printf '%s\n' "$seen" | grep -c -v -e '^$' -e '^openwiki/' || true)"
+  # And an untouched tree must report nothing, or the two cases above would pass
+  # on an instrument that simply always fires.
+  expect "untouched-tree-reports-no-change" 0 \
+    "$(comm -13 <(printf '%s\n' "$snap_after") <(worktree_snapshot "$fixture") | grep -c . || true)"
 
   echo "SELFTEST $([ "$red" -eq 0 ] && echo GREEN || echo RED)"
   return "$red"

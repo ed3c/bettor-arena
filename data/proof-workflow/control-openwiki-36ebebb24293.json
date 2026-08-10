@@ -1,0 +1,309 @@
+{
+  "schema_version": "bettor-arena-control-openwiki-receipt@1.0.0",
+  "control_of": "prove_macro_loop.sh",
+  "method": "run the entry point for real, keep the trace, derive what it touches from its own source and its own output, compare against the macro receipt's covered paths",
+  "run_id": "20260808T061237Z-36ebebb24293",
+  "commit": "36ebebb24293b98e677b2379b8f47fbbcd31ad32",
+  "status": "passed",
+  "bootstrap_exit": 0,
+  "compared_against": "openwiki-36ebebb24293-dirty.json",
+  "compared_against_dirty_stamp": true,
+  "capture_dir": "proof_workflow/data/20260808T061237Z-36ebebb24293",
+  "capture_dir_tracked": false,
+  "capture_note": "gitignored: gate stdout embeds this machine's absolute repo root. These sha256 are what binds the on-disk trace to this commit.",
+  "captured_streams": [
+    {
+      "step": "upstream-trigger",
+      "path": "20260808T061237Z-36ebebb24293/streams/1-upstream-trigger.out",
+      "sha256": "f0fb2efcd7ef1e727b3f0ca352e10898098e28c5c0a220143a4c7572ba05d1b2",
+      "bytes": 339
+    },
+    {
+      "step": "upstream-trigger",
+      "path": "20260808T061237Z-36ebebb24293/streams/1-upstream-trigger.err",
+      "sha256": "39d8ddce339678ba2090569a93c2a42399a2c4490103d82d527b42b3b970e8d9",
+      "bytes": 201
+    },
+    {
+      "step": "worker",
+      "path": "20260808T061237Z-36ebebb24293/streams/2-worker.out",
+      "sha256": "62381e1526db626148823dbdc9133e173666f1017e47eb6f7f525bf32f1b209d",
+      "bytes": 523
+    },
+    {
+      "step": "worker",
+      "path": "20260808T061237Z-36ebebb24293/streams/2-worker.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "worker-repeat",
+      "path": "20260808T061237Z-36ebebb24293/streams/3-worker-repeat.out",
+      "sha256": "62381e1526db626148823dbdc9133e173666f1017e47eb6f7f525bf32f1b209d",
+      "bytes": 523
+    },
+    {
+      "step": "worker-repeat",
+      "path": "20260808T061237Z-36ebebb24293/streams/3-worker-repeat.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-without-data-wiki-update",
+      "path": "20260808T061237Z-36ebebb24293/streams/4-probe-without-data-wiki-update.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-without-data-wiki-update",
+      "path": "20260808T061237Z-36ebebb24293/streams/4-probe-without-data-wiki-update.err",
+      "sha256": "d6d0d778a2a1c352a90945c3d981ec0625193b13d0a1e58b6894cd0e41ca6e47",
+      "bytes": 151
+    },
+    {
+      "step": "probe-without-kb-ingest-openwiki-update-system-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/5-probe-without-kb-ingest-openwiki-update-system-md.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-kb-ingest-openwiki-update-system-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/5-probe-without-kb-ingest-openwiki-update-system-md.err",
+      "sha256": "9270b3e02faef30a8bf9bcb7d782981000ea78677e96f1d3a3477644c9a43c4c",
+      "bytes": 166
+    },
+    {
+      "step": "probe-without-kb-ingest-openwiki-user-update-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/6-probe-without-kb-ingest-openwiki-user-update-md.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-kb-ingest-openwiki-user-update-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/6-probe-without-kb-ingest-openwiki-user-update-md.err",
+      "sha256": "223d2bc489b00f573c2be7ece815fa84bd8271ff4bf23f36f5346b7a9c186fb9",
+      "bytes": 164
+    },
+    {
+      "step": "probe-without-kb-ingest-port-host-runtime-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/7-probe-without-kb-ingest-port-host-runtime-md.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-kb-ingest-port-host-runtime-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/7-probe-without-kb-ingest-port-host-runtime-md.err",
+      "sha256": "1dcfb88b939c7b49bb1ef1223d0438393c903d237a546eb3aa187cf2859a9852",
+      "bytes": 161
+    },
+    {
+      "step": "probe-without-kb-ingest-port-openwiki_post-py",
+      "path": "20260808T061237Z-36ebebb24293/streams/8-probe-without-kb-ingest-port-openwiki_post-py.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-kb-ingest-port-openwiki_post-py",
+      "path": "20260808T061237Z-36ebebb24293/streams/8-probe-without-kb-ingest-port-openwiki_post-py.err",
+      "sha256": "aca256675244bd517432164f3d421061e6bc9fce58db6c12bab8d81ab9003aed",
+      "bytes": 141
+    },
+    {
+      "step": "probe-without-kb-ingest-port-openwiki_subagent-sh",
+      "path": "20260808T061237Z-36ebebb24293/streams/9-probe-without-kb-ingest-port-openwiki_subagent-sh.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-kb-ingest-port-openwiki_subagent-sh",
+      "path": "20260808T061237Z-36ebebb24293/streams/9-probe-without-kb-ingest-port-openwiki_subagent-sh.err",
+      "sha256": "7fcd3cf14a27d833d39b9c9f55279915d0c7f3a24ace429ac3dac9c4a0d55cc4",
+      "bytes": 142
+    },
+    {
+      "step": "probe-without-openwiki",
+      "path": "20260808T061237Z-36ebebb24293/streams/10-probe-without-openwiki.out",
+      "sha256": "641524acb076144f6f4a46f0d1ac195b8b2276958e301d58edee47bdb00b1457",
+      "bytes": 93
+    },
+    {
+      "step": "probe-without-openwiki",
+      "path": "20260808T061237Z-36ebebb24293/streams/10-probe-without-openwiki.err",
+      "sha256": "32af605acfbf6df2b377cde83de6367390d0b67373623e0b8f7c16ffa5063f73",
+      "bytes": 112
+    },
+    {
+      "step": "probe-without-openwiki--last-update-json",
+      "path": "20260808T061237Z-36ebebb24293/streams/11-probe-without-openwiki--last-update-json.out",
+      "sha256": "62381e1526db626148823dbdc9133e173666f1017e47eb6f7f525bf32f1b209d",
+      "bytes": 523
+    },
+    {
+      "step": "probe-without-openwiki--last-update-json",
+      "path": "20260808T061237Z-36ebebb24293/streams/11-probe-without-openwiki--last-update-json.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-without-openwiki-quickstart-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/12-probe-without-openwiki-quickstart-md.out",
+      "sha256": "62381e1526db626148823dbdc9133e173666f1017e47eb6f7f525bf32f1b209d",
+      "bytes": 523
+    },
+    {
+      "step": "probe-without-openwiki-quickstart-md",
+      "path": "20260808T061237Z-36ebebb24293/streams/12-probe-without-openwiki-quickstart-md.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "worker-after-probes",
+      "path": "20260808T061237Z-36ebebb24293/streams/13-worker-after-probes.out",
+      "sha256": "62381e1526db626148823dbdc9133e173666f1017e47eb6f7f525bf32f1b209d",
+      "bytes": 523
+    },
+    {
+      "step": "worker-after-probes",
+      "path": "20260808T061237Z-36ebebb24293/streams/13-worker-after-probes.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "worker-full",
+      "path": "20260808T061237Z-36ebebb24293/streams/14-worker-full.out",
+      "sha256": "417a640d82d7ff49440f92c72c3d99f803171c8569a78621b8a0bd3866644362",
+      "bytes": 241
+    },
+    {
+      "step": "worker-full",
+      "path": "20260808T061237Z-36ebebb24293/streams/14-worker-full.err",
+      "sha256": "babe451db98e1a362e99917f0f6716714f37747914a24764b745f8ed49426e48",
+      "bytes": 6952
+    }
+  ],
+  "comparison": {
+    "entry_point_inputs": {
+      "data/wiki-update": {
+        "class": "required",
+        "probe_exit": 64
+      },
+      "kb-ingest/openwiki/update.system.md": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "kb-ingest/openwiki/user.update.md": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "kb-ingest/port/host-runtime.md": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "kb-ingest/port/openwiki_post.py": {
+        "class": "required",
+        "probe_exit": 64
+      },
+      "kb-ingest/port/openwiki_subagent.sh": {
+        "class": "required",
+        "probe_exit": 64
+      },
+      "openwiki": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "openwiki/.last-update.json": {
+        "class": "optional",
+        "probe_exit": 0
+      },
+      "openwiki/quickstart.md": {
+        "class": "optional",
+        "probe_exit": 0
+      }
+    },
+    "entry_point_produced": [
+      "data/wiki-update/receipt-dr-example.json",
+      "data/wiki-update/request-dr-example.json",
+      "loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/build.dr-example.err",
+      "loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/build.dr-example.out",
+      "loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/exchange-context.dr-example.md",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json"
+    ],
+    "proof_covered_paths": {
+      "-": "macro",
+      ".githooks/commit-msg": "macro",
+      ".githooks/lib/validate_molecular_message.ts": "macro",
+      ".githooks/post-commit": "macro",
+      ".githooks/pre-commit": "macro",
+      ".grepai/index.gob": "macro",
+      "AGENTS.md": "macro",
+      "ARCHITECTURE.md": "macro",
+      "CLAUDE.md": "macro",
+      "CONTEXT.md": "macro",
+      "bootstrap.sh": "macro",
+      "data/receipts/post-commit-36ebebb24293b98e677b2379b8f47fbbcd31ad32.json": "macro",
+      "data/wiki-update/request-issue23-dryrun.json": "micro",
+      "data/wiki-update/request-poweron-2026-08-06.json": "micro",
+      "data/wiki-update/request-review-i23.json": "micro",
+      "delivery.json": "macro",
+      "kb-ingest/check_repo_wiki_converge.py": "openwiki",
+      "kb-ingest/openwiki/init.system.md": "openwiki",
+      "kb-ingest/openwiki/subagents/answer-verifier.md": "openwiki",
+      "kb-ingest/openwiki/subagents/question-finder.md": "openwiki",
+      "kb-ingest/openwiki/subagents/skeleton-critic.md": "openwiki",
+      "kb-ingest/openwiki/update.system.md": "openwiki",
+      "kb-ingest/openwiki/user.init.md": "openwiki",
+      "kb-ingest/openwiki/user.update.md": "openwiki",
+      "kb-ingest/port/host-runtime.md": "openwiki",
+      "kb-ingest/port/openwiki_post.py": "openwiki",
+      "kb-ingest/port/openwiki_subagent.sh": "openwiki",
+      "kb-ingest/port/wiki_update_worker.sh": "openwiki",
+      "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/exchange-context.dr-example.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/baselines/seed-stats.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/semantic-truth-context.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/inbox/dr-example.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.review-i23.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/run.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/cli.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/run_generated_fast_quality.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/verify_generated_repo.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/verify.sh": "micro",
+      "openwiki/.last-update.json": "openwiki",
+      "openwiki/architecture.md": "openwiki",
+      "openwiki/index.md": "openwiki",
+      "openwiki/quickstart.md": "openwiki",
+      "scripts/gates/check_credential_hygiene.py": "macro",
+      "scripts/gates/check_delivery_receipt.py": "macro",
+      "scripts/gates/check_placement.py": "macro",
+      "scripts/gates/check_root_coupling.py": "macro",
+      "scripts/gates/check_skill_pointers.py": "macro",
+      "scripts/gates/fast_quality.sh": "macro"
+    },
+    "produced_uncovered": [],
+    "required_uncovered": [],
+    "misdeclared_optional": [],
+    "optional_uncovered": [],
+    "probabilistic_segment": {
+      "exercised_by_this_control": true,
+      "why": "the probes are --dry-run: a segment whose output varies per run cannot take part in an exit-code comparison. CONTROL_OPENWIKI_FULL=1 runs it once afterwards as an existence proof only — never read back into the classification",
+      "full_mode_receipts_found": [
+        "data/wiki-update/receipt-poweron-2026-08-06.json"
+      ],
+      "existence_proof": {
+        "worker_exit": 2,
+        "last_stage_reached": "regenerate",
+        "regenerate_line": "[regenerate] model=sonnet changed_wiki_paths=0 transcript=data/wiki-update/regen-dr-example.json",
+        "claim_boundary": "the path executes end to end at this commit; says nothing about the quality of what the model wrote"
+      }
+    }
+  }
+}

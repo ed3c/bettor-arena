@@ -1,0 +1,130 @@
+{
+  "schema_version": "technical-equivalence-carrier-capabilities@1.0.0",
+  "actors": {
+    "agy": {
+      "kind": "model-replay-actor",
+      "native_browser": false,
+      "capabilities": ["independent-replay"]
+    },
+    "claude-code": {
+      "kind": "agent-actor",
+      "native_browser": true,
+      "capabilities": ["host-shell", "mcp-client", "claude-in-chrome"]
+    },
+    "codex-cli": {
+      "kind": "agent-actor",
+      "native_browser": false,
+      "capabilities": ["host-shell", "mcp-client"]
+    },
+    "runtime-broker": {
+      "kind": "execution-broker",
+      "native_browser": false,
+      "capabilities": ["fixed-workload-entrypoint"]
+    }
+  },
+  "browser_transports": {
+    "antigravity-puppeteer-cdp": {
+      "host": "local-macos",
+      "engine": "puppeteer-core",
+      "capabilities": ["gemini-dr-submit", "gemini-dr-wait", "gemini-dr-extract"],
+      "contract_path": "adapter-registry.json"
+    },
+    "chatgpt-chrome-extension": {
+      "host": "chatgpt-desktop-app",
+      "engine": "chrome-extension",
+      "capabilities": ["signed-in-chrome-control"],
+      "contract_path": ".runtime-env/bindings/bettor-arena-local.json"
+    },
+    "claude-in-chrome": {
+      "host": "claude-code",
+      "engine": "chrome-extension",
+      "capabilities": ["signed-in-chrome-control"],
+      "contract_path": ".runtime-env/bindings/bettor-arena-local.json"
+    },
+    "playwright-cdp": {
+      "host": "local-macos",
+      "engine": "playwright",
+      "capabilities": ["loopback-cdp-attach", "gemini-dr-extract"],
+      "contract_path": "scripts/runtime-env/check-research-cdp.py"
+    },
+    "stealth-browser-playwright": {
+      "host": "local-macos",
+      "engine": "playwright",
+      "capabilities": ["gemini-dr-submit", "gemini-dr-extract", "mcp-control"],
+      "contract_path": "scripts/runtime-env/check-stealth-browser.sh"
+    }
+  },
+  "acceptance_cases": [
+    {
+      "id": "agy--gemini-dr-browser",
+      "actor": "agy",
+      "transport": "playwright-cdp",
+      "status": "unsupported",
+      "assurance": "declared",
+      "reason": "agy is an independent model replay actor, not a logged-in Gemini browser transport."
+    },
+    {
+      "id": "agy--independent-replay",
+      "actor": "agy",
+      "transport": null,
+      "status": "supported",
+      "assurance": "offline-exercised",
+      "reason": "The fixed agy model inventory and file-output replay are separate from browser research."
+    },
+    {
+      "id": "claude-code--claude-in-chrome",
+      "actor": "claude-code",
+      "transport": "claude-in-chrome",
+      "status": "supported",
+      "assurance": "declared",
+      "reason": "Claude Code can use its own Chrome extension integration when the host extension is paired."
+    },
+    {
+      "id": "claude-code--stealth-browser-playwright",
+      "actor": "claude-code",
+      "transport": "stealth-browser-playwright",
+      "status": "supported",
+      "assurance": "offline-exercised",
+      "reason": "Claude Code can call the bounded stealth-browser MCP or fixed host entrypoint."
+    },
+    {
+      "id": "codex-cli--chatgpt-chrome-extension",
+      "actor": "codex-cli",
+      "transport": "chatgpt-chrome-extension",
+      "status": "unsupported",
+      "assurance": "declared",
+      "reason": "The ChatGPT Chrome extension is a desktop-app surface; Codex CLI has no native Browser surface."
+    },
+    {
+      "id": "codex-cli--playwright-cdp",
+      "actor": "codex-cli",
+      "transport": "playwright-cdp",
+      "status": "supported",
+      "assurance": "offline-exercised",
+      "reason": "Codex CLI can invoke a Playwright MCP server or a fixed local workload; browser state remains broker-owned."
+    },
+    {
+      "id": "codex-cli--stealth-browser-playwright",
+      "actor": "codex-cli",
+      "transport": "stealth-browser-playwright",
+      "status": "supported",
+      "assurance": "offline-exercised",
+      "reason": "Codex CLI can use the bounded stealth-browser MCP without receiving browser credential files."
+    },
+    {
+      "id": "runtime-broker--antigravity-puppeteer-cdp",
+      "actor": "runtime-broker",
+      "transport": "antigravity-puppeteer-cdp",
+      "status": "supported",
+      "assurance": "offline-exercised",
+      "reason": "The technical-equivalence loop pins the Antigravity adapter source and runs it through a file-only JSONL session."
+    }
+  ],
+  "official_sources": {
+    "codex-browser-boundary": "https://learn.chatgpt.com/docs/browser",
+    "codex-chrome-extension": "https://learn.chatgpt.com/docs/chrome-extension",
+    "codex-mcp": "https://developers.openai.com/codex/mcp",
+    "gemini-deep-research": "https://support.google.com/gemini/answer/15719111?hl=en",
+    "playwright-cdp": "https://playwright.dev/docs/api/class-browsertype#browser-type-connect-over-cdp"
+  }
+}

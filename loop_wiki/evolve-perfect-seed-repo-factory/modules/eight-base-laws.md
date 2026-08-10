@@ -137,6 +137,14 @@ fast receipt 的 claim boundary（`preflight-only-not-code-quality-axis`）與
   （`--no-verify` 禁令的本迴圈形）。
 - 迭代期間禁 commit，收斂後一次提交；commit 訊息解釋為什麼。
 - Human admission is the terminal edge——人閘不可讓渡，任何綠燈都推不掉它。
+- 共享 working tree 上暫存區是公共狀態——訊號：多 session 同一棵樹，且自己的 commit
+  剛被閘門拒絕；動作：先 `git restore --staged <自己的檔>`，再去排查閘門，排完把
+  stage 與 commit 綁在同一條命令裡重來；為何：失敗的 commit 不回滾 `git add`，
+  留在暫存區的檔會被下一個 session 的 commit 整批帶走。
+  2026-08-08 實證：`.claude/hooks/rm_guard.py` 被 pre-commit 閘（`.githooks/` 有未
+  stage 改動）擋下後留在暫存區，隨即落進另一個 session 的 8628397（24 檔），內容完好
+  但 why 錯配到 loopctl 的訊息。當初以為退出暫存一次就安全——那只擋住當下那一次，
+  之後每一次被拒絕都重新開一個窗。
 
 ## 來源與同步
 

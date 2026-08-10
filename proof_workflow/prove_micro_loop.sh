@@ -40,6 +40,14 @@ PACKET=$F/packets/inbox/dr-example.json
 
 prove_init micro "$F/trigger.sh <packet> <output> -> route-result -> data/wiki-update/request"
 
+# The directory's own laws, one level above the factory. Hashed for the same
+# reason the other three READMEs are: a document that tells the next agent how to
+# read a red can itself drift, and an unstamped edit changes every later reading
+# with nothing saying so. Note the path is loop_wiki/, not $F — the laws hold for
+# any loop placed there, not only for this factory.
+prove_context loop-wiki-laws loop_wiki/README.md \
+  "loop_wiki -> agent session: judgement in the typed layer, named exits, one-variable experiments, and the Harness of defects already found"
+
 # --- probabilistic lane: the three context lanes of the exchange -------------
 prove_context fixed-prompt "$F/PROMPT.md" \
   "fixed lane -> engine turn: the invariant task statement"
@@ -53,13 +61,24 @@ prove_context emergent-packet "$PACKET" \
   "emergent lane -> engine turn: the physical packet field (emergent prompts ride the packet, never a standards module)"
 prove_context sandbox-agents "$F/AGENTS.md" \
   "sandbox root -> engine session passive context (sandbox is its own host dir, §3 鐵律 3)"
-# The iteration lane. trigger.sh writes this file itself before the engine turn,
-# and the header above has always named it as one of the three lanes — but it was
-# not hashed until control_micro_entry.sh ran the entry point for real and showed
-# the whole _engine-run ledger uncovered. A lane described and not covered is the
-# gap a step list cannot see in itself.
-prove_context iteration-exchange-context "$F/_engine-run/exchange-context.dr-example.md" \
-  "trigger.sh -> iteration lane: packet id, source_refs, refs_status, human_gate, target output"
+# The iteration lane, covered by SHAPE rather than by bytes. control_micro_entry.sh
+# found it uncovered and the first fix hashed one instance — wrong instrument twice
+# over: the file is gitignored, so no historical checkout carries it and the proof
+# became unreplayable, and its bytes embed the output path of whichever run wrote
+# it last, so the digest tracked where someone ran the loop rather than what the
+# loop is. What is load-bearing is that the lane carries its fields; that is
+# asserted, and the note below says why the bytes are not.
+prove_harness iteration-exchange-context - \
+  "trigger.sh -> iteration lane: the newest exchange-context must carry packet, source_refs, refs_status, human_gate and target_output" \
+  -- sh -c 'f=$(ls -t loop_wiki/evolve-perfect-seed-repo-factory/_engine-run/exchange-context.*.md 2>/dev/null | head -1);
+            [ -n "$f" ] || { echo "no exchange-context yet — run the loop once"; exit 2; };
+            for k in "- packet:" "- source_refs:" "- refs_status:" "- human_gate:" "- target_output:"; do
+              grep -Fq -e "$k" "$f" || { echo "iteration lane missing $k in $f"; exit 2; }; done'
+            # -e is load-bearing: every field name starts with "- ", and without it
+            # grep parses the pattern as options and reports a file that plainly
+            # contains the field as missing.
+prove_note iteration-lane-bytes-not-hashed "$F/_engine-run" \
+  "declared out of scope: this ledger holds per-run scratch — exchange-context.<id>.md is regenerated every run and embeds that run's output path, and build.<id>.{out,err} are one build's raw streams. Their bytes are facts about the last run, not about the loop. The lane itself is covered by the field assertion above and its producer (trigger.sh) is hashed"
 
 # --- deterministic harness: the input contract trigger.sh runs first ---------
 prove_harness cli-validate-packet "$F/src/cli.ts" \

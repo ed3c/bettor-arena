@@ -6,3 +6,26 @@ data/wiki-update/
 .serena/
 .openwiki-review/
 proof_workflow/data/
+# A -dirty proof stamp binds bytes that were never present at its named commit.
+# Keep settled proof/control receipts reviewable; discard only this noisy class.
+data/proof-workflow/*-dirty.json
+.grepai/
+data/ingest/
+# One directory per notebooklm harvest. Evidence of a run, and the extracted
+# text belongs to somebody else's Google documents — the receipt beside it
+# carries the sha256, which is what pins a claim to a run without publishing it.
+data/notebooklm/
+# What a sandboxed codex turn wrote, one directory per run. Evidence of a run,
+# not part of the repo: committing it would put an agent's draft on main before
+# anyone read it.
+data/codex-sandbox/
+# Paired auto-permission measurements, one directory per experiment. Evidence,
+# not source: the numbers belong in whatever writes them up, not on main.
+data/automode-bench/
+.container-home/
+# Native worktrees live here. Each one is a git repository, so a `git add -A`
+# stages it as an embedded repo — a clone of this repo would carry a pointer to
+# something it cannot fetch, and the fast-quality gate FATALs on a path it
+# cannot read. Caught exactly that way. This is the shape fix: the guard belongs
+# where every caller already routes, not in each person remembering.
+.claude/worktrees/

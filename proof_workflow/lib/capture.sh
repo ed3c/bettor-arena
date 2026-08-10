@@ -39,10 +39,23 @@ capture_init() { # label
     rev-parse --show-toplevel) || { echo "capture FATAL: not a git work tree" >&2; exit 64; }
   CAPTURE_COMMIT=$(git -C "$CAPTURE_ROOT" rev-parse HEAD)
   CAPTURE_SHORT=$(printf %.12s "$CAPTURE_COMMIT")
-  RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$CAPTURE_SHORT"
-  RUNDIR="$CAPTURE_ROOT/proof_workflow/data/$RUN_ID"
-  mkdir -p "$RUNDIR/streams"
+  mkdir -p "$CAPTURE_ROOT/proof_workflow/data"
+  RUNDIR=$(mktemp -d "$CAPTURE_ROOT/proof_workflow/data/$(date -u +%Y%m%dT%H%M%SZ)-$CAPTURE_SHORT.XXXXXX") \
+    || { echo "capture FATAL: could not allocate unique run directory" >&2; exit 64; }
+  RUN_ID=${RUNDIR##*/}
+  mkdir "$RUNDIR/streams"
   CAPTURE_SEQ=0
+  # OrbStack redirects the docker CLI through a context, so `docker ps` works
+  # while /var/run/docker.sock refuses — and OpenShell, which dials the socket
+  # directly, fails with "Connection refused (os error 61)" on an otherwise
+  # healthy machine. Selected HERE rather than in each control: three copies had
+  # accumulated (the policy control, codex-sandbox.sh, automode-bench.sh) and the
+  # fourth caller forgot, which is a shape problem, not a discipline one. Every
+  # control already routes through capture_init, so forgetting becomes impossible.
+  if [ -z "${DOCKER_HOST:-}" ] && [ -S "$HOME/.orbstack/run/docker.sock" ]; then
+    DOCKER_HOST="unix://$HOME/.orbstack/run/docker.sock"
+    export DOCKER_HOST
+  fi
   echo "control[$1] run_id=$RUN_ID commit=$CAPTURE_COMMIT"
 }
 
@@ -69,3 +82,21 @@ capture() { # id -- cmd...
   echo "  [ran] $_cid — exit $_crc"
   return "$_crc"
 }
+
+_capture_selftest() {
+  CAPTURE_HOME=$(cd "$(dirname "$0")/.." && pwd -P)
+  capture_init collision-a >/dev/null
+  _first=$RUNDIR
+  capture_init collision-b >/dev/null
+  _second=$RUNDIR
+  if [ "$_first" = "$_second" ]; then
+    echo "SELFTEST RED: two same-HEAD allocations collided" >&2
+    return 2
+  fi
+  echo "SELFTEST GREEN"
+  return 0
+}
+
+case "$0" in
+  */capture.sh) [ "${1:-}" = "--selftest" ] && _capture_selftest ;;
+esac

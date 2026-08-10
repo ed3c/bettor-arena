@@ -1,0 +1,36 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "1e3c12687306663d62ab8793ccc67b2f0cb606771ca3578a524581b1bef4cec4",
+  "policy": {
+    "carrier": "codex-cli",
+    "config_home_env": "CODEX_HOME",
+    "external_requirements": [
+      "Use OpenShell, a managed Codex App worktree sandbox, or another OS policy to deny read access to runtime-env dotenv, <stealth-profile-root>, and other carrier homes; Codex native workspace-write is not an arbitrary deny-read policy."
+    ],
+    "forbidden_environment": [
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_OAUTH_TOKEN",
+      "CLAUDE_CONFIG_DIR"
+    ],
+    "id": "codex-cli-native-isolation",
+    "receipt_commands": [
+      "codex login status",
+      "codex -C <existing-worktree> doctor --json"
+    ],
+    "required_settings": {
+      "approval_policy": "on-request",
+      "sandbox_mode": "workspace-write",
+      "shell_environment_policy.ignore_default_excludes": false,
+      "shell_environment_policy.inherit": "none"
+    },
+    "schema": "runtime-env/carrier-policy/v1",
+    "settings_file": "config.toml",
+    "summary": "Codex CLI native sandbox, approval, and environment controls without Claude state inheritance."
+  },
+  "schema": "runtime-env/consumer-policy/v1",
+  "source": {
+    "commit": "b8c768d23cf3e6e1f96996aea9ef05ad51dc114c",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "66bdf403f888eb029d114a1a0cb62c61151aad7c"
+  }
+}

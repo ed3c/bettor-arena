@@ -1,0 +1,349 @@
+{
+  "schema_version": "bettor-arena-control-macro-receipt@1.0.0",
+  "control_of": "prove_macro_loop.sh",
+  "method": "run the entry point for real, keep the trace, derive what it touches from its own source and its own output, compare against the macro receipt's covered paths",
+  "run_id": "20260808T132824Z-77ce9e424c78",
+  "commit": "77ce9e424c78619af70aaab878c882c9a0dcf0b9",
+  "status": "passed",
+  "bootstrap_exit": 0,
+  "compared_against": "macro-77ce9e424c78-dirty.json",
+  "compared_against_dirty_stamp": true,
+  "capture_dir": "proof_workflow/data/20260808T132824Z-77ce9e424c78",
+  "capture_dir_tracked": false,
+  "capture_note": "gitignored: gate stdout embeds this machine's absolute repo root. These sha256 are what binds the on-disk trace to this commit.",
+  "captured_streams": [
+    {
+      "step": "coverage-scan",
+      "path": "20260808T132824Z-77ce9e424c78/streams/1-coverage-scan.out",
+      "sha256": "a6fa3f60e468e9ab6598614fd62402d32c33b7a0a16201c18bb49e4ac5831701",
+      "bytes": 965
+    },
+    {
+      "step": "coverage-scan",
+      "path": "20260808T132824Z-77ce9e424c78/streams/1-coverage-scan.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "coverage-scan-with-plant",
+      "path": "20260808T132824Z-77ce9e424c78/streams/2-coverage-scan-with-plant.out",
+      "sha256": "3140cf83284378731e3a65e48c991b37ac4cc3b6ccd21d5d6695da0200e3d4b0",
+      "bytes": 1018
+    },
+    {
+      "step": "coverage-scan-with-plant",
+      "path": "20260808T132824Z-77ce9e424c78/streams/2-coverage-scan-with-plant.err",
+      "sha256": "936b07c0b9fea444fb4809973e95c11be7f8196b46f5965994750f63d22a8bfb",
+      "bytes": 128
+    },
+    {
+      "step": "hookspath-before",
+      "path": "20260808T132824Z-77ce9e424c78/streams/1-hookspath-before.out",
+      "sha256": "239b057f9b05bafd589c56bedb8337bbd4f8be338092c5acee42c243ef407811",
+      "bytes": 10
+    },
+    {
+      "step": "hookspath-before",
+      "path": "20260808T132824Z-77ce9e424c78/streams/1-hookspath-before.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "bootstrap",
+      "path": "20260808T132824Z-77ce9e424c78/streams/2-bootstrap.out",
+      "sha256": "987b5ac0df40c2966308e3ea6f39d020d7df3a03b93689ed12ae03a8521e0f6b",
+      "bytes": 478
+    },
+    {
+      "step": "bootstrap",
+      "path": "20260808T132824Z-77ce9e424c78/streams/2-bootstrap.err",
+      "sha256": "e6026e97dad3fa777bcec4a4f4941b8068610efa8e9a3b8ca363a9b34b780259",
+      "bytes": 653
+    },
+    {
+      "step": "hookspath-after",
+      "path": "20260808T132824Z-77ce9e424c78/streams/3-hookspath-after.out",
+      "sha256": "239b057f9b05bafd589c56bedb8337bbd4f8be338092c5acee42c243ef407811",
+      "bytes": 10
+    },
+    {
+      "step": "hookspath-after",
+      "path": "20260808T132824Z-77ce9e424c78/streams/3-hookspath-after.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "tool-git",
+      "path": "20260808T132824Z-77ce9e424c78/streams/4-tool-git.out",
+      "sha256": "0a72a762b37a3800276a1004e2c169aed0610d4a3ba601ba59e70e1c4d9f3200",
+      "bytes": 35
+    },
+    {
+      "step": "tool-git",
+      "path": "20260808T132824Z-77ce9e424c78/streams/4-tool-git.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "tool-python3",
+      "path": "20260808T132824Z-77ce9e424c78/streams/5-tool-python3.out",
+      "sha256": "e0a27cb2901f75d2f18c5b6e213703920904b8836e0c536f72d1647bc78fae03",
+      "bytes": 82
+    },
+    {
+      "step": "tool-python3",
+      "path": "20260808T132824Z-77ce9e424c78/streams/5-tool-python3.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "tool-bun",
+      "path": "20260808T132824Z-77ce9e424c78/streams/6-tool-bun.out",
+      "sha256": "793de7b6d4c7a5d8dc78b85c58824834f38880e82eb46bf6572fa601c4231503",
+      "bytes": 7
+    },
+    {
+      "step": "tool-bun",
+      "path": "20260808T132824Z-77ce9e424c78/streams/6-tool-bun.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-baseline-worktree",
+      "path": "20260808T132824Z-77ce9e424c78/streams/7-probe-baseline-worktree.out",
+      "sha256": "987b5ac0df40c2966308e3ea6f39d020d7df3a03b93689ed12ae03a8521e0f6b",
+      "bytes": 478
+    },
+    {
+      "step": "probe-baseline-worktree",
+      "path": "20260808T132824Z-77ce9e424c78/streams/7-probe-baseline-worktree.err",
+      "sha256": "c8d0c742b1a0f7b0af7e53a63e7f50c027a26a74f7d735c887ab3222eac0b8df",
+      "bytes": 735
+    },
+    {
+      "step": "probe-without--githooks",
+      "path": "20260808T132824Z-77ce9e424c78/streams/8-probe-without--githooks.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-without--githooks",
+      "path": "20260808T132824Z-77ce9e424c78/streams/8-probe-without--githooks.err",
+      "sha256": "39d43a56c4868f4c6daa67c5c9a0ef851b68390a5cd44b9f3b8365f194a472bc",
+      "bytes": 110
+    },
+    {
+      "step": "probe-without--grepai-index-gob",
+      "path": "20260808T132824Z-77ce9e424c78/streams/9-probe-without--grepai-index-gob.out",
+      "sha256": "987b5ac0df40c2966308e3ea6f39d020d7df3a03b93689ed12ae03a8521e0f6b",
+      "bytes": 478
+    },
+    {
+      "step": "probe-without--grepai-index-gob",
+      "path": "20260808T132824Z-77ce9e424c78/streams/9-probe-without--grepai-index-gob.err",
+      "sha256": "c8d0c742b1a0f7b0af7e53a63e7f50c027a26a74f7d735c887ab3222eac0b8df",
+      "bytes": 735
+    },
+    {
+      "step": "probe-without-openwiki--last-update-json",
+      "path": "20260808T132824Z-77ce9e424c78/streams/10-probe-without-openwiki--last-update-json.out",
+      "sha256": "987b5ac0df40c2966308e3ea6f39d020d7df3a03b93689ed12ae03a8521e0f6b",
+      "bytes": 478
+    },
+    {
+      "step": "probe-without-openwiki--last-update-json",
+      "path": "20260808T132824Z-77ce9e424c78/streams/10-probe-without-openwiki--last-update-json.err",
+      "sha256": "23f6042e0cc89e8ba54add2f9df1f6cebb65454a6e777f36490bb2c9ca4cc55c",
+      "bytes": 683
+    },
+    {
+      "step": "probe-without-scripts-gates-check_root_coupling-py",
+      "path": "20260808T132824Z-77ce9e424c78/streams/11-probe-without-scripts-gates-check_root_coupling-py.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "step": "probe-without-scripts-gates-check_root_coupling-py",
+      "path": "20260808T132824Z-77ce9e424c78/streams/11-probe-without-scripts-gates-check_root_coupling-py.err",
+      "sha256": "7b7d4152c70b310f34ea21b4c90c0744f59ace05c77497d4b3f1b146ea5b95d2",
+      "bytes": 367
+    }
+  ],
+  "comparison": {
+    "entry_point_named_paths": {
+      ".githooks": {
+        "class": "required",
+        "probe_exit": 64
+      },
+      ".grepai/index.gob": {
+        "class": "optional",
+        "probe_exit": 0
+      },
+      "openwiki/.last-update.json": {
+        "class": "optional",
+        "probe_exit": 0
+      },
+      "scripts/gates/check_root_coupling.py": {
+        "class": "required",
+        "probe_exit": 64
+      }
+    },
+    "doctor_gated_tools": [
+      "bun",
+      "curl",
+      "git",
+      "python3",
+      "uv"
+    ],
+    "tools_covered_transitively_by_bootstrap_step": true,
+    "message_lanes_fired": [
+      "bootstrap OK: hooksPath=.githooks, doctor green (git/python3/bun)",
+      "bootstrap ok: ollama reachable on http://localhost:11434",
+      "bootstrap WARN: openwiki/ is stale (code changed since wiki gitHead 4e0dd25befdfd0066bc98253ce1122367c7a331e) — rerun the repo-wiki-converge update flow"
+    ],
+    "proof_covered_paths": {
+      "-": "container",
+      ".githooks/commit-msg": "macro",
+      ".githooks/lib/validate_molecular_message.ts": "macro",
+      ".githooks/post-commit": "macro",
+      ".githooks/pre-commit": "macro",
+      ".githooks/prepare-commit-msg": "macro",
+      ".gitignore": "container",
+      ".grepai/index.gob": "macro",
+      "AGENTS.md": "macro",
+      "ARCHITECTURE.md": "macro",
+      "CLAUDE.md": "macro",
+      "CONTEXT.md": "macro",
+      "bootstrap.sh": "macro",
+      "data/receipts/post-commit-77ce9e424c78619af70aaab878c882c9a0dcf0b9.json": "macro",
+      "data/wiki-update/request-ingest-note.json": "micro",
+      "data/wiki-update/request-issue23-dryrun.json": "micro",
+      "data/wiki-update/request-pdf-probe.json": "micro",
+      "data/wiki-update/request-poweron-2026-08-06.json": "micro",
+      "data/wiki-update/request-repo-probe.json": "micro",
+      "data/wiki-update/request-review-i23.json": "micro",
+      "delivery.json": "macro",
+      "kb-ingest/README.md": "openwiki",
+      "kb-ingest/check_repo_wiki_converge.py": "openwiki",
+      "kb-ingest/openwiki/init.system.md": "openwiki",
+      "kb-ingest/openwiki/subagents/answer-verifier.md": "openwiki",
+      "kb-ingest/openwiki/subagents/question-finder.md": "openwiki",
+      "kb-ingest/openwiki/subagents/skeleton-critic.md": "openwiki",
+      "kb-ingest/openwiki/update.system.md": "openwiki",
+      "kb-ingest/openwiki/user.init.md": "openwiki",
+      "kb-ingest/openwiki/user.update.md": "openwiki",
+      "kb-ingest/port/host-runtime.md": "openwiki",
+      "kb-ingest/port/openwiki_post.py": "openwiki",
+      "kb-ingest/port/openwiki_subagent.sh": "openwiki",
+      "kb-ingest/port/wiki_update_worker.sh": "openwiki",
+      "loop_wiki/README.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/baselines/seed-stats.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/modules/semantic-truth-context.md": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/inbox/dr-example.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.ingest-note.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.pdf-probe.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.repo-probe.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.review-i23.json": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/run.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/cli.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/run_generated_fast_quality.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/src/verify_generated_repo.ts": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh": "micro",
+      "loop_wiki/evolve-perfect-seed-repo-factory/verify.sh": "micro",
+      "loopctl/Dockerfile": "container",
+      "loopctl/README.md": "macro",
+      "loopctl/automode-bench.sh": "container",
+      "loopctl/automode_report.py": "container",
+      "loopctl/codex-sandbox.sh": "container",
+      "loopctl/container-run.sh": "container",
+      "loopctl/container_preflight.sh": "container",
+      "loopctl/contract.json": "macro",
+      "loopctl/ingest.py": "macro",
+      "loopctl/lineage.py": "macro",
+      "loopctl/loopctl.sh": "macro",
+      "loopctl/mcp_server.py": "policy",
+      "loopctl/mcp_tools.py": "policy",
+      "loopctl/replay.sh": "macro",
+      "loopctl/result_json.py": "policy",
+      "loopctl/sandbox-policy.yaml": "policy",
+      "loopctl/selftest.sh": "macro",
+      "loopctl/surface.lock": "macro",
+      "loopctl/surface_digest.py": "macro",
+      "loopctl/workflow_lock.py": "macro",
+      "mcp/README.md": "macro",
+      "mcp/context-pack/benchmarks/receipts/m1-pro-2026-07-29.json": "macro",
+      "mcp/context-pack/src/context_pack_mcp/engine.py": "macro",
+      "mcp/context-pack/src/context_pack_mcp/server.py": "macro",
+      "mcp/production/migrate.py": "macro",
+      "mcp/production/probe_stdio.py": "macro",
+      "openwiki/.last-update.json": "openwiki",
+      "openwiki/architecture.md": "openwiki",
+      "openwiki/data-ledgers.md": "openwiki",
+      "openwiki/factory/build-pipeline.md": "openwiki",
+      "openwiki/factory/generated-repo.md": "openwiki",
+      "openwiki/factory/index.md": "openwiki",
+      "openwiki/factory/overview.md": "openwiki",
+      "openwiki/factory/packet-contract.md": "openwiki",
+      "openwiki/factory/v2-plan.md": "openwiki",
+      "openwiki/factory/verification.md": "openwiki",
+      "openwiki/gates/fast-quality.md": "openwiki",
+      "openwiki/gates/index.md": "openwiki",
+      "openwiki/gates/structure-gates.md": "openwiki",
+      "openwiki/host-loop/bootstrap.md": "openwiki",
+      "openwiki/host-loop/claude-host.md": "openwiki",
+      "openwiki/host-loop/git-hooks.md": "openwiki",
+      "openwiki/host-loop/index.md": "openwiki",
+      "openwiki/host-loop/mcp-surface.md": "openwiki",
+      "openwiki/host-loop/molecular-messages.md": "openwiki",
+      "openwiki/index.md": "openwiki",
+      "openwiki/kb-ingest/index.md": "openwiki",
+      "openwiki/kb-ingest/official-port.md": "openwiki",
+      "openwiki/kb-ingest/overview.md": "openwiki",
+      "openwiki/migration/engine.md": "openwiki",
+      "openwiki/migration/history.md": "openwiki",
+      "openwiki/migration/index.md": "openwiki",
+      "openwiki/quickstart.md": "openwiki",
+      "openwiki/skills-surface.md": "openwiki",
+      "openwiki/testing.md": "openwiki",
+      "proof_workflow/README.md": "macro",
+      "proof_workflow/control_container_surface.sh": "harness",
+      "proof_workflow/control_harness_coverage.sh": "harness",
+      "proof_workflow/control_macro_entry.sh": "harness",
+      "proof_workflow/control_mcp_surface.sh": "harness",
+      "proof_workflow/control_micro_entry.sh": "harness",
+      "proof_workflow/control_openwiki_entry.sh": "harness",
+      "proof_workflow/control_sandbox_policy.sh": "harness",
+      "proof_workflow/control_workflow_lineage.sh": "harness",
+      "proof_workflow/lib/capture.sh": "harness",
+      "proof_workflow/lib/compare_control.py": "harness",
+      "proof_workflow/lib/harness_coverage.py": "harness",
+      "proof_workflow/lib/prove.sh": "harness",
+      "proof_workflow/lib/shebang_match.py": "harness",
+      "proof_workflow/prove_container.sh": "harness",
+      "proof_workflow/prove_harness.sh": "harness",
+      "proof_workflow/prove_macro_loop.sh": "harness",
+      "proof_workflow/prove_micro_loop.sh": "harness",
+      "proof_workflow/prove_openwiki.sh": "harness",
+      "proof_workflow/prove_policy.sh": "harness",
+      "proof_workflow/prove_workflow.sh": "harness",
+      "scripts/gates/check_credential_hygiene.py": "macro",
+      "scripts/gates/check_delivery_receipt.py": "macro",
+      "scripts/gates/check_placement.py": "macro",
+      "scripts/gates/check_root_coupling.py": "macro",
+      "scripts/gates/check_skill_pointers.py": "macro",
+      "scripts/gates/fast_quality.sh": "macro"
+    },
+    "required_uncovered": [],
+    "misdeclared_optional": [],
+    "optional_uncovered": []
+  }
+}

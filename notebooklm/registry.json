@@ -1,0 +1,48 @@
+{
+  "schema_version": "bettor-arena-notebooklm-registry@1.0.0",
+  "purpose": [
+    "The interaction data this repo needs to talk to notebooklm-py: which account profile,",
+    "which notebooks exist and what each is for, and which harvests are named targets.",
+    "workflow.py resolves `--target <name>` here so a caller does not have to retype a",
+    "notebook title, and so a target's shape is reviewable in a diff instead of living in",
+    "somebody's shell history.",
+    "",
+    "WHAT IS DELIBERATELY NOT HERE: the credential. storage_state.json / NOTEBOOKLM_AUTH_JSON",
+    "are BEARER credentials -- whoever holds them acts as this Google account -- so this file",
+    "carries only a POINTER to where the notebooklm CLI keeps its own, never a copy and never",
+    "a value. A registry that materialised the secret to make automation convenient would be",
+    "the exact incident check_credential_hygiene.py exists to prevent.",
+    "",
+    "`id` is a PIN, not a lookup shortcut. workflow.py still resolves the title against the",
+    "live account and refuses when the two disagree: a stale pin that silently won would",
+    "harvest a different notebook under the right name, which is worse than failing."
+  ],
+  "profile": {
+    "name": "default",
+    "home_env": "NOTEBOOKLM_HOME",
+    "credential_location": "~/.notebooklm/profiles/<profile>/storage_state.json (outside this repo, never tracked)",
+    "verify": "notebooklm auth check --test --json  -- require status ok AND checks.token_fetch true; bare --json only proves the cookie file parses"
+  },
+  "notebooks": [
+    {
+      "title": "AI 知識變現",
+      "id": "86da32d8-73b8-41df-815b-c4647c0e475a",
+      "what_it_is": "AI 變現情報:市場研究表、內容變現潛力排行、開源模型排名。第一個業務 module 的收割對象",
+      "observed": {
+        "utc": "2026-08-08",
+        "ready_harvestable_sources": 5,
+        "kinds": ["google_spreadsheet x4", "google_docs x1"]
+      }
+    }
+  ],
+  "targets": [
+    {
+      "name": "ai-monetization",
+      "module": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
+      "notebook_title": "AI 知識變現",
+      "source_title": null,
+      "follow": true,
+      "why": "source_title is null on purpose: the default pick rule (AI-related, spreadsheets first, then by title) is part of what this target exercises. Pinning one sheet here would make the rule untested and the target would keep passing after the rule broke"
+    }
+  ]
+}

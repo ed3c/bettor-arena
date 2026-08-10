@@ -1,0 +1,303 @@
+{
+  "assurance": {
+    "human_admit": "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN",
+    "live_prod_device": "NOT_EXERCISED_REQUIRES_EXTERNAL_ENVIRONMENT",
+    "maximum_claim": "offline_multi_surface_implemented",
+    "mcp_inline_carrier": "EXERCISED_PASS",
+    "portable_packet": "EXERCISED_PASS",
+    "relocation": "EXERCISED_PASS",
+    "trusted_local": "EXERCISED_PASS",
+    "verifier_negative_control": "EXERCISED_PASS"
+  },
+  "baseline": {
+    "canonical_projection": "80116d79a5ee64b9ee86d5ed5727ab487a5e1582a5691649892031c26b258dc1",
+    "exit": 0,
+    "repeat_count": 3
+  },
+  "claim_boundary": "portable packet, verifier, relocation, trusted-local and MCP inline surfaces at this commit; no live PROD/device side effect and no Human admit",
+  "commit": "31bce1b3c680746e1af28b3bc06d6b122e135c6e",
+  "input_classifications": [
+    {
+      "artifact_ref": "domain-profile.json",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    },
+    {
+      "artifact_ref": "evidence/inv-demo.txt",
+      "classification": "required",
+      "exit": 2,
+      "projection": "d10cb4a745ab012c029a2dfe00a633f519a3c13bc029806f498862ea3a8feb02"
+    },
+    {
+      "artifact_ref": "subject-snapshot.json",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    },
+    {
+      "artifact_ref": "subject/files/rules.txt",
+      "classification": "required",
+      "exit": 64,
+      "projection": "ABSENT"
+    }
+  ],
+  "planted_defects": [
+    {
+      "axis": "verifier_negative_control",
+      "byte_guard": true,
+      "caught": true,
+      "exit": 2,
+      "id": "verifier-missing-human-gate",
+      "target": "loop_wiki/code-truth-graph/src/code_truth_graph/verify_artifacts.py"
+    },
+    {
+      "axis": "relocation",
+      "byte_guard": true,
+      "caught": true,
+      "exit": 2,
+      "id": "relocation-root-coupling",
+      "target": "loop_wiki/code-truth-graph/run.sh"
+    },
+    {
+      "axis": "trusted_local",
+      "byte_guard": true,
+      "caught": true,
+      "exit": 2,
+      "id": "local-receipt-open-schema",
+      "target": "loop_wiki/code-truth-graph/schemas/ctg-local-build-receipt.schema.json"
+    },
+    {
+      "axis": "mcp_inline_carrier",
+      "byte_guard": true,
+      "caught": true,
+      "exit": 2,
+      "id": "mcp-local-artifact-list-leak",
+      "target": "loopctl/mcp_server.py"
+    }
+  ],
+  "produced_artifacts": [
+    "code-truth-graph.json",
+    "ctg-route-result.json",
+    "graphrag/entities.csv",
+    "graphrag/relationships.csv",
+    "graphrag/text_units.csv",
+    "report.html"
+  ],
+  "proof_digest": "16b94a33f4f664177dd41ff71fed5d75fe75aefc39f1de48f320c8e7986918c8",
+  "run_id": "20260809T130318Z-31bce1b3c680.VuDetW",
+  "runs": [
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-1",
+      "seq": 1,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 312,
+        "sha256": "275065c16e537dc970f4df04772bf097adab52835022ca1c3fc2e3da33187a0c"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-2",
+      "seq": 2,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 312,
+        "sha256": "27e9dfe353dab0592d0faecdc1a87034cb76d1e1ca3ff05aa4e5c5eae5f9e20a"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-1",
+      "seq": 3,
+      "stderr": {
+        "bytes": 66,
+        "sha256": "3ea6c6bf11d519c1ff5c440a9f489808baafddb73eceb947008d690c92fed709"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 2,
+      "id": "probe-2",
+      "seq": 4,
+      "stderr": {
+        "bytes": 64,
+        "sha256": "1357e38ded9f64c5ca042fb2cf67c6d1a4f92435fda8a3aafaab5224ef7d9a65"
+      },
+      "stdout": {
+        "bytes": 79,
+        "sha256": "9f44d38426e16ea9b32045e92bcf36f4f7f75057aae788549b692d41820df7e5"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-3",
+      "seq": 5,
+      "stderr": {
+        "bytes": 68,
+        "sha256": "8fcbfa5f3084764ac3e870e8c6e744616b83c6732fac6bc448dc615c62a9ff54"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 64,
+      "id": "probe-4",
+      "seq": 6,
+      "stderr": {
+        "bytes": 70,
+        "sha256": "d1732a8d826aabd8f9420883879a7dfeff91f2268ce746682ea903c5515a5f09"
+      },
+      "stdout": {
+        "bytes": 80,
+        "sha256": "fbfae821df1fdb1d1c75ca0b319635fe4b9ebf71fd50a54cfc2711d7da8d3f05"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "baseline-after-probes",
+      "seq": 7,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 302,
+        "sha256": "b76b393533fae917aca0fe4a092255b5218cc319864ec3a24711bbc6e3eec82a"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "verifier-unplanted",
+      "seq": 8,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 60,
+        "sha256": "1a36431a4df90264eb84c61bec2c5eac8f867fade09b378e8cca63ae991c965a"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "relocation-unplanted",
+      "seq": 9,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "local-unplanted",
+      "seq": 10,
+      "stderr": {
+        "bytes": 106,
+        "sha256": "df6df75e2d3fbc6dc08ecb42a957f517a6d27d452cdf0c6d3089398f1fd6d83d"
+      },
+      "stdout": {
+        "bytes": 27,
+        "sha256": "b842c7e0334f29e02e74a42c2e48a7b6748c0bb09bfd4553dff01bc217ce6490"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 0,
+      "id": "mcp-unplanted",
+      "seq": 11,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 27,
+        "sha256": "73a5c7714547810453c235db67c6835dd12ed3dc67f29a7564b80afc4bd769fb"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 2,
+      "id": "planted-verifier-missing-human-gate",
+      "seq": 12,
+      "stderr": {
+        "bytes": 120,
+        "sha256": "0b9c794c53851f718807ff9ac31ab7552d0d87f51ebe536f3d76da06abd2039a"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 2,
+      "id": "planted-relocation-root-coupling",
+      "seq": 13,
+      "stderr": {
+        "bytes": 88,
+        "sha256": "81b778b22133b7685619591490f39c61e00b0ef49e1ff12ca1ad9f165647a6c2"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 2,
+      "id": "planted-local-receipt-open-schema",
+      "seq": 14,
+      "stderr": {
+        "bytes": 137,
+        "sha256": "2eca3735ed632b782f902a260b9c62a5e5195690737e1f4df9b3a29fb6e2781c"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "cwd": "disposable-worktree",
+      "exit": 2,
+      "id": "planted-mcp-local-artifact-list-leak",
+      "seq": 15,
+      "stderr": {
+        "bytes": 44035,
+        "sha256": "db65b23ac63a7695dfbccd934cfc9dd50d5e73c73cb1b3634bc4ca5995597843"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "schema_version": "bettor-arena-ctg-control@2.0.0",
+  "status": "passed"
+}
