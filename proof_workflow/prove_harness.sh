@@ -51,6 +51,14 @@ prove_harness shebang-match proof_workflow/lib/shebang_match.py \
 prove_harness no-bash-script-run-with-sh - \
   "the scan itself, over the live tree: it caught prove_openwiki.sh running the bash worker with sh, which had been silent until a selftest case used process substitution" \
   -- python3 proof_workflow/lib/shebang_match.py
+# A backtick inside a double-quoted prose argument is executable shell, not
+# Markdown.  Two proofs used those descriptions for command names; both commands
+# ran, printed an error, and the measured harness still returned zero.  Proof
+# scripts have no legitimate need for legacy backtick substitution, so refuse it
+# on every non-comment line instead of maintaining a list of known descriptions.
+prove_harness no-executable-backticks-in-proofs - \
+  "proof descriptions must be inert data: an unescaped backtick on executable lines can run a command while the measured assertion remains green" \
+  -- python3 -c 'from pathlib import Path; import sys; bad=[f"{p}:{n}:{line.rstrip()}" for p in sorted(Path("proof_workflow").glob("prove_*.sh")) for n,line in enumerate(p.read_text(encoding="utf-8").splitlines(),1) if not line.lstrip().startswith("#") and "`" in line and "\\`" not in line]; print("\n".join(bad), file=sys.stderr); sys.exit(2 if bad else 0)'
 prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
   "tracked proof_workflow files x proof receipts at this commit -> covered / declared / UNCOVERED; a control receipt is refused as a source" \
   -- python3 proof_workflow/lib/harness_coverage.py --selftest

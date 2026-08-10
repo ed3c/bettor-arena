@@ -42,7 +42,7 @@ prove_harness preflight loopctl/container_preflight.sh \
 # it moved no digest and the lineage hook stayed silent about a change to the rule
 # that governs which bytes ever reach a sandbox.
 prove_harness upload-boundary .gitignore \
-  "the ignore rules -> what `openshell sandbox --upload` sends and what a commit carries; per-run evidence (data/codex-sandbox/, proof_workflow/data/) is excluded here so an agent's draft never lands on main by default"
+  "the ignore rules -> what \`openshell sandbox create --upload\` sends and what a commit carries; per-run evidence (data/codex-sandbox/, proof_workflow/data/) is excluded here so an agent's draft never lands on main by default"
 # The shared skills entering a sandbox under a name. Before it, a sandbox turn
 # ran with zero skills and nothing recorded that — "which skills version was this"
 # had no answer at all. Its refusal is the mechanism: the canonical is read live
