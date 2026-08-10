@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "9b75124e05703add82c0c053fccd8fb3f2f1e513fdd3c6b27ff3e1a2616da98c",
+  "content_sha256": "1d7ce263d96a48cd896a4d72ec6ea36f741b5dd324209b9c2c7a7abfadafac6f",
   "profile": "bettor-arena-runtime-local",
   "projections": {
     "policies": [
@@ -16,7 +16,7 @@
   },
   "schema": "runtime-env/consumer-binding/v1",
   "source": {
-    "commit": "a5fb4c601f6a8ae928d382599b8dbc25e495a34b",
+    "commit": "aaa252b1551eb998ba7f31d62f90e8b8c35145c3",
     "repository": "https://github.com/ed3c/runtime-env",
     "tree": "f85ec0ed18bc8fe2c0801108231ebf41e0a96f5a"
   },
