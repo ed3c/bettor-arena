@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "f45a8b79fb2dbd63ac1076d72e312792c862086a",
+  "workflow_commit": "131107ace96976e579015fce37e837fe17461a25",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-f45a8b79fb2d-dirty.json",
-    "ctg": "ctg-f45a8b79fb2d-dirty.json",
-    "equivalence": "equivalence-f45a8b79fb2d-dirty.json",
-    "harness": "harness-f45a8b79fb2d-dirty.json",
-    "macro": "macro-f45a8b79fb2d-dirty.json",
-    "micro": "micro-f45a8b79fb2d-dirty.json",
-    "notebooklm": "notebooklm-f45a8b79fb2d-dirty.json",
-    "openwiki": "openwiki-f45a8b79fb2d-dirty.json",
-    "policy": "policy-f45a8b79fb2d-dirty.json",
-    "workflow": "workflow-f45a8b79fb2d-dirty.json"
+    "container": "container-131107ace969-dirty.json",
+    "ctg": "ctg-131107ace969-dirty.json",
+    "equivalence": "equivalence-131107ace969-dirty.json",
+    "harness": "harness-131107ace969-dirty.json",
+    "macro": "macro-131107ace969-dirty.json",
+    "micro": "micro-131107ace969-dirty.json",
+    "notebooklm": "notebooklm-131107ace969-dirty.json",
+    "openwiki": "openwiki-131107ace969-dirty.json",
+    "policy": "policy-131107ace969-dirty.json",
+    "workflow": "workflow-131107ace969-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "f3db3d924a6f4a7c8bd9fc28815d2f8d9e9339cc4955040d442f92c86def24c2",
+  "workflow_digest": "83eac7a8e78bed97817a5c834a32141596e43cf491a8df9ba5c8aa88c051ea8a",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -64,7 +64,7 @@
       ]
     },
     ".githooks/pre-commit": {
-      "sha256": "97f33b7c8520644bb0adb7c16f0f247265f627612f20c322eb32cbdeb21e4648",
+      "sha256": "02f9f223736712b75cff776a0b7c187a0d3194e5342a7aae459a8a2739eafdbc",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-f45a8b79fb2dbd63ac1076d72e312792c862086a.json": {
+    "data/receipts/post-commit-131107ace96976e579015fce37e837fe17461a25.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -546,7 +546,7 @@
       ]
     },
     "loop_wiki/code-truth-graph/src/code_truth_graph/java_ast.py": {
-      "sha256": "33b640cbc3df06225988a5fcffb52093840c0975427aef2d44709639bc738917",
+      "sha256": "95d37099387c3ed5488325fc9b1ae1655abbc2eccb20b7b3d1ae35574bf3552e",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
