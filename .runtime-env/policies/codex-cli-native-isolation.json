@@ -1,11 +1,11 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "d55503ce5bda86a178dfa6227bc8f222449e4065e01fee4983bd33ede2b8cd69",
+  "content_sha256": "2c3fc113cfde60b7365dac1ce31a5483788ce9755979871ee0e470854bc98a07",
   "policy": {
     "carrier": "codex-cli",
     "config_home_env": "CODEX_HOME",
     "external_requirements": [
-      "Use OpenShell, a managed Codex App worktree sandbox, or another OS policy to deny read access to runtime-env dotenv and other carrier homes; Codex native workspace-write is not an arbitrary deny-read policy."
+      "Use OpenShell, a managed Codex App worktree sandbox, or another OS policy to deny read access to runtime-env dotenv, <stealth-profile-root>, and other carrier homes; Codex native workspace-write is not an arbitrary deny-read policy."
     ],
     "forbidden_environment": [
       "ANTHROPIC_API_KEY",
@@ -29,8 +29,8 @@
   },
   "schema": "runtime-env/consumer-policy/v1",
   "source": {
-    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
+    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
+    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
   }
 }

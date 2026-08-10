@@ -2,6 +2,7 @@
 set -eu
 
 ROOT=${STEALTH_BROWSER_ROOT:?STEALTH_BROWSER_ROOT is required}
+PROFILE_ROOT=${STEALTH_PROFILE_ROOT:?STEALTH_PROFILE_ROOT is required}
 case "$ROOT" in
   /*) ;;
   *) echo "stealth-browser control FATAL: root must be absolute" >&2; exit 64 ;;
@@ -18,6 +19,7 @@ TOP=$(git -C "$ROOT" rev-parse --show-toplevel 2>/dev/null) || {
 
 for required in \
   package.json package-lock.json src/cli.ts src/index.ts \
+  src/core/profile-root.ts tests/profile-root.test.ts \
   tests/cli.test.ts tests/dr-cdp-mode.test.ts \
   tests/dr-html-to-markdown.test.ts tests/dr-report-html-extract.test.ts
 do
@@ -26,6 +28,9 @@ do
     exit 2
   }
 done
+
+STEALTH_BROWSER_ROOT="$ROOT" STEALTH_PROFILE_ROOT="$PROFILE_ROOT" \
+  sh "$(dirname "$0")/check-stealth-profile-hygiene.sh"
 
 if [ -n "$(git -C "$ROOT" status --porcelain=v1)" ]; then
   echo "stealth-browser control RED: checkout is dirty and not admitted" >&2

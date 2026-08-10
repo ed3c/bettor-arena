@@ -1,11 +1,11 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "134c9cae0f0ec2ed88793bc553495d1035ff8fe3cd43a02402db89d232e9d28c",
+  "content_sha256": "f28e82966c51e7cb7436f20d30bccd198e081d5ec7f63b65e78a4907a1624a1a",
   "schema": "runtime-env/consumer-workload/v1",
   "source": {
-    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
+    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
+    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
   },
   "workload": {
     "agent_secret_access": "denied",
@@ -14,6 +14,7 @@
         "AGY_MODEL",
         "AGY_EFFORT"
       ],
+      "carrier-contract": [],
       "claude-auth-status": [],
       "codex-login-status": [
         "CODEX_HOME"
@@ -38,7 +39,12 @@
         "DR_CDP_URL"
       ],
       "stealth-browser-control": [
-        "STEALTH_BROWSER_ROOT"
+        "STEALTH_BROWSER_ROOT",
+        "STEALTH_PROFILE_ROOT"
+      ],
+      "stealth-profile-hygiene": [
+        "STEALTH_BROWSER_ROOT",
+        "STEALTH_PROFILE_ROOT"
       ]
     },
     "entrypoints": {
@@ -46,6 +52,12 @@
         "python3",
         "scripts/runtime-env/check-carrier-status.py",
         "agy"
+      ],
+      "carrier-contract": [
+        "python3",
+        "scripts/runtime-env/check-carrier-contract.py",
+        "--matrix",
+        "loop_wiki/evolve-technical-equivalence-research/carrier-capabilities.json"
       ],
       "claude-auth-status": [
         "python3",
@@ -82,6 +94,10 @@
       "stealth-browser-control": [
         "sh",
         "scripts/runtime-env/check-stealth-browser.sh"
+      ],
+      "stealth-profile-hygiene": [
+        "sh",
+        "scripts/runtime-env/check-stealth-profile-hygiene.sh"
       ]
     },
     "evidence": {

@@ -11,7 +11,8 @@
 | `policies/codex-cli-native-isolation.json` | Codex CLI workspace/shell environment 與外部 deny-read 要求 |
 | `policies/codex-openshell-chatgpt-placeholder.json` | OpenShell sandbox 的 Codex custom provider；只傳 opaque placeholders，禁用 sandbox `auth.json` |
 | `../scripts/gates/check_runtime_env_binding.py` | 本 repo 離線驗證器；pre-commit 使用 `--staged` |
-| `../scripts/runtime-env/check-stealth-browser.sh` | 只接受乾淨、完整、獨立版控的 stealth-browser checkout，跑 CLI＋DR CDP／HTML／file-sink 最小閉包；不冒充 owner full-suite |
+| `../scripts/runtime-env/check-stealth-browser.sh` | 只接受乾淨、完整、獨立版控的 stealth-browser checkout，並要求 `$STEALTH_PROFILE_ROOT` 位於 checkout 外、目錄 0700、檔案 0600；跑 CLI＋DR CDP／HTML／file-sink 最小閉包 |
+| `../scripts/runtime-env/check-carrier-contract.py` | 驗 actor × browser transport 相容矩陣與 Codex CLI 無原生 Browser 的負控 |
 | `../scripts/runtime-env/run-equivalence-live.py` | 驗 request 與 0600、短效、digest-bound Gemini 外送核准後才啟動 live adapter |
 
 OpenShell 的一次性 Codex provider bootstrap 只住在上游
@@ -43,7 +44,8 @@ stealth-browser owner full-suite 仍是獨立 gate。2026-08-10 實測為 365 pa
   --id bettor-arena-proof --entrypoint claude-auth-status \
   --target-root <bettor-arena-checkout> --env-file <runtime-env-checkout>/.env --json
 
-# 可替換為 codex-login-status、agy-model-inventory、stealth-browser-control。
+# 可替換為 codex-login-status、agy-model-inventory、carrier-contract、
+# stealth-profile-hygiene、stealth-browser-control。
 # equivalence-live 額外要求 EQUIVALENCE_* 三個路徑，且 approval receipt 必須
 # 精確綁 request bytes、Gemini destination、風險文字與有效期限。
 ```

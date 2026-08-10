@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "89063a1a1e9b8e841b96f62931af87ad2a34e0c3c2f882a765f63ab4509f8c76",
+  "content_sha256": "70943d007da582c4955904a7bab5225d5b170b0712a2c4667475e754d04614e9",
   "profile": "bettor-arena-runtime-local",
   "projections": {
     "policies": [
@@ -13,13 +13,13 @@
   "render": {
     "format": "dotenv",
     "path": ".runtime-env/examples/bettor-arena-local.env.example",
-    "sha256": "608a90839ab04b500797072dbef3d5665f4cb1f7142e281db4f7f616f65e6b6c"
+    "sha256": "dbba78c17b9543cb0ca899b99abb52c11b30eb3cdc7478c812dccb7cd92ac061"
   },
   "schema": "runtime-env/consumer-binding/v1",
   "source": {
-    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
+    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
+    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
   },
   "variables": [
     {
@@ -166,6 +166,13 @@
       "description": "Stable browser language list used by the stealth fingerprint layer.",
       "name": "STEALTH_LANGUAGES",
       "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Absolute broker-owned directory for untracked browser cookies, storage state, and locked fingerprints; directories are 0700 and files 0600.",
+      "name": "STEALTH_PROFILE_ROOT",
+      "required": true,
       "runtime_scope": "local-only",
       "secret": false
     },

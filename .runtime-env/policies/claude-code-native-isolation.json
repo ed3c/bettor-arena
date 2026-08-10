@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "05f6654716b91a5452e533a509e6fb1f51a7a4becf1661a503bb6f7cb469e0c3",
+  "content_sha256": "fe8dc474e682d7a484e1d6bc4bb7b57f85fef93199519a3b175830ff1bd77909",
   "policy": {
     "carrier": "claude-code",
     "config_home_env": "CLAUDE_CONFIG_DIR",
@@ -29,8 +29,8 @@
         "Edit(<codex-home>/**)",
         "Read(<agy-home>/**)",
         "Edit(<agy-home>/**)",
-        "Read(<stealth-browser-root>/profiles/**)",
-        "Edit(<stealth-browser-root>/profiles/**)",
+        "Read(<stealth-profile-root>/**)",
+        "Edit(<stealth-profile-root>/**)",
         "Read(<appstoreconnect-private-keys>/**)",
         "Edit(<appstoreconnect-private-keys>/**)"
       ],
@@ -43,7 +43,7 @@
         "<claude-config-dir>",
         "<codex-home>",
         "<agy-home>",
-        "<stealth-browser-root>/profiles",
+        "<stealth-profile-root>",
         "<appstoreconnect-private-keys>"
       ],
       "sandbox.filesystem.denyWrite": [
@@ -51,7 +51,7 @@
         "<claude-config-dir>",
         "<codex-home>",
         "<agy-home>",
-        "<stealth-browser-root>/profiles",
+        "<stealth-profile-root>",
         "<appstoreconnect-private-keys>"
       ]
     },
@@ -61,8 +61,8 @@
   },
   "schema": "runtime-env/consumer-policy/v1",
   "source": {
-    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
+    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
+    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
   }
 }
