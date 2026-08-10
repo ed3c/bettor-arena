@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "bettor-arena-ctg-control@1.0.0",
+  "$id": "bettor-arena-ctg-control@2.0.0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "commit", "run_id", "status", "baseline", "input_classifications", "produced_artifacts", "proof_digest", "runs", "claim_boundary"],
+  "required": ["schema_version", "commit", "run_id", "status", "baseline", "input_classifications", "produced_artifacts", "proof_digest", "runs", "planted_defects", "assurance", "claim_boundary"],
   "properties": {
-    "schema_version": {"const": "bettor-arena-ctg-control@1.0.0"},
-    "commit": {"type": "string", "minLength": 40},
+    "schema_version": {"const": "bettor-arena-ctg-control@2.0.0"},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "run_id": {"type": "string", "minLength": 1},
     "status": {"enum": ["passed", "failed"]},
     "baseline": {
@@ -36,7 +36,27 @@
     },
     "produced_artifacts": {"type": "array", "minItems": 1, "items": {"type": "string"}},
     "proof_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "runs": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/run"}},
+    "runs": {"type": "array", "minItems": 8, "items": {"$ref": "#/$defs/run"}},
+    "planted_defects": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/planted_defect"}
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["portable_packet", "verifier_negative_control", "relocation", "trusted_local", "mcp_inline_carrier", "live_prod_device", "human_admit", "maximum_claim"],
+      "properties": {
+        "portable_packet": {"enum": ["EXERCISED_PASS", "EXERCISED_FAIL"]},
+        "verifier_negative_control": {"enum": ["EXERCISED_PASS", "EXERCISED_FAIL"]},
+        "relocation": {"enum": ["EXERCISED_PASS", "EXERCISED_FAIL"]},
+        "trusted_local": {"enum": ["EXERCISED_PASS", "EXERCISED_FAIL"]},
+        "mcp_inline_carrier": {"enum": ["EXERCISED_PASS", "EXERCISED_FAIL"]},
+        "live_prod_device": {"const": "NOT_EXERCISED_REQUIRES_EXTERNAL_ENVIRONMENT"},
+        "human_admit": {"const": "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN"},
+        "maximum_claim": {"enum": ["no_positive_claim", "offline_multi_surface_implemented"]}
+      }
+    },
     "claim_boundary": {"type": "string", "minLength": 1}
   },
   "$defs": {
@@ -60,6 +80,19 @@
         "exit": {"enum": [0, 2, 64]},
         "stdout": {"$ref": "#/$defs/stream"},
         "stderr": {"$ref": "#/$defs/stream"}
+      }
+    },
+    "planted_defect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "axis", "target", "byte_guard", "exit", "caught"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "axis": {"enum": ["verifier_negative_control", "relocation", "trusted_local", "mcp_inline_carrier"]},
+        "target": {"type": "string", "minLength": 1},
+        "byte_guard": {"const": true},
+        "exit": {"enum": [0, 2, 64]},
+        "caught": {"type": "boolean"}
       }
     }
   }

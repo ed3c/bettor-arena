@@ -22,7 +22,10 @@ Caller-owned outputs plus local `logs/` and `anti/`; transient paths never becom
 
 ## B6 Independent verification
 
-`verify.sh`, `selftest.sh`, `portability.sh`, proof receipt, and behavioral control. A green without a planted red is hollow.
+`verify.sh`, `selftest.sh`, `portability.sh`, proof receipt, and behavioral control. The control keeps portable
+packet, verifier, relocation, trusted-local, MCP inline carrier, live PROD/device, and Human-admit assurance
+states separate. Offline executable axes require an unmodified green plus a byte-guarded planted red; live
+PROD/device and Human admission remain named `NOT_EXERCISED`, never inherited from an offline green.
 
 ## B7 Goal contract
 

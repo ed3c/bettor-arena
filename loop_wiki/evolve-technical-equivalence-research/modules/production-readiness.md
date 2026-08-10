@@ -37,3 +37,14 @@
   adapter receipt may prove all Gemini turns completed while the aggregate stays
   red because a candidate omitted a required grounding field; that state is
   `carrier_exercised_research_collected`, never `candidate_ready`.
+- Candidate shape drift has only two admitted lossless rewrites: rename
+  `falsifiable_conditions` to `falsification_conditions`, and wrap one non-empty
+  string as a one-item array. Both are recorded in the verification bundle.
+  Missing semantic content gets one candidate-only repair turn at most. The
+  repair may add only a missing `falsification_conditions` field; it cannot
+  create or overwrite identity, claim, source, audit, or probe evidence. It
+  then lands a terminal `candidate_invalid` route with exit 2 if still invalid;
+  it never loops the carrier.
+- Research requests and adapter receipts bind the versioned candidate-contract
+  digest. A transport-passed result from an older contract cannot satisfy the
+  completed-run cache, even when its provider/source identities still match.

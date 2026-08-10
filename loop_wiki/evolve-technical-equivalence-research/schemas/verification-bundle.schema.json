@@ -1,1 +1,61 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"technical-equivalence-verification-bundle@1.0.0","type":"object","required":["schema_version","upstream_research_result_digest","gap_topics","candidates","semantic_loss_ledger","semantic_judge","verification_bundle_digest"],"properties":{"schema_version":{"const":"technical-equivalence-verification-bundle@1.0.0"},"candidates":{"type":"array"},"semantic_loss_ledger":{"type":"array"}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "technical-equivalence-verification-bundle@1.1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "upstream_research_result_digest",
+    "gap_topics",
+    "candidate_normalization",
+    "candidate_repair",
+    "candidate_validation",
+    "candidates",
+    "semantic_loss_ledger",
+    "semantic_judge",
+    "verification_bundle_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "technical-equivalence-verification-bundle@1.1.0"
+    },
+    "candidate_normalization": {"type": "array"},
+    "candidate_repair": {
+      "type": "object",
+      "required": [
+        "max_attempts",
+        "attempts",
+        "errors_before",
+        "errors_after",
+        "patches"
+      ],
+      "properties": {
+        "max_attempts": {"type": "integer", "minimum": 0, "maximum": 1},
+        "attempts": {"type": "integer", "minimum": 0, "maximum": 1},
+        "patches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["candidate_id", "added_fields"],
+            "properties": {
+              "candidate_id": {"type": "string", "minLength": 1},
+              "added_fields": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "candidate_validation": {
+      "type": "object",
+      "required": ["status", "errors"],
+      "properties": {
+        "status": {"enum": ["passed", "failed"]},
+        "errors": {"type": "array"}
+      }
+    },
+    "candidates": {"type": "array"},
+    "semantic_loss_ledger": {"type": "array"}
+  }
+}

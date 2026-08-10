@@ -19,6 +19,8 @@ from typing import Any, Callable
 ROOT = Path(__file__).resolve().parent
 PROFILE = ROOT / "profile" / "technical-equivalence.md"
 REQUEST_SCHEMA = "technical-equivalence-request@1.0.0"
+CANDIDATE_CONTRACT_VERSION = "technical-equivalence-candidate-contract@1.0.0"
+REPAIRABLE_CANDIDATE_FIELDS = frozenset({"falsification_conditions"})
 COMMERCIAL_SPDX_ALLOWLIST = {
     "0BSD",
     "Apache-2.0",
@@ -181,8 +183,23 @@ def structured_output_contract() -> str:
 `equivalence_uncertain`、`wrong_decision_costly`、`inference:false`，以及
 `code_audit:{"status":"not_exercised"}`、`probe:{"status":"not_exercised"}`。
 研究階段不得假造本機 audit/probe receipt。若沒有公開可驗實作，仍須輸出至少一個
-`inference:true` 的候選並寫明 claim、source_urls 與可證偽條件；不得輸出空陣列。
+`inference:true` 的候選；它必須使用精確鍵名 `candidate_id`、`claim`、
+`source_urls`，以及 `falsification_conditions`。最後一欄必須是非空字串陣列，
+形如 `falsification_conditions:["non-empty falsifier"]`，不得改用
+`falsifiable_conditions` 或單一字串。不得輸出空陣列。
 """.strip()
+
+
+def candidate_contract_identity() -> dict[str, str]:
+    return {
+        "version": CANDIDATE_CONTRACT_VERSION,
+        "digest": digest(
+            {
+                "version": CANDIDATE_CONTRACT_VERSION,
+                "contract": structured_output_contract(),
+            }
+        ),
+    }
 
 
 def extract_structured_candidates(markdown: str) -> list[dict[str, Any]]:
@@ -247,6 +264,79 @@ def plan_gap_prompts(
     }
 
 
+def candidate_contract_errors(candidates: list[Any]) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates):
+        candidate_id = (
+            str(candidate.get("candidate_id") or "")
+            if isinstance(candidate, dict)
+            else ""
+        )
+        try:
+            if not isinstance(candidate, dict):
+                raise ContractError("candidate entries must be objects")
+            grounding(candidate)
+        except (ContractError, VerificationFailure) as exc:
+            errors.append(
+                {
+                    "candidate_id": candidate_id,
+                    "candidate_index": index,
+                    "error": str(exc),
+                }
+            )
+    return errors
+
+
+def candidate_repair_prompt(candidates: list[Any], errors: list[dict[str, Any]]) -> str:
+    invalid = [candidates[error["candidate_index"]] for error in errors]
+    return (
+        "Repair only the following machine-readable candidate records. "
+        "Preserve each candidate_id and every valid existing field. Only add "
+        "a missing falsification_conditions field; candidate_id, claim, "
+        "source_urls, code_audit, and probe are not repairable here. "
+        "Do not claim code-audit, probe, judge, or Human authority. "
+        "Return exactly one fenced json block with the root key "
+        "technical_equivalence_candidates and no prose after it.\n\n"
+        f"## Validation errors\n```json\n{json.dumps(errors, ensure_ascii=False, indent=2)}\n```\n\n"
+        f"## Invalid candidates\n```json\n{json.dumps(invalid, ensure_ascii=False, indent=2)}\n```\n\n"
+        f"{structured_output_contract()}"
+    )
+
+
+def merge_candidate_repairs(
+    candidates: list[Any],
+    errors: list[dict[str, Any]],
+    repairs: list[dict[str, Any]],
+) -> tuple[list[Any], list[dict[str, Any]]]:
+    invalid_ids = {error["candidate_id"] for error in errors if error["candidate_id"]}
+    by_id: dict[str, list[dict[str, Any]]] = {}
+    for repair in repairs:
+        candidate_id = str(repair.get("candidate_id") or "")
+        if candidate_id in invalid_ids:
+            by_id.setdefault(candidate_id, []).append(repair)
+    merged = list(candidates)
+    patches: list[dict[str, Any]] = []
+    for error in errors:
+        candidate_id = error["candidate_id"]
+        matches = by_id.get(candidate_id, [])
+        original = merged[error["candidate_index"]]
+        if candidate_id and len(matches) == 1 and isinstance(original, dict):
+            additions = {
+                key: value
+                for key, value in matches[0].items()
+                if key not in original and key in REPAIRABLE_CANDIDATE_FIELDS
+            }
+            if additions:
+                merged[error["candidate_index"]] = {**original, **additions}
+                patches.append(
+                    {
+                        "candidate_id": candidate_id,
+                        "added_fields": sorted(additions),
+                    }
+                )
+    return merged, patches
+
+
 def collect_live_research(
     primary_prompt: str,
     invoke: Callable[[str, str], str],
@@ -279,10 +369,34 @@ def collect_live_research(
             "Gemini live research produced no machine-readable candidate appendix; "
             "an inference:true candidate is required when no public implementation exists"
         )
+    candidates, normalization = normalize_candidates(candidates)
+    errors_before = candidate_contract_errors(candidates)
+    repairs: list[dict[str, Any]] = []
+    patches: list[dict[str, Any]] = []
+    repair_normalization: list[dict[str, Any]] = []
+    if errors_before:
+        repair_report = invoke(
+            "repair-01", candidate_repair_prompt(candidates, errors_before)
+        )
+        reports.append(("repair-01", repair_report))
+        repairs = extract_structured_candidates(repair_report)
+        repairs, repair_normalization = normalize_candidates(repairs)
+        candidates, patches = merge_candidate_repairs(
+            candidates, errors_before, repairs
+        )
+    errors_after = candidate_contract_errors(candidates)
+    ledger["candidate_normalization"] = normalization + repair_normalization
+    ledger["candidate_repair"] = {
+        "max_attempts": 1,
+        "attempts": 1 if errors_before else 0,
+        "errors_before": errors_before,
+        "errors_after": errors_after,
+        "patches": patches,
+    }
     return reports, candidates, ledger
 
 
-def validate_result(result: dict[str, Any], research_digest: str) -> None:
+def validate_result(result: dict[str, Any], research: dict[str, Any]) -> None:
     required = {
         "schema_version",
         "upstream_research_request_digest",
@@ -294,12 +408,24 @@ def validate_result(result: dict[str, Any], research_digest: str) -> None:
     missing = sorted(required - result.keys())
     if missing:
         raise ContractError(f"research result missing fields: {', '.join(missing)}")
-    if result["schema_version"] != "technical-equivalence-research-result@1.0.0":
-        raise ContractError(
-            f"unsupported research result schema: {result['schema_version']}"
-        )
-    if result["upstream_research_request_digest"] != research_digest:
+    schema_version = result["schema_version"]
+    if schema_version not in {
+        "technical-equivalence-research-result@1.0.0",
+        "technical-equivalence-research-result@1.1.0",
+    }:
+        raise ContractError(f"unsupported research result schema: {schema_version}")
+    if (
+        result["upstream_research_request_digest"]
+        != research["research_request_digest"]
+    ):
         raise ContractError("research result upstream digest mismatch")
+    if schema_version == "technical-equivalence-research-result@1.1.0":
+        expected_contract = research.get("candidate_contract", {}).get("digest")
+        if (
+            not expected_contract
+            or result.get("candidate_contract_digest") != expected_contract
+        ):
+            raise ContractError("research result candidate contract mismatch")
     expected = digest(result, "research_result_digest")
     if result["research_result_digest"] != expected:
         raise ContractError(
@@ -455,6 +581,41 @@ def grounding(candidate: dict[str, Any]) -> tuple[str, list[str]]:
     )
 
 
+def normalize_candidates(
+    candidates: list[Any],
+) -> tuple[list[Any], list[dict[str, Any]]]:
+    """Canonicalize only lossless provider shape drift and record every change."""
+    normalized: list[Any] = []
+    ledger: list[dict[str, Any]] = []
+    for raw in candidates:
+        if not isinstance(raw, dict) or raw.get("inference") is not True:
+            normalized.append(raw)
+            continue
+        candidate = dict(raw)
+        operations: list[str] = []
+        if (
+            "falsification_conditions" not in candidate
+            and "falsifiable_conditions" in candidate
+        ):
+            candidate["falsification_conditions"] = candidate.pop(
+                "falsifiable_conditions"
+            )
+            operations.append("rename:falsifiable_conditions->falsification_conditions")
+        conditions = candidate.get("falsification_conditions")
+        if isinstance(conditions, str) and conditions.strip():
+            candidate["falsification_conditions"] = [conditions]
+            operations.append("wrap:falsification_conditions:string->array")
+        normalized.append(candidate)
+        if operations:
+            ledger.append(
+                {
+                    "candidate_id": str(candidate.get("candidate_id") or ""),
+                    "operations": operations,
+                }
+            )
+    return normalized, ledger
+
+
 def verified_evidence(value: Any, schema: str) -> tuple[dict[str, Any], str | None]:
     if not isinstance(value, dict) or value.get("status") != "passed":
         return {}, "not exercised"
@@ -483,19 +644,53 @@ def process_result(
     run_dir: Path,
 ) -> tuple[dict[str, Any], dict[str, str]]:
     result = load_json(result_path)
-    validate_result(result, research["research_request_digest"])
+    validate_result(result, research)
     selected, truncated = parse_gap_topics(result["raw_markdown"])
+    normalized, normalization_ledger = normalize_candidates(result["candidates"])
+    result_ledger = result.get("gap_ledger")
+    if not isinstance(result_ledger, dict):
+        result_ledger = {}
+    upstream_normalization = result_ledger.get("candidate_normalization")
+    if not isinstance(upstream_normalization, list):
+        upstream_normalization = []
+    upstream_repair = result_ledger.get("candidate_repair")
+    if not isinstance(upstream_repair, dict):
+        upstream_repair = {
+            "max_attempts": 0,
+            "attempts": 0,
+            "errors_before": [],
+            "errors_after": [],
+            "patches": [],
+        }
     classified = []
-    for raw in result["candidates"]:
+    validation_errors = []
+    for index, raw in enumerate(normalized):
         if not isinstance(raw, dict):
-            raise ContractError("candidate entries must be objects")
-        state, reasons = grounding(raw)
-        item = dict(raw)
+            error = "candidate entries must be objects"
+            item = {"candidate_value": raw}
+            candidate_id = ""
+            state, reasons = "invalid", [error]
+        else:
+            item = dict(raw)
+            candidate_id = str(raw.get("candidate_id") or "")
+            try:
+                state, reasons = grounding(raw)
+            except (ContractError, VerificationFailure) as exc:
+                error = str(exc)
+                state, reasons = "invalid", [error]
+        if state == "invalid":
+            validation_errors.append(
+                {
+                    "candidate_id": candidate_id,
+                    "candidate_index": index,
+                    "error": error,
+                }
+            )
         item["grounding_state"] = state
         item["grounding_reasons"] = reasons
         classified.append(item)
     verification = {
-        "schema_version": "technical-equivalence-verification-bundle@1.0.0",
+        "schema_version": "technical-equivalence-verification-bundle@1.1.0",
         "upstream_research_result_digest": result["research_result_digest"],
         "gap_topics": {
             "selected": selected,
@@ -503,6 +698,12 @@ def process_result(
             "selected_count": len(selected),
             "truncated_count": len(truncated),
             "max": 6,
+        },
+        "candidate_normalization": (upstream_normalization + normalization_ledger),
+        "candidate_repair": upstream_repair,
+        "candidate_validation": {
+            "status": "failed" if validation_errors else "passed",
+            "errors": validation_errors,
         },
         "candidates": classified,
         "semantic_loss_ledger": [
@@ -534,7 +735,7 @@ def process_result(
     verification_path = run_dir / f"verification-bundle.{result_key}.json"
     write_immutable(verification_path, verification)
     artifacts = {"verification_bundle": str(verification_path)}
-    if not any(
+    if validation_errors or not any(
         item["grounding_state"] == "technical_equivalent" for item in classified
     ):
         return verification, artifacts
@@ -842,6 +1043,18 @@ def completed_adapter_run(
             raise ContractError(
                 f"passed adapter result binding mismatch: {receipt_path}"
             )
+        expected_contract = (
+            expected_identity.get("candidate_contract_digest")
+            if expected_identity is not None
+            else None
+        )
+        if (
+            expected_contract
+            and result.get("candidate_contract_digest") != expected_contract
+        ):
+            raise ContractError(
+                f"completed adapter result candidate contract mismatch: {receipt_path}"
+            )
         return result_path, receipt_path
     return None
 
@@ -1034,6 +1247,14 @@ def execute_gemini_adapter(
 ) -> tuple[Path, Path]:
     source_peer = source_peer.resolve()
     source_head = git_head(source_peer)
+    candidate_contract = research.get("candidate_contract")
+    if (
+        not isinstance(candidate_contract, dict)
+        or candidate_contract.get("version") != CANDIDATE_CONTRACT_VERSION
+        or candidate_contract.get("digest") != candidate_contract_identity()["digest"]
+    ):
+        raise ContractError("research request candidate contract is absent or stale")
+    candidate_contract_digest = str(candidate_contract["digest"])
     registry = load_json(ROOT / "adapter-registry.json")
     adapter_id = research["adapter_id"]
     declared = registry.get("adapters", {}).get(adapter_id)
@@ -1122,6 +1343,7 @@ def execute_gemini_adapter(
                 "sha256": runner_sha256,
                 "transport": "persistent-jsonl-v1",
             },
+            "candidate_contract": candidate_contract,
         }
     )
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -1143,6 +1365,7 @@ def execute_gemini_adapter(
             "source_files": source_files,
             "top_level_dependencies": actual_dependencies,
             "adapter_execution_policy_digest": execution_policy_digest,
+            "candidate_contract_digest": candidate_contract_digest,
         },
     )
     completed = completed_adapter_run(
@@ -1154,6 +1377,7 @@ def execute_gemini_adapter(
             "source_files": source_files,
             "top_level_dependencies": actual_dependencies,
             "adapter_execution_policy_digest": execution_policy_digest,
+            "candidate_contract_digest": candidate_contract_digest,
         },
     )
     if completed is not None:
@@ -1278,13 +1502,14 @@ def execute_gemini_adapter(
 
     def write_receipt(status: str, failure: str | None = None) -> dict[str, Any]:
         receipt: dict[str, Any] = {
-            "schema_version": "technical-equivalence-adapter-receipt@1.1.0",
+            "schema_version": "technical-equivalence-adapter-receipt@1.2.0",
             "adapter_id": adapter_id,
             "source_peer": str(source_peer),
             "source_commit": source_head,
             "source_files": source_files,
             "top_level_dependencies": actual_dependencies,
             "adapter_execution_policy_digest": execution_policy_digest,
+            "candidate_contract_digest": candidate_contract_digest,
             "execution_mirror": mirror_evidence,
             "research_request_digest": research["research_request_digest"],
             "status": status,
@@ -1322,8 +1547,9 @@ def execute_gemini_adapter(
     receipt = write_receipt("passed")
     combined = "\n\n".join(f"<!-- {label} -->\n{report}" for label, report in reports)
     result = {
-        "schema_version": "technical-equivalence-research-result@1.0.0",
+        "schema_version": "technical-equivalence-research-result@1.1.0",
         "upstream_research_request_digest": research["research_request_digest"],
+        "candidate_contract_digest": candidate_contract_digest,
         "provider": "gemini-deep-research",
         "adapter_receipt_digest": receipt["adapter_receipt_digest"],
         "raw_markdown": combined,
@@ -1361,12 +1587,13 @@ def run(args: argparse.Namespace) -> int:
     )
     prompt = build_prompt(request)
     research = {
-        "schema_version": "technical-equivalence-research-request@1.0.0",
+        "schema_version": "technical-equivalence-research-request@1.1.0",
         "request_id": request["request_id"],
         "upstream_request_digest": request["request_digest"],
         "provider": "gemini-deep-research",
         "adapter_id": "antigravity-dr-session-v1",
         "max_gap_topics": 6,
+        "candidate_contract": candidate_contract_identity(),
         "prompt": prompt,
         "prompt_digest": "sha256:" + hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
     }
@@ -1388,7 +1615,11 @@ def run(args: argparse.Namespace) -> int:
         verification, result_artifacts = process_result(result_path, research, run_dir)
         artifacts["research_result"] = str(result_path)
         artifacts.update(result_artifacts)
-        if "expected_judge_result" not in result_artifacts:
+        if verification["candidate_validation"]["status"] == "failed":
+            state = "candidate_invalid"
+            next_edge = "repair_candidate_contract_once_or_supply_a_new_research_result"
+            route_exit = 2
+        elif "expected_judge_result" not in result_artifacts:
             state = "candidate_ready"
             next_edge = "audit_probe_and_if_required_rebuild_then_supply_enriched_research_result"
         else:
@@ -1420,7 +1651,7 @@ def run(args: argparse.Namespace) -> int:
                 next_edge = "external_human_admit_then_target_side_apply"
 
     route = {
-        "schema_version": "technical-equivalence-route-result@1.0.0",
+        "schema_version": "technical-equivalence-route-result@1.1.0",
         "request_id": request["request_id"],
         "request_digest": request["request_digest"],
         "state": state,

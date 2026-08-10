@@ -1,1 +1,36 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"technical-equivalence-route-result@1.0.0","type":"object","required":["schema_version","request_id","request_digest","state","target_peer","expected_target_head","artifacts","next_edge","exit_semantics","route_result_digest"],"properties":{"schema_version":{"const":"technical-equivalence-route-result@1.0.0"},"state":{"enum":["research_required","candidate_ready","judge_required","verification_failed","human_required"]},"route_result_digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "technical-equivalence-route-result@1.1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "request_id",
+    "request_digest",
+    "state",
+    "target_peer",
+    "expected_target_head",
+    "artifacts",
+    "next_edge",
+    "exit_semantics",
+    "route_result_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "technical-equivalence-route-result@1.1.0"
+    },
+    "state": {
+      "enum": [
+        "research_required",
+        "candidate_invalid",
+        "candidate_ready",
+        "judge_required",
+        "verification_failed",
+        "human_required"
+      ]
+    },
+    "route_result_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

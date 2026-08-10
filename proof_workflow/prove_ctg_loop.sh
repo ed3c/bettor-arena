@@ -22,6 +22,8 @@ prove_context eight-base "$F/modules/eight-base-laws.md" \
   "global harness law -> physical CTG base landing"
 prove_context state-ledger "$F/PLAN.md" \
   "iteration result -> append-only trajectory and Human gates"
+prove_harness sandbox-ignore-policy "$F/.gitignore" \
+  "caller-owned outputs and transient diagnostics -> excluded from the tracked mechanism inventory"
 prove_harness input-schema "$F/schemas/ctg-input.schema.json" \
   "external packet -> closed semantic envelope (hashed; json readability is exercised by the public contract test)"
 prove_harness result-schema "$F/schemas/ctg-route-result.schema.json" \
@@ -44,6 +46,14 @@ prove_harness graph-schema "$F/schemas/code-truth-graph.schema.json" \
   "authoritative graph -> legacy-compatible graph contract"
 prove_harness runtime-receipt-schema "$F/schemas/runtime-receipt.schema.json" \
   "portable core execution -> legacy runtime receipt compatibility boundary"
+prove_harness loopctl-entry loopctl/loopctl.sh \
+  "public loopctl command -> contract-selected CTG entry with unchanged exit code"
+prove_harness loopctl-contract loopctl/contract.json \
+  "CTG run/build-local/prove/test declarations -> public carrier and receipt surface"
+prove_harness mcp-tool-generator loopctl/mcp_tools.py \
+  "CTG MCP declaration -> generated inline-bundle-only tool schema"
+prove_harness mcp-server loopctl/mcp_server.py \
+  "inline bundle -> pinned isolated CTG execution -> bounded typed delivery"
 prove_harness entry "$F/run.sh" \
   "stdin EOF + sandbox-local Python path -> one-shot runtime (hashed, not fired because the contract test fires the public CLI)"
 prove_harness trigger "$F/trigger.sh" \
@@ -63,9 +73,14 @@ prove_harness public-contract tests/test_ctg_cli.sh \
 prove_harness java-core tests/test_ctg_java_core.sh \
   "java-compiler-v1 -> compiler AST nodes and evidence through the public CLI" \
   -- sh tests/test_ctg_java_core.sh
+prove_harness domain-projection tests/test_ctg_domain_projection.py \
+  "domain profile selectors and evidence bindings -> deterministic graph projection (hashed; fired by java-core)"
 prove_harness local-build tests/test_ctg_local_build.sh \
   "trusted-local manifest -> generic graph while MCP retains the raw-evidence non-egress boundary" \
   -- sh tests/test_ctg_local_build.sh
+prove_harness mcp-carrier tests/test_ctg_mcp_carrier.sh \
+  "closed inline bundle -> pinned public MCP seam -> bounded typed artifacts; local paths and bad digests refused" \
+  -- sh tests/test_ctg_mcp_carrier.sh
 prove_harness verifier-agent "$F/.agents/agents/verifier.md" \
   "output directory -> read-only verifier route"
 prove_harness runtime-skill "$F/.agents/skills/code-truth-graph-runtime/SKILL.md" \

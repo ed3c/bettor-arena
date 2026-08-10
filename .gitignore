@@ -6,6 +6,9 @@ data/wiki-update/
 .serena/
 .openwiki-review/
 proof_workflow/data/
+# A -dirty proof stamp binds bytes that were never present at its named commit.
+# Keep settled proof/control receipts reviewable; discard only this noisy class.
+data/proof-workflow/*-dirty.json
 .grepai/
 data/ingest/
 # One directory per notebooklm harvest. Evidence of a run, and the extracted

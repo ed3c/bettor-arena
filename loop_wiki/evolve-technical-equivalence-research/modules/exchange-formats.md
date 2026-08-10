@@ -14,9 +14,15 @@ candidate output followed by independently enriched evidence). Verification,
 judge, sync, and route-result filenames include a binding digest prefix, so the
 immutable artifacts coexist rather than overwrite each other.
 
-Adapter receipt v1.1 binds two additional identities. The execution-policy
-digest identifies which external write-path exports may be redirected plus the
-local persistent-session runner and transport. The
+Research request v1.1 carries a versioned candidate-contract digest. Live
+research result v1.1 and adapter receipt v1.2 repeat that digest so cached
+transport evidence cannot answer for a different candidate schema. Verification
+bundle v1.1 records lossless normalization, the bounded repair ledger and every
+candidate-level validation error.
+
+Adapter receipt v1.2 retains the execution identities introduced in v1.1. The
+execution-policy digest identifies which external write-path exports may be
+redirected plus the local persistent-session runner and transport. The
 execution-mirror digest identifies the copied/transformed modules, redirect
 targets and verified dependency directory used by that attempt. These are
 runtime receipts only; neither grants semantic authority or Human admit.
