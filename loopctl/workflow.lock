@@ -1,25 +1,25 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "bb61e462dd7a3872ceee6231165efaa47c14a386",
+  "workflow_commit": "3a94dc5bbffc4b207f6ffd6cd3e678916f4b22b6",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-bb61e462dd7a-dirty.json",
-    "ctg": "ctg-bb61e462dd7a-dirty.json",
-    "equivalence": "equivalence-bb61e462dd7a-dirty.json",
-    "harness": "harness-bb61e462dd7a-dirty.json",
-    "macro": "macro-bb61e462dd7a-dirty.json",
-    "micro": "micro-bb61e462dd7a-dirty.json",
-    "notebooklm": "notebooklm-bb61e462dd7a-dirty.json",
-    "openwiki": "openwiki-bb61e462dd7a-dirty.json",
-    "policy": "policy-bb61e462dd7a-dirty.json",
-    "workflow": "workflow-bb61e462dd7a-dirty.json"
+    "container": "container-3a94dc5bbffc-dirty.json",
+    "ctg": "ctg-3a94dc5bbffc-dirty.json",
+    "equivalence": "equivalence-3a94dc5bbffc-dirty.json",
+    "harness": "harness-3a94dc5bbffc-dirty.json",
+    "macro": "macro-3a94dc5bbffc-dirty.json",
+    "micro": "micro-3a94dc5bbffc-dirty.json",
+    "notebooklm": "notebooklm-3a94dc5bbffc-dirty.json",
+    "openwiki": "openwiki-3a94dc5bbffc-dirty.json",
+    "policy": "policy-3a94dc5bbffc-dirty.json",
+    "workflow": "workflow-3a94dc5bbffc-dirty.json"
   },
   "counts": {
     "artifact": 34,
     "context": 58,
     "harness": 125
   },
-  "workflow_digest": "3f40646746c8b383ee17a28b96f1d246c2cc84484dab53bd1f1e9904503d68ef",
+  "workflow_digest": "1ac262ec197fb63fe4059edacfbbbb8222147d05884c7d85a170b6db218cff06",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -88,7 +88,7 @@
       ]
     },
     ".runtime-env/policies/codex-openshell-chatgpt-placeholder.json": {
-      "sha256": "6a9de3262a307cb7147e2a918f5606f28d36efeb13e678ef1f4e09ee2df9af3c",
+      "sha256": "2a6953dcb9f2096b3948a3421d22ea4cefd84a9503eddb7c01c823bc058755c2",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -135,7 +135,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-bb61e462dd7a3872ceee6231165efaa47c14a386.json": {
+    "data/receipts/post-commit-3a94dc5bbffc4b207f6ffd6cd3e678916f4b22b6.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",

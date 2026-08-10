@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "fe8dc474e682d7a484e1d6bc4bb7b57f85fef93199519a3b175830ff1bd77909",
+  "content_sha256": "a1904010ed1021645ffca1d383b4a15ac33c09c8646dab1922a38cc87766177c",
   "policy": {
     "carrier": "claude-code",
     "config_home_env": "CLAUDE_CONFIG_DIR",
@@ -61,8 +61,8 @@
   },
   "schema": "runtime-env/consumer-policy/v1",
   "source": {
-    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
+    "commit": "b8c768d23cf3e6e1f96996aea9ef05ad51dc114c",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
+    "tree": "66bdf403f888eb029d114a1a0cb62c61151aad7c"
   }
 }

@@ -1,14 +1,17 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "f28e82966c51e7cb7436f20d30bccd198e081d5ec7f63b65e78a4907a1624a1a",
+  "content_sha256": "81f0a823ae95d703bb5c03f5050fb491e3e1a9a723784a50a02fb17f88f7c449",
   "schema": "runtime-env/consumer-workload/v1",
   "source": {
-    "commit": "56b0667086275148322a1e6c6f59955af920bfb6",
+    "commit": "b8c768d23cf3e6e1f96996aea9ef05ad51dc114c",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "7348fd6f314d821aa0bafe176e13415cdd1bb0a1"
+    "tree": "66bdf403f888eb029d114a1a0cb62c61151aad7c"
   },
   "workload": {
     "agent_secret_access": "denied",
+    "clean_catalog_entrypoints": [
+      "forgejo-credential-canary"
+    ],
     "entrypoint_environment": {
       "agy-model-inventory": [
         "AGY_MODEL",
@@ -31,6 +34,7 @@
         "EQUIVALENCE_RUN_ROOT",
         "SKILL_BETTOR_PEER"
       ],
+      "forgejo-credential-canary": [],
       "prove-equivalence": [
         "ANTIGRAVITY_PEER",
         "SKILL_BETTOR_PEER"
@@ -79,6 +83,11 @@
       "equivalence-live": [
         "python3",
         "scripts/runtime-env/run-equivalence-live.py"
+      ],
+      "forgejo-credential-canary": [
+        "/bin/bash",
+        "@runtime-env/scripts/verify-local-runtime.sh",
+        "--credential-helper-only"
       ],
       "prove-equivalence": [
         "sh",
