@@ -37,6 +37,16 @@ _JDK_ROOTS = (
     Path("/usr/lib/jvm"),  # Linux
 )
 
+# Single JDK homes that are not under any of the roots above, tried last: a
+# runtime that came with some application should not outrank an installed JDK.
+# JetBrains Runtime is an OpenJDK fork under the same GPLv2+Classpath-Exception,
+# ships a complete javac, and is present on any machine with Android Studio —
+# which is often the only JDK such a machine has.
+_JDK_HOMES = (
+    Path("/Applications/Android Studio.app/Contents/jbr/Contents/Home"),
+    Path.home() / "Applications/Android Studio.app/Contents/jbr/Contents/Home",
+)
+
 
 def _runs(tool: str) -> bool:
     """Does this binary actually answer, or is it a stub that cannot resolve?
@@ -57,7 +67,7 @@ def _runs(tool: str) -> bool:
 
 
 def _jdk_tool(name: str) -> str | None:
-    """JAVA_HOME, then a PATH copy that works, then a scan of the usual roots.
+    """JAVA_HOME, then a working PATH copy, then the usual roots, then _JDK_HOMES.
 
     The scan exists because the caller should not have to remember to export
     JAVA_HOME: that is the "every caller must remember" shape, and the fix for it
@@ -92,6 +102,12 @@ def _jdk_tool(name: str) -> str | None:
             for candidate in (entry / "Contents/Home/bin" / name, entry / "bin" / name):
                 if candidate.is_file() and _runs(str(candidate)):
                     return str(candidate)
+
+    for home_dir in _JDK_HOMES:
+        candidate = home_dir / "bin" / name
+        if candidate.is_file() and _runs(str(candidate)):
+            return str(candidate)
+
     # `found` may still be the non-working stub. Returning it keeps the caller's
     # error message about a real path rather than a bare None, and the message
     # names JAVA_HOME as the way out.
