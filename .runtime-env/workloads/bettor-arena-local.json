@@ -1,0 +1,40 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "ac3847cdf8feb8035ad6d4115085c4d9ba41350b81c91383515a487e430af05c",
+  "schema": "runtime-env/consumer-workload/v1",
+  "source": {
+    "commit": "14c9627923dce3a4aa5312ff8a4354e4fd9ad509",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "130f92b139a1514ff2b232e98bcc8091c9f0fa50"
+  },
+  "workload": {
+    "agent_secret_access": "denied",
+    "entrypoints": {
+      "control-equivalence": [
+        "sh",
+        "loopctl/loopctl.sh",
+        "equivalence",
+        "test",
+        "--force-receipt"
+      ],
+      "prove-equivalence": [
+        "sh",
+        "loopctl/loopctl.sh",
+        "equivalence",
+        "prove",
+        "--force-receipt"
+      ]
+    },
+    "evidence": {
+      "control": "data/proof-workflow/control-equivalence-<commit12>.json",
+      "receipt": "data/proof-workflow/equivalence-<commit12>.json"
+    },
+    "host": "local-macos",
+    "id": "bettor-arena-proof",
+    "mutation": "workspace",
+    "profile": "bettor-arena-runtime-local",
+    "schema": "runtime-env/workload/v1",
+    "secret_delivery": "none",
+    "summary": "Generate bettor-arena proof receipts and run independent controls."
+  }
+}

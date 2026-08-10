@@ -33,8 +33,8 @@ bettor-arena/
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
 │                      #   目錄不存在=未 retarget,是缺席不是缺陷
 ├── .runtime-env/      # runtime-env 的 consumer 投影(非密鑰儲存):bindings/ 固定來源 commit/tree+profile closure;
-│                      #   examples/ 是可重算 dotenv 範例;README.md 記顯式 sync/check 路徑。
-│                      #   pre-commit 只驗 staged 兩檔,禁連網/讀 sibling/自動同步
+│                      #   examples/ 是可重算 dotenv；workloads/ 固定入口/收據/對照組；policies/ 分離 Claude/Codex 原生設定。
+│                      #   pre-commit 驗 staged manifest 全閉包，禁連網/讀 sibling/自動同步；README.md 記顯式 sync/check 路徑
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
 ├── loop_wiki/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)

@@ -1,23 +1,99 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "3cf24d42479dd4d258843b2f3db2c95f5ba7576a0225942528176b9e72c03a6e",
-  "profile": "bettor-arena-local",
+  "content_sha256": "9ed3fab4a8d1ca707854b8a9f4d3f9f15fa008975d09033dff311ccc890e51eb",
+  "profile": "bettor-arena-runtime-local",
+  "projections": {
+    "policies": [
+      ".runtime-env/policies/claude-code-native-isolation.json",
+      ".runtime-env/policies/codex-cli-native-isolation.json"
+    ],
+    "workload": ".runtime-env/workloads/bettor-arena-local.json"
+  },
   "render": {
     "format": "dotenv",
     "path": ".runtime-env/examples/bettor-arena-local.env.example",
-    "sha256": "dd01d5527272bbe635a851631409543758c0fc56de2cc7d253c899814cd6801c"
+    "sha256": "c156c86626dca8d2f56f0e7131993da875ab6604fe86293441fbfa6dbeea4cc1"
   },
   "schema": "runtime-env/consumer-binding/v1",
   "source": {
-    "commit": "88a0fe3005a27c65362211fda487fe931f547a62",
+    "commit": "14c9627923dce3a4aa5312ff8a4354e4fd9ad509",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "e5d0a7e6b20904ad91f3ca956f3befee5bc3c533"
+    "tree": "130f92b139a1514ff2b232e98bcc8091c9f0fa50"
   },
   "variables": [
     {
-      "default": "http://localhost:11434",
-      "description": "Ollama service root used by health checks and non-OpenAI-compatible clients.",
-      "name": "OLLAMA_URL",
+      "default": "high",
+      "description": "Agy reasoning effort selector.",
+      "name": "AGY_EFFORT",
+      "required": false,
+      "secret": false
+    },
+    {
+      "default": "gemini-3.6-flash-high",
+      "description": "Exact agy model id observed from the live model inventory.",
+      "name": "AGY_MODEL",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Explicit local path to the Antigravity source peer used by proof controls.",
+      "name": "ANTIGRAVITY_PEER",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Dedicated Claude Code configuration root; its contents remain host-only.",
+      "name": "CLAUDE_CONFIG_DIR",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Dedicated Codex configuration root; its contents remain host-only.",
+      "name": "CODEX_HOME",
+      "required": false,
+      "secret": false
+    },
+    {
+      "default": "http://127.0.0.1:9333",
+      "description": "Loopback CDP endpoint for an already-running dedicated research browser.",
+      "name": "DR_CDP_URL",
+      "required": false,
+      "secret": false
+    },
+    {
+      "default": "0",
+      "description": "Whether broker-owned deep-research browser operations use a visible window.",
+      "name": "DR_HEADED",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Explicit local path to the skill-bettor target peer used by proof controls.",
+      "name": "SKILL_BETTOR_PEER",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Additional broker-approved output roots for stealth-browser file sinks.",
+      "name": "STEALTH_BROWSER_EXTRA_ALLOW",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Broker-owned path for sanitized stealth-browser diagnostics.",
+      "name": "STEALTH_DEBUG_LOG",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Stable browser language list used by the stealth fingerprint layer.",
+      "name": "STEALTH_LANGUAGES",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Explicit browser user-agent override for deterministic probes.",
+      "name": "STEALTH_USER_AGENT",
       "required": false,
       "secret": false
     }

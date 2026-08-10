@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate bettor-arena's runtime-env consumer binding without network access.
 
-The default mode reads worktree files. ``--staged`` reads both artifacts from
+The default mode reads worktree files. ``--staged`` reads every projection from
 Git's index, which is the pre-commit contract: judge exactly the bytes being
 committed and never consult a sibling runtime-env checkout. Upstream freshness
 is deliberately outside this gate and is checked explicitly with
@@ -26,8 +26,14 @@ from _gate_common import repo_root
 
 
 BINDING_ID = "bettor-arena-local"
+PROFILE_ID = "bettor-arena-runtime-local"
 BINDING_REL = f".runtime-env/bindings/{BINDING_ID}.json"
 EXAMPLE_REL = f".runtime-env/examples/{BINDING_ID}.env.example"
+WORKLOAD_REL = f".runtime-env/workloads/{BINDING_ID}.json"
+POLICY_RELS = (
+    ".runtime-env/policies/claude-code-native-isolation.json",
+    ".runtime-env/policies/codex-cli-native-isolation.json",
+)
 SOURCE_REPOSITORY = "https://github.com/ed3c/runtime-env"
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -75,7 +81,43 @@ def _render(variables: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def validate(binding_text: str | None, example_text: str | None) -> list[str]:
+def _validate_projection(
+    relative: str,
+    text: str | None,
+    *,
+    expected_schema: str,
+    source: object,
+) -> tuple[list[str], dict[str, Any] | None]:
+    if text is None:
+        return [f"missing {relative}"], None
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [f"invalid JSON in {relative}: {exc}"], None
+    if not isinstance(document, dict):
+        return [f"{relative} must contain an object"], None
+    failures: list[str] = []
+    if document.get("schema") != expected_schema:
+        failures.append(f"{relative} has unexpected schema")
+    if document.get("binding") != BINDING_ID:
+        failures.append(f"{relative} has wrong binding id")
+    if document.get("source") != source:
+        failures.append(f"{relative} source receipt differs from binding")
+    digest = document.get("content_sha256")
+    unsigned = dict(document)
+    unsigned.pop("content_sha256", None)
+    if not isinstance(digest, str) or not HEX64.fullmatch(digest):
+        failures.append(f"{relative} content_sha256 is invalid")
+    elif digest != _sha256(_canonical_json(unsigned)):
+        failures.append(f"{relative} content_sha256 does not match its content")
+    return failures, document
+
+
+def validate(
+    binding_text: str | None,
+    example_text: str | None,
+    projection_texts: dict[str, str | None],
+) -> list[str]:
     failures: list[str] = []
     if binding_text is None:
         failures.append(f"missing {BINDING_REL}")
@@ -95,6 +137,7 @@ def validate(binding_text: str | None, example_text: str | None) -> list[str]:
         "binding",
         "content_sha256",
         "profile",
+        "projections",
         "render",
         "schema",
         "source",
@@ -104,8 +147,10 @@ def validate(binding_text: str | None, example_text: str | None) -> list[str]:
         failures.append("binding top-level fields do not match consumer-binding/v1")
     if document.get("schema") != "runtime-env/consumer-binding/v1":
         failures.append("binding schema is not runtime-env/consumer-binding/v1")
-    if document.get("binding") != BINDING_ID or document.get("profile") != BINDING_ID:
-        failures.append(f"binding and profile must both be {BINDING_ID}")
+    if document.get("binding") != BINDING_ID:
+        failures.append(f"binding must be {BINDING_ID}")
+    if document.get("profile") != PROFILE_ID:
+        failures.append(f"profile must be {PROFILE_ID}")
 
     source = document.get("source")
     if not isinstance(source, dict) or set(source) != {"repository", "commit", "tree"}:
@@ -125,6 +170,16 @@ def validate(binding_text: str | None, example_text: str | None) -> list[str]:
             failures.append(
                 "source tree must be a 40-character lowercase Git object ID"
             )
+
+    projections = document.get("projections")
+    expected_projection_manifest = {
+        "policies": list(POLICY_RELS),
+        "workload": WORKLOAD_REL,
+    }
+    if projections != expected_projection_manifest:
+        failures.append(
+            "projection manifest does not match bettor-arena runtime closure"
+        )
 
     variables = document.get("variables")
     if not isinstance(variables, list) or not variables:
@@ -206,6 +261,45 @@ def validate(binding_text: str | None, example_text: str | None) -> list[str]:
             expected_example
         ):
             failures.append("render sha256 does not match the deterministic projection")
+
+    workload_failures, workload = _validate_projection(
+        WORKLOAD_REL,
+        projection_texts.get(WORKLOAD_REL),
+        expected_schema="runtime-env/consumer-workload/v1",
+        source=source,
+    )
+    failures.extend(workload_failures)
+    if workload is not None:
+        payload = workload.get("workload")
+        if not isinstance(payload, dict):
+            failures.append(f"{WORKLOAD_REL} lacks workload object")
+        else:
+            if payload.get("id") != "bettor-arena-proof":
+                failures.append(f"{WORKLOAD_REL} has wrong workload id")
+            if payload.get("profile") != PROFILE_ID:
+                failures.append(f"{WORKLOAD_REL} has wrong workload profile")
+            if payload.get("agent_secret_access") != "denied":
+                failures.append(f"{WORKLOAD_REL} must deny agent secret access")
+
+    expected_policies = {
+        POLICY_RELS[0]: ("claude-code-native-isolation", "claude-code"),
+        POLICY_RELS[1]: ("codex-cli-native-isolation", "codex-cli"),
+    }
+    for relative, (policy_id, carrier) in expected_policies.items():
+        policy_failures, projection = _validate_projection(
+            relative,
+            projection_texts.get(relative),
+            expected_schema="runtime-env/consumer-policy/v1",
+            source=source,
+        )
+        failures.extend(policy_failures)
+        if projection is None:
+            continue
+        payload = projection.get("policy")
+        if not isinstance(payload, dict):
+            failures.append(f"{relative} lacks policy object")
+        elif payload.get("id") != policy_id or payload.get("carrier") != carrier:
+            failures.append(f"{relative} policy identity does not match its path")
     return failures
 
 
@@ -216,6 +310,10 @@ def run(root: Path, staged: bool) -> int:
         failures = validate(
             _read(root, BINDING_REL, staged),
             _read(root, EXAMPLE_REL, staged),
+            {
+                relative: _read(root, relative, staged)
+                for relative in (WORKLOAD_REL, *POLICY_RELS)
+            },
         )
     except RuntimeError as exc:
         print(f"FATAL: {exc}", file=sys.stderr)
@@ -224,11 +322,16 @@ def run(root: Path, staged: bool) -> int:
         print(f"RUNTIME-ENV-DRIFT {failure}", file=sys.stderr)
     if failures:
         return 2
-    print("PASS: runtime-env binding and dotenv projection agree")
+    print("PASS: runtime-env binding, workload, policies, and dotenv projection agree")
     return 0
 
 
-def _fixture() -> tuple[str, str]:
+def _projection(document: dict[str, Any]) -> str:
+    document["content_sha256"] = _sha256(_canonical_json(document))
+    return json.dumps(document, indent=2, sort_keys=True) + "\n"
+
+
+def _fixture() -> tuple[str, str, dict[str, str]]:
     variables = [
         {
             "default": "http://localhost:11434",
@@ -241,7 +344,8 @@ def _fixture() -> tuple[str, str]:
     example = _render(variables)
     document: dict[str, Any] = {
         "binding": BINDING_ID,
-        "profile": BINDING_ID,
+        "profile": PROFILE_ID,
+        "projections": {"policies": list(POLICY_RELS), "workload": WORKLOAD_REL},
         "render": {"format": "dotenv", "path": EXAMPLE_REL, "sha256": _sha256(example)},
         "schema": "runtime-env/consumer-binding/v1",
         "source": {
@@ -252,11 +356,48 @@ def _fixture() -> tuple[str, str]:
         "variables": variables,
     }
     document["content_sha256"] = _sha256(_canonical_json(document))
-    return json.dumps(document, indent=2, sort_keys=True) + "\n", example
+    source = document["source"]
+    projections = {
+        WORKLOAD_REL: _projection(
+            {
+                "binding": BINDING_ID,
+                "schema": "runtime-env/consumer-workload/v1",
+                "source": source,
+                "workload": {
+                    "id": "bettor-arena-proof",
+                    "profile": PROFILE_ID,
+                    "agent_secret_access": "denied",
+                },
+            }
+        ),
+        POLICY_RELS[0]: _projection(
+            {
+                "binding": BINDING_ID,
+                "schema": "runtime-env/consumer-policy/v1",
+                "source": source,
+                "policy": {
+                    "id": "claude-code-native-isolation",
+                    "carrier": "claude-code",
+                },
+            }
+        ),
+        POLICY_RELS[1]: _projection(
+            {
+                "binding": BINDING_ID,
+                "schema": "runtime-env/consumer-policy/v1",
+                "source": source,
+                "policy": {
+                    "id": "codex-cli-native-isolation",
+                    "carrier": "codex-cli",
+                },
+            }
+        ),
+    }
+    return json.dumps(document, indent=2, sort_keys=True) + "\n", example, projections
 
 
 def _selftest() -> int:
-    good_binding, good_example = _fixture()
+    good_binding, good_example, good_projections = _fixture()
     tampered = json.loads(good_binding)
     tampered["profile"] = "other"
     secret_default = json.loads(good_binding)
@@ -271,17 +412,57 @@ def _selftest() -> int:
     traversal["content_sha256"] = _sha256(
         _canonical_json({k: v for k, v in traversal.items() if k != "content_sha256"})
     )
+    missing_policy = dict(good_projections)
+    del missing_policy[POLICY_RELS[0]]
+    wrong_workload_schema = dict(good_projections)
+    workload_projection = json.loads(wrong_workload_schema[WORKLOAD_REL])
+    workload_projection["schema"] = "runtime-env/consumer-policy/v1"
+    wrong_workload_schema[WORKLOAD_REL] = _projection(
+        {k: v for k, v in workload_projection.items() if k != "content_sha256"}
+    )
     cases = [
-        ("good", good_binding, good_example, False),
-        ("missing-binding", None, good_example, True),
-        ("tampered-example", good_binding, good_example + "# drift\n", True),
-        ("tampered-binding-digest", json.dumps(tampered), good_example, True),
-        ("secret-default", json.dumps(secret_default), good_example, True),
-        ("render-path-traversal", json.dumps(traversal), good_example, True),
+        ("good", good_binding, good_example, good_projections, False),
+        ("missing-binding", None, good_example, good_projections, True),
+        (
+            "tampered-example",
+            good_binding,
+            good_example + "# drift\n",
+            good_projections,
+            True,
+        ),
+        (
+            "tampered-binding-digest",
+            json.dumps(tampered),
+            good_example,
+            good_projections,
+            True,
+        ),
+        (
+            "secret-default",
+            json.dumps(secret_default),
+            good_example,
+            good_projections,
+            True,
+        ),
+        (
+            "render-path-traversal",
+            json.dumps(traversal),
+            good_example,
+            good_projections,
+            True,
+        ),
+        ("missing-policy", good_binding, good_example, missing_policy, True),
+        (
+            "wrong-workload-schema",
+            good_binding,
+            good_example,
+            wrong_workload_schema,
+            True,
+        ),
     ]
     red = []
-    for name, binding, example, should_fail in cases:
-        failed = bool(validate(binding, example))
+    for name, binding, example, projections, should_fail in cases:
+        failed = bool(validate(binding, example, projections))
         if failed != should_fail:
             red.append(f"{name}: failed={failed}, want {should_fail}")
     with tempfile.TemporaryDirectory() as raw:
@@ -290,6 +471,7 @@ def _selftest() -> int:
         for relative, content in (
             (BINDING_REL, good_binding),
             (EXAMPLE_REL, good_example),
+            *good_projections.items(),
         ):
             destination = root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,68 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "82ea94d51eb9c8d9bfecc71ad2f9e3bf213646b97a3eed3c22aea4c60555bb93",
+  "policy": {
+    "carrier": "claude-code",
+    "config_home_env": "CLAUDE_CONFIG_DIR",
+    "external_requirements": [
+      "Render placeholders to absolute host paths and install the resulting deny rules in a host or managed settings layer that the repository cannot widen."
+    ],
+    "forbidden_environment": [
+      "CODEX_ACCESS_TOKEN",
+      "CODEX_API_KEY",
+      "CODEX_HOME",
+      "OPENAI_API_KEY"
+    ],
+    "id": "claude-code-native-isolation",
+    "receipt_commands": [
+      "claude auth status",
+      "claude --settings <rendered-settings> --permission-mode acceptEdits"
+    ],
+    "required_settings": {
+      "permissions.defaultMode": "acceptEdits",
+      "permissions.deny": [
+        "Read(<runtime-env-root>/.env)",
+        "Edit(<runtime-env-root>/.env)",
+        "Read(<claude-config-dir>/**)",
+        "Edit(<claude-config-dir>/**)",
+        "Read(<codex-home>/**)",
+        "Edit(<codex-home>/**)",
+        "Read(<agy-home>/**)",
+        "Edit(<agy-home>/**)",
+        "Read(<stealth-browser-root>/profiles/**)",
+        "Edit(<stealth-browser-root>/profiles/**)",
+        "Read(<appstoreconnect-private-keys>/**)",
+        "Edit(<appstoreconnect-private-keys>/**)"
+      ],
+      "permissions.disableBypassPermissionsMode": "disable",
+      "sandbox.allowUnsandboxedCommands": false,
+      "sandbox.enabled": true,
+      "sandbox.failIfUnavailable": true,
+      "sandbox.filesystem.denyRead": [
+        "<runtime-env-root>/.env",
+        "<claude-config-dir>",
+        "<codex-home>",
+        "<agy-home>",
+        "<stealth-browser-root>/profiles",
+        "<appstoreconnect-private-keys>"
+      ],
+      "sandbox.filesystem.denyWrite": [
+        "<runtime-env-root>/.env",
+        "<claude-config-dir>",
+        "<codex-home>",
+        "<agy-home>",
+        "<stealth-browser-root>/profiles",
+        "<appstoreconnect-private-keys>"
+      ]
+    },
+    "schema": "runtime-env/carrier-policy/v1",
+    "settings_file": "settings.json",
+    "summary": "Claude Code native permission and sandbox controls without Codex state inheritance."
+  },
+  "schema": "runtime-env/consumer-policy/v1",
+  "source": {
+    "commit": "14c9627923dce3a4aa5312ff8a4354e4fd9ad509",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "130f92b139a1514ff2b232e98bcc8091c9f0fa50"
+  }
+}
