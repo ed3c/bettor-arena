@@ -171,6 +171,19 @@ prove_harness() { # id repo-relative-path|- dataflow [-- cmd...]
     PROVE_STATUS=failed
     echo "  [harness ] $_id — exit $_rc RED — $_path" >&2
     tail -15 "$PROVE_TMP/$_id.log" | sed 's/^/             | /' >&2
+    # A red that cannot say what clears it becomes a red nobody reads, and the
+    # repo already refuses the usual escape (a warning tier is just a place to
+    # park it). So the summary carries two things per red: the failing thing's
+    # OWN first complaint, and — if it knows one — the route out.
+    #
+    # The route is taken from the step's own output rather than declared beside
+    # every call site, because a second list drifts and because the mechanism is
+    # what actually knows. Any tool opts in by printing `NEXT: <route>`; the
+    # equivalence loop already computes exactly this as its `next_edge`.
+    _why=$(grep -m1 -E '^(FAIL|FATAL|Error|error|SELFTEST RED)' "$PROVE_TMP/$_id.log" 2>/dev/null \
+           || head -1 "$PROVE_TMP/$_id.log" 2>/dev/null)
+    _next=$(grep -m1 -E '^(NEXT:|next_edge=)' "$PROVE_TMP/$_id.log" 2>/dev/null)
+    _prove_red_note "$_id" "$_path" "${_why:-（沒有任何輸出——那本身就是線索）}" "${_next#NEXT: }" "$_rc"
   fi
   return 0
 }
@@ -183,6 +196,8 @@ prove_artifact() { # id repo-relative-path dataflow
       _prove_record artifact "$1" "$2" null null absent-in-worktree "$3"
       PROVE_STATUS=failed
       echo "  [artifact] $1 — ABSENT IN WORKTREE — $2 (tracked at HEAD, deleted locally)" >&2
+      _prove_red_note "$1" "$2" "tracked at HEAD but deleted from the worktree" \
+        "restore it (git checkout -- $2) or, if the removal was intended, commit it and update the proof"
       return 0
     fi
     _s=$(git -C "$PROVE_ROOT" cat-file blob "HEAD:$2" | prove_sha256_stdin)
@@ -198,6 +213,8 @@ prove_artifact() { # id repo-relative-path dataflow
     _prove_record artifact "$1" "$2" null null absent "$3"
     PROVE_STATUS=failed
     echo "  [artifact] $1 — ABSENT — $2 (the mechanism left no terminus here)" >&2
+    _prove_red_note "$1" "$2" "the mechanism left no terminus at this path" \
+      "run the entry point once so it produces this artifact, or move the step if the terminus moved"
   fi
   return 0
 }
@@ -235,6 +252,15 @@ prove_note() { # id [repo-relative-path-or-ledger] why-this-path-is-not-hashed
     echo "  [note    ] $1 — excluded — $2"
   fi
   return 0
+}
+
+# One place every red registers, whatever kind it is. The first version only
+# covered harness reds, so an ABSENT artifact failed the traversal and printed no
+# summary at all — worse than the message it replaced, which at least said "see
+# the RED steps above". A summary that silently covers one kind of red is the
+# same defect class this file exists to catch.
+_prove_red_note() { # id path why next [exit]
+  printf '%s\t%s\t%s\t%s\t%s\n' "$1" "${5:-—}" "$2" "$3" "$4" >>"$PROVE_TMP/reds"
 }
 
 prove_emit() {
@@ -279,7 +305,22 @@ EOF
     echo "PASS: $PROVE_LOOP traversal — $PROVE_RAN harness ran, $PROVE_NOTRUN hashed-not-run, $PROVE_SEQ steps at $PROVE_COMMIT"
     return 0
   fi
-  echo "FAIL: $PROVE_LOOP traversal — see the RED steps above; receipt ${_receipt#"$PROVE_ROOT"/}" >&2
+  echo "FAIL: $PROVE_LOOP traversal — receipt ${_receipt#"$PROVE_ROOT"/}" >&2
+  if [ -s "$PROVE_TMP/reds" ]; then
+    echo "  each red, with its own words and the route out:" >&2
+    while IFS=$(printf '\t') read -r _rid _rrc _rpath _rwhy _rnext; do
+      echo "    ✗ $_rid (exit $_rrc) ${_rpath:+— $_rpath}" >&2
+      echo "        why:  $_rwhy" >&2
+      if [ -n "$_rnext" ]; then
+        echo "        next: ${_rnext#NEXT: }" >&2
+      else
+        # Stated, not blank: "this mechanism does not know its own repair route"
+        # is a different situation from "here is the route", and collapsing them
+        # is how a red stops being actionable.
+        echo "        next: this step declares no route — re-run it directly and read its output" >&2
+      fi
+    done <"$PROVE_TMP/reds"
+  fi
   return 2
 }
 
@@ -436,6 +477,37 @@ _prove_selftest() {
   fi
   grep -q '"worktree_dirty": true' "$drifted" 2>/dev/null \
     || { echo "SELFTEST case failed — dirty run does not record worktree_dirty" >&2; red=1; }
+
+  # 10) a red must carry its own first complaint AND a route — including the
+  #     case where it has none. Blank there would read as "no route exists",
+  #     which is a different situation from "this step never declared one", and
+  #     collapsing them is how a red stops being actionable.
+  cat >"$repo/redwithroute.sh" <<'RS'
+echo "FAIL: the widget disagreed"
+echo "NEXT: rebuild the widget and re-run"
+exit 2
+RS
+  cat >"$repo/rednoroute.sh" <<'RS'
+echo "FAIL: the widget disagreed"
+exit 2
+RS
+  red_out=$(
+    (
+      PROVE_HOME="$repo"
+      PROVE_FORCE_RECEIPT=1
+      export PROVE_FORCE_RECEIPT
+      prove_init redcase "route surfacing"
+      prove_harness with-route doc.md "declares a route" -- sh redwithroute.sh
+      prove_harness no-route doc.md "declares none" -- sh rednoroute.sh
+      prove_emit
+    ) 2>&1
+  )
+  printf '%s' "$red_out" | grep -q 'why:  FAIL: the widget disagreed' \
+    || { echo "SELFTEST case failed — red does not carry the failing thing's own first line" >&2; red=1; }
+  printf '%s' "$red_out" | grep -q 'next: rebuild the widget and re-run' \
+    || { echo "SELFTEST case failed — a declared NEXT: route did not reach the summary" >&2; red=1; }
+  printf '%s' "$red_out" | grep -q 'next: this step declares no route' \
+    || { echo "SELFTEST case failed — a red with no route must SAY it has none, not print a blank" >&2; red=1; }
 
   echo "SELFTEST $([ "$red" = 0 ] && echo GREEN || echo RED)"
   return "$red"
