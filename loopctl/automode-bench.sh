@@ -133,6 +133,19 @@ CODEX_ON_FLAGS='-s danger-full-access --strict-config -c approval_policy=never -
 # untouched. Kept as its own string because the selftest asserts on it.
 CODEX_REDUCE_ONLY='--strict-config -c tool_output_token_limit=512'
 
+# Where each CLI actually looks for skills inside a sandbox, read out of the
+# shipped binaries rather than assumed (`.claude/skills` with a CLAUDE_SKILL_DIR
+# override; `.codex/skills`). HOME in the sandbox is /sandbox. One function so
+# the selftest can call the same code the run uses — a second copy in the test
+# would pass against a broken implementation.
+skills_target() { # <platform> -> path, or exit 1 for an unknown platform
+  case "$1" in
+    claude) echo /sandbox/.claude/skills ;;
+    codex)  echo /sandbox/.codex/skills ;;
+    *) return 1 ;;
+  esac
+}
+
 if [ "${SELFTEST:-0}" = 1 ]; then
   RED=0
   say() { if [ "$2" = "$3" ]; then echo "  [ok]   $1"; else echo "  [RED]  $1 — got $2, want $3" >&2; RED=1; fi; }
@@ -174,6 +187,15 @@ if [ "${SELFTEST:-0}" = 1 ]; then
     *tool_output_token_limit*) echo "  [ok]   codex-reduce-changes-only-the-output-lever" ;;
     *) echo "  [RED]  codex-reduce-changes-only-the-output-lever — the lever is missing entirely" >&2; RED=1 ;;
   esac
+  # A bundle uploaded where the CLI does not look is indistinguishable from no
+  # bundle at all — same numbers, same silence — so both targets are asserted by
+  # calling the REAL resolver. The first version of these two cases re-derived
+  # the literal inside the test, which is a tautology: it would have passed
+  # against any implementation, including a broken one.
+  say "claude-skills-target-is-the-surface-claude-reads" "$(skills_target claude)" /sandbox/.claude/skills
+  say "codex-skills-target-is-the-surface-codex-reads" "$(skills_target codex)" /sandbox/.codex/skills
+  skills_target nonsense >/dev/null 2>&1
+  say "unknown-platform-has-no-target" $? 1
   [ "$RED" -eq 0 ] && { echo "SELFTEST GREEN"; exit 0; }
   echo "SELFTEST RED" >&2; exit 2
 fi
@@ -195,8 +217,19 @@ case "$VENUE:$PLATFORM" in
       echo "FATAL: $PLATFORM is not on PATH — the direct venue runs the host's own CLI" >&2; exit 64; }
     ;;
   sandbox:claude)
-    openshell provider list 2>/dev/null | grep -q "^claude-code " || {
-      echo "FATAL: no 'claude-code' provider on this gateway — the sandbox would have no credential." >&2
+    # Three outcomes, not two. `... 2>/dev/null | grep -q` folded "the gateway
+    # could not be reached" into "the provider is not there", and it said so out
+    # loud: with the socket unreachable this printed a confident instruction to
+    # create a provider that already existed. Asking and being told no is a
+    # different repair from not being able to ask.
+    PROVIDERS=$(openshell provider list 2>&1); PROVIDERS_RC=$?
+    if [ "$PROVIDERS_RC" -ne 0 ]; then
+      echo "FATAL: could not ask the gateway which providers exist (exit $PROVIDERS_RC) — this is NOT 'the provider is missing', and creating one would be the wrong repair. First line of its complaint:" >&2
+      printf '%s\n' "$PROVIDERS" | head -1 >&2
+      exit 64
+    fi
+    printf '%s\n' "$PROVIDERS" | grep -q "^claude-code " || {
+      echo "FATAL: the gateway answered, and it has no 'claude-code' provider — the sandbox would have no credential." >&2
       echo "       openshell provider create --name claude-code --type generic --credential CLAUDE_CODE_OAUTH_TOKEN" >&2
       exit 64; }
     ;;
@@ -227,6 +260,34 @@ STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 OUT="$ROOT/data/automode-bench/$STAMP"
 WORK="/sandbox/$(basename "$ROOT")"
 
+# The shared skills, once per invocation rather than once per arm — three arms
+# rebuilding the same bundle would be three chances for them to differ, and an
+# experiment whose arms carry different skills is not measuring the guard.
+#
+# THE TARGET PATH IS PER PLATFORM and getting it wrong is invisible: uploading to
+# a directory the CLI does not read looks exactly like not uploading at all, and
+# every number would still come back. Read out of the shipped binaries rather
+# than assumed — claude reads ~/.claude/skills (with a CLAUDE_SKILL_DIR
+# override), codex reads ~/.codex/skills — and HOME inside the sandbox is
+# /sandbox.
+SKILLS_ARGS=""
+SKILLS_TARGET=$(skills_target "$PLATFORM") || {
+  echo "FATAL: no skills surface known for platform '$PLATFORM'" >&2; exit 64; }
+SKILLS_LINE="skills-bundle: not carried (SANDBOX_SKILLS=1 to include them)"
+if [ "${SANDBOX_SKILLS:-0}" = 1 ] && [ "$VENUE" = sandbox ]; then
+  if SKILLS_LINE=$(sh "$ROOT/loopctl/skills-bundle.sh" "$OUT/skills-bundle" 2>&1); then
+    SKILLS_ARGS="--upload $OUT/skills-bundle/skills:$SKILLS_TARGET"
+  else
+    printf '%s\n' "$SKILLS_LINE" >&2
+    echo "FATAL: skills were asked for and could not be named — arms carrying an unnameable version cannot be compared to anything later" >&2
+    exit 64
+  fi
+elif [ "${SANDBOX_SKILLS:-0}" = 1 ]; then
+  # Direct runs use the host's own surfaces, which is a different thing entirely
+  # and must not be reported as if the bundle had been applied.
+  SKILLS_LINE="skills-bundle: not applicable to --venue direct (the host's own skills are in force)"
+fi
+
 if [ "$DRY" -eq 1 ]; then
   echo "dry-run — preconditions ran, nothing was created"
   echo "  platform  $PLATFORM      venue $VENUE      arms $ARM      runs per arm: $RUNS"
@@ -247,6 +308,7 @@ if [ "$DRY" -eq 1 ]; then
     echo "  NOT VARIED: the sandbox axis. bwrap cannot create a namespace here, so"
     echo "              read-only and workspace-write do not execute at all."
   fi
+  echo "  skills    $SKILLS_LINE"
   echo "  results   -> $OUT"
   exit 0
 fi
@@ -380,6 +442,7 @@ tar cf /sandbox/bench.tar -C /sandbox $(cd /sandbox && ls run-*.jsonl run-*.err 
     $CRED_ARGS \
     --env "BENCH_TASK=$TASK" \
     $ENV_ARGS \
+    $SKILLS_ARGS \
     --from "$ROOT/loopctl/Dockerfile" --upload "$ROOT" \
     -- sh -c "$inner"
   mkdir -p "$OUT/$arm"

@@ -100,7 +100,16 @@ fi
 # Gated on the provider existing rather than skipped silently: a control may not
 # mint a subscription token, so its absence is NOT EXERCISED, never a pass.
 PROVIDER=${POLICY_CLAUDE_PROVIDER:-claude-code}
-if openshell provider list 2>/dev/null | grep -q "^$PROVIDER "; then
+# Same three-outcome split as automode-bench.sh, and for the same reason: a
+# gateway that cannot be reached used to read as a provider that is not there,
+# so the control reported NOT EXERCISED for the one condition it can actually
+# distinguish — "nobody minted a token" — while the truth was "nobody could ask".
+# Those send the reader to different places.
+POLICY_PROVIDERS=$(openshell provider list 2>&1); POLICY_PROVIDERS_RC=$?
+if [ "$POLICY_PROVIDERS_RC" -ne 0 ]; then
+  echo "  [note] could not ask the gateway which providers exist (exit $POLICY_PROVIDERS_RC) — the credential turn is NOT EXERCISED, and this is NOT the same as the provider being absent:"
+  printf '%s\n' "$POLICY_PROVIDERS" | head -1 | sed 's/^/         /'
+elif printf '%s\n' "$POLICY_PROVIDERS" | grep -q "^$PROVIDER "; then
   capture credential-turn -- sh -c "openshell sandbox create --name policy-credential --no-tty --no-keep \
     --policy '$POLICY' --provider '$PROVIDER' --from '$ROOT/loopctl/Dockerfile' --upload '$ROOT' \
     -- sh -c 'echo \"ENV=\${CLAUDE_CODE_OAUTH_TOKEN:-<unset>}\"; claude -p \"reply with exactly: ok\"; echo \"TURN_RC=\$?\"'"

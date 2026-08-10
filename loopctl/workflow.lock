@@ -1,25 +1,25 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "bfb2bfc32feb8271412cd7743cb4628a08c7e299",
+  "workflow_commit": "66140a649b13895291c548220c1eeaba752b9a2b",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-bfb2bfc32feb-dirty.json",
-    "ctg": "ctg-bfb2bfc32feb-dirty.json",
-    "equivalence": "equivalence-bfb2bfc32feb-dirty.json",
-    "harness": "harness-bfb2bfc32feb-dirty.json",
-    "macro": "macro-bfb2bfc32feb-dirty.json",
-    "micro": "micro-bfb2bfc32feb-dirty.json",
-    "notebooklm": "notebooklm-bfb2bfc32feb-dirty.json",
-    "openwiki": "openwiki-bfb2bfc32feb-dirty.json",
-    "policy": "policy-bfb2bfc32feb-dirty.json",
-    "workflow": "workflow-bfb2bfc32feb-dirty.json"
+    "container": "container-66140a649b13-dirty.json",
+    "ctg": "ctg-66140a649b13-dirty.json",
+    "equivalence": "equivalence-66140a649b13-dirty.json",
+    "harness": "harness-66140a649b13-dirty.json",
+    "macro": "macro-66140a649b13-dirty.json",
+    "micro": "micro-66140a649b13-dirty.json",
+    "notebooklm": "notebooklm-66140a649b13-dirty.json",
+    "openwiki": "openwiki-66140a649b13-dirty.json",
+    "policy": "policy-66140a649b13-dirty.json",
+    "workflow": "workflow-66140a649b13-dirty.json"
   },
   "counts": {
     "artifact": 32,
     "context": 58,
     "harness": 120
   },
-  "workflow_digest": "7d41701c40855ff5cc45c4a342a5cc2e0e9c174d677c749893235086ddf2b00e",
+  "workflow_digest": "588b957d2ca46d9f26555a40246867ba2ce269bdd02e2f995569c789fced4af0",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -127,7 +127,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-bfb2bfc32feb8271412cd7743cb4628a08c7e299.json": {
+    "data/receipts/post-commit-66140a649b13895291c548220c1eeaba752b9a2b.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -928,7 +928,7 @@
       ]
     },
     "loopctl/README.md": {
-      "sha256": "e916d845b71fd6226e8c3c5bd9f068e67205500bc2929e340b1062b8976a7ae5",
+      "sha256": "7239fd35c27790e6cc1d28e6245877aeeece3ac1e98948ac1610d0208c199baa",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -936,7 +936,7 @@
       ]
     },
     "loopctl/automode-bench.sh": {
-      "sha256": "95a65e57f8e101c8dfcf150b1009ba1c1608b77496b3422a74ad70078f02373f",
+      "sha256": "02d2681d71c39abdd07ea4fcdb145aaaba8059fdea86a49b952de08a3ce9177f",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1484,7 +1484,7 @@
       ]
     },
     "proof_workflow/control_sandbox_policy.sh": {
-      "sha256": "0bbaf83014c82bf7ade10349784bb94265e01b247f26267471d533aa7fc96258",
+      "sha256": "61402dc9d597962d413df667b3a785728e8e1cbab056b2c95d1646c9b09d7f44",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
