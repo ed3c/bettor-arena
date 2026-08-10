@@ -1,15 +1,62 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "ac3847cdf8feb8035ad6d4115085c4d9ba41350b81c91383515a487e430af05c",
+  "content_sha256": "fc6cdc29087e7af2b7ffd973090f596140d0b537f43341a96e138d96c00aff2e",
   "schema": "runtime-env/consumer-workload/v1",
   "source": {
-    "commit": "14c9627923dce3a4aa5312ff8a4354e4fd9ad509",
+    "commit": "a5fb4c601f6a8ae928d382599b8dbc25e495a34b",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "130f92b139a1514ff2b232e98bcc8091c9f0fa50"
+    "tree": "f85ec0ed18bc8fe2c0801108231ebf41e0a96f5a"
   },
   "workload": {
     "agent_secret_access": "denied",
+    "entrypoint_environment": {
+      "agy-model-inventory": [
+        "AGY_MODEL",
+        "AGY_EFFORT"
+      ],
+      "claude-auth-status": [],
+      "codex-login-status": [
+        "CODEX_HOME"
+      ],
+      "control-equivalence": [
+        "ANTIGRAVITY_PEER",
+        "SKILL_BETTOR_PEER"
+      ],
+      "equivalence-live": [
+        "ANTIGRAVITY_PEER",
+        "DR_CDP_URL",
+        "EQUIVALENCE_APPROVAL_RECEIPT_PATH",
+        "EQUIVALENCE_REQUEST_PATH",
+        "EQUIVALENCE_RUN_ROOT",
+        "SKILL_BETTOR_PEER"
+      ],
+      "prove-equivalence": [
+        "ANTIGRAVITY_PEER",
+        "SKILL_BETTOR_PEER"
+      ],
+      "research-browser-health": [
+        "DR_CDP_URL"
+      ],
+      "stealth-browser-control": [
+        "STEALTH_BROWSER_ROOT"
+      ]
+    },
     "entrypoints": {
+      "agy-model-inventory": [
+        "python3",
+        "scripts/runtime-env/check-carrier-status.py",
+        "agy"
+      ],
+      "claude-auth-status": [
+        "python3",
+        "scripts/runtime-env/check-carrier-status.py",
+        "claude"
+      ],
+      "codex-login-status": [
+        "python3",
+        "scripts/runtime-env/check-carrier-status.py",
+        "codex"
+      ],
       "control-equivalence": [
         "sh",
         "loopctl/loopctl.sh",
@@ -17,12 +64,24 @@
         "test",
         "--force-receipt"
       ],
+      "equivalence-live": [
+        "python3",
+        "scripts/runtime-env/run-equivalence-live.py"
+      ],
       "prove-equivalence": [
         "sh",
         "loopctl/loopctl.sh",
         "equivalence",
         "prove",
         "--force-receipt"
+      ],
+      "research-browser-health": [
+        "python3",
+        "scripts/runtime-env/check-research-cdp.py"
+      ],
+      "stealth-browser-control": [
+        "sh",
+        "scripts/runtime-env/check-stealth-browser.sh"
       ]
     },
     "evidence": {
@@ -34,7 +93,7 @@
     "mutation": "workspace",
     "profile": "bettor-arena-runtime-local",
     "schema": "runtime-env/workload/v1",
-    "secret_delivery": "none",
+    "secret_delivery": "broker-only",
     "summary": "Generate bettor-arena proof receipts and run independent controls."
   }
 }

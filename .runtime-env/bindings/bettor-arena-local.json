@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "9ed3fab4a8d1ca707854b8a9f4d3f9f15fa008975d09033dff311ccc890e51eb",
+  "content_sha256": "9b75124e05703add82c0c053fccd8fb3f2f1e513fdd3c6b27ff3e1a2616da98c",
   "profile": "bettor-arena-runtime-local",
   "projections": {
     "policies": [
@@ -12,13 +12,13 @@
   "render": {
     "format": "dotenv",
     "path": ".runtime-env/examples/bettor-arena-local.env.example",
-    "sha256": "c156c86626dca8d2f56f0e7131993da875ab6604fe86293441fbfa6dbeea4cc1"
+    "sha256": "0afe74e73822cf13c4f60742e103e70197304d7a9c1442619d785b70ef5ab7fc"
   },
   "schema": "runtime-env/consumer-binding/v1",
   "source": {
-    "commit": "14c9627923dce3a4aa5312ff8a4354e4fd9ad509",
+    "commit": "a5fb4c601f6a8ae928d382599b8dbc25e495a34b",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "130f92b139a1514ff2b232e98bcc8091c9f0fa50"
+    "tree": "f85ec0ed18bc8fe2c0801108231ebf41e0a96f5a"
   },
   "variables": [
     {
@@ -44,13 +44,13 @@
     {
       "description": "Dedicated Claude Code configuration root; its contents remain host-only.",
       "name": "CLAUDE_CONFIG_DIR",
-      "required": false,
+      "required": true,
       "secret": false
     },
     {
       "description": "Dedicated Codex configuration root; its contents remain host-only.",
       "name": "CODEX_HOME",
-      "required": false,
+      "required": true,
       "secret": false
     },
     {
@@ -68,6 +68,24 @@
       "secret": false
     },
     {
+      "description": "Path to a per-request external-transmission approval receipt; the receipt contains no credential values.",
+      "name": "EQUIVALENCE_APPROVAL_RECEIPT_PATH",
+      "required": true,
+      "secret": false
+    },
+    {
+      "description": "Path to the digest-bound technical-equivalence request approved for execution.",
+      "name": "EQUIVALENCE_REQUEST_PATH",
+      "required": true,
+      "secret": false
+    },
+    {
+      "description": "Broker-owned file sink for technical-equivalence prompts, reports, and receipts.",
+      "name": "EQUIVALENCE_RUN_ROOT",
+      "required": true,
+      "secret": false
+    },
+    {
       "description": "Explicit local path to the skill-bettor target peer used by proof controls.",
       "name": "SKILL_BETTOR_PEER",
       "required": false,
@@ -77,6 +95,12 @@
       "description": "Additional broker-approved output roots for stealth-browser file sinks.",
       "name": "STEALTH_BROWSER_EXTRA_ALLOW",
       "required": false,
+      "secret": false
+    },
+    {
+      "description": "Absolute path to the separately versioned stealth-browser checkout.",
+      "name": "STEALTH_BROWSER_ROOT",
+      "required": true,
       "secret": false
     },
     {
