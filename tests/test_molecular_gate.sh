@@ -60,13 +60,24 @@ if git -C "$R" commit -q -F "$TMP/hollow.msg" 2>/dev/null; then
 fi
 [ "$(git -C "$R" rev-list --count HEAD)" = "1" ] || fail "hollow molecular commit exists"
 
-# 3) Protected gate surface + ordinary message → must fail.
+# 3) Large-loop maintenance of the protected gate surface has no slice to name,
+#    so an ordinary message must pass (ADR 0001 amendment).
 echo '# gate' > "$R/scripts/gates/g.py"
 git -C "$R" add scripts/gates/g.py
-if git -C "$R" commit -q -m "bad: ordinary message touching gate surface" 2>/dev/null; then
-  fail "protected-surface commit with ordinary message was accepted"
+git -C "$R" commit -q -m "good: large-loop gate maintenance" \
+  || fail "large-loop gate maintenance was wrongly forced to invent a slice"
+[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "large-loop gate commit missing"
+
+# 3b) A small-loop change touching the protected gate surface does own a slice;
+#     an ordinary message must fail and the commit must not exist.
+mkdir -p "$R/loop_wiki/some-loop"
+echo loop > "$R/loop_wiki/some-loop/run.sh"
+echo '# gate 2' > "$R/scripts/gates/g2.py"
+git -C "$R" add loop_wiki/some-loop/run.sh scripts/gates/g2.py
+if git -C "$R" commit -q -m "bad: small-loop gate change without lineage" 2>/dev/null; then
+  fail "small-loop protected-surface commit with ordinary message was accepted"
 fi
-[ "$(git -C "$R" rev-list --count HEAD)" = "1" ] || fail "protected-surface bad commit exists"
+[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "small-loop bad commit exists"
 
 # 4) Full molecular message on protected surface → must pass.
 cat > "$TMP/good.msg" <<'EOF'
@@ -87,7 +98,7 @@ docs/plan-package.yaml
   -> repo/
 EOF
 git -C "$R" commit -q -F "$TMP/good.msg" || fail "good molecular commit rejected"
-[ "$(git -C "$R" rev-list --count HEAD)" = "2" ] || fail "good molecular commit not created"
+[ "$(git -C "$R" rev-list --count HEAD)" = "3" ] || fail "good molecular commit not created"
 
 # 5) bun-absent negative control: FATAL 64, diagnostic names bun.
 printf 'any message\n' > "$TMP/any.msg"

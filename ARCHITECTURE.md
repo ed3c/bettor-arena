@@ -32,6 +32,9 @@ bettor-arena/
 │                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
 │                      #   目錄不存在=未 retarget,是缺席不是缺陷
+├── .runtime-env/      # runtime-env 的 consumer 投影(非密鑰儲存):bindings/ 固定來源 commit/tree+profile closure;
+│                      #   examples/ 是可重算 dotenv 範例;README.md 記顯式 sync/check 路徑。
+│                      #   pre-commit 只驗 staged 兩檔,禁連網/讀 sibling/自動同步
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
 ├── loop_wiki/
 │   └── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)
@@ -50,7 +53,7 @@ bettor-arena/
 │                      #   路徑是必要還是可選由**實驗**判定——丟棄式 worktree 拿掉該路徑再跑,看 exit 變不變,
 │                      #   不讀 fatal/warn 字面;未分類即 FATAL。比對面是三支證明收據的聯集,不只 macro
 ├── scripts/
-│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(三閘共用 repo_root/fixture 樣板)+allowlist 帳
+│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_runtime_env_binding.py(staged consumer 投影防漂移,零 sibling/網路)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(共用 repo_root/fixture 樣板)+allowlist 帳
 │   ├── delivery_status.py # 交付活狀態顯式審計(打網路,禁進 hook;--selftest 零網路驗渲染)
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)

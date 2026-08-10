@@ -1,0 +1,25 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "3cf24d42479dd4d258843b2f3db2c95f5ba7576a0225942528176b9e72c03a6e",
+  "profile": "bettor-arena-local",
+  "render": {
+    "format": "dotenv",
+    "path": ".runtime-env/examples/bettor-arena-local.env.example",
+    "sha256": "dd01d5527272bbe635a851631409543758c0fc56de2cc7d253c899814cd6801c"
+  },
+  "schema": "runtime-env/consumer-binding/v1",
+  "source": {
+    "commit": "88a0fe3005a27c65362211fda487fe931f547a62",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "e5d0a7e6b20904ad91f3ca956f3befee5bc3c533"
+  },
+  "variables": [
+    {
+      "default": "http://localhost:11434",
+      "description": "Ollama service root used by health checks and non-OpenAI-compatible clients.",
+      "name": "OLLAMA_URL",
+      "required": false,
+      "secret": false
+    }
+  ]
+}
