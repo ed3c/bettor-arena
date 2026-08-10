@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "131107ace96976e579015fce37e837fe17461a25",
+  "workflow_commit": "55a81e922fc9945b61506bcfbf70a007a0a2fc4e",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-131107ace969-dirty.json",
-    "ctg": "ctg-131107ace969-dirty.json",
-    "equivalence": "equivalence-131107ace969-dirty.json",
-    "harness": "harness-131107ace969-dirty.json",
-    "macro": "macro-131107ace969-dirty.json",
-    "micro": "micro-131107ace969-dirty.json",
-    "notebooklm": "notebooklm-131107ace969-dirty.json",
-    "openwiki": "openwiki-131107ace969-dirty.json",
-    "policy": "policy-131107ace969-dirty.json",
-    "workflow": "workflow-131107ace969-dirty.json"
+    "container": "container-55a81e922fc9.json",
+    "ctg": "ctg-55a81e922fc9.json",
+    "equivalence": "equivalence-55a81e922fc9.json",
+    "harness": "harness-55a81e922fc9.json",
+    "macro": "macro-55a81e922fc9.json",
+    "micro": "micro-55a81e922fc9.json",
+    "notebooklm": "notebooklm-55a81e922fc9.json",
+    "openwiki": "openwiki-55a81e922fc9.json",
+    "policy": "policy-55a81e922fc9.json",
+    "workflow": "workflow-55a81e922fc9.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "83eac7a8e78bed97817a5c834a32141596e43cf491a8df9ba5c8aa88c051ea8a",
+  "workflow_digest": "700a26fe3e652f3a04709edf20cebdcb09d707c4e0e0f80d9414af4a6d9bdc93",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -136,7 +136,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-131107ace96976e579015fce37e837fe17461a25.json": {
+    "data/receipts/post-commit-55a81e922fc9945b61506bcfbf70a007a0a2fc4e.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
