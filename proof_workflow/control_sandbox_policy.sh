@@ -47,7 +47,17 @@ expect() { # name got want
 # then fell through to the unknown branch and reported a DENIED destination as
 # reachable — a false alarm on a security check is as corrosive as a missed one.
 PROBE='
-probe() { code=$(curl -s -m 8 -o /dev/null -w "%{http_code}" "$2" 2>/dev/null); echo "$1=${code:-000}"; }
+# curl s own exit code travels beside the HTTP status, separated so the two can
+# never be glued (an earlier version concatenated them into "000000" and read a
+# denied destination as reachable). Without the exit code, an ABSENT curl gives
+# an empty status, which became 000, which scored as "denied" — a security
+# control passing because its instrument was missing. `nocurl` is its own token
+# so that case can never reach the denial branch at all.
+probe() {
+  command -v curl >/dev/null 2>&1 || { echo "$1=nocurl/0"; return; }
+  code=$(curl -s -m 8 -o /dev/null -w "%{http_code}" "$2" 2>/dev/null); rc=$?
+  echo "$1=${code:-000}/$rc"
+}
 probe unlisted_host https://example.com/
 probe forgejo http://host.docker.internal:3000/
 probe gateway https://host.docker.internal:8080/
@@ -56,7 +66,14 @@ capture policy-probes -- sh -c "openshell sandbox create --name policy-probe --n
   --policy '$POLICY' --from '$ROOT/loopctl/Dockerfile' --upload '$ROOT' -- sh -c '$PROBE'"
 PROBE_OUT="$RUNDIR/streams/$CAPTURE_SEQ-policy-probes.out"
 
-read_probe() { sed -nE "s/^$1=([0-9]{3}).*/\1/p" "$PROBE_OUT" | head -1; }
+# Two distinct captures, never one string split later: the token before the slash
+# is the HTTP status (or `nocurl`), the one after is curl's own exit.
+#
+# Delimiter `#`, not `|`: the pattern needs `|` for the alternation, and using it
+# as the delimiter too is how an extraction dies silently and hands back an empty
+# string — which compares equal to anything and is already a row in the Harness.
+read_probe() { sed -nE "s#^$1=([0-9]{3}|nocurl)/[0-9]+\$#\1#p" "$PROBE_OUT" | head -1; }
+read_rc()    { sed -nE "s#^$1=([0-9]{3}|nocurl)/([0-9]+)\$#\2#p" "$PROBE_OUT" | head -1; }
 
 UNLISTED=$(read_probe unlisted_host)
 FORGEJO=$(read_probe forgejo)
@@ -73,6 +90,12 @@ else
     name=${pair%%:*}
     code=${pair#*:}
     case "$code" in
+      nocurl)
+        # FATAL, never "denied". With no curl in the sandbox every probe returns
+        # nothing, every nothing used to become 000, and 000 scored as a denial —
+        # so this control passed hardest exactly when it was measuring least.
+        echo "control FATAL: no curl inside the sandbox, so $name was never dialled. A missing instrument is not a denial, and scoring it as one would make this security control pass by measuring nothing." >&2
+        exit 64 ;;
       000|4*|5*) expect "$name-denied" denied denied ;;
       "") echo "  [note] $name produced no reading this run — NOT exercised" ;;
       *) echo "  [RED]  $name-denied — reachable with HTTP $code; an external caller can touch this machine" >&2; RED=1 ;;

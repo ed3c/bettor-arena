@@ -82,6 +82,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | 想「加一個省 token 的模式」時 | **先看 `reduce` 這一臂為什麼長這樣。** 它與 `off` 旗標**逐位元組相同**，只多一個 `.claudeignore`——因為 `on` 貴的原因是換掉工具面→cached prefix 變了→整個重寫。往 `reduce` 加任何一個旗標，它就變成第二個 `on`，而報表還是寫 `reduce`。selftest 有一條專門把這個等式釘住，並且驗過會紅 |
 | 直接執行的三臂量測沒有分離 | n=3 時**組內散布壓過組間差異**（off 的 cost 跨 0.135–0.466）。唯一看得見的形狀是 `on` 從沒有便宜的那一次，而 off／reduce 各有一次 cache-write 只有 ~3000——與 prefix 理論一致，**但一致不等於成立**。要下結論得加 n，或換一個真的會誘發貪婪探勘的任務 |
 | 前置說「provider 不存在」，但它明明在 | `openshell provider list 2>/dev/null \| grep -q` 把**「問不到」與「答案是否」折成同一件事**——gateway 連不上時，它印出一句自信的「去建一個 provider」，而那個 provider 一直都在。三種結局要分開：問不到（64，具名對方的抱怨第一行）／問到了且沒有／問到了且有。**同一個形狀在 `control_sandbox_policy.sh` 也有一份** |
+| 安全對照組在儀器缺席時**通過最用力** | 探針 `code=$(curl … 2>/dev/null)`，curl 不存在 → 空 → `${code:-000}` → `000` 判成 denied → PASS。**掃同類時才發現的**：修完 provider 那條後掃「失敗被消音再當布林用」的形狀，這一個在安全檢查上。curl 的 exit code 與 HTTP 狀態分開帶（`nocurl/0`），缺席走自己的 FATAL 分支 |
 | skills bundle 上傳了但 agent 看不到 | 目標路徑寫錯**與完全沒上傳長得一模一樣**（同樣的數字、同樣的沉默）。路徑從 binary 量出來（`.claude/skills` ／ `.codex/skills`），並由**同一個 resolver 函式**供給執行與 selftest——第一版在測試裡重寫字面值，那是同義反覆，對任何實作都會通過 |
 | 新加的守衛「綠」，但它其實什麼都沒查 | 把 resolver 樁成回空集合 → 掃描報 0 個不符、exit 0。**「解析不到卻回傳成功」與「查遍了沒問題」長得一模一樣** → 空集合改成 FATAL(64)，並用樁把這件事驗進 selftest |
 | 上一列那個修法**弄紅了另一個檢查** | 環境變數集中設好後，wrapper 跳過自己的選擇邏輯、不再印公告，而對照組正在斷言那句話。**收斂共用設定會讓「驗這個設定本身」的檢查失去對象** → 那一格改用 `env -u` 問 |
