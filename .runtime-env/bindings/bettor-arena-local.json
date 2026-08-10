@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "1d7ce263d96a48cd896a4d72ec6ea36f741b5dd324209b9c2c7a7abfadafac6f",
+  "content_sha256": "5d0f2f9fb62344d2f43d2461a9912a275891d90611abacc95f7a49c0d11e4d4a",
   "profile": "bettor-arena-runtime-local",
   "projections": {
     "policies": [
@@ -12,13 +12,13 @@
   "render": {
     "format": "dotenv",
     "path": ".runtime-env/examples/bettor-arena-local.env.example",
-    "sha256": "0afe74e73822cf13c4f60742e103e70197304d7a9c1442619d785b70ef5ab7fc"
+    "sha256": "f0f89b3a31600038b7b788a2069edaa22c67c47a301f51d03ffeecb59623f71a"
   },
   "schema": "runtime-env/consumer-binding/v1",
   "source": {
-    "commit": "aaa252b1551eb998ba7f31d62f90e8b8c35145c3",
+    "commit": "9b52b2284d4dfce2fc2618f327d380c67c72ed80",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "f85ec0ed18bc8fe2c0801108231ebf41e0a96f5a"
+    "tree": "ac626fd202d412e133040be6b624dd9b9cd48804"
   },
   "variables": [
     {
@@ -83,6 +83,32 @@
       "description": "Broker-owned file sink for technical-equivalence prompts, reports, and receipts.",
       "name": "EQUIVALENCE_RUN_ROOT",
       "required": true,
+      "secret": false
+    },
+    {
+      "default": "claude-code",
+      "description": "OpenShell provider name for the isolated Claude subscription carrier.",
+      "name": "OPENSHELL_CLAUDE_PROVIDER",
+      "required": false,
+      "secret": false
+    },
+    {
+      "default": "codex-runtime-env",
+      "description": "OpenShell provider name for the isolated Codex ChatGPT carrier.",
+      "name": "OPENSHELL_CODEX_PROVIDER",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Optional stored OpenShell gateway name selected by the host broker.",
+      "name": "OPENSHELL_GATEWAY",
+      "required": false,
+      "secret": false
+    },
+    {
+      "description": "Optional explicit OpenShell gateway endpoint selected by the host broker.",
+      "name": "OPENSHELL_GATEWAY_ENDPOINT",
+      "required": false,
       "secret": false
     },
     {

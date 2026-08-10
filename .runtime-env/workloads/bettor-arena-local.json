@@ -1,11 +1,11 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "4eeff7aff4678478eec3bd5a47dc6d8bac98a498a54098789aad0a235a0787c4",
+  "content_sha256": "437568773c7af07c70eac4ca5902644e5b8381f8c55ed59dafb97d6d784ab30f",
   "schema": "runtime-env/consumer-workload/v1",
   "source": {
-    "commit": "aaa252b1551eb998ba7f31d62f90e8b8c35145c3",
+    "commit": "9b52b2284d4dfce2fc2618f327d380c67c72ed80",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "f85ec0ed18bc8fe2c0801108231ebf41e0a96f5a"
+    "tree": "ac626fd202d412e133040be6b624dd9b9cd48804"
   },
   "workload": {
     "agent_secret_access": "denied",

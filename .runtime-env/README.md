@@ -13,6 +13,13 @@
 | `../scripts/runtime-env/check-stealth-browser.sh` | 只接受乾淨、完整、獨立版控的 stealth-browser checkout，跑 CLI＋DR CDP／HTML／file-sink 最小閉包；不冒充 owner full-suite |
 | `../scripts/runtime-env/run-equivalence-live.py` | 驗 request 與 0600、短效、digest-bound Gemini 外送核准後才啟動 live adapter |
 
+OpenShell 的一次性 Codex provider bootstrap 只住在上游
+`runtime-env/scripts/bootstrap-openshell-provider.py`，收據放在 host-only
+`~/.local/state/runtime-env/receipts/openshell/<provider>.json`。本 repo 與
+pre-commit 都不讀 Codex `auth.json`、不建立 provider；日常沙盒只使用
+`OPENSHELL_CODEX_PROVIDER`／`OPENSHELL_CLAUDE_PROVIDER` 名稱。這與兩個 native
+policy 是三個獨立面，任一面更新都不會暗改另外兩面。
+
 本機真值只放 `<runtime-env-checkout>/.env`（本機 canonical 實體目前位於
 `runtime-env` checkout 根；0600、untracked）。本 repo 只收
 `examples/bettor-arena-local.env.example` 的空值／安全預設。既有 macOS Keychain
