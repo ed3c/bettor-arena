@@ -157,19 +157,21 @@ else
   echo "         create it with: openshell provider create --name $PROVIDER --type generic --credential CLAUDE_CODE_OAUTH_TOKEN"
 fi
 
-# --- the other writing role, which pays a different price -------------------
-# codex cannot use the placeholder above — it parses its credential as a JWT
-# before any request — so its session enters the sandbox as a real value and the
-# policy is the only thing bounding what can spend it. Two policy properties ride
-# on this and nothing else covers them: that chatgpt.com is admitted at all (the
-# subscription backend is NOT api.openai.com), and that codex's binary identity
-# still matches after an image rebuild.
+# --- the other writing role, through a different placeholder mapping --------
+# Codex's ordinary auth.json path parses JWTs locally, so the synchronized custom
+# model provider bypasses that path: access/account placeholders go directly into
+# HTTPS headers and the proxy substitutes them. This control covers both that
+# chatgpt.com is admitted and that codex's binary identity still matches.
 #
 # Opt-in, like CONTROL_OPENWIKI_FULL: it costs an image build, an upload and a
 # real model turn, which is minutes and tokens on every `policy test`. Default is
 # NOT EXERCISED with the command named — a silent skip would read as covered.
 if [ "${CONTROL_CODEX_TURN:-0}" = 1 ]; then
-  if [ -f "${CODEX_AUTH_FILE:-$HOME/.codex/auth.json}" ]; then
+  CODEX_PROVIDER=${POLICY_CODEX_PROVIDER:-${OPENSHELL_CODEX_PROVIDER:-codex-runtime-env}}
+  if printf '%s\n' "$POLICY_PROVIDERS" | awk -v wanted="$CODEX_PROVIDER" '
+    $1 == wanted && $2 == "codex" { found = 1 }
+    END { exit(found ? 0 : 1) }
+  '; then
     capture codex-write-turn -- sh "$ROOT/loopctl/codex-sandbox.sh" \
       "create a file named CONTROL_CODEX_TURN.txt whose only content is the word ok, then stop"
     CODEX_RC=$?
@@ -178,7 +180,7 @@ if [ "${CONTROL_CODEX_TURN:-0}" = 1 ]; then
     grep -q "^changed files: [1-9]" "$CODEX_OUT" && WROTE=yes || WROTE=no
     expect "codex-turn-actually-wrote-a-file" "$WROTE" yes
   else
-    echo "  [note] no codex session on this host — the codex write turn is NOT EXERCISED, not passed"
+    echo "  [note] no codex provider '$CODEX_PROVIDER' on this gateway — the codex write turn is NOT EXERCISED, not passed"
   fi
 else
   echo "  [note] the codex write turn is NOT EXERCISED (costs a build + a real turn); run with CONTROL_CODEX_TURN=1 to include it"

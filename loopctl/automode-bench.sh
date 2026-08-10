@@ -63,6 +63,8 @@ done
 
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
   echo "FATAL: not inside a git work tree" >&2; exit 64; }
+CODEX_POLICY="$ROOT/.runtime-env/policies/codex-openshell-chatgpt-placeholder.json"
+CODEX_RENDERER="$ROOT/loopctl/codex-openshell-config.py"
 
 # The task walks several proof scripts to find one declared exclusion, so a
 # greedy strategy has somewhere to be greedy. The answer is one path, which makes
@@ -207,7 +209,10 @@ if [ "$VENUE" = sandbox ]; then
   command -v openshell >/dev/null 2>&1 || { echo "FATAL: openshell is not on PATH (needed by --venue sandbox; --venue direct does not use it)" >&2; exit 64; }
 fi
 case "$VENUE" in sandbox|direct) ;; *) echo "FATAL: --venue must be sandbox or direct" >&2; exit 64 ;; esac
-CODEX_AUTH=""
+CODEX_CONFIG_B64=""
+CODEX_PROVIDER=${OPENSHELL_CODEX_PROVIDER:-codex-runtime-env}
+CODEX_MODEL=${CODEX_SANDBOX_MODEL:-gpt-5.6-sol}
+CLAUDE_PROVIDER=${OPENSHELL_CLAUDE_PROVIDER:-claude-code}
 # Credentials are a SANDBOX concern only. Run directly, both CLIs use the host's
 # own session — which is also the honest difference between the two venues, and
 # the reason the direct numbers are not interchangeable with the sandbox ones.
@@ -228,26 +233,35 @@ case "$VENUE:$PLATFORM" in
       printf '%s\n' "$PROVIDERS" | head -1 >&2
       exit 64
     fi
-    printf '%s\n' "$PROVIDERS" | grep -q "^claude-code " || {
-      echo "FATAL: the gateway answered, and it has no 'claude-code' provider — the sandbox would have no credential." >&2
-      echo "       openshell provider create --name claude-code --type generic --credential CLAUDE_CODE_OAUTH_TOKEN" >&2
+    printf '%s\n' "$PROVIDERS" | awk -v wanted="$CLAUDE_PROVIDER" '
+      $1 == wanted { found = 1 }
+      END { exit(found ? 0 : 1) }
+    ' || {
+      echo "FATAL: the gateway answered, and it has no '$CLAUDE_PROVIDER' provider — the sandbox would have no credential." >&2
       exit 64; }
     ;;
   sandbox:codex)
-    # codex cannot use the provider placeholder — it parses its credential as a
-    # JWT before any request — so the session goes in as a real value. Same trade
-    # as codex-sandbox.sh, and the same reason it is stated rather than buried.
-    CODEX_AUTH=$(python3 - "${CODEX_AUTH_FILE:-$HOME/.codex/auth.json}" <<'PY'
-import json, sys
-try:
-    d = json.load(open(sys.argv[1], encoding="utf-8"))
-except OSError:
-    sys.exit("FATAL: no codex session at %s — run `codex login` on the host first" % sys.argv[1])
-if d.get("auth_mode") != "chatgpt":
-    sys.exit("FATAL: codex auth_mode is %r, not 'chatgpt'" % d.get("auth_mode"))
-print(json.dumps(d, separators=(",", ":")))
-PY
-) || exit 64
+    case "$CODEX_MODEL" in
+      ''|*[!A-Za-z0-9._:/-]*)
+        echo "FATAL: CODEX_SANDBOX_MODEL contains unsupported characters" >&2
+        exit 64 ;;
+    esac
+    CODEX_CONFIG=$(python3 "$CODEX_RENDERER" --policy "$CODEX_POLICY") || exit $?
+    [ -n "$CODEX_CONFIG" ] || { echo "FATAL: rendered Codex provider config is empty" >&2; exit 64; }
+    CODEX_CONFIG_B64=$(printf '%s' "$CODEX_CONFIG" | base64 | tr -d '\n')
+    PROVIDERS=$(openshell provider list 2>&1); PROVIDERS_RC=$?
+    if [ "$PROVIDERS_RC" -ne 0 ]; then
+      echo "FATAL: could not ask the gateway which providers exist (exit $PROVIDERS_RC) — this is NOT 'the provider is missing'" >&2
+      printf '%s\n' "$PROVIDERS" | head -1 >&2
+      exit 64
+    fi
+    printf '%s\n' "$PROVIDERS" | awk -v wanted="$CODEX_PROVIDER" '
+      $1 == wanted && $2 == "codex" { found = 1 }
+      END { exit(found ? 0 : 1) }
+    ' || {
+      echo "FATAL: the gateway answered, but codex provider '$CODEX_PROVIDER' is absent" >&2
+      exit 64
+    }
     ;;
   *) echo "FATAL: --platform must be claude or codex (got '$PLATFORM')" >&2; exit 64 ;;
 esac
@@ -293,7 +307,7 @@ if [ "$DRY" -eq 1 ]; then
   echo "  platform  $PLATFORM      venue $VENUE      arms $ARM      runs per arm: $RUNS"
   case "$VENUE" in
     direct) echo "            direct = host CLI, host session, cwd = a DISPOSABLE worktree at HEAD" ;;
-    sandbox) echo "            sandbox = OpenShell, policy-governed egress, credentials injected" ;;
+    sandbox) echo "            sandbox = OpenShell, policy-governed egress, provider placeholders only" ;;
   esac
   echo "  task      \"$(printf '%s' "$TASK" | cut -c1-58)...\""
   echo "  graded on the answer containing: $EXPECT"
@@ -341,7 +355,7 @@ cd '"$WORK"' || exit 64
       reduce) flags="$CLAUDE_REDUCE_FLAGS"; write_ignore=1 ;;
       *) echo "FATAL: unknown arm $arm" >&2; exit 64 ;;
     esac
-    CRED_ARGS="--provider claude-code"
+    CRED_ARGS="--provider $CLAUDE_PROVIDER"
     # base64, because the gateway refuses an --env value containing a newline
     # ("spec.environment value ... contains newline or carriage return
     # characters") — and it refused for BOTH arms on the first attempt, since the
@@ -371,16 +385,19 @@ tar cf /sandbox/bench.tar -C /sandbox $(cd /sandbox && ls run-*.json run-*.err 2
       reduce) flags="$CODEX_OFF_FLAGS $CODEX_REDUCE_ONLY" ;;
       *) echo "FATAL: unknown arm $arm" >&2; exit 64 ;;
     esac
-    ENV_ARGS="--env CODEX_AUTH_JSON=$CODEX_AUTH"
+    CRED_ARGS="--provider $CODEX_PROVIDER"
+    ENV_ARGS="--env CODEX_CONFIG_B64=$CODEX_CONFIG_B64 --env CODEX_SANDBOX_MODEL=$CODEX_MODEL"
     inner='
 set -u
 mkdir -p "$HOME/.codex"
-printenv CODEX_AUTH_JSON >"$HOME/.codex/auth.json"
-chmod 600 "$HOME/.codex/auth.json"
+printf "%s" "$CODEX_CONFIG_B64" | base64 -d >"$HOME/.codex/config.toml"
+chmod 600 "$HOME/.codex/config.toml"
 cd '"$WORK"' || exit 64
 i=1
 while [ "$i" -le '"$RUNS"' ]; do
-  codex exec --skip-git-repo-check --json '"$flags"' "$BENCH_TASK" >"/sandbox/run-$i.jsonl" 2>"/sandbox/run-$i.err" || true
+  codex exec --skip-git-repo-check --json '"$flags"' \
+    -c "model=\"$CODEX_SANDBOX_MODEL\"" "$BENCH_TASK" \
+    >"/sandbox/run-$i.jsonl" 2>"/sandbox/run-$i.err" || true
   # Abort the arm on the first empty run instead of repeating it N times. A
   # rejected flag produced three identical empty results and three wasted turns
   # before anyone read the .err sitting next to them; one probe is enough to

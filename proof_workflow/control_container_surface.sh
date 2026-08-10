@@ -195,7 +195,7 @@ PY
       --entrypoint sh "$IMAGE" -c 'timeout 45 claude -p hi 2>&1'
     PH_OUT="$RUNDIR/streams/$CAPTURE_SEQ-placeholder-token-not-refused.out"
     if grep -qiE "$REFUSAL" "$PH_OUT"; then
-      echo "  [RED]  placeholder-token-is-not-refused-locally — the client rejected the placeholder before any request; the provider-placeholder credential model is dead as written and the sandbox needs a real token in it, which is the thing this design exists to avoid" >&2
+      echo "  [RED]  placeholder-token-is-not-refused-locally — the client rejected the placeholder before any request; this provider contract is unsupported as written, so stop rather than injecting a real token into the sandbox" >&2
       head -c 400 "$PH_OUT" >&2
       RED=1
     else

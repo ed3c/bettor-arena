@@ -33,11 +33,13 @@ WORKLOAD_REL = f".runtime-env/workloads/{BINDING_ID}.json"
 POLICY_RELS = (
     ".runtime-env/policies/claude-code-native-isolation.json",
     ".runtime-env/policies/codex-cli-native-isolation.json",
+    ".runtime-env/policies/codex-openshell-chatgpt-placeholder.json",
 )
 SOURCE_REPOSITORY = "https://github.com/ed3c/runtime-env"
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 VARIABLE_NAME = re.compile(r"^[A-Z][A-Z0-9_]*$")
+RUNTIME_SCOPES = {"local-only", "cloud-runtime", "portable"}
 
 
 def _sha256(content: str) -> str:
@@ -189,12 +191,19 @@ def validate(
     allowed_variable = {
         "name",
         "required",
+        "runtime_scope",
         "secret",
         "description",
         "account_url",
         "default",
     }
-    required_variable = {"name", "required", "secret", "description"}
+    required_variable = {
+        "name",
+        "required",
+        "runtime_scope",
+        "secret",
+        "description",
+    }
     for position, variable in enumerate(variables):
         label = f"variables[{position}]"
         if not isinstance(variable, dict):
@@ -216,6 +225,8 @@ def validate(
             failures.append(f"{label}.required must be boolean")
         if not isinstance(variable.get("secret"), bool):
             failures.append(f"{label}.secret must be boolean")
+        if variable.get("runtime_scope") not in RUNTIME_SCOPES:
+            failures.append(f"{label}.runtime_scope is invalid")
         if (
             not isinstance(variable.get("description"), str)
             or not variable["description"].strip()
@@ -284,6 +295,7 @@ def validate(
     expected_policies = {
         POLICY_RELS[0]: ("claude-code-native-isolation", "claude-code"),
         POLICY_RELS[1]: ("codex-cli-native-isolation", "codex-cli"),
+        POLICY_RELS[2]: ("codex-openshell-chatgpt-placeholder", "codex-cli"),
     }
     for relative, (policy_id, carrier) in expected_policies.items():
         policy_failures, projection = _validate_projection(
@@ -338,6 +350,7 @@ def _fixture() -> tuple[str, str, dict[str, str]]:
             "description": "Ollama service root.",
             "name": "OLLAMA_URL",
             "required": False,
+            "runtime_scope": "local-only",
             "secret": False,
         }
     ]
@@ -392,6 +405,17 @@ def _fixture() -> tuple[str, str, dict[str, str]]:
                 },
             }
         ),
+        POLICY_RELS[2]: _projection(
+            {
+                "binding": BINDING_ID,
+                "schema": "runtime-env/consumer-policy/v1",
+                "source": source,
+                "policy": {
+                    "id": "codex-openshell-chatgpt-placeholder",
+                    "carrier": "codex-cli",
+                },
+            }
+        ),
     }
     return json.dumps(document, indent=2, sort_keys=True) + "\n", example, projections
 
@@ -405,6 +429,13 @@ def _selftest() -> int:
     secret_default["content_sha256"] = _sha256(
         _canonical_json(
             {k: v for k, v in secret_default.items() if k != "content_sha256"}
+        )
+    )
+    missing_scope = json.loads(good_binding)
+    del missing_scope["variables"][0]["runtime_scope"]
+    missing_scope["content_sha256"] = _sha256(
+        _canonical_json(
+            {k: v for k, v in missing_scope.items() if k != "content_sha256"}
         )
     )
     traversal = json.loads(good_binding)
@@ -440,6 +471,13 @@ def _selftest() -> int:
         (
             "secret-default",
             json.dumps(secret_default),
+            good_example,
+            good_projections,
+            True,
+        ),
+        (
+            "missing-runtime-scope",
+            json.dumps(missing_scope),
             good_example,
             good_projections,
             True,

@@ -53,8 +53,14 @@ prove_harness upload-boundary .gitignore \
 prove_harness skills-bundle loopctl/skills-bundle.sh \
   "shared-skills canonical -> a bundle named by commit -> <sandbox>/.claude|.codex/skills; a dirty canonical is refused, and the explicit override stamps -dirty so the id can never read as a named commit" \
   -- sh loopctl/skills-bundle.sh --selftest
+prove_harness codex-provider-policy .runtime-env/policies/codex-openshell-chatgpt-placeholder.json \
+  "pinned runtime-env transport contract -> exact ChatGPT endpoint, placeholder env names, HTTPS-only model provider, and sandbox auth.json prohibition"
+prove_harness codex-provider-config loopctl/codex-openshell-config.py \
+  "synchronized transport policy -> validated deterministic config.toml with opaque access/account placeholders and no credential values" \
+  -- python3 loopctl/codex-openshell-config.py \
+       --policy .runtime-env/policies/codex-openshell-chatgpt-placeholder.json --selftest
 prove_harness codex-writing-role loopctl/codex-sandbox.sh \
-  "host ChatGPT session -> --env -> ~/.codex/auth.json inside an OpenShell sandbox -> one write turn -> changed files back out; its selftest gives each way of having no usable session its own exit" \
+  "OpenShell codex provider -> opaque access/account placeholders -> custom HTTPS model provider -> one write turn -> changed files back out; auth.json never enters the sandbox" \
   -- sh loopctl/codex-sandbox.sh --selftest
 
 # The paired auto-permission experiment. It has no control group of its own, and

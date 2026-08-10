@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "bad4dc81f23fb8516fbfe73cbb18bf9dea645a05d10638042f73d5d998002ca8",
+  "content_sha256": "d55503ce5bda86a178dfa6227bc8f222449e4065e01fee4983bd33ede2b8cd69",
   "policy": {
     "carrier": "codex-cli",
     "config_home_env": "CODEX_HOME",
@@ -29,8 +29,8 @@
   },
   "schema": "runtime-env/consumer-policy/v1",
   "source": {
-    "commit": "9b52b2284d4dfce2fc2618f327d380c67c72ed80",
+    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "ac626fd202d412e133040be6b624dd9b9cd48804"
+    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
   }
 }

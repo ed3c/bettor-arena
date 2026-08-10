@@ -59,7 +59,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 | `mcp_tools.py` / `mcp_server.py` / `result_json.py` | contract 生成的 MCP 工具面；`DENIED_TOOLS` 帶理由 |
 | `Dockerfile` / `container-run.sh` / `container_preflight.sh` | 映像、runtime 選擇、**一個真 turn** 分辨 present 與 authenticated |
 | `sandbox-policy.yaml` | deny-by-default 出口 ＋ binary 綁定 |
-| `codex-sandbox.sh` | codex 寫入角色（**真憑證進沙盒**，比 claude 那條弱，header 有寫） |
+| `codex-openshell-config.py` / `codex-sandbox.sh` | 從 runtime-env projection 渲染 Codex custom provider；sandbox 只持 opaque placeholders，不持 `auth.json` |
 | `automode-bench.sh` / `automode_report.py` | 三臂自動許可實驗（`off`／`on`／`reduce`）× 兩個 venue（`sandbox`／`direct`）；跑之前先讀報表的判準 |
 | `skills-bundle.sh` | 共用 skills 以**具名 commit** 進沙盒；canonical 髒即拒絕，覆寫出口把 id 蓋成 `-dirty` |
 | `evolve-technical-equivalence-research/` | hash-bound 技術觀點→實作等價物；獨立 control 在 disposable HEAD 做消融與 planted defects；offline/live/judge/Human 四態分記，sync bundle 停在人閘 |
@@ -92,6 +92,7 @@ sh loopctl/loopctl.sh workflow lock       # 由收據重建 manifest（先 git a
 - **`workflow.lock` 不入任何證明**（循環）；它的完整性來自「可重建」。
 - **`--upload` 沙盒沒有 `.git`**，所以證明與 replay 不能住在那裡；bind-mount 用來證明，
   upload 沙盒用來跑 agent turn。這條分工是硬的。
-- **codex 的憑證比 claude 弱且不可修**：它在任何請求前把憑證當 JWT 解析，佔位符當場死在本地，
-  所以真 session 必須進沙盒。**不要把兩條路當成同一級。**
+- **codex 的 `auth.json` 路徑不能吃 placeholder**，但這不是整個 client 的限制：custom model provider
+  會把 placeholder 直接放進 HTTPS header。若有人又把真 session 放回沙盒，`tests/test_codex_openshell_placeholder.sh`
+  與 runtime-env policy 必須立刻紅。
 - **死鎖出口**：機制自己壞掉時，commit message 寫 `Workflow-Lineage-Override: <理由>`，理由必填。

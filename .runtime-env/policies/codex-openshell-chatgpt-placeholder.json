@@ -1,0 +1,44 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "942fe03298abc032bad6a925021884d7c6b261b15ccf319238bb6437ed5cb8e8",
+  "policy": {
+    "carrier": "codex-cli",
+    "config_home_env": "CODEX_HOME",
+    "external_requirements": [
+      "Attach a typed OpenShell codex provider; CODEX_AUTH_ACCESS_TOKEN and CODEX_AUTH_ACCOUNT_ID inside the sandbox must be opaque openshell:resolve:env placeholders, never credential values.",
+      "Do not copy, upload, mount, reconstruct, or read ~/.codex/auth.json inside the sandbox.",
+      "Restrict HTTPS egress to chatgpt.com and bind that endpoint to the admitted Codex executable; the proxy must inspect the request so it can replace placeholders.",
+      "Render this provider block into a disposable sandbox CODEX_HOME; keep the host Codex native policy and host login configuration separate."
+    ],
+    "forbidden_environment": [
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_OAUTH_TOKEN",
+      "CLAUDE_CONFIG_DIR",
+      "CODEX_API_KEY",
+      "CODEX_AUTH_JSON",
+      "OPENAI_API_KEY"
+    ],
+    "id": "codex-openshell-chatgpt-placeholder",
+    "receipt_commands": [
+      "codex exec --skip-git-repo-check -s read-only -c approval_policy=never -c model_provider=openshell_chatgpt <bounded-canary>"
+    ],
+    "required_settings": {
+      "model_provider": "openshell_chatgpt",
+      "model_providers.openshell_chatgpt.base_url": "https://chatgpt.com/backend-api/codex",
+      "model_providers.openshell_chatgpt.env_http_headers.ChatGPT-Account-ID": "CODEX_AUTH_ACCOUNT_ID",
+      "model_providers.openshell_chatgpt.env_key": "CODEX_AUTH_ACCESS_TOKEN",
+      "model_providers.openshell_chatgpt.requires_openai_auth": false,
+      "model_providers.openshell_chatgpt.supports_websockets": false,
+      "model_providers.openshell_chatgpt.wire_api": "responses"
+    },
+    "schema": "runtime-env/carrier-policy/v1",
+    "settings_file": "config.toml",
+    "summary": "Codex ChatGPT transport through OpenShell opaque placeholders without copying auth.json into the sandbox."
+  },
+  "schema": "runtime-env/consumer-policy/v1",
+  "source": {
+    "commit": "a252ec8d79cdf873de7e267d480f908c3939fd4f",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "de8839c4c61b5d1ddbab175e266bdee782275730"
+  }
+}
