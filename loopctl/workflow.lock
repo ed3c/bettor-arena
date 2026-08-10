@@ -1,18 +1,18 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "24510a4633effe38e02b70f564d7ea1b5729c43b",
+  "workflow_commit": "f45a8b79fb2dbd63ac1076d72e312792c862086a",
   "workflow_tags": [],
   "built_from": {
-    "container": "container-24510a4633ef-dirty.json",
-    "ctg": "ctg-24510a4633ef-dirty.json",
-    "equivalence": "equivalence-24510a4633ef-dirty.json",
-    "harness": "harness-24510a4633ef-dirty.json",
-    "macro": "macro-24510a4633ef-dirty.json",
-    "micro": "micro-24510a4633ef-dirty.json",
-    "notebooklm": "notebooklm-24510a4633ef-dirty.json",
-    "openwiki": "openwiki-24510a4633ef-dirty.json",
-    "policy": "policy-24510a4633ef-dirty.json",
-    "workflow": "workflow-24510a4633ef-dirty.json"
+    "container": "container-f45a8b79fb2d-dirty.json",
+    "ctg": "ctg-f45a8b79fb2d-dirty.json",
+    "equivalence": "equivalence-f45a8b79fb2d-dirty.json",
+    "harness": "harness-f45a8b79fb2d-dirty.json",
+    "macro": "macro-f45a8b79fb2d-dirty.json",
+    "micro": "micro-f45a8b79fb2d-dirty.json",
+    "notebooklm": "notebooklm-f45a8b79fb2d-dirty.json",
+    "openwiki": "openwiki-f45a8b79fb2d-dirty.json",
+    "policy": "policy-f45a8b79fb2d-dirty.json",
+    "workflow": "workflow-f45a8b79fb2d-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -20,7 +20,7 @@
     "harness": 123,
     "optional": 1
   },
-  "workflow_digest": "aa1e55e712431be3ed444446b142f7f1d03cae45c2fd1de104ae40d1971e6512",
+  "workflow_digest": "f3db3d924a6f4a7c8bd9fc28815d2f8d9e9339cc4955040d442f92c86def24c2",
   "files": {
     ".agents/skills/notebooklm-workflow/SKILL.md": {
       "sha256": "82ae3cd978860905485065b8a611e22c5c02f6e911abb946ff9722eecea5638d",
@@ -129,14 +129,14 @@
       ]
     },
     "bootstrap.sh": {
-      "sha256": "27e1f14705aae3d759839cabc6494bc0ea3e95fb50e0fc461ce756665a584130",
+      "sha256": "32b6b71a6a6fbd806fb0e5c6bccc0f5328e500362380cbc2aa5422d8a4e9630b",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
         "macro"
       ]
     },
-    "data/receipts/post-commit-24510a4633effe38e02b70f564d7ea1b5729c43b.json": {
+    "data/receipts/post-commit-f45a8b79fb2dbd63ac1076d72e312792c862086a.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",

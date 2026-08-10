@@ -26,7 +26,26 @@ command -v bun >/dev/null 2>&1 || fatal "bun not on PATH (factory toolchain; ins
 # print OK while registering nothing — assert before configuring.
 [ -d "$ROOT/.githooks" ] && [ -n "$(ls -A "$ROOT/.githooks")" ] \
   || fatal ".githooks/ missing or empty — hooksPath would register nothing (restore the tracked hooks)"
-git -C "$ROOT" config core.hooksPath .githooks
+
+# Write ONLY when it is not already right, then assert either way.
+#
+# Two things wrong with the unconditional write it replaces. It touched
+# .git/config on every run — and that file is where core.hooksPath lives, so a
+# sandbox that protects it from tampering (correctly) turned this into
+# "could not lock config file" and failed the whole macro proof for a setting
+# that was already correct. And it never read the value back: the closing
+# "bootstrap OK: hooksPath=.githooks" was a success message with no assertion
+# behind it, printing the value it had just tried to set rather than the value
+# git actually holds.
+_want=.githooks
+_have=$(git -C "$ROOT" config --get core.hooksPath 2>/dev/null || true)
+if [ "$_have" != "$_want" ]; then
+  git -C "$ROOT" config core.hooksPath "$_want" \
+    || fatal "could not set core.hooksPath (currently '${_have:-unset}') — hooks would not run"
+fi
+_have=$(git -C "$ROOT" config --get core.hooksPath 2>/dev/null || true)
+[ "$_have" = "$_want" ] \
+  || fatal "core.hooksPath is '${_have:-unset}', not '$_want' — the hooks are not registered"
 
 python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
   || fatal "root-coupling gate selftest RED — do not trust its green"
