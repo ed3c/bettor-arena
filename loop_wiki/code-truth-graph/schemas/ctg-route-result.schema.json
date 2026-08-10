@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ctg-route-result@1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "observation_id",
+    "actual_runner",
+    "digests",
+    "refs_status",
+    "stages",
+    "artifacts",
+    "graph_summary",
+    "settlement_summary",
+    "next_edge",
+    "human_gate",
+    "overall",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "ctg-route-result@1.0.0"},
+    "packet_id": {"type": "string", "minLength": 1},
+    "observation_id": {"type": "string", "minLength": 1},
+    "actual_runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo_commit", "repo_tree", "surface_version", "runtime_ref", "runtime_sha256"],
+      "properties": {
+        "repo_commit": {"type": "string", "minLength": 1},
+        "repo_tree": {"type": "string", "minLength": 1},
+        "surface_version": {"type": "string"},
+        "runtime_ref": {"type": "string"},
+        "runtime_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "subject_snapshot", "domain_profile", "execution_argv", "delivery"],
+      "properties": {
+        "input": {"$ref": "#/$defs/sha256"},
+        "subject_snapshot": {"$ref": "#/$defs/sha256"},
+        "domain_profile": {"$ref": "#/$defs/sha256"},
+        "execution_argv": {"$ref": "#/$defs/sha256"},
+        "delivery": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "refs_status": {"enum": ["resolved", "stale"]},
+    "stages": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "state", "exit", "diagnostics", "artifacts"],
+        "properties": {
+          "name": {"enum": ["STATIC", "SANDBOX", "PROD"]},
+          "state": {"enum": ["PASSED", "FAILED", "BLOCKED", "NOT_EXERCISED", "NOT_REQUESTED"]},
+          "exit": {"type": ["integer", "null"]},
+          "diagnostics": {"type": "array", "items": {"type": "string"}},
+          "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}}
+        }
+      }
+    },
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "graph_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_count", "edge_count"],
+      "properties": {
+        "node_count": {"type": "integer", "minimum": 0},
+        "edge_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "settlement_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invariant_outcome", "evidence_availability"],
+      "properties": {
+        "invariant_outcome": {"enum": ["SETTLED", "REFUTED", "UNSETTLED", "UNCHALLENGED", "DEMO_ONLY"]},
+        "evidence_availability": {"type": "string"}
+      }
+    },
+    "next_edge": {"type": "string"},
+    "human_gate": {"const": "required_before_invariant_admit"},
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "exit"],
+      "properties": {
+        "state": {"enum": ["PASSED", "FAILED", "BLOCKED"]},
+        "exit": {"enum": [0, 2, 64]}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "artifact_ref", "sha256"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+#!/bin/sh
+# prepare-commit-msg — stamp workflow lineage into the message, automatically.
+#
+# The workflow is 60 files across five directories. "Did I touch the workflow?"
+# is not a question anyone answers reliably by eye, so this hook asks
+# loopctl/workflow.lock instead and writes the answer in:
+#
+#   Workflow-Lineage: <commit>              the workflow version this descends from
+#   Workflow-Version: <tag>                 only when that commit carries one
+#   Workflow-Touched: <kind>:<loop>:<path>  one per file, kind first
+#
+# Kind leads because "the workflow changed" cannot be acted on: harness means the
+# mechanism moved and the proofs need re-stamping, context means the document the
+# model reads moved, artifact means a terminus moved. Different repairs.
+#
+# Writes nothing when no workflow file is staged, so ordinary commits stay clean.
+# Never fails the commit: this hook's job is to make the record, and the gate at
+# commit time is what refuses an unstamped one — a message helper that can block
+# a commit is a message helper people disable.
+#
+# Idempotent: an existing trailer is left alone, so amending or rewording keeps
+# the lineage that was already recorded rather than re-deriving it from a tree
+# that may have moved on.
+set -u
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+MSG_FILE=$1
+LOCK="$ROOT/loopctl/workflow.lock"
+
+[ -f "$LOCK" ] || exit 0
+grep -q '^Workflow-Lineage:' "$MSG_FILE" 2>/dev/null && exit 0
+
+TRAILER_FILE=$(mktemp "${TMPDIR:-/tmp}/lineage-trailer.XXXXXX")
+TMP=$(mktemp "${TMPDIR:-/tmp}/prepare-commit-msg.XXXXXX")
+trap 'rm -f "$TRAILER_FILE" "$TMP"' EXIT
+python3 "$ROOT/loopctl/lineage.py" trailer "$ROOT" "$LOCK" >"$TRAILER_FILE" 2>/dev/null || exit 0
+[ -s "$TRAILER_FILE" ] || exit 0
+
+# Trailers belong at the end of the message, after any body, and before the
+# commented-out template git appends. Splitting on the first comment line keeps
+# the stamp inside what actually gets committed.
+#
+# The trailer is read from a FILE, never passed through `awk -v`: it is several
+# lines, and -v cannot carry a newline — the first version died with "newline in
+# string" and wrote nothing, which the commit-msg gate then correctly refused.
+awk -v tf="$TRAILER_FILE" '
+  function emit(  line) { print ""; while ((getline line < tf) > 0) print line }
+  /^#/ && !done { emit(); done=1 }
+  { print }
+  END { if (!done) emit() }
+' "$MSG_FILE" >"$TMP"
+cat "$TMP" >"$MSG_FILE"

@@ -1,9 +1,9 @@
 #!/bin/sh
 # prove.sh — shared recorder for the proof_workflow traversal proofs.
 #
-# The three loop proofs (macro / micro / openwiki) each walk their own
-# mechanism from its entry point to its terminal artifact. This file owns the
-# one thing all three must do identically: record every step, hash every file
+# The contract-declared loop proofs each walk their own mechanism from its entry
+# point to its terminal artifact. This file owns the one thing all of them must
+# do identically: record every step, hash every file
 # on the path, and fold those hashes into a single molecular digest that moves
 # if any traversed byte moves.
 #
@@ -216,11 +216,24 @@ prove_optional() { # id repo-relative-path dataflow
   return 0
 }
 
-prove_note() { # id why-this-path-is-not-hashed
+prove_note() { # id [repo-relative-path-or-ledger] why-this-path-is-not-hashed
+  # With two arguments the note is prose. With three, the middle one is the path
+  # or ledger being excluded, and it lands in the receipt as a DECLARED exclusion
+  # rather than as a sentence — which is what lets the control group tell "this
+  # output is deliberately out of scope, here is why" apart from "nobody noticed
+  # this output exists". The control honours the declaration for produced paths
+  # only; a required input can never be declared away, or the kind would become a
+  # way to stay green.
   PROVE_SEQ=$((PROVE_SEQ + 1))
-  printf '{"seq":%d,"kind":"note","id":"%s","path":null,"sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
-    "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" >>"$PROVE_TMP/steps"
-  echo "  [note    ] $1 — excluded — $2"
+  if [ "$#" -ge 3 ]; then
+    printf '{"seq":%d,"kind":"note","id":"%s","path":"%s","sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
+      "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" "$(_prove_esc "$3")" >>"$PROVE_TMP/steps"
+    echo "  [note    ] $1 — excluded — $2 — $3"
+  else
+    printf '{"seq":%d,"kind":"note","id":"%s","path":null,"sha256":null,"exit":null,"state":"excluded","dataflow":"%s"}\n' \
+      "$PROVE_SEQ" "$1" "$(_prove_esc "$2")" >>"$PROVE_TMP/steps"
+    echo "  [note    ] $1 — excluded — $2"
+  fi
   return 0
 }
 
@@ -276,6 +289,13 @@ EOF
 
 _prove_selftest() {
   red=0
+  # Hermetic against the caller's environment. PROVE_FORCE_RECEIPT inherited from
+  # a parent turned the receipt-collision case green — the check kept running and
+  # kept reporting, and only its VERDICT changed, which is worse than failing to
+  # run. Surfaced the moment prove_harness.sh invoked this selftest under a
+  # --force-receipt of its own. A selftest whose answer depends on who called it
+  # is measuring the caller.
+  unset PROVE_FORCE_RECEIPT
   expect() { # name want got
     [ "$3" = "$2" ] || { echo "SELFTEST case failed — $1: got $3, want $2" >&2; red=1; }
   }

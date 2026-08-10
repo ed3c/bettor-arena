@@ -1,0 +1,18 @@
+{
+  "schema_version": "bettor-arena-proof-workflow-receipt@1.0.0",
+  "loop": "container",
+  "entry_point": "loopctl container build -> OCI image -> container preflight (inside)",
+  "utc": "2026-08-08T09:55:10Z",
+  "status": "passed",
+  "commit": "39d81dd4b340faa842a74e23be9a2f282c971c21",
+  "tree": "57672d1f41d0fc38e993de423388991f88a591d6",
+  "worktree_dirty": true,
+  "counts": { "steps": 7, "harness_ran": 1, "harness_hashed_not_run": 3, "hashed_files": 3 },
+  "molecular_hardening": {
+    "algo": "sha256",
+    "digest_input": "the sorted, LF-terminated '<sha256>  <repo-relative path>' lines of every context/harness/artifact file traversed below; context and harness bytes come from the worktree (that is what was read and what ran), tracked artifact bytes come from HEAD (state present-at-head) so a harness step cannot move its own evidence",
+    "proof_digest": "bff01ddb71d990fc3df0e0b613188fa1fb7abee4c5ab6cded3ed5f7795e46dd0"
+  },
+  "claim_boundary": "traversal-of-the-mechanism-at-this-commit-not-a-quality-axis-claim",
+  "steps": [{"seq":1,"kind":"harness","id":"dockerfile","path":"loopctl/Dockerfile","sha256":"cbabf0839716ac27cdf9b69d12715afc9ef5c8a34ef39d60f5b908316a640008","exit":null,"state":"hashed-not-run","dataflow":"base image -> deterministic base (build-checked) + the sandbox runtime's contract: sandbox user/group, iproute2 for proxy-mode isolation, OCI USER as identity fallback, workspace == home == policy-admitted path"},{"seq":2,"kind":"harness","id":"wrapper","path":"loopctl/container-run.sh","sha256":"bcb5ab9fcfd8c1c93289b463daa0e1723d657b07fccfddf1399882026da72174","exit":null,"state":"hashed-not-run","dataflow":"caller -> live-socket selection (a dead /var/run/docker.sock is refused, not absent) -> host uid -> session mounts -> no default ref for serve"},{"seq":3,"kind":"harness","id":"preflight","path":"loopctl/container_preflight.sh","sha256":"b7bd149947dd03ccd12f649ecf5a20f5f800f5eaad875f262ec67fe77e99bad6","exit":null,"state":"hashed-not-run","dataflow":"inside the container -> deterministic base, worktree isolation, and ONE REAL TURN per driver to tell present from authenticated"},{"seq":4,"kind":"note","id":"control-owned-by-harness","path":"proof_workflow/control_container_surface.sh","sha256":null,"exit":null,"state":"excluded","dataflow":"declared here, hashed by the harness proof. Ownership rule: every file under proof_workflow/ belongs to prove_harness.sh, because those files ARE the instrument. Hashing a control in two proofs records one claim twice and makes a single edit look like two moved digests"},{"seq":5,"kind":"note","id":"no-context-lane","path":"-","sha256":null,"exit":null,"state":"excluded","dataflow":"this layer reads no prompt of its own: it carries the other loops' context lanes rather than adding one. Recorded so that 'no context steps' reads as a decision instead of as an omission"},{"seq":6,"kind":"note","id":"image-not-an-artifact","path":"-","sha256":null,"exit":null,"state":"excluded","dataflow":"the built image is not hashed: it is rebuildable from the Dockerfile above and lives in a runtime's store, so its id would record which machine last built it rather than what the layer is. Its required shape is asserted by 'container test' against the real image"},{"seq":7,"kind":"harness","id":"git-anchored-by-construction","path":"-","sha256":null,"exit":0,"state":"ran","dataflow":"loopctl resolves the repo root through git, which is why an upload-based sandbox (no .git) cannot host the proofs — asserted, not assumed"}]
+}

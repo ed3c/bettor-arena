@@ -40,6 +40,15 @@ PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
 
 prove_init openwiki "kb-ingest/port/wiki_update_worker.sh <request.json> -> openwiki/ -> data/wiki-update/receipt-<id>.json"
 
+# The module's own laws. Hashed for the same reason the other two READMEs are: a
+# document that tells the next agent how to read a red can itself drift, and an
+# unstamped edit to it changes every future reading with nothing saying so.
+# Placed AFTER prove_init, because prove_context resolves against a root that
+# init sets — calling it first FATALed with "context document absent" about a
+# file that was plainly there, which is the recorder being right and loud.
+prove_context kb-ingest-laws kb-ingest/README.md \
+  "kb-ingest -> agent session: the three roots, exit 3, the upstream/port boundary, and the Harness of defects already found"
+
 # --- probabilistic lane: the official prompt assets the turn is composed from
 prove_context update-system kb-ingest/openwiki/update.system.md \
   "OPENWIKI-OFFICIAL block -> claude -p --system-prompt (update mode)"
@@ -78,7 +87,7 @@ prove_harness subagent-runner kb-ingest/port/openwiki_subagent.sh \
   "role + target -> isolated child process whose READ BOUNDARY is the directory it can see (worktree / wiki-only copy)"
 prove_harness worker-selftest kb-ingest/port/wiki_update_worker.sh \
   "fixture requests -> absent 64 / non-JSON 2 / foreign schema 2 / missing field 2 / good dry-run receipt / collision 64" \
-  -- sh kb-ingest/port/wiki_update_worker.sh --selftest
+  -- bash kb-ingest/port/wiki_update_worker.sh --selftest
 
 # --- deterministic harness: a real request through the real chain ------------
 # The newest request the micro loop left in the ledger, chosen by name so the
@@ -89,7 +98,7 @@ if [ -n "$REQUEST" ]; then
     "micro loop trigger.sh -> arena ledger -> this proof's dry-run input"
   prove_harness worker-dry-run kb-ingest/port/wiki_update_worker.sh \
     "real request -> parse + preflight + gate sandbox assembly (OPENWIKI_DRY_RUN) + post passes on a scratch copy, live wiki byte-compared untouched -> receipt" \
-    -- env WIKI_UPDATE_FORCE_RECEIPT=1 sh kb-ingest/port/wiki_update_worker.sh "$REQUEST" --dry-run
+    -- env WIKI_UPDATE_FORCE_RECEIPT=1 bash kb-ingest/port/wiki_update_worker.sh "$REQUEST" --dry-run
 else
   prove_artifact consumed-request "data/wiki-update/request-*.json" \
     "micro loop trigger.sh -> arena ledger (absent: run the micro loop's trigger.sh first)"
@@ -102,6 +111,25 @@ prove_artifact wiki-architecture openwiki/architecture.md \
   "regenerated as-built page: the projection of ARCHITECTURE.md's mechanism"
 prove_artifact last-update openwiki/.last-update.json \
   "finalize -> gitHead stamp; bootstrap.sh reads it to decide wiki freshness"
+
+# EVERY other tracked page, not just the three named above. Measured before it
+# was fixed: 29 files live under openwiki/ and 4 were in the manifest, so a
+# regeneration that rewrote the other 25 moved no digest and drew no lineage
+# trailer — in the loop whose entire purpose is producing those pages. A wiki
+# whose terminal artifact is mostly unmeasured cannot answer "did the rewrite
+# land", which is the question this loop exists to answer.
+#
+# Derived from `git ls-files`, never listed here: pages are added and removed by
+# the regeneration itself, and a written-out list would be stale on the next run.
+# The four already named above are skipped, because hashing a path twice inside
+# one proof records one claim as two and makes a single edit look like two moves.
+for _p in $(git -C "$PROVE_ROOT" ls-files 'openwiki/*'); do
+  case "$_p" in
+    openwiki/index.md|openwiki/architecture.md|openwiki/.last-update.json|openwiki/quickstart.md) continue ;;
+  esac
+  prove_artifact "wiki-$(printf '%s' "${_p#openwiki/}" | tr '/.' '--')" "$_p" \
+    "regenerated as-built page: a rewrite of it must move this digest and name it in the commit trailer"
+done
 
 # Commit traceability of the wiki itself: the gitHead it was generated at must
 # resolve in this repository, and its distance to HEAD is the staleness fact

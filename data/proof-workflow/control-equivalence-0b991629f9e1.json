@@ -1,0 +1,183 @@
+{
+  "assurance": {
+    "fresh_semantic_judge": "NOT_EXERCISED_REQUIRES_TWO_BLINDED_BATCHES",
+    "human_admit": "NOT_EXERCISED_REQUIRES_EXTERNAL_HUMAN",
+    "live_carrier": "CARRIER_EXERCISED_PASS",
+    "maximum_claim": "carrier_exercised_research_collected",
+    "offline_surface": "EXERCISED_PASS"
+  },
+  "capture_dir": "proof_workflow/data/20260809T113335Z-0b991629f9e1.QjR2TQ",
+  "capture_dir_tracked": false,
+  "captured_streams": [
+    {
+      "bytes": 297,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/1-offline-unplanted.out",
+      "sha256": "5113613aaedb43af1187b27d5ed89fb20b52d974cb2cc993f71a79e20ba59d10",
+      "step": "offline-unplanted"
+    },
+    {
+      "bytes": 228,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/1-offline-unplanted.err",
+      "sha256": "d2551919b2c25d585e97e9e8b3a3da53c28c5ac99fe5e02260b62f9cf1bdf4f6",
+      "step": "offline-unplanted"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/2-offline-assurance-shape.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "offline-assurance-shape"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/2-offline-assurance-shape.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "offline-assurance-shape"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/3-without-loop_wiki-evolve-technical-equivalence-research-equivalence-py.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-equivalence-py"
+    },
+    {
+      "bytes": 62,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/3-without-loop_wiki-evolve-technical-equivalence-research-equivalence-py.err",
+      "sha256": "c2e6b0de354a6cb2233ac0c65151d7a20a944f9401ebc9d0e1a766f5857fdf66",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-equivalence-py"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/4-without-loop_wiki-evolve-technical-equivalence-research-drift-py.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-drift-py"
+    },
+    {
+      "bytes": 56,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/4-without-loop_wiki-evolve-technical-equivalence-research-drift-py.err",
+      "sha256": "ad4bed9071187450e3e26cac310d87646bcd05abfcc9d0d26de772f0d8c67828",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-drift-py"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/5-without-loop_wiki-evolve-technical-equivalence-research-profile-technical-equivalence-md.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-profile-technical-equivalence-md"
+    },
+    {
+      "bytes": 80,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/5-without-loop_wiki-evolve-technical-equivalence-research-profile-technical-equivalence-md.err",
+      "sha256": "0eb81e036e47736e312fdcf041d18040044adafe1f493d6dd08159a967f8ffff",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-profile-technical-equivalence-md"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/6-without-loop_wiki-evolve-technical-equivalence-research-adapter-registry-json.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-adapter-registry-json"
+    },
+    {
+      "bytes": 69,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/6-without-loop_wiki-evolve-technical-equivalence-research-adapter-registry-json.err",
+      "sha256": "8c08b7c29b60db5d718a43dd6603021f3fa900f4298b8743194898bf9fdfe5f3",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-adapter-registry-json"
+    },
+    {
+      "bytes": 0,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/7-without-loop_wiki-evolve-technical-equivalence-research-schemas.out",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-schemas"
+    },
+    {
+      "bytes": 55,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/7-without-loop_wiki-evolve-technical-equivalence-research-schemas.err",
+      "sha256": "c929c19737be2d050461e4778de9b9e26efc72e362e64271d8ee2ab942bbc623",
+      "step": "without-loop_wiki-evolve-technical-equivalence-research-schemas"
+    },
+    {
+      "bytes": 295,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/8-planted-request-digest.out",
+      "sha256": "d8d36bf56936028852a68483b90a9567ca8238a461aa68fd2186727d21a28189",
+      "step": "planted-request-digest"
+    },
+    {
+      "bytes": 854,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/8-planted-request-digest.err",
+      "sha256": "ba0d21fb0048dcdafec59c2c0a1c89ae66e01b41187a6951e435fb3a1b0502c6",
+      "step": "planted-request-digest"
+    },
+    {
+      "bytes": 295,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/9-planted-judge-authority.out",
+      "sha256": "d8d36bf56936028852a68483b90a9567ca8238a461aa68fd2186727d21a28189",
+      "step": "planted-judge-authority"
+    },
+    {
+      "bytes": 944,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/9-planted-judge-authority.err",
+      "sha256": "407399ee0e021560ec627d5d352dfc004c96e5cf413c46147e7ee02e9687365e",
+      "step": "planted-judge-authority"
+    },
+    {
+      "bytes": 295,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/10-planted-committed-source-binding.out",
+      "sha256": "d8d36bf56936028852a68483b90a9567ca8238a461aa68fd2186727d21a28189",
+      "step": "planted-committed-source-binding"
+    },
+    {
+      "bytes": 968,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/10-planted-committed-source-binding.err",
+      "sha256": "5006a07827cd09d8fd8c31c9506c1c4044e77360484bdbc950a72d8f10103a9d",
+      "step": "planted-committed-source-binding"
+    },
+    {
+      "bytes": 304,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/11-live-carrier.out",
+      "sha256": "c83a1a020b142f04a7f3cc4a2f7ddf8810cd40bfa0610006948e2a7d9c80d139",
+      "step": "live-carrier"
+    },
+    {
+      "bytes": 306,
+      "path": "20260809T113335Z-0b991629f9e1.QjR2TQ/streams/11-live-carrier.err",
+      "sha256": "49e7985ff629f6b0d61b0ff3e10373b2e120ebb861fd27b88084e8410031a24c",
+      "step": "live-carrier"
+    }
+  ],
+  "commit": "0b991629f9e121382bfd7aba6bad8dee3a22f6e9",
+  "compared_against": "equivalence-0b991629f9e1.json",
+  "compared_against_dirty_stamp": false,
+  "comparison": {
+    "core_input_ablation": {
+      "loop_wiki/evolve-technical-equivalence-research/adapter-registry.json": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "loop_wiki/evolve-technical-equivalence-research/drift.py": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "loop_wiki/evolve-technical-equivalence-research/equivalence.py": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md": {
+        "class": "required",
+        "probe_exit": 2
+      },
+      "loop_wiki/evolve-technical-equivalence-research/schemas": {
+        "class": "required",
+        "probe_exit": 2
+      }
+    },
+    "core_inputs_not_required": [],
+    "proof_covered_count": 29,
+    "tracked_inventory_count": 29,
+    "tracked_uncovered": []
+  },
+  "control_exit": 2,
+  "control_of": "prove_equivalence.sh",
+  "method": "run committed offline seams in a disposable worktree; remove core inputs one at a time; plant digest, judge-authority and HEAD-binding defects; derive canonical file inventory from Git rather than the proof step list",
+  "proof_digest": "6fdcbafd1becef7a3dc30d7cc7ca2ebe4fed495a2062ebdd7a06f7bcf38e92a3",
+  "run_id": "20260809T113335Z-0b991629f9e1.QjR2TQ",
+  "schema_version": "bettor-arena-control-equivalence-receipt@1.0.0",
+  "status": "failed"
+}

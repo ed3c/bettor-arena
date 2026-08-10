@@ -1,0 +1,98 @@
+#!/bin/sh
+# prove_ctg_loop.sh — deterministic traversal of the CTG runtime contract.
+set -u
+
+PROVE_HOME=$(cd "$(dirname "$0")" && pwd -P)
+. "$PROVE_HOME/lib/prove.sh"
+
+F=loop_wiki/code-truth-graph
+prove_init ctg "loopctl ctg run/build-local -> portable packet or trusted-local manifest -> verified graph artifacts"
+
+prove_context sandbox-agents "$F/AGENTS.md" \
+  "sandbox -> agent read order, eight-base ownership, and execution boundary"
+prove_context sandbox-claude "$F/CLAUDE.md" \
+  "sandbox -> passive claim and sovereignty limits"
+prove_context target "$F/PROMPT.md" \
+  "caller intent -> success and stop-loss contract"
+prove_context routes "$F/ROUTES.md" \
+  "packet state -> named actor/validator/pass/failure edge"
+prove_context exchange-formats "$F/modules/exchange-formats.md" \
+  "semantic envelope -> owner and closed-schema boundary"
+prove_context eight-base "$F/modules/eight-base-laws.md" \
+  "global harness law -> physical CTG base landing"
+prove_context state-ledger "$F/PLAN.md" \
+  "iteration result -> append-only trajectory and Human gates"
+prove_harness sandbox-ignore-policy "$F/.gitignore" \
+  "caller-owned outputs and transient diagnostics -> excluded from the tracked mechanism inventory"
+prove_harness input-schema "$F/schemas/ctg-input.schema.json" \
+  "external packet -> closed semantic envelope (hashed; json readability is exercised by the public contract test)"
+prove_harness result-schema "$F/schemas/ctg-route-result.schema.json" \
+  "runtime stages and artifact digests -> closed route-result envelope (hashed; json readability is exercised by the public contract test)"
+prove_harness local-result-schema "$F/schemas/ctg-local-build-receipt.schema.json" \
+  "trusted-local runner/subject/artifact identity -> closed non-egress receipt"
+prove_harness control-schema "$F/schemas/ctg-control.schema.json" \
+  "copied-input behavior probes -> closed control receipt"
+prove_harness runtime-ref "$F/src/code_truth_graph/__init__.py" \
+  "immutable runtime identity -> expected_runner comparison"
+prove_harness runtime "$F/src/code_truth_graph/cli.py" \
+  "packet bundle -> digest verification -> graph/result materialization"
+for module in identity model evidence settlement graphrag java_ast sessions build local_cli render util fixture verify_artifacts; do
+  prove_harness "core-$module" "$F/src/code_truth_graph/$module.py" \
+    "ported generic CTG core -> the closed runtime adapter (hashed here; exercised by the public and Java fixtures)"
+done
+prove_harness java-extractor "$F/tools/java/CodeGraphAstExtractor.java" \
+  "pinned java-compiler-v1 profile -> compiler AST JSONL"
+prove_harness graph-schema "$F/schemas/code-truth-graph.schema.json" \
+  "authoritative graph -> legacy-compatible graph contract"
+prove_harness runtime-receipt-schema "$F/schemas/runtime-receipt.schema.json" \
+  "portable core execution -> legacy runtime receipt compatibility boundary"
+prove_harness loopctl-entry loopctl/loopctl.sh \
+  "public loopctl command -> contract-selected CTG entry with unchanged exit code"
+prove_harness loopctl-contract loopctl/contract.json \
+  "CTG run/build-local/prove/test declarations -> public carrier and receipt surface"
+prove_harness mcp-tool-generator loopctl/mcp_tools.py \
+  "CTG MCP declaration -> generated inline-bundle-only tool schema"
+prove_harness mcp-server loopctl/mcp_server.py \
+  "inline bundle -> pinned isolated CTG execution -> bounded typed delivery"
+prove_harness entry "$F/run.sh" \
+  "stdin EOF + sandbox-local Python path -> one-shot runtime (hashed, not fired because the contract test fires the public CLI)"
+prove_harness trigger "$F/trigger.sh" \
+  "two positional carrier arguments -> one-shot run.sh with stdin EOF (hashed; fired by public-contract)"
+prove_harness local-trigger "$F/local-trigger.sh" \
+  "trusted-local manifest/output arguments -> generic builder with stdin EOF (hashed; fired by local-build)"
+prove_harness verify "$F/verify.sh" \
+  "whole candidate -> format/lint/good/hollow/relocation/public behavior gates (hashed; run directly by CI/operator)"
+prove_harness selftest "$F/selftest.sh" \
+  "valid output versus missing required result field -> positive and hollow verdicts" \
+  -- sh "$F/selftest.sh"
+prove_harness portability "$F/portability.sh" \
+  "runtime copied to a different depth -> identical one-shot contract (hashed; fired by public-contract)"
+prove_harness public-contract tests/test_ctg_cli.sh \
+  "good/unknown/duplicate/unsafe/stale packets -> exact 0/64/2 exits and durable outputs" \
+  -- sh tests/test_ctg_cli.sh
+prove_harness java-core tests/test_ctg_java_core.sh \
+  "java-compiler-v1 -> compiler AST nodes and evidence through the public CLI" \
+  -- sh tests/test_ctg_java_core.sh
+prove_harness domain-projection tests/test_ctg_domain_projection.py \
+  "domain profile selectors and evidence bindings -> deterministic graph projection (hashed; fired by java-core)"
+prove_harness local-build tests/test_ctg_local_build.sh \
+  "trusted-local manifest -> generic graph while MCP retains the raw-evidence non-egress boundary" \
+  -- sh tests/test_ctg_local_build.sh
+prove_harness mcp-carrier tests/test_ctg_mcp_carrier.sh \
+  "closed inline bundle -> pinned public MCP seam -> bounded typed artifacts; local paths and bad digests refused" \
+  -- sh tests/test_ctg_mcp_carrier.sh
+prove_harness verifier-agent "$F/.agents/agents/verifier.md" \
+  "output directory -> read-only verifier route"
+prove_harness runtime-skill "$F/.agents/skills/code-truth-graph-runtime/SKILL.md" \
+  "external request -> public loopctl run/prove/test capability"
+prove_harness local-log-policy "$F/logs/README.md" \
+  "transient diagnostics -> non-authoritative local log boundary"
+prove_harness anti-policy "$F/anti/README.md" \
+  "planted defect -> named negative-control record"
+
+prove_note per-run-output-not-hashed \
+  "CTG output is caller-selected and content-addressed; the public contract test verifies its graph/result digests in a disposable directory, so a previous run cannot stand in for this traversal"
+prove_note control-owned-by-harness proof_workflow/control_ctg_entry.sh \
+  "the behavioral control is part of the proof instrument and is hashed by prove_harness.sh, never fired from its traversal proof"
+
+prove_emit
