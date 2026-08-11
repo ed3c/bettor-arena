@@ -10,7 +10,6 @@ import {
   type ModuleSurface,
 } from "./mcp_contract.ts";
 import {
-  loadModulesAtRef,
   selectedModules,
   validateExternal,
 } from "./mcp_execution.ts";
@@ -35,7 +34,13 @@ export function loadSurface(root: string, commit: string): ModuleSurface {
     commit,
     ".arena/locks/bettor-arena.lock.json",
   );
-  const modules = loadModulesAtRef(root, commit, selectedModules(lock));
+  const modules = new Map<string, ModuleManifest>();
+  for (const id of [...selectedModules(lock)].sort()) {
+    modules.set(
+      id,
+      internalJsonAtRef<ModuleManifest>(root, commit, `.arena/modules/${id}/module.json`),
+    );
+  }
   const tools = buildTools(contract, policy);
   validateExternal(tools, lock, modules);
   return { tools, modules, policyDigest: digestValue(policy) };
