@@ -1,0 +1,43 @@
+{
+  "schema": "bettor-arena/ownership-classes/v1",
+  "classes": [
+    {
+      "id": "generated-host-projections",
+      "kind": "generated",
+      "description": "Versioned Claude/Codex/MCP and repo-binding projections generated from canonical module, Skill, or runtime contracts.",
+      "paths": [
+        ".claude",
+        ".codex",
+        ".mcp.json",
+        ".skill-bindings"
+      ]
+    },
+    {
+      "id": "versioned-evidence",
+      "kind": "evidence",
+      "description": "Checked-in receipts, proof snapshots, migration records, and the repository delivery receipt; runtime secrets and per-run private payloads remain excluded.",
+      "paths": [
+        "data",
+        "delivery.json"
+      ]
+    },
+    {
+      "id": "repository-documentation",
+      "kind": "documentation",
+      "description": "Repository-wide documentation that is not already owned by a more specific module root.",
+      "paths": [
+        "README.md",
+        "LICENSE",
+        "docs"
+      ]
+    },
+    {
+      "id": "repository-metadata",
+      "kind": "metadata",
+      "description": "Repository-level metadata that is intentionally not an executable module implementation.",
+      "paths": [
+        ".gitignore"
+      ]
+    }
+  ]
+}
