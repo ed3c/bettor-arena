@@ -20,6 +20,7 @@ jobs:
             scripts/arena_modules.py \
             scripts/arena_ownership.py \
             scripts/arena_lock.py \
+            scripts/arena_proof.py \
             scripts/gates/check_agent_docs.py \
             scripts/gates/check_module_catalog.py
 
@@ -38,10 +39,28 @@ jobs:
             --requirements .arena/compositions/bettor-arena.requirements.json \
             --output /tmp/bettor-arena.lock.json
           cat /tmp/bettor-arena.lock.json
-          diff -u .arena/locks/bettor-arena.lock.json /tmp/bettor-arena.lock.json
+          python3 -c 'import json; assert json.load(open(".arena/locks/bettor-arena.lock.json")) == json.load(open("/tmp/bettor-arena.lock.json"))'
 
       - name: Check module catalog, full ownership, and deterministic lock
         run: python3 scripts/gates/check_module_catalog.py
+
+      - name: Prove module proof identity can disagree
+        run: python3 scripts/arena_proof.py --selftest
+
+      - name: Render exact module subjects and release receipt
+        run: |
+          python3 scripts/arena_proof.py subjects \
+            --output /tmp/subjects.lock.json
+          cat /tmp/subjects.lock.json
+          python3 -c 'import json; assert json.load(open("data/module-proof/subjects.lock.json")) == json.load(open("/tmp/subjects.lock.json"))'
+          python3 scripts/arena_proof.py release \
+            --subjects /tmp/subjects.lock.json \
+            --output /tmp/release-receipt.json
+          cat /tmp/release-receipt.json
+          python3 -c 'import json; assert json.load(open("data/module-proof/release-receipt.json")) == json.load(open("/tmp/release-receipt.json"))'
+
+      - name: Check module-scoped proof subjects and release receipt
+        run: python3 scripts/arena_proof.py check
 
       - name: Print ownership coverage summary
         run: python3 scripts/arena_lock.py ownership > /tmp/ownership.json && python3 -c 'import json; x=json.load(open("/tmp/ownership.json")); print({"tracked_files":x["tracked_files"],"ownership_sha256":x["ownership_sha256"],"counts":x["counts"]})'

@@ -1,0 +1,21 @@
+{
+  "composition": "bettor-arena",
+  "composition_lock_sha256": "d0c77feb7063c38cb0a0b8aab63706ccaa742f382198b39b92d18972ec530683",
+  "content_sha256": "78b7df7e1143248fdf85033bfcba46448c67bb6af49fd545fd48e8c81d3dde1d",
+  "modules": [
+    {"closure_sha256": "2c85a55657c7620bc82020de1215159bad01ed818160e8d56ce823de33b6e550", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "agent-runtime-integration", "interface_version": "1.1.0"},
+    {"closure_sha256": "e81cc35f368df8d46f3c6f44ada6422db8639fd9f88c46955c45d5695bf9c5b9", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "arena-core", "interface_version": "1.1.0"},
+    {"closure_sha256": "e527580718aa6a97d9e0244cc6f89683aa9c4831132494272308ab0bc9d0925f", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "code-truth-graph", "interface_version": "1.0.0"},
+    {"closure_sha256": "bdad6f2437d58c60ba28a64c44e6040c79d70ba20072ff7a31106c74be292283", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "loop-runtime", "interface_version": "1.0.0"},
+    {"closure_sha256": "f54749602816f0d6a9f2c0e1886852b9bbfdaf3d0b27950b13ce2c55c19e965a", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "mcp-adapters", "interface_version": "1.0.0"},
+    {"closure_sha256": "8c69dce9d0afdbba469b3e9e11b51d606ff2620f1100f2aac2661bc9c806b5a6", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "module-catalog", "interface_version": "1.1.0"},
+    {"closure_sha256": "8f472a2115554074c0ff9ffc1aa7efd6889f991606904a6d1b2af967c9cb8e64", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "notebooklm", "interface_version": "1.0.0"},
+    {"closure_sha256": "2e11b1ac8a92d8ba54e1ac5fd33547ee56d020823c97f47d4ace78858be99305", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "openwiki", "interface_version": "1.0.0"},
+    {"closure_sha256": "ec34585570e47b0c854532ae3d6b42ee713640e179f2574b3521fe43d3fc3178", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "perfect-seed-factory", "interface_version": "1.0.0"},
+    {"closure_sha256": "dee9821aac0d08564177e2b1d03c78449d14ea79d082bcc784c955d1c8384c17", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "proof-kernel", "interface_version": "1.2.0"},
+    {"closure_sha256": "20735b3e9567b77a358ff156a19c24d10b5da10696874b62306c3439a3b3b863", "evidence": {"control": "NOT_EXERCISED", "mutation": "NOT_EXERCISED", "proof": "NOT_EXERCISED"}, "id": "technical-equivalence", "interface_version": "1.0.0"}
+  ],
+  "schema": "bettor-arena/module-release-receipt/v1",
+  "status": "NOT_EXERCISED",
+  "subject_lock_sha256": "c8a590a1e4e1f03abd2574516c590248faae7fd3832285cd867d1c400b0ce681"
+}
