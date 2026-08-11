@@ -3,7 +3,8 @@
     "bootstrap": {
       "paths": [
         "bootstrap.sh",
-        ".githooks"
+        ".githooks",
+        ".claude/hooks"
       ],
       "required": true
     },
@@ -80,6 +81,7 @@
     "bootstrap.sh",
     ".githooks",
     ".github",
+    ".claude/hooks",
     "scripts/gates",
     "scripts/delivery_status.py",
     "scripts/delivery_sync.py",
@@ -101,5 +103,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Root engineering SSOT, native Agent entrypoints, bootstrap, hooks, delivery/migration operators, and repository-level deterministic gates."
+  "summary": "Root engineering SSOT, native Agent entrypoints and hooks, bootstrap, delivery/migration operators, and repository-level deterministic gates."
 }
