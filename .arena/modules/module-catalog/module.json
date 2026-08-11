@@ -56,7 +56,10 @@
   ],
   "requires": [],
   "roots": [
-    ".arena"
+    ".arena",
+    "scripts/arena_modules.py",
+    "scripts/arena_ownership.py",
+    "scripts/arena_lock.py"
   ],
   "runtime": {
     "profiles": [],
