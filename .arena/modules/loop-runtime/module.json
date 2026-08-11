@@ -9,6 +9,7 @@
         "loopctl/mcp_contract.ts",
         "loopctl/mcp_execution.ts",
         "loopctl/mcp_surface.ts",
+        "loopctl/mcp_carrier.ts",
         "loopctl/mcp_core.ts",
         "loopctl/mcp_tools.ts",
         "loopctl/mcp_runtime.ts",
@@ -45,11 +46,11 @@
   "conflicts": [],
   "external_policy": {"exposed": true, "mutation": "disposable-worktree", "network": "optional", "secrets": "broker-only"},
   "id": "loop-runtime",
-  "interface_version": "1.3.0",
+  "interface_version": "1.4.0",
   "loops": [
     {"class": "core", "external_policy": "allowlisted", "id": "loopctl", "interface_version": "2.8.0", "public_port": "sh loopctl/loopctl.sh"},
     {"class": "core", "external_policy": "control-only", "id": "context-capsule", "interface_version": "1.0.0", "public_port": "python3 scripts/arena_context.py"},
-    {"class": "core", "external_policy": "control-only", "id": "mcp-policy", "interface_version": "1.1.0", "public_port": "bun scripts/gates/check_mcp_policy.ts"}
+    {"class": "core", "external_policy": "control-only", "id": "mcp-policy", "interface_version": "1.2.0", "public_port": "bun scripts/gates/check_mcp_policy.ts"}
   ],
   "proof": {
     "control": ["sh", "tests/test_ctg_mcp_carrier.sh"],
@@ -63,5 +64,5 @@
   "runtime": {"profiles": ["bettor-arena-runtime-local"], "tools": ["bun", "claude", "codex", "git", "python3", "sh"]},
   "schema": "bettor-arena/module/v1",
   "skills": {"optional": [], "repo_owned": [], "required": ["shared-skills-infra"]},
-  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, and a Bun/TypeScript default-deny stateless MCP runtime with selected module closures and disposable execution."
+  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, and a Bun/TypeScript default-deny stateless MCP runtime with explicit exposure, generic closed carriers, selected module closures, and disposable execution."
 }
