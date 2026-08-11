@@ -1,115 +1,42 @@
 {
   "components": {
     "context": {
-      "paths": [
-        "scripts/arena_context.py",
-        ".arena/contexts",
-        ".arena/contexts.lock.json"
-      ],
+      "paths": ["scripts/arena_context.py", ".arena/contexts", ".arena/contexts.lock.json"],
       "required": true
     },
     "mcp": {
-      "paths": [
-        "loopctl/mcp_server.py",
-        "loopctl/mcp_tools.py"
-      ],
+      "paths": ["loopctl/mcp_server.py", "loopctl/mcp_runtime.py", "loopctl/mcp_tools.py"],
       "required": true
     },
     "proof": {
-      "paths": [
-        "loopctl/selftest.sh",
-        "loopctl/surface.lock",
-        "data/context-capsules/driver-parity.json"
-      ],
+      "paths": ["loopctl/selftest.sh", "loopctl/surface.lock", "data/context-capsules/driver-parity.json", "scripts/gates/check_mcp_policy.py"],
       "required": true
     },
     "runtime": {
-      "paths": [
-        "loopctl/loopctl.sh",
-        "loopctl/contract.json",
-        "scripts/arena_context.py"
-      ],
+      "paths": ["loopctl/loopctl.sh", "loopctl/contract.json", "scripts/arena_context.py"],
       "required": true
     }
   },
   "conflicts": [],
-  "external_policy": {
-    "exposed": true,
-    "mutation": "disposable-worktree",
-    "network": "optional",
-    "secrets": "broker-only"
-  },
+  "external_policy": {"exposed": true, "mutation": "disposable-worktree", "network": "optional", "secrets": "broker-only"},
   "id": "loop-runtime",
-  "interface_version": "1.1.0",
+  "interface_version": "1.2.0",
   "loops": [
-    {
-      "class": "core",
-      "external_policy": "allowlisted",
-      "id": "loopctl",
-      "interface_version": "2.8.0",
-      "public_port": "sh loopctl/loopctl.sh"
-    },
-    {
-      "class": "core",
-      "external_policy": "control-only",
-      "id": "context-capsule",
-      "interface_version": "1.0.0",
-      "public_port": "python3 scripts/arena_context.py"
-    }
+    {"class": "core", "external_policy": "allowlisted", "id": "loopctl", "interface_version": "2.8.0", "public_port": "sh loopctl/loopctl.sh"},
+    {"class": "core", "external_policy": "control-only", "id": "context-capsule", "interface_version": "1.0.0", "public_port": "python3 scripts/arena_context.py"},
+    {"class": "core", "external_policy": "control-only", "id": "mcp-policy", "interface_version": "1.0.0", "public_port": "python3 scripts/gates/check_mcp_policy.py"}
   ],
   "proof": {
-    "control": [
-      "python3",
-      "scripts/arena_context.py",
-      "check"
-    ],
-    "mutation": [
-      "python3",
-      "scripts/arena_context.py",
-      "--selftest"
-    ],
-    "selftest": [
-      "python3",
-      "scripts/arena_context.py",
-      "--selftest"
-    ],
-    "verify": [
-      "python3",
-      "scripts/arena_context.py",
-      "check"
-    ]
+    "control": ["python3", "scripts/gates/check_mcp_policy.py"],
+    "mutation": ["python3", "scripts/gates/check_mcp_policy.py", "--selftest"],
+    "selftest": ["python3", "scripts/gates/check_mcp_policy.py", "--selftest"],
+    "verify": ["python3", "scripts/gates/check_mcp_policy.py"]
   },
-  "provides": [
-    "arena.loopctl/v1",
-    "arena.stateless-mcp/v1",
-    "arena.context-carrier/v1"
-  ],
-  "requires": [
-    "arena.passive-context/v1"
-  ],
-  "roots": [
-    "loopctl",
-    "scripts/arena_context.py"
-  ],
-  "runtime": {
-    "profiles": [
-      "bettor-arena-runtime-local"
-    ],
-    "tools": [
-      "claude",
-      "codex",
-      "git",
-      "python3",
-      "sh"
-    ]
-  },
+  "provides": ["arena.loopctl/v1", "arena.stateless-mcp/v1", "arena.context-carrier/v1"],
+  "requires": ["arena.passive-context/v1"],
+  "roots": ["loopctl", "scripts/arena_context.py"],
+  "runtime": {"profiles": ["bettor-arena-runtime-local"], "tools": ["claude", "codex", "git", "python3", "sh"]},
   "schema": "bettor-arena/module/v1",
-  "skills": {
-    "optional": [],
-    "repo_owned": [],
-    "required": [
-      "shared-skills-infra"
-    ]
-  },
-  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, replay/container adapters, and stateless MCP execution."
+  "skills": {"optional": [], "repo_owned": [], "required": ["shared-skills-infra"]},
+  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, default-deny policy-validated MCP tools, selected module closures, and disposable execution."
 }

@@ -1,0 +1,10 @@
+{
+  "schema": "bettor-arena/mcp-policy/v1",
+  "tools": [
+    {"name": "loopctl_ctg_run", "module": "code-truth-graph", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 1048576, "max_output_bytes": 1048576},
+    {"name": "loopctl_ctg_prove", "module": "code-truth-graph", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
+    {"name": "loopctl_ctg_test", "module": "code-truth-graph", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
+    {"name": "loopctl_micro_prove", "module": "perfect-seed-factory", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
+    {"name": "loopctl_micro_test", "module": "perfect-seed-factory", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576}
+  ]
+}

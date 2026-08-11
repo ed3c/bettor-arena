@@ -1,65 +1,31 @@
 #!/bin/sh
 # pre-commit — staged-only fast-quality preflight (activated from
 # pre-commit.staged by the admitted #14 stage 1).
-#
-# What it does, in order:
-#   1. Self-integrity, radius = this gate's own closure only (.githooks/ +
-#      scripts/gates/): staged vs worktree must be identical there, otherwise
-#      the hook/gate that is running is not the one being committed.
-#   2. Materializes the whole index into a temp tree via
-#      `git checkout-index -a --prefix` — the gate must judge the bytes being
-#      committed, never the worktree copies, and staged TS files must resolve
-#      imports against tracked-but-unchanged siblings at their index bytes —
-#      then feeds only the staged (added/copied/modified/renamed — deletions
-#      have nothing to check) temp paths to scripts/gates/fast_quality.sh,
-#      the single check definition (same source as the factory sandbox's
-#      full-scope verify.sh quality:fast mount; see the gate header).
-#      Relative layout is preserved under the prefix; note the temp tree sits
-#      outside eslint's base path, so the hook's ts-lint ride is
-#      warn-and-skip — mount 2 carries the full eslint pass.
-#   3. check_root_coupling.py --staged (index blobs, not worktree).
-#
-# Budget: FAST_QUALITY_BUDGET seconds (default 5) wall for the gate call;
-# overrun = process-group kill (the gate's whole tree — sh, node, tsc — no
-# orphaned grandchildren) + FATAL 64, never a silent pass. Runs no tests,
-# touches no network. Exit: 0 pass · 2 gate FAIL · 64 FATAL (budget /
-# missing tool).
 set -eu
 ROOT=$(git rev-parse --show-toplevel)
 cd "$ROOT"
 
 if ! git diff --quiet -- .githooks scripts/gates; then
   echo "pre-commit FAIL: unstaged edits under .githooks/ or scripts/gates/ —" \
-       "the gate that would run is not the one being committed" \
+       "the gate that would run is not the gate being committed" \
        "(stage or stash those edits first)" >&2
   exit 2
 fi
 
-# Mode 120000 is a symlink: it has a path as its content, nothing to format,
-# lint or typecheck, and the quality gate rightly refuses a non-regular input.
-# Whether the link resolves where it should is check_skill_pointers' contract,
-# which runs below — so a symlink is filtered here, never silently unchecked.
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR | while IFS= read -r path; do
   mode=$(git ls-files --stage -- "$path" | cut -c1-6)
   if [ "$mode" != "120000" ]; then printf '%s\n' "$path"; fi
 done)
 [ -n "$STAGED" ] || exit 0
 
-# Name the parent explicitly: bare `mktemp -d` falls back to the platform
-# default, which a sandbox may deny — committing then fails for a reason that
-# has nothing to do with the commit.
 STAGEDTREE=$(mktemp -d "${TMPDIR:-/tmp}/pre-commit.XXXXXX") || {
   echo "pre-commit: cannot create a temp dir under ${TMPDIR:-/tmp}" >&2
   exit 64
 }
 trap 'rm -rf "$STAGEDTREE"' EXIT
-# -a: full index, not just staged paths — staged files may import unchanged ones.
 git checkout-index -a --prefix="$STAGEDTREE/tree/"
 
 BUDGET=${FAST_QUALITY_BUDGET:-5}
-# Job control (set -m) puts each background job in its own process group, so
-# the watchdog's kill -- -pgid reaches the gate's whole tree (sh, node, tsc),
-# not just the pipeline leader — a plain kill of $GATE orphaned grandchildren.
 set -m
 ( printf '%s\n' "$STAGED" | sed "s|^|$STAGEDTREE/tree/|" | sh scripts/gates/fast_quality.sh ) &
 GATE=$!
@@ -77,9 +43,7 @@ if [ "$RC" -ge 128 ]; then
 fi
 [ "$RC" -eq 0 ] || exit "$RC"
 
-# No exec: the EXIT trap must still fire to clean up the staged tree.
 python3 scripts/gates/check_root_coupling.py --staged
-# Repo-level structure gates (fast, read-only; §2 placement + skill pointer SSOT).
 python3 scripts/gates/check_placement.py
 python3 scripts/gates/check_skill_pointers.py
 python3 scripts/gates/check_credential_hygiene.py
@@ -88,7 +52,8 @@ python3 scripts/gates/check_delivery_receipt.py
 
 # Modular-integration gates judge the exact staged tree. They are
 # repo-contained, zero-network, and do not read sibling checkouts.
-python3 scripts/gates/check_agent_docs.py --root "$STAGEDTREE/tree"
-python3 scripts/gates/check_module_catalog.py --root "$STAGEDTREE/tree"
+python3 "$STAGEDTREE/tree/scripts/gates/check_agent_docs.py" --root "$STAGEDTREE/tree"
+python3 "$STAGEDTREE/tree/scripts/gates/check_module_catalog.py" --root "$STAGEDTREE/tree"
 python3 "$STAGEDTREE/tree/scripts/arena_proof.py" --root "$STAGEDTREE/tree" check
 python3 "$STAGEDTREE/tree/scripts/arena_context.py" --root "$STAGEDTREE/tree" check
+python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py"
