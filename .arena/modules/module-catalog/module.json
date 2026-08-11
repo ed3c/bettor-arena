@@ -9,7 +9,9 @@
     "runtime": {
       "paths": [
         ".arena",
-        "scripts/arena_modules.py"
+        "scripts/arena_modules.py",
+        "scripts/arena_ownership.py",
+        "scripts/arena_lock.py"
       ],
       "required": true
     }
@@ -22,21 +24,21 @@
     "secrets": "none"
   },
   "id": "module-catalog",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "core",
       "external_policy": "denied",
       "id": "module-catalog",
-      "interface_version": "1.0.0",
-      "public_port": "python3 scripts/arena_modules.py"
+      "interface_version": "1.1.0",
+      "public_port": "python3 scripts/arena_lock.py"
     }
   ],
   "proof": {
     "control": null,
     "mutation": [
       "python3",
-      "scripts/arena_modules.py",
+      "scripts/arena_lock.py",
       "--selftest"
     ],
     "selftest": [
@@ -54,11 +56,15 @@
   ],
   "requires": [],
   "roots": [
-    ".arena"
+    ".arena",
+    "scripts/arena_modules.py",
+    "scripts/arena_ownership.py",
+    "scripts/arena_lock.py"
   ],
   "runtime": {
     "profiles": [],
     "tools": [
+      "git",
       "python3"
     ]
   },
@@ -68,5 +74,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Machine-readable module catalog, composition requirements, deterministic locks, and zero-network validation."
+  "summary": "Machine-readable module catalog, full tracked-path ownership, composition requirements, deterministic locks, and zero-network validation."
 }

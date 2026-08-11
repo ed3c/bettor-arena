@@ -56,12 +56,24 @@
       },
       "type": "array"
     },
+    "ownership_classes_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "ownership_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
     "requirements_sha256": {
       "pattern": "^[0-9a-f]{64}$",
       "type": "string"
     },
     "schema": {
       "const": "bettor-arena/composition-lock/v1"
+    },
+    "tracked_files": {
+      "minimum": 1,
+      "type": "integer"
     }
   },
   "required": [
@@ -70,6 +82,9 @@
     "requirements_sha256",
     "modules",
     "capabilities",
+    "tracked_files",
+    "ownership_sha256",
+    "ownership_classes_sha256",
     "content_sha256"
   ],
   "title": "Bettor Arena Composition Lock v1",

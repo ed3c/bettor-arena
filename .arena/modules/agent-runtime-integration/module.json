@@ -16,7 +16,8 @@
     },
     "runtime": {
       "paths": [
-        "scripts/agent_runtime.py"
+        "scripts/agent_runtime.py",
+        "scripts/runtime-env"
       ],
       "required": true
     }
@@ -29,7 +30,7 @@
     "secrets": "none"
   },
   "id": "agent-runtime-integration",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "aggregate",
@@ -70,7 +71,9 @@
     ".agents",
     ".runtime-env",
     "scripts/agent_runtime.py",
-    "docs/agent-runtime-integration.md"
+    "scripts/runtime-env",
+    "docs/agent-runtime-integration.md",
+    "docs/runtime-env-integration.md"
   ],
   "runtime": {
     "profiles": [
@@ -90,5 +93,5 @@
       "shared-skills-infra"
     ]
   },
-  "summary": "Resolved skills-shared/runtime-env closure plus Claude Code and Codex CLI adapter verdicts."
+  "summary": "Resolved skills-shared/runtime-env closure, generated runtime helpers, and Claude Code/Codex CLI adapter verdicts."
 }

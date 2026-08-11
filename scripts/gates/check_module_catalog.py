@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Zero-network gate for the checked-in bettor-arena module catalog.
 
-The implementation lives in scripts/arena_modules.py so the CLI and commit gate
-consume one resolver. This file is only the stable gate entrypoint.
-
-Exit codes are passed through unchanged.
+The Phase 0 manifest/capability resolver lives in `scripts/arena_modules.py`.
+`scripts/arena_lock.py` adds Phase 1 complete tracked-path ownership and binds
+its digest into the same checked-in composition lock.  This file remains the
+stable commit-gate entrypoint and passes exit codes through unchanged.
 """
 
 from __future__ import annotations
@@ -26,9 +26,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = args.root.resolve()
-    script = root / "scripts" / "arena_modules.py"
+    script = root / "scripts" / "arena_lock.py"
     if not script.is_file():
-        print(f"module catalog FATAL: missing resolver: {script}", file=sys.stderr)
+        print(f"module catalog FATAL: missing lock resolver: {script}", file=sys.stderr)
         return 64
     command = [sys.executable, str(script)]
     if args.selftest:
