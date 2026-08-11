@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/project-managed.schema.json",
+  "title": "Bettor Arena Managed Project Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project", "mode", "plan_sha256", "source", "paths", "embedded", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/project-managed/v1"},
+    "project": {"type": "string"},
+    "mode": {"enum": ["remote-consumer", "embedded-core"]},
+    "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {"type": "object", "required": ["repository", "commit", "tree"]},
+    "paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "mode"],
+        "properties": {
+          "path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "mode": {"type": "integer"}
+        }
+      }
+    },
+    "embedded": {"type": ["object", "null"]},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
