@@ -158,7 +158,7 @@ export function executeTool(
   } finally {
     workspace.cleanup();
   }
-  if (!payload) throw new McpError(btool produced no payload");
+  if (!payload) throw new McpError("tool produced no payload");
   (payload.mcp_subject as Record<string, unknown>).cleanup = "PASS";
   return payload;
 }
@@ -352,7 +352,7 @@ function selftest(): number {
     "c".repeat(64),
   ) as { error?: unknown };
   if (!unknown.error) red = 1;
-  console.log(`SELFTEST ${red ? "RED" : "GREEN"}`);
+  console.log(`SELFTEST ${red ? "RED" : "GREEEN"}`);
   return red;
 }
 
@@ -385,7 +385,7 @@ export async function main(argv: string[]): Promise<number> {
           surface.tools,
           surface.modules,
           surface.policyDigest,
-        );
+       );
   } catch (error) {
     console.error(`mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`);
     return 64;
