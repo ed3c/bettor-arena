@@ -1,0 +1,25 @@
+{
+  "components": {
+    "runtime_env": {
+      "binding": ".runtime-env/bindings/bettor-arena-local.json",
+      "requirements": ".runtime-env/requirements.json"
+    },
+    "shared_skills": {
+      "binding": ".agents/bindings/bettor-arena.json",
+      "requirements": ".agents/shared-skills.requirements.json"
+    }
+  },
+  "carriers": {
+    "claude_code": {
+      "policy": ".runtime-env/policies/claude-code-native-isolation.json",
+      "skill_surface": ".claude/skills"
+    },
+    "codex_cli": {
+      "policy": ".runtime-env/policies/codex-cli-native-isolation.json",
+      "skill_surface": ".agents/skills"
+    }
+  },
+  "live_receipt": "data/agent-runtime/live.json",
+  "schema": "bettor-arena/agent-module-set/v1",
+  "workload": ".runtime-env/workloads/bettor-arena-local.json"
+}

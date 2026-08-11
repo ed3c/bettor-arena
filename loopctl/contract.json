@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.7.0",
+  "surface_version": "2.8.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -317,6 +317,63 @@
       "writes": [
         "proof_workflow/data/<run_id>/"
       ]
+    },
+    {
+      "loop": "agent-runtime",
+      "mode": "run",
+      "target": "scripts/agent_runtime.py",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json",
+        "--live",
+        "--offline"
+      ],
+      "opt_in": {
+        "--live": "after portable and local-adapter checks pass, spend one real Claude Code turn and one real Codex CLI turn, then bind a redacted receipt to this HEAD/module-set",
+        "--offline": "validate portable requirements/bindings/projections only; explicitly leaves local adapter bytes and real carrier turns NOT_EXERCISED",
+        "--force-receipt": "only with --live; replace an existing same-path live receipt intentionally"
+      },
+      "io": {
+        "input": ".agents/module-set.json plus its shared-skills/runtime-env requirements and resolved projections",
+        "output": [
+          "stdout/stderr: three-state verdict; NOT_EXERCISED is never PASS",
+          "--live: data/agent-runtime/live.json (ignored, redacted, same-HEAD subject)"
+        ],
+        "exit": "0 selected level passed · 2 failed or strict/live incomplete · 64 usage/tool/receipt collision"
+      },
+      "writes": [
+        "--live only: data/agent-runtime/live.json"
+      ]
+    },
+    {
+      "loop": "agent-runtime",
+      "mode": "prove",
+      "target": "proof_workflow/prove_agent_runtime.sh",
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "portable module-set closure; live turns remain named not-run",
+        "output": ["data/proof-workflow/agent-runtime-<commit12>[-dirty].json"],
+        "exit": "0 portable traversal passed · 2 a step red · 64 missing context/tool or receipt collision"
+      },
+      "writes": ["data/proof-workflow/agent-runtime-<commit12>[-dirty].json"]
+    },
+    {
+      "loop": "agent-runtime",
+      "mode": "test",
+      "target": "proof_workflow/control_agent_runtime_entry.sh",
+      "required": [],
+      "optional": ["--json"],
+      "io": {
+        "input": "synthetic clean module set plus four isolated planted defects",
+        "output": ["proof_workflow/data/<run_id>/"],
+        "exit": "0 baseline passed and shared/runtime/Claude/Codex defects all turned red · 2 a control failed · 64 fixture/tool failure"
+      },
+      "writes": ["proof_workflow/data/<run_id>/"]
     },
     {
       "loop": "workflow",

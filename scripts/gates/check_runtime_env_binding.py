@@ -138,21 +138,55 @@ def validate(
     expected_top = {
         "binding",
         "content_sha256",
+        "modules",
         "profile",
         "projections",
         "render",
+        "requirements_sha256",
         "schema",
         "source",
         "variables",
     }
     if set(document) != expected_top:
         failures.append("binding top-level fields do not match consumer-binding/v1")
-    if document.get("schema") != "runtime-env/consumer-binding/v1":
-        failures.append("binding schema is not runtime-env/consumer-binding/v1")
+    if document.get("schema") != "runtime-env/consumer-binding/v2":
+        failures.append("binding schema is not runtime-env/consumer-binding/v2")
     if document.get("binding") != BINDING_ID:
         failures.append(f"binding must be {BINDING_ID}")
     if document.get("profile") != PROFILE_ID:
         failures.append(f"profile must be {PROFILE_ID}")
+
+    requirements_sha = document.get("requirements_sha256")
+    if requirements_sha is not None and (
+        not isinstance(requirements_sha, str) or not HEX64.fullmatch(requirements_sha)
+    ):
+        failures.append("requirements_sha256 must be null or lowercase hexadecimal")
+    modules = document.get("modules")
+    if not isinstance(modules, list) or not modules:
+        failures.append("modules must be a non-empty resolved closure")
+    else:
+        seen_modules: set[str] = set()
+        for position, module in enumerate(modules):
+            label = f"modules[{position}]"
+            if not isinstance(module, dict) or set(module) != {
+                "content_sha256",
+                "id",
+                "interface_version",
+            }:
+                failures.append(f"{label} fields do not match the module receipt")
+                continue
+            if not isinstance(module["id"], str) or not module["id"]:
+                failures.append(f"{label}.id must be non-empty")
+            elif module["id"] in seen_modules:
+                failures.append(f"duplicate resolved module {module['id']}")
+            else:
+                seen_modules.add(module["id"])
+            if module["interface_version"] != "runtime-env/module/v1":
+                failures.append(f"{label}.interface_version is unsupported")
+            if not isinstance(module["content_sha256"], str) or not HEX64.fullmatch(
+                module["content_sha256"]
+            ):
+                failures.append(f"{label}.content_sha256 is invalid")
 
     source = document.get("source")
     if not isinstance(source, dict) or set(source) != {"repository", "commit", "tree"}:
@@ -357,10 +391,18 @@ def _fixture() -> tuple[str, str, dict[str, str]]:
     example = _render(variables)
     document: dict[str, Any] = {
         "binding": BINDING_ID,
+        "modules": [
+            {
+                "content_sha256": "c" * 64,
+                "id": "fixture-module",
+                "interface_version": "runtime-env/module/v1",
+            }
+        ],
         "profile": PROFILE_ID,
         "projections": {"policies": list(POLICY_RELS), "workload": WORKLOAD_REL},
         "render": {"format": "dotenv", "path": EXAMPLE_REL, "sha256": _sha256(example)},
-        "schema": "runtime-env/consumer-binding/v1",
+        "requirements_sha256": None,
+        "schema": "runtime-env/consumer-binding/v2",
         "source": {
             "commit": "a" * 40,
             "repository": SOURCE_REPOSITORY,

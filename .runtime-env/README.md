@@ -4,7 +4,8 @@
 
 | 路徑 | 職責 |
 |---|---|
-| `bindings/bettor-arena-local.json` | 上游 repository/commit/tree、profile closure、內容與輸出 hash |
+| `requirements.json` | consumer desired state：profile、精確 module closure、workload 與 policies |
+| `bindings/bettor-arena-local.json` | resolved state：上游 repository/commit/tree、requirements/module digest、內容與輸出 hash |
 | `examples/bettor-arena-local.env.example` | 由 binding 可重算的無密鑰 dotenv 範例 |
 | `workloads/bettor-arena-local.json` | proof/control、carrier status 與經逐次外送核准的 live research 固定入口 |
 | `policies/claude-code-native-isolation.json` | Claude Code fail-closed sandbox 與跨 carrier deny 要求 |
@@ -55,33 +56,18 @@ checkout 執行：
 
 ```bash
 <runtime-env-checkout>/runtime-env sync \
-  --profile bettor-arena-runtime-local \
-  --binding bettor-arena-local \
-  --workload bettor-arena-proof \
-  --policy claude-code-native-isolation \
-  --policy codex-cli-native-isolation \
-  --policy codex-openshell-chatgpt-placeholder \
+  --requirements <bettor-arena-checkout>/.runtime-env/requirements.json \
   --target-root <bettor-arena-checkout>
 
 # 人或 Agent 審閱 dry-run receipt 後才寫檔
 <runtime-env-checkout>/runtime-env sync \
-  --profile bettor-arena-runtime-local \
-  --binding bettor-arena-local \
-  --workload bettor-arena-proof \
-  --policy claude-code-native-isolation \
-  --policy codex-cli-native-isolation \
-  --policy codex-openshell-chatgpt-placeholder \
+  --requirements <bettor-arena-checkout>/.runtime-env/requirements.json \
   --target-root <bettor-arena-checkout> \
   --apply
 
 # 與該 runtime-env checkout 比對上游 freshness；只讀、不修檔
 <runtime-env-checkout>/runtime-env sync \
-  --profile bettor-arena-runtime-local \
-  --binding bettor-arena-local \
-  --workload bettor-arena-proof \
-  --policy claude-code-native-isolation \
-  --policy codex-cli-native-isolation \
-  --policy codex-openshell-chatgpt-placeholder \
+  --requirements <bettor-arena-checkout>/.runtime-env/requirements.json \
   --target-root <bettor-arena-checkout> \
   --check
 ```
