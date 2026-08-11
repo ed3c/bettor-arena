@@ -13,4 +13,12 @@ export {
   toArgv,
   validateExternal,
 } from "./mcp_execution.ts";
+export {
+  CLOSED_INLINE_BUNDLE_KIND,
+  attachInlineDelivery,
+  collectInlineDelivery,
+  prepareInlineCarrier,
+  type InlineDelivery,
+  type PreparedInlineCarrier,
+} from "./mcp_carrier.ts";
 export { loadSurface } from "./mcp_surface.ts";
