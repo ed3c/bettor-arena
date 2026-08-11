@@ -1,0 +1,11 @@
+{
+  "schema": "bettor-arena/preset/v1",
+  "id": "embedded-core",
+  "status": "IMPLEMENTED",
+  "summary": "Self-contained consumer composition with an independent no-hardlink bettor clone pinned to an immutable release.",
+  "modules": [
+    {"id": "module-catalog", "components": ["proof", "runtime"]},
+    {"id": "arena-core", "components": ["bootstrap", "context", "proof"]},
+    {"id": "loop-runtime", "components": ["context", "mcp", "proof", "runtime"]}
+  ]
+}
