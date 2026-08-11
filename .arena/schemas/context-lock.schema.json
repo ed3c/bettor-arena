@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/context-lock.schema.json",
+  "title": "Bettor Arena Context Lock v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "contexts", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/context-lock/v1"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "contexts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "module", "loop", "cwd", "common", "drivers", "policy", "files", "context_sha256"],
+        "properties": {
+          "id": {"type": "string"},
+          "module": {"type": "string"},
+          "loop": {"type": "string"},
+          "cwd": {"type": "string"},
+          "common": {"type": "array"},
+          "drivers": {"type": "object"},
+          "policy": {"type": "object"},
+          "files": {"type": "array"},
+          "context_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}
