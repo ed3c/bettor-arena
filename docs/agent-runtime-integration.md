@@ -1,7 +1,13 @@
 # Agent runtime integration — concrete contract
 
-這是 Claude Code 與 Codex CLI 在 bettor-arena 消費所有模組的低壓縮入口。新 chat 從
-`AGENTS.md → ARCHITECTURE.md → 本檔` 到達；`AGENTS.md` 在 chat 啟動時載入，改檔後要開新 chat。
+這是 Claude Code 與 Codex CLI 在 bettor-arena 消費目前已落地 Skills/runtime module-set 的低壓縮入口。
+新 chat 從 `AGENTS.md → ARCHITECTURE.md → docs/architecture/modular-integration-requirements.md → 本檔`
+到達；`AGENTS.md`／`CLAUDE.md` 在 chat 啟動時載入，改檔後要開新 chat。
+
+本檔描述**現行可執行介面**；`docs/architecture/modular-integration-requirements.md` 描述下一階段 Module Host、
+Loop Runtime、Proof Kernel、Stateless MCP Gateway 與 Project Bootstrapper 的 target contract。Target 中尚未
+落地的 `.arena/` manifests、module-scoped proof v2、Context Capsule、project initializer、multi-origin release
+與 browser contract v2，不得由本檔目前的 offline/adapter 綠燈代理。
 
 ## Architecture
 
