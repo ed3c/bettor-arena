@@ -71,7 +71,7 @@
   "external_policy": {
     "exposed": false,
     "mutation": "none",
-    "network": "probe-only",
+    "network": "optional",
     "secrets": "none"
   }
 }
