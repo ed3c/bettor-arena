@@ -8,6 +8,7 @@
       "paths": [
         "loopctl/mcp_contract.ts",
         "loopctl/mcp_execution.ts",
+        "loopctl/mcp_surface.ts",
         "loopctl/mcp_core.ts",
         "loopctl/mcp_tools.ts",
         "loopctl/mcp_runtime.ts",
