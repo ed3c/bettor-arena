@@ -10,7 +10,10 @@ permissions:
 
 jobs:
   contracts:
+    # The checkout below intentionally tests the PR head itself rather than the
+    # synthetic merge ref, so the merge command can pin the same verified SHA.
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
