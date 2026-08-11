@@ -1,0 +1,182 @@
+name: Apply Phase 4 Bun MCP corrections
+
+on:
+  push:
+    branches: [feat/stateless-mcp-bun]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase4-bun-corrections
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/stateless-mcp-bun
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+
+      - name: Apply deterministic source corrections
+        run: |
+          bun <<'BUN'
+          import { readFileSync, writeFileSync } from "node:fs";
+
+          function replaceOnce(path, before, after) {
+            const source = readFileSync(path, "utf8");
+            const count = source.split(before).length - 1;
+            if (count !== 1) throw new Error(`${path}: expected one replacement, found ${count}`);
+            writeFileSync(path, source.replace(before, after));
+          }
+
+          function ensureCommandExposure(loop, mode, target) {
+            const path = "loopctl/contract.json";
+            const source = readFileSync(path, "utf8");
+            const already = `      \"target\": \"${target}\",\n      \"mcp_exposed\": true,`;
+            if (source.includes(already)) return;
+            const needle = `      \"loop\": \"${loop}\",\n      \"mode\": \"${mode}\",\n      \"target\": \"${target}\",`;
+            const replacement = `${needle}\n      \"mcp_exposed\": true,`;
+            const count = source.split(needle).length - 1;
+            if (count !== 1) throw new Error(`${path}: ${loop}/${mode} target count=${count}`);
+            writeFileSync(path, source.replace(needle, replacement));
+          }
+
+          replaceOnce(
+            "loopctl/mcp_contract.ts",
+            '  description?: string;\n  input_schema: Record<string, Json>;',
+            '  description?: string;\n  result_file?: string;\n  input_schema: Record<string, Json>;',
+          );
+          replaceOnce(
+            "loopctl/mcp_contract.ts",
+            'export function jsonAtRef<T>(root: string, ref: string, path: string): T {\n  safeArtifactRef(path);\n  const raw = gitText(root, ["show", `${ref}:${path}`]);',
+            'export function jsonAtRef<T>(root: string, ref: string, path: string): T {\n  const normalizedPath = normalize(path).replaceAll("\\\\", "/");\n  if (\n    isAbsolute(path) ||\n    normalizedPath === "." ||\n    normalizedPath === ".." ||\n    normalizedPath.startsWith("../") ||\n    normalizedPath.includes("/../") ||\n    !/^[A-Za-z0-9._/-]+$/.test(normalizedPath)\n  ) {\n    throw new McpError(`unsafe repository path: ${path}`);\n  }\n  const raw = gitText(root, ["show", `${ref}:${normalizedPath}`]);',
+          );
+          replaceOnce(
+            "loopctl/mcp_contract.ts",
+            '    if (command.mcp_exposed === false) {\n      throw new McpError(`CLI contract explicitly forbids MCP exposure: ${entry.name}`);\n    }',
+            '    if (command.mcp_exposed !== true) {\n      throw new McpError(`CLI contract has not explicitly enabled MCP exposure: ${entry.name}`);\n    }\n    if (command.mcp_carrier) {\n      if (command.mcp_carrier.kind !== "closed-inline-bundle@1.0.0") {\n        throw new McpError(`unsupported closed carrier: ${entry.name}`);\n      }\n      if (!command.mcp_carrier.result_file) {\n        throw new McpError(`closed carrier result_file is required: ${entry.name}`);\n      }\n      safeArtifactRef(command.mcp_carrier.result_file);\n      if (!command.required.includes("--packet") || !command.required.includes("--output")) {\n        throw new McpError(`closed carrier requires --packet and --output: ${entry.name}`);\n      }\n    }',
+          );
+
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            'export function collectCtgDelivery(\n  output: string,\n  maxBytes: number,\n): {\n  route_result: Record<string, unknown>;\n  artifacts: Array<{ kind: unknown; sha256: string; content_base64: string }>;\n} {\n  const resultPath = join(output, "ctg-route-result.json");\n  if (!existsSync(resultPath)) throw new McpError("CTG route result is absent");',
+            'export function collectInlineDelivery(\n  output: string,\n  maxBytes: number,\n  resultFile: string,\n): {\n  result: Record<string, unknown>;\n  artifacts: Array<{ kind: unknown; sha256: string; content_base64: string }>;\n} {\n  const resultPath = safeJoin(output, safeArtifactRef(resultFile));\n  if (!existsSync(resultPath)) throw new McpError(`inline delivery result is absent: ${resultFile}`);',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '  if (total > maxBytes) throw new McpError("CTG output exceeds policy limit");\n  const routeResult = JSON.parse(resultBytes.toString("utf8")) as Record<string, unknown>;\n  const rawArtifacts = routeResult.artifacts;\n  if (!Array.isArray(rawArtifacts)) throw new McpError("CTG route result artifacts must be an array");',
+            '  if (total > maxBytes) throw new McpError("inline delivery result exceeds policy limit");\n  const routeResult = JSON.parse(resultBytes.toString("utf8")) as Record<string, unknown>;\n  const rawArtifacts = routeResult.artifacts;\n  if (!Array.isArray(rawArtifacts)) throw new McpError("inline delivery artifacts must be an array");',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '    assertObject(raw, `CTG artifacts[${index}]`);',
+            '    assertObject(raw, `inline delivery artifacts[${index}]`);',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '      throw new McpError(`CTG artifacts[${index}] has invalid sha256`);',
+            '      throw new McpError(`inline delivery artifacts[${index}] has invalid sha256`);',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '    if (total > maxBytes) throw new McpError("CTG typed output exceeds policy limit");',
+            '    if (total > maxBytes) throw new McpError("inline delivery exceeds policy limit");',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '      throw new McpError(`CTG result artifact digest mismatch: ${artifactRef}`);',
+            '      throw new McpError(`inline delivery artifact digest mismatch: ${artifactRef}`);',
+          );
+          replaceOnce(
+            "loopctl/mcp_execution.ts",
+            '  return { route_result: routeResult, artifacts };\n}\n\nexport function sanitizedEnvironment()',
+            '  return { result: routeResult, artifacts };\n}\n\nexport function collectCtgDelivery(\n  output: string,\n  maxBytes: number,\n): {\n  route_result: Record<string, unknown>;\n  artifacts: Array<{ kind: unknown; sha256: string; content_base64: string }>;\n} {\n  const delivery = collectInlineDelivery(output, maxBytes, "ctg-route-result.json");\n  return { route_result: delivery.result, artifacts: delivery.artifacts };\n}\n\nexport function sanitizedEnvironment()',
+          );
+
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            'import { createInterface } from "node:readline";\nimport { dirname, join, resolve } from "node:path";',
+            'import { createInterface } from "node:readline";\nimport { existsSync } from "node:fs";\nimport { dirname, join, resolve } from "node:path";',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '  collectCtgDelivery,',
+            '  collectInlineDelivery,',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '    if (!pruned.kept || !loopctl) throw new McpError("selected module closure omitted loopctl");',
+            '    if (!pruned.kept || !existsSync(loopctl)) {\n      throw new McpError("selected module closure omitted loopctl");\n    }',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '    let argv: string[];\n    let ctgOutput: string | undefined;\n    if (tool._carrier) {\n      if (tool._carrier.kind !== "ctg-inline-bundle@1.0.0") {\n        throw new McpError(`unsupported carrier: ${tool._carrier.kind}`);\n      }',
+            '    let argv: string[];\n    let inlineOutput: { path: string; resultFile: string } | undefined;\n    if (tool._carrier) {\n      if (tool._carrier.kind !== "closed-inline-bundle@1.0.0") {\n        throw new McpError(`unsupported carrier: ${tool._carrier.kind}`);\n      }\n      if (!tool._carrier.result_file) {\n        throw new McpError("closed inline carrier has no result_file");\n      }',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '      ctgOutput = materialized.output;\n      argv = [\n        "ctg",\n        "run",',
+            '      inlineOutput = { path: materialized.output, resultFile: tool._carrier.result_file };\n      argv = [\n        tool._argv.loop,\n        tool._argv.mode,',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '    if (ctgOutput) {\n      payload.artifacts = [];\n      payload.ctg_delivery = collectCtgDelivery(ctgOutput, policy.max_output_bytes);\n    }',
+            '    if (inlineOutput) {\n      const delivery = collectInlineDelivery(\n        inlineOutput.path,\n        policy.max_output_bytes,\n        inlineOutput.resultFile,\n      );\n      payload.artifacts = [];\n      payload.inline_delivery = delivery;\n      if (tool._argv.loop === "ctg") {\n        payload.ctg_delivery = {\n          route_result: delivery.result,\n          artifacts: delivery.artifacts,\n        };\n      }\n    }',
+          );
+          replaceOnce(
+            "loopctl/mcp_runtime.ts",
+            '  console.log(`SELFTEST ${red ? "RED" : "GREEEN"}`);',
+            '  console.log(`SELFTEST ${red ? "RED" : "GREEN"}`);',
+          );
+
+          replaceOnce(
+            "loopctl/mcp_core.test.ts",
+            '        mcp_carrier: {\n          kind: "ctg-inline-bundle@1.0.0",',
+            '        mcp_exposed: true,\n        mcp_carrier: {\n          kind: "closed-inline-bundle@1.0.0",\n          result_file: "ctg-route-result.json",',
+          );
+          replaceOnce(
+            "loopctl/mcp_core.test.ts",
+            '  test("explicit policy selects only named commands", () => {\n    const f = fixture();\n    expect(buildTools(f.contract, f.policy).map((tool) => tool.name)).toEqual([\n      "loopctl_ctg_run",\n    ]);\n  });',
+            '  test("explicit policy selects only explicitly enabled commands", () => {\n    const f = fixture();\n    expect(buildTools(f.contract, f.policy).map((tool) => tool.name)).toEqual([\n      "loopctl_ctg_run",\n    ]);\n  });\n\n  test("omitted mcp_exposed cannot be re-enabled by policy", () => {\n    const f = fixture();\n    const denied = structuredClone(f.policy);\n    denied.tools[0]!.name = "loopctl_private_test";\n    expect(() => buildTools(f.contract, denied)).toThrow(/not explicitly enabled/);\n  });',
+          );
+
+          replaceOnce(
+            "loopctl/mcp_tools.ts",
+            '      { loop: "micro", mode: "run", target: "x", required: ["--packet"], optional: ["--json"] },',
+            '      { loop: "micro", mode: "run", target: "x", required: ["--packet"], optional: ["--json"], mcp_exposed: true },',
+          );
+
+          ensureCommandExposure("micro", "prove", "proof_workflow/prove_micro_loop.sh");
+          ensureCommandExposure("micro", "test", "proof_workflow/control_micro_entry.sh");
+          ensureCommandExposure("ctg", "run", "loop_wiki/code-truth-graph/trigger.sh");
+          ensureCommandExposure("ctg", "prove", "proof_workflow/prove_ctg_loop.sh");
+          ensureCommandExposure("ctg", "test", "proof_workflow/control_ctg_entry.sh");
+
+          replaceOnce(
+            "loopctl/contract.json",
+            '        "kind": "ctg-inline-bundle@1.0.0",\n        "max_request_bytes": 1048576,',
+            '        "kind": "closed-inline-bundle@1.0.0",\n        "result_file": "ctg-route-result.json",\n        "max_request_bytes": 1048576,',
+          );
+          BUN
+
+      - name: Commit corrections
+        run: |
+          git config user.name ed3c-bettor-phase-bot
+          git config user.email 30064024+ed3c@users.noreply.github.com
+          git add \
+            loopctl/mcp_contract.ts \
+            loopctl/mcp_execution.ts \
+            loopctl/mcp_runtime.ts \
+            loopctl/mcp_core.test.ts \
+            loopctl/mcp_tools.ts \
+            loopctl/contract.json
+          git commit -m "fix: close Bun MCP exposure and carrier contracts"
+          git push origin HEAD:feat/stateless-mcp-bun
