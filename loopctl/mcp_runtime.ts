@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 import { dirname, join, resolve } from "node:path";
@@ -7,21 +8,22 @@ import { fileURLToPath } from "node:url";
 import {
   McpError,
   PROTOCOL,
+  attachInlineDelivery,
   boundedJsonPayload,
   canonical,
   closurePrefixes,
-  collectCtgDelivery,
   createWorkspace,
   loadSurface,
   moduleClosure,
+  prepareInlineCarrier,
   pruneWorktree,
   publicTool,
   resolveRef,
   sanitizedEnvironment,
   toArgv,
-  materializeInlineBundle,
   type GeneratedTool,
   type ModuleManifest,
+  type PreparedInlineCarrier,
 } from "./mcp_core.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -54,20 +56,28 @@ export function parseArgs(
     const flag = rest.shift();
     if (flag === "--ref") {
       const value = rest.shift();
-      if (!value) throw new McpError("--ref requires an immutable commit or v* tag");
+      if (!value) {
+        throw new McpError("--ref requires an immutable commit or v* tag");
+      }
       ref = value;
     } else if (flag === "--http") {
       const value = rest.shift();
-      if (!value || !/^\d+$/.test(value)) throw new McpError("--http requires a numeric port");
+      if (!value || !/^\d+$/.test(value)) {
+        throw new McpError("--http requires a numeric port");
+      }
       httpPort = Number(value);
-      if (httpPort < 1 || httpPort > 65535) throw new McpError("--http port is outside 1..65535");
+      if (httpPort < 1 || httpPort > 65535) {
+        throw new McpError("--http port is outside 1..65535");
+      }
     } else if (flag === "--json") {
       // loopctl declares --json on its own surface; server output is always structured.
     } else {
       throw new McpError(`unknown argument: ${flag}`);
     }
   }
-  if (!ref) throw new McpError("an immutable --ref or LOOPCTL_REF is required");
+  if (!ref) {
+    throw new McpError("an immutable --ref or LOOPCTL_REF is required");
+  }
   return { ref, httpPort };
 }
 
@@ -88,31 +98,25 @@ export function executeTool(
   try {
     const pruned = pruneWorktree(workspace.worktree, prefixes);
     const loopctl = join(workspace.worktree, "loopctl/loopctl.sh");
-    if (!pruned.kept || !loopctl) throw new McpError("selected module closure omitted loopctl");
+    if (!pruned.kept || !existsSync(loopctl)) {
+      throw new McpError("selected module closure omitted loopctl");
+    }
 
     let argv: string[];
-    let ctgOutput: string | undefined;
+    let preparedCarrier: PreparedInlineCarrier | undefined;
     if (tool._carrier) {
-      if (tool._carrier.kind !== "ctg-inline-bundle@1.0.0") {
-        throw new McpError(`unsupported carrier: ${tool._carrier.kind}`);
-      }
-      const materialized = materializeInlineBundle(
+      preparedCarrier = prepareInlineCarrier(
+        tool,
         workspace.base,
         argumentsValue,
         policy.max_request_bytes,
       );
-      ctgOutput = materialized.output;
-      argv = [
-        "ctg",
-        "run",
-        "--packet",
-        materialized.packet,
-        "--output",
-        materialized.output,
-        "--json",
-      ];
+      argv = preparedCarrier.argv;
     } else {
-      if (Buffer.byteLength(canonical(argumentsValue ?? {})) > policy.max_request_bytes) {
+      if (
+        Buffer.byteLength(canonical(argumentsValue ?? {})) >
+        policy.max_request_bytes
+      ) {
         throw new McpError("request exceeds policy limit");
       }
       argv = toArgv(tool, argumentsValue ?? {});
@@ -127,7 +131,9 @@ export function executeTool(
     });
     if (process.error) {
       if ((process.error as NodeJS.ErrnoException).code === "ETIMEDOUT") {
-        throw new McpError(`tool timed out after ${policy.max_seconds} seconds`);
+        throw new McpError(
+          `tool timed out after ${policy.max_seconds} seconds`,
+        );
       }
       throw new McpError(`tool process failed: ${process.error.message}`);
     }
@@ -137,12 +143,18 @@ export function executeTool(
       process.status ?? 64,
       policy.max_output_bytes,
     );
-    if (typeof payload.exit !== "number") payload.exit = process.status ?? 64;
+    if (typeof payload.exit !== "number") {
+      payload.exit = process.status ?? 64;
+    }
     delete payload.stdout;
     delete payload.stderr;
-    if (ctgOutput) {
-      payload.artifacts = [];
-      payload.ctg_delivery = collectCtgDelivery(ctgOutput, policy.max_output_bytes);
+    if (preparedCarrier) {
+      attachInlineDelivery(
+        payload,
+        tool,
+        preparedCarrier,
+        policy.max_output_bytes,
+      );
     }
     payload.mcp_subject = {
       module: policy.module,
@@ -191,7 +203,9 @@ export function handle(
     };
   }
   if (request.method === "tools/call") {
-    const tool = tools.find((candidate) => candidate.name === request.params?.name);
+    const tool = tools.find(
+      (candidate) => candidate.name === request.params?.name,
+    );
     if (!tool) {
       return rpcError(
         request.id,
@@ -248,15 +262,27 @@ async function serveStdio(
   for await (const line of lines) {
     if (!line.trim()) continue;
     if (Buffer.byteLength(line) > 1024 * 1024) {
-      console.log(JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")));
+      console.log(
+        JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")),
+      );
       continue;
     }
     try {
       const request = JSON.parse(line) as RpcRequest;
-      const response = handle(request, root, commit, tree, tools, modules, policyDigest);
+      const response = handle(
+        request,
+        root,
+        commit,
+        tree,
+        tools,
+        modules,
+        policyDigest,
+      );
       if (response) console.log(JSON.stringify(response));
     } catch (error) {
-      console.log(JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`)));
+      console.log(
+        JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`)),
+      );
     }
   }
   return 0;
@@ -272,7 +298,10 @@ async function serveHttp(
   port: number,
 ): Promise<number> {
   const server = createServer(async (request, response) => {
-    if (request.method !== "POST" || request.url?.replace(/\/$/, "") !== "/mcp") {
+    if (
+      request.method !== "POST" ||
+      request.url?.replace(/\/$/, "") !== "/mcp"
+    ) {
       response.writeHead(404).end();
       return;
     }
@@ -283,14 +312,26 @@ async function serveHttp(
       total += buffer.length;
       if (total > 1024 * 1024) {
         response.writeHead(413, { "content-type": "application/json" });
-        response.end(JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")));
+        response.end(
+          JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")),
+        );
         return;
       }
       chunks.push(buffer);
     }
     try {
-      const rpc = JSON.parse(Buffer.concat(chunks).toString("utf8")) as RpcRequest;
-      const value = handle(rpc, root, commit, tree, tools, modules, policyDigest);
+      const rpc = JSON.parse(
+        Buffer.concat(chunks).toString("utf8"),
+      ) as RpcRequest;
+      const value = handle(
+        rpc,
+        root,
+        commit,
+        tree,
+        tools,
+        modules,
+        policyDigest,
+      );
       if (!value) {
         response.writeHead(202).end();
         return;
@@ -302,7 +343,9 @@ async function serveHttp(
       });
       response.end(body);
     } catch (error) {
-      const body = JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`));
+      const body = JSON.stringify(
+        rpcError(null, -32700, `parse error: ${String(error)}`),
+      );
       response.writeHead(200, { "content-type": "application/json" });
       response.end(body);
     }
@@ -343,7 +386,12 @@ function selftest(): number {
   ) as { result?: { protocolVersion?: string } };
   if (init.result?.protocolVersion !== PROTOCOL) red = 1;
   const unknown = handle(
-    { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "nope" } },
+    {
+      jsonrpc: "2.0",
+      id: 2,
+      method: "tools/call",
+      params: { name: "nope" },
+    },
     ROOT,
     "a".repeat(40),
     "b".repeat(40),
@@ -352,7 +400,7 @@ function selftest(): number {
     "c".repeat(64),
   ) as { error?: unknown };
   if (!unknown.error) red = 1;
-  console.log(`SELFTEST ${red ? "RED" : "GREEEN"}`);
+  console.log(`SELFTEST ${red ? "RED" : "GREEN"}`);
   return red;
 }
 
@@ -362,7 +410,9 @@ export async function main(argv: string[]): Promise<number> {
   try {
     parsed = parseArgs(argv);
   } catch (error) {
-    console.error(`mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`);
+    console.error(
+      `mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`,
+    );
     return 64;
   }
   try {
@@ -385,12 +435,15 @@ export async function main(argv: string[]): Promise<number> {
           surface.tools,
           surface.modules,
           surface.policyDigest,
-       );
+        );
   } catch (error) {
-    console.error(`mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`);
+    console.error(
+      `mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`,
+    );
     return 64;
   }
 }
 
-const invoked = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const invoked =
+  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) process.exit(await main(process.argv.slice(2)));
