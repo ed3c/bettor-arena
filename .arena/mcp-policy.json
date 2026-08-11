@@ -5,11 +5,6 @@
     {"name": "loopctl_ctg_prove", "module": "code-truth-graph", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
     {"name": "loopctl_ctg_test", "module": "code-truth-graph", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
     {"name": "loopctl_micro_prove", "module": "perfect-seed-factory", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_micro_test", "module": "perfect-seed-factory", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_openwiki_prove", "module": "openwiki", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_notebooklm_prove", "module": "notebooklm", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_notebooklm_test", "module": "notebooklm", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_equivalence_prove", "module": "technical-equivalence", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576},
-    {"name": "loopctl_equivalence_test", "module": "technical-equivalence", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576}
+    {"name": "loopctl_micro_test", "module": "perfect-seed-factory", "mutation": "disposable-worktree", "network": "none", "secrets": "none", "max_seconds": 300, "max_request_bytes": 65536, "max_output_bytes": 1048576}
   ]
 }
