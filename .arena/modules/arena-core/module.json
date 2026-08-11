@@ -1,0 +1,100 @@
+{
+  "components": {
+    "bootstrap": {
+      "paths": [
+        "bootstrap.sh",
+        ".githooks"
+      ],
+      "required": true
+    },
+    "context": {
+      "paths": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "docs/architecture/modular-integration-requirements.md"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "scripts/gates/check_agent_docs.py",
+        "scripts/gates/check_placement.py",
+        ".github/workflows/modular-contracts.yml"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "arena-core",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "macro",
+      "external_policy": "denied",
+      "id": "macro",
+      "interface_version": "2.8.0",
+      "public_port": "sh loopctl/loopctl.sh macro"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_macro_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/gates/check_agent_docs.py",
+      "--selftest"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/gates/check_agent_docs.py",
+      "--selftest"
+    ],
+    "verify": [
+      "python3",
+      "scripts/gates/check_agent_docs.py"
+    ]
+  },
+  "provides": [
+    "arena.passive-context/v1",
+    "arena.host-gates/v1"
+  ],
+  "requires": [
+    "arena.module-catalog/v1"
+  ],
+  "roots": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTEXT.md",
+    "ARCHITECTURE.md",
+    "bootstrap.sh",
+    ".githooks",
+    ".github",
+    "scripts/gates",
+    "docs/architecture"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Root engineering SSOT, native Agent entrypoints, bootstrap, hooks, and repository-level deterministic gates."
+}
