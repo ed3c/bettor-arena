@@ -12,7 +12,8 @@
         "AGENTS.md",
         "CLAUDE.md",
         "ARCHITECTURE.md",
-        "docs/architecture/modular-integration-requirements.md"
+        "docs/architecture/modular-integration-requirements.md",
+        "loop_wiki/README.md"
       ],
       "required": true
     },
@@ -33,7 +34,7 @@
     "secrets": "none"
   },
   "id": "arena-core",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "macro",
@@ -80,7 +81,11 @@
     ".githooks",
     ".github",
     "scripts/gates",
-    "docs/architecture"
+    "scripts/delivery_status.py",
+    "scripts/delivery_sync.py",
+    "scripts/migrate",
+    "docs/architecture",
+    "loop_wiki/README.md"
   ],
   "runtime": {
     "profiles": [],
@@ -96,5 +101,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Root engineering SSOT, native Agent entrypoints, bootstrap, hooks, and repository-level deterministic gates."
+  "summary": "Root engineering SSOT, native Agent entrypoints, bootstrap, hooks, delivery/migration operators, and repository-level deterministic gates."
 }
