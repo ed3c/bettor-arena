@@ -1,0 +1,40 @@
+name: Modular contracts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile Phase 0 Python entrypoints
+        run: |
+          python3 -m py_compile \
+            scripts/arena_modules.py \
+            scripts/gates/check_agent_docs.py \
+            scripts/gates/check_module_catalog.py
+
+      - name: Prove Agent entrypoint gate can disagree
+        run: python3 scripts/gates/check_agent_docs.py --selftest
+
+      - name: Check Agent entrypoint contract
+        run: python3 scripts/gates/check_agent_docs.py
+
+      - name: Prove module catalog gate can disagree
+        run: python3 scripts/gates/check_module_catalog.py --selftest
+
+      - name: Check module catalog and deterministic lock
+        run: python3 scripts/gates/check_module_catalog.py
+
+      - name: Prove placement gate can disagree
+        run: python3 scripts/gates/check_placement.py --selftest
+
+      - name: Check root placement contract
+        run: python3 scripts/gates/check_placement.py
