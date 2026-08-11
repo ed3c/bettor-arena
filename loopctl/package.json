@@ -1,0 +1,9 @@
+{
+  "name": "@bettor-arena/loopctl",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:mcp": "bun test mcp_core.test.ts",
+    "selftest:mcp": "bun mcp_tools.ts --selftest && bun mcp_runtime.ts --selftest"
+  }
+}

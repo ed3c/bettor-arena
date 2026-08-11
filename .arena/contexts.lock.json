@@ -1,1 +1,556 @@
-{"content_sha256":"c5784aaa13a6d1bfa7a4f48ba3620f0fbae6797939fb19d9c937d5f9cd9709e9","contexts":[{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","docs/agent-runtime-integration.md","docs/runtime-env-integration.md",".agents/module-set.json",".agents/shared-skills.requirements.json",".runtime-env/requirements.json"],"context_sha256":"8a1f4a82c5e8d29d6e9dcf3282a633c366d81da7138ae8d894e32a5b0fdb8e14","cwd":".","drivers":{"claude-code":{"binary":"claude","entry":"CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"AGENTS.md"}},"files":[{"blob":"74aba159208c921a5618dfc9f0c29a414de48e50","mode":"100644","path":".agents/module-set.json"},{"blob":"6d2e5a5375c7f101977eed0d0166b571ca329e92","mode":"100644","path":".agents/shared-skills.requirements.json"},{"blob":"b5ba3ebe181898bd53d8d048f79ffc69e75478b6","mode":"100644","path":".runtime-env/requirements.json"},{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"bf1f3607d32b7343c00ad950872a929bd1950a59","mode":"100644","path":"docs/agent-runtime-integration.md"},{"blob":"a67a2bd93792ebdfbb8cd32bf10cd3ec3ad03704","mode":"100644","path":"docs/runtime-env-integration.md"}],"id":"agent-runtime","loop":"agent-runtime","module":"agent-runtime-integration","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","loop_wiki/code-truth-graph/AGENTS.md","loop_wiki/code-truth-graph/CLAUDE.md","loop_wiki/code-truth-graph/PROMPT.md","loop_wiki/code-truth-graph/ROUTES.md","loop_wiki/code-truth-graph/PLAN.md","loop_wiki/code-truth-graph/modules/eight-base-laws.md","loop_wiki/code-truth-graph/modules/exchange-formats.md"],"context_sha256":"a835ce07cbc419c696fc6fcbb2b2e1348345f32865cde3a021c00b36e16e708a","cwd":"loop_wiki/code-truth-graph","drivers":{"claude-code":{"binary":"claude","entry":"loop_wiki/code-truth-graph/CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"loop_wiki/code-truth-graph/AGENTS.md"}},"files":[{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"f4a41917a6467c17e2ff450841dd835e7319903e","mode":"100644","path":"loop_wiki/code-truth-graph/AGENTS.md"},{"blob":"38e26e2d94368449a94e506d7d85739c8c73c601","mode":"100644","path":"loop_wiki/code-truth-graph/CLAUDE.md"},{"blob":"b135394c4eda0e21f844eb80449b7f14cbe19e1f","mode":"100644","path":"loop_wiki/code-truth-graph/PLAN.md"},{"blob":"79dc9b8dcfcf31a092ca4565b3a78c7b09a704ce","mode":"100644","path":"loop_wiki/code-truth-graph/PROMPT.md"},{"blob":"185188ff6ab65e566981946b47889f800e3a69d4","mode":"100644","path":"loop_wiki/code-truth-graph/ROUTES.md"},{"blob":"3297a92de7c86e5c19a973275af28fbfd7c48004","mode":"100644","path":"loop_wiki/code-truth-graph/modules/eight-base-laws.md"},{"blob":"01dce34eee7a09268a2a03adfedb4a511e68a508","mode":"100644","path":"loop_wiki/code-truth-graph/modules/exchange-formats.md"}],"id":"code-truth-graph","loop":"ctg","module":"code-truth-graph","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","CONTEXT.md","docs/architecture/modular-integration-requirements.md","docs/architecture/modular-integration-status.md","docs/agent-runtime-integration.md"],"context_sha256":"a7bfd3b3b089fcb5e61bf82f249dcb8efd6e5edc841a4c6568e506307dc19636","cwd":".","drivers":{"claude-code":{"binary":"claude","entry":"CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"AGENTS.md"}},"files":[{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"c2cec9193eb3c511db9bf0eb9f0fc2710edeeaec","mode":"100644","path":"CONTEXT.md"},{"blob":"bf1f3607d32b7343c00ad950872a929bd1950a59","mode":"100644","path":"docs/agent-runtime-integration.md"},{"blob":"e91f533d4591824c9794f30cc4479720de3bbbbc","mode":"100644","path":"docs/architecture/modular-integration-requirements.md"},{"blob":"d41da4910b8230e0acc6a9f53535c9c438f6374e","mode":"100644","path":"docs/architecture/modular-integration-status.md"}],"id":"macro","loop":"macro","module":"arena-core","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","notebooklm/README.md",".agents/skills/notebooklm-workflow/SKILL.md",".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md","docs/architecture/modular-integration-requirements.md"],"context_sha256":"4b54886e5e236d64e2b3409b368191b0732dfb7113bf4a721684fa1af1fd5c6d","cwd":"notebooklm","drivers":{"claude-code":{"binary":"claude","entry":"CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"AGENTS.md"}},"files":[{"blob":"1bd52057b714cde9b6cd559af02c22adf37e38f5","mode":"100644","path":".agents/skills/notebooklm-workflow/SKILL.md"},{"blob":"0da366fc164d15de57b45a5d1d84bb5ff8a7b4d7","mode":"100644","path":".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"},{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"e91f533d4591824c9794f30cc4479720de3bbbbc","mode":"100644","path":"docs/architecture/modular-integration-requirements.md"},{"blob":"80432ce79798718440f8feff8b99aa7467b3522f","mode":"100644","path":"notebooklm/README.md"}],"id":"notebooklm","loop":"notebooklm","module":"notebooklm","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","kb-ingest/README.md","kb-ingest/skill/SKILL.md","kb-ingest/port/README.md","docs/architecture/modular-integration-requirements.md"],"context_sha256":"396d218f71daf1a52768c98bcda7b1a11f11cdf73f2974782298f292289ceaff","cwd":"kb-ingest","drivers":{"claude-code":{"binary":"claude","entry":"CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"AGENTS.md"}},"files":[{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"e91f533d4591824c9794f30cc4479720de3bbbbc","mode":"100644","path":"docs/architecture/modular-integration-requirements.md"},{"blob":"73667b35c07b9c1967ad4fba4b62cf30605ab7b9","mode":"100644","path":"kb-ingest/README.md"},{"blob":"01ff1d19855022102ed91064344c47b86c2744bd","mode":"100644","path":"kb-ingest/port/README.md"},{"blob":"db7bbbc94c5ec99310f1bbea2315cbec4f0624e4","mode":"100644","path":"kb-ingest/skill/SKILL.md"}],"id":"openwiki","loop":"openwiki","module":"openwiki","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md","loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md","loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md","loop_wiki/evolve-perfect-seed-repo-factory/ROUTES.md","loop_wiki/evolve-perfect-seed-repo-factory/PLAN.md","loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md","loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"],"context_sha256":"c6baf5d031ec8b6c55dbb9b142f615d53a5a0139606eedc02644a7f7f3f71167","cwd":"loop_wiki/evolve-perfect-seed-repo-factory","drivers":{"claude-code":{"binary":"claude","entry":"loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md"}},"files":[{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"0ebb5d7daefcd3ce2c1dd2a342a468be5c83e3fc","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md"},{"blob":"5ce6b645fc58353ec4f2306ac6cbb29ed4bd4f7a","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md"},{"blob":"90ace356a3de4c6ca4883e3050556b763a5323f8","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/PLAN.md"},{"blob":"c982a4b4e7fcd2ae18c67a71c23ed70f35a40aba","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md"},{"blob":"5135e77e042d853de920e1c46c9056c023252cf6","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/ROUTES.md"},{"blob":"53cab58767d8698b5f5839cb91084bbedee3cc12","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md"},{"blob":"b55d59f08667bcf7b96fed3e1789093a0e10417d","mode":"100644","path":"loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"}],"id":"perfect-seed-factory","loop":"micro","module":"perfect-seed-factory","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}},{"common":["AGENTS.md","CLAUDE.md","ARCHITECTURE.md","loop_wiki/evolve-technical-equivalence-research/AGENTS.md","loop_wiki/evolve-technical-equivalence-research/PROMPT.md","loop_wiki/evolve-technical-equivalence-research/ROUTES.md","loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md","loop_wiki/evolve-technical-equivalence-research/modules/architecture.md","loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md","loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"],"context_sha256":"8fc666ea03b84dcfb05db9f20bf272aadc425964d20d919e7cb8ee81d94538f7","cwd":"loop_wiki/evolve-technical-equivalence-research","drivers":{"claude-code":{"binary":"claude","entry":"CLAUDE.md"},"codex-cli":{"binary":"codex","entry":"loop_wiki/evolve-technical-equivalence-research/AGENTS.md"}},"files":[{"blob":"6af42cdc81cdf6f6b59844b2b4120aaff405b4fb","mode":"100644","path":"AGENTS.md"},{"blob":"3b54ba7e3e19e3dc6d673a11ed9a842c634cd113","mode":"100644","path":"ARCHITECTURE.md"},{"blob":"dfc6bf7751f6b662cfc7b8413679152c99947543","mode":"100644","path":"CLAUDE.md"},{"blob":"77eec5a0b7bf2bdca72a21bc1861aed21c91c2d9","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/AGENTS.md"},{"blob":"a3715017f763ad8cfd6289a40971e4a3535a50e5","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/PROMPT.md"},{"blob":"acf1a2814b498437aa25b33e629632be7ab91ac7","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/ROUTES.md"},{"blob":"7937a5753e9718b58fc1725b1bda85998e3b8f9b","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/modules/architecture.md"},{"blob":"d142713a25f7f4895710f71b1af0f7bb41344928","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md"},{"blob":"5141106bafaef8e6571d24aaa529a6e1635509dd","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"},{"blob":"49f051c0509632a4e81ee04293a8d80aa4271e59","mode":"100644","path":"loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md"}],"id":"technical-equivalence","loop":"equivalence","module":"technical-equivalence","policy":{"immutable_ref_required":true,"max_seconds":180,"mutation":"none","network":"host-policy","secrets":"host-only"}}],"schema":"bettor-arena/context-lock/v1"}
+{
+  "content_sha256": "c5784aaa13a6d1bfa7a4f48ba3620f0fbae6797939fb19d9c937d5f9cd9709e9",
+  "contexts": [
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "docs/agent-runtime-integration.md",
+        "docs/runtime-env-integration.md",
+        ".agents/module-set.json",
+        ".agents/shared-skills.requirements.json",
+        ".runtime-env/requirements.json"
+      ],
+      "context_sha256": "8a1f4a82c5e8d29d6e9dcf3282a633c366d81da7138ae8d894e32a5b0fdb8e14",
+      "cwd": ".",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "74aba159208c921a5618dfc9f0c29a414de48e50",
+          "mode": "100644",
+          "path": ".agents/module-set.json"
+        },
+        {
+          "blob": "6d2e5a5375c7f101977eed0d0166b571ca329e92",
+          "mode": "100644",
+          "path": ".agents/shared-skills.requirements.json"
+        },
+        {
+          "blob": "b5ba3ebe181898bd53d8d048f79ffc69e75478b6",
+          "mode": "100644",
+          "path": ".runtime-env/requirements.json"
+        },
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "bf1f3607d32b7343c00ad950872a929bd1950a59",
+          "mode": "100644",
+          "path": "docs/agent-runtime-integration.md"
+        },
+        {
+          "blob": "a67a2bd93792ebdfbb8cd32bf10cd3ec3ad03704",
+          "mode": "100644",
+          "path": "docs/runtime-env-integration.md"
+        }
+      ],
+      "id": "agent-runtime",
+      "loop": "agent-runtime",
+      "module": "agent-runtime-integration",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "loop_wiki/code-truth-graph/AGENTS.md",
+        "loop_wiki/code-truth-graph/CLAUDE.md",
+        "loop_wiki/code-truth-graph/PROMPT.md",
+        "loop_wiki/code-truth-graph/ROUTES.md",
+        "loop_wiki/code-truth-graph/PLAN.md",
+        "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
+        "loop_wiki/code-truth-graph/modules/exchange-formats.md"
+      ],
+      "context_sha256": "a835ce07cbc419c696fc6fcbb2b2e1348345f32865cde3a021c00b36e16e708a",
+      "cwd": "loop_wiki/code-truth-graph",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "loop_wiki/code-truth-graph/CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "loop_wiki/code-truth-graph/AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "f4a41917a6467c17e2ff450841dd835e7319903e",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/AGENTS.md"
+        },
+        {
+          "blob": "38e26e2d94368449a94e506d7d85739c8c73c601",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/CLAUDE.md"
+        },
+        {
+          "blob": "b135394c4eda0e21f844eb80449b7f14cbe19e1f",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/PLAN.md"
+        },
+        {
+          "blob": "79dc9b8dcfcf31a092ca4565b3a78c7b09a704ce",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/PROMPT.md"
+        },
+        {
+          "blob": "185188ff6ab65e566981946b47889f800e3a69d4",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/ROUTES.md"
+        },
+        {
+          "blob": "3297a92de7c86e5c19a973275af28fbfd7c48004",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/modules/eight-base-laws.md"
+        },
+        {
+          "blob": "01dce34eee7a09268a2a03adfedb4a511e68a508",
+          "mode": "100644",
+          "path": "loop_wiki/code-truth-graph/modules/exchange-formats.md"
+        }
+      ],
+      "id": "code-truth-graph",
+      "loop": "ctg",
+      "module": "code-truth-graph",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "CONTEXT.md",
+        "docs/architecture/modular-integration-requirements.md",
+        "docs/architecture/modular-integration-status.md",
+        "docs/agent-runtime-integration.md"
+      ],
+      "context_sha256": "a7bfd3b3b089fcb5e61bf82f249dcb8efd6e5edc841a4c6568e506307dc19636",
+      "cwd": ".",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "c2cec9193eb3c511db9bf0eb9f0fc2710edeeaec",
+          "mode": "100644",
+          "path": "CONTEXT.md"
+        },
+        {
+          "blob": "bf1f3607d32b7343c00ad950872a929bd1950a59",
+          "mode": "100644",
+          "path": "docs/agent-runtime-integration.md"
+        },
+        {
+          "blob": "e91f533d4591824c9794f30cc4479720de3bbbbc",
+          "mode": "100644",
+          "path": "docs/architecture/modular-integration-requirements.md"
+        },
+        {
+          "blob": "d41da4910b8230e0acc6a9f53535c9c438f6374e",
+          "mode": "100644",
+          "path": "docs/architecture/modular-integration-status.md"
+        }
+      ],
+      "id": "macro",
+      "loop": "macro",
+      "module": "arena-core",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "notebooklm/README.md",
+        ".agents/skills/notebooklm-workflow/SKILL.md",
+        ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
+        "docs/architecture/modular-integration-requirements.md"
+      ],
+      "context_sha256": "4b54886e5e236d64e2b3409b368191b0732dfb7113bf4a721684fa1af1fd5c6d",
+      "cwd": "notebooklm",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "1bd52057b714cde9b6cd559af02c22adf37e38f5",
+          "mode": "100644",
+          "path": ".agents/skills/notebooklm-workflow/SKILL.md"
+        },
+        {
+          "blob": "0da366fc164d15de57b45a5d1d84bb5ff8a7b4d7",
+          "mode": "100644",
+          "path": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"
+        },
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "e91f533d4591824c9794f30cc4479720de3bbbbc",
+          "mode": "100644",
+          "path": "docs/architecture/modular-integration-requirements.md"
+        },
+        {
+          "blob": "80432ce79798718440f8feff8b99aa7467b3522f",
+          "mode": "100644",
+          "path": "notebooklm/README.md"
+        }
+      ],
+      "id": "notebooklm",
+      "loop": "notebooklm",
+      "module": "notebooklm",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "kb-ingest/README.md",
+        "kb-ingest/skill/SKILL.md",
+        "kb-ingest/port/README.md",
+        "docs/architecture/modular-integration-requirements.md"
+      ],
+      "context_sha256": "396d218f71daf1a52768c98bcda7b1a11f11cdf73f2974782298f292289ceaff",
+      "cwd": "kb-ingest",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "e91f533d4591824c9794f30cc4479720de3bbbbc",
+          "mode": "100644",
+          "path": "docs/architecture/modular-integration-requirements.md"
+        },
+        {
+          "blob": "73667b35c07b9c1967ad4fba4b62cf30605ab7b9",
+          "mode": "100644",
+          "path": "kb-ingest/README.md"
+        },
+        {
+          "blob": "01ff1d19855022102ed91064344c47b86c2744bd",
+          "mode": "100644",
+          "path": "kb-ingest/port/README.md"
+        },
+        {
+          "blob": "db7bbbc94c5ec99310f1bbea2315cbec4f0624e4",
+          "mode": "100644",
+          "path": "kb-ingest/skill/SKILL.md"
+        }
+      ],
+      "id": "openwiki",
+      "loop": "openwiki",
+      "module": "openwiki",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/ROUTES.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/PLAN.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
+        "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
+      ],
+      "context_sha256": "c6baf5d031ec8b6c55dbb9b142f615d53a5a0139606eedc02644a7f7f3f71167",
+      "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "0ebb5d7daefcd3ce2c1dd2a342a468be5c83e3fc",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md"
+        },
+        {
+          "blob": "5ce6b645fc58353ec4f2306ac6cbb29ed4bd4f7a",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md"
+        },
+        {
+          "blob": "90ace356a3de4c6ca4883e3050556b763a5323f8",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/PLAN.md"
+        },
+        {
+          "blob": "c982a4b4e7fcd2ae18c67a71c23ed70f35a40aba",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md"
+        },
+        {
+          "blob": "5135e77e042d853de920e1c46c9056c023252cf6",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/ROUTES.md"
+        },
+        {
+          "blob": "53cab58767d8698b5f5839cb91084bbedee3cc12",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md"
+        },
+        {
+          "blob": "b55d59f08667bcf7b96fed3e1789093a0e10417d",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
+        }
+      ],
+      "id": "perfect-seed-factory",
+      "loop": "micro",
+      "module": "perfect-seed-factory",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "loop_wiki/evolve-technical-equivalence-research/AGENTS.md",
+        "loop_wiki/evolve-technical-equivalence-research/PROMPT.md",
+        "loop_wiki/evolve-technical-equivalence-research/ROUTES.md",
+        "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md",
+        "loop_wiki/evolve-technical-equivalence-research/modules/architecture.md",
+        "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
+        "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
+      ],
+      "context_sha256": "8fc666ea03b84dcfb05db9f20bf272aadc425964d20d919e7cb8ee81d94538f7",
+      "cwd": "loop_wiki/evolve-technical-equivalence-research",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "loop_wiki/evolve-technical-equivalence-research/AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "6af42cdc81cdf6f6b59844b2b4120aaff405b4fb",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "3b54ba7e3e19e3dc6d673a11ed9a842c634cd113",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "dfc6bf7751f6b662cfc7b8413679152c99947543",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "77eec5a0b7bf2bdca72a21bc1861aed21c91c2d9",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/AGENTS.md"
+        },
+        {
+          "blob": "a3715017f763ad8cfd6289a40971e4a3535a50e5",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/PROMPT.md"
+        },
+        {
+          "blob": "acf1a2814b498437aa25b33e629632be7ab91ac7",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/ROUTES.md"
+        },
+        {
+          "blob": "7937a5753e9718b58fc1725b1bda85998e3b8f9b",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/modules/architecture.md"
+        },
+        {
+          "blob": "d142713a25f7f4895710f71b1af0f7bb41344928",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md"
+        },
+        {
+          "blob": "5141106bafaef8e6571d24aaa529a6e1635509dd",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
+        },
+        {
+          "blob": "49f051c0509632a4e81ee04293a8d80aa4271e59",
+          "mode": "100644",
+          "path": "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md"
+        }
+      ],
+      "id": "technical-equivalence",
+      "loop": "equivalence",
+      "module": "technical-equivalence",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    }
+  ],
+  "schema": "bettor-arena/context-lock/v1"
+}

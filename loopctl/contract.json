@@ -141,6 +141,7 @@
       "loop": "micro",
       "mode": "prove",
       "target": "proof_workflow/prove_micro_loop.sh",
+      "mcp_exposed": true,
       "required": [],
       "optional": [
         "--force-receipt",
@@ -154,6 +155,7 @@
       "loop": "micro",
       "mode": "test",
       "target": "proof_workflow/control_micro_entry.sh",
+      "mcp_exposed": true,
       "required": [],
       "optional": [
         "--json"
@@ -677,6 +679,7 @@
       "loop": "ctg",
       "mode": "run",
       "target": "loop_wiki/code-truth-graph/trigger.sh",
+      "mcp_exposed": true,
       "required": [
         "--packet",
         "--output"
@@ -693,7 +696,8 @@
         "exit": "0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input"
       },
       "mcp_carrier": {
-        "kind": "ctg-inline-bundle@1.0.0",
+        "kind": "closed-inline-bundle@1.0.0",
+        "result_file": "ctg-route-result.json",
         "max_request_bytes": 1048576,
         "description": "MCP accepts no local path. Supply one closed content-addressed bundle; the server materializes it only inside the call and returns bounded artifacts inline without disposable paths.",
         "input_schema": {
@@ -760,6 +764,7 @@
       "loop": "ctg",
       "mode": "prove",
       "target": "proof_workflow/prove_ctg_loop.sh",
+      "mcp_exposed": true,
       "required": [],
       "optional": [
         "--force-receipt",
@@ -780,6 +785,7 @@
       "loop": "ctg",
       "mode": "test",
       "target": "proof_workflow/control_ctg_entry.sh",
+      "mcp_exposed": true,
       "required": [],
       "optional": [
         "--json"
