@@ -1,19 +1,19 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "83d696586b8f6300eb2edf2c23bec82ce7a853e2",
+  "workflow_commit": "1f5622ae25cac71e8891519a1dde3245568026b3",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-83d696586b8f-dirty.json",
-    "container": "container-83d696586b8f-dirty.json",
-    "ctg": "ctg-83d696586b8f-dirty.json",
-    "equivalence": "equivalence-83d696586b8f-dirty.json",
-    "harness": "harness-83d696586b8f-dirty.json",
-    "macro": "macro-83d696586b8f-dirty.json",
-    "micro": "micro-83d696586b8f-dirty.json",
-    "notebooklm": "notebooklm-83d696586b8f-dirty.json",
-    "openwiki": "openwiki-83d696586b8f-dirty.json",
-    "policy": "policy-83d696586b8f-dirty.json",
-    "workflow": "workflow-83d696586b8f-dirty.json"
+    "agent-runtime": "agent-runtime-1f5622ae25ca-dirty.json",
+    "container": "container-1f5622ae25ca-dirty.json",
+    "ctg": "ctg-1f5622ae25ca-dirty.json",
+    "equivalence": "equivalence-1f5622ae25ca-dirty.json",
+    "harness": "harness-1f5622ae25ca-dirty.json",
+    "macro": "macro-1f5622ae25ca-dirty.json",
+    "micro": "micro-1f5622ae25ca-dirty.json",
+    "notebooklm": "notebooklm-1f5622ae25ca-dirty.json",
+    "openwiki": "openwiki-1f5622ae25ca-dirty.json",
+    "policy": "policy-1f5622ae25ca-dirty.json",
+    "workflow": "workflow-1f5622ae25ca-dirty.json"
   },
   "counts": {
     "artifact": 45,
@@ -21,7 +21,7 @@
     "harness": 135,
     "optional": 1
   },
-  "workflow_digest": "ec3da09ac247f70566096bc45152effee22d04265bb92ddf898aa97b2ad0eac4",
+  "workflow_digest": "2a39c827797d6bd652cf99bfa135efb288fc3a971875449c29ae2de0377476e6",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -122,7 +122,7 @@
       ]
     },
     ".runtime-env/bindings/bettor-arena-local.json": {
-      "sha256": "3212747efa8b99ec3f6531fb74b5c39dea08ef7b30c6f6f33f201e66db57a3ab",
+      "sha256": "86ee90dd33c1e7efa0ed8e9fb03773b016cb1fb708eeac5b5e444ae2009f8d82",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -130,7 +130,7 @@
       ]
     },
     ".runtime-env/policies/codex-openshell-chatgpt-placeholder.json": {
-      "sha256": "432a82bc98335f56eedecd8fcba9e005d1077499a861743bcdd3390ccea95963",
+      "sha256": "7fd13d8d0bd98702ce22f6a4a9545a765e09c69b537552d1306086fcaaf01e67",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -186,7 +186,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-83d696586b8f6300eb2edf2c23bec82ce7a853e2.json": {
+    "data/receipts/post-commit-1f5622ae25cac71e8891519a1dde3245568026b3.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
