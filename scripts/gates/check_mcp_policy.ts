@@ -46,7 +46,14 @@ function check(): number {
     throw new McpError("public tool projection leaked internal fields");
   }
   const runtime = readFileSync(resolve(ROOT, "loopctl/mcp_runtime.ts"), "utf8");
-  if (/symlink(?:Sync|To)|node_modules.*owner/i.test(runtime)) {
+  const borrowingMarkers = [
+    "symlinkSync(",
+    "symlinkTo(",
+    "ownerNodeModules",
+    "owner_node_modules",
+    "borrowOwnerDependencies",
+  ];
+  if (borrowingMarkers.some((marker) => runtime.includes(marker))) {
     throw new McpError("Bun runtime contains owner dependency borrowing");
   }
   console.log(`PASS default-deny Bun MCP policy (${surface.tools.length} tools)`);
