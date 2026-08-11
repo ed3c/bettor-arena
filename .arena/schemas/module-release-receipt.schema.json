@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/module-release-receipt.schema.json",
+  "title": "Bettor Arena Module Release Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "composition", "composition_lock_sha256", "subject_lock_sha256", "status", "modules", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/module-release-receipt/v1"},
+    "composition": {"type": "string", "minLength": 1},
+    "composition_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "subject_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["PASS", "FAIL", "NOT_EXERCISED"]},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "interface_version", "closure_sha256", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "interface_version": {"type": "string"},
+          "closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["proof", "control", "mutation"],
+            "properties": {
+              "proof": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED"]},
+              "control": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED"]},
+              "mutation": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}
