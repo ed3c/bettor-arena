@@ -3,6 +3,9 @@
 工程 SSOT＝`ARCHITECTURE.md`：放置契約＝§2、鐵律全文＝§3。規則原文只住 canonical 文件，
 本檔只保留 Claude Code 專屬入口與強制讀取順序，禁止複述另一份模組化規格。
 
+`CLAUDE.md`／`AGENTS.md` 是 governed projections；修改時必須同步其 `skills-shared` canonical generator/source。
+本機 agent-docs gate 缺席時只能回報 `NOT_CHECKED`，不得把 SKIP 說成 checked-clean。
+
 - 啟用：`sh bootstrap.sh`；專案 MCP（`.mcp.json`）與 hook（`.claude/settings.json`）啟用＝人 admit。
 - commit 前：走 `ARCHITECTURE.md` §3 的 T0 閘；落新檔前：先查 §2 槽位與 module owner。
 - 迭代期間 root passive context 凍結；改本檔後必須開新 Claude Code session 才能驗證。
@@ -16,7 +19,7 @@
 2. `docs/architecture/modular-integration-requirements.md`；
 3. `docs/agent-runtime-integration.md`；
 4. `sh loopctl/loopctl.sh contract`；
-5. 目標 loop 自己的 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；
+5. 目標 module/loop 宣告的 passive context，例如 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；缺席必須具名，不得臆造；
 6. 最新 proof/control receipt 與 named exclusions。
 
 `docs/architecture/modular-integration-requirements.md` 是 target contract，不是完成宣告。不存在的 `.arena/`
