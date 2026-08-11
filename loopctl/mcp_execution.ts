@@ -154,4 +154,201 @@ export function pruneWorktree(
   worktree: string,
   prefixes: string[],
 ): { kept: number; removed: number } {
-  const raw = gitBytes(worktree, ["ls-files", "-zh‰t¤ì(€±•Ð­•ÁÐ€ô€Àì(€±•ÐÉ•µ½Ù•€ô€Àì(€™½È€¡½¹ÍÐÁ…Ñ ½˜É…Ü¹Ñ½MÑÉ¥¹œ ‰ÕÑ˜àˆ¤¹ÍÁ±¥Ð ‰pÀˆ¤¤ì(€€€¥˜€ …Á…Ñ ¤½¹Ñ¥¹Õ”ì(€€€¥˜€¡ÁÉ•™¥á•Ì¹Í½µ” ¡ÁÉ•™¥à¤€ôøµ…Ñ¡•ÍAÉ•™¥à¡Á…Ñ °ÁÉ•™¥à¤¤¤ì(€€€€€­•ÁÐ€¬ô€Äì(€€€€€½¹Ñ¥¹Õ”ì(€€€ô(€€€½¹ÍÐÑ…É•Ð€ô©½¥¸¡Ý½É­ÑÉ•”°Á…Ñ ¤ì(€€€¥˜€¡•á¥ÍÑÍMå¹Œ¡Ñ…É•Ð¤¤Õ¹±¥¹­Må¹Œ¡Ñ…É•Ð¤ì(€€€É•µ½Ù•€¬ô€Äì(€ô(€É•ÑÕÉ¸ì­•ÁÐ°É•µ½Ù•ôì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸É•…Ñ•]½É­ÍÁ…”¡É½½ÐèÍÑÉ¥¹œ°½µµ¥ÐèÍÑÉ¥¹œ¤èì(€‰…Í”èÍÑÉ¥¹œì(€Ý½É­ÑÉ•”èÍÑÉ¥¹œì(€±•…¹ÕÀè€ ¤€ôøÙ½¥ì)ôì(€½¹ÍÐ‰…Í”€ôµ­‘Ñ•µÁMå¹Œ¡©½¥¸¡ÑµÁ‘¥È ¤°€‰±½½ÁÑ°µµÀ´ˆ¤¤ì(€½¹ÍÐÝ½É­ÑÉ•”€ô©½¥¸¡‰…Í”°€‰É•Á¼ˆ¤ì(€ÑÉäì(€€€¥ÑQ•áÐ¡É½½Ð°l‰Ý½É­ÑÉ•”ˆ°€‰…‘ˆ°€ˆ´µ‘•Ñ… ˆ°Ý½É­ÑÉ•”°½µµ¥Ñt¤ì(€ô…Ñ €¡•ÉÉ½È¤ì(€€€ÉµMå¹Œ¡‰…Í”°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”°™½É”èÑÉÕ”ô¤ì(€€€Ñ¡É½Ü•ÉÉ½Èì(€ô(€±•Ð‘½¹”€ô™…±Í”ì(€É•ÑÕÉ¸ì(€€€‰…Í”°(€€€Ý½É­ÑÉ•”°(€€€±•…¹ÕÀè€ ¤€ôøì(€€€€€¥˜€¡‘½¹”¤É•ÑÕÉ¸ì(€€€€€‘½¹”€ôÑÉÕ”ì(€€€€€ÍÁ…Ý¹Må¹Œ ‰¥Ðˆ°lˆµˆ°É½½Ð°€‰Ý½É­ÑÉ•”ˆ°€‰É•µ½Ù”ˆ°€ˆ´µ™½É”ˆ°Ý½É­ÑÉ••t°ì(€€€€€€€•¹½‘¥¹œè€‰ÕÑ˜àˆ°(€€€€€ô¤ì(€€€€€ÉµMå¹Œ¡‰…Í”°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”°™½É”èÑÉÕ”ô¤ì(€€€ô°(€ôì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸Ñ½ÉØ¡Ñ½½°è•¹•É…Ñ•‘Q½½°°…ÉÕµ•¹ÑÍY…±Õ”èÕ¹­¹½Ý¸¤èÍÑÉ¥¹mtì(€…ÍÍ•ÉÑ=‰©•Ð¡…ÉÕµ•¹ÑÍY…±Õ”°€‰Ñ½½°…ÉÕµ•¹ÑÌˆ¤ì(€¥˜€¡Ñ½½°¹}…ÉÉ¥•È¤ì(€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰ÑåÁ•¥¹±¥¹”…ÉÉ¥•È…•ÁÑÌ•á…Ñ±ä½¹”‰Õ¹‘±”½‰©•Ðì±½…°Á…­•Ð½½ÕÑÁÕÐÁ…Ñ¡Ì…É”™½É‰¥‘‘•¸ˆ¤ì(€ô(€½¹ÍÐ…±±½Ý•€ô¹•Ü5…À (€€€Ñ½½°¹}…ÉØ¹™±…Ì¹µ…À ¡™±…œ¤€ôøm™±…œ¹Í±¥” È¤¹É•Á±…•±° ˆ´ˆ°€‰|ˆ¤°™±…t¤°(€€¤ì(€½¹ÍÐÕ¹­¹½Ý¸€ô=‰©•Ð¹­•åÌ¡…ÉÕµ•¹ÑÍY…±Õ”¤¹™¥±Ñ•È ¡­•ä¤€ôø€……±±½Ý•¹¡…Ì¡­•ä¤¤ì(€¥˜€¡Õ¹­¹½Ý¸¹±•¹Ñ ¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡Õ¹‘•±…É•…ÉÕµ•¹Ð¡Ì¤è€‘íÕ¹­¹½Ý¸¹Í½ÉÐ ¤¹©½¥¸ ˆ°€ˆ¥õ€¤ì(€½¹ÍÐ…ÉØ€ômÑ½½°¹}…ÉØ¹±½½À°Ñ½½°¹}…ÉØ¹µ½‘•tì(€™½È€¡½¹ÍÐ­•ä½˜=‰©•Ð¹­•åÌ¡…ÉÕµ•¹ÑÍY…±Õ”¤¹Í½ÉÐ ¤¤ì(€€€½¹ÍÐÙ…±Õ”€ô…ÉÕµ•¹ÑÍY…±Õ•m­•åtì(€€€½¹ÍÐ™±…œ€ô…±±½Ý•¹•Ð¡­•ä¤„ì(€€€¥˜€¡ÑåÁ•½˜Ù…±Õ”€ôôô€‰‰½½±•…¸ˆ¤ì(€€€€€¥˜€¡Ù…±Õ”¤…ÉØ¹ÁÕÍ ¡™±…œ¤ì(€€€€€½¹Ñ¥¹Õ”ì(€€€ô(€€€¥˜€¡ÑåÁ•½˜Ù…±Õ”€„ôô€‰ÍÑÉ¥¹œˆ¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡…ÉÕµ•¹Ð€‘í­•åôµÕÍÐ‰”„ÍÑÉ¥¹œ½È‰½½±•…¹€¤ì(€€€ô(€€€½¹ÍÐ…¹‘¥‘…Ñ”€ô¹½Éµ…±¥é”¡Ù…±Õ”¤¹É•Á±…•±° ‰qpˆ°€ˆ¼ˆ¤ì(€€€¥˜€¡¥Í‰Í½±ÕÑ”¡Ù…±Õ”¤ñð…¹‘¥‘…Ñ”€ôôô€ˆ¸¸ˆñð…¹‘¥‘…Ñ”¹ÍÑ…ÉÑÍ]¥Ñ  ˆ¸¸¼ˆ¤ñð…¹‘¥‘…Ñ”¹¥¹±Õ‘•Ì ˆ¼¸¸¼ˆ¤¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡Í•ÉÙ•Èµ¡½ÍÐÁ…Ñ ¥Ì™½É‰¥‘‘•¸è€‘í­•åõ€¤ì(€€€ô(€€€…ÉØ¹ÁÕÍ ¡™±…œ°Ù…±Õ”¤ì(€ô(€¥˜€ ……ÉØ¹¥¹±Õ‘•Ì ˆ´µ©Í½¸ˆ¤¤…ÉØ¹ÁÕÍ  ˆ´µ©Í½¸ˆ¤ì(€É•ÑÕÉ¸…ÉØì)ô()™Õ¹Ñ¥½¸‘•½‘•	…Í”ØÐ¡Ù…±Õ”èÕ¹­¹½Ý¸°±…‰•°èÍÑÉ¥¹œ¤è	Õ™™•Èì(€¥˜€¡ÑåÁ•½˜Ù…±Õ”€„ôô€‰ÍÑÉ¥¹œˆñðÙ…±Õ”¹±•¹Ñ €”€Ð€„ôô€Àñð€„½x üémµi„µèÀ´ä¬½uìÑô¤¨ üémµi„µèÀ´ä¬½uìÉôôõñmµi„µèÀ´ä¬½uìÍôô¤ü¼¹Ñ•ÍÐ¡Ù…±Õ”¤¤ì(€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡€‘í±…‰•±ô¡…Ì¥¹Ù…±¥‰…Í”ØÑ€¤ì(€ô(€É•ÑÕÉ¸	Õ™™•È¹™É½´¡Ù…±Õ”°€‰‰…Í”ØÐˆ¤ì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸µ…Ñ•É¥…±¥é•%¹±¥¹•	Õ¹‘±” (€‰…Í”èÍÑÉ¥¹œ°(€…ÉÕµ•¹ÑÍY…±Õ”èÕ¹­¹½Ý¸°(€µ…á	åÑ•Ìè¹Õµ‰•È°(¤èìÁ…­•ÐèÍÑÉ¥¹œì½ÕÑÁÕÐèÍÑÉ¥¹œôì(€…ÍÍ•ÉÑá…Ñ¥•±‘Ì¡…ÉÕµ•¹ÑÍY…±Õ”°l‰‰Õ¹‘±”‰t°€‰…ÉÉ¥•È…ÉÕµ•¹ÑÌˆ¤ì(€½¹ÍÐ‰Õ¹‘±”€ô…ÉÕµ•¹ÑÍY…±Õ”¹‰Õ¹‘±”ì(€…ÍÍ•ÉÑá…Ñ¥•±‘Ì¡‰Õ¹‘±”°l‰Á…­•Ñ}É•˜ˆ°€‰™¥±•Ì‰t°€‰‰Õ¹‘±”ˆ¤ì(€¥˜€ …ÉÉ…ä¹¥ÍÉÉ…ä¡‰Õ¹‘±”¹™¥±•Ì¤ñð‰Õ¹‘±”¹™¥±•Ì¹±•¹Ñ €ôôô€À¤ì(€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰‰Õ¹‘±”¹™¥±•ÌµÕÍÐ‰”¹½¸µ•µÁÑäˆ¤ì(€ô(€½¹ÍÐÁ…­•ÑI•˜€ôÍ…™•ÉÑ¥™…ÑI•˜¡‰Õ¹‘±”¹Á…­•Ñ}É•˜¤ì(€½¹ÍÐÑ…É•Ð€ô©½¥¸¡‰…Í”°€‰¥¹ÁÕÐˆ¤ì(€½¹ÍÐ½ÕÑÁÕÐ€ô©½¥¸¡‰…Í”°€‰½ÕÑÁÕÐˆ¤ì(€µ­‘¥ÉMå¹Œ¡Ñ…É•Ð°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”ô¤ì(€µ­‘¥ÉMå¹Œ¡½ÕÑÁÕÐ°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”ô¤ì(€½¹ÍÐÍ••¸€ô¹•ÜM•ÐñÍÑÉ¥¹œø ¤ì(€±•ÐÑ½Ñ…°€ô€Àì(€™½È€¡½¹ÍÐm¥¹‘•à°É…Ýt½˜‰Õ¹‘±”¹™¥±•Ì¹•¹ÑÉ¥•Ì ¤¤ì(€€€…ÍÍ•ÉÑá…Ñ¥•±‘Ì¡É…Ü°l‰…ÉÑ¥™…Ñ}É•˜ˆ°€‰Í¡„ÈÔØˆ°€‰½¹Ñ•¹Ñ}‰…Í”ØÐ‰t°‰Õ¹‘±”¹™¥±•Íl‘í¥¹‘•áõu€¤ì(€€€½¹ÍÐ…ÉÑ¥™…ÑI•˜€ôÍ…™•ÉÑ¥™…ÑI•˜¡É…Ü¹…ÉÑ¥™…Ñ}É•˜¤ì(€€€¥˜€¡Í••¸¹¡…Ì¡…ÉÑ¥™…ÑI•˜¤¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡‘ÕÁ±¥…Ñ”…ÉÑ¥™…Ñ}É•˜è€‘í…ÉÑ¥™…ÑI•™õ€¤ì(€€€Í••¸¹…‘¡…ÉÑ¥™…ÑI•˜¤ì(€€€¥˜€¡ÑåÁ•½˜É…Ü¹Í¡„ÈÔØ€„ôô€‰ÍÑÉ¥¹œˆñð€„½ylÀ´å„µ™uìØÑô¼¹Ñ•ÍÐ¡É…Ü¹Í¡„ÈÔØ¤¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡‰Õ¹‘±”¹™¥±•Íl‘í¥¹‘•áõt¡…Ì¥¹Ù…±¥Í¡„ÈÔÙ€¤ì(€€€ô(€€€½¹ÍÐ½¹Ñ•¹Ð€ô‘•½‘•	…Í”ØÐ¡É…Ü¹½¹Ñ•¹Ñ}‰…Í”ØÐ°‰Õ¹‘±”¹™¥±•Íl‘í¥¹‘•áõu€¤ì(€€€Ñ½Ñ…°€¬ô½¹Ñ•¹Ð¹±•¹Ñ ì(€€€¥˜€¡Ñ½Ñ…°€øµ…á	åÑ•Ì¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰‘•½‘•¥¹±¥¹”É•ÅÕ•ÍÐ•á••‘ÌÁ½±¥ä±¥µ¥Ðˆ¤ì(€€€¥˜€¡Í¡„ÈÔØ¡½¹Ñ•¹Ð¤€„ôôÉ…Ü¹Í¡„ÈÔØ¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡¥¹±¥¹”…ÉÑ¥™…Ð‘¥•ÍÐµ¥Íµ…Ñ è€‘í…ÉÑ¥™…ÑI•™õ€¤ì(€€€ô(€€€½¹ÍÐ‘•ÍÑ¥¹…Ñ¥½¸€ôÍ…™•)½¥¸¡Ñ…É•Ð°…ÉÑ¥™…ÑI•˜¤ì(€€€µ­‘¥ÉMå¹Œ¡‘¥É¹…µ”¡‘•ÍÑ¥¹…Ñ¥½¸¤°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”ô¤ì(€€€ÝÉ¥Ñ•¥±•Må¹Œ¡‘•ÍÑ¥¹…Ñ¥½¸°½¹Ñ•¹Ð¤ì(€ô(€¥˜€ …Í••¸¹¡…Ì¡Á…­•ÑI•˜¤¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰Á…­•Ñ}É•˜¥Ì¹½ÐÁÉ•Í•¹Ð¥¸™¥±•Ìˆ¤ì(€É•ÑÕÉ¸ìÁ…­•ÐèÍ…™•)½¥¸¡Ñ…É•Ð°Á…­•ÑI•˜¤°½ÕÑÁÕÐôì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸‰½Õ¹‘•‘)Í½¹A…å±½… (€ÍÑ‘½ÕÐèÍÑÉ¥¹œ°(€ÍÑ‘•ÉÈèÍÑÉ¥¹œ°(€É•ÑÕÉ¹½‘”è¹Õµ‰•È°(€±¥µ¥Ðè¹Õµ‰•È°(¤èI•½ÉñÍÑÉ¥¹œ°Õ¹­¹½Ý¸øì(€¥˜€¡	Õ™™•È¹‰åÑ•1•¹Ñ ¡ÍÑ‘½ÕÐ¤€¬	Õ™™•È¹‰åÑ•1•¹Ñ ¡ÍÑ‘•ÉÈ¤€ø±¥µ¥Ð¤ì(€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰±½½ÁÑ°½ÕÑÁÕÐ•á••‘ÌÁ½±¥ä±¥µ¥Ðˆ¤ì(€ô(€ÑÉäì(€€€½¹ÍÐÙ…±Õ”€ô)M=8¹Á…ÉÍ”¡ÍÑ‘½ÕÐñð€‰íôˆ¤ì(€€€…ÍÍ•ÉÑ=‰©•Ð¡Ù…±Õ”°€‰±½½ÁÑ°)M=8É•ÍÕ±Ðˆ¤ì(€€€É•ÑÕÉ¸Ù…±Õ”ì(€ô…Ñ €¡•ÉÉ½È¤ì(€€€¥˜€¡•ÉÉ½È¥¹ÍÑ…¹•½˜5ÁÉÉ½È¤Ñ¡É½Ü•ÉÉ½Èì(€€€É•ÑÕÉ¸ì(€€€€€•ÉÉ½Èè€‰±½½ÁÑ°ÁÉ½‘Õ•¹¼)M=8É•ÍÕ±Ðˆ°(€€€€€•á¥ÐèÉ•ÑÕÉ¹½‘”°(€€€€€ÍÑ‘½ÕÐèÍÑ‘½ÕÐ¹Í±¥” ´ÐÀÀÀ¤°(€€€€€ÍÑ‘•ÉÈèÍÑ‘•ÉÈ¹Í±¥” ´ÐÀÀÀ¤°(€€€ôì(€ô)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸½±±•ÑÑ•±¥Ù•Éä (€½ÕÑÁÕÐèÍÑÉ¥¹œ°(€µ…á	åÑ•Ìè¹Õµ‰•È°(¤èì(€É½ÕÑ•}É•ÍÕ±ÐèI•½ÉñÍÑÉ¥¹œ°Õ¹­¹½Ý¸øì(€…ÉÑ¥™…ÑÌèÉÉ…äñì­¥¹èÕ¹­¹½Ý¸ìÍ¡„ÈÔØèÍÑÉ¥¹œì½¹Ñ•¹Ñ}‰…Í”ØÐèÍÑÉ¥¹œôøì)ôì(€½¹ÍÐÉ•ÍÕ±ÑA…Ñ €ô©½¥¸¡½ÕÑÁÕÐ°€‰ÑœµÉ½ÕÑ”µÉ•ÍÕ±Ð¹©Í½¸ˆ¤ì(€¥˜€ …•á¥ÍÑÍMå¹Œ¡É•ÍÕ±ÑA…Ñ ¤¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰QÉ½ÕÑ”É•ÍÕ±Ð¥Ì…‰Í•¹Ðˆ¤ì(€½¹ÍÐÉ•ÍÕ±Ñ	åÑ•Ì€ôÉ•…‘¥±•Må¹Œ¡É•ÍÕ±ÑA…Ñ ¤ì(€±•ÐÑ½Ñ…°€ôÉ•ÍÕ±Ñ	åÑ•Ì¹±•¹Ñ ì(€¥˜€¡Ñ½Ñ…°€øµ…á	åÑ•Ì¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰Q½ÕÑÁÕÐ•á••‘ÌÁ½±¥ä±¥µ¥Ðˆ¤ì(€½¹ÍÐÉ½ÕÑ•I•ÍÕ±Ð€ô)M=8¹Á…ÉÍ”¡É•ÍÕ±Ñ	åÑ•Ì¹Ñ½MÑÉ¥¹œ ‰ÕÑ˜àˆ¤¤…ÌI•½ÉñÍÑÉ¥¹œ°Õ¹­¹½Ý¸øì(€½¹ÍÐÉ…ÝÉÑ¥™…ÑÌ€ôÉ½ÕÑ•I•ÍÕ±Ð¹…ÉÑ¥™…ÑÌì(€¥˜€ …ÉÉ…ä¹¥ÍÉÉ…ä¡É…ÝÉÑ¥™…ÑÌ¤¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰QÉ½ÕÑ”É•ÍÕ±Ð…ÉÑ¥™…ÑÌµÕÍÐ‰”…¸…ÉÉ…äˆ¤ì(€½¹ÍÐ…ÉÑ¥™…ÑÌèÉÉ…äñì­¥¹èÕ¹­¹½Ý¸ìÍ¡„ÈÔØèÍÑÉ¥¹œì½¹Ñ•¹Ñ}‰…Í”ØÐèÍÑÉ¥¹œôø€ômtì(€™½È€¡½¹ÍÐm¥¹‘•à°É…Ýt½˜É…ÝÉÑ¥™…ÑÌ¹•¹ÑÉ¥•Ì ¤¤ì(€€€…ÍÍ•ÉÑ=‰©•Ð¡É…Ü°Q…ÉÑ¥™…ÑÍl‘í¥¹‘•áõu€¤ì(€€€½¹ÍÐ…ÉÑ¥™…ÑI•˜€ôÍ…™•ÉÑ¥™…ÑI•˜¡É…Ü¹…ÉÑ¥™…Ñ}É•˜¤ì(€€€¥˜€¡ÑåÁ•½˜É…Ü¹Í¡„ÈÔØ€„ôô€‰ÍÑÉ¥¹œˆñð€„½ylÀ´å„µ™uìØÑô¼¹Ñ•ÍÐ¡É…Ü¹Í¡„ÈÔØ¤¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡Q…ÉÑ¥™…ÑÍl‘í¥¹‘•áõt¡…Ì¥¹Ù…±¥Í¡„ÈÔÙ€¤ì(€€€ô(€€€½¹ÍÐ½¹Ñ•¹Ð€ôÉ•…‘¥±•Må¹Œ¡Í…™•)½¥¸¡½ÕÑÁÕÐ°…ÉÑ¥™…ÑI•˜¤¤ì(€€€Ñ½Ñ…°€¬ô½¹Ñ•¹Ð¹±•¹Ñ ì(€€€¥˜€¡Ñ½Ñ…°€øµ…á	åÑ•Ì¤Ñ¡É½Ü¹•Ü5ÁÉÉ½È ‰QÑåÁ•½ÕÑÁÕÐ•á••‘ÌÁ½±¥ä±¥µ¥Ðˆ¤ì(€€€¥˜€¡Í¡„ÈÔØ¡½¹Ñ•¹Ð¤€„ôôÉ…Ü¹Í¡„ÈÔØ¤ì(€€€€€Ñ¡É½Ü¹•Ü5ÁÉÉ½È¡QÉ•ÍÕ±Ð…ÉÑ¥™…Ð‘¥•ÍÐµ¥Íµ…Ñ è€‘í…ÉÑ¥™…ÑI•™õ€¤ì(€€€ô(€€€…ÉÑ¥™…ÑÌ¹ÁÕÍ ¡ì(€€€€€­¥¹èÉ…Ü¹­¥¹°(€€€€€Í¡„ÈÔØèÉ…Ü¹Í¡„ÈÔØ°(€€€€€½¹Ñ•¹Ñ}‰…Í”ØÐè½¹Ñ•¹Ð¹Ñ½MÑÉ¥¹œ ‰‰…Í”ØÐˆ¤°(€€€ô¤ì(€ô(€É•ÑÕÉ¸ìÉ½ÕÑ•}É•ÍÕ±ÐèÉ½ÕÑ•I•ÍÕ±Ð°…ÉÑ¥™…ÑÌôì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸Í…¹¥Ñ¥é•‘¹Ù¥É½¹µ•¹Ð ¤è9½‘•)L¹AÉ½•ÍÍ¹Øì(€½¹ÍÐ•¹Ù¥É½¹µ•¹Ðè9½‘•)L¹AÉ½•ÍÍ¹Ø€ôì€¸¸¹ÁÉ½•ÍÌ¹•¹Øôì(€™½È€¡½¹ÍÐ¹…µ”½˜MIQ}95L¤‘•±•Ñ”•¹Ù¥É½¹µ•¹Ñm¹…µ•tì(€É•ÑÕÉ¸•¹Ù¥É½¹µ•¹Ðì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸±½…‘MÕÉ™…”¡É½½ÐèÍÑÉ¥¹œ°½µµ¥ÐèÍÑÉ¥¹œ¤è5½‘Õ±•MÕÉ™…”ì(€½¹ÍÐ½¹ÑÉ…Ð€ô©Í½¹ÑI•˜ñ1½½Á½¹ÑÉ…Ðø¡É½½Ð°½µµ¥Ð°€‰±½½ÁÑ°½½¹ÑÉ…Ð¹©Í½¸ˆ¤ì(€½¹ÍÐÁ½±¥ä€ô©Í½¹ÑI•˜ñ5ÁA½±¥äø¡É½½Ð°½µµ¥Ð°€ˆ¹…É•¹„½µÀµÁ½±¥ä¹©Í½¸ˆ¤ì(€½¹ÍÐ±½¬€ô©Í½¹ÑI•˜ñ½µÁ½Í¥Ñ¥½¹1½¬ø¡É½½Ð°½µµ¥Ð°€ˆ¹…É•¹„½±½­Ì½‰•ÑÑ½Èµ…É•¹„¹±½¬¹©Í½¸ˆ¤ì(€½¹ÍÐµ½‘Õ±•Ì€ô±½…‘5½‘Õ±•ÍÑI•˜¡É½½Ð°½µµ¥Ð°Í•±•Ñ•‘5½‘Õ±•Ì¡±½¬¤¤ì(€½¹ÍÐÑ½½±Ì€ô‰Õ¥±‘Q½½±Ì¡½¹ÑÉ…Ð°Á½±¥ä¤ì(€Ù…±¥‘…Ñ•áÑ•É¹…°¡Ñ½½±Ì°±½¬°µ½‘Õ±•Ì¤ì(€É•ÑÕÉ¸ìÑ½½±Ì°µ½‘Õ±•Ì°Á½±¥å¥•ÍÐè‘¥•ÍÑY…±Õ”¡Á½±¥ä¤ôì)ô(
+  const raw = gitBytes(worktree, ["ls-files", "-z"]);
+  let kept = 0;
+  let removed = 0;
+  for (const path of raw.toString("utf8").split("\0")) {
+    if (!path) continue;
+    if (prefixes.some((prefix) => matchesPrefix(path, prefix))) {
+      kept += 1;
+      continue;
+    }
+    const target = join(worktree, path);
+    if (existsSync(target)) unlinkSync(target);
+    removed += 1;
+  }
+  return { kept, removed };
+}
+
+export function createWorkspace(root: string, commit: string): {
+  base: string;
+  worktree: string;
+  cleanup: () => void;
+} {
+  const base = mkdtempSync(join(tmpdir(), "loopctl-mcp-"));
+  const worktree = join(base, "repo");
+  try {
+    gitText(root, ["worktree", "add", "--detach", worktree, commit]);
+  } catch (error) {
+    rmSync(base, { recursive: true, force: true });
+    throw error;
+  }
+  let done = false;
+  return {
+    base,
+    worktree,
+    cleanup: () => {
+      if (done) return;
+      done = true;
+      spawnSync("git", ["-C", root, "worktree", "remove", "--force", worktree], {
+        encoding: "utf8",
+      });
+      rmSync(base, { recursive: true, force: true });
+    },
+  };
+}
+
+export function toArgv(tool: GeneratedTool, argumentsValue: unknown): string[] {
+  assertObject(argumentsValue, "tool arguments");
+  if (tool._carrier) {
+    throw new McpError("typed inline carrier accepts exactly one bundle object; local packet/output paths are forbidden");
+  }
+  const allowed = new Map(
+    tool._argv.flags.map((flag) => [flag.slice(2).replaceAll("-", "_"), flag]),
+  );
+  const unknown = Object.keys(argumentsValue).filter((key) => !allowed.has(key));
+  if (unknown.length) throw new McpError(`undeclared argument(s): ${unknown.sort().join(", ")}`);
+  const argv = [tool._argv.loop, tool._argv.mode];
+  for (const key of Object.keys(argumentsValue).sort()) {
+    const value = argumentsValue[key];
+    const flag = allowed.get(key)!;
+    if (typeof value === "boolean") {
+      if (value) argv.push(flag);
+      continue;
+    }
+    if (typeof value !== "string") {
+      throw new McpError(`argument ${key} must be a string or boolean`);
+    }
+    const candidate = normalize(value).replaceAll("\\", "/");
+    if (isAbsolute(value) || candidate === ".." || candidate.startsWith("../") || candidate.includes("/../")) {
+      throw new McpError(`server-host path is forbidden: ${key}`);
+    }
+    argv.push(flag, value);
+  }
+  if (!argv.includes("--json")) argv.push("--json");
+  return argv;
+}
+
+function decodeBase64(value: unknown, label: string): Buffer {
+  if (typeof value !== "string" || value.length % 4 !== 0 || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)) {
+    throw new McpError(`${label} has invalid base64`);
+  }
+  return Buffer.from(value, "base64");
+}
+
+export function materializeInlineBundle(
+  base: string,
+  argumentsValue: unknown,
+  maxBytes: number,
+): { packet: string; output: string } {
+  assertExactFields(argumentsValue, ["bundle"], "carrier arguments");
+  const bundle = argumentsValue.bundle;
+  assertExactFields(bundle, ["packet_ref", "files"], "bundle");
+  if (!Array.isArray(bundle.files) || bundle.files.length === 0) {
+    throw new McpError("bundle.files must be non-empty");
+  }
+  const packetRef = safeArtifactRef(bundle.packet_ref);
+  const target = join(base, "input");
+  const output = join(base, "output");
+  mkdirSync(target, { recursive: true });
+  mkdirSync(output, { recursive: true });
+  const seen = new Set<string>();
+  let total = 0;
+  for (const [index, raw] of bundle.files.entries()) {
+    assertExactFields(raw, ["artifact_ref", "sha256", "content_base64"], `bundle.files[${index}]`);
+    const artifactRef = safeArtifactRef(raw.artifact_ref);
+    if (seen.has(artifactRef)) throw new McpError(`duplicate artifact_ref: ${artifactRef}`);
+    seen.add(artifactRef);
+    if (typeof raw.sha256 !== "string" || !/^[0-9a-f]{64}$/.test(raw.sha256)) {
+      throw new McpError(`bundle.files[${index}] has invalid sha256`);
+    }
+    const content = decodeBase64(raw.content_base64, `bundle.files[${index}]`);
+    total += content.length;
+    if (total > maxBytes) throw new McpError("decoded inline request exceeds policy limit");
+    if (sha256(content) !== raw.sha256) {
+      throw new McpError(`inline artifact digest mismatch: ${artifactRef}`);
+    }
+    const destination = safeJoin(target, artifactRef);
+    mkdirSync(dirname(destination), { recursive: true });
+    writeFileSync(destination, content);
+  }
+  if (!seen.has(packetRef)) throw new McpError("packet_ref is not present in files");
+  return { packet: safeJoin(target, packetRef), output };
+}
+
+export function boundedJsonPayload(
+  stdout: string,
+  stderr: string,
+  returnCode: number,
+  limit: number,
+): Record<string, unknown> {
+  if (Buffer.byteLength(stdout) + Buffer.byteLength(stderr) > limit) {
+    throw new McpError("loopctl output exceeds policy limit");
+  }
+  try {
+    const value = JSON.parse(stdout || "{}");
+    assertObject(value, "loopctl JSON result");
+    return value;
+  } catch (error) {
+    if (error instanceof McpError) throw error;
+    return {
+      error: "loopctl produced no JSON result",
+      exit: returnCode,
+      stdout: stdout.slice(-4000),
+      stderr: stderr.slice(-4000),
+    };
+  }
+}
+
+export function collectCtgDelivery(
+  output: string,
+  maxBytes: number,
+): {
+  route_result: Record<string, unknown>;
+  artifacts: Array<{ kind: unknown; sha256: string; content_base64: string }>;
+} {
+  const resultPath = join(output, "ctg-route-result.json");
+  if (!existsSync(resultPath)) throw new McpError("CTG route result is absent");
+  const resultBytes = readFileSync(resultPath);
+  let total = resultBytes.length;
+  if (total > maxBytes) throw new McpError("CTG output exceeds policy limit");
+  const routeResult = JSON.parse(resultBytes.toString("utf8")) as Record<string, unknown>;
+  const rawArtifacts = routeResult.artifacts;
+  if (!Array.isArray(rawArtifacts)) throw new McpError("CTG route result artifacts must be an array");
+  const artifacts: Array<{ kind: unknown; sha256: string; content_base64: string }> = [];
+  for (const [index, raw] of rawArtifacts.entries()) {
+    assertObject(raw, `CTG artifacts[${index}]`);
+    const artifactRef = safeArtifactRef(raw.artifact_ref);
+    if (typeof raw.sha256 !== "string" || !/^[0-9a-f]{64}$/.test(raw.sha256)) {
+      throw new McpError(`CTG artifacts[${index}] has invalid sha256`);
+    }
+    const content = readFileSync(safeJoin(output, artifactRef));
+    total += content.length;
+    if (total > maxBytes) throw new McpError("CTG typed output exceeds policy limit");
+    if (sha256(content) !== raw.sha256) {
+      throw new McpError(`CTG result artifact digest mismatch: ${artifactRef}`);
+    }
+    artifacts.push({
+      kind: raw.kind,
+      sha256: raw.sha256,
+      content_base64: content.toString("base64"),
+    });
+  }
+  return { route_result: routeResult, artifacts };
+}
+
+export function sanitizedEnvironment(): NodeJS.ProcessEnv {
+  const environment: NodeJS.ProcessEnv = { ...process.env };
+  for (const name of SECRET_NAMES) delete environment[name];
+  return environment;
+}
+
+export function loadSurface(root: string, commit: string): ModuleSurface {
+  const contract = jsonAtRef<LoopContract>(root, commit, "loopctl/contract.json");
+  const policy = jsonAtRef<McpPolicy>(root, commit, ".arena/mcp-policy.json");
+  const lock = jsonAtRef<CompositionLock>(root, commit, ".arena/locks/bettor-arena.lock.json");
+  const modules = loadModulesAtRef(root, commit, selectedModules(lock));
+  const tools = buildTools(contract, policy);
+  validateExternal(tools, lock, modules);
+  return { tools, modules, policyDigest: digestValue(policy) };
+}
