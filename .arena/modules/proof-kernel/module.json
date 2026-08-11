@@ -3,7 +3,8 @@
     "proof": {
       "paths": [
         "proof_workflow/prove_harness.sh",
-        "proof_workflow/control_harness_coverage.sh"
+        "proof_workflow/control_harness_coverage.sh",
+        "tests"
       ],
       "required": true
     },
@@ -22,7 +23,7 @@
     "secrets": "none"
   },
   "id": "proof-kernel",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "core",
@@ -59,7 +60,8 @@
     "arena.loopctl/v1"
   ],
   "roots": [
-    "proof_workflow"
+    "proof_workflow",
+    "tests"
   ],
   "runtime": {
     "profiles": [],
@@ -75,5 +77,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Traversal receipts, independent controls, named exclusions, and anti-jitter comparison logic."
+  "summary": "Traversal receipts, repository test evidence, independent controls, named exclusions, and anti-jitter comparison logic."
 }
