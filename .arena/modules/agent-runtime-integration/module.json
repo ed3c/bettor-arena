@@ -1,0 +1,94 @@
+{
+  "components": {
+    "bindings": {
+      "paths": [
+        ".agents/bindings/bettor-arena.json",
+        ".runtime-env/bindings/bettor-arena-local.json"
+      ],
+      "required": true
+    },
+    "requirements": {
+      "paths": [
+        ".agents/shared-skills.requirements.json",
+        ".runtime-env/requirements.json"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "scripts/agent_runtime.py"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "agent-runtime-integration",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "aggregate",
+      "external_policy": "control-only",
+      "id": "agent-runtime",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh agent-runtime"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_agent_runtime_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "sh",
+      "proof_workflow/control_agent_runtime_entry.sh",
+      "--json"
+    ],
+    "selftest": null,
+    "verify": [
+      "python3",
+      "scripts/agent_runtime.py",
+      "check",
+      "--offline"
+    ]
+  },
+  "provides": [
+    "agent-runtime.aggregate/v1"
+  ],
+  "requires": [
+    "arena.module-catalog/v1",
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "roots": [
+    ".agents",
+    ".runtime-env",
+    "scripts/agent_runtime.py",
+    "docs/agent-runtime-integration.md"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "claude",
+      "codex",
+      "python3"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "shared-skills-infra"
+    ]
+  },
+  "summary": "Resolved skills-shared/runtime-env closure plus Claude Code and Codex CLI adapter verdicts."
+}
