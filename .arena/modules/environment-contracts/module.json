@@ -6,6 +6,7 @@
   "roots": [
     "scripts/environment_types.ts",
     "scripts/arena_origins.ts",
+    "scripts/arena_origin_checkout_probe.ts",
     "scripts/arena_browser.ts"
   ],
   "components": {
@@ -14,7 +15,8 @@
       "paths": [
         ".arena/origins/release.json",
         "scripts/environment_types.ts",
-        "scripts/arena_origins.ts"
+        "scripts/arena_origins.ts",
+        "scripts/arena_origin_checkout_probe.ts"
       ]
     },
     "browser": {
@@ -28,7 +30,8 @@
     "proof": {
       "required": true,
       "paths": [
-        "scripts/gates/check_environment_contracts.ts"
+        "scripts/gates/check_environment_contracts.ts",
+        "scripts/arena_origin_checkout_probe.ts"
       ]
     }
   },
