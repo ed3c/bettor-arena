@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/origin-equivalence.schema.json",
+  "title": "Bettor Arena Origin Equivalence Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "logical_source", "status", "mode", "origins", "subject", "note", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/origin-equivalence/v1"},
+    "logical_source": {"type": "string"},
+    "status": {"enum": ["PASS", "FAIL", "NOT_EXERCISED"]},
+    "mode": {"type": ["string", "null"], "enum": ["exact-commit", "same-tree", "same-release-manifest", null]},
+    "origins": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string"}},
+    "subject": {"type": ["object", "null"]},
+    "note": {"type": "string"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

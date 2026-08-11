@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/browser-contract.schema.json",
+  "title": "Bettor Arena Browser Contract v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "actors", "surfaces", "sessions", "transports", "workflows", "routes"],
+  "properties": {
+    "schema": {"const": "bettor-arena/browser-contract/v2"},
+    "actors": {"type": "object", "minProperties": 1},
+    "surfaces": {"type": "object", "minProperties": 1},
+    "sessions": {"type": "object", "minProperties": 1},
+    "transports": {"type": "object", "minProperties": 1},
+    "workflows": {"type": "object", "required": ["gemini-conversation-research", "dr-research-loop", "external-verify"]},
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "workflow", "actor", "surface", "transport", "session", "environment", "support", "assurance", "evidence_state", "receipt", "fallback_to", "output_trust"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+          "workflow": {"type": "string"},
+          "actor": {"type": "string"},
+          "surface": {"type": "string"},
+          "transport": {"type": ["string", "null"]},
+          "session": {"type": "string"},
+          "environment": {"enum": ["local", "cloud", "local-cloud"]},
+          "support": {"enum": ["supported", "unsupported", "not-implemented"]},
+          "assurance": {"enum": ["declared", "offline-exercised", "live-exercised"]},
+          "evidence_state": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED", "NOT_IMPLEMENTED"]},
+          "receipt": {"type": ["string", "null"]},
+          "fallback_to": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+          "output_trust": {"enum": ["trusted-artifact", "untrusted-raw", "primary-evidence", "candidate-only"]}
+        }
+      }
+    }
+  }
+}

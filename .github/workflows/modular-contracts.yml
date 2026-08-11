@@ -12,7 +12,7 @@ jobs:
   contracts:
     # Test the exact PR head so the merge command can pin the verified SHA.
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,6 +51,11 @@ jobs:
             scripts/project_transaction.ts \
             scripts/arena_project.ts \
             scripts/gates/check_project_bootstrap.ts \
+            scripts/environment_types.ts \
+            scripts/arena_origins.ts \
+            scripts/arena_origin_checkout_probe.ts \
+            scripts/arena_browser.ts \
+            scripts/gates/check_environment_contracts.ts \
             --target=bun \
             --outdir=/tmp/bun-build
 
@@ -64,6 +69,9 @@ jobs:
       - name: Prove Bun project planning and rollback can disagree
         run: bun scripts/gates/check_project_bootstrap.ts --selftest
 
+      - name: Prove origin and browser contracts can disagree
+        run: bun scripts/gates/check_environment_contracts.ts --selftest
+
       - name: Prove deterministic Python compatibility gates can disagree
         run: |
           python3 scripts/gates/check_agent_docs.py --selftest
@@ -71,21 +79,25 @@ jobs:
           python3 scripts/arena_proof.py --selftest
           python3 scripts/arena_context.py --selftest
 
-      - name: Check Agent, MCP, and project entry contracts
+      - name: Check Agent, MCP, project, origin, and browser contracts
         run: |
           python3 scripts/gates/check_agent_docs.py
           bun scripts/gates/check_mcp_policy.ts
           bun scripts/gates/check_project_bootstrap.ts
+          bun scripts/gates/check_environment_contracts.ts
 
       - name: Run external stateless MCP consumer canary
         run: sh tests/test_ctg_mcp_carrier.sh
 
-      - name: Render expected modular contracts
+      - name: Render one coherent expected modular release
         run: |
           mkdir -p /tmp/generated-contracts
+          cp .arena/locks/bettor-arena.lock.json /tmp/original-bettor-arena.lock.json
+          trap 'cp /tmp/original-bettor-arena.lock.json .arena/locks/bettor-arena.lock.json' EXIT
           python3 scripts/arena_lock.py resolve \
             --requirements .arena/compositions/bettor-arena.requirements.json \
             --output /tmp/generated-contracts/bettor-arena.lock.json
+          cp /tmp/generated-contracts/bettor-arena.lock.json .arena/locks/bettor-arena.lock.json
           python3 scripts/arena_context.py lock \
             --output /tmp/generated-contracts/contexts.lock.json
           python3 scripts/arena_context.py parity \
@@ -98,6 +110,19 @@ jobs:
           bun loopctl/mcp_tools.ts loopctl/contract.json \
             --policy .arena/mcp-policy.json \
             > /tmp/generated-contracts/mcp-exposure.json
+          bun scripts/arena_origins.ts status \
+            --output /tmp/generated-contracts/origin-status.json
+          bun scripts/arena_browser.ts status \
+            --output /tmp/generated-contracts/browser-status.json
+          cp /tmp/original-bettor-arena.lock.json .arena/locks/bettor-arena.lock.json
+          trap - EXIT
+
+      - name: Probe the GitHub distribution origin at the exact checked head
+        run: |
+          bun scripts/arena_origin_checkout_probe.ts \
+            --origin github-cloud \
+            --commit "${{ github.event.pull_request.head.sha || github.sha }}" \
+            --output /tmp/generated-contracts/github-origin-receipt.json
 
       - name: Upload expected modular contracts
         if: always()
@@ -116,6 +141,8 @@ jobs:
           python3 -c 'import json; assert json.load(open("data/module-proof/subjects.lock.json")) == json.load(open("/tmp/generated-contracts/subjects.lock.json"))'
           python3 -c 'import json; assert json.load(open("data/module-proof/release-receipt.json")) == json.load(open("/tmp/generated-contracts/release-receipt.json"))'
           python3 -c 'import json; assert json.load(open("data/mcp/exposure.json")) == json.load(open("/tmp/generated-contracts/mcp-exposure.json"))'
+          python3 -c 'import json; assert json.load(open("data/origins/status.json")) == json.load(open("/tmp/generated-contracts/origin-status.json"))'
+          python3 -c 'import json; assert json.load(open("data/browser/status.json")) == json.load(open("/tmp/generated-contracts/browser-status.json"))'
 
       - name: Check current contracts through their stable gates
         run: |
@@ -124,6 +151,7 @@ jobs:
           python3 scripts/arena_context.py check
           bun scripts/gates/check_mcp_policy.ts
           bun scripts/gates/check_project_bootstrap.ts
+          bun scripts/gates/check_environment_contracts.ts
 
       - name: Print ownership coverage summary
         run: python3 scripts/arena_lock.py ownership > /tmp/ownership.json && python3 -c 'import json; x=json.load(open("/tmp/ownership.json")); print({"tracked_files":x["tracked_files"],"ownership_sha256":x["ownership_sha256"],"counts":x["counts"]})'

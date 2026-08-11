@@ -1,0 +1,80 @@
+{
+  "schema": "bettor-arena/module/v1",
+  "id": "environment-contracts",
+  "interface_version": "1.0.0",
+  "summary": "Bun and TypeScript contracts for one GitHub/Forgejo logical release and Browser Contract v2 actor, surface, transport, session, workflow, route, and evidence boundaries.",
+  "roots": [
+    "scripts/environment_types.ts",
+    "scripts/arena_origins.ts",
+    "scripts/arena_origin_checkout_probe.ts",
+    "scripts/arena_browser.ts"
+  ],
+  "components": {
+    "origins": {
+      "required": true,
+      "paths": [
+        ".arena/origins/release.json",
+        "scripts/environment_types.ts",
+        "scripts/arena_origins.ts",
+        "scripts/arena_origin_checkout_probe.ts"
+      ]
+    },
+    "browser": {
+      "required": true,
+      "paths": [
+        ".arena/browser/contract.json",
+        "scripts/environment_types.ts",
+        "scripts/arena_browser.ts"
+      ]
+    },
+    "proof": {
+      "required": true,
+      "paths": [
+        "scripts/gates/check_environment_contracts.ts",
+        "scripts/arena_origin_checkout_probe.ts"
+      ]
+    }
+  },
+  "provides": [
+    "arena.logical-release/v1",
+    "arena.browser-contract/v2"
+  ],
+  "requires": [
+    "arena.module-catalog/v1"
+  ],
+  "conflicts": [],
+  "loops": [
+    {
+      "id": "environment-contracts",
+      "class": "core",
+      "interface_version": "1.0.0",
+      "public_port": "bun scripts/gates/check_environment_contracts.ts",
+      "external_policy": "denied"
+    }
+  ],
+  "skills": {
+    "required": [
+      "external-verify",
+      "gemini-conversation-research",
+      "dr-research-loop"
+    ],
+    "optional": [],
+    "repo_owned": []
+  },
+  "runtime": {
+    "profiles": ["bettor-arena-runtime-local"],
+    "tools": ["bun", "git"]
+  },
+  "proof": {
+    "verify": ["bun", "scripts/gates/check_environment_contracts.ts"],
+    "selftest": ["bun", "scripts/gates/check_environment_contracts.ts", "--selftest"],
+    "control": ["bun", "scripts/gates/check_environment_contracts.ts", "--selftest"],
+    "mutation": ["bun", "scripts/gates/check_environment_contracts.ts", "--selftest"]
+  },
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "optional",
+    "secrets": "none"
+  }
+}
