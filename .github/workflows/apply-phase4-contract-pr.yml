@@ -1,0 +1,85 @@
+name: Apply Phase 4 contract migration
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-phase4-contract-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: github.event.pull_request.head.ref == 'feat/stateless-mcp-bun'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+
+      - name: Patch explicit exposure and generic carrier declarations
+        run: |
+          bun <<'BUN'
+          import { readFileSync, unlinkSync, writeFileSync } from "node:fs";
+
+          const contractPath = "loopctl/contract.json";
+          let source = readFileSync(contractPath, "utf8");
+
+          function expose(loop, mode, target) {
+            const ready = `      "target": "${target}",\n      "mcp_exposed": true,`;
+            if (source.includes(ready)) return;
+            const needle = `      "loop": "${loop}",\n      "mode": "${mode}",\n      "target": "${target}",`;
+            const count = source.split(needle).length - 1;
+            if (count !== 1) {
+              throw new Error(`${loop}/${mode}: expected one target, found ${count}`);
+            }
+            source = source.replace(needle, `${needle}\n      "mcp_exposed": true,`);
+          }
+
+          expose("micro", "prove", "proof_workflow/prove_micro_loop.sh");
+          expose("micro", "test", "proof_workflow/control_micro_entry.sh");
+          expose("ctg", "run", "loop_wiki/code-truth-graph/trigger.sh");
+          expose("ctg", "prove", "proof_workflow/prove_ctg_loop.sh");
+          expose("ctg", "test", "proof_workflow/control_ctg_entry.sh");
+
+          const legacy = '        "kind": "ctg-inline-bundle@1.0.0",';
+          const generic = '        "kind": "closed-inline-bundle@1.0.0",';
+          if (source.includes(legacy)) {
+            const count = source.split(legacy).length - 1;
+            if (count !== 1) throw new Error(`legacy carrier count=${count}`);
+            source = source.replace(legacy, generic);
+          }
+          if (!source.includes(generic)) throw new Error("generic carrier is absent");
+
+          const result = '        "result_file": "ctg-route-result.json",';
+          if (!source.includes(result)) {
+            source = source.replace(generic, `${generic}\n${result}`);
+          }
+
+          writeFileSync(contractPath, source);
+          for (const oneShot of [
+            ".github/workflows/apply-phase4-contract.yml",
+            ".github/workflows/apply-phase4-contract-pr.yml",
+          ]) {
+            try { unlinkSync(oneShot); } catch (error) {
+              if (error?.code !== "ENOENT") throw error;
+            }
+          }
+          BUN
+
+      - name: Commit the migrated contract
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add loopctl/contract.json .github/workflows/apply-phase4-contract.yml .github/workflows/apply-phase4-contract-pr.yml
+          git commit -m "feat: require explicit MCP exposure in loopctl"
+          git pull --rebase origin "${{ github.event.pull_request.head.ref }}"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
