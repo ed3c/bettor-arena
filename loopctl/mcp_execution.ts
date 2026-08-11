@@ -251,7 +251,6 @@ export function materializeInlineBundle(
   const target = join(base, "input");
   const output = join(base, "output");
   mkdirSync(target, { recursive: true });
-  mkdirSync(output, { recursive: true });
   const seen = new Set<string>();
   let total = 0;
   for (const [index, raw] of bundle.files.entries()) {
