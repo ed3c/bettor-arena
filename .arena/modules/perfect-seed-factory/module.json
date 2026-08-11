@@ -1,0 +1,85 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh",
+        "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/evolve-perfect-seed-repo-factory/trigger.sh"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": true,
+    "mutation": "disposable-worktree",
+    "network": "optional",
+    "secrets": "none"
+  },
+  "id": "perfect-seed-factory",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "micro",
+      "external_policy": "allowlisted",
+      "id": "micro",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh micro"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_micro_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "sh",
+      "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh"
+    ],
+    "selftest": [
+      "sh",
+      "loop_wiki/evolve-perfect-seed-repo-factory/selftest.sh"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/evolve-perfect-seed-repo-factory/verify.sh"
+    ]
+  },
+  "provides": [
+    "seed-repo.build/v1",
+    "wiki-update-request.produce/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "roots": [
+    "loop_wiki/evolve-perfect-seed-repo-factory"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "bun",
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "loop-harness-standard"
+    ]
+  },
+  "summary": "Bounded seed-repository factory that validates typed packets and emits route results plus wiki-update requests."
+}
