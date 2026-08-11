@@ -28,6 +28,7 @@ function staticCheck(root: string): void {
   const required = [
     "scripts/environment_types.ts",
     "scripts/arena_origins.ts",
+    "scripts/arena_origin_checkout_probe.ts",
     "scripts/arena_browser.ts",
     ".arena/origins/release.json",
     ".arena/browser/contract.json",
@@ -42,7 +43,10 @@ function staticCheck(root: string): void {
   for (const marker of forbidden) if (text.toLowerCase().includes(marker.toLowerCase())) throw new EnvironmentContractError(`versioned environment contract contains forbidden host/session material: ${marker}`);
   const manifest = JSON.parse(readFileSync(join(root, ".arena/modules/environment-contracts/module.json"), "utf8"));
   const proof = JSON.stringify(manifest.proof ?? {});
-  if (!proof.includes("bun") || !proof.includes("check_environment_contracts.ts")) throw new EnvironmentContractError("environment module proof is not Bun + TypeScript primary");
+  const components = JSON.stringify(manifest.components ?? {});
+  if (!proof.includes("bun") || !proof.includes("check_environment_contracts.ts") || !components.includes("arena_origin_checkout_probe.ts")) {
+    throw new EnvironmentContractError("environment module proof is not a complete Bun + TypeScript closure");
+  }
 }
 
 function main(argv: string[]): number {
