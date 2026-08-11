@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/project-plan.schema.json",
+  "title": "Bettor Arena Project Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project", "mode", "release", "requirements_sha256", "target_head", "previous_managed_sha256", "previous_managed_base64", "consumer_lock_sha256", "files", "embedded", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/project-plan/v1"},
+    "project": {"type": "string"},
+    "mode": {"enum": ["remote-consumer", "embedded-core"]},
+    "release": {"type": "object", "required": ["repository", "commit", "tree"]},
+    "requirements_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_head": {"type": ["string", "null"]},
+    "previous_managed_sha256": {"type": ["string", "null"]},
+    "previous_managed_base64": {"type": ["string", "null"]},
+    "consumer_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "embedded": {"type": ["object", "null"]},
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "action", "mode", "before_sha256", "before_base64", "after_sha256", "after_base64"],
+        "properties": {
+          "path": {"type": "string"},
+          "action": {"enum": ["write", "delete"]},
+          "mode": {"type": ["integer", "null"]},
+          "before_sha256": {"type": ["string", "null"]},
+          "before_base64": {"type": ["string", "null"]},
+          "after_sha256": {"type": ["string", "null"]},
+          "after_base64": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}
