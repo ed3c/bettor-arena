@@ -26,6 +26,14 @@
     },
     {
       "components": [
+        "mcp",
+        "proof",
+        "runtime"
+      ],
+      "id": "loop-runtime"
+    },
+    {
+      "components": [
         "proof",
         "runtime"
       ],
@@ -67,14 +75,6 @@
         "runtime"
       ],
       "id": "proof-kernel"
-    },
-    {
-      "components": [
-        "mcp",
-        "proof",
-        "runtime"
-      ],
-      "id": "loop-runtime"
     },
     {
       "components": [
