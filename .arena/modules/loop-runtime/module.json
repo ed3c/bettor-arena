@@ -1,0 +1,91 @@
+{
+  "components": {
+    "mcp": {
+      "paths": [
+        "loopctl/mcp_server.py",
+        "loopctl/mcp_tools.py"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loopctl/selftest.sh",
+        "loopctl/surface.lock"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loopctl/loopctl.sh",
+        "loopctl/contract.json"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": true,
+    "mutation": "disposable-worktree",
+    "network": "optional",
+    "secrets": "broker-only"
+  },
+  "id": "loop-runtime",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "allowlisted",
+      "id": "loopctl",
+      "interface_version": "2.8.0",
+      "public_port": "sh loopctl/loopctl.sh"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_mcp_surface.sh"
+    ],
+    "mutation": [
+      "sh",
+      "loopctl/selftest.sh"
+    ],
+    "selftest": [
+      "sh",
+      "loopctl/selftest.sh"
+    ],
+    "verify": [
+      "sh",
+      "loopctl/selftest.sh"
+    ]
+  },
+  "provides": [
+    "arena.loopctl/v1",
+    "arena.stateless-mcp/v1",
+    "arena.context-carrier/v1"
+  ],
+  "requires": [
+    "arena.passive-context/v1"
+  ],
+  "roots": [
+    "loopctl"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "shared-skills-infra"
+    ]
+  },
+  "summary": "Stable loopctl CLI surface, replay, container adapters, and immutable stateless MCP execution."
+}
