@@ -53,6 +53,7 @@ jobs:
             scripts/gates/check_project_bootstrap.ts \
             scripts/environment_types.ts \
             scripts/arena_origins.ts \
+            scripts/arena_origin_checkout_probe.ts \
             scripts/arena_browser.ts \
             scripts/gates/check_environment_contracts.ts \
             --target=bun \
@@ -118,7 +119,7 @@ jobs:
 
       - name: Probe the GitHub distribution origin at the exact checked head
         run: |
-          bun scripts/arena_origins.ts probe \
+          bun scripts/arena_origin_checkout_probe.ts \
             --origin github-cloud \
             --commit "${{ github.event.pull_request.head.sha || github.sha }}" \
             --output /tmp/generated-contracts/github-origin-receipt.json
