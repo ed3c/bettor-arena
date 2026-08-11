@@ -1,0 +1,39 @@
+{
+  "canonical_documents": [
+    "ARCHITECTURE.md",
+    "docs/architecture/modular-integration-requirements.md",
+    "docs/architecture/modular-integration-status.md",
+    "docs/agent-runtime-integration.md"
+  ],
+  "entrypoints": {
+    "AGENTS.md": {
+      "required_markers": [
+        "docs/architecture/modular-integration-requirements.md",
+        "## Mandatory read order",
+        "## Macro / Micro boundary",
+        "## CLI, MCP, and passive context",
+        "## Proof and anti-jitter",
+        "## Completion contract",
+        "NOT_IMPLEMENTED",
+        "NOT_EXERCISED"
+      ],
+      "role": "codex-cross-host"
+    },
+    "CLAUDE.md": {
+      "required_markers": [
+        "docs/architecture/modular-integration-requirements.md",
+        "## Mandatory modular-integration read order",
+        "Claude Code 不得",
+        "NOT_IMPLEMENTED",
+        "NOT_EXERCISED"
+      ],
+      "role": "claude-code"
+    }
+  },
+  "forbidden_patterns": [
+    "/Users/",
+    "(?<![A-Za-z0-9_.-])~/",
+    "\\bix-agy/"
+  ],
+  "schema": "bettor-arena/agent-entrypoints/v1"
+}
