@@ -27,13 +27,13 @@ jobs:
 
       - name: Patch explicit exposure and generic carrier declarations
         run: |
-          bun <<'BUN'
+          cat > /tmp/apply-phase4-contract.ts <<'BUN'
           import { readFileSync, unlinkSync, writeFileSync } from "node:fs";
 
           const contractPath = "loopctl/contract.json";
           let source = readFileSync(contractPath, "utf8");
 
-          function expose(loop, mode, target) {
+          function expose(loop: string, mode: string, target: string): void {
             const ready = `      "target": "${target}",\n      "mcp_exposed": true,`;
             if (source.includes(ready)) return;
             const needle = `      "loop": "${loop}",\n      "mode": "${mode}",\n      "target": "${target}",`;
@@ -69,11 +69,14 @@ jobs:
             ".github/workflows/apply-phase4-contract.yml",
             ".github/workflows/apply-phase4-contract-pr.yml",
           ]) {
-            try { unlinkSync(oneShot); } catch (error) {
-              if (error?.code !== "ENOENT") throw error;
+            try {
+              unlinkSync(oneShot);
+            } catch (error) {
+              if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
             }
           }
           BUN
+          bun /tmp/apply-phase4-contract.ts
 
       - name: Commit the migrated contract
         run: |
