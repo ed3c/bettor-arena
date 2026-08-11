@@ -59,3 +59,4 @@ python3 "$STAGEDTREE/tree/scripts/arena_context.py" --root "$STAGEDTREE/tree" ch
 python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py"
 command -v bun >/dev/null 2>&1 || { echo "pre-commit FATAL: bun absent" >&2; exit 64; }
 bun "$STAGEDTREE/tree/scripts/gates/check_project_bootstrap.ts" --root "$STAGEDTREE/tree"
+bun "$STAGEDTREE/tree/scripts/gates/check_environment_contracts.ts" --root "$STAGEDTREE/tree"
