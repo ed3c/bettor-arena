@@ -1,8 +1,8 @@
 {
   "schema": "bettor-arena/preset/v1",
-  "id": "consumer-core",
+  "id": "embedded-core",
   "status": "IMPLEMENTED",
-  "summary": "Minimum remote-consumer composition for Claude Code and Codex CLI entrypoints, module resolution, Context Capsules, proof controls, and the Bun/TypeScript default-deny MCP runtime.",
+  "summary": "Self-contained consumer composition with an independent no-hardlink bettor clone pinned to an immutable release.",
   "modules": [
     {"id": "module-catalog", "components": ["proof", "runtime"]},
     {"id": "arena-core", "components": ["bootstrap", "context", "proof"]},

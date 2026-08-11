@@ -57,3 +57,5 @@ python3 "$STAGEDTREE/tree/scripts/gates/check_module_catalog.py" --root "$STAGED
 python3 "$STAGEDTREE/tree/scripts/arena_proof.py" --root "$STAGEDTREE/tree" check
 python3 "$STAGEDTREE/tree/scripts/arena_context.py" --root "$STAGEDTREE/tree" check
 python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py"
+command -v bun >/dev/null 2>&1 || { echo "pre-commit FATAL: bun absent" >&2; exit 64; }
+bun "$STAGEDTREE/tree/scripts/gates/check_project_bootstrap.ts" --root "$STAGEDTREE/tree"

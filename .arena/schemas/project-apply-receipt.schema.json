@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/project-apply-receipt.schema.json",
+  "title": "Bettor Arena Project Apply Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project", "mode", "plan_sha256", "files", "managed_before_sha256", "managed_before_base64", "managed_after_sha256", "managed_after_base64", "embedded_created", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/project-apply-receipt/v1"},
+    "project": {"type": "string"},
+    "mode": {"enum": ["remote-consumer", "embedded-core"]},
+    "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "files": {"type": "array"},
+    "managed_before_sha256": {"type": ["string", "null"]},
+    "managed_before_base64": {"type": ["string", "null"]},
+    "managed_after_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "managed_after_base64": {"type": "string"},
+    "embedded_created": {"type": ["object", "null"]},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

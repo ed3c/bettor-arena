@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/consumer-lock.schema.json",
+  "title": "Bettor Arena Consumer Lock v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project", "mode", "source", "modules", "capabilities", "skills", "mcp_policy_sha256", "runtime", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/consumer-lock/v1"},
+    "project": {"type": "string"},
+    "mode": {"enum": ["remote-consumer", "embedded-core"]},
+    "source": {"type": "object", "required": ["repository", "commit", "tree"]},
+    "modules": {"type": "array"},
+    "capabilities": {"type": "object"},
+    "skills": {"type": "object"},
+    "mcp_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "runtime": {"const": "bun-typescript"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

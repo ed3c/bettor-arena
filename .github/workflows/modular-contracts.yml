@@ -10,8 +10,7 @@ permissions:
 
 jobs:
   contracts:
-    # The checkout below intentionally tests the PR head itself rather than the
-    # synthetic merge ref, so the merge command can pin the same verified SHA.
+    # Test the exact PR head so the merge command can pin the verified SHA.
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -32,6 +31,7 @@ jobs:
             scripts/arena_lock.py \
             scripts/arena_proof.py \
             scripts/arena_context.py \
+            scripts/arena_project.py \
             scripts/gates/check_agent_docs.py \
             scripts/gates/check_module_catalog.py \
             scripts/gates/check_mcp_policy.py \
@@ -46,6 +46,11 @@ jobs:
             loopctl/mcp_runtime.ts \
             loopctl/mcp_tools.ts \
             scripts/gates/check_mcp_policy.ts \
+            scripts/project_types.ts \
+            scripts/project_resolver.ts \
+            scripts/project_transaction.ts \
+            scripts/arena_project.ts \
+            scripts/gates/check_project_bootstrap.ts \
             --target=bun \
             --outdir=/tmp/bun-build
 
@@ -56,17 +61,21 @@ jobs:
           bun loopctl/mcp_runtime.ts --selftest
           bun scripts/gates/check_mcp_policy.ts --selftest
 
-      - name: Prove deterministic gates can disagree
+      - name: Prove Bun project planning and rollback can disagree
+        run: bun scripts/gates/check_project_bootstrap.ts --selftest
+
+      - name: Prove deterministic Python compatibility gates can disagree
         run: |
           python3 scripts/gates/check_agent_docs.py --selftest
           python3 scripts/arena_lock.py --selftest
           python3 scripts/arena_proof.py --selftest
           python3 scripts/arena_context.py --selftest
 
-      - name: Check Agent and MCP entry contracts
+      - name: Check Agent, MCP, and project entry contracts
         run: |
           python3 scripts/gates/check_agent_docs.py
           bun scripts/gates/check_mcp_policy.ts
+          bun scripts/gates/check_project_bootstrap.ts
 
       - name: Run external stateless MCP consumer canary
         run: sh tests/test_ctg_mcp_carrier.sh
@@ -114,6 +123,7 @@ jobs:
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check
           bun scripts/gates/check_mcp_policy.ts
+          bun scripts/gates/check_project_bootstrap.ts
 
       - name: Print ownership coverage summary
         run: python3 scripts/arena_lock.py ownership > /tmp/ownership.json && python3 -c 'import json; x=json.load(open("/tmp/ownership.json")); print({"tracked_files":x["tracked_files"],"ownership_sha256":x["ownership_sha256"],"counts":x["counts"]})'

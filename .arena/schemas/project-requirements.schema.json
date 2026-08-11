@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/project-requirements.schema.json",
+  "title": "Bettor Arena Project Requirements v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "mode", "release", "preset", "modules"],
+  "properties": {
+    "schema": {"const": "bettor-arena/project-requirements/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "mode": {"enum": ["remote-consumer", "embedded-core"]},
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "preset": {"type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "components"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+          "components": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
