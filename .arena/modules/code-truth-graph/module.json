@@ -1,0 +1,83 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "loop_wiki/code-truth-graph/selftest.sh",
+        "loop_wiki/code-truth-graph/portability.sh"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/code-truth-graph/run.sh"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": true,
+    "mutation": "disposable-worktree",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "code-truth-graph",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "micro",
+      "external_policy": "allowlisted",
+      "id": "ctg",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh ctg"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_ctg_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "sh",
+      "loop_wiki/code-truth-graph/selftest.sh"
+    ],
+    "selftest": [
+      "sh",
+      "loop_wiki/code-truth-graph/selftest.sh"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/code-truth-graph/verify.sh"
+    ]
+  },
+  "provides": [
+    "code-truth-graph.build/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "roots": [
+    "loop_wiki/code-truth-graph"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "repo-fullstack-debugger"
+    ]
+  },
+  "summary": "Closed-packet code truth graph builder with content-addressed snapshots and MCP carrier."
+}
