@@ -1,0 +1,138 @@
+{
+  "schema": "bettor-arena/browser-contract/v2",
+  "actors": {
+    "claude-code": {"category": "actor", "surfaces": ["claude-code-cli"]},
+    "codex-cli": {"category": "actor", "surfaces": ["codex-cli"]},
+    "codex-desktop": {"category": "actor", "surfaces": ["codex-desktop"]},
+    "agy": {"category": "actor", "surfaces": ["agy-replay"]},
+    "runtime-broker": {"category": "actor", "surfaces": ["fixed-workload"]}
+  },
+  "surfaces": {
+    "claude-code-cli": {"category": "surface", "actor": "claude-code", "kind": "cli"},
+    "codex-cli": {"category": "surface", "actor": "codex-cli", "kind": "cli"},
+    "codex-desktop": {"category": "surface", "actor": "codex-desktop", "kind": "desktop"},
+    "agy-replay": {"category": "surface", "actor": "agy", "kind": "replay"},
+    "fixed-workload": {"category": "surface", "actor": "runtime-broker", "kind": "broker"}
+  },
+  "sessions": {
+    "none": {"category": "session", "credential_bearing": false, "sync_policy": "none", "environment": "none"},
+    "user-chrome-profile": {"category": "session", "credential_bearing": true, "sync_policy": "forbidden", "environment": "local"},
+    "broker-owned-profile": {"category": "session", "credential_bearing": true, "sync_policy": "forbidden", "environment": "local"},
+    "desktop-app-profile": {"category": "session", "credential_bearing": true, "sync_policy": "forbidden", "environment": "local"},
+    "ephemeral-cloud-profile": {"category": "session", "credential_bearing": true, "sync_policy": "forbidden", "environment": "cloud"}
+  },
+  "transports": {
+    "github-api": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local-cloud",
+      "session_owner": "none",
+      "compatible_actors": ["claude-code", "codex-cli", "agy", "runtime-broker"],
+      "capabilities": ["navigate", "raw-body", "artifact-write", "metadata-receipt"]
+    },
+    "raw-http": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local-cloud",
+      "session_owner": "none",
+      "compatible_actors": ["claude-code", "codex-cli", "agy", "runtime-broker"],
+      "capabilities": ["navigate", "raw-body", "artifact-write", "metadata-receipt"]
+    },
+    "static-html": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local-cloud",
+      "session_owner": "none",
+      "compatible_actors": ["claude-code", "codex-cli", "agy", "runtime-broker"],
+      "capabilities": ["navigate", "dom-read", "artifact-write", "metadata-receipt"]
+    },
+    "claude-in-chrome": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local",
+      "session_owner": "user-chrome-profile",
+      "compatible_actors": ["claude-code"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "extract-to-file", "metadata-receipt"]
+    },
+    "codex-chrome-extension": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local",
+      "session_owner": "user-chrome-profile",
+      "compatible_actors": ["codex-desktop"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "extract-to-file", "metadata-receipt"]
+    },
+    "playwright-cdp": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local",
+      "session_owner": "broker-owned-profile",
+      "compatible_actors": ["claude-code", "codex-cli", "runtime-broker"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "console-read", "network-read", "extract-to-file", "metadata-receipt"]
+    },
+    "stealth-browser-playwright": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local",
+      "session_owner": "broker-owned-profile",
+      "compatible_actors": ["claude-code", "codex-cli", "runtime-broker"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "extract-to-file", "metadata-receipt"]
+    },
+    "antigravity-puppeteer-cdp": {
+      "category": "transport",
+      "implemented": true,
+      "runtime_scope": "local",
+      "session_owner": "broker-owned-profile",
+      "compatible_actors": ["runtime-broker"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "extract-to-file", "metadata-receipt"]
+    },
+    "ephemeral-cloud-browser": {
+      "category": "transport",
+      "implemented": false,
+      "runtime_scope": "cloud",
+      "session_owner": "ephemeral-cloud-profile",
+      "compatible_actors": ["runtime-broker"],
+      "capabilities": ["navigate", "signed-in-session", "submit", "wait", "dom-read", "extract-to-file", "metadata-receipt"]
+    }
+  },
+  "workflows": {
+    "gemini-conversation-research": {
+      "skill": "gemini-conversation-research",
+      "browser_required": true,
+      "required_capabilities": ["navigate", "signed-in-session", "submit", "wait", "extract-to-file", "metadata-receipt"],
+      "body_to_main_context": "denied",
+      "artifact_output": "file-only",
+      "metadata_receipt_max_chars": 4096,
+      "route_selection": "explicit"
+    },
+    "dr-research-loop": {
+      "skill": "dr-research-loop",
+      "core_browser_required": false,
+      "stage1_browser": "optional",
+      "stage1_output_trust": "untrusted-raw",
+      "route_selection": "explicit"
+    },
+    "external-verify": {
+      "skill": "external-verify",
+      "browser_required": false,
+      "route_priority": ["github-api", "raw-http", "static-html", "playwright-cdp", "signed-in-browser"],
+      "primary_evidence": "raw-primary",
+      "route_selection": "explicit"
+    }
+  },
+  "routes": [
+    {"id": "gcr-claude-chrome-local", "workflow": "gemini-conversation-research", "actor": "claude-code", "surface": "claude-code-cli", "transport": "claude-in-chrome", "session": "user-chrome-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "trusted-artifact"},
+    {"id": "gcr-codex-desktop-chrome-local", "workflow": "gemini-conversation-research", "actor": "codex-desktop", "surface": "codex-desktop", "transport": "codex-chrome-extension", "session": "user-chrome-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "trusted-artifact"},
+    {"id": "gcr-codex-cli-playwright-local", "workflow": "gemini-conversation-research", "actor": "codex-cli", "surface": "codex-cli", "transport": "playwright-cdp", "session": "broker-owned-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "trusted-artifact"},
+    {"id": "gcr-claude-stealth-local", "workflow": "gemini-conversation-research", "actor": "claude-code", "surface": "claude-code-cli", "transport": "stealth-browser-playwright", "session": "broker-owned-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "trusted-artifact"},
+    {"id": "gcr-antigravity-local", "workflow": "gemini-conversation-research", "actor": "runtime-broker", "surface": "fixed-workload", "transport": "antigravity-puppeteer-cdp", "session": "broker-owned-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "trusted-artifact"},
+    {"id": "gcr-codex-cli-native-chrome", "workflow": "gemini-conversation-research", "actor": "codex-cli", "surface": "codex-cli", "transport": null, "session": "none", "environment": "local", "support": "unsupported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "candidate-only"},
+    {"id": "gcr-agy-signed-in", "workflow": "gemini-conversation-research", "actor": "agy", "surface": "agy-replay", "transport": null, "session": "none", "environment": "local", "support": "unsupported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "candidate-only"},
+    {"id": "gcr-cloud-browser", "workflow": "gemini-conversation-research", "actor": "runtime-broker", "surface": "fixed-workload", "transport": "ephemeral-cloud-browser", "session": "ephemeral-cloud-profile", "environment": "cloud", "support": "not-implemented", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "candidate-only"},
+    {"id": "dr-public-local-cloud", "workflow": "dr-research-loop", "actor": "agy", "surface": "agy-replay", "transport": "raw-http", "session": "none", "environment": "local-cloud", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "untrusted-raw"},
+    {"id": "dr-subscription-local", "workflow": "dr-research-loop", "actor": "claude-code", "surface": "claude-code-cli", "transport": "claude-in-chrome", "session": "user-chrome-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "untrusted-raw"},
+    {"id": "external-github-api", "workflow": "external-verify", "actor": "agy", "surface": "agy-replay", "transport": "github-api", "session": "none", "environment": "local-cloud", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "primary-evidence"},
+    {"id": "external-raw-http", "workflow": "external-verify", "actor": "claude-code", "surface": "claude-code-cli", "transport": "raw-http", "session": "none", "environment": "local-cloud", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "primary-evidence"},
+    {"id": "external-browser-fallback", "workflow": "external-verify", "actor": "codex-cli", "surface": "codex-cli", "transport": "playwright-cdp", "session": "broker-owned-profile", "environment": "local", "support": "supported", "assurance": "declared", "evidence_state": "NOT_EXERCISED", "receipt": null, "fallback_to": [], "output_trust": "candidate-only"}
+  ]
+}
