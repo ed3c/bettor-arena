@@ -237,32 +237,35 @@ TURN_RC=0
 是 gateway 的性質，驗在 gateway 所在的那一支**，且 gate 在 provider 存在與否——對照組不能自己
 鑄訂閱 token，**沒有就是 NOT EXERCISED，不是通過**。
 
-於是容器**不再只服務唯讀角色**：codex（讀）靠掛載 `~/.codex`，claude（寫）靠 provider 佔位符。
+於是兩個寫入 carrier 都走 provider placeholder；任一邊都不掛載 host credential store。
 
-### codex 在 OpenShell 內寫入：一條刻意較弱的路
+### codex 在 OpenShell 內寫入：custom provider 路徑
 
 ```
 sh loopctl/codex-sandbox.sh --dry-run "<prompt>"     # 前置全跑、不建任何東西
 sh loopctl/codex-sandbox.sh "<prompt>"               # 真跑，改動檔案下載回 data/codex-sandbox/<utc>/
 ```
 
-**codex 用不了 claude 那套佔位符，而這是量出來的不是猜的**：它在任何請求之前把憑證當 JWT 解析，
-佔位符當場死在本地（`invalid agent identity JWT format`）。所以訂閱 session **必須以真值**經
-`--env` 進沙盒、重建成 `~/.codex/auth.json`——沙盒內每個 process 都讀得到它。守線的只剩 policy
-的 deny-by-default ＋ binary 綁定，加上沙盒用完即棄。**這條比 claude 弱，不要當成同一級。**
+**被推翻的是「Codex 必須拿真 session」這個過度擴張的結論。**量測只證明 ordinary
+`auth.json` 路徑會在請求前解析 JWT，所以 placeholder 塞進 `auth.json` 會死在本地。Codex 的
+custom model provider 另有 `env_key` 與 `env_http_headers`：同步的 runtime-env policy 把 access
+placeholder 放進 Authorization、account placeholder 放進 `ChatGPT-Account-ID`，直接送往
+`https://chatgpt.com/backend-api/codex`；OpenShell proxy 再替換真值。sandbox 不讀、不掛、不重建
+`~/.codex/auth.json`。`supports_websockets=false` 讓這條路固定走可檢查的 HTTPS。
 
 四個關卡各自的真相（每一個都只有真跑才看得見）：
 
 | 症狀 | 真因 |
 |---|---|
-| `agent identity JWT payload is not valid JSON` | **`--with-access-token` 要的不是 ChatGPT access token**，是 codex 自己的 agent-identity JWT。看起來像 token 壞掉，其實是餵錯欄位——正解是重建整份 `auth.json` |
+| `invalid ID token format`／`agent identity JWT payload is not valid JSON` | placeholder 被餵進會本地解析 JWT 的 login／agent-identity 路徑；修法是改走同步的 custom model provider，不是把真 `auth.json` 搬進 sandbox |
 | `HTTP CONNECT failed with status 403`，而 policy 明明列了 codex | npm 把 codex 裝成 **`.js` shim**，真正連線的是它 spawn 出來的 vendored 原生檔，**policy 綁的路徑沒有任何 process 擁有**。claude 沒事只因為 npm 給的是 ELF。Dockerfile 改指原生檔並在 build 期斷言 ELF |
 | 模型答了、tokens 也燒了，但沒有檔案 | codex 用 **bubblewrap 關自己的 shell 指令**，在容器內建不了 user namespace。`-s danger-full-access` 關掉那層內沙盒——**不是放寬邊界**：外層的 Landlock／seccomp／出口白名單全在，這正是 OpenShell 自己丟掉 AppArmor 時給的同一個理由 |
-| token 疑似在傳輸中被截斷 | **沒有**。host 與沙盒內 sha256 一致（`len=1752`）——先量再修，省下一整條錯誤的追查 |
+| model 回 401 missing bearer | custom provider 沒選中、`env_key` 沒指向 provider placeholder，或 provider 沒掛上；先驗 projection、provider type 與 placeholder 形狀，禁 fallback 到真 token |
 
-access token 壽命 **10 天**（不是一小時），host 上的 codex 會自動續期，所以實務成本是**每週重抽一次**。
-`codex-sandbox.sh --selftest` 把「讀不到／不是 JSON／是 API key／空 token／已過期」五種缺席各給
-獨立出口——過期若不在這裡擋，會在沙盒裡變成一個看不出原因的 auth 錯誤。
+`codex-openshell-config.py --policy .runtime-env/policies/codex-openshell-chatgpt-placeholder.json --selftest`
+驗 synchronized policy 的 endpoint、env 名、HTTPS transport
+與 `CODEX_AUTH_JSON` 禁令；`codex-sandbox.sh --dry-run` 另外把 provider 查不到、gateway 問不到、
+model 名不合法分流。provider 真值的刷新屬 gateway/bootstrap plane，不再由 sandbox 解析 token 到期日。
 
 改動怎麼回來：upload 沙盒**沒有 `.git`**，所以不是 diff，是**前後各一份雜湊清單**比對。第一版用
 `find -newer` 時間戳，而**時間戳看不見刪除**——那種包比誠實的包更糟：套用的人會把 agent 決定移除的
@@ -271,9 +274,6 @@ access token 壽命 **10 天**（不是一小時），host 上的 codex 會自�
 刪除以**清單**形式回來（`_codex_deleted.txt`），不是以「檔案不在包裡」的形式——tar 沒辦法裝一個
 不存在的檔，所以不讀清單就套用會還原掉那些刪除。腳本印出來時加 `+`／`-` 前綴，而 `-` 那些**不會
 自動套用**。
-
-session 快到期時（剩不到 24 小時）在 `--dry-run` 就警告並給出續期指令。真正的失效模式不是「跑到
-一半過期」，是**兩週沒在 host 上跑過 codex**——趁還免費的時候講，別等到需要它的那天早上變 FATAL。
 
 ### 自動許可的 token 成本：量出來的方向與參考文件相反
 

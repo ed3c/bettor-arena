@@ -41,6 +41,8 @@ prove_harness capture proof_workflow/lib/capture.sh \
   -- sh proof_workflow/lib/capture.sh --selftest
 prove_harness ctg-control-helper proof_workflow/ctg_control.py \
   "closed packet closure + canonical projection + proof linkage for the CTG behavioral control"
+prove_harness agent-runtime-control-helper proof_workflow/agent_runtime_control.py \
+  "portable module-set fixture + isolated shared/runtime/Claude/Codex mutations for the independent control"
 # The coverage checker, which caught its own absence the moment it became tracked:
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written
@@ -51,6 +53,14 @@ prove_harness shebang-match proof_workflow/lib/shebang_match.py \
 prove_harness no-bash-script-run-with-sh - \
   "the scan itself, over the live tree: it caught prove_openwiki.sh running the bash worker with sh, which had been silent until a selftest case used process substitution" \
   -- python3 proof_workflow/lib/shebang_match.py
+# A backtick inside a double-quoted prose argument is executable shell, not
+# Markdown.  Two proofs used those descriptions for command names; both commands
+# ran, printed an error, and the measured harness still returned zero.  Proof
+# scripts have no legitimate need for legacy backtick substitution, so refuse it
+# on every non-comment line instead of maintaining a list of known descriptions.
+prove_harness no-executable-backticks-in-proofs - \
+  "proof descriptions must be inert data: an unescaped backtick on executable lines can run a command while the measured assertion remains green" \
+  -- python3 -c 'from pathlib import Path; import sys; bad=[f"{p}:{n}:{line.rstrip()}" for p in sorted(Path("proof_workflow").glob("prove_*.sh")) for n,line in enumerate(p.read_text(encoding="utf-8").splitlines(),1) if not line.lstrip().startswith("#") and "`" in line and "\\`" not in line]; print("\n".join(bad), file=sys.stderr); sys.exit(2 if bad else 0)'
 prove_harness coverage-checker proof_workflow/lib/harness_coverage.py \
   "tracked proof_workflow files x proof receipts at this commit -> covered / declared / UNCOVERED; a control receipt is refused as a source" \
   -- python3 proof_workflow/lib/harness_coverage.py --selftest
@@ -61,7 +71,7 @@ prove_harness equivalence-control-comparator proof_workflow/lib/equivalence_cont
 # --- every traversal proof --------------------------------------------------
 # Hashed, never fired: a proof run from inside a proof would write receipts about
 # receipts, and the outer digest would then depend on when the inner one last ran.
-for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm equivalence ctg_loop; do
+for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm equivalence ctg_loop agent_runtime; do
   case "$p" in
     macro_loop|micro_loop) f="proof_workflow/prove_$p.sh" ;;
     *) f="proof_workflow/prove_$p.sh" ;;
@@ -72,7 +82,7 @@ for p in macro_loop micro_loop openwiki container policy workflow harness notebo
 done
 
 # --- every control ----------------------------------------------------------
-for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry equivalence_entry ctg_entry; do
+for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry equivalence_entry ctg_entry agent_runtime_entry; do
   f="proof_workflow/control_$c.sh"
   [ -f "$PROVE_ROOT/$f" ] || continue
   prove_harness "control-$c" "$f" \

@@ -1,7 +1,7 @@
 #!/bin/sh
 # loopctl.sh — the one CLI over this repo's declared loops.
 #
-#   loopctl.sh <macro|micro|openwiki|notebooklm|ctg> <mode> [flags]
+#   loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|ctg> <mode> [flags]
 #   loopctl.sh contract      print the declared surface and its sha256
 #   loopctl.sh --selftest    prove the surface and the wiring still agree
 #
@@ -32,7 +32,7 @@ HERE=$(cd "$(dirname "$0")" && pwd -P)
 CONTRACT="$HERE/contract.json"
 
 usage() {
-  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|equivalence|ctg> <mode> [flags]" >&2
+  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|equivalence|ctg> <mode> [flags]" >&2
   echo "       loopctl.sh contract | --selftest" >&2
   echo "       flags per command: loopctl.sh contract" >&2
 }
@@ -310,6 +310,21 @@ case "$LOOP/$MODE" in
     python3 "$ROOT/$TARGET" run "$@" ;;
   notebooklm/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   notebooklm/test)  if has_flag --live "$@"; then CONTROL_NOTEBOOKLM_LIVE=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  agent-runtime/run)
+    _agent_offline=0; has_flag --offline "$@" && _agent_offline=1
+    _agent_live=0; has_flag --live "$@" && _agent_live=1
+    _agent_force=0; has_flag --force-receipt "$@" && _agent_force=1
+    [ "$_agent_offline" -eq 1 ] && [ "$_agent_live" -eq 1 ] && fatal "agent-runtime run accepts --offline or --live, not both"
+    [ "$_agent_force" -eq 1 ] && [ "$_agent_live" -ne 1 ] && fatal "--force-receipt applies only with --live"
+    if [ "$_agent_live" -eq 1 ]; then
+      if [ "$_agent_force" -eq 1 ]; then python3 "$ROOT/$TARGET" live --force-receipt; else python3 "$ROOT/$TARGET" live; fi
+    elif [ "$_agent_offline" -eq 1 ]; then
+      python3 "$ROOT/$TARGET" check --offline
+    else
+      python3 "$ROOT/$TARGET" check
+    fi ;;
+  agent-runtime/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  agent-runtime/test) sh "$ROOT/$TARGET" ;;
   ctg/run)
     _ctg_packet=$(value_of --packet "$@")
     _ctg_output=$(value_of --output "$@")

@@ -55,7 +55,7 @@ prove_note mcp-control-owned-by-harness proof_workflow/control_mcp_surface.sh \
 # rules to the YAML believing they are enforced, this goes red rather than
 # leaving two documents quietly disagreeing about who is in charge.
 prove_harness authorization-split-is-real - \
-  "the policy must NOT claim per-tool rules while the server owns them: a `tool:` matcher in the YAML would be silently unenforced on the running gateway" \
+  "the policy must NOT claim per-tool rules while the server owns them: a \`tool:\` matcher in the YAML would be silently unenforced on the running gateway" \
   -- sh -c '! grep -qE "^\s+tool:" loopctl/sandbox-policy.yaml'
 # The subscription backend is NOT api.openai.com, and a policy that admits only
 # the latter denies every codex turn while reading as though codex is allowed.

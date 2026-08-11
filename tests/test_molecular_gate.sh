@@ -101,7 +101,7 @@ git -C "$R" commit -q -F "$TMP/good.msg" || fail "good molecular commit rejected
 # 6) bun-absent negative control: FATAL 64, diagnostic names bun.
 printf 'any message\n' > "$TMP/any.msg"
 set +e
-ERR=$(env PATH=/usr/bin:/bin sh "$R/.githooks/commit-msg" "$TMP/any.msg" 2>&1)
+ERR=$(cd "$R" && env PATH=/usr/bin:/bin sh .githooks/commit-msg "$TMP/any.msg" 2>&1)
 RC=$?
 set -e
 [ "$RC" -eq 64 ] || fail "bun-absent hook exited $RC, want 64"

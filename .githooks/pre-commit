@@ -83,6 +83,7 @@ python3 scripts/gates/check_root_coupling.py --staged
 python3 scripts/gates/check_placement.py
 python3 scripts/gates/check_skill_pointers.py
 python3 scripts/gates/check_credential_hygiene.py
+python3 scripts/gates/check_runtime_env_binding.py --staged
 python3 scripts/gates/check_delivery_receipt.py
 
 # agent-docs drift gate: the CLAUDE.md / AGENTS.md being committed must match

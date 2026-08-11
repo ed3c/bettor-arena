@@ -91,13 +91,11 @@ network_policies:
   # `https://chatgpt.com/backend-api/codex`, and with only the entry above a
   # subscription-mode turn is denied by a policy that looks like it admits codex.
   #
-  # Same binary binding, and here it is doing more work than it looks. The token
-  # reaching this sandbox is a REAL access token, not a placeholder — codex
-  # parses its credential as a JWT before any request, so the placeholder model
-  # that carries claude cannot carry codex. That trade is stated in
-  # proof_workflow/README.md; what belongs here is the consequence: the secret is
-  # readable inside the sandbox, so the set of processes allowed to spend it is
-  # the only remaining boundary.
+  # The ordinary auth.json path parses JWTs locally, but this sandbox does not use
+  # that path. Its custom model provider places opaque OpenShell placeholders in
+  # Authorization and ChatGPT-Account-ID, then the proxy substitutes them in the
+  # inspected HTTPS request. The binary binding is therefore still load-bearing:
+  # a placeholder is a spendable capability even though it is not the secret.
   codex_chatgpt:
     name: codex-chatgpt-backend
     endpoints:
