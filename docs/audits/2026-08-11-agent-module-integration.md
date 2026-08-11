@@ -62,12 +62,18 @@ Upstream implementation commits（目前是本機隔離分支 commit；未隨本
 | Portable desired/resolved closure | PASS | `agent_runtime.py check --offline`; two upstream `sync --check` both UNCHANGED |
 | runtime workload + three policy projections | PASS | `check_runtime_env_binding.py` worktree/selftest |
 | loopctl surface/wiring | PASS | `loopctl.sh --selftest`; lock `2.8.0` |
-| Control instrument turns red | PASS | baseline offline/adapter green; missing live remains exit 2; shared/runtime/Claude/Codex four defects each exit 2 |
+| Agent-runtime proof/control at `fafe06c` | PASS | proof digest `abd7c6a5aad7`; baseline offline/adapter green; missing live remains exit 2; shared/runtime/Claude/Codex four defects each exit 2 |
 | Local shared-skill adapter equals binding | **INCOMPLETE** | `forgejo-delivery-loop`、`html-for-decisions`、`shared-skills-infra` bytes differ on both carriers |
 | Claude Code real canary at this HEAD | **NOT_EXERCISED** | adapter must first equal binding; no same-HEAD receipt |
 | Codex CLI real canary at this HEAD | **NOT_EXERCISED** | same blocker; no same-HEAD receipt |
 | “all local services integrated” | **FALSE / out of evidence** | service health、Forgejo、CDP、provider availability have separate owners and receipts |
 | Upstream source publicly reviewable from this PR | **NO** | upstream commits are not in bettor repo and are not published by this handoff |
+
+Full workflow re-stamp at `fafe06c` produced 11 receipts: 8 PASS and 3 retained RED。The RED receipts are
+`micro`（missing iteration context and local `node_modules/.bin/prettier`）、`openwiki`（missing consumed
+request artifact）、`equivalence`（legacy peer/live state NOT_EXERCISED）。They are unrelated to the portable
+agent-runtime closure but remain publication evidence; the rebuilt workflow lock records their measured bytes and
+must not be read as making those three traversals green。
 
 The three adapter drifts are not auto-fixed because the canonical skills working tree contains user changes. Pointing
 symlinks at `/private/tmp` or overwriting those changes would produce a temporary green while breaking the release model。
