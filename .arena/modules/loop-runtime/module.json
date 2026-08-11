@@ -11,6 +11,7 @@
     "mcp": {
       "paths": [
         "loopctl/mcp_server.py",
+        "loopctl/mcp_runtime.py",
         "loopctl/mcp_tools.py"
       ],
       "required": true
@@ -40,7 +41,7 @@
     "secrets": "broker-only"
   },
   "id": "loop-runtime",
-  "interface_version": "1.1.0",
+  "interface_version": "1.2.0",
   "loops": [
     {
       "class": "core",
@@ -55,28 +56,37 @@
       "id": "context-capsule",
       "interface_version": "1.0.0",
       "public_port": "python3 scripts/arena_context.py"
+    },
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "mcp-policy",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loopctl/mcp_runtime.py"
     }
   ],
   "proof": {
     "control": [
       "python3",
-      "scripts/arena_context.py",
-      "check"
+      "loopctl/mcp_runtime.py",
+      "--selftest"
     ],
     "mutation": [
       "python3",
-      "scripts/arena_context.py",
+      "loopctl/mcp_runtime.py",
       "--selftest"
     ],
     "selftest": [
       "python3",
-      "scripts/arena_context.py",
+      "loopctl/mcp_runtime.py",
       "--selftest"
     ],
     "verify": [
       "python3",
-      "scripts/arena_context.py",
-      "check"
+      "loopctl/mcp_tools.py",
+      "loopctl/contract.json",
+      "--policy",
+      ".arena/mcp-policy.json"
     ]
   },
   "provides": [
@@ -111,5 +121,5 @@
       "shared-skills-infra"
     ]
   },
-  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, replay/container adapters, and stateless MCP execution."
+  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, default-deny policy-validated MCP tools, selected module closures, and disposable execution."
 }
