@@ -1,0 +1,58 @@
+{
+  "schema": "bettor-arena/module/v1",
+  "id": "project-bootstrapper",
+  "interface_version": "1.0.0",
+  "summary": "Bun and TypeScript dry-run planning, transactional external-project initialization, immutable remote or embedded consumption, verification, and fail-closed rollback.",
+  "roots": [
+    "scripts/project_types.ts",
+    "scripts/project_resolver.ts",
+    "scripts/project_transaction.ts",
+    "scripts/arena_project.ts",
+    "scripts/arena_project.py"
+  ],
+  "components": {
+    "runtime": {
+      "required": true,
+      "paths": [
+        "scripts/project_types.ts",
+        "scripts/project_resolver.ts",
+        "scripts/project_transaction.ts",
+        "scripts/arena_project.ts",
+        "scripts/arena_project.py"
+      ]
+    },
+    "proof": {
+      "required": true,
+      "paths": [
+        "scripts/arena_project.ts",
+        "scripts/gates/check_project_bootstrap.ts"
+      ]
+    }
+  },
+  "provides": ["arena.project-bootstrap/v1"],
+  "requires": ["arena.module-catalog/v1", "arena.stateless-mcp/v1"],
+  "conflicts": [],
+  "loops": [
+    {
+      "id": "project-bootstrapper",
+      "class": "macro",
+      "interface_version": "1.0.0",
+      "public_port": "bun scripts/arena_project.ts",
+      "external_policy": "denied"
+    }
+  ],
+  "skills": {"required": [], "optional": [], "repo_owned": []},
+  "runtime": {"profiles": [], "tools": ["bun", "git", "python3", "sh"]},
+  "proof": {
+    "verify": ["bun", "scripts/gates/check_project_bootstrap.ts"],
+    "selftest": ["bun", "scripts/arena_project.ts", "--selftest"],
+    "control": ["bun", "scripts/arena_project.ts", "--selftest"],
+    "mutation": ["bun", "scripts/arena_project.ts", "--selftest"]
+  },
+  "external_policy": {
+    "exposed": false,
+    "mutation": "external-system",
+    "network": "none",
+    "secrets": "none"
+  }
+}
