@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -7,10 +13,12 @@ import {
   McpError,
   buildTools,
   collectCtgDelivery,
+  collectInlineDelivery,
   createWorkspace,
   digestValue,
   materializeInlineBundle,
   moduleClosure,
+  prepareInlineCarrier,
   pruneWorktree,
   resolveRef,
   safeArtifactRef,
@@ -23,7 +31,9 @@ import {
 
 const temporary: string[] = [];
 afterEach(() => {
-  while (temporary.length) rmSync(temporary.pop()!, { recursive: true, force: true });
+  while (temporary.length) {
+    rmSync(temporary.pop()!, { recursive: true, force: true });
+  }
 });
 
 function fixture() {
@@ -36,8 +46,10 @@ function fixture() {
         target: "run.sh",
         required: ["--packet", "--output"],
         optional: ["--json"],
+        mcp_exposed: true,
         mcp_carrier: {
-          kind: "ctg-inline-bundle@1.0.0",
+          kind: "closed-inline-bundle@1.0.0",
+          result_file: "ctg-route-result.json",
           input_schema: {
             type: "object",
             required: ["bundle"],
@@ -45,7 +57,13 @@ function fixture() {
           },
         },
       },
-      { loop: "private", mode: "test", target: "private.sh", required: [], optional: ["--json"] },
+      {
+        loop: "private",
+        mode: "test",
+        target: "private.sh",
+        required: [],
+        optional: ["--json"],
+      },
     ],
   };
   const policy: McpPolicy = {
@@ -92,11 +110,25 @@ describe("default deny policy", () => {
     expect(buildTools(f.contract, null)).toEqual([]);
   });
 
-  test("explicit policy selects only named commands", () => {
+  test("explicit policy selects only explicitly enabled commands", () => {
     const f = fixture();
     expect(buildTools(f.contract, f.policy).map((tool) => tool.name)).toEqual([
       "loopctl_ctg_run",
     ]);
+  });
+
+  test("omitted mcp_exposed cannot be re-enabled by policy", () => {
+    const f = fixture();
+    const denied = structuredClone(f.policy);
+    denied.tools[0]!.name = "loopctl_private_test";
+    expect(() => buildTools(f.contract, denied)).toThrow(/not explicitly enabled/);
+  });
+
+  test("legacy command-specific carrier kinds are rejected", () => {
+    const f = fixture();
+    const legacy = structuredClone(f.contract);
+    legacy.commands[0]!.mcp_carrier!.kind = "ctg-inline-bundle@1.0.0";
+    expect(() => buildTools(legacy, f.policy)).toThrow(/unsupported closed carrier/);
   });
 
   test("stable digest sorts nested object keys", () => {
@@ -130,6 +162,33 @@ describe("closed typed carrier", () => {
     expect(readFileSync(result.packet)).toEqual(content);
   });
 
+  test("dispatches through the command's declared loop and mode", () => {
+    const f = fixture();
+    const tool = buildTools(f.contract, f.policy)[0]!;
+    const root = mkdtempSync(join(tmpdir(), "mcp-carrier-"));
+    temporary.push(root);
+    const content = Buffer.from('{"packet":true}\n');
+    const prepared = prepareInlineCarrier(
+      tool,
+      root,
+      {
+        bundle: {
+          packet_ref: "ctg-input.json",
+          files: [
+            {
+              artifact_ref: "ctg-input.json",
+              sha256: sha256(content),
+              content_base64: content.toString("base64"),
+            },
+          ],
+        },
+      },
+      1024,
+    );
+    expect(prepared.argv.slice(0, 2)).toEqual(["ctg", "run"]);
+    expect(prepared.resultFile).toBe("ctg-route-result.json");
+  });
+
   test("rejects path escape and digest mismatch", () => {
     expect(() => safeArtifactRef("../escape")).toThrow(McpError);
     const root = mkdtempSync(join(tmpdir(), "mcp-carrier-"));
@@ -154,7 +213,30 @@ describe("closed typed carrier", () => {
     ).toThrow(/digest mismatch/);
   });
 
-  test("returns bounded verified CTG artifacts without paths", () => {
+  test("returns bounded verified generic artifacts without paths", () => {
+    const root = mkdtempSync(join(tmpdir(), "mcp-output-"));
+    temporary.push(root);
+    const content = Buffer.from("hello");
+    writeFileSync(join(root, "graph.json"), content);
+    writeFileSync(
+      join(root, "result.json"),
+      JSON.stringify({
+        overall: { exit: 0 },
+        artifacts: [
+          {
+            kind: "graph",
+            artifact_ref: "graph.json",
+            sha256: sha256(content),
+          },
+        ],
+      }),
+    );
+    const delivery = collectInlineDelivery(root, 1024, "result.json");
+    expect(delivery.artifacts[0]).not.toHaveProperty("artifact_ref");
+    expect(delivery.artifacts[0]?.sha256).toBe(sha256(content));
+  });
+
+  test("retains the CTG compatibility projection", () => {
     const root = mkdtempSync(join(tmpdir(), "mcp-output-"));
     temporary.push(root);
     const content = Buffer.from("hello");
@@ -164,13 +246,17 @@ describe("closed typed carrier", () => {
       JSON.stringify({
         overall: { exit: 0 },
         artifacts: [
-          { kind: "graph", artifact_ref: "graph.json", sha256: sha256(content) },
+          {
+            kind: "graph",
+            artifact_ref: "graph.json",
+            sha256: sha256(content),
+          },
         ],
       }),
     );
     const delivery = collectCtgDelivery(root, 1024);
     expect(delivery.artifacts[0]).not.toHaveProperty("artifact_ref");
-    expect(delivery.artifacts[0]?.sha256).toBe(sha256(content));
+    expect(delivery.route_result).toHaveProperty("overall");
   });
 });
 
@@ -185,7 +271,12 @@ describe("module closure and workspace", () => {
           provides: ["a/v1"],
           requires: ["b/v1"],
           components: {},
-          external_policy: { exposed: true, mutation: "none", network: "none", secrets: "none" },
+          external_policy: {
+            exposed: true,
+            mutation: "none",
+            network: "none",
+            secrets: "none",
+          },
           loops: [],
         },
       ],
@@ -197,7 +288,12 @@ describe("module closure and workspace", () => {
           provides: ["b/v1"],
           requires: [],
           components: {},
-          external_policy: { exposed: false, mutation: "none", network: "none", secrets: "none" },
+          external_policy: {
+            exposed: false,
+            mutation: "none",
+            network: "none",
+            secrets: "none",
+          },
           loops: [],
         },
       ],
@@ -206,7 +302,9 @@ describe("module closure and workspace", () => {
   });
 
   test("mutable refs are refused", () => {
-    expect(() => resolveRef(resolve(import.meta.dir, ".."), "HEAD")).toThrow(/mutable/);
+    expect(() => resolveRef(resolve(import.meta.dir, ".."), "HEAD")).toThrow(
+      /mutable/,
+    );
   });
 
   test("disposable worktree is cleaned", () => {
@@ -216,7 +314,9 @@ describe("module closure and workspace", () => {
     }).stdout.trim();
     const workspace = createWorkspace(root, commit);
     const parent = workspace.base;
-    expect(pruneWorktree(workspace.worktree, ["loopctl"]).kept).toBeGreaterThan(0);
+    expect(pruneWorktree(workspace.worktree, ["loopctl"]).kept).toBeGreaterThan(
+      0,
+    );
     workspace.cleanup();
     expect(existsSync(parent)).toBe(false);
   });
