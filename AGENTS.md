@@ -4,8 +4,10 @@
 `docs/architecture/modular-integration-requirements.md`。本檔只負責**強制讀取順序、不可違反邊界與完成報告**，
 禁止把完整規格複製進 root passive context。
 
-`AGENTS.md`／`CLAUDE.md` 是 governed projections；修改時必須同步其 `skills-shared` canonical generator/source。
-本機 agent-docs gate 缺席時只能回報 `NOT_CHECKED`，不得把 SKIP 說成 checked-clean。
+`AGENTS.md`／`CLAUDE.md` 是本 repo 的 governed entry projections：內容必須同時服從
+`ARCHITECTURE.md`、完整模組化契約與 `docs/architecture/agent-entrypoints.contract.json`。
+常設 gate 只讀本 repo staged bytes，禁止依賴 sibling checkout；跨 repo generator 只能作 promotion-time
+同步工具，不能成為 pre-commit 的隱性執行依賴。
 
 - 啟用：`sh bootstrap.sh`（冪等；doctor + 相對 hooksPath）。
 - Skill 內容單份住 `.agents/skills/`；`.claude/skills` 只作 pointer/forwarder。
@@ -19,10 +21,11 @@ GitHub/Forgejo origin、外部專案初始化或 Agent Shield 整合時，動手
 
 1. `ARCHITECTURE.md` §1–§3；
 2. `docs/architecture/modular-integration-requirements.md`；
-3. `docs/agent-runtime-integration.md`；
-4. `sh loopctl/loopctl.sh contract`；
-5. 目標 module/loop 宣告的 passive context，例如 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；缺席必須具名，不得臆造；
-6. 最新 proof/control receipt 與 named exclusions。
+3. `docs/architecture/modular-integration-status.md`；
+4. `docs/agent-runtime-integration.md`；
+5. `sh loopctl/loopctl.sh contract`；
+6. 目標 module/loop 宣告的 passive context，例如 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；缺席必須具名，不得臆造；
+7. 最新 proof/control receipt 與 named exclusions。
 
 修改 `AGENTS.md`／`CLAUDE.md` 後，必須開新 Agent session 才能驗證 passive context。
 
@@ -158,4 +161,4 @@ rollback subject
 | Shared worktree staging 是公共狀態 | §7：commit 被拒後先退自己的 stage，再以單一命令 stage+commit。 |
 | 推翻是時間線，note 必填 | B8：append 誤信原因，禁改寫歷史。 |
 
-<!-- 新增 module evidence 時，先更新 canonical requirement/manifests，再由 generator 更新本路由。 -->
+<!-- 新增 module evidence 時，先更新 canonical requirement/manifests 與 agent-entrypoints contract，再更新本路由。 -->
