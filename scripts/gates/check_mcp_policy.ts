@@ -101,7 +101,7 @@ function selftest(): number {
 function main(argv: string[]): number {
   try {
     if (argv[0] === "--selftest") return selftest();
-    if (argv.length) throw new McpError "no arguments are accepted except --selftest");
+    if (argv.length) throw new McpError("no arguments are accepted except --selftest");
     return check();
   } catch (error) {
     console.error(`MCP policy RED: ${String(error instanceof Error ? error.message : error)}`);
