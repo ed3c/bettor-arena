@@ -1,1 +1,127 @@
-{}
+{
+  "schema": "bettor-arena/browser-status/v1",
+  "contract_sha256": "a6cb696ad2c66dd7830ef29c794ef7c49c1e835e900b0ca7f49c4a86ed848338",
+  "offline_contract": "PASS",
+  "live_state": "NOT_EXERCISED",
+  "cloud_signed_in_broker": "NOT_IMPLEMENTED",
+  "routes": [
+    {
+      "id": "gcr-claude-chrome-local",
+      "workflow": "gemini-conversation-research",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "gcr-codex-desktop-chrome-local",
+      "workflow": "gemini-conversation-research",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "gcr-codex-cli-playwright-local",
+      "workflow": "gemini-conversation-research",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "gcr-claude-stealth-local",
+      "workflow": "gemini-conversation-research",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "gcr-antigravity-local",
+      "workflow": "gemini-conversation-research",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "gcr-codex-cli-native-chrome",
+      "workflow": "gemini-conversation-research",
+      "support": "UNSUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "Unsupported by category/ownership contract."
+    },
+    {
+      "id": "gcr-agy-signed-in",
+      "workflow": "gemini-conversation-research",
+      "support": "UNSUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "Unsupported by category/ownership contract."
+    },
+    {
+      "id": "gcr-cloud-browser",
+      "workflow": "gemini-conversation-research",
+      "support": "NOT_IMPLEMENTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "Provider/session broker is not implemented."
+    },
+    {
+      "id": "dr-public-local-cloud",
+      "workflow": "dr-research-loop",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "dr-subscription-local",
+      "workflow": "dr-research-loop",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "external-github-api",
+      "workflow": "external-verify",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "external-raw-http",
+      "workflow": "external-verify",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    },
+    {
+      "id": "external-browser-fallback",
+      "workflow": "external-verify",
+      "support": "SUPPORTED",
+      "assurance": "declared",
+      "live_state": "NOT_EXERCISED",
+      "receipt": null,
+      "note": "A host-owned live receipt is required before promotion."
+    }
+  ],
+  "content_sha256": "44469e63cbacfa04d84f65cadaa817112f7d7836f7daf66eddc92dc9e159f94a"
+}

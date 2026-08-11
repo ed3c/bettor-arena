@@ -1,8 +1,10 @@
 {
   "capabilities": {
     "agent-runtime.aggregate/v1": "agent-runtime-integration",
+    "arena.browser-contract/v2": "environment-contracts",
     "arena.context-carrier/v1": "loop-runtime",
     "arena.host-gates/v1": "arena-core",
+    "arena.logical-release/v1": "environment-contracts",
     "arena.loopctl/v1": "loop-runtime",
     "arena.mcp-adapters/v1": "mcp-adapters",
     "arena.module-catalog/v1": "module-catalog",
@@ -19,24 +21,181 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "0e013020d08fe59103791ff6b8bf65e2b8b18d6b1f6078a593a7cd27556b7089",
+  "content_sha256": "2ed9a8eae1493f6fccad8e2aff86c31daa8eab83b403ea531bc22f0382eb356f",
   "modules": [
-    {"components": ["bindings", "requirements", "runtime"], "id": "agent-runtime-integration", "interface_version": "1.1.0", "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea", "provides": ["agent-runtime.aggregate/v1"]},
-    {"components": ["bootstrap", "context", "proof"], "id": "arena-core", "interface_version": "1.1.0", "manifest_sha256": "3d9ee08d2dee4fc4fe3834fabe2f7c7fd7e95309766ebeaebb7dc2e80c1808bb", "provides": ["arena.host-gates/v1", "arena.passive-context/v1"]},
-    {"components": ["proof", "runtime"], "id": "code-truth-graph", "interface_version": "1.0.0", "manifest_sha256": "b020a94105e1d4e58764b3b07d7ada34186d21a1e83ee925b96aa147bcccb7b2", "provides": ["code-truth-graph.build/v1"]},
-    {"components": ["context", "mcp", "proof", "runtime"], "id": "loop-runtime", "interface_version": "1.4.0", "manifest_sha256": "68d84d69be9168b8a9ea1f0438a2b5928853606e719b92d8e584df408cf8c90e", "provides": ["arena.context-carrier/v1", "arena.loopctl/v1", "arena.stateless-mcp/v1"]},
-    {"components": ["proof", "runtime"], "id": "mcp-adapters", "interface_version": "1.0.0", "manifest_sha256": "67d03796e0f24e0d1d97baf564d36cb09070c620f27d1c91e8ad6d34ade13ff1", "provides": ["arena.mcp-adapters/v1"]},
-    {"components": ["proof", "runtime"], "id": "module-catalog", "interface_version": "1.1.0", "manifest_sha256": "c535383654ae26b8771203ecc2ff91dc04382b75d47e3746e6a8ef3908804c3f", "provides": ["arena.module-catalog/v1"]},
-    {"components": ["interaction-data", "proof", "runtime"], "id": "notebooklm", "interface_version": "1.0.0", "manifest_sha256": "c6999646ea47c71b401c28524373cf9dee0db60f815f7f012d0f944d54bff520", "provides": ["notebooklm.harvest/v1"]},
-    {"components": ["projection", "proof", "runtime"], "id": "openwiki", "interface_version": "1.0.0", "manifest_sha256": "0103a681d651520f0a7e6f3f48b8095c820114e467fa009a3b42ff221835be3b", "provides": ["repo-wiki.projection/v1", "wiki-update-request.consume/v1"]},
-    {"components": ["proof", "runtime"], "id": "perfect-seed-factory", "interface_version": "1.0.0", "manifest_sha256": "64826a8b8d71ab13f22b836d5c92c7e1052cfa0cd6d21e5c8cbfa6d40f1e2d5c", "provides": ["seed-repo.build/v1", "wiki-update-request.produce/v1"]},
-    {"components": ["proof", "runtime"], "id": "project-bootstrapper", "interface_version": "1.0.0", "manifest_sha256": "5c18074503b938abcacc4e31cc583cbce3b334183a9ae9a01f89bed683ffbebf", "provides": ["arena.project-bootstrap/v1"]},
-    {"components": ["proof", "runtime"], "id": "proof-kernel", "interface_version": "1.2.0", "manifest_sha256": "f613a193fd692d6a6fa95d5af952bc3a06a5d69c68cb8ea230efbeaeb2dfd0ea", "provides": ["arena.proof-kernel/v1"]},
-    {"components": ["proof", "runtime"], "id": "technical-equivalence", "interface_version": "1.0.0", "manifest_sha256": "c24d9e6a12b994b6ab5acf6459ada5a7724d6de8813367fc774082a80a7105c4", "provides": ["technical-equivalence.evaluate/v1"]}
+    {
+      "components": [
+        "bindings",
+        "requirements",
+        "runtime"
+      ],
+      "id": "agent-runtime-integration",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea",
+      "provides": [
+        "agent-runtime.aggregate/v1"
+      ]
+    },
+    {
+      "components": [
+        "bootstrap",
+        "context",
+        "proof"
+      ],
+      "id": "arena-core",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "3d9ee08d2dee4fc4fe3834fabe2f7c7fd7e95309766ebeaebb7dc2e80c1808bb",
+      "provides": [
+        "arena.host-gates/v1",
+        "arena.passive-context/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "code-truth-graph",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "b020a94105e1d4e58764b3b07d7ada34186d21a1e83ee925b96aa147bcccb7b2",
+      "provides": [
+        "code-truth-graph.build/v1"
+      ]
+    },
+    {
+      "components": [
+        "browser",
+        "origins",
+        "proof"
+      ],
+      "id": "environment-contracts",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "62d7d406f9f152e1203196602427930776ca9673ba0de94cf9eb1033ddb0853e",
+      "provides": [
+        "arena.browser-contract/v2",
+        "arena.logical-release/v1"
+      ]
+    },
+    {
+      "components": [
+        "context",
+        "mcp",
+        "proof",
+        "runtime"
+      ],
+      "id": "loop-runtime",
+      "interface_version": "1.4.0",
+      "manifest_sha256": "68d84d69be9168b8a9ea1f0438a2b5928853606e719b92d8e584df408cf8c90e",
+      "provides": [
+        "arena.context-carrier/v1",
+        "arena.loopctl/v1",
+        "arena.stateless-mcp/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "mcp-adapters",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "67d03796e0f24e0d1d97baf564d36cb09070c620f27d1c91e8ad6d34ade13ff1",
+      "provides": [
+        "arena.mcp-adapters/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "module-catalog",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "c535383654ae26b8771203ecc2ff91dc04382b75d47e3746e6a8ef3908804c3f",
+      "provides": [
+        "arena.module-catalog/v1"
+      ]
+    },
+    {
+      "components": [
+        "interaction-data",
+        "proof",
+        "runtime"
+      ],
+      "id": "notebooklm",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "c6999646ea47c71b401c28524373cf9dee0db60f815f7f012d0f944d54bff520",
+      "provides": [
+        "notebooklm.harvest/v1"
+      ]
+    },
+    {
+      "components": [
+        "projection",
+        "proof",
+        "runtime"
+      ],
+      "id": "openwiki",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "0103a681d651520f0a7e6f3f48b8095c820114e467fa009a3b42ff221835be3b",
+      "provides": [
+        "repo-wiki.projection/v1",
+        "wiki-update-request.consume/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "perfect-seed-factory",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "64826a8b8d71ab13f22b836d5c92c7e1052cfa0cd6d21e5c8cbfa6d40f1e2d5c",
+      "provides": [
+        "seed-repo.build/v1",
+        "wiki-update-request.produce/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "project-bootstrapper",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "5c18074503b938abcacc4e31cc583cbce3b334183a9ae9a01f89bed683ffbebf",
+      "provides": [
+        "arena.project-bootstrap/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "proof-kernel",
+      "interface_version": "1.2.0",
+      "manifest_sha256": "f613a193fd692d6a6fa95d5af952bc3a06a5d69c68cb8ea230efbeaeb2dfd0ea",
+      "provides": [
+        "arena.proof-kernel/v1"
+      ]
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "technical-equivalence",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "c24d9e6a12b994b6ab5acf6459ada5a7724d6de8813367fc774082a80a7105c4",
+      "provides": [
+        "technical-equivalence.evaluate/v1"
+      ]
+    }
   ],
   "ownership_classes_sha256": "8d8cb3edee1df2d44177c0310c0ecb744c6027928b5b96d9126d9a46a444ef69",
-  "ownership_sha256": "3464b9eb27ba82bdbe752fa61b233192b1ad885fd3f50fdfeed7f3170aa67ec7",
-  "requirements_sha256": "f1380ca8108c2d855cd3dd7493865144677cb5837fe832732c2f1c84de471ac0",
+  "ownership_sha256": "9429f330b54ba7070f9e2843fec35fa899f6ce2f6afc5d0fc14dc94a023aa53e",
+  "requirements_sha256": "c5b8b901db08f27d19ebd3ba020acd1a4a568b3cf686d581857f6e0bcaf085ed",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1202
+  "tracked_files": 1217
 }
