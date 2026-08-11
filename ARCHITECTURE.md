@@ -23,6 +23,7 @@ bettor-arena/
 ├── .gitignore         # 版控忽略帳(__pycache__/、*.pyc 等生成物)
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
+├── .github/           # GitHub cloud verification；只跑零網路、可由 fresh clone 重現的契約閘
 ├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill;
 │                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
@@ -35,6 +36,8 @@ bettor-arena/
 │   ├── shared-skills.requirements.json # consumer desired shared/repo-owned names與雙 carrier surface
 │   ├── bindings/      # skills-shared resolver 產的 commit/tree/requirements/registry/per-skill digest closure
 │   └── module-set.json # skills-shared + runtime-env + Claude/Codex adapter 的唯一聚合介面
+├── .arena/            # 模組控制面：schemas、module manifests、composition requirements/locks、presets；
+│                      #   Phase 0 只宣告與驗證，不冒充 module-scoped proof v2 或 project initializer 已完成
 ├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:
 │                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
@@ -81,8 +84,10 @@ bettor-arena/
 │                      #   路徑是必要還是可選由**實驗**判定——丟棄式 worktree 拿掉該路徑再跑,看 exit 變不變,
 │                      #   不讀 fatal/warn 字面;未分類即 FATAL。比對面是三支證明收據的聯集,不只 macro
 ├── scripts/
+│   ├── arena_modules.py # Phase 0 module catalog CLI：catalog/check/resolve，產 deterministic composition lock
 │   ├── agent_runtime.py # module-set 深介面：offline/adapter/strict 三層判決與雙 carrier live receipt
-│   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_runtime_env_binding.py(staged consumer 投影防漂移,零 sibling/網路)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(共用 repo_root/fixture 樣板)+allowlist 帳
+│   ├── gates/         # repo 級零網路閘：root coupling/placement/skills/credentials/runtime/delivery，
+│   │                  #   加上 agent entrypoint contract 與 module catalog/lock；常設閘禁讀 sibling checkout
 │   ├── delivery_status.py # 交付活狀態顯式審計(打網路,禁進 hook;--selftest 零網路驗渲染)
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
 ├── tests/             # repo 級測試(打 gate CLI exit code 接縫;tools/=量測再現腳本,如 corpus parity)
@@ -102,7 +107,9 @@ bettor-arena/
 │   │                  # schema bettor-arena-wiki-update-request@1.0.0,producer=工廠 trigger.sh,
 │   │                  # consumer=kb-ingest/port/wiki_update_worker.sh;湧現內容不落此處,只落 openwiki backlog)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only,同名重跑 exit 64/--force-receipt 顯式覆寫;S3/S4 的 apply 早於 per-run 機制,其 receipt 僅存 git history 的 last-migration-report.json 版本;last-migration-report.json=最新拷貝,執行期生)
-└── docs/              # 計劃/交接文件(非模組知識);agent-runtime-integration.md=跨 repo 模組集合的 Agent 具體契約;audits/=具名 commit/branch 的審計交接包;adr/=架構決策記錄(0001=slice 詞彙);
+└── docs/              # 計劃/交接文件(非模組知識);agent-runtime-integration.md=目前可執行跨 repo closure；
+                       #   architecture/modular-integration-requirements.md=下一階段低壓縮 target contract；
+                       #   audits/=具名 commit/branch 的審計交接包;adr/=架構決策記錄(0001=slice 詞彙);
                        #   plans/<date>-<topic>/as-run.md=該線執行帳(已完成/未完成/已跑/未跑),
                        #   forgejo-delivery-loop 三 SSOT 之一,與 openwiki(as-built)分工
 ```
@@ -122,3 +129,5 @@ bettor-arena/
 6. 工具缺席走 FATAL(exit 64),與檢查失敗(exit 2)分流;缺席永不可讀成綠(§1:每個綠
    先有對應的紅)。
 7. 重複組件禁字面推論等價:判等價=讀碼+真跑;load-bearing 且判錯有代價=重建並列量測。
+8. `.arena/` 是 manifest-first 控制面；Phase 0 的綠只證 catalog/requirements/lock 自洽與 ownership
+   不重疊，不得代理 module-scoped proof v2、Context Capsule、project initializer 或 multi-origin promotion。
