@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""Compatibility entrypoint for the default-deny stateless MCP runtime.
-
-The implementation lives in `mcp_runtime.py`; this file remains the stable path
-used by `.mcp.json`, `.codex/config.toml`, loopctl wiring, and existing callers.
-"""
-
+"""Stable compatibility entrypoint for the Bun/TypeScript stateless MCP server."""
 from __future__ import annotations
 
-from mcp_runtime import main
+import os
+from pathlib import Path
+import sys
 
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+HERE = Path(__file__).resolve().parent
+os.execvp("bun", ["bun", str(HERE / "mcp_runtime.ts"), *sys.argv[1:]])

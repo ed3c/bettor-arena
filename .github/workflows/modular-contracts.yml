@@ -13,8 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Compile modular-control Python entrypoints
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+
+      - name: Compile modular-control compatibility entrypoints
         run: |
           python3 -m py_compile \
             scripts/arena_modules.py \
@@ -29,18 +35,27 @@ jobs:
             loopctl/mcp_runtime.py \
             loopctl/mcp_server.py
 
+      - name: Prove Bun MCP policy and carrier can disagree
+        run: |
+          bun test loopctl/mcp_core.test.ts
+          bun loopctl/mcp_tools.ts --selftest
+          bun loopctl/mcp_runtime.ts --selftest
+          bun scripts/gates/check_mcp_policy.ts --selftest
+
       - name: Prove deterministic gates can disagree
         run: |
           python3 scripts/gates/check_agent_docs.py --selftest
           python3 scripts/arena_lock.py --selftest
           python3 scripts/arena_proof.py --selftest
           python3 scripts/arena_context.py --selftest
-          python3 scripts/gates/check_mcp_policy.py --selftest
 
       - name: Check Agent and MCP entry contracts
         run: |
           python3 scripts/gates/check_agent_docs.py
-          python3 scripts/gates/check_mcp_policy.py
+          bun scripts/gates/check_mcp_policy.ts
+
+      - name: Run external stateless MCP consumer canary
+        run: sh tests/test_ctg_mcp_carrier.sh
 
       - name: Render expected modular contracts
         run: |
@@ -57,7 +72,7 @@ jobs:
           python3 scripts/arena_proof.py release \
             --subjects /tmp/generated-contracts/subjects.lock.json \
             --output /tmp/generated-contracts/release-receipt.json
-          python3 loopctl/mcp_tools.py loopctl/contract.json \
+          bun loopctl/mcp_tools.ts loopctl/contract.json \
             --policy .arena/mcp-policy.json \
             > /tmp/generated-contracts/mcp-exposure.json
 
@@ -84,7 +99,7 @@ jobs:
           python3 scripts/gates/check_module_catalog.py
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check
-          python3 scripts/gates/check_mcp_policy.py
+          bun scripts/gates/check_mcp_policy.ts
 
       - name: Print ownership coverage summary
         run: python3 scripts/arena_lock.py ownership > /tmp/ownership.json && python3 -c 'import json; x=json.load(open("/tmp/ownership.json")); print({"tracked_files":x["tracked_files"],"ownership_sha256":x["ownership_sha256"],"counts":x["counts"]})'
