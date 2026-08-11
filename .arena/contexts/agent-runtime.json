@@ -1,0 +1,28 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "agent-runtime",
+  "module": "agent-runtime-integration",
+  "loop": "agent-runtime",
+  "cwd": ".",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "docs/agent-runtime-integration.md",
+    "docs/runtime-env-integration.md",
+    ".agents/module-set.json",
+    ".agents/shared-skills.requirements.json",
+    ".runtime-env/requirements.json"
+  ],
+  "drivers": {
+    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}

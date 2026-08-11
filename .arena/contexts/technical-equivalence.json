@@ -1,0 +1,30 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "technical-equivalence",
+  "module": "technical-equivalence",
+  "loop": "equivalence",
+  "cwd": "loop_wiki/evolve-technical-equivalence-research",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "loop_wiki/evolve-technical-equivalence-research/AGENTS.md",
+    "loop_wiki/evolve-technical-equivalence-research/PROMPT.md",
+    "loop_wiki/evolve-technical-equivalence-research/ROUTES.md",
+    "loop_wiki/evolve-technical-equivalence-research/profile/technical-equivalence.md",
+    "loop_wiki/evolve-technical-equivalence-research/modules/architecture.md",
+    "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
+    "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
+  ],
+  "drivers": {
+    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "loop_wiki/evolve-technical-equivalence-research/AGENTS.md", "binary": "codex"}
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}

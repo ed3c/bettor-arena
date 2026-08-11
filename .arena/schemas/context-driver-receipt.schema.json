@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/context-driver-receipt.schema.json",
+  "title": "Bettor Arena Context Driver Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "context", "module", "loop", "driver", "commit", "tree", "context_sha256", "state", "exit", "reply_sha256", "cleanup", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/context-driver-receipt/v1"},
+    "context": {"type": "string"},
+    "module": {"type": "string"},
+    "loop": {"type": "string"},
+    "driver": {"enum": ["claude-code", "codex-cli"]},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "context_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED"]},
+    "exit": {"type": ["integer", "null"]},
+    "reply_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "cleanup": {"enum": ["PASS", "FAIL"]},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

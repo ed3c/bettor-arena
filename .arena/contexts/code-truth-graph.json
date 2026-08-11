@@ -1,0 +1,30 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "code-truth-graph",
+  "module": "code-truth-graph",
+  "loop": "ctg",
+  "cwd": "loop_wiki/code-truth-graph",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "loop_wiki/code-truth-graph/AGENTS.md",
+    "loop_wiki/code-truth-graph/CLAUDE.md",
+    "loop_wiki/code-truth-graph/PROMPT.md",
+    "loop_wiki/code-truth-graph/ROUTES.md",
+    "loop_wiki/code-truth-graph/PLAN.md",
+    "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
+    "loop_wiki/code-truth-graph/modules/exchange-formats.md"
+  ],
+  "drivers": {
+    "claude-code": {"entry": "loop_wiki/code-truth-graph/CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "loop_wiki/code-truth-graph/AGENTS.md", "binary": "codex"}
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}

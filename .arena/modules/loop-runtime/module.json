@@ -1,5 +1,13 @@
 {
   "components": {
+    "context": {
+      "paths": [
+        "scripts/arena_context.py",
+        ".arena/contexts",
+        ".arena/contexts.lock.json"
+      ],
+      "required": true
+    },
     "mcp": {
       "paths": [
         "loopctl/mcp_server.py",
@@ -10,14 +18,16 @@
     "proof": {
       "paths": [
         "loopctl/selftest.sh",
-        "loopctl/surface.lock"
+        "loopctl/surface.lock",
+        "data/context-capsules/driver-parity.json"
       ],
       "required": true
     },
     "runtime": {
       "paths": [
         "loopctl/loopctl.sh",
-        "loopctl/contract.json"
+        "loopctl/contract.json",
+        "scripts/arena_context.py"
       ],
       "required": true
     }
@@ -30,7 +40,7 @@
     "secrets": "broker-only"
   },
   "id": "loop-runtime",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "core",
@@ -38,24 +48,35 @@
       "id": "loopctl",
       "interface_version": "2.8.0",
       "public_port": "sh loopctl/loopctl.sh"
+    },
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "context-capsule",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/arena_context.py"
     }
   ],
   "proof": {
     "control": [
-      "sh",
-      "proof_workflow/control_mcp_surface.sh"
+      "python3",
+      "scripts/arena_context.py",
+      "check"
     ],
     "mutation": [
-      "sh",
-      "loopctl/selftest.sh"
+      "python3",
+      "scripts/arena_context.py",
+      "--selftest"
     ],
     "selftest": [
-      "sh",
-      "loopctl/selftest.sh"
+      "python3",
+      "scripts/arena_context.py",
+      "--selftest"
     ],
     "verify": [
-      "sh",
-      "loopctl/selftest.sh"
+      "python3",
+      "scripts/arena_context.py",
+      "check"
     ]
   },
   "provides": [
@@ -67,13 +88,16 @@
     "arena.passive-context/v1"
   ],
   "roots": [
-    "loopctl"
+    "loopctl",
+    "scripts/arena_context.py"
   ],
   "runtime": {
     "profiles": [
       "bettor-arena-runtime-local"
     ],
     "tools": [
+      "claude",
+      "codex",
       "git",
       "python3",
       "sh"
@@ -87,5 +111,5 @@
       "shared-skills-infra"
     ]
   },
-  "summary": "Stable loopctl CLI surface, replay, container adapters, and immutable stateless MCP execution."
+  "summary": "Stable loopctl surface, immutable Context Capsules, fixed Claude/Codex canaries, replay/container adapters, and stateless MCP execution."
 }

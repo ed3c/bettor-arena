@@ -1,0 +1,27 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "macro",
+  "module": "arena-core",
+  "loop": "macro",
+  "cwd": ".",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "CONTEXT.md",
+    "docs/architecture/modular-integration-requirements.md",
+    "docs/architecture/modular-integration-status.md",
+    "docs/agent-runtime-integration.md"
+  ],
+  "drivers": {
+    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}
