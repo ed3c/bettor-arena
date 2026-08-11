@@ -23,22 +23,24 @@ jobs:
             scripts/arena_proof.py \
             scripts/arena_context.py \
             scripts/gates/check_agent_docs.py \
-            scripts/gates/check_module_catalog.py
+            scripts/gates/check_module_catalog.py \
+            scripts/gates/check_mcp_policy.py \
+            loopctl/mcp_tools.py \
+            loopctl/mcp_runtime.py \
+            loopctl/mcp_server.py
 
-      - name: Prove Agent entrypoint gate can disagree
-        run: python3 scripts/gates/check_agent_docs.py --selftest
+      - name: Prove deterministic gates can disagree
+        run: |
+          python3 scripts/gates/check_agent_docs.py --selftest
+          python3 scripts/arena_lock.py --selftest
+          python3 scripts/arena_proof.py --selftest
+          python3 scripts/arena_context.py --selftest
+          python3 scripts/gates/check_mcp_policy.py --selftest
 
-      - name: Check Agent entrypoint contract
-        run: python3 scripts/gates/check_agent_docs.py
-
-      - name: Prove ownership and composition gates can disagree
-        run: python3 scripts/arena_lock.py --selftest
-
-      - name: Prove module proof identity can disagree
-        run: python3 scripts/arena_proof.py --selftest
-
-      - name: Prove Context Capsules and driver contracts can disagree
-        run: python3 scripts/arena_context.py --selftest
+      - name: Check Agent and MCP entry contracts
+        run: |
+          python3 scripts/gates/check_agent_docs.py
+          python3 scripts/gates/check_mcp_policy.py
 
       - name: Render expected modular contracts
         run: |
@@ -55,6 +57,9 @@ jobs:
           python3 scripts/arena_proof.py release \
             --subjects /tmp/generated-contracts/subjects.lock.json \
             --output /tmp/generated-contracts/release-receipt.json
+          python3 loopctl/mcp_tools.py loopctl/contract.json \
+            --policy .arena/mcp-policy.json \
+            > /tmp/generated-contracts/mcp-exposure.json
 
       - name: Upload expected modular contracts
         if: always()
@@ -72,12 +77,14 @@ jobs:
           python3 -c 'import json; assert json.load(open("data/context-capsules/driver-parity.json")) == json.load(open("/tmp/generated-contracts/driver-parity.json"))'
           python3 -c 'import json; assert json.load(open("data/module-proof/subjects.lock.json")) == json.load(open("/tmp/generated-contracts/subjects.lock.json"))'
           python3 -c 'import json; assert json.load(open("data/module-proof/release-receipt.json")) == json.load(open("/tmp/generated-contracts/release-receipt.json"))'
+          python3 -c 'import json; assert json.load(open("data/mcp/exposure.json")) == json.load(open("/tmp/generated-contracts/mcp-exposure.json"))'
 
       - name: Check current contracts through their stable gates
         run: |
           python3 scripts/gates/check_module_catalog.py
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check
+          python3 scripts/gates/check_mcp_policy.py
 
       - name: Print ownership coverage summary
         run: python3 scripts/arena_lock.py ownership > /tmp/ownership.json && python3 -c 'import json; x=json.load(open("/tmp/ownership.json")); print({"tracked_files":x["tracked_files"],"ownership_sha256":x["ownership_sha256"],"counts":x["counts"]})'
