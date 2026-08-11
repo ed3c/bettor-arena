@@ -18,7 +18,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "5a4bffb7fb444b37c498e4c3f2b66ea3a18a506c462be725d1cd114285d0ac43",
+  "content_sha256": "2a2cfbc93d3656d2d90f42e1e1746477c4a4427f95a04b9fbb7c80aaa6059c9b",
   "modules": [
     {
       "components": [
@@ -27,8 +27,8 @@
         "runtime"
       ],
       "id": "agent-runtime-integration",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "a37df08dabd73fd0a6986575713c1f0b033e2ce6bfa410e6be013bfe81381936",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea",
       "provides": [
         "agent-runtime.aggregate/v1"
       ]
@@ -40,8 +40,8 @@
         "proof"
       ],
       "id": "arena-core",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "6fff935d48885d3c3bd58b25aead469db70523726343dad5a7b7831dad32e0b3",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "3d9ee08d2dee4fc4fe3834fabe2f7c7fd7e95309766ebeaebb7dc2e80c1808bb",
       "provides": [
         "arena.host-gates/v1",
         "arena.passive-context/v1"
@@ -92,8 +92,8 @@
         "runtime"
       ],
       "id": "module-catalog",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "028006abbb18197db4e3f2fb33583ce1c6a035a5f253e86014cc9bf189719a6c",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "c535383654ae26b8771203ecc2ff91dc04382b75d47e3746e6a8ef3908804c3f",
       "provides": [
         "arena.module-catalog/v1"
       ]
@@ -144,8 +144,8 @@
         "runtime"
       ],
       "id": "proof-kernel",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "fd202e4d8597fd602198fc456573917e3c89f19242861717633cb1dd3ef27353",
+      "interface_version": "1.1.0",
+      "manifest_sha256": "6d38eb892fe4b715cbfb349fac6005c8be318b160313da0de830046bbb565434",
       "provides": [
         "arena.proof-kernel/v1"
       ]
@@ -163,6 +163,9 @@
       ]
     }
   ],
+  "ownership_classes_sha256": "8d8cb3edee1df2d44177c0310c0ecb744c6027928b5b96d9126d9a46a444ef69",
+  "ownership_sha256": "3cbf039a69b0a004906dc5fb58358a7eb4cb34598c645361a46c2c0ea4cf99dc",
   "requirements_sha256": "d87f4a62b75eef6ce551583144cd785a9a15e63654f6db3fd87f627edc3cf324",
-  "schema": "bettor-arena/composition-lock/v1"
+  "schema": "bettor-arena/composition-lock/v1",
+  "tracked_files": 1153
 }
