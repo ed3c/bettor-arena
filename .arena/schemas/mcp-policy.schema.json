@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/mcp-policy.schema.json",
+  "title": "Bettor Arena MCP Exposure Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "tools"],
+  "properties": {
+    "schema": {"const": "bettor-arena/mcp-policy/v1"},
+    "tools": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "module", "mutation", "network", "secrets", "max_seconds", "max_request_bytes", "max_output_bytes"],
+        "properties": {
+          "name": {"type": "string", "pattern": "^loopctl_[A-Za-z0-9._-]+$"},
+          "module": {"type": "string", "pattern": "^[a-z0-9._-]+$"},
+          "mutation": {"enum": ["none", "disposable-worktree"]},
+          "network": {"enum": ["none", "optional"]},
+          "secrets": {"enum": ["none", "broker-only"]},
+          "max_seconds": {"type": "integer", "minimum": 1, "maximum": 900},
+          "max_request_bytes": {"type": "integer", "minimum": 1024, "maximum": 10485760},
+          "max_output_bytes": {"type": "integer", "minimum": 1024, "maximum": 10485760}
+        }
+      }
+    }
+  }
+}
