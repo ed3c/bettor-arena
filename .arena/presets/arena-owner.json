@@ -1,0 +1,89 @@
+{
+  "id": "arena-owner",
+  "modules": [
+    {
+      "components": [
+        "bindings",
+        "requirements",
+        "runtime"
+      ],
+      "id": "agent-runtime-integration"
+    },
+    {
+      "components": [
+        "bootstrap",
+        "context",
+        "proof"
+      ],
+      "id": "arena-core"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "code-truth-graph"
+    },
+    {
+      "components": [
+        "mcp",
+        "proof",
+        "runtime"
+      ],
+      "id": "loop-runtime"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "mcp-adapters"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "module-catalog"
+    },
+    {
+      "components": [
+        "interaction-data",
+        "proof",
+        "runtime"
+      ],
+      "id": "notebooklm"
+    },
+    {
+      "components": [
+        "projection",
+        "proof",
+        "runtime"
+      ],
+      "id": "openwiki"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "perfect-seed-factory"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "proof-kernel"
+    },
+    {
+      "components": [
+        "proof",
+        "runtime"
+      ],
+      "id": "technical-equivalence"
+    }
+  ],
+  "schema": "bettor-arena/preset/v1",
+  "summary": "All currently cataloged bettor-arena owner modules and all declared components."
+}
