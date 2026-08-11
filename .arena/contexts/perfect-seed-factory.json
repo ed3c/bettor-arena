@@ -1,0 +1,30 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "perfect-seed-factory",
+  "module": "perfect-seed-factory",
+  "loop": "micro",
+  "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/PROMPT.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/ROUTES.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/PLAN.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
+    "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
+  ],
+  "drivers": {
+    "claude-code": {"entry": "loop_wiki/evolve-perfect-seed-repo-factory/CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "loop_wiki/evolve-perfect-seed-repo-factory/AGENTS.md", "binary": "codex"}
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}
