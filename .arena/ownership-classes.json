@@ -4,7 +4,7 @@
     {
       "id": "generated-host-projections",
       "kind": "generated",
-      "description": "Versioned Claude/Codex/MCP and repo-binding projections generated from canonical module, Skill, or runtime contracts.",
+      "description": "Versioned Claude/Codex/MCP and repo-binding projections generated from canonical module, Skill, or runtime contracts. Executable host hooks are owned by arena-core instead of this class.",
       "paths": [
         ".claude",
         ".codex",
@@ -26,8 +26,6 @@
       "kind": "documentation",
       "description": "Repository-wide documentation that is not already owned by a more specific module root.",
       "paths": [
-        "README.md",
-        "LICENSE",
         "docs"
       ]
     },
