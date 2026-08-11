@@ -30,7 +30,7 @@ cd "$ROOT"
 
 if ! git diff --quiet -- .githooks scripts/gates; then
   echo "pre-commit FAIL: unstaged edits under .githooks/ or scripts/gates/ —" \
-       "the gate that would run is not the gate being committed" \
+       "the gate that would run is not the one being committed" \
        "(stage or stash those edits first)" >&2
   exit 2
 fi
@@ -86,13 +86,7 @@ python3 scripts/gates/check_credential_hygiene.py
 python3 scripts/gates/check_runtime_env_binding.py --staged
 python3 scripts/gates/check_delivery_receipt.py
 
-# agent-docs drift gate: the CLAUDE.md / AGENTS.md being committed must match
-# their source in the shared skill. Pure forwarder -- the logic lives once, in
-# scripts/pre-commit-agent-docs.sh; four copies of a checker is the shape this
-# gate exists to remove.
-AGENT_DOCS_GATE="$HOME/.agents/skills-shared/skills/forgejo-delivery-loop/scripts/pre-commit-agent-docs.sh"
-if [ -f "$AGENT_DOCS_GATE" ]; then
-  sh "$AGENT_DOCS_GATE" || exit $?
-else
-  echo "pre-commit SKIP: agent-docs gate not on this machine -- docs unchecked" >&2
-fi
+# New modular-integration gates judge the exact staged tree. They are
+# repo-contained, zero-network, and do not read sibling checkouts.
+python3 scripts/gates/check_agent_docs.py --root "$STAGEDTREE/tree"
+python3 scripts/gates/check_module_catalog.py --root "$STAGEDTREE/tree"

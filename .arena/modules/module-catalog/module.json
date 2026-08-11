@@ -1,0 +1,72 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "scripts/gates/check_module_catalog.py"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        ".arena",
+        "scripts/arena_modules.py"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "module-catalog",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "denied",
+      "id": "module-catalog",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/arena_modules.py"
+    }
+  ],
+  "proof": {
+    "control": null,
+    "mutation": [
+      "python3",
+      "scripts/arena_modules.py",
+      "--selftest"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/gates/check_module_catalog.py",
+      "--selftest"
+    ],
+    "verify": [
+      "python3",
+      "scripts/gates/check_module_catalog.py"
+    ]
+  },
+  "provides": [
+    "arena.module-catalog/v1"
+  ],
+  "requires": [],
+  "roots": [
+    ".arena"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Machine-readable module catalog, composition requirements, deterministic locks, and zero-network validation."
+}

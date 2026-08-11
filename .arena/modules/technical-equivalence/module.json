@@ -1,0 +1,84 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "loop_wiki/evolve-technical-equivalence-research/selftest.sh"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/evolve-technical-equivalence-research/equivalence.py"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "workspace",
+    "network": "broker-only",
+    "secrets": "broker-only"
+  },
+  "id": "technical-equivalence",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "micro",
+      "external_policy": "control-only",
+      "id": "equivalence",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh equivalence"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_equivalence_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "sh",
+      "loop_wiki/evolve-technical-equivalence-research/selftest.sh"
+    ],
+    "selftest": [
+      "sh",
+      "loop_wiki/evolve-technical-equivalence-research/selftest.sh"
+    ],
+    "verify": [
+      "python3",
+      "loop_wiki/evolve-technical-equivalence-research/selftest.py"
+    ]
+  },
+  "provides": [
+    "technical-equivalence.evaluate/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "roots": [
+    "loop_wiki/evolve-technical-equivalence-research"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "agy",
+      "claude",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "external-verify",
+      "path-b-reduction"
+    ]
+  },
+  "summary": "Typed technical-equivalence research loop with actor/transport contracts and candidate-only sync bundles."
+}

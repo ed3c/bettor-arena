@@ -1,0 +1,27 @@
+{
+  "id": "consumer-core",
+  "modules": [
+    {
+      "components": [
+        "runtime"
+      ],
+      "id": "module-catalog"
+    },
+    {
+      "components": [
+        "context"
+      ],
+      "id": "arena-core"
+    },
+    {
+      "components": [
+        "mcp",
+        "runtime"
+      ],
+      "id": "loop-runtime"
+    }
+  ],
+  "schema": "bettor-arena/preset/v1",
+  "status": "PLANNED",
+  "summary": "Caller-side core for an external Claude Code or Codex CLI consumer."
+}

@@ -1,0 +1,91 @@
+{
+  "components": {
+    "interaction-data": {
+      "paths": [
+        "notebooklm/registry.json"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "notebooklm/README.md"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "notebooklm/workflow.py",
+        "notebooklm/drive_fetch.py"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "external-system",
+    "network": "required",
+    "secrets": "host-only"
+  },
+  "id": "notebooklm",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "micro",
+      "external_policy": "control-only",
+      "id": "notebooklm",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh notebooklm"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_notebooklm_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "sh",
+      "proof_workflow/control_notebooklm_entry.sh",
+      "--json"
+    ],
+    "selftest": [
+      "python3",
+      "notebooklm/workflow.py",
+      "--selftest"
+    ],
+    "verify": [
+      "python3",
+      "notebooklm/workflow.py",
+      "--selftest"
+    ]
+  },
+  "provides": [
+    "notebooklm.harvest/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "roots": [
+    "notebooklm"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "notebooklm",
+      "python3"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [
+      "notebooklm-workflow"
+    ],
+    "required": []
+  },
+  "summary": "Host-owned NotebookLM harvest loop with authenticated Drive follow and offline proof/control."
+}

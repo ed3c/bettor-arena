@@ -1,0 +1,313 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/module.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "paths": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "required",
+          "paths"
+        ],
+        "type": "object"
+      },
+      "minProperties": 1,
+      "type": "object"
+    },
+    "conflicts": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_policy": {
+      "additionalProperties": false,
+      "properties": {
+        "exposed": {
+          "type": "boolean"
+        },
+        "mutation": {
+          "enum": [
+            "none",
+            "disposable-worktree",
+            "workspace",
+            "external-system"
+          ]
+        },
+        "network": {
+          "enum": [
+            "none",
+            "optional",
+            "required",
+            "broker-only"
+          ]
+        },
+        "secrets": {
+          "enum": [
+            "none",
+            "broker-only",
+            "host-only"
+          ]
+        }
+      },
+      "required": [
+        "exposed",
+        "mutation",
+        "network",
+        "secrets"
+      ],
+      "type": "object"
+    },
+    "id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "type": "string"
+    },
+    "interface_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "loops": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "enum": [
+              "macro",
+              "micro",
+              "core",
+              "provider",
+              "aggregate"
+            ]
+          },
+          "external_policy": {
+            "enum": [
+              "denied",
+              "allowlisted",
+              "control-only"
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "interface_version": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "public_port": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "class",
+          "interface_version",
+          "public_port",
+          "external_policy"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "proof": {
+      "additionalProperties": false,
+      "properties": {
+        "control": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          ]
+        },
+        "mutation": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          ]
+        },
+        "selftest": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          ]
+        },
+        "verify": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "verify",
+        "selftest",
+        "control",
+        "mutation"
+      ],
+      "type": "object"
+    },
+    "provides": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "requires": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "roots": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "runtime": {
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "tools": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "profiles",
+        "tools"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "bettor-arena/module/v1"
+    },
+    "skills": {
+      "additionalProperties": false,
+      "properties": {
+        "optional": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "repo_owned": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "required": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "required",
+        "optional",
+        "repo_owned"
+      ],
+      "type": "object"
+    },
+    "summary": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "interface_version",
+    "summary",
+    "roots",
+    "components",
+    "provides",
+    "requires",
+    "conflicts",
+    "loops",
+    "skills",
+    "runtime",
+    "proof",
+    "external_policy"
+  ],
+  "title": "Bettor Arena Module Contract v1",
+  "type": "object"
+}

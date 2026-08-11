@@ -1,0 +1,54 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/composition-requirements.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "type": "string"
+    },
+    "modules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "components": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "id": {
+            "pattern": "^[a-z0-9][a-z0-9._-]*$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "components"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "preset": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "bettor-arena/composition-requirements/v1"
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "preset",
+    "modules"
+  ],
+  "title": "Bettor Arena Composition Requirements v1",
+  "type": "object"
+}

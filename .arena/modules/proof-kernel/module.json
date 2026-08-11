@@ -1,0 +1,79 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "proof_workflow/prove_harness.sh",
+        "proof_workflow/control_harness_coverage.sh"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "proof_workflow/lib"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "proof-kernel",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "harness",
+      "interface_version": "1.0.0",
+      "public_port": "sh proof_workflow/prove_harness.sh"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_harness_coverage.sh"
+    ],
+    "mutation": [
+      "sh",
+      "proof_workflow/control_harness_coverage.sh"
+    ],
+    "selftest": [
+      "sh",
+      "proof_workflow/prove_harness.sh",
+      "--selftest"
+    ],
+    "verify": [
+      "sh",
+      "proof_workflow/prove_harness.sh",
+      "--selftest"
+    ]
+  },
+  "provides": [
+    "arena.proof-kernel/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1"
+  ],
+  "roots": [
+    "proof_workflow"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Traversal receipts, independent controls, named exclusions, and anti-jitter comparison logic."
+}

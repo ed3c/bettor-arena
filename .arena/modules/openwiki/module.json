@@ -1,0 +1,94 @@
+{
+  "components": {
+    "projection": {
+      "paths": [
+        "openwiki"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "kb-ingest/check_repo_wiki_converge.py"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "kb-ingest/port/wiki_update_worker.sh"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "workspace",
+    "network": "optional",
+    "secrets": "host-only"
+  },
+  "id": "openwiki",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "micro",
+      "external_policy": "control-only",
+      "id": "openwiki",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh openwiki"
+    }
+  ],
+  "proof": {
+    "control": [
+      "sh",
+      "proof_workflow/control_openwiki_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "bash",
+      "kb-ingest/port/test_relocation.sh"
+    ],
+    "selftest": [
+      "sh",
+      "kb-ingest/port/wiki_update_worker.sh",
+      "--selftest"
+    ],
+    "verify": [
+      "python3",
+      "kb-ingest/check_repo_wiki_converge.py"
+    ]
+  },
+  "provides": [
+    "wiki-update-request.consume/v1",
+    "repo-wiki.projection/v1"
+  ],
+  "requires": [
+    "arena.loopctl/v1",
+    "arena.proof-kernel/v1",
+    "wiki-update-request.produce/v1"
+  ],
+  "roots": [
+    "kb-ingest",
+    "openwiki"
+  ],
+  "runtime": {
+    "profiles": [
+      "bettor-arena-runtime-local"
+    ],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [
+      "openwiki-port"
+    ],
+    "required": [
+      "repo-wiki-converge"
+    ]
+  },
+  "summary": "Portable OpenWiki ingestion and regenerated as-built wiki projection."
+}
