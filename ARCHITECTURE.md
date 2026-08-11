@@ -27,7 +27,10 @@ bettor-arena/
 │                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
 ├── .agents/
-│   └── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
+│   ├── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
+│   ├── shared-skills.requirements.json # consumer desired shared/repo-owned names與雙 carrier surface
+│   ├── bindings/      # skills-shared resolver 產的 commit/tree/requirements/registry/per-skill digest closure
+│   └── module-set.json # skills-shared + runtime-env + Claude/Codex adapter 的唯一聚合介面
 ├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:
 │                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
@@ -61,7 +64,7 @@ bettor-arena/
 │                      #   連 sha256 一起印,表面變動因此是可見事件);loopctl.sh=接線;兩者由
 │                      #   selftest.sh 雙向綁死,任一邊多出命令即紅。exit code 原樣透傳不重映射。
 │                      #   危險路徑一律 opt-in 旗標(`openwiki run --full` 才燒 model turn 並改 openwiki/)
-├── proof_workflow/    # contract 宣告迴圈的物理遍歷證明(一迴圈一支 .sh;lib/prove.sh=共用記錄器,
+├── proof_workflow/    # contract 宣告迴圈的物理遍歷證明(含 agent-runtime proof/control；一迴圈一支 .sh;lib/prove.sh=共用記錄器,
 │                      #   `--selftest` 是它自己的負控)。每支從啟動點走到末端產物,分記兩種步驟:
 │                      #   harness=確定性腳本(真跑並記 exit;會改帳的入口只 hash 記 hashed-not-run,
 │                      #   永不讀成綠)、context=概率性那一側真正讀的文檔(只 hash 不執行,缺席即 FATAL)、
@@ -74,6 +77,7 @@ bettor-arena/
 │                      #   路徑是必要還是可選由**實驗**判定——丟棄式 worktree 拿掉該路徑再跑,看 exit 變不變,
 │                      #   不讀 fatal/warn 字面;未分類即 FATAL。比對面是三支證明收據的聯集,不只 macro
 ├── scripts/
+│   ├── agent_runtime.py # module-set 深介面：offline/adapter/strict 三層判決與雙 carrier live receipt
 │   ├── gates/         # repo 級防禦腳本(零 LLM):check_root_coupling.py+check_placement.py(§2 機械化)+check_skill_pointers.py(skills 單份+host 指針閘;S5)+check_credential_hygiene.py(憑證材料不入 tracked 檔;#17 事故根因)+check_runtime_env_binding.py(staged consumer 投影防漂移,零 sibling/網路)+check_delivery_receipt.py(交付收據;forgejo-delivery-loop 的 T0,零網路;#27)+_gate_common.py(共用 repo_root/fixture 樣板)+allowlist 帳
 │   ├── delivery_status.py # 交付活狀態顯式審計(打網路,禁進 hook;--selftest 零網路驗渲染)
 │   └── migrate/       # 遷移引擎 v2(migrate_seed.py;dry-run 預設/--apply/--stats/--selftest;S2 落地)
@@ -94,7 +98,7 @@ bettor-arena/
 │   │                  # schema bettor-arena-wiki-update-request@1.0.0,producer=工廠 trigger.sh,
 │   │                  # consumer=kb-ingest/port/wiki_update_worker.sh;湧現內容不落此處,只落 openwiki backlog)
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only,同名重跑 exit 64/--force-receipt 顯式覆寫;S3/S4 的 apply 早於 per-run 機制,其 receipt 僅存 git history 的 last-migration-report.json 版本;last-migration-report.json=最新拷貝,執行期生)
-└── docs/              # 計劃/交接文件(非模組知識);adr/=架構決策記錄(0001=slice 詞彙);
+└── docs/              # 計劃/交接文件(非模組知識);agent-runtime-integration.md=跨 repo 模組集合的 Agent 具體契約;audits/=具名 commit/branch 的審計交接包;adr/=架構決策記錄(0001=slice 詞彙);
                        #   plans/<date>-<topic>/as-run.md=該線執行帳(已完成/未完成/已跑/未跑),
                        #   forgejo-delivery-loop 三 SSOT 之一,與 openwiki(as-built)分工
 ```

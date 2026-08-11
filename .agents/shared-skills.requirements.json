@@ -1,0 +1,37 @@
+{
+  "binding": "bettor-arena",
+  "repo_owned": [
+    "harness-wiki",
+    "product-ops",
+    "skill-authoring"
+  ],
+  "schema": "shared-skills/consumer-requirements/v1",
+  "shared": [
+    "autoresearch-composer",
+    "dr-research-loop",
+    "dr-to-mvp",
+    "external-verify",
+    "fold-in",
+    "forgejo-delivery-loop",
+    "gemini-conversation-research",
+    "github-delivery-loop",
+    "gitlab-delivery-loop",
+    "html-for-decisions",
+    "judge-loop-chooser",
+    "knowledge-continuity",
+    "loop-harness-review-handoff",
+    "loop-harness-standard",
+    "path-b-reduction",
+    "repo-agent-native",
+    "repo-fullstack-debugger",
+    "repo-wiki-converge",
+    "sdlc-plan-composer",
+    "shared-skills-infra",
+    "truth-verify-loop",
+    "unknown-discovery-composer"
+  ],
+  "surfaces": {
+    "claude": ".claude/skills",
+    "codex": ".agents/skills"
+  }
+}

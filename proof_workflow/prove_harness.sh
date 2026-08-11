@@ -41,6 +41,8 @@ prove_harness capture proof_workflow/lib/capture.sh \
   -- sh proof_workflow/lib/capture.sh --selftest
 prove_harness ctg-control-helper proof_workflow/ctg_control.py \
   "closed packet closure + canonical projection + proof linkage for the CTG behavioral control"
+prove_harness agent-runtime-control-helper proof_workflow/agent_runtime_control.py \
+  "portable module-set fixture + isolated shared/runtime/Claude/Codex mutations for the independent control"
 # The coverage checker, which caught its own absence the moment it became tracked:
 # it is the file that asks whether the instrument is measured, and nothing was
 # measuring it. Left out of the first version of this proof because it was written
@@ -69,7 +71,7 @@ prove_harness equivalence-control-comparator proof_workflow/lib/equivalence_cont
 # --- every traversal proof --------------------------------------------------
 # Hashed, never fired: a proof run from inside a proof would write receipts about
 # receipts, and the outer digest would then depend on when the inner one last ran.
-for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm equivalence ctg_loop; do
+for p in macro_loop micro_loop openwiki container policy workflow harness notebooklm equivalence ctg_loop agent_runtime; do
   case "$p" in
     macro_loop|micro_loop) f="proof_workflow/prove_$p.sh" ;;
     *) f="proof_workflow/prove_$p.sh" ;;
@@ -80,7 +82,7 @@ for p in macro_loop micro_loop openwiki container policy workflow harness notebo
 done
 
 # --- every control ----------------------------------------------------------
-for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry equivalence_entry ctg_entry; do
+for c in macro_entry micro_entry openwiki_entry workflow_lineage mcp_surface container_surface sandbox_policy harness_coverage notebooklm_entry equivalence_entry ctg_entry agent_runtime_entry; do
   f="proof_workflow/control_$c.sh"
   [ -f "$PROVE_ROOT/$f" ] || continue
   prove_harness "control-$c" "$f" \

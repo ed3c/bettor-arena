@@ -60,7 +60,10 @@ PY
   # first shape made a declared command look unwired and sent the fix at the
   # contract instead of at the extraction.
   {
-    grep -oE '^  (macro|micro|openwiki|notebooklm|equivalence|ctg)/(run|prove|test|build-local)\)' "$_cli" | tr -d ' )'
+    # Keep the hyphenated aggregate name in this executable grammar. The first
+    # agent-runtime wiring was invisible here because this alternation only
+    # named the older loops, so all three real case labels looked unwired.
+    grep -oE '^  (macro|micro|openwiki|notebooklm|agent-runtime|equivalence|ctg)/(run|prove|test|build-local)\)' "$_cli" | tr -d ' )'
     # The nested subcommands are listed, not extracted. Their labels repeat
     # across branches — `test)` under four of them, `prove)` under two — and a
     # shape-based grep cannot say which branch a label belongs to: it prefixed
