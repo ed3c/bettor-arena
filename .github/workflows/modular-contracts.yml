@@ -14,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
@@ -34,6 +35,16 @@ jobs:
             loopctl/mcp_tools.py \
             loopctl/mcp_runtime.py \
             loopctl/mcp_server.py
+
+      - name: Compile Bun and TypeScript primary entrypoints
+        run: |
+          mkdir -p /tmp/bun-build
+          bun build \
+            loopctl/mcp_runtime.ts \
+            loopctl/mcp_tools.ts \
+            scripts/gates/check_mcp_policy.ts \
+            --target=bun \
+            --outdir=/tmp/bun-build
 
       - name: Prove Bun MCP policy and carrier can disagree
         run: |
