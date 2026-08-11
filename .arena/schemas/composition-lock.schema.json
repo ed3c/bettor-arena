@@ -1,0 +1,77 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/composition-lock.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "additionalProperties": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "composition": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "modules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "interface_version": {
+            "type": "string"
+          },
+          "manifest_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "provides": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "interface_version",
+          "manifest_sha256",
+          "components",
+          "provides"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "requirements_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "bettor-arena/composition-lock/v1"
+    }
+  },
+  "required": [
+    "schema",
+    "composition",
+    "requirements_sha256",
+    "modules",
+    "capabilities",
+    "content_sha256"
+  ],
+  "title": "Bettor Arena Composition Lock v1",
+  "type": "object"
+}
