@@ -1,0 +1,187 @@
+{
+  "binding": "bettor-arena-local",
+  "content_sha256": "9477a887561b1b976a0f086e63971d9a17dad0a90c3b8f654cc21653c452517d",
+  "profile": "bettor-arena-runtime-local",
+  "projections": {
+    "policies": [
+      ".runtime-env/policies/claude-code-native-isolation.json",
+      ".runtime-env/policies/codex-cli-native-isolation.json",
+      ".runtime-env/policies/codex-openshell-chatgpt-placeholder.json"
+    ],
+    "workload": ".runtime-env/workloads/bettor-arena-local.json"
+  },
+  "render": {
+    "format": "dotenv",
+    "path": ".runtime-env/examples/bettor-arena-local.env.example",
+    "sha256": "dbba78c17b9543cb0ca899b99abb52c11b30eb3cdc7478c812dccb7cd92ac061"
+  },
+  "schema": "runtime-env/consumer-binding/v1",
+  "source": {
+    "commit": "b8c768d23cf3e6e1f96996aea9ef05ad51dc114c",
+    "repository": "https://github.com/ed3c/runtime-env",
+    "tree": "66bdf403f888eb029d114a1a0cb62c61151aad7c"
+  },
+  "variables": [
+    {
+      "default": "high",
+      "description": "Agy reasoning effort selector.",
+      "name": "AGY_EFFORT",
+      "required": false,
+      "runtime_scope": "portable",
+      "secret": false
+    },
+    {
+      "default": "gemini-3.6-flash-high",
+      "description": "Exact agy model id observed from the live model inventory.",
+      "name": "AGY_MODEL",
+      "required": false,
+      "runtime_scope": "portable",
+      "secret": false
+    },
+    {
+      "description": "Explicit local path to the Antigravity source peer used by proof controls.",
+      "name": "ANTIGRAVITY_PEER",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Dedicated Claude Code configuration root; its contents remain host-only.",
+      "name": "CLAUDE_CONFIG_DIR",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Dedicated Codex configuration root; its contents remain host-only.",
+      "name": "CODEX_HOME",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "default": "gpt-5.6-sol",
+      "description": "Codex model selected by the disposable OpenShell ChatGPT carrier.",
+      "name": "CODEX_SANDBOX_MODEL",
+      "required": false,
+      "runtime_scope": "portable",
+      "secret": false
+    },
+    {
+      "default": "http://127.0.0.1:9333",
+      "description": "Loopback CDP endpoint for an already-running dedicated research browser.",
+      "name": "DR_CDP_URL",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "default": "0",
+      "description": "Whether broker-owned deep-research browser operations use a visible window.",
+      "name": "DR_HEADED",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Path to a per-request external-transmission approval receipt; the receipt contains no credential values.",
+      "name": "EQUIVALENCE_APPROVAL_RECEIPT_PATH",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Path to the digest-bound technical-equivalence request approved for execution.",
+      "name": "EQUIVALENCE_REQUEST_PATH",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Broker-owned file sink for technical-equivalence prompts, reports, and receipts.",
+      "name": "EQUIVALENCE_RUN_ROOT",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "default": "claude-code",
+      "description": "OpenShell provider name for the isolated Claude subscription carrier.",
+      "name": "OPENSHELL_CLAUDE_PROVIDER",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "default": "codex-runtime-env",
+      "description": "OpenShell provider name for the isolated Codex ChatGPT carrier.",
+      "name": "OPENSHELL_CODEX_PROVIDER",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Optional stored OpenShell gateway name selected by the host broker.",
+      "name": "OPENSHELL_GATEWAY",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Optional explicit OpenShell gateway endpoint selected by the host broker.",
+      "name": "OPENSHELL_GATEWAY_ENDPOINT",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Explicit local path to the skill-bettor target peer used by proof controls.",
+      "name": "SKILL_BETTOR_PEER",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Additional broker-approved output roots for stealth-browser file sinks.",
+      "name": "STEALTH_BROWSER_EXTRA_ALLOW",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Absolute path to the separately versioned stealth-browser checkout.",
+      "name": "STEALTH_BROWSER_ROOT",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Broker-owned path for sanitized stealth-browser diagnostics.",
+      "name": "STEALTH_DEBUG_LOG",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Stable browser language list used by the stealth fingerprint layer.",
+      "name": "STEALTH_LANGUAGES",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Absolute broker-owned directory for untracked browser cookies, storage state, and locked fingerprints; directories are 0700 and files 0600.",
+      "name": "STEALTH_PROFILE_ROOT",
+      "required": true,
+      "runtime_scope": "local-only",
+      "secret": false
+    },
+    {
+      "description": "Explicit browser user-agent override for deterministic probes.",
+      "name": "STEALTH_USER_AGENT",
+      "required": false,
+      "runtime_scope": "local-only",
+      "secret": false
+    }
+  ]
+}
