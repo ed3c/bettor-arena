@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/.arena/schemas/origin-receipt.schema.json",
+  "title": "Bettor Arena Origin Probe Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "logical_source", "origin", "status", "subject", "note", "content_sha256"],
+  "properties": {
+    "schema": {"const": "bettor-arena/origin-receipt/v1"},
+    "logical_source": {"type": "string"},
+    "origin": {"type": "object", "required": ["id", "role", "repository", "scopes"]},
+    "status": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED"]},
+    "subject": {
+      "type": ["object", "null"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "release_manifest": {"type": "string"},
+        "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "note": {"type": "string"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
