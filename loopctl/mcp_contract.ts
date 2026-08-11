@@ -44,6 +44,7 @@ export interface McpCarrier {
   kind: string;
   max_request_bytes?: number;
   description?: string;
+  result_file?: string;
   input_schema: Record<string, Json>;
 }
 
@@ -126,7 +127,11 @@ function stable(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stable);
   if (value && typeof value === "object") {
     const source = value as Record<string, unknown>;
-    return Object.fromEntries(Object.keys(source).sort().map((key) => [key, stable(source[key])]));
+    return Object.fromEntries(
+      Object.keys(source)
+        .sort()
+        .map((key) => [key, stable(source[key])]),
+    );
   }
   return value;
 }
@@ -151,7 +156,10 @@ export function readJson<T>(path: string): T {
   }
 }
 
-export function assertObject(value: unknown, label: string): asserts value is Record<string, unknown> {
+export function assertObject(
+  value: unknown,
+  label: string,
+): asserts value is Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new McpError(`${label} must be an object`);
   }
@@ -166,7 +174,9 @@ export function assertExactFields(
   const got = Object.keys(value).sort();
   const want = [...fields].sort();
   if (JSON.stringify(got) !== JSON.stringify(want)) {
-    throw new McpError(`${label} fields drifted: got=${got.join(",")}, want=${want.join(",")}`);
+    throw new McpError(
+      `${label} fields drifted: got=${got.join(",")}, want=${want.join(",")}`,
+    );
   }
 }
 
@@ -196,14 +206,20 @@ export function safeJoin(root: string, child: string): string {
   return target;
 }
 
-export function gitText(root: string, args: string[], allowFailure = false): string {
+export function gitText(
+  root: string,
+  args: string[],
+  allowFailure = false,
+): string {
   const process = spawnSync("git", ["-C", root, ...args], {
     encoding: "utf8",
     maxBuffer: 16 * 1024 * 1024,
   });
   if (process.status !== 0 && !allowFailure) {
     throw new McpError(
-      (process.stderr || process.stdout || `git ${args.join(" ")} failed`).trim().slice(0, 1200),
+      (process.stderr || process.stdout || `git ${args.join(" ")} failed`)
+        .trim()
+        .slice(0, 1200),
     );
   }
   return (process.stdout || "").trim();
@@ -215,7 +231,10 @@ export function gitBytes(root: string, args: string[]): Buffer {
   });
   if (process.status !== 0) {
     throw new McpError(
-      Buffer.from(process.stderr || process.stdout || "git failed").toString("utf8").trim().slice(0, 1200),
+      Buffer.from(process.stderr || process.stdout || "git failed")
+        .toString("utf8")
+        .trim()
+        .slice(0, 1200),
     );
   }
   return Buffer.from(process.stdout || Buffer.alloc(0));
@@ -231,7 +250,10 @@ export function jsonAtRef<T>(root: string, ref: string, path: string): T {
   }
 }
 
-export function resolveRef(root: string, ref: string): { commit: string; tree: string } {
+export function resolveRef(
+  root: string,
+  ref: string,
+): { commit: string; tree: string } {
   if (["HEAD", "main", "master", "trunk"].includes(ref)) {
     throw new McpError(`mutable ref is refused: ${ref}`);
   }
@@ -271,10 +293,15 @@ function describe(command: LoopCommand, contract: LoopContract): string {
 
 function commandSchema(command: LoopCommand): Record<string, Json> {
   if (command.mcp_carrier) return command.mcp_carrier.input_schema;
-  const input = typeof command.io?.input === "object" && command.io.input ? command.io.input : {};
+  const input =
+    typeof command.io?.input === "object" && command.io.input
+      ? command.io.input
+      : {};
   const optIn = command.opt_in ?? {};
   const properties: Record<string, Json> = {};
-  for (const flag of [...new Set([...command.required, ...command.optional])].sort()) {
+  for (const flag of [
+    ...new Set([...command.required, ...command.optional]),
+  ].sort()) {
     const key = flag.slice(2).replaceAll("-", "_");
     const boolean = Object.hasOwn(optIn, flag) && !Object.hasOwn(input, flag);
     properties[key] = {
@@ -285,19 +312,46 @@ function commandSchema(command: LoopCommand): Record<string, Json> {
   return {
     type: "object",
     properties,
-    required: command.required.map((flag) => flag.slice(2).replaceAll("-", "_")),
+    required: command.required.map((flag) =>
+      flag.slice(2).replaceAll("-", "_"),
+    ),
     additionalProperties: false,
   };
 }
 
-export function validatePolicy(policy: McpPolicy | null, contract: LoopContract): ToolPolicy[] {
+function validateCarrier(command: LoopCommand, name: string): void {
+  const carrier = command.mcp_carrier;
+  if (!carrier) return;
+  if (carrier.kind !== "closed-inline-bundle@1.0.0") {
+    throw new McpError(`unsupported closed carrier: ${name}`);
+  }
+  if (!carrier.result_file) {
+    throw new McpError(`closed carrier result_file is required: ${name}`);
+  }
+  safeArtifactRef(carrier.result_file);
+  if (
+    !command.required.includes("--packet") ||
+    !command.required.includes("--output")
+  ) {
+    throw new McpError(`closed carrier requires --packet and --output: ${name}`);
+  }
+}
+
+export function validatePolicy(
+  policy: McpPolicy | null,
+  contract: LoopContract,
+): ToolPolicy[] {
   if (policy === null) return [];
   assertExactFields(policy, ["schema", "tools"], "MCP policy");
   if (policy.schema !== POLICY_SCHEMA) {
     throw new McpError(`MCP policy schema must be ${POLICY_SCHEMA}`);
   }
-  if (!Array.isArray(policy.tools)) throw new McpError("MCP policy tools must be an array");
-  const commands = new Map(contract.commands.map((command) => [toolName(command), command]));
+  if (!Array.isArray(policy.tools)) {
+    throw new McpError("MCP policy tools must be an array");
+  }
+  const commands = new Map(
+    contract.commands.map((command) => [toolName(command), command]),
+  );
   const seen = new Set<string>();
   const normalized: ToolPolicy[] = [];
   for (const [index, entry] of policy.tools.entries()) {
@@ -305,26 +359,39 @@ export function validatePolicy(policy: McpPolicy | null, contract: LoopContract)
     if (typeof entry.name !== "string" || !entry.name) {
       throw new McpError(`MCP policy tool[${index}] name is required`);
     }
-    if (seen.has(entry.name)) throw new McpError(`duplicate MCP policy tool: ${entry.name}`);
+    if (seen.has(entry.name)) {
+      throw new McpError(`duplicate MCP policy tool: ${entry.name}`);
+    }
     seen.add(entry.name);
     const command = commands.get(entry.name);
-    if (!command) throw new McpError(`MCP policy references unknown CLI command: ${entry.name}`);
-    if (command.mcp_exposed === false) {
-      throw new McpError(`CLI contract explicitly forbids MCP exposure: ${entry.name}`);
+    if (!command) {
+      throw new McpError(
+        `MCP policy references unknown CLI command: ${entry.name}`,
+      );
     }
+    if (command.mcp_exposed !== true) {
+      throw new McpError(
+        `CLI contract has not explicitly enabled MCP exposure: ${entry.name}`,
+      );
+    }
+    validateCarrier(command, entry.name);
     if (typeof entry.module !== "string" || !entry.module) {
       throw new McpError(`MCP policy module is required: ${entry.name}`);
     }
-    if (!(["none", "disposable-worktree"] as string[]).includes(entry.mutation)) {
+    if (!( ["none", "disposable-worktree"] as string[]).includes(entry.mutation)) {
       throw new McpError(`unsupported mutation policy: ${entry.name}`);
     }
-    if (!(["none", "optional"] as string[]).includes(entry.network)) {
+    if (!( ["none", "optional"] as string[]).includes(entry.network)) {
       throw new McpError(`unsupported network policy: ${entry.name}`);
     }
-    if (!(["none", "broker-only"] as string[]).includes(entry.secrets)) {
+    if (!( ["none", "broker-only"] as string[]).includes(entry.secrets)) {
       throw new McpError(`unsupported secrets policy: ${entry.name}`);
     }
-    for (const field of ["max_seconds", "max_request_bytes", "max_output_bytes"] as const) {
+    for (const field of [
+      "max_seconds",
+      "max_request_bytes",
+      "max_output_bytes",
+    ] as const) {
       if (!Number.isInteger(entry[field]) || entry[field] <= 0) {
         throw new McpError(`${entry.name}.${field} must be positive`);
       }
@@ -334,8 +401,13 @@ export function validatePolicy(policy: McpPolicy | null, contract: LoopContract)
   return normalized.sort((left, right) => left.name.localeCompare(right.name));
 }
 
-export function buildTools(contract: LoopContract, policy: McpPolicy | null): GeneratedTool[] {
-  const commands = new Map(contract.commands.map((command) => [toolName(command), command]));
+export function buildTools(
+  contract: LoopContract,
+  policy: McpPolicy | null,
+): GeneratedTool[] {
+  const commands = new Map(
+    contract.commands.map((command) => [toolName(command), command]),
+  );
   return validatePolicy(policy, contract).map((entry) => {
     const command = commands.get(entry.name)!;
     return {
@@ -354,6 +426,9 @@ export function buildTools(contract: LoopContract, policy: McpPolicy | null): Ge
 }
 
 export function publicTool(tool: GeneratedTool): Record<string, unknown> {
-  return { name: tool.name, description: tool.description, inputSchema: tool.inputSchema };
+  return {
+    name: tool.name,
+    description: tool.description,
+    inputSchema: tool.inputSchema,
+  };
 }
-
