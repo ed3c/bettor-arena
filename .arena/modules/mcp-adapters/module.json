@@ -1,0 +1,54 @@
+{
+  "components": {
+    "proof": {
+      "paths": [
+        "mcp/README.md"
+      ],
+      "required": false
+    },
+    "runtime": {
+      "paths": [
+        "mcp"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "mcp-adapters",
+  "interface_version": "1.0.0",
+  "loops": [],
+  "proof": {
+    "control": null,
+    "mutation": null,
+    "selftest": null,
+    "verify": null
+  },
+  "provides": [
+    "arena.mcp-adapters/v1"
+  ],
+  "requires": [
+    "arena.stateless-mcp/v1"
+  ],
+  "roots": [
+    "mcp"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Higher-level MCP adapters and production migration machinery layered on loopctl's immutable server."
+}
