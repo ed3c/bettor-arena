@@ -1,0 +1,26 @@
+{
+  "schema": "bettor-arena/origin-contract/v1",
+  "logical_source": "ed3c/bettor-arena",
+  "release_manifest": ".arena/locks/bettor-arena.lock.json",
+  "accepted_equivalence": [
+    "exact-commit",
+    "same-tree",
+    "same-release-manifest"
+  ],
+  "origins": [
+    {
+      "id": "github-cloud",
+      "role": "distribution",
+      "scopes": ["cloud", "promotion"],
+      "repository": "https://github.com/ed3c/bettor-arena.git",
+      "live_probe": "ci"
+    },
+    {
+      "id": "forgejo-local",
+      "role": "authoring",
+      "scopes": ["local", "promotion"],
+      "repository": "http://localhost:3000/neon/bettor-arena.git",
+      "live_probe": "host-only"
+    }
+  ]
+}
