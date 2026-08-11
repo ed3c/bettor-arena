@@ -1,6 +1,6 @@
 {
   "binding": "bettor-arena-local",
-  "content_sha256": "e61c9da7699b95c10bee1965574e80dc0e60c139c3a0319676055f511f051721",
+  "content_sha256": "bb09408e5b36e9317a28a2115d0e51383209bce68d043383450834c0a82c236b",
   "modules": [
     {
       "content_sha256": "109b5402afe32209b44945f16e4026287a1493e5227d668cf80ce6054f3b2397",
@@ -80,9 +80,9 @@
   "requirements_sha256": "a0d429e4780dd4030d8371eae41f518f62238726a2cfc6054027eb093cae276f",
   "schema": "runtime-env/consumer-binding/v2",
   "source": {
-    "commit": "e113e76f6ae848b3e3ab99fbb778449a99cb62bd",
+    "commit": "1b1ce4f2ea377592e06ad3e1a675d2ae893ca272",
     "repository": "https://github.com/ed3c/runtime-env",
-    "tree": "46a119288bb558929eb4f4a808c107767a80b676"
+    "tree": "78e72711d37238360b460dbb7c0854e9479b67c6"
   },
   "variables": [
     {
