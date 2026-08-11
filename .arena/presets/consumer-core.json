@@ -1,27 +1,11 @@
 {
-  "id": "consumer-core",
-  "modules": [
-    {
-      "components": [
-        "runtime"
-      ],
-      "id": "module-catalog"
-    },
-    {
-      "components": [
-        "context"
-      ],
-      "id": "arena-core"
-    },
-    {
-      "components": [
-        "mcp",
-        "runtime"
-      ],
-      "id": "loop-runtime"
-    }
-  ],
   "schema": "bettor-arena/preset/v1",
-  "status": "PLANNED",
-  "summary": "Caller-side core for an external Claude Code or Codex CLI consumer."
+  "id": "consumer-core",
+  "status": "IMPLEMENTED",
+  "summary": "Minimum remote-consumer composition for Claude Code and Codex CLI entrypoints, module resolution, Context Capsules, proof controls, and the Bun/TypeScript default-deny MCP runtime.",
+  "modules": [
+    {"id": "module-catalog", "components": ["proof", "runtime"]},
+    {"id": "arena-core", "components": ["bootstrap", "context", "proof"]},
+    {"id": "loop-runtime", "components": ["context", "mcp", "proof", "runtime"]}
+  ]
 }
