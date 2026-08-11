@@ -45,7 +45,13 @@ STAGED=$(git diff --cached --name-only --diff-filter=ACMR | while IFS= read -r p
 done)
 [ -n "$STAGED" ] || exit 0
 
-STAGEDTREE=$(mktemp -d)
+# Name the parent explicitly: bare `mktemp -d` falls back to the platform
+# default, which a sandbox may deny — committing then fails for a reason that
+# has nothing to do with the commit.
+STAGEDTREE=$(mktemp -d "${TMPDIR:-/tmp}/pre-commit.XXXXXX") || {
+  echo "pre-commit: cannot create a temp dir under ${TMPDIR:-/tmp}" >&2
+  exit 64
+}
 trap 'rm -rf "$STAGEDTREE"' EXIT
 # -a: full index, not just staged paths — staged files may import unchanged ones.
 git checkout-index -a --prefix="$STAGEDTREE/tree/"

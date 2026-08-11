@@ -284,6 +284,25 @@ def main() -> int:
     path.write_text(encoded, encoding="utf-8")
     print(f"receipt={path}")
     print("SELFTEST " + ("RED" if red else "GREEN") + f" live={live}")
+    if red:
+        # A red that cannot say what clears it becomes a red nobody reads, and
+        # this one has an answer: the checks know which of them failed, and the
+        # drift gate knows the state it landed in. Emitted as `NEXT:` because
+        # prove.sh lifts that line into its summary — the route travels with the
+        # mechanism that computes it rather than being restated beside the proof,
+        # where it would drift.
+        failing = [c["name"] for c in checks if c["exit"] != 0]
+        if hard["state"] == "hard_drift":
+            route = (
+                "the admitted mirror predates the current profile — "
+                "`equivalence.py run --execute-gemini` to candidate_ready, then audit-probe the "
+                "load-bearing candidates into technical_equivalent (a judge packet is only built "
+                "once at least one reaches it), then the fresh judge, then human admit. "
+                f"drift failures: {'; '.join(hard['failures'])}"
+            )
+        else:
+            route = f"repair the failing check(s) and re-run: {', '.join(failing)}"
+        print(f"NEXT: {route}")
     return 2 if red else 0
 
 

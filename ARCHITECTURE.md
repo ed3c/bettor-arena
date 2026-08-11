@@ -26,6 +26,10 @@ bettor-arena/
 ├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill;
 │                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
+├── .runtime-env/      # runtime-env 單向產生的消費端投影(binding/example/workload/policies;
+│                      #   Agent 操作與完成契約→docs/runtime-env-integration.md):
+│                      #   只帶名稱、安全預設與 source commit/tree receipt，禁放憑證值與 .env;
+│                      #   維護時顯式 sync，consumer verifier 的輸入只准本 repo projection，禁讀 source catalog
 ├── .agents/
 │   ├── skills/        # skill 內容 SSOT(host-neutral 單份;S5 落地)
 │   ├── shared-skills.requirements.json # consumer desired shared/repo-owned names與雙 carrier surface
