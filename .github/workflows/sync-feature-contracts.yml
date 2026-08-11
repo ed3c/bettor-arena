@@ -1,5 +1,7 @@
 name: Sync feature modular contracts
 
+# This workflow keeps checked-in generated contracts aligned before the exact-head
+# verification workflow decides whether a feature branch is mergeable.
 on:
   push:
     branches:
