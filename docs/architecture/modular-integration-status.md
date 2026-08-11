@@ -7,8 +7,9 @@ from this file, this file is authoritative for what has actually landed.
 
 ## Phase 0 — executable module catalog
 
-Status: **IMPLEMENTED in the Phase 0 branch; evidence is the repository-contained
-gate and GitHub workflow, not this sentence.**
+Status: **IMPLEMENTED on `main` by PR #4, merge commit
+`5ff5e374fa1113451796c3136d0d4d86449e9c11`. Evidence is the
+repository-contained gates and exact-head GitHub workflow, not this sentence.**
 
 Implemented:
 
@@ -35,8 +36,14 @@ Current limitation:
 - no public `loopctl module` surface has been added, so the Arena surface version
   has not changed.
 
+## Active delivery
+
+- Parent PRD: issue #5.
+- Current slice: issue #6, full tracked-path ownership coverage.
+
 ## Remaining target phases
 
+- **NOT_IMPLEMENTED:** full tracked-path ownership coverage (issue #6);
 - **NOT_IMPLEMENTED:** module-scoped proof v2 and transitive receipt invalidation;
 - **NOT_IMPLEMENTED:** Context Capsule and Claude/Codex driver parity;
 - **NOT_IMPLEMENTED:** stateless MCP default-deny generation from module policy;
