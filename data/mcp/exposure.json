@@ -1,1 +1,125 @@
-{"tools":[{"name":"loopctl_ctg_prove","description":"prove: traverse it and write a proof receipt under data/proof-workflow/ Loop: ctg. Input: clean committed CTG mechanism and public carrier surfaces Writes: data/proof-workflow/ctg-<commit12>.json Exit: 0 traversal passed · 2 a mechanism step went red · 64 missing tool/context or invalid receipt state Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.","inputSchema":{"type":"object","properties":{"force_receipt":{"type":"string","description":"--force-receipt"},"json":{"type":"string","description":"--json"}},"required":[],"additionalProperties":false}},{"name":"loopctl_ctg_run","description":"run: execute the loop's real entry point Loop: ctg. Input: --packet: closed ctg-input@1.0.0 bundle manifest; --output: fresh absolute output directory Writes: <output>/ctg-route-result.json — ctg-route-result@1.0.0; <output>/code-truth-graph.json — content-addressed graph artifact Exit: 0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.","inputSchema":{"type":"object","additionalProperties":false,"required":["bundle"],"properties":{"bundle":{"type":"object","additionalProperties":false,"required":["packet_ref","files"],"properties":{"packet_ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._/-]*$"},"files":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["artifact_ref","sha256","content_base64"],"properties":{"artifact_ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._/-]*$"},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"content_base64":{"type":"string"}}}}}}}}},{"name":"loopctl_ctg_test","description":"test: run the control group: execute the entry point in isolation and compare what it really touches against the proof Loop: ctg. Input: clean same-HEAD ctg proof receipt; committed portable, verifier, relocation, trusted-local and MCP carrier mechanisms Writes: data/proof-workflow/control-ctg-<commit12>.json Exit: 0 five offline axes passed and four planted defects were caught · 2 a behavioral axis went red · 64 proof/environment/contract failure Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.","inputSchema":{"type":"object","properties":{"json":{"type":"string","description":"--json"}},"required":[],"additionalProperties":false}},{"name":"loopctl_micro_prove","description":"prove: traverse it and write a proof receipt under data/proof-workflow/ Loop: micro. Writes: data/proof-workflow/micro-<commit12>[-dirty].json Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.","inputSchema":{"type":"object","properties":{"force_receipt":{"type":"string","description":"--force-receipt"},"json":{"type":"string","description":"--json"}},"required":[],"additionalProperties":false}},{"name":"loopctl_micro_test","description":"test: run the control group: execute the entry point in isolation and compare what it really touches against the proof Loop: micro. Writes: proof_workflow/data/<run_id>/; data/proof-workflow/control-micro-<commit12>.json Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.","inputSchema":{"type":"object","properties":{"json":{"type":"string","description":"--json"}},"required":[],"additionalProperties":false}}]}
+{
+  "tools": [
+    {
+      "name": "loopctl_ctg_prove",
+      "description": "prove: traverse it and write a proof receipt under data/proof-workflow/ Loop: ctg. Input: clean committed CTG mechanism and public carrier surfaces Writes: data/proof-workflow/ctg-<commit12>.json Exit: 0 traversal passed · 2 a mechanism step went red · 64 missing tool/context or invalid receipt state Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "force_receipt": {
+            "type": "string",
+            "description": "--force-receipt"
+          },
+          "json": {
+            "type": "string",
+            "description": "--json"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "loopctl_ctg_run",
+      "description": "run: execute the loop's real entry point Loop: ctg. Input: --packet: closed ctg-input@1.0.0 bundle manifest; --output: fresh absolute output directory Writes: <output>/ctg-route-result.json — ctg-route-result@1.0.0; <output>/code-truth-graph.json — content-addressed graph artifact Exit: 0 required reach stages passed · 2 a named measurement stage failed · 64 usage, closed-contract violation, or unverifiable input Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bundle"
+        ],
+        "properties": {
+          "bundle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packet_ref",
+              "files"
+            ],
+            "properties": {
+              "packet_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+              },
+              "files": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "artifact_ref",
+                    "sha256",
+                    "content_base64"
+                  ],
+                  "properties": {
+                    "artifact_ref": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "content_base64": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "loopctl_ctg_test",
+      "description": "test: run the control group: execute the entry point in isolation and compare what it really touches against the proof Loop: ctg. Input: clean same-HEAD ctg proof receipt; committed portable, verifier, relocation, trusted-local and MCP carrier mechanisms Writes: data/proof-workflow/control-ctg-<commit12>.json Exit: 0 five offline axes passed and four planted defects were caught · 2 a behavioral axis went red · 64 proof/environment/contract failure Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "json": {
+            "type": "string",
+            "description": "--json"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "loopctl_micro_prove",
+      "description": "prove: traverse it and write a proof receipt under data/proof-workflow/ Loop: micro. Writes: data/proof-workflow/micro-<commit12>[-dirty].json Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "force_receipt": {
+            "type": "string",
+            "description": "--force-receipt"
+          },
+          "json": {
+            "type": "string",
+            "description": "--json"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "loopctl_micro_test",
+      "description": "test: run the control group: execute the entry point in isolation and compare what it really touches against the proof Loop: micro. Writes: proof_workflow/data/<run_id>/; data/proof-workflow/control-micro-<commit12>.json Exit codes are the target's own and are never re-mapped: 0 ok, 2 the loop's own check failed, 64 usage or a FATAL. Do not fold 2 and 64 together.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "json": {
+            "type": "string",
+            "description": "--json"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
