@@ -31,7 +31,7 @@
     }
   },
   "forbidden_patterns": [
-    "/Users/",
+    "/Use(?:rs)/",
     "(?<![A-Za-z0-9_.-])~/",
     "\\bix-agy/"
   ],

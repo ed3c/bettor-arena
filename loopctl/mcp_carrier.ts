@@ -1,12 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import {
-  McpError,
-  assertObject,
-  safeArtifactRef,
-  safeJoin,
-  sha256,
-  type GeneratedTool,
-} from "./mcp_contract.ts";
+import { McpError, assertObject, safeArtifactRef, safeJoin, sha256, type GeneratedTool } from "./mcp_contract.ts";
 import { materializeInlineBundle } from "./mcp_execution.ts";
 
 export const CLOSED_INLINE_BUNDLE_KIND = "closed-inline-bundle@1.0.0";
@@ -56,11 +49,7 @@ export function prepareInlineCarrier(
   };
 }
 
-export function collectInlineDelivery(
-  output: string,
-  maxBytes: number,
-  resultFile: string,
-): InlineDelivery {
+export function collectInlineDelivery(output: string, maxBytes: number, resultFile: string): InlineDelivery {
   const resultPath = safeJoin(output, safeArtifactRef(resultFile));
   if (!existsSync(resultPath)) {
     throw new McpError(`inline delivery result is absent: ${resultFile}`);
@@ -90,9 +79,7 @@ export function collectInlineDelivery(
     assertObject(raw, `inline delivery artifacts[${index}]`);
     const artifactRef = safeArtifactRef(raw.artifact_ref);
     if (typeof raw.sha256 !== "string" || !/^[0-9a-f]{64}$/.test(raw.sha256)) {
-      throw new McpError(
-        `inline delivery artifacts[${index}] has invalid sha256`,
-      );
+      throw new McpError(`inline delivery artifacts[${index}] has invalid sha256`);
     }
     const content = readFileSync(safeJoin(output, artifactRef));
     total += content.length;
@@ -100,9 +87,7 @@ export function collectInlineDelivery(
       throw new McpError("inline delivery exceeds policy limit");
     }
     if (sha256(content) !== raw.sha256) {
-      throw new McpError(
-        `inline delivery artifact digest mismatch: ${artifactRef}`,
-      );
+      throw new McpError(`inline delivery artifact digest mismatch: ${artifactRef}`);
     }
     artifacts.push({
       kind: raw.kind,
@@ -119,11 +104,7 @@ export function attachInlineDelivery(
   prepared: PreparedInlineCarrier,
   maxBytes: number,
 ): void {
-  const delivery = collectInlineDelivery(
-    prepared.output,
-    maxBytes,
-    prepared.resultFile,
-  );
+  const delivery = collectInlineDelivery(prepared.output, maxBytes, prepared.resultFile);
   payload.artifacts = [];
   payload.inline_delivery = delivery;
 

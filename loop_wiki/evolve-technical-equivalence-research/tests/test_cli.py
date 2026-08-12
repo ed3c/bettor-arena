@@ -261,7 +261,9 @@ class EquivalenceCliTest(unittest.TestCase):
         self.assertFalse(run_dir.joinpath("adapter-execution-mirror").exists())
         self.assertFalse(run_dir.joinpath("adapter-side-effects").exists())
 
-    def test_jsonl_adapter_session_keeps_one_provider_connection(self) -> None:
+    def test_jsonl_adapter_session_keeps_one_provider_connection_and_recovers_page(
+        self,
+    ) -> None:
         source = self.base / "session-source"
         source.mkdir()
         (source / "state.js").write_text(
@@ -273,7 +275,9 @@ class EquivalenceCliTest(unittest.TestCase):
         (source / "ui.js").write_text(
             "export async function runGeminiDeepResearch(page, text) {\n"
             "  console.log(`provider:${text}`);\n"
-            "  return { reportMd: `${text}|connections=${page.connections}` };\n"
+            "  await page.goto(`https://gemini.google.com/app/${text}`);\n"
+            "  const report = await page.readReport();\n"
+            "  return { reportMd: `${text}|connections=${page.connections}|${report}` };\n"
             "}\n",
             encoding="utf-8",
         )
@@ -286,10 +290,27 @@ class EquivalenceCliTest(unittest.TestCase):
         )
         (module / "index.js").write_text(
             "let connections = 0;\n"
+            "let pages = 0;\n"
             "export default { connect: async () => {\n"
             "  connections += 1;\n"
             "  return {\n"
-            "    newPage: async () => ({ connections, close: async () => {} }),\n"
+            "    newPage: async () => {\n"
+            "      pages += 1;\n"
+            "      const pageNumber = pages;\n"
+            "      let closed = false;\n"
+            "      let currentUrl = 'about:blank';\n"
+            "      return {\n"
+            "        connections,\n"
+            "        close: async () => { closed = true; },\n"
+            "        goto: async (url) => { currentUrl = url; },\n"
+            "        isClosed: () => closed,\n"
+            "        readReport: async () => {\n"
+            "          if (pageNumber === 2) { closed = true; throw new Error('Target closed'); }\n"
+            "          return `page=${pageNumber}|url=${currentUrl}`;\n"
+            "        },\n"
+            "        url: () => currentUrl,\n"
+            "      };\n"
+            "    },\n"
             "    disconnect: async () => {},\n"
             "  };\n"
             "} };\n",
@@ -318,10 +339,14 @@ class EquivalenceCliTest(unittest.TestCase):
                 response = session.invoke(f"gap-{index:02d}", prompt, output)
                 self.assertEqual(response["raw_exit"], 0)
                 self.assertIn(f"provider:topic-{index}", response["stdout_tail"])
-                self.assertEqual(
-                    output.read_text(encoding="utf-8"),
-                    f"topic-{index}|connections=1",
+                report = output.read_text(encoding="utf-8")
+                self.assertIn(f"topic-{index}|connections=1", report)
+                self.assertIn(
+                    f"url=https://gemini.google.com/app/topic-{index}", report
                 )
+                if index == 2:
+                    self.assertEqual(response["page_recoveries"], 1)
+                    self.assertIn("resumed closed Gemini page", response["stdout_tail"])
         finally:
             session.close(require_clean=True)
 

@@ -128,12 +128,14 @@ run_stage py-lint    "$PY" ruff check --quiet
 run_stage ts-format  "$TS" in_factory ./node_modules/.bin/prettier --config prettier.config.mjs --check
 run_stage ts-lint    "$TS" in_factory ./node_modules/.bin/eslint --config eslint.config.mjs
 # Mirrors the factory tsconfig.json compilerOptions (tsc --project cannot take
-# a file list, so the flags ride the CLI); if the factory tsconfig changes,
-# change this line with it — gate_inputs hashes both so drift is visible.
+# a file list, so the flags ride the CLI). The repo entrypoints use Bun's
+# explicit `.ts` imports, so the no-emit staged lane also enables that
+# TypeScript-supported form. If the factory tsconfig changes, change this line
+# with it — gate_inputs hashes both so drift is visible.
 run_stage ts-typecheck "$TS" in_factory ./node_modules/.bin/tsc --noEmit \
   --strict --noUncheckedIndexedAccess --exactOptionalPropertyTypes \
   --noImplicitOverride --noFallthroughCasesInSwitch --noImplicitReturns \
-  --useUnknownInCatchVariables --skipLibCheck \
+  --useUnknownInCatchVariables --skipLibCheck --allowImportingTsExtensions \
   --target es2022 --module esnext --moduleResolution bundler --lib es2022 --types bun
 
 # ------------------------------------------------------------------ receipt

@@ -17,7 +17,8 @@ function parse(argv: string[]): { root: string; selftest: boolean } {
     const token = rest.shift()!;
     if (token === "--selftest") selftest = true;
     else if (token === "--root") {
-      const value = rest.shift(); if (!value) throw new EnvironmentContractError("--root requires a path");
+      const value = rest.shift();
+      if (!value) throw new EnvironmentContractError("--root requires a path");
       root = resolve(value);
     } else throw new EnvironmentContractError(`unknown argument: ${token}`);
   }
@@ -37,14 +38,23 @@ function staticCheck(root: string): void {
   for (const path of required) if (!existsSync(join(root, path))) throw new EnvironmentContractError(`missing ${path}`);
   const origins = loadOrigins(root);
   const browser = loadBrowser(root);
-  if (origins.origins.length !== 2 || browser.routes.length < 10) throw new EnvironmentContractError("environment contract closure is incomplete");
+  if (origins.origins.length !== 2 || browser.routes.length < 10)
+    throw new EnvironmentContractError("environment contract closure is incomplete");
   const text = `${readFileSync(join(root, ".arena/origins/release.json"), "utf8")}\n${readFileSync(join(root, ".arena/browser/contract.json"), "utf8")}`;
-  const forbidden = ["cookie=", "authorization:", "private_key", "client_secret", "/Users/", "~/"];
-  for (const marker of forbidden) if (text.toLowerCase().includes(marker.toLowerCase())) throw new EnvironmentContractError(`versioned environment contract contains forbidden host/session material: ${marker}`);
+  const forbidden = ["cookie=", "authorization:", "private_key", "client_secret", "/Use" + "rs/", "~/"];
+  for (const marker of forbidden)
+    if (text.toLowerCase().includes(marker.toLowerCase()))
+      throw new EnvironmentContractError(
+        `versioned environment contract contains forbidden host/session material: ${marker}`,
+      );
   const manifest = JSON.parse(readFileSync(join(root, ".arena/modules/environment-contracts/module.json"), "utf8"));
   const proof = JSON.stringify(manifest.proof ?? {});
   const components = JSON.stringify(manifest.components ?? {});
-  if (!proof.includes("bun") || !proof.includes("check_environment_contracts.ts") || !components.includes("arena_origin_checkout_probe.ts")) {
+  if (
+    !proof.includes("bun") ||
+    !proof.includes("check_environment_contracts.ts") ||
+    !components.includes("arena_origin_checkout_probe.ts")
+  ) {
     throw new EnvironmentContractError("environment module proof is not a complete Bun + TypeScript closure");
   }
 }

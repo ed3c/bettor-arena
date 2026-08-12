@@ -24,6 +24,7 @@ STAGEDTREE=$(mktemp -d "${TMPDIR:-/tmp}/pre-commit.XXXXXX") || {
 }
 trap 'rm -rf "$STAGEDTREE"' EXIT
 git checkout-index -a --prefix="$STAGEDTREE/tree/"
+git ls-files --stage -z > "$STAGEDTREE/index.zlist"
 
 BUDGET=${FAST_QUALITY_BUDGET:-5}
 set -m
@@ -53,10 +54,18 @@ python3 scripts/gates/check_delivery_receipt.py
 # Modular-integration gates judge the exact staged tree. They are
 # repo-contained, zero-network, and do not read sibling checkouts.
 python3 "$STAGEDTREE/tree/scripts/gates/check_agent_docs.py" --root "$STAGEDTREE/tree"
-python3 "$STAGEDTREE/tree/scripts/gates/check_module_catalog.py" --root "$STAGEDTREE/tree"
-python3 "$STAGEDTREE/tree/scripts/arena_proof.py" --root "$STAGEDTREE/tree" check
-python3 "$STAGEDTREE/tree/scripts/arena_context.py" --root "$STAGEDTREE/tree" check
-python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py"
+python3 "$STAGEDTREE/tree/scripts/gates/check_module_catalog.py" \
+  --root "$STAGEDTREE/tree" \
+  --index-manifest "$STAGEDTREE/index.zlist"
+python3 "$STAGEDTREE/tree/scripts/arena_proof.py" \
+  --root "$STAGEDTREE/tree" \
+  --index-manifest "$STAGEDTREE/index.zlist" \
+  check
+python3 "$STAGEDTREE/tree/scripts/arena_context.py" \
+  --root "$STAGEDTREE/tree" \
+  --index-manifest "$STAGEDTREE/index.zlist" \
+  check
+python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py" --materialized-index
 command -v bun >/dev/null 2>&1 || { echo "pre-commit FATAL: bun absent" >&2; exit 64; }
 bun "$STAGEDTREE/tree/scripts/gates/check_project_bootstrap.ts" --root "$STAGEDTREE/tree"
 bun "$STAGEDTREE/tree/scripts/gates/check_environment_contracts.ts" --root "$STAGEDTREE/tree"

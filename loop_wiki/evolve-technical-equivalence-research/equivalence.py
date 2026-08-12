@@ -1492,6 +1492,7 @@ def execute_gemini_adapter(
                 else 0,
                 "execution_mirror_digest": mirror_evidence["execution_mirror_digest"],
                 "transport": "persistent-jsonl-v1",
+                "page_recoveries": response.get("page_recoveries", 0),
                 "stdout_tail": str(response.get("stdout_tail") or "")[-8000:],
                 "stderr_tail": str(response.get("stderr_tail") or "")[-8000:],
             }

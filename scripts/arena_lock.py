@@ -21,6 +21,7 @@ import sys
 import tempfile
 from typing import Any
 
+import arena_index
 import arena_modules
 import arena_ownership
 
@@ -61,8 +62,13 @@ def resolve(
     return augment(base, ownership)
 
 
-def check(root: Path, requirements_path: Path, lock_path: Path) -> None:
-    expected = resolve(root, requirements_path)
+def check(
+    root: Path,
+    requirements_path: Path,
+    lock_path: Path,
+    tracked_paths: list[str] | None = None,
+) -> None:
+    expected = resolve(root, requirements_path, tracked_paths=tracked_paths)
     actual = arena_modules.load_json(lock_path)
     if actual.get("schema") != LOCK_SCHEMA:
         raise LockError(f"{lock_path}: schema must be {LOCK_SCHEMA}")
@@ -137,6 +143,11 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path(".arena/locks/bettor-arena.lock.json"),
     )
+    check_parser.add_argument(
+        "--index-manifest",
+        type=Path,
+        help="NUL-delimited `git ls-files --stage -z` captured for a plain tree",
+    )
 
     resolve_parser = subparsers.add_parser("resolve")
     resolve_parser.add_argument("--requirements", type=Path, required=True)
@@ -163,10 +174,16 @@ def main(argv: list[str] | None = None) -> int:
                 else root / args.requirements
             )
             lock_path = args.lock if args.lock.is_absolute() else root / args.lock
-            check(root, requirements, lock_path)
+            tracked_paths = (
+                list(arena_index.load_entries(args.index_manifest))
+                if args.index_manifest
+                else None
+            )
+            check(root, requirements, lock_path, tracked_paths=tracked_paths)
             ownership = arena_ownership.snapshot(
                 root,
                 arena_modules.load_modules(root)[0],
+                tracked_paths=tracked_paths,
             )
             print(
                 "PASS module catalog and ownership "
@@ -182,7 +199,9 @@ def main(argv: list[str] | None = None) -> int:
             )
             value = resolve(root, requirements)
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:
@@ -194,7 +213,12 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
             return 0
         parser.error(f"unknown command: {args.command}")
-    except (arena_modules.ContractError, arena_ownership.OwnershipError, LockError) as exc:
+    except (
+        arena_index.IndexError,
+        arena_modules.ContractError,
+        arena_ownership.OwnershipError,
+        LockError,
+    ) as exc:
         print(f"composition lock RED: {exc}", file=sys.stderr)
         return 2
     except OSError as exc:

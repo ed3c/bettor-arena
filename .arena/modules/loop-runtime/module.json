@@ -46,9 +46,9 @@
   "conflicts": [],
   "external_policy": {"exposed": true, "mutation": "disposable-worktree", "network": "optional", "secrets": "broker-only"},
   "id": "loop-runtime",
-  "interface_version": "1.4.0",
+  "interface_version": "1.5.0",
   "loops": [
-    {"class": "core", "external_policy": "allowlisted", "id": "loopctl", "interface_version": "2.8.0", "public_port": "sh loopctl/loopctl.sh"},
+    {"class": "core", "external_policy": "allowlisted", "id": "loopctl", "interface_version": "2.9.0", "public_port": "sh loopctl/loopctl.sh"},
     {"class": "core", "external_policy": "control-only", "id": "context-capsule", "interface_version": "1.0.0", "public_port": "python3 scripts/arena_context.py"},
     {"class": "core", "external_policy": "control-only", "id": "mcp-policy", "interface_version": "1.2.0", "public_port": "bun scripts/gates/check_mcp_policy.ts"}
   ],
@@ -59,7 +59,7 @@
     "verify": ["bun", "scripts/gates/check_mcp_policy.ts"]
   },
   "provides": ["arena.loopctl/v1", "arena.stateless-mcp/v1", "arena.context-carrier/v1"],
-  "requires": ["arena.passive-context/v1"],
+  "requires": ["arena.module-catalog/v1", "arena.passive-context/v1"],
   "roots": ["loopctl", "scripts/arena_context.py"],
   "runtime": {"profiles": ["bettor-arena-runtime-local"], "tools": ["bun", "claude", "codex", "git", "python3", "sh"]},
   "schema": "bettor-arena/module/v1",

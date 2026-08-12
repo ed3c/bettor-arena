@@ -27,7 +27,7 @@
         "redirected_write_exports": ["SCREENSHOT_DIR", "GEMINI_RESEARCH_DIR"]
       },
       "argv": ["node", "{execution_mirror}/gemini_session.mjs", "--stdio-jsonl"],
-      "notes": "External browser/login runtime. A bettor-owned, digest-bound JSONL runner keeps one CDP connection across primary and gap invocations while calling the pinned ui.js provider entry. Only declared write-path exports are redirected into the run. Source, runner, or policy drift requires explicit re-admission."
+      "notes": "External browser/login runtime. A bettor-owned, digest-bound JSONL runner keeps one CDP connection across primary and gap invocations while calling the pinned ui.js provider entry. A transient page failure may resume the same observed Gemini conversation URL once without resubmitting the prompt. Only declared write-path exports are redirected into the run. Source, runner, or policy drift requires explicit re-admission."
     }
   }
 }

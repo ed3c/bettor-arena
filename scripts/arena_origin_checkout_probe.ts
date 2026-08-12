@@ -17,7 +17,10 @@ const DEFAULT_ROOT = resolve(HERE, "..");
 const RECEIPT_SCHEMA = "bettor-arena/origin-receipt/v1";
 
 function normalizedRepository(value: string): string {
-  return value.trim().replace(/\.git$/, "").replace(/\/$/, "");
+  return value
+    .trim()
+    .replace(/\.git$/, "")
+    .replace(/\/$/, "");
 }
 
 interface Options {
@@ -64,7 +67,9 @@ function main(argv = process.argv.slice(2)): number {
     }
     const remote = runGit(options.root, ["remote", "get-url", "origin"]);
     if (normalizedRepository(remote) !== normalizedRepository(origin.repository)) {
-      throw new EnvironmentContractError(`checkout remote ${remote} differs from configured origin ${origin.repository}`);
+      throw new EnvironmentContractError(
+        `checkout remote ${remote} differs from configured origin ${origin.repository}`,
+      );
     }
     const actual = runGit(options.root, ["rev-parse", "HEAD"]);
     if (actual !== options.commit) {

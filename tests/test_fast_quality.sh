@@ -52,6 +52,27 @@ RC=$?
 set -e
 [ "$RC" -eq 2 ] || fail "TS type error exited $RC, want 2"
 
+# 2a) Bun-style explicit .ts imports are part of the checked repo surface.
+#     The staged-file tsc mirror must accept the same import form while still
+#     running with --noEmit; otherwise any root entrypoint importing its typed
+#     closure is uncommittable even when the closure is valid.
+printf 'export const value: number = 1;\n' > "$W/imported.ts"
+printf 'import { value } from "./imported.ts";\nexport const imported: number = value;\n' > "$W/good_import.ts"
+set +e
+OUT=$(sh "$G" "$W/good_import.ts" 2>&1)
+RC=$?
+set -e
+[ "$RC" -eq 0 ] || fail "explicit .ts import exited $RC, want 0 — $OUT"
+
+# 2aa) The real environment-contract entrypoint imports the browser/origin
+#      validators. Keep that production closure under the staged-file gate so
+#      fixture-only greens cannot hide strict errors in repo code.
+set +e
+OUT=$(sh "$G" "$ROOT/scripts/gates/check_environment_contracts.ts" 2>&1)
+RC=$?
+set -e
+[ "$RC" -eq 0 ] || fail "environment-contract TS closure exited $RC, want 0 — $OUT"
+
 # 2b) TS strictness parity probe: optional-param `.length` must red here exactly
 #     as the factory's strict tsconfig reds it (two mounts, one judgment). The
 #     probe is prettier-clean so the red can only come from ts-typecheck.
@@ -127,7 +148,8 @@ python3 "$ROOT/scripts/gates/check_root_coupling.py" --selftest >/dev/null \
 
 # ---------------------------------------------------------- hook in fixture
 R="$TMP/repo"
-mkdir -p "$R/.githooks" "$R/scripts/gates"
+MARKERS="$TMP/modular-gate-markers"
+mkdir -p "$R/.githooks" "$R/scripts/gates" "$MARKERS"
 cp "$H" "$R/.githooks/pre-commit"
 cp "$G" "$R/scripts/gates/fast_quality.sh"
 cp "$ROOT/scripts/gates/check_root_coupling.py" "$R/scripts/gates/"
@@ -140,6 +162,21 @@ for stub in check_placement check_skill_pointers check_credential_hygiene check_
   printf '#!/usr/bin/env python3\n# fixture stub: real gate has its own selftest; this proves hook wiring.\nimport pathlib\npathlib.Path(__file__).with_name("%s.called").touch()\n' "$stub" \
     > "$R/scripts/gates/$stub.py"
 done
+# Modular gates execute from the staged checkout, which is deleted when the
+# hook exits. Their stubs therefore write observable markers to a fixture-owned
+# directory inherited through the environment instead of their own directory.
+for stub in check_agent_docs check_module_catalog check_mcp_policy; do
+  printf '#!/usr/bin/env python3\nimport os, pathlib\npathlib.Path(os.environ["FAST_QUALITY_TEST_MARKERS"], "%s.called").touch()\n' "$stub" \
+    > "$R/scripts/gates/$stub.py"
+done
+for stub in arena_proof arena_context; do
+  printf '#!/usr/bin/env python3\nimport os, pathlib\npathlib.Path(os.environ["FAST_QUALITY_TEST_MARKERS"], "%s.called").touch()\n' "$stub" \
+    > "$R/scripts/$stub.py"
+done
+for stub in check_project_bootstrap check_environment_contracts; do
+  printf 'await Bun.write(`${process.env.FAST_QUALITY_TEST_MARKERS}/%s.called`, "");\n' "$stub" \
+    > "$R/scripts/gates/$stub.ts"
+done
 git -C "$R" init -q -b main
 git -C "$R" config user.email test@test
 git -C "$R" config user.name test
@@ -151,6 +188,7 @@ git -C "$R" add .githooks scripts
 git -C "$R" commit -q -m "baseline: gate closure tracked"
 git -C "$R" config core.hooksPath .githooks
 export FAST_QUALITY_FACTORY="$FACTORY"
+export FAST_QUALITY_TEST_MARKERS="$MARKERS"
 
 # 9) Clean staged tree (all three lanes) → commit passes, wall time < 5s.
 printf 'export const ok: number = 1;\n' > "$R/a.ts"
@@ -167,6 +205,9 @@ T1=$(python3 -c 'import time; print(time.time())')
 [ -f "$R/scripts/gates/check_credential_hygiene.called" ] || fail "hook did not call check_credential_hygiene"
 [ -f "$R/scripts/gates/check_runtime_env_binding.called" ] || fail "hook did not call check_runtime_env_binding"
 [ -f "$R/scripts/gates/check_delivery_receipt.called" ] || fail "hook did not call check_delivery_receipt"
+for marker in check_agent_docs check_module_catalog check_mcp_policy arena_proof arena_context check_project_bootstrap check_environment_contracts; do
+  [ -f "$MARKERS/$marker.called" ] || fail "hook did not call $marker"
+done
 ELAPSED=$(python3 -c "print($T1 - $T0)")
 python3 -c "import sys; sys.exit(0 if $ELAPSED < 5.0 else 1)" \
   || fail "hook wall time ${ELAPSED}s breaches the <5s budget"
