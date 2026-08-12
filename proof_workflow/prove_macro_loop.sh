@@ -105,6 +105,9 @@ prove_harness gate-root-coupling scripts/gates/check_root_coupling.py \
 prove_harness gate-placement scripts/gates/check_placement.py \
   "git ls-files roots -> ARCHITECTURE.md §2 slots -> exit" \
   -- python3 scripts/gates/check_placement.py --selftest
+prove_harness gate-readme-coverage scripts/gates/check_readme_coverage.py \
+  "tracked README set + module manifests -> coverage/marker/link/path contract -> exit" \
+  -- python3 scripts/gates/check_readme_coverage.py --selftest
 prove_harness gate-skill-pointers scripts/gates/check_skill_pointers.py \
   ".claude/skills symlinks -> .agents/skills single-copy SSOT -> exit" \
   -- python3 scripts/gates/check_skill_pointers.py --selftest

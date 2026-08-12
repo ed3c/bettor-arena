@@ -1,0 +1,61 @@
+{
+  "schema": "bettor-arena/readme-coverage/v1",
+  "minimum_bytes": 80,
+  "required_readmes": [
+    "README.md",
+    "docs/README.md",
+    "docs/architecture/README.md",
+    "docs/adr/README.md",
+    "docs/audits/README.md",
+    "docs/plans/README.md",
+    ".arena/README.md",
+    ".arena/browser/README.md",
+    ".arena/compositions/README.md",
+    ".arena/contexts/README.md",
+    ".arena/locks/README.md",
+    ".arena/modules/README.md",
+    ".arena/origins/README.md",
+    ".arena/presets/README.md",
+    ".arena/schemas/README.md",
+    "data/README.md",
+    "data/browser/README.md",
+    "data/context-capsules/README.md",
+    "data/mcp/README.md",
+    "data/migration/README.md",
+    "data/module-proof/README.md",
+    "data/origins/README.md",
+    "data/proof-workflow/README.md",
+    "data/receipts/README.md"
+  ],
+  "module_manifest_root": ".arena/modules",
+  "module_manifest_name": "module.json",
+  "module_readme_name": "README.md",
+  "required_markers": {
+    "README.md": [
+      "Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper",
+      "PASS ≠ FAIL ≠ ABSENT ≠ NOT_IMPLEMENTED ≠ NOT_EXERCISED"
+    ],
+    "docs/README.md": [
+      "Authority order",
+      "scripts/gates/check_readme_coverage.py"
+    ],
+    ".arena/README.md": [
+      "machine-readable",
+      "Adding or changing a module"
+    ],
+    ".arena/modules/README.md": [
+      "module.json",
+      "README.md"
+    ],
+    "data/README.md": [
+      "navigation only",
+      "NOT_EXERCISED"
+    ]
+  },
+  "forbidden_patterns": [
+    "/Use[r]s/",
+    "(?<![A-Za-z0-9_.-])~/",
+    "[A-Za-z]:\\\\Users\\\\"
+  ],
+  "check_relative_links": true
+}
