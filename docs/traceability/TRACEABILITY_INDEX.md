@@ -14,32 +14,37 @@ source / incident
 → Human Admit
 ```
 
-## Documentation stack
+## Documentation sibling set
 
-| Repository | Issue | Branch | Stack class | State |
+| Plane | Issue | PR | Stack class | State |
 |---|---|---|---|---|
-| `bettor-arena` parent | #35 | n/a | parent contract | open |
-| `bettor-arena` binding | #36 | `docs/document-routing-v1` | independent sibling | implementation branch |
-| `skills-shared` method | #84 | `docs/document-routing-v1` | independent sibling | implementation branch |
-| `runtime-env` binding | #29 | `docs/document-routing-v1` | independent sibling | implementation branch |
-| `agent-shield-monorepo` binding | #77 | `docs/document-routing-v1` | independent terminal sibling | implementation branch |
-| final exact index/cold-start audit | future bettor issue/PR | future branch | convergence leaf | `NOT_IMPLEMENTED` until siblings merge |
+| Parent integration contract | `#35` | n/a | parent | open |
+| Integration / Acceptance | `#36` | `#37` | independent sibling | Draft |
+| Instruction / Method | `ed3c/skills-shared#84` | `ed3c/skills-shared#85` | independent sibling | Draft |
+| Runtime Contract | `ed3c/runtime-env#29` | `ed3c/runtime-env#30` | independent sibling | Draft |
+| Domain Product / Reference Consumer | `ed3c/agent-shield-monorepo#77` | `ed3c/agent-shield-monorepo#78` | independent terminal sibling | Draft |
+| Exact merged index + cold-start audit | `#38` | future | convergence leaf | blocked by four PRs |
 
-These branches are independent because each changes only its repository's documentation and consumes merged bytes. They are not a false serial stack. The final convergence leaf alone updates exact merged PR/commit references and runs the cross-repository cold-start route audit.
+The four documentation PRs are siblings because each edits only its own repository and consumes merged inputs. They do not form a false serial Stack. Issue #38 is the only convergence owner; its branch must not be created until all four PRs merge.
+
+Exact open-PR heads are read from GitHub PR metadata. Issue #38 will record immutable merged commits and trees.
 
 ## Method lineage
 
-- `knowledge-continuity`: no hidden background, knowledge outsourcing, or unexplained two-hop-to-evidence chain.
-- `forgejo-delivery-loop`: local authoring, deterministic routing/outbox/recovery, receipt separation.
-- `github-delivery-loop`: GitHub publication/Actions/merge state separation.
-- `git-town-stacked-pr-worker`: sibling versus true-child, terminal leaf, convergence leaf, worktree/lease, no-push sync, Human boundaries.
+- `knowledge-continuity`: every hop leaves a local summary; no hidden background or unexplained index-to-index outsourcing.
+- `forgejo-delivery-loop`: local authoring, deterministic routing/outbox/recovery, and receipt separation.
+- `github-delivery-loop`: GitHub publication, Actions, and merge-state separation.
+- `git-town-stacked-pr-worker`: sibling, true-child, terminal leaf, convergence leaf, worktree/lease, no-push sync, and Human boundaries.
 
-## Current machine authorities
+## Machine authorities
 
 - `.agents/shared-skills.requirements.json`, `.agents/bindings/`, `.agents/module-set.json`
-- `.runtime-env/requirements.json`, bindings, workloads, policies
-- `.arena/modules/`, compositions, locks, contexts, origins, browser and MCP policies
-- `loopctl/contract.json` and Bun/TypeScript MCP runtime
+- `.runtime-env/requirements.json`, bindings, workloads, and policies
+- `.arena/modules/`, compositions, locks, contexts, origins, browser, and MCP policies
+- `loopctl/contract.json` and the Bun/TypeScript MCP runtime
 - `proof_workflow/` and `data/` receipts
+- Agent Shield module release/status/receipts in its own repository
 
-Documentation completion does not imply cross-repository route-checker execution, GitHub/Forgejo equivalence, live Claude/Codex/browser/provider canaries, Agent Shield acceptance, or Human promotion.
+## Evidence boundary
+
+Documentation completion does not imply route-checker execution, fresh Claude/Codex cold-start, GitHub/Forgejo equivalence, live browser/provider canaries, Agent Shield acceptance, external-release promotion, or production readiness.
