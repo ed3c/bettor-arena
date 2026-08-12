@@ -27,11 +27,14 @@
         "http://localhost:3000/neon/bettor-arena/issues/16",
         "http://localhost:3000/neon/bettor-arena/issues/17",
         "http://localhost:3000/neon/bettor-arena/issues/26",
-        "http://localhost:3000/neon/bettor-arena/issues/27"
+        "http://localhost:3000/neon/bettor-arena/issues/27",
+        "http://localhost:3000/neon/bettor-arena/issues/32",
+        "http://localhost:3000/neon/bettor-arena/issues/34"
       ],
       "pr_urls": [
         "http://localhost:3000/neon/bettor-arena/pulls/1",
-        "http://localhost:3000/neon/bettor-arena/pulls/25"
+        "http://localhost:3000/neon/bettor-arena/pulls/25",
+        "http://localhost:3000/neon/bettor-arena/pulls/33"
       ],
       "note": "materialized_path=\".\"：本線交付的是 repo 自身與其閘，收據落在 repo 根。工廠 build 出的生成 repo 落在 scratch（一次性），不是這條線的收據對象。另一條線出現時各自登記，T0 閘對未物化者走 SKIP 並具名。"
     }
