@@ -57,7 +57,10 @@ sh loopctl/loopctl.sh <loop> test                    # 對照組驗行為
 `loopctl equivalence test --force-receipt` 顯式要求。control 只接受 clean、commit 綁定目前 HEAD 的 proof，
 不得拿 `-dirty` receipt 去比 detached HEAD。命名目前 HEAD 的 clean receipts 會先是 working-tree
 runtime evidence；把它們 commit 後 HEAD 必然前進，所以它們在下一個 commit 裡只可能是歷史證據，
-不能把「tracked」與「仍命名目前 HEAD」假裝成可同時成立。
+不能把「tracked」與「仍命名目前 HEAD」假裝成可同時成立。所有新 receipt 因此由
+`.gitignore` 留在 host；這也讓下一個 runtime-env broker adapter 的 clean-target gate
+不會把前一個 proof 的合法 workspace evidence 誤判成 consumer source drift。既有已追蹤
+receipt 仍留在 Git，若要新增歷史快照必須由人顯式 force-add。
 
 **訊號 → 動作**
 
