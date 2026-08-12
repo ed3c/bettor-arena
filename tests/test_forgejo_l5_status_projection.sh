@@ -20,8 +20,18 @@ grep -q '| #34 |' "$AS_RUN" || {
   exit 1
 }
 
-grep -q 'Forgejo `main` 同 SHA' "$AS_RUN" || {
-  echo "FAIL: as-run ledger omits the dual-origin exact-commit claim" >&2
+if grep -q 'Forgejo `main` 同 SHA' "$AS_RUN"; then
+  echo "FAIL: versioned ledger freezes a claim about mutable main" >&2
+  exit 1
+fi
+
+grep -q 'git ls-remote' "$AS_RUN" || {
+  echo "FAIL: as-run ledger does not delegate live ref truth to git ls-remote" >&2
+  exit 1
+}
+
+grep -q 'scripts/delivery_status.py' "$AS_RUN" || {
+  echo "FAIL: as-run ledger does not delegate live tracking truth to delivery_status" >&2
   exit 1
 }
 
