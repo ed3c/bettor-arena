@@ -1,5 +1,5 @@
 {
-  "content_sha256": "c5784aaa13a6d1bfa7a4f48ba3620f0fbae6797939fb19d9c937d5f9cd9709e9",
+  "content_sha256": "e9eccca2494cf4a6413cda93b494d853d03b043bfd6212c90c76788a492f99db",
   "contexts": [
     {
       "common": [
@@ -476,7 +476,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "8fc666ea03b84dcfb05db9f20bf272aadc425964d20d919e7cb8ee81d94538f7",
+      "context_sha256": "af9c476cdf824d6e488ca0af967ee9e298264a66d5e68f781d62150d076cae57",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -520,7 +520,7 @@
           "path": "loop_wiki/evolve-technical-equivalence-research/ROUTES.md"
         },
         {
-          "blob": "7937a5753e9718b58fc1725b1bda85998e3b8f9b",
+          "blob": "91553992ddb539acbb61985924cc127afd1f9caa",
           "mode": "100644",
           "path": "loop_wiki/evolve-technical-equivalence-research/modules/architecture.md"
         },

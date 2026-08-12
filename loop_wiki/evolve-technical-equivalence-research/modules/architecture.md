@@ -22,6 +22,14 @@ returns one response per prompt, so invocation receipts remain distinct. This
 avoids reconnecting to a Chrome debug endpoint that can stop answering HTTP
 after a completed Deep Research page disconnects.
 
+Within one invocation, the runner may recover one transiently closed or detached
+page only after it has observed a concrete `gemini.google.com/app/<conversation>`
+URL. Recovery opens that same conversation on the existing CDP connection and
+records the count in the invocation receipt. It refuses recovery before a
+conversation URL exists, refuses a second recovery, and never resubmits the
+prompt; those boundaries prevent a transport repair from becoming an implicit
+external retry.
+
 Long Gemini runs resume only at digest-bound invocation boundaries. A prior
 successful primary/gap result is reusable only when the request, source,
 dependency, execution-policy, prompt, and output identities still match its
