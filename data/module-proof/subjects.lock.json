@@ -1,7 +1,7 @@
 {
   "composition": "bettor-arena",
   "composition_lock_sha256": "c93748f028e538756ad2397431e02d536953c9d1b3b8f28e2370b3100b90b62c",
-  "content_sha256": "708752e579291937f7cfd08d76368822c4b5911c0a9801b188fc0fbcf8c66bd9",
+  "content_sha256": "c988c383a47e3c1384828f76829f679632f4ee35fc36f0b02008e4f9d163add7",
   "modules": [
     {
       "closure_sha256": "a0d96558e9d74ff92abe1c1d06d02096450a803e44bd7dae2656fb7ce738e48f",
@@ -349,7 +349,7 @@
       ]
     },
     {
-      "closure_sha256": "6ce80af1449bfc2cb8e493f44036e1d97f3fe2989447d32a7e7bc44a21c9168e",
+      "closure_sha256": "e9b57f8ef5390b3fb8c6c48dd75bd664e789e0a5bed0e171278bd8db8fecb48d",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -362,10 +362,10 @@
           "provider": "loop-runtime"
         }
       ],
-      "files_sha256": "d3acc70fb71073d1c98b248c069aaf135880cfb642537205cac05427533a5594",
+      "files_sha256": "40ab553d1487f6f0d334399414726227a1ce0d4679b5cc9a6690b1850bffb479",
       "id": "project-bootstrapper",
       "interface_version": "1.0.0",
-      "local_sha256": "85b54a84836b564429a3c86bf2bd3007670a5c6713ac9a5c76a20ee3580fd498",
+      "local_sha256": "c5b4c4dd69fd14a75b90c772bc20ebe191840244d19a2be57f91595de8347451",
       "manifest_sha256": "5c18074503b938abcacc4e31cc583cbce3b334183a9ae9a01f89bed683ffbebf",
       "owned_files": 6,
       "proof_spec_sha256": "4c408bdf7c676b205b7a924fe71165fb0413e12ddbc763cef8ed2e6843ca475f",

@@ -1,5 +1,14 @@
 import { spawnSync } from "node:child_process";
-import { chmodSync, existsSync, lstatSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  renameSync,
+  writeFileSync,
+} from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
@@ -168,7 +177,9 @@ export function runGit(root: string, args: string[], allow = new Set([0])): stri
 }
 export function ensureGitRepository(root: string): void {
   const actual = runGit(root, ["rev-parse", "--show-toplevel"]);
-  if (resolve(actual) !== resolve(root)) throw new ProjectError(`target must be the Git repository root: ${root}`);
+  if (realpathSync(actual) !== realpathSync(root)) {
+    throw new ProjectError(`target must be the Git repository root: ${root}`);
+  }
 }
 export function gitHeadOrNull(root: string): string | null {
   const result = spawnSync(
