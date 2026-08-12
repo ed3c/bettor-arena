@@ -33,6 +33,7 @@ jobs:
             scripts/arena_context.py \
             scripts/arena_project.py \
             scripts/gates/check_agent_docs.py \
+            scripts/gates/check_readme_coverage.py \
             scripts/gates/check_module_catalog.py \
             scripts/gates/check_mcp_policy.py \
             loopctl/mcp_tools.py \
@@ -75,13 +76,15 @@ jobs:
       - name: Prove deterministic Python compatibility gates can disagree
         run: |
           python3 scripts/gates/check_agent_docs.py --selftest
+          python3 scripts/gates/check_readme_coverage.py --selftest
           python3 scripts/arena_lock.py --selftest
           python3 scripts/arena_proof.py --selftest
           python3 scripts/arena_context.py --selftest
 
-      - name: Check Agent, MCP, project, origin, and browser contracts
+      - name: Check Agent, documentation, MCP, project, origin, and browser contracts
         run: |
           python3 scripts/gates/check_agent_docs.py
+          python3 scripts/gates/check_readme_coverage.py
           bun scripts/gates/check_mcp_policy.ts
           bun scripts/gates/check_project_bootstrap.ts
           bun scripts/gates/check_environment_contracts.ts
@@ -146,6 +149,7 @@ jobs:
 
       - name: Check current contracts through their stable gates
         run: |
+          python3 scripts/gates/check_readme_coverage.py
           python3 scripts/gates/check_module_catalog.py
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check

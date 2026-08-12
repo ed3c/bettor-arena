@@ -26,6 +26,7 @@
       "kind": "documentation",
       "description": "Repository-wide documentation that is not already owned by a more specific module root.",
       "paths": [
+        "README.md",
         "docs"
       ]
     },
