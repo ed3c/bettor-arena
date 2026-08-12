@@ -7,9 +7,12 @@ data/wiki-update/
 .serena/
 .openwiki-review/
 proof_workflow/data/
-# A -dirty proof stamp binds bytes that were never present at its named commit.
-# Keep settled proof/control receipts reviewable; discard only this noisy class.
-data/proof-workflow/*-dirty.json
+# Proof/control receipts are per-run evidence. A clean current-HEAD receipt cannot
+# be committed while retaining that HEAD identity, and leaving it unignored makes
+# the next broker adapter reject the consumer as dirty. Historical receipts that
+# are already tracked remain reviewable; every new receipt stays host-local unless
+# a human explicitly force-adds it as a historical record.
+data/proof-workflow/*.json
 .grepai/
 data/ingest/
 # One directory per notebooklm harvest. Evidence of a run, and the extracted
