@@ -9,7 +9,7 @@
     "AGENTS.md": {
       "required_markers": [
         "docs/architecture/modular-integration-requirements.md",
-        "## Mandatory read order",
+        "## Mandatory multi-hop read order",
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",
