@@ -1,6 +1,6 @@
 # `module-catalog` module
 
-Machine authority: [`module.json`](module.json)  
+Machine authority: [`module.json`](module.json)
 Interface version: `1.2.0`
 
 ## Role

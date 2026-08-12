@@ -20,6 +20,11 @@ FACTORY="$ROOT/loop_wiki/evolve-perfect-seed-repo-factory"
 [ -f "$G" ] || fail "gate missing: $G"
 # #14 stage 1 (human admit) activated the hook; it must be live and executable.
 [ -x "$H" ] || fail "pre-commit missing or not executable: $H"
+python3 -c 'from pathlib import Path; Path("'"$ROOT"'/ARCHITECTURE.md").read_text(encoding="utf-8")' \
+  || fail "ARCHITECTURE.md is not valid UTF-8"
+! grep -q 'STAEDTREE' "$H" || fail "pre-commit contains misspelled STAGEDTREE variable"
+! grep -q '綁定屈\|法則屈' "$ROOT/ARCHITECTURE.md" \
+  || fail "ARCHITECTURE.md contains corrupted layer terminology"
 
 # Assembled so this tracked file never embeds a literal home-root prefix.
 BADROOT=$(printf '/Use%s' 'rs/nobody/home')
@@ -165,7 +170,7 @@ done
 # Modular gates execute from the staged checkout, which is deleted when the
 # hook exits. Their stubs therefore write observable markers to a fixture-owned
 # directory inherited through the environment instead of their own directory.
-for stub in check_agent_docs check_module_catalog check_mcp_policy; do
+for stub in check_agent_docs check_readme_coverage check_module_catalog check_mcp_policy; do
   printf '#!/usr/bin/env python3\nimport os, pathlib\npathlib.Path(os.environ["FAST_QUALITY_TEST_MARKERS"], "%s.called").touch()\n' "$stub" \
     > "$R/scripts/gates/$stub.py"
 done
@@ -205,7 +210,7 @@ T1=$(python3 -c 'import time; print(time.time())')
 [ -f "$R/scripts/gates/check_credential_hygiene.called" ] || fail "hook did not call check_credential_hygiene"
 [ -f "$R/scripts/gates/check_runtime_env_binding.called" ] || fail "hook did not call check_runtime_env_binding"
 [ -f "$R/scripts/gates/check_delivery_receipt.called" ] || fail "hook did not call check_delivery_receipt"
-for marker in check_agent_docs check_module_catalog check_mcp_policy arena_proof arena_context check_project_bootstrap check_environment_contracts; do
+for marker in check_agent_docs check_readme_coverage check_module_catalog check_mcp_policy arena_proof arena_context check_project_bootstrap check_environment_contracts; do
   [ -f "$MARKERS/$marker.called" ] || fail "hook did not call $marker"
 done
 ELAPSED=$(python3 -c "print($T1 - $T0)")

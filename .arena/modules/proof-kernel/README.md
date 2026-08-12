@@ -1,6 +1,6 @@
 # `proof-kernel` module
 
-Machine authority: [`module.json`](module.json)  
+Machine authority: [`module.json`](module.json)
 Interface version: `1.3.0`
 
 ## Role

@@ -1,6 +1,6 @@
 # `openwiki` module
 
-Machine authority: [`module.json`](module.json)  
+Machine authority: [`module.json`](module.json)
 Interface version: `1.0.0`
 
 ## Role

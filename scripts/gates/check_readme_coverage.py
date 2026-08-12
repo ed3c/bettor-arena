@@ -74,12 +74,16 @@ def load_contract(path: Path) -> dict:
     for name, values in markers.items():
         if safe(name) not in cfg["required_readmes"]:
             raise Fatal(f"marker target not required: {name}")
-        if not isinstance(values, list) or not values or any(
-            not isinstance(value, str) or not value for value in values
+        if (
+            not isinstance(values, list)
+            or not values
+            or any(not isinstance(value, str) or not value for value in values)
         ):
             raise Fatal(f"bad marker list: {name}")
     patterns = cfg["forbidden_patterns"]
-    if not isinstance(patterns, list) or any(not isinstance(value, str) for value in patterns):
+    if not isinstance(patterns, list) or any(
+        not isinstance(value, str) for value in patterns
+    ):
         raise Fatal("forbidden_patterns must be strings")
     try:
         cfg["patterns"] = [re.compile(value) for value in patterns]
@@ -221,12 +225,19 @@ def selftest() -> None:
     cfg = {
         "schema": SCHEMA,
         "minimum_bytes": 20,
-        "required_readmes": ["README.md", ".arena/README.md", ".arena/modules/README.md"],
+        "required_readmes": [
+            "README.md",
+            ".arena/README.md",
+            ".arena/modules/README.md",
+        ],
         "module_manifest_root": ".arena/modules",
         "module_manifest_name": "module.json",
         "module_readme_name": "README.md",
-        "required_markers": {"README.md": ["ROOT"], ".arena/modules/README.md": ["module.json"]},
-        "forbidden_patterns": [r"/Users/"],
+        "required_markers": {
+            "README.md": ["ROOT"],
+            ".arena/modules/README.md": ["module.json"],
+        },
+        "forbidden_patterns": [r"/Use[r]s/"],
         "check_relative_links": True,
     }
     data = {
@@ -261,7 +272,8 @@ def selftest() -> None:
         ):
             raise Fatal("broken link control failed")
         (root / module).write_text(data[module])
-        (root / "README.md").write_text(data["README.md"] + "/Users/x\n")
+        bad_home = "/Use" + "rs/x"
+        (root / "README.md").write_text(data["README.md"] + bad_home + "\n")
         if not any(
             error.startswith("FORBIDDEN-PATH")
             for error in check(root, root / "contract.json", files)
@@ -271,8 +283,14 @@ def selftest() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
-    parser.add_argument("--contract", type=Path, default=Path("docs/architecture/readme-coverage.contract.json"))
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[2]
+    )
+    parser.add_argument(
+        "--contract",
+        type=Path,
+        default=Path("docs/architecture/readme-coverage.contract.json"),
+    )
     parser.add_argument("--index-manifest", type=Path)
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()

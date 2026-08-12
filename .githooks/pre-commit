@@ -65,7 +65,7 @@ python3 "$STAGEDTREE/tree/scripts/arena_proof.py" \
   --index-manifest "$STAGEDTREE/index.zlist" \
   check
 python3 "$STAGEDTREE/tree/scripts/arena_context.py" \
-  --root "$STAEDTREE/tree" \
+  --root "$STAGEDTREE/tree" \
   --index-manifest "$STAGEDTREE/index.zlist" \
   check
 python3 "$STAGEDTREE/tree/scripts/gates/check_mcp_policy.py" --materialized-index

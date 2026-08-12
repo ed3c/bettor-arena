@@ -53,7 +53,7 @@
     ]
   },
   "forbidden_patterns": [
-    "/Users/",
+    "/Use[r]s/",
     "(?<![A-Za-z0-9_.-])~/",
     "[A-Za-z]:\\\\Users\\\\"
   ],

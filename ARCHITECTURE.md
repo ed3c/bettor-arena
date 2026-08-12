@@ -39,7 +39,7 @@ bettor-arena/
 │   └── module-set.json # skills-shared + runtime-env + Claude/Codex adapter 的唯一聚合介面
 ├── .arena/            # machine-readable 模組控制面：schemas/manifests/compositions/locks/contexts/presets/origins/browser/MCP policy；
 │                      #   每個 module.json 必有相鄰 README；deterministic contract 綠不代理 live provider/Human Admit
-├── .skill-bindings/   # 共用 skill 的本 repo 綁定屈(一 skill 一目錄,必有 binding.md 四欄:
+├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:
 │                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
 │                      #   目錄不存在=未 retarget,是缺席不是缺陷
@@ -47,7 +47,7 @@ bettor-arena/
 │                      #   examples/ 是可重算 dotenv；workloads/ 固定入口/收據/對照組；policies/ 分離 Claude/Codex 原生設定。
 │                      #   pre-commit 驗 staged manifest 全閉包，禁連網/讀 sibling/自動同步；README.md 記顯式 sync/check 路徑
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
-├── notebooklm/        # NotebookLM 業務迴圈模組(README.md=法則屈+抖動迴圈+已抓到的缺陷,開這個目錄的
+├── notebooklm/        # NotebookLM 業務迴圈模組(README.md=法則層+抖動迴圈+已抓到的缺陷,開這個目錄的
 │                      #   agent 先讀它;workflow.py=唯一入口,drive_fetch.py=認證過的 Drive 路徑,
 │                      #   registry.json=互動資料(notebook pin/harvest target;憑證只留指針,絕不落值),
 │                      #   自有 `--selftest` 零網路)。
@@ -99,7 +99,7 @@ bettor-arena/
 │   │                  #   hash 的位元組不在該 commit 裡,宣稱範圍隨檔名寫死)
 │   ├── notebooklm/    # notebooklm 迴圈的每趟業務收據(runtime 生成物,gitignore;schema
 │   │                  #   bettor-arena-notebooklm-module@1.0.0)。內容是他人 Google 文件的抽取物,
-│   │                  #   位元組��進版控也不進任何 proof digest——每趟都變的東西進 digest,
+│   │                  #   位元組不進版控也不進任何 proof digest——每趟都變的東西進 digest,
 │   │                  #   追蹤的就變成「上次跑在哪」而不是「機制是什麼」。收據只記 sha256 與計數
 │   ├── ingest/        # loopctl `micro run --source` 的抽取產物(runtime 生成物,gitignore):
 │   │                  #   packet.json + extracted.txt + provenance.json(原檔路徑/sha256、抽取器 argv

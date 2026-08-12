@@ -1,6 +1,6 @@
 # `loop-runtime` module
 
-Machine authority: [`module.json`](module.json)  
+Machine authority: [`module.json`](module.json)
 Interface version: `1.5.0`
 
 ## Role
