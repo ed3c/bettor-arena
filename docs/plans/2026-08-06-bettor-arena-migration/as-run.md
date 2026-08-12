@@ -41,16 +41,18 @@
 | #31 | 宣告值無人斷言 | **完成** | ts `90bbe7f` | 兩個字串斷言收口(前綴洩漏),同型缺陷在上一行的 python_spawn_boundary_coverage 一併修;9 個無人讀的 key 全屬生產者輸入,已記進 notes |
 | ts#27b | 收據物化 | **完成** | ts `fc2b196`、arena `517dd59` | PR merge 後線才有交付載體;真跑 sync 炸出 explicit-null 與 merged-PR 兩缺陷,兩份姊妹副本同日一起掃 |
 | #2 | PRD 母票 | **完成** | 本輪 | 驗收條款逐條真跑:5 結構閘+5 selftest+fast_quality+7 tests+工廠三支+kb-ingest 閘,全綠零紅 |
-| #34 | GitHub 修正同步與 runtime-env L5 acceptance | **進行中** | GitHub `27b53bb`；Forgejo `main` 同 SHA | 46 個 tracked TypeScript、6 projections、8 個非外送 host canary 已綠；Gemini live、fresh judge、Human admit、skill-bettor mirror sync 與 consolidated acceptance 尚未完成 |
+| #34 | GitHub 修正同步與 runtime-env L5 acceptance | **進行中** | 2026-08-12 同步起始 baseline：GitHub/Forgejo `27b53bb` | 46 個 tracked TypeScript、6 projections、8 個非外送 host canary 已綠；Gemini live、fresh judge、Human admit、skill-bettor mirror sync 與 consolidated acceptance 尚未完成 |
 ## 2. 跑過什麼(真跑,非宣稱)
 
 - **六波 workflow**(22+ agent):implement→tdd→code-review 逐片,findings 回流成 fix commit 或新票。
 - **通電一輪**(真 packet `poweron-2026-08-06`):trigger 交付→自動發 wiki-update 請求→消化站
   LLM 再生(sonnet)→finder/verifier 官方閘真開火→finalize 重錨 gitHead→receipt 回鏈+凍結入版控。
 - **全閘掃描**(16 道,兩 repo):15 綠、1 具名 NOT-RUN、0 紅。掃描本身也被教會三態(64≠壞掉)。
-- **Origins/PR**:Forgejo `main` 與 GitHub `main` 已對齊 `27b53bb`;Forgejo #1/#25/#33 與
-  GitHub #26/#28 已 merge。GitHub issue #25 的本地進度投影為 Forgejo #34,兩者在 L5
-  consolidated acceptance 通過前保持 open。
+- **Origins/PR**:2026-08-12 的同步起始 baseline 是 GitHub/Forgejo `27b53bb`;Forgejo
+  #1/#25/#33 與 GitHub #26/#28/#31 已 merge。GitHub issue #25 的本地進度投影為
+  Forgejo #34,兩者在 L5 consolidated acceptance 通過前保持 open。版本化 as-run 只記歷史
+  baseline,不凍結「mutable main 現在等於哪個 SHA」；目前 refs 由 `git ls-remote` 回讀，
+  issue/PR/milestone 活狀態由 `scripts/delivery_status.py` 現拉。
 
 ## 3. 沒跑什麼(缺席具名,不冒充綠)
 
