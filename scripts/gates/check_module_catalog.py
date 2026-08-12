@@ -23,6 +23,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="check_module_catalog.py")
     parser.add_argument("--root", type=Path, default=default_root())
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--index-manifest", type=Path)
     args = parser.parse_args(argv)
 
     root = args.root.resolve()
@@ -35,6 +36,8 @@ def main(argv: list[str] | None = None) -> int:
         command.append("--selftest")
     else:
         command.extend(["--root", str(root), "check"])
+        if args.index_manifest:
+            command.extend(["--index-manifest", str(args.index_manifest)])
     return subprocess.run(command, check=False).returncode
 
 

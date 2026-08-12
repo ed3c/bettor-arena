@@ -19,10 +19,11 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import subprocess
 import sys
 import tempfile
 from typing import Any, Iterable
+
+import arena_index
 
 
 CLASSES_SCHEMA = "bettor-arena/ownership-classes/v1"
@@ -132,9 +133,10 @@ def load_classes(path: Path) -> dict[str, Any]:
             raise OwnershipError(
                 f"{path}: invalid class kind for {class_id}: {entry['kind']!r}"
             )
-        if not isinstance(entry["description"], str) or not entry[
-            "description"
-        ].strip():
+        if (
+            not isinstance(entry["description"], str)
+            or not entry["description"].strip()
+        ):
             raise OwnershipError(f"{path}: class description is required: {class_id}")
         paths = entry["paths"]
         if not isinstance(paths, list) or not paths:
@@ -156,19 +158,10 @@ def load_classes(path: Path) -> dict[str, Any]:
 
 
 def git_tracked_paths(root: Path) -> list[str]:
-    process = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "-z"],
-        check=False,
-        capture_output=True,
-    )
-    if process.returncode != 0:
-        detail = process.stderr.decode("utf-8", errors="replace").strip()
-        raise OwnershipError(f"git ls-files failed for {root}: {detail}")
-    return sorted(
-        item.decode("utf-8", errors="strict")
-        for item in process.stdout.split(b"\0")
-        if item
-    )
+    try:
+        return sorted(arena_index.git_entries(root))
+    except arena_index.IndexError as exc:
+        raise OwnershipError(str(exc)) from exc
 
 
 def module_claims(modules: dict[str, dict[str, Any]]) -> list[tuple[str, str]]:
@@ -211,9 +204,7 @@ def classify(
             }
         )
         if len(owners) > 1:
-            errors.append(
-                f"MULTIPLY_OWNED {normalized}: modules={','.join(owners)}"
-            )
+            errors.append(f"MULTIPLY_OWNED {normalized}: modules={','.join(owners)}")
             continue
         if len(owners) == 1:
             assignments.append(
@@ -246,9 +237,7 @@ def classify(
             continue
         for matched_class, _, prefix in matches:
             prefix_usage[(matched_class, prefix)] += 1
-        assignments.append(
-            {"path": normalized, "type": kind, "subject": class_id}
-        )
+        assignments.append({"path": normalized, "type": kind, "subject": class_id})
 
     for (class_id, prefix), count in sorted(prefix_usage.items()):
         if count == 0:
@@ -280,7 +269,9 @@ def snapshot(
 ) -> dict[str, Any]:
     path = classes_path or root / ".arena" / "ownership-classes.json"
     classes_value = load_classes(path)
-    paths = list(tracked_paths) if tracked_paths is not None else git_tracked_paths(root)
+    paths = (
+        list(tracked_paths) if tracked_paths is not None else git_tracked_paths(root)
+    )
     return classify(modules, classes_value, paths)
 
 

@@ -1,13 +1,5 @@
 import { spawnSync } from "node:child_process";
-import {
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  unlinkSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -26,6 +18,7 @@ import {
   sha256,
   type CompositionLock,
   type GeneratedTool,
+  type LoopContract,
   type McpPolicy,
   type ModuleManifest,
   type ModuleSurface,
@@ -36,11 +29,7 @@ export function selectedModules(lock: CompositionLock): Set<string> {
   return new Set(lock.modules.map((item) => item.id));
 }
 
-export function loadModulesAtRef(
-  root: string,
-  ref: string,
-  selected: Set<string>,
-): Map<string, ModuleManifest> {
+export function loadModulesAtRef(root: string, ref: string, selected: Set<string>): Map<string, ModuleManifest> {
   const modules = new Map<string, ModuleManifest>();
   for (const id of [...selected].sort()) {
     modules.set(id, jsonAtRef<ModuleManifest>(root, ref, `.arena/modules/${id}/module.json`));
@@ -66,9 +55,7 @@ export function validateExternal(
     }
     const loops = module.loops.filter((loop) => loop.id === tool._argv.loop);
     if (loops.length !== 1 || loops[0]!.external_policy !== "allowlisted") {
-      throw new McpError(
-        `tool ${tool.name} is not an allowlisted loop of module ${policy.module}`,
-      );
+      throw new McpError(`tool ${tool.name} is not an allowlisted loop of module ${policy.module}`);
     }
     if (
       policy.mutation !== module.external_policy.mutation &&
@@ -82,10 +69,7 @@ export function validateExternal(
   }
 }
 
-export function moduleClosure(
-  moduleId: string,
-  modules: Map<string, ModuleManifest>,
-): string[] {
+export function moduleClosure(moduleId: string, modules: Map<string, ModuleManifest>): string[] {
   const providers = new Map<string, string>();
   for (const [id, module] of modules) {
     for (const capability of module.provides ?? []) {
@@ -121,10 +105,7 @@ function portablePrefix(value: string): string {
   return normalized;
 }
 
-export function closurePrefixes(
-  closure: string[],
-  modules: Map<string, ModuleManifest>,
-): string[] {
+export function closurePrefixes(closure: string[], modules: Map<string, ModuleManifest>): string[] {
   const prefixes = new Set<string>();
   for (const id of closure) {
     const module = modules.get(id)!;
@@ -150,10 +131,7 @@ function matchesPrefix(path: string, prefix: string): boolean {
   return path === prefix || path.startsWith(`${prefix}/`);
 }
 
-export function pruneWorktree(
-  worktree: string,
-  prefixes: string[],
-): { kept: number; removed: number } {
+export function pruneWorktree(worktree: string, prefixes: string[]): { kept: number; removed: number } {
   const raw = gitBytes(worktree, ["ls-files", "-z"]);
   let kept = 0;
   let removed = 0;
@@ -170,7 +148,10 @@ export function pruneWorktree(
   return { kept, removed };
 }
 
-export function createWorkspace(root: string, commit: string): {
+export function createWorkspace(
+  root: string,
+  commit: string,
+): {
   base: string;
   worktree: string;
   cleanup: () => void;
@@ -201,11 +182,11 @@ export function createWorkspace(root: string, commit: string): {
 export function toArgv(tool: GeneratedTool, argumentsValue: unknown): string[] {
   assertObject(argumentsValue, "tool arguments");
   if (tool._carrier) {
-    throw new McpError("typed inline carrier accepts exactly one bundle object; local packet/output paths are forbidden");
+    throw new McpError(
+      "typed inline carrier accepts exactly one bundle object; local packet/output paths are forbidden",
+    );
   }
-  const allowed = new Map(
-    tool._argv.flags.map((flag) => [flag.slice(2).replaceAll("-", "_"), flag]),
-  );
+  const allowed = new Map(tool._argv.flags.map((flag) => [flag.slice(2).replaceAll("-", "_"), flag]));
   const unknown = Object.keys(argumentsValue).filter((key) => !allowed.has(key));
   if (unknown.length) throw new McpError(`undeclared argument(s): ${unknown.sort().join(", ")}`);
   const argv = [tool._argv.loop, tool._argv.mode];
@@ -230,7 +211,11 @@ export function toArgv(tool: GeneratedTool, argumentsValue: unknown): string[] {
 }
 
 function decodeBase64(value: unknown, label: string): Buffer {
-  if (typeof value !== "string" || value.length % 4 !== 0 || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)) {
+  if (
+    typeof value !== "string" ||
+    value.length % 4 !== 0 ||
+    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)
+  ) {
     throw new McpError(`${label} has invalid base64`);
   }
   return Buffer.from(value, "base64");

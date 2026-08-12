@@ -32,6 +32,8 @@ import sys
 import tempfile
 from typing import Any, Iterator
 
+import arena_index
+
 
 CAPSULE_SCHEMA = "bettor-arena/context-capsule/v1"
 LOCK_SCHEMA = "bettor-arena/context-lock/v1"
@@ -102,32 +104,6 @@ def git(root: Path, *args: str) -> str:
     if process.returncode != 0:
         raise ContextError(process.stderr.strip() or f"git {' '.join(args)} failed")
     return process.stdout.strip()
-
-
-def git_entries(root: Path) -> dict[str, dict[str, str]]:
-    process = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "--stage", "-z"],
-        capture_output=True,
-        check=False,
-    )
-    if process.returncode != 0:
-        raise ContextError(
-            process.stderr.decode("utf-8", errors="replace").strip()
-            or "git ls-files --stage failed"
-        )
-    result: dict[str, dict[str, str]] = {}
-    for raw in process.stdout.split(b"\0"):
-        if not raw:
-            continue
-        metadata, separator, path_raw = raw.partition(b"\t")
-        if not separator:
-            raise ContextError("malformed Git index entry")
-        mode, blob, stage = metadata.decode("ascii").split()
-        if stage != "0":
-            raise ContextError("unmerged context bytes cannot be frozen")
-        path = path_raw.decode("utf-8", errors="strict")
-        result[path] = {"path": path, "mode": mode, "blob": blob}
-    return result
 
 
 def validate_capsule(value: dict[str, Any], path: Path, root: Path) -> dict[str, Any]:
@@ -208,9 +184,12 @@ def load_capsules(root: Path) -> dict[str, dict[str, Any]]:
     return capsules
 
 
-def context_lock(root: Path) -> dict[str, Any]:
+def context_lock(
+    root: Path,
+    entries: dict[str, dict[str, str]] | None = None,
+) -> dict[str, Any]:
     capsules = load_capsules(root)
-    entries = git_entries(root)
+    entries = entries if entries is not None else arena_index.git_entries(root)
     locked: list[dict[str, Any]] = []
     for context_id, capsule in sorted(capsules.items()):
         paths = sorted(
@@ -268,7 +247,16 @@ def disposable_worktree(root: Path, commit: str) -> Iterator[Path]:
     worktree = parent / "worktree"
     try:
         process = subprocess.run(
-            ["git", "-C", str(root), "worktree", "add", "--detach", str(worktree), commit],
+            [
+                "git",
+                "-C",
+                str(root),
+                "worktree",
+                "add",
+                "--detach",
+                str(worktree),
+                commit,
+            ],
             text=True,
             capture_output=True,
             check=False,
@@ -279,7 +267,15 @@ def disposable_worktree(root: Path, commit: str) -> Iterator[Path]:
     finally:
         if worktree.exists():
             subprocess.run(
-                ["git", "-C", str(root), "worktree", "remove", "--force", str(worktree)],
+                [
+                    "git",
+                    "-C",
+                    str(root),
+                    "worktree",
+                    "remove",
+                    "--force",
+                    str(worktree),
+                ],
                 text=True,
                 capture_output=True,
                 check=False,
@@ -405,7 +401,9 @@ def prepare_or_canary(
                 config["binary"],
                 context["policy"]["max_seconds"],
             )
-            state = "PASS" if exit_code == 0 and reply.strip() == "CONTEXT_OK" else "FAIL"
+            state = (
+                "PASS" if exit_code == 0 and reply.strip() == "CONTEXT_OK" else "FAIL"
+            )
             reply_sha = hashlib.sha256(reply.encode("utf-8")).hexdigest()
         receipt = {
             "schema": RECEIPT_SCHEMA,
@@ -429,8 +427,11 @@ def prepare_or_canary(
     return receipt
 
 
-def check(root: Path) -> None:
-    expected_lock = context_lock(root)
+def check(
+    root: Path,
+    entries: dict[str, dict[str, str]] | None = None,
+) -> None:
+    expected_lock = context_lock(root, entries=entries)
     lock_path = root / ".arena" / "contexts.lock.json"
     actual_lock = read_json(lock_path)
     if actual_lock != expected_lock:
@@ -448,7 +449,9 @@ def check(root: Path) -> None:
 
 def init_fixture(path: Path) -> str:
     subprocess.run(["git", "init", "-q", str(path)], check=True)
-    subprocess.run(["git", "-C", str(path), "config", "user.email", "t@local"], check=True)
+    subprocess.run(
+        ["git", "-C", str(path), "config", "user.email", "t@local"], check=True
+    )
     subprocess.run(["git", "-C", str(path), "config", "user.name", "t"], check=True)
     (path / ".arena" / "contexts").mkdir(parents=True)
     (path / "loop").mkdir()
@@ -534,7 +537,11 @@ def selftest() -> None:
             raise ContextError("path escape was accepted")
 
         # Restore a valid committed fixture, then prove the disposable worktree cleans up.
-        subprocess.run(["git", "-C", str(root), "reset", "--hard", commit], check=True, capture_output=True)
+        subprocess.run(
+            ["git", "-C", str(root), "reset", "--hard", commit],
+            check=True,
+            capture_output=True,
+        )
         parent: Path | None = None
         with disposable_worktree(root, commit) as worktree:
             parent = worktree.parent
@@ -553,7 +560,10 @@ def selftest() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="arena_context.py")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[1]
+    )
+    parser.add_argument("--index-manifest", type=Path)
     parser.add_argument("--selftest", action="store_true")
     subparsers = parser.add_subparsers(dest="command")
 
@@ -589,26 +599,35 @@ def main(argv: list[str] | None = None) -> int:
         if args.command is None:
             parser.error("a command is required")
         root = args.root.resolve()
+        entries = (
+            arena_index.load_entries(args.index_manifest)
+            if args.index_manifest
+            else None
+        )
         if args.command == "lock":
-            value = context_lock(root)
+            value = context_lock(root, entries=entries)
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:
                 print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
             return 0
         if args.command == "parity":
-            value = parity_receipt(context_lock(root))
+            value = parity_receipt(context_lock(root, entries=entries))
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:
                 print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
             return 0
         if args.command == "check":
-            check(root)
+            check(root, entries=entries)
             print("PASS Context Capsules and offline driver parity")
             return 0
         live = args.command == "canary" and args.live
@@ -620,7 +639,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
         return 0
-    except ContextError as exc:
+    except (ContextError, arena_index.IndexError) as exc:
         print(f"context RED: {exc}", file=sys.stderr)
         return 2
     except (OSError, subprocess.SubprocessError) as exc:

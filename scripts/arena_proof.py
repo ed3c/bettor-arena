@@ -24,11 +24,11 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import subprocess
 import sys
 import tempfile
 from typing import Any
 
+import arena_index
 import arena_lock
 import arena_modules
 import arena_ownership
@@ -72,41 +72,13 @@ def read_json(path: Path) -> dict[str, Any]:
     return arena_modules.load_json(path)
 
 
-def git_entries(root: Path) -> dict[str, dict[str, str]]:
-    process = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "--stage", "-z"],
-        check=False,
-        capture_output=True,
-    )
-    if process.returncode != 0:
-        detail = process.stderr.decode("utf-8", errors="replace").strip()
-        raise ProofError(f"git ls-files --stage failed: {detail}")
-    entries: dict[str, dict[str, str]] = {}
-    for raw in process.stdout.split(b"\0"):
-        if not raw:
-            continue
-        metadata, separator, path_raw = raw.partition(b"\t")
-        if not separator:
-            raise ProofError("git index entry has no path separator")
-        parts = metadata.decode("ascii").split()
-        if len(parts) != 3:
-            raise ProofError("git index entry metadata drifted")
-        mode, blob, stage = parts
-        if stage != "0":
-            raise ProofError(
-                f"unmerged index entry is not a stable proof input: "
-                f"{path_raw.decode('utf-8', errors='replace')}"
-            )
-        path = path_raw.decode("utf-8", errors="strict")
-        entries[path] = {"path": path, "mode": mode, "blob": blob}
-    if not entries:
-        raise ProofError("Git index is empty")
-    return entries
-
-
 def manifest_owner(path: str, selected: set[str]) -> str | None:
     parts = Path(path).parts
-    if len(parts) == 4 and parts[:2] == (".arena", "modules") and parts[3] == "module.json":
+    if (
+        len(parts) == 4
+        and parts[:2] == (".arena", "modules")
+        and parts[3] == "module.json"
+    ):
         module_id = parts[2]
         return module_id if module_id in selected else None
     return None
@@ -167,7 +139,9 @@ def load_shared_skills(root: Path) -> dict[str, str]:
     return result
 
 
-def entries_under(entries: dict[str, dict[str, str]], prefix: str) -> list[dict[str, str]]:
+def entries_under(
+    entries: dict[str, dict[str, str]], prefix: str
+) -> list[dict[str, str]]:
     return [
         entries[path]
         for path in sorted(entries)
@@ -289,9 +263,7 @@ def dependency_map(
         dependencies: list[dict[str, str]] = []
         for capability in sorted(modules[module_id]["requires"]):
             if capability.startswith("external:"):
-                dependencies.append(
-                    {"capability": capability, "provider": "EXTERNAL"}
-                )
+                dependencies.append({"capability": capability, "provider": "EXTERNAL"})
                 continue
             provider = providers.get(capability)
             if provider is None or provider not in selected:
@@ -348,14 +320,17 @@ def close_subjects(
     return resolved
 
 
-def subject_lock(root: Path) -> dict[str, Any]:
+def subject_lock(
+    root: Path,
+    entries: dict[str, dict[str, str]] | None = None,
+) -> dict[str, Any]:
     modules, _ = arena_modules.load_modules(root)
     composition_lock = read_json(root / ".arena" / "locks" / "bettor-arena.lock.json")
     selected = {item["id"] for item in composition_lock["modules"]}
     missing = selected - set(modules)
     if missing:
         raise ProofError(f"composition selects missing modules: {sorted(missing)}")
-    entries = git_entries(root)
+    entries = entries if entries is not None else arena_index.git_entries(root)
     ownership = arena_ownership.snapshot(root, modules, tracked_paths=entries.keys())
     local = local_subjects(root, modules, selected, entries, ownership)
     dependencies = dependency_map(modules, selected)
@@ -430,7 +405,11 @@ def release_receipt(
                 state = "NOT_EXERCISED"
             evidence[kind] = state
             if state != "PASS":
-                overall = "NOT_EXERCISED" if state == "NOT_EXERCISED" and overall == "PASS" else overall
+                overall = (
+                    "NOT_EXERCISED"
+                    if state == "NOT_EXERCISED" and overall == "PASS"
+                    else overall
+                )
                 if state in {"FAIL", "ABSENT"}:
                     overall = "FAIL"
         module_entries.append(
@@ -461,8 +440,13 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
     )
 
 
-def check(root: Path, subjects_path: Path, release_path: Path) -> None:
-    expected_subjects = subject_lock(root)
+def check(
+    root: Path,
+    subjects_path: Path,
+    release_path: Path,
+    entries: dict[str, dict[str, str]] | None = None,
+) -> None:
+    expected_subjects = subject_lock(root, entries=entries)
     actual_subjects = read_json(subjects_path)
     if actual_subjects != expected_subjects:
         raise ProofError(
@@ -547,6 +531,7 @@ def selftest() -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="arena_proof.py")
     parser.add_argument("--root", type=Path, default=default_root())
+    parser.add_argument("--index-manifest", type=Path)
     parser.add_argument("--selftest", action="store_true")
     subparsers = parser.add_subparsers(dest="command")
 
@@ -554,12 +539,18 @@ def main(argv: list[str] | None = None) -> int:
     subjects_parser.add_argument("--output", type=Path)
 
     release_parser = subparsers.add_parser("release")
-    release_parser.add_argument("--subjects", type=Path, default=Path("data/module-proof/subjects.lock.json"))
+    release_parser.add_argument(
+        "--subjects", type=Path, default=Path("data/module-proof/subjects.lock.json")
+    )
     release_parser.add_argument("--output", type=Path)
 
     check_parser = subparsers.add_parser("check")
-    check_parser.add_argument("--subjects", type=Path, default=Path("data/module-proof/subjects.lock.json"))
-    check_parser.add_argument("--release", type=Path, default=Path("data/module-proof/release-receipt.json"))
+    check_parser.add_argument(
+        "--subjects", type=Path, default=Path("data/module-proof/subjects.lock.json")
+    )
+    check_parser.add_argument(
+        "--release", type=Path, default=Path("data/module-proof/release-receipt.json")
+    )
 
     args = parser.parse_args(argv)
     try:
@@ -572,17 +563,26 @@ def main(argv: list[str] | None = None) -> int:
         if args.command is None:
             parser.error("a command is required")
         root = args.root.resolve()
+        entries = (
+            arena_index.load_entries(args.index_manifest)
+            if args.index_manifest
+            else None
+        )
         if args.command == "subjects":
-            value = subject_lock(root)
+            value = subject_lock(root, entries=entries)
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:
                 print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
             return 0
         if args.command == "release":
-            subjects_path = args.subjects if args.subjects.is_absolute() else root / args.subjects
+            subjects_path = (
+                args.subjects if args.subjects.is_absolute() else root / args.subjects
+            )
             subjects = read_json(subjects_path)
             value = release_receipt(
                 root,
@@ -590,21 +590,28 @@ def main(argv: list[str] | None = None) -> int:
                 root / "data" / "module-proof" / "evidence",
             )
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:
                 print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
             return 0
         if args.command == "check":
-            subjects_path = args.subjects if args.subjects.is_absolute() else root / args.subjects
-            release_path = args.release if args.release.is_absolute() else root / args.release
-            check(root, subjects_path, release_path)
+            subjects_path = (
+                args.subjects if args.subjects.is_absolute() else root / args.subjects
+            )
+            release_path = (
+                args.release if args.release.is_absolute() else root / args.release
+            )
+            check(root, subjects_path, release_path, entries=entries)
             print("PASS module proof subjects and release receipt")
             return 0
         parser.error(f"unknown command: {args.command}")
     except (
         ProofError,
+        arena_index.IndexError,
         arena_modules.ContractError,
         arena_ownership.OwnershipError,
         arena_lock.LockError,

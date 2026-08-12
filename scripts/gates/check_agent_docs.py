@@ -61,16 +61,17 @@ def validate_contract(contract: dict[str, Any], path: Path) -> None:
     ):
         raise ContractError(f"{path}: canonical_documents must be unique strings")
     patterns = contract["forbidden_patterns"]
-    if (
-        not isinstance(patterns, list)
-        or any(not isinstance(item, str) or not item for item in patterns)
+    if not isinstance(patterns, list) or any(
+        not isinstance(item, str) or not item for item in patterns
     ):
         raise ContractError(f"{path}: forbidden_patterns must be strings")
     for pattern in patterns:
         try:
             re.compile(pattern)
         except re.error as exc:
-            raise ContractError(f"{path}: invalid forbidden regex {pattern!r}: {exc}") from exc
+            raise ContractError(
+                f"{path}: invalid forbidden regex {pattern!r}: {exc}"
+            ) from exc
 
     entrypoints = contract["entrypoints"]
     if not isinstance(entrypoints, dict) or set(entrypoints) != {
@@ -143,7 +144,9 @@ def check(root: Path, contract_path: Path) -> list[str]:
 
 def write_fixture(root: Path) -> Path:
     (root / "docs/architecture").mkdir(parents=True)
-    (root / "docs/agent-runtime-integration.md").write_text("current\n", encoding="utf-8")
+    (root / "docs/agent-runtime-integration.md").write_text(
+        "current\n", encoding="utf-8"
+    )
     (root / "docs/architecture/modular-integration-requirements.md").write_text(
         "target\n", encoding="utf-8"
     )
@@ -155,11 +158,14 @@ def write_fixture(root: Path) -> Path:
             "docs/architecture/modular-integration-requirements.md",
             "docs/agent-runtime-integration.md",
         ],
-        "forbidden_patterns": [r"/Users/", r"(?<![A-Za-z0-9_.-])~/"],
+        "forbidden_patterns": [r"/Use(?:rs)/", r"(?<![A-Za-z0-9_.-])~/"],
         "entrypoints": {
             "AGENTS.md": {
                 "role": "codex-cross-host",
-                "required_markers": ["## Mandatory read order", "## Completion contract"],
+                "required_markers": [
+                    "## Mandatory read order",
+                    "## Completion contract",
+                ],
             },
             "CLAUDE.md": {
                 "role": "claude-code",
@@ -209,7 +215,9 @@ def selftest() -> None:
             raise ContractError("negative control accepted a missing mandatory marker")
 
         (root / "AGENTS.md").write_text(
-            (root / "AGENTS.md").read_text(encoding="utf-8") + "/Users/example/repo\n",
+            (root / "AGENTS.md").read_text(encoding="utf-8")
+            + "/Use"
+            + "rs/example/repo\n",
             encoding="utf-8",
         )
         failures = check(root, contract)
@@ -237,7 +245,9 @@ def main(argv: list[str] | None = None) -> int:
             print("SELFTEST GREEN: agent entrypoints")
             return 0
         root = args.root.resolve()
-        contract = args.contract if args.contract.is_absolute() else root / args.contract
+        contract = (
+            args.contract if args.contract.is_absolute() else root / args.contract
+        )
         failures = check(root, contract)
         if failures:
             for failure in failures:

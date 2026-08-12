@@ -69,7 +69,11 @@ export function writeJson(path: string, value: unknown): void {
   renameSync(temp, path);
 }
 
-export function run(command: string, args: string[], options: { cwd?: string; allow?: number[]; env?: NodeJS.ProcessEnv } = {}): string {
+export function run(
+  command: string,
+  args: string[],
+  options: { cwd?: string; allow?: number[]; env?: NodeJS.ProcessEnv } = {},
+): string {
   const processResult = spawnSync(command, args, {
     cwd: options.cwd,
     env: options.env ?? process.env,
@@ -87,7 +91,11 @@ export function runGit(root: string, args: string[], allow = [0]): string {
   return run("git", ["-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", "-C", root, ...args], { allow });
 }
 
-export function closedObject(value: unknown, fields: string[], label: string): asserts value is Record<string, unknown> {
+export function closedObject(
+  value: unknown,
+  fields: string[],
+  label: string,
+): asserts value is Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new EnvironmentContractError(`${label}: object required`);
   }

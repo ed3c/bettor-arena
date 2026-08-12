@@ -1,13 +1,7 @@
 #!/usr/bin/env bun
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  buildTools,
-  publicTool,
-  readJson,
-  type LoopContract,
-  type McpPolicy,
-} from "./mcp_core.ts";
+import { buildTools, publicTool, readJson, type LoopContract, type McpPolicy } from "./mcp_core.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "..");
@@ -37,10 +31,7 @@ function parseArgs(argv: string[]): { contract: string; policy: string | null } 
   return { contract, policy };
 }
 
-export function generate(
-  contractPath: string,
-  policyPath: string | null,
-): object {
+export function generate(contractPath: string, policyPath: string | null): object {
   const contract = readJson<LoopContract>(contractPath);
   const policy = policyPath ? readJson<McpPolicy>(policyPath) : null;
   return { tools: buildTools(contract, policy).map(publicTool) };
@@ -89,9 +80,7 @@ function selftest(): number {
   };
   const tools = buildTools(contract, policy);
   if (tools.length !== 1 || tools[0]?.name !== "loopctl_micro_run") {
-    console.error(
-      "SELFTEST case failed — explicit policy did not select exactly one tool",
-    );
+    console.error("SELFTEST case failed — explicit policy did not select exactly one tool");
     return 1;
   }
   console.log("SELFTEST GREEN");
@@ -105,13 +94,10 @@ export function main(argv: string[]): number {
     console.log(JSON.stringify(generate(args.contract, args.policy), null, 2));
     return 0;
   } catch (error) {
-    console.error(
-      `MCP policy RED: ${String(error instanceof Error ? error.message : error)}`,
-    );
+    console.error(`MCP policy RED: ${String(error instanceof Error ? error.message : error)}`);
     return 2;
   }
 }
 
-const invoked =
-  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const invoked = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) process.exit(main(process.argv.slice(2)));

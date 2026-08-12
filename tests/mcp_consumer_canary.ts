@@ -43,11 +43,12 @@ function invoke(root: string, ref: string, request: object): RpcResponse {
     env: { ...process.env, LOOPCTL_REF: "" },
   });
   if (proc.status !== 0) {
-    throw new Error(
-      `MCP server exited ${proc.status}\n--- stdout ---\n${proc.stdout}\n--- stderr ---\n${proc.stderr}`,
-    );
+    throw new Error(`MCP server exited ${proc.status}\n--- stdout ---\n${proc.stdout}\n--- stderr ---\n${proc.stderr}`);
   }
-  const lines = proc.stdout.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const lines = proc.stdout
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
   const line = lines.at(-1);
   if (!line) throw new Error(`MCP server returned no response\n--- stderr ---\n${proc.stderr}`);
   try {
@@ -134,7 +135,9 @@ function main(): number {
 
     const tampered = structuredClone(request);
     tampered.id = 43;
-    tampered.params.arguments.bundle.files[0].sha256 = "0".repeat(64);
+    const firstFile = tampered.params.arguments.bundle.files[0];
+    if (!firstFile) throw new Error("fixture bundle unexpectedly contains no files");
+    firstFile.sha256 = "0".repeat(64);
     const badDigest = invoke(root, ref, tampered);
     const badDigestText = badDigest.result?.content?.[0]?.text || badDigest.error?.message || "";
     if (!badDigest.result?.isError || !/digest mismatch/i.test(badDigestText)) {

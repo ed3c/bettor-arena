@@ -1,11 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import {
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -112,9 +106,7 @@ describe("default deny policy", () => {
 
   test("explicit policy selects only explicitly enabled commands", () => {
     const f = fixture();
-    expect(buildTools(f.contract, f.policy).map((tool) => tool.name)).toEqual([
-      "loopctl_ctg_run",
-    ]);
+    expect(buildTools(f.contract, f.policy).map((tool) => tool.name)).toEqual(["loopctl_ctg_run"]);
   });
 
   test("omitted mcp_exposed cannot be re-enabled by policy", () => {
@@ -132,9 +124,7 @@ describe("default deny policy", () => {
   });
 
   test("stable digest sorts nested object keys", () => {
-    expect(digestValue({ b: 1, a: { z: 2, y: 3 } })).toBe(
-      digestValue({ a: { y: 3, z: 2 }, b: 1 }),
-    );
+    expect(digestValue({ b: 1, a: { z: 2, y: 3 } })).toBe(digestValue({ a: { y: 3, z: 2 }, b: 1 }));
   });
 });
 
@@ -302,9 +292,7 @@ describe("module closure and workspace", () => {
   });
 
   test("mutable refs are refused", () => {
-    expect(() => resolveRef(resolve(import.meta.dir, ".."), "HEAD")).toThrow(
-      /mutable/,
-    );
+    expect(() => resolveRef(resolve(import.meta.dir, ".."), "HEAD")).toThrow(/mutable/);
   });
 
   test("disposable worktree is cleaned", () => {
@@ -314,9 +302,7 @@ describe("module closure and workspace", () => {
     }).stdout.trim();
     const workspace = createWorkspace(root, commit);
     const parent = workspace.base;
-    expect(pruneWorktree(workspace.worktree, ["loopctl"]).kept).toBeGreaterThan(
-      0,
-    );
+    expect(pruneWorktree(workspace.worktree, ["loopctl"]).kept).toBeGreaterThan(0);
     workspace.cleanup();
     expect(existsSync(parent)).toBe(false);
   });

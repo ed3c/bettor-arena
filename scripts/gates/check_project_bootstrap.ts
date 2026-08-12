@@ -37,23 +37,34 @@ function staticCheck(root: string): void {
   for (const path of required) if (!existsSync(join(root, path))) throw new Error(`missing ${path}`);
   const manifest = JSON.parse(readFileSync(join(root, ".arena/modules/project-bootstrapper/module.json"), "utf8"));
   const commandText = JSON.stringify(manifest.proof ?? {});
-  if (!commandText.includes("bun") || !commandText.includes("scripts/arena_project.ts")) throw new Error("project-bootstrapper proof is not Bun + TypeScript primary");
+  if (!commandText.includes("bun") || !commandText.includes("scripts/arena_project.ts"))
+    throw new Error("project-bootstrapper proof is not Bun + TypeScript primary");
   const preset = JSON.parse(readFileSync(join(root, ".arena/presets/consumer-core.json"), "utf8"));
   if (preset.status !== "IMPLEMENTED") throw new Error("consumer-core is not IMPLEMENTED");
   const shim = readFileSync(join(root, "scripts/arena_project.py"), "utf8");
-  if (!shim.includes("os.execv") || shim.includes("def plan")) throw new Error("Python entry is not a thin compatibility shim");
+  if (!shim.includes("os.execv") || shim.includes("def plan"))
+    throw new Error("Python entry is not a thin compatibility shim");
 }
 
 function main(argv: string[]): number {
   let options: { root: string; selftest: boolean };
-  try { options = parse(argv); staticCheck(options.root) }
-  catch (error) { console.error(`PROJECT-BOOTSTRAP-GATE-RED ${String(error)}`); return 2 }
+  try {
+    options = parse(argv);
+    staticCheck(options.root);
+  } catch (error) {
+    console.error(`PROJECT-BOOTSTRAP-GATE-RED ${String(error)}`);
+    return 2;
+  }
   if (options.selftest) {
-    const result = spawnSync(process.execPath, [join(options.root, "scripts/arena_project.ts"), "--source", options.root, "--selftest"], {
-      cwd: options.root,
-      encoding: "utf8",
-      stdio: "inherit",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [join(options.root, "scripts/arena_project.ts"), "--source", options.root, "--selftest"],
+      {
+        cwd: options.root,
+        encoding: "utf8",
+        stdio: "inherit",
+      },
+    );
     if (result.status !== 0) return result.status ?? 64;
   }
   console.log("PASS Bun + TypeScript project bootstrap contract");

@@ -16,13 +16,15 @@ import {
   toArgv,
   type LoopContract,
 } from "../../loopctl/mcp_core.ts";
+import { loadSurfaceFromTree } from "../../loopctl/mcp_surface.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
 
-function check(): number {
-  const commit = gitText(ROOT, ["rev-parse", "HEAD"]);
-  const surface = loadSurface(ROOT, commit);
+function check(materializedIndex = false): number {
+  const surface = materializedIndex
+    ? loadSurfaceFromTree(ROOT)
+    : loadSurface(ROOT, gitText(ROOT, ["rev-parse", "HEAD"]));
   if (!surface.tools.length || surface.tools.length >= 20) {
     throw new McpError(`explicit policy generated an invalid tool count: ${surface.tools.length}`);
   }
@@ -38,11 +40,7 @@ function check(): number {
   if (leaked.length) {
     throw new McpError(`dangerous tools exposed: ${leaked.map((tool) => tool.name)}`);
   }
-  if (
-    surface.tools.some((tool) =>
-      Object.keys(publicTool(tool)).some((key) => key.startsWith("_")),
-    )
-  ) {
+  if (surface.tools.some((tool) => Object.keys(publicTool(tool)).some((key) => key.startsWith("_")))) {
     throw new McpError("public tool projection leaked internal fields");
   }
   const runtime = readFileSync(resolve(ROOT, "loopctl/mcp_runtime.ts"), "utf8");
@@ -111,10 +109,7 @@ function selftest(): number {
     const parent = workspace.base;
     try {
       const closure = moduleClosure(tool._policy.module, surface.modules);
-      const result = pruneWorktree(
-        workspace.worktree,
-        closurePrefixes(closure, surface.modules),
-      );
+      const result = pruneWorktree(workspace.worktree, closurePrefixes(closure, surface.modules));
       expect("pruning-keeps-and-removes-files", result.kept > 0 && result.removed > 0);
       if (tool._policy.module !== "notebooklm") {
         expect(
@@ -135,18 +130,14 @@ function selftest(): number {
 function main(argv: string[]): number {
   try {
     if (argv[0] === "--selftest") return selftest();
-    if (argv.length) {
-      throw new McpError("no arguments are accepted except --selftest");
-    }
-    return check();
+    if (!argv.length) return check();
+    if (argv.length === 1 && argv[0] === "--materialized-index") return check(true);
+    throw new McpError("only --selftest or --materialized-index is accepted");
   } catch (error) {
-    console.error(
-      `MCP policy RED: ${String(error instanceof Error ? error.message : error)}`,
-    );
+    console.error(`MCP policy RED: ${String(error instanceof Error ? error.message : error)}`);
     return error instanceof McpError ? 2 : 64;
   }
 }
 
-const invoked =
-  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const invoked = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) process.exit(main(process.argv.slice(2)));

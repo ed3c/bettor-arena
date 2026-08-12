@@ -45,10 +45,7 @@ function rpcError(id: RpcRequest["id"], code: number, message: string): object {
   return { jsonrpc: "2.0", id: id ?? null, error: { code, message } };
 }
 
-export function parseArgs(
-  argv: string[],
-  environment: Record<string, string | undefined> = process.env,
-): ParsedArgs {
+export function parseArgs(argv: string[], environment: Record<string, string | undefined> = process.env): ParsedArgs {
   let ref = environment.LOOPCTL_REF ?? "";
   let httpPort: number | undefined;
   const rest = [...argv];
@@ -78,7 +75,7 @@ export function parseArgs(
   if (!ref) {
     throw new McpError("an immutable --ref or LOOPCTL_REF is required");
   }
-  return { ref, httpPort };
+  return httpPort === undefined ? { ref } : { ref, httpPort };
 }
 
 export function executeTool(
@@ -105,18 +102,10 @@ export function executeTool(
     let argv: string[];
     let preparedCarrier: PreparedInlineCarrier | undefined;
     if (tool._carrier) {
-      preparedCarrier = prepareInlineCarrier(
-        tool,
-        workspace.base,
-        argumentsValue,
-        policy.max_request_bytes,
-      );
+      preparedCarrier = prepareInlineCarrier(tool, workspace.base, argumentsValue, policy.max_request_bytes);
       argv = preparedCarrier.argv;
     } else {
-      if (
-        Buffer.byteLength(canonical(argumentsValue ?? {})) >
-        policy.max_request_bytes
-      ) {
+      if (Buffer.byteLength(canonical(argumentsValue ?? {})) > policy.max_request_bytes) {
         throw new McpError("request exceeds policy limit");
       }
       argv = toArgv(tool, argumentsValue ?? {});
@@ -131,9 +120,7 @@ export function executeTool(
     });
     if (process.error) {
       if ((process.error as NodeJS.ErrnoException).code === "ETIMEDOUT") {
-        throw new McpError(
-          `tool timed out after ${policy.max_seconds} seconds`,
-        );
+        throw new McpError(`tool timed out after ${policy.max_seconds} seconds`);
       }
       throw new McpError(`tool process failed: ${process.error.message}`);
     }
@@ -149,12 +136,7 @@ export function executeTool(
     delete payload.stdout;
     delete payload.stderr;
     if (preparedCarrier) {
-      attachInlineDelivery(
-        payload,
-        tool,
-        preparedCarrier,
-        policy.max_output_bytes,
-      );
+      attachInlineDelivery(payload, tool, preparedCarrier, policy.max_output_bytes);
     }
     payload.mcp_subject = {
       module: policy.module,
@@ -203,26 +185,12 @@ export function handle(
     };
   }
   if (request.method === "tools/call") {
-    const tool = tools.find(
-      (candidate) => candidate.name === request.params?.name,
-    );
+    const tool = tools.find((candidate) => candidate.name === request.params?.name);
     if (!tool) {
-      return rpcError(
-        request.id,
-        -32602,
-        `unknown or externally denied tool ${JSON.stringify(request.params?.name)}`,
-      );
+      return rpcError(request.id, -32602, `unknown or externally denied tool ${JSON.stringify(request.params?.name)}`);
     }
     try {
-      const payload = executeTool(
-        root,
-        commit,
-        tree,
-        tool,
-        modules,
-        policyDigest,
-        request.params?.arguments ?? {},
-      );
+      const payload = executeTool(root, commit, tree, tool, modules, policyDigest, request.params?.arguments ?? {});
       return {
         jsonrpc: "2.0",
         id: request.id ?? null,
@@ -262,27 +230,15 @@ async function serveStdio(
   for await (const line of lines) {
     if (!line.trim()) continue;
     if (Buffer.byteLength(line) > 1024 * 1024) {
-      console.log(
-        JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")),
-      );
+      console.log(JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")));
       continue;
     }
     try {
       const request = JSON.parse(line) as RpcRequest;
-      const response = handle(
-        request,
-        root,
-        commit,
-        tree,
-        tools,
-        modules,
-        policyDigest,
-      );
+      const response = handle(request, root, commit, tree, tools, modules, policyDigest);
       if (response) console.log(JSON.stringify(response));
     } catch (error) {
-      console.log(
-        JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`)),
-      );
+      console.log(JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`)));
     }
   }
   return 0;
@@ -298,10 +254,7 @@ async function serveHttp(
   port: number,
 ): Promise<number> {
   const server = createServer(async (request, response) => {
-    if (
-      request.method !== "POST" ||
-      request.url?.replace(/\/$/, "") !== "/mcp"
-    ) {
+    if (request.method !== "POST" || request.url?.replace(/\/$/, "") !== "/mcp") {
       response.writeHead(404).end();
       return;
     }
@@ -312,26 +265,14 @@ async function serveHttp(
       total += buffer.length;
       if (total > 1024 * 1024) {
         response.writeHead(413, { "content-type": "application/json" });
-        response.end(
-          JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")),
-        );
+        response.end(JSON.stringify(rpcError(null, -32602, "request exceeds 1 MiB")));
         return;
       }
       chunks.push(buffer);
     }
     try {
-      const rpc = JSON.parse(
-        Buffer.concat(chunks).toString("utf8"),
-      ) as RpcRequest;
-      const value = handle(
-        rpc,
-        root,
-        commit,
-        tree,
-        tools,
-        modules,
-        policyDigest,
-      );
+      const rpc = JSON.parse(Buffer.concat(chunks).toString("utf8")) as RpcRequest;
+      const value = handle(rpc, root, commit, tree, tools, modules, policyDigest);
       if (!value) {
         response.writeHead(202).end();
         return;
@@ -343,9 +284,7 @@ async function serveHttp(
       });
       response.end(body);
     } catch (error) {
-      const body = JSON.stringify(
-        rpcError(null, -32700, `parse error: ${String(error)}`),
-      );
+      const body = JSON.stringify(rpcError(null, -32700, `parse error: ${String(error)}`));
       response.writeHead(200, { "content-type": "application/json" });
       response.end(body);
     }
@@ -398,8 +337,8 @@ function selftest(): number {
     [],
     new Map(),
     "c".repeat(64),
-  ) as { error?: unknown };
-  if (!unknown.error) red = 1;
+  ) as { error?: { message?: string } };
+  if (!unknown.error?.message?.includes("externally denied")) red = 1;
   console.log(`SELFTEST ${red ? "RED" : "GREEN"}`);
   return red;
 }
@@ -410,40 +349,20 @@ export async function main(argv: string[]): Promise<number> {
   try {
     parsed = parseArgs(argv);
   } catch (error) {
-    console.error(
-      `mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`,
-    );
+    console.error(`mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`);
     return 64;
   }
   try {
     const ids = resolveRef(ROOT, parsed.ref);
     const surface = loadSurface(ROOT, ids.commit);
     return parsed.httpPort
-      ? serveHttp(
-          ROOT,
-          ids.commit,
-          ids.tree,
-          surface.tools,
-          surface.modules,
-          surface.policyDigest,
-          parsed.httpPort,
-        )
-      : serveStdio(
-          ROOT,
-          ids.commit,
-          ids.tree,
-          surface.tools,
-          surface.modules,
-          surface.policyDigest,
-        );
+      ? serveHttp(ROOT, ids.commit, ids.tree, surface.tools, surface.modules, surface.policyDigest, parsed.httpPort)
+      : serveStdio(ROOT, ids.commit, ids.tree, surface.tools, surface.modules, surface.policyDigest);
   } catch (error) {
-    console.error(
-      `mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`,
-    );
+    console.error(`mcp-server FATAL: ${String(error instanceof Error ? error.message : error)}`);
     return 64;
   }
 }
 
-const invoked =
-  process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const invoked = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) process.exit(await main(process.argv.slice(2)));

@@ -9,6 +9,7 @@
     "runtime": {
       "paths": [
         ".arena",
+        "scripts/arena_index.py",
         "scripts/arena_modules.py",
         "scripts/arena_ownership.py",
         "scripts/arena_lock.py"
@@ -24,13 +25,13 @@
     "secrets": "none"
   },
   "id": "module-catalog",
-  "interface_version": "1.1.0",
+  "interface_version": "1.2.0",
   "loops": [
     {
       "class": "core",
       "external_policy": "denied",
       "id": "module-catalog",
-      "interface_version": "1.1.0",
+      "interface_version": "1.2.0",
       "public_port": "python3 scripts/arena_lock.py"
     }
   ],
@@ -57,6 +58,7 @@
   "requires": [],
   "roots": [
     ".arena",
+    "scripts/arena_index.py",
     "scripts/arena_modules.py",
     "scripts/arena_ownership.py",
     "scripts/arena_lock.py"
