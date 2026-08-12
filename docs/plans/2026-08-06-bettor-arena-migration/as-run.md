@@ -41,13 +41,16 @@
 | #31 | 宣告值無人斷言 | **完成** | ts `90bbe7f` | 兩個字串斷言收口(前綴洩漏),同型缺陷在上一行的 python_spawn_boundary_coverage 一併修;9 個無人讀的 key 全屬生產者輸入,已記進 notes |
 | ts#27b | 收據物化 | **完成** | ts `fc2b196`、arena `517dd59` | PR merge 後線才有交付載體;真跑 sync 炸出 explicit-null 與 merged-PR 兩缺陷,兩份姊妹副本同日一起掃 |
 | #2 | PRD 母票 | **完成** | 本輪 | 驗收條款逐條真跑:5 結構閘+5 selftest+fast_quality+7 tests+工廠三支+kb-ingest 閘,全綠零紅 |
+| #34 | GitHub 修正同步與 runtime-env L5 acceptance | **進行中** | GitHub `27b53bb`；Forgejo `main` 同 SHA | 46 個 tracked TypeScript、6 projections、8 個非外送 host canary 已綠；Gemini live、fresh judge、Human admit、skill-bettor mirror sync 與 consolidated acceptance 尚未完成 |
 ## 2. 跑過什麼(真跑,非宣稱)
 
 - **六波 workflow**(22+ agent):implement→tdd→code-review 逐片,findings 回流成 fix commit 或新票。
 - **通電一輪**(真 packet `poweron-2026-08-06`):trigger 交付→自動發 wiki-update 請求→消化站
   LLM 再生(sonnet)→finder/verifier 官方閘真開火→finalize 重錨 gitHead→receipt 回鏈+凍結入版控。
 - **全閘掃描**(16 道,兩 repo):15 綠、1 具名 NOT-RUN、0 紅。掃描本身也被教會三態(64≠壞掉)。
-- **PR**:#1 已 merge(S1–S11 全切片);#25 待審(post-merge 增量)。
+- **Origins/PR**:Forgejo `main` 與 GitHub `main` 已對齊 `27b53bb`;Forgejo #1/#25/#33 與
+  GitHub #26/#28 已 merge。GitHub issue #25 的本地進度投影為 Forgejo #34,兩者在 L5
+  consolidated acceptance 通過前保持 open。
 
 ## 3. 沒跑什麼(缺席具名,不冒充綠)
 
@@ -61,6 +64,10 @@
 - **CQ／PU 由 record-only 升 blocking**:**觸發條件 2026-08-07 已成立**——第一個 admitted tracer
   (ts-skill-bettor#1,GCR-SLICE-02)走完真實旅程並產出 admission-result@v1。升級本身**尚未做**,
   這條從「尚未發生」改記為「已到期未做」,開票 arena#32 追。兩者在帳上不能長得一樣。
+- **runtime-env L5**(#34):離線 projection 與非 Gemini host canary 已綁 `27b53bb` 通過；
+  `equivalence-live` 仍是 **NOT_EXERCISED**，因 digest-bound request、內部 runtime/security 架構與
+  本機路徑 metadata 外送到 Gemini 需要精確授權。fresh semantic judge、external Human admit、
+  skill-bettor target-side apply 與 consolidated `accept-consumer` 也不得提前讀成 PASS。
 
 ## 4. 過程中的事故與修正(留帳而非美化)
 
@@ -92,5 +99,6 @@
 ## 5. 這條線怎麼繼續
 
 `python3 scripts/gates/check_delivery_receipt.py --line bettor-arena-migration` 取上下文;
-open issues 走 forgejo-delivery-loop 的執行循環(隔離工作面→tdd→code-review→PR `Closes #N`);
+目前 open issues 是 #32 與 #34；走 forgejo-delivery-loop 的執行循環
+(隔離工作面→tdd→code-review→PR `Closes #N`);
 漂移開新 issue 掛同 milestone,不夾帶進進行中的 PR。
