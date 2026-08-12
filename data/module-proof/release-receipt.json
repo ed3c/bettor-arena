@@ -1,1 +1,140 @@
-{"composition":"bettor-arena","composition_lock_sha256":"5db96bd9f54fd81b89fbf91c94d841b67a32a743326dd38c5f4751eb742c3a2e","content_sha256":"99d9bbefe47f54ffc79bb285fa81afebc1fa4ed47d871c803658d7ff1c800bf1","modules":[{"closure_sha256":"022d0eafe0dedb628ae0580525895fa4ffac8c4ef6e0e35dd32a1720ba3fad1f","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"agent-runtime-integration","interface_version":"1.1.0"},{"closure_sha256":"eb448f73fc63529c3cf871d5b570bae5e42224ae28acf9de673fc32493c34fd2","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"arena-core","interface_version":"1.1.0"},{"closure_sha256":"37d626d81749c9e247af432d24008799b3de1f1aaa4c4dbddc117784e1a78b16","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"code-truth-graph","interface_version":"1.0.0"},{"closure_sha256":"0e227d7e9bba0d3a31cc6e79472a1bb272a90219f378a66076dfe32ab4a09100","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"environment-contracts","interface_version":"1.0.0"},{"closure_sha256":"75a354b9934b6bc279d74f62b243e0284799adcb74bd896aa103373686fa31d4","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"loop-runtime","interface_version":"1.5.0"},{"closure_sha256":"a3d419e9c07945272cd82bb1bc5d3957c6d0028b4d7ca4e1b949d03eea7bbecf","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"mcp-adapters","interface_version":"1.0.0"},{"closure_sha256":"8c2bc07f5fbd3f717863803fbb07684d1b48e048994724dab43d25bd0b1cd117","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"module-catalog","interface_version":"1.2.0"},{"closure_sha256":"62b9fe5fc308bdf5d2ad27f1ba420c16dd1cd70cba04f05d5f194ddf460c13a4","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"notebooklm","interface_version":"1.0.0"},{"closure_sha256":"2cd57bfc701b74977159475a5baa7c610c359cfce7167d9b26d131db25fda3b6","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"openwiki","interface_version":"1.0.0"},{"closure_sha256":"daa77086883b5d139b8a03cec63269b18c13e3618f2f59cafde27464760374cb","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"perfect-seed-factory","interface_version":"1.0.0"},{"closure_sha256":"4c23162cddeb1b9ae55b865e345b8d69204706271f9521874e8864138e0c324e","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"project-bootstrapper","interface_version":"1.0.0"},{"closure_sha256":"f8b110e0ed4788d9691bf036366532ee35df5b6c8fec43287fe45656bdc0856a","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"proof-kernel","interface_version":"1.3.0"},{"closure_sha256":"6bd5f01e827f552a127c796716d5ca36d456718a1ac0afe6cd55c34db12720ec","evidence":{"control":"NOT_EXERCISED","mutation":"NOT_EXERCISED","proof":"NOT_EXERCISED"},"id":"technical-equivalence","interface_version":"1.0.0"}],"schema":"bettor-arena/module-release-receipt/v1","status":"NOT_EXERCISED","subject_lock_sha256":"16456cb17b7004e72fd626c59a77671e61a00d5c68fdb9f1d94be5ce895ca483"}
+{
+  "composition": "bettor-arena",
+  "composition_lock_sha256": "5db96bd9f54fd81b89fbf91c94d841b67a32a743326dd38c5f4751eb742c3a2e",
+  "content_sha256": "ed8851aeb801d1e2c2016d16499eb5ba6017555fc88114134ccb1515eaf8b55b",
+  "modules": [
+    {
+      "closure_sha256": "27e242ce8dcb5dca27f3d15328a40a871f44eda8ef853f59b6ec7b59ff1f39fe",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "agent-runtime-integration",
+      "interface_version": "1.1.0"
+    },
+    {
+      "closure_sha256": "905f22b286975148f5413e7bd24e293c041f32d56a2bae1fa971bb44df71bccc",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "arena-core",
+      "interface_version": "1.1.0"
+    },
+    {
+      "closure_sha256": "614dc617b4357a8284e8daa6ae1099d9f4a4b57c9e46f90a476e89d9a7e488a2",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "code-truth-graph",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "134ad42dc055501b01f4fc64d5bc2acd57bae4c893e2b23cfafbca8aef8bec2f",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "environment-contracts",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "a9ea9ee137d453f4359809eeb6bbbcb1b3508cc5691428a71f837a94802cdb70",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "loop-runtime",
+      "interface_version": "1.5.0"
+    },
+    {
+      "closure_sha256": "b0a513f0a528eec8510e6f0219c876d24f5b8b8ffaae2541797489832a9bb6c7",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "mcp-adapters",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "9bee18cb43bc9ea978768975b4fa94384644809d90315c3a8eb4228118dd0a79",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "module-catalog",
+      "interface_version": "1.2.0"
+    },
+    {
+      "closure_sha256": "9286b1133aa7a498e05672f9e7d1b23b1462575f80cf57f94ac63dee7f46f2ca",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "notebooklm",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "bfdf5ab8f48abd47630c62e5af470933ad3970cd9ee98e4246d7f90347f4dec6",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "openwiki",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "d2f4ab48503203b36e14bb036e5bd07d057eae0a3821d033ba4609e3ae226528",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "perfect-seed-factory",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "192d9f929ba73164a71d4bfcae3fbb9868d281bb96927dbe86a7dc64425bd574",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "project-bootstrapper",
+      "interface_version": "1.0.0"
+    },
+    {
+      "closure_sha256": "8bf5db5e35ee730041f5dfce9c7fb9ee8f046e71612800f43448ddfedd5f9280",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "proof-kernel",
+      "interface_version": "1.3.0"
+    },
+    {
+      "closure_sha256": "6a1bcfb55af5ac246663f6143f49481d72ea6540cf8f51c65183e633961731e9",
+      "evidence": {
+        "control": "NOT_EXERCISED",
+        "mutation": "NOT_EXERCISED",
+        "proof": "NOT_EXERCISED"
+      },
+      "id": "technical-equivalence",
+      "interface_version": "1.0.0"
+    }
+  ],
+  "schema": "bettor-arena/module-release-receipt/v1",
+  "status": "NOT_EXERCISED",
+  "subject_lock_sha256": "cf6f12ea7375cbe77c27ddce7225e36c67f8de6175cd802931e4d787da7e8503"
+}
