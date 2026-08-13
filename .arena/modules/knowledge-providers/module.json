@@ -1,0 +1,101 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "knowledge-providers/contracts",
+        "knowledge-providers/providers",
+        "knowledge-providers/registry.json"
+      ],
+      "required": true
+    },
+    "context": {
+      "paths": [
+        "knowledge-providers/CONTEXT.md",
+        "knowledge-providers/README.md",
+        "knowledge-providers/architecture-decision.md",
+        "knowledge-providers/host-state.md",
+        ".arena/contexts/knowledge-providers.json"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "knowledge-providers/scripts/check_knowledge_providers.py",
+        "knowledge-providers/tests"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "knowledge-providers",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "provider",
+      "external_policy": "control-only",
+      "id": "knowledge-providers",
+      "interface_version": "1.0.0",
+      "public_port": "python3 knowledge-providers/scripts/check_knowledge_providers.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "knowledge-providers/scripts/check_knowledge_providers.py",
+      "check",
+      "--root",
+      "knowledge-providers"
+    ],
+    "mutation": [
+      "python3",
+      "knowledge-providers/tests/run_controls.py",
+      "--root",
+      "knowledge-providers"
+    ],
+    "selftest": [
+      "sh",
+      "knowledge-providers/tests/run-all.sh"
+    ],
+    "verify": [
+      "python3",
+      "knowledge-providers/scripts/check_knowledge_providers.py",
+      "check",
+      "--root",
+      "knowledge-providers"
+    ]
+  },
+  "provides": [
+    "knowledge-provider.contracts/v1",
+    "knowledge-provider.candidate-receipt/v1",
+    "knowledge-provider.memory-proposal/v1"
+  ],
+  "requires": [
+    "arena.module-catalog/v1",
+    "arena.passive-context/v1"
+  ],
+  "roots": [
+    "knowledge-providers"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": [
+      "repo-agent-native"
+    ]
+  },
+  "summary": "Provider-neutral, subject-bound contracts and deterministic controls for optional symbolic, semantic, graph and memory projections that cannot become repository or gate authority."
+}

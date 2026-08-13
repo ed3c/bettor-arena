@@ -1,0 +1,17 @@
+{
+  "schema_version": "knowledge-provider-query-receipt/v1",
+  "request_id": "fixture-symbol-lookup-001",
+  "subject": {"repository": "ed3c/bettor-arena", "commit": "0123456789abcdef0123456789abcdef01234567", "tree": "89abcdef0123456789abcdef0123456789abcdef"},
+  "provider": {"id": "serena", "version": "source@5107b11fb3c", "adapter_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "index": {"subject_commit": "0123456789abcdef0123456789abcdef01234567", "subject_tree": "89abcdef0123456789abcdef0123456789abcdef", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "staleness": "CURRENT"},
+  "capability": "symbol.lookup",
+  "query_digest": "sha256:a59f11d805490af72efbc63c1175c6a4a08517b318a98d888e14acd499521205",
+  "status": "CANDIDATE",
+  "evidence_mode": "synthetic-fixture",
+  "results": [{"path": "src/adapter.ts", "line_start": 10, "line_end": 28, "claim": "Candidate symbol location.", "provenance": "synthetic provider fixture"}],
+  "result_count": 1,
+  "authority": {"source_truth": false, "state_transition": false, "gate_verdict": false, "promotion": false, "human_admit": false},
+  "source_readback_required": true,
+  "canary_artifacts": [],
+  "generated_at": "2026-08-13T00:00:10Z"
+}

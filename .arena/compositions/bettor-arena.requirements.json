@@ -27,6 +27,14 @@
     },
     {
       "components": [
+        "context",
+        "contracts",
+        "proof"
+      ],
+      "id": "knowledge-providers"
+    },
+    {
+      "components": [
         "browser",
         "origins",
         "proof"

@@ -26,6 +26,7 @@ The manifest owns interface and closure facts. The README explains intent, publi
 | [`openwiki`](openwiki/) | Portable OpenWiki update and projection |
 | [`notebooklm`](notebooklm/) | Authenticated NotebookLM harvest loop |
 | [`code-truth-graph`](code-truth-graph/) | Closed-packet code truth graph builder |
+| [`knowledge-providers`](knowledge-providers/) | Provider-neutral symbol, semantic, graph and memory candidate contracts |
 | [`technical-equivalence`](technical-equivalence/) | Technical claim-to-implementation equivalence loop |
 
 Validation:

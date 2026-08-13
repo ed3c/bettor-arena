@@ -1,0 +1,17 @@
+{
+  "schema_version": "knowledge-provider-manifest/v1",
+  "id": "serena",
+  "family": "symbol",
+  "upstream_repository": "oraios/serena",
+  "observed_commit": "5107b11fb3cace69fcb4f35e5c74b5fb55d6fa4c",
+  "version": "source@5107b11fb3c",
+  "admission_state": "CANDIDATE",
+  "runtime_state": "NOT_EXERCISED",
+  "capabilities": ["symbol.lookup", "symbol.references", "symbol.rename-plan"],
+  "effect_mode": "READ_ONLY",
+  "adapter": {"state": "NOT_ADMITTED", "digest": null},
+  "index": {"state": "NOT_EXERCISED", "digest": null},
+  "authority": {"source_truth": false, "state_transition": false, "gate_verdict": false, "promotion": false, "human_admit": false, "code_mutation": false, "memory_mutation": false},
+  "fallback": "Use exact search, direct source read, compiler, and native language-server diagnostics.",
+  "canary_artifacts": []
+}

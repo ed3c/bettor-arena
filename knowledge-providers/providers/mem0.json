@@ -1,0 +1,17 @@
+{
+  "schema_version": "knowledge-provider-manifest/v1",
+  "id": "mem0",
+  "family": "memory",
+  "upstream_repository": "mem0ai/mem0",
+  "observed_commit": "14c431735b1e8b94027949497a53a0022c214de7",
+  "version": "source@14c431735b1e",
+  "admission_state": "CANDIDATE",
+  "runtime_state": "NOT_EXERCISED",
+  "capabilities": ["memory.delete-proposal", "memory.recall", "memory.write-proposal"],
+  "effect_mode": "PROPOSAL_ONLY",
+  "adapter": {"state": "NOT_ADMITTED", "digest": null},
+  "index": {"state": "NOT_EXERCISED", "digest": null},
+  "authority": {"source_truth": false, "state_transition": false, "gate_verdict": false, "promotion": false, "human_admit": false, "code_mutation": false, "memory_mutation": false},
+  "fallback": "Use current CONTEXT, ADRs, Git history, issues, source, tests, receipts, and LoopX events.",
+  "canary_artifacts": []
+}
