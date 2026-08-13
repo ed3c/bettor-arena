@@ -13,5 +13,21 @@
     "relevant_ids": ["provider-registry"],
     "must_remain_unknown": []
   },
+  "hard_gates": {
+    "source_readback_required": true,
+    "fresh_index_required": true,
+    "candidate_only": true,
+    "no_authority_escalation": true,
+    "cleanup_required": true,
+    "min_verified_precision": 1.0,
+    "min_verified_recall": 1.0
+  },
+  "budgets": {
+    "max_results": 10,
+    "max_context_bytes": 32768,
+    "max_latency_ms": 10000,
+    "max_tool_calls": 8
+  },
+  "eligible_recommendations": ["SECONDARY_CANDIDATE", "EXPERIMENTAL"],
   "fixture_subject": true
 }
