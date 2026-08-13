@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-query-receipt.v1.schema.json",
+  "title": "Knowledge Provider Query Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "provider",
+    "capability",
+    "query_digest",
+    "execution",
+    "index",
+    "results",
+    "authority",
+    "cleanup"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-provider-query-receipt/v1"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "object"
+    },
+    "provider": {
+      "type": "object"
+    },
+    "capability": {
+      "type": "string"
+    },
+    "query_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executed",
+        "state",
+        "fixture"
+      ],
+      "properties": {
+        "executed": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ABSENT",
+            "NOT_EXERCISED",
+            "STALE_SUBJECT",
+            "SKIPPED_BY_POLICY"
+          ]
+        },
+        "fixture": {
+          "type": "boolean"
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "state",
+        "repository",
+        "commit",
+        "tree",
+        "digest"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "FRESH",
+            "STALE",
+            "ABSENT",
+            "NOT_REQUIRED",
+            "UNKNOWN"
+          ]
+        },
+        "repository": {
+          "type": "string"
+        },
+        "commit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tree": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "claim",
+          "verification",
+          "source_refs"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "claim": {
+            "type": "string"
+          },
+          "verification": {
+            "enum": [
+              "CANDIDATE",
+              "SOURCE_READBACK_REQUIRED",
+              "UNRESOLVED"
+            ]
+          },
+          "source_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_only",
+        "advanced_state",
+        "waived_gate",
+        "marked_tested",
+        "human_admit"
+      ],
+      "properties": {
+        "candidate_only": {
+          "const": true
+        },
+        "advanced_state": {
+          "const": false
+        },
+        "waived_gate": {
+          "const": false
+        },
+        "marked_tested": {
+          "const": false
+        },
+        "human_admit": {
+          "const": false
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "residue"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_RUN"
+          ]
+        },
+        "residue": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -29,6 +29,7 @@ When prose and executable bytes disagree, the executable contract and its curren
 - [`plans/README.md`](plans/README.md) — dated execution plans and as-run ledgers.
 - [`agent-runtime-integration.md`](agent-runtime-integration.md) — Skills/runtime-env/host adapters, including the `repo-agent-native` route.
 - [`runtime-env-integration.md`](runtime-env-integration.md) — secret-free runtime projection and consumer verification.
+- [`knowledge-providers/README.md`](knowledge-providers/README.md) — subject-bound Serena/GrepAI/Code-Graph-RAG/Mem0 capability contracts and memory proposal boundary.
 - [`../.skill-bindings/repo-agent-native/README.md`](../.skill-bindings/repo-agent-native/README.md) — source-anchored repository-analysis consumer binding and provider boundaries.
 - [`../.arena/modules/README.md`](../.arena/modules/README.md) — current module catalog for humans.
 - [`../README.md`](../README.md) — repository entrypoint and quick verification.
@@ -45,6 +46,7 @@ README.md
 → applicable docs/adr/
 → nearest directory README.md
 → .skill-bindings/repo-agent-native/README.md
+→ docs/knowledge-providers/README.md when a semantic/symbol/graph/memory capability is used
 → projected shared Skill and matching modules
 → machine contract/source/tests/receipts
 → exact issue and PR

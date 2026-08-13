@@ -1,0 +1,55 @@
+{
+  "schema_version": "knowledge-provider-manifest/v1",
+  "provider_id": "grepai",
+  "source": {
+    "repository": "yoanbernabeu/grepai",
+    "commit": "c4f294b38552dc4dad253d6a8118ba2799a2d61d",
+    "license": "MIT"
+  },
+  "admission": {
+    "state": "CANDIDATE",
+    "runtime_state": "NOT_EXERCISED",
+    "live_claim": false
+  },
+  "capabilities": [
+    "search.semantic",
+    "callgraph.trace"
+  ],
+  "adapter": {
+    "transport": "mcp",
+    "identity_state": "UNPINNED",
+    "digest": null,
+    "read_only": true,
+    "allowed_operations": [
+      "search",
+      "trace_callers",
+      "trace_callees",
+      "status"
+    ],
+    "denied_operations": [
+      "watch",
+      "init",
+      "write",
+      "delete"
+    ]
+  },
+  "index": {
+    "required": true,
+    "subject_bound": true,
+    "rebuildable": true,
+    "freshness_required": true
+  },
+  "authority": {
+    "result_class": "CANDIDATE_ONLY",
+    "may_write_repository": false,
+    "may_write_memory": false,
+    "may_advance_state": false,
+    "may_waive_gate": false,
+    "may_mark_tested": false,
+    "may_human_admit": false
+  },
+  "limits": {
+    "max_results": 100,
+    "max_bytes": 262144
+  }
+}
