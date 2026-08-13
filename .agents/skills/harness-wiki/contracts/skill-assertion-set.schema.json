@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/skill-assertion-set.v1.schema.json",
+  "title": "Skill Assertion Set v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "subject_policy", "assertions"],
+  "properties": {
+    "schema_version": {"const": "skill-assertion-set/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
+    "subject_policy": {"type": "string", "enum": ["exact-request-subject"]},
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "severity", "expected"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
+          "type": {
+            "type": "string",
+            "enum": ["exit_code", "stdout_json_schema", "stderr_pattern", "file_exists", "file_hash", "file_content", "git_diff_allowlist", "ast_query", "lsp_diagnostics", "test_report", "artifact_digest", "subject_match"]
+          },
+          "severity": {"type": "string", "enum": ["hard", "advisory"]},
+          "expected": {"type": "object"},
+          "evidence_required": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "coverage": {"type": "object"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "request": {
+    "schema_version": "skill-execution-request/v1",
+    "request_id": "req-portable-contract-good",
+    "subject": {
+      "repository": "ed3c/bettor-arena",
+      "commit": "1111111111111111111111111111111111111111",
+      "tree": "2222222222222222222222222222222222222222",
+      "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "skill": {
+      "name": "harness-wiki",
+      "canonical_source": "ed3c/bettor-arena/.agents/skills/harness-wiki",
+      "content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host_projection": "loopctl"
+    },
+    "command": {
+      "executable": "python3",
+      "argv": ["scripts/check.py", "--format", "json"],
+      "cwd": ".",
+      "stdin": {"mode": "closed"},
+      "env_allowlist": ["CI"],
+      "timeout_ms": 30000
+    },
+    "sandbox": {
+      "network": "deny",
+      "writable_paths": ["artifacts"],
+      "read_only_paths": ["src", "tests"],
+      "max_output_bytes": 1048576,
+      "process_group": true,
+      "cleanup": "required"
+    },
+    "assertion_set": {
+      "id": "portable-contract-good",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "expected_artifacts": ["artifacts/result.json"]
+  },
+  "assertions": {
+    "schema_version": "skill-assertion-set/v1",
+    "id": "portable-contract-good",
+    "subject_policy": "exact-request-subject",
+    "assertions": [
+      {
+        "id": "subject-exact",
+        "type": "subject_match",
+        "severity": "hard",
+        "expected": {"request": true},
+        "evidence_required": ["subject"]
+      },
+      {
+        "id": "exit-zero",
+        "type": "exit_code",
+        "severity": "hard",
+        "expected": {"equals": 0},
+        "evidence_required": ["exit_code"]
+      },
+      {
+        "id": "result-exists",
+        "type": "file_exists",
+        "severity": "hard",
+        "expected": {"path": "artifacts/result.json", "kind": "file"},
+        "evidence_required": ["artifact_digest"]
+      }
+    ]
+  },
+  "receipt": {
+    "schema_version": "skill-execution-receipt/v1",
+    "request_id": "req-portable-contract-good",
+    "subject": {
+      "repository": "ed3c/bettor-arena",
+      "commit": "1111111111111111111111111111111111111111",
+      "tree": "2222222222222222222222222222222222222222",
+      "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "skill": {
+      "name": "harness-wiki",
+      "canonical_source": "ed3c/bettor-arena/.agents/skills/harness-wiki",
+      "content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host_projection": "loopctl"
+    },
+    "runner": {
+      "id": "loopctl-local",
+      "version": "1",
+      "command_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "executed": true,
+    "status": "PASS",
+    "exit_code": 0,
+    "timing": {
+      "started_at": "2026-08-13T10:00:00Z",
+      "ended_at": "2026-08-13T10:00:01Z",
+      "duration_ms": 1000
+    },
+    "artifacts": {
+      "stdout": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "stderr": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "git_diff": null,
+      "test_report": null
+    },
+    "assertions": [
+      {"id": "subject-exact", "severity": "hard", "status": "PASS", "evidence": ["subject"]},
+      {"id": "exit-zero", "severity": "hard", "status": "PASS", "evidence": ["exit_code:0"]},
+      {"id": "result-exists", "severity": "hard", "status": "PASS", "evidence": ["sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"]}
+    ],
+    "cleanup": {"status": "PASS", "residue": []},
+    "human_admit_required": true
+  }
+}
