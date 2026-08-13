@@ -1,8 +1,9 @@
 # Agent runtime integration — concrete contract
 
 這是 Claude Code 與 Codex CLI 在 bettor-arena 消費目前已落地 Skills/runtime closure 的低壓縮入口。
-新 chat 從 `AGENTS.md → ARCHITECTURE.md → modular-integration-requirements.md →
-modular-integration-status.md → 本檔` 到達；`AGENTS.md` 在 chat 啟動時載入，改檔後要開新 chat。
+新 chat 從 `AGENTS.md → ARCHITECTURE.md → CONTEXT.md → docs/README.md →
+docs/agents/domain.md → modular-integration-requirements.md → modular-integration-status.md → 本檔`
+到達；`AGENTS.md` 在 chat 啟動時載入，Skill discovery 與 passive context 也具 session scope，改檔後要開新 chat。
 
 完整 Module Platform 的 target contract 在
 `docs/architecture/modular-integration-requirements.md`；目前已落地與尚未實作的層級以
@@ -12,7 +13,7 @@ skills-shared/runtime-env module-set 的可執行契約，不能代理後續 pha
 ## Architecture
 
 ```text
-skills-shared canonical ──> shared requirements ──> shared binding ─┐
+skills-shared canonical ──> shared requirements ─> shared binding ─┐
                                                                    ├─> module-set ─> Claude/Codex adapters ─> live receipt
 runtime-env catalog ──────> runtime requirements ─> runtime binding ┘
                                                         └────────────> workload + policies
@@ -31,6 +32,51 @@ runtime-env 只同步 secret-free projection，整個上游 checkout 與 `.env` 
 | aggregate | `.agents/module-set.json` | `python3 scripts/agent_runtime.py check` |
 | public CLI | `loopctl/contract.json` | `sh loopctl/loopctl.sh agent-runtime <run|prove|test>` |
 | evidence | proof traversal | `proof_workflow/prove_agent_runtime.sh` + `control_agent_runtime_entry.sh` |
+| repository analysis | `.skill-bindings/repo-agent-native/binding.json` | shared `repo-agent-native` projection + consumer binding gate |
+| domain policy | `CONTEXT.md`, optional `CONTEXT-MAP.md`, applicable ADRs | `docs/agents/domain.md` + nearest README |
+
+## Repository-analysis Skill route
+
+`repo-agent-native` is the portable procedure for source-anchored brownfield understanding. Its shared body lives once in
+`skills-shared`; Bettor owns only the consumer binding and provider observations.
+
+```text
+README.md
+→ AGENTS.md or CLAUDE.md
+→ ARCHITECTURE.md
+→ CONTEXT.md or CONTEXT-MAP.md
+→ docs/README.md
+→ docs/agents/domain.md
+→ applicable docs/adr/
+→ nearest directory README.md
+→ .skill-bindings/repo-agent-native/README.md
+→ projected shared repo-agent-native README/SKILL.md
+→ matching capability modules only
+→ manifest/public contract/source/tests/receipts
+→ exact issue and PR
+```
+
+Current provider roles remain distinct:
+
+| Capability | Current Bettor state | Evidence ceiling before readback |
+|---|---|---|
+| exact source | built-in `git`/`rg`/direct read | `A` only after current source body read |
+| semantic candidates | GrepAI declared, host executable unpinned | `B+` candidate |
+| bounded Python context | repo-context-pack declared | `B+`; cannot prove absence |
+| symbols/references/diagnostics | Serena declared at an exact Git pin | `A-` only after source/workspace readback |
+| cross-language graph | Code-Graph-RAG candidate, not configured | `B+` candidate after future admission |
+| project/session memory | Mem0 candidate, not configured | advisory hint, never repository authority |
+
+Configuration presence is not provider health. Index freshness, LSP initialization, graph coverage, memory provenance, Claude/Codex output quality, and physical current-versus-candidate A/B remain `NOT_EXERCISED` until current subject-bound receipts exist.
+
+The binding gate is:
+
+```bash
+python3 scripts/gates/check_repo_agent_native_binding.py --selftest
+python3 scripts/gates/check_repo_agent_native_binding.py
+```
+
+It verifies symlink projection rather than a shadow copy, document-route closure, provider config agreement, exact Serena pin, candidate-provider absence, evidence ceilings, fallbacks, and planted failures.
 
 ## Verdict levels
 
@@ -52,6 +98,8 @@ runtime-env 只同步 secret-free projection，整個上游 checkout 與 `.env` 
 6. 有意花費兩個 canary turn 時跑 `agent-runtime run --live`；最後 strict `agent-runtime run`。
 7. 產 proof/control receipt、stage 全 closure、過 pre-commit，才提交 bettor。
 
+For `repo-agent-native`, also update the exact shared candidate commit in its consumer binding, rerun the binding selftest, open fresh Claude/Codex sessions, and execute the four-condition physical A/B contract before claiming output superiority.
+
 Rollback 不手改 binding：checkout 上游舊 clean commit，用同一 requirements 重 sync。private publication
 是 delivery policy，不是 module contract；本線不 push，也不把 remote visibility 改成 public。
 
@@ -62,4 +110,7 @@ Rollback 不手改 binding：checkout 上游舊 clean commit，用同一 require
 - 多 repo promotion 尚無原子 transaction；任一 repo merge 一半時 strict gate 應紅，不能自動回滾別 repo。
 - requirements 刪除 module 需要 migration/deprecation review；digest freshness 本身不知道 consumer 是否仍在用舊能力。
 - live receipt 有時效與費用；同 HEAD receipt 證一次抵達，不證外部 provider 永久可用。
+- GrepAI 目前從 host `PATH` 啟動；未有 executable/package pin 前不得稱可重現 provider identity。
+- Code-Graph-RAG 的標準 MCP 面含 write/delete/wipe/index 操作；未有 read-only wrapper 與 store isolation 前不得啟用。
+- Mem0 需要 LLM/embedding/storage、retention、provenance、redaction、expiry、delete/export 與 conflict policy；未有契約前不得自動寫回。
 - secret rotation、host service health、Forgejo/CDP availability 各有 owner；它們不能被 module binding 的綠代理。
