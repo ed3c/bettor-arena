@@ -29,14 +29,16 @@ Do not create a root `CONTEXT-MAP.md` merely to satisfy a template. Add one only
 | execution receipt | Subject-bound evidence of what actually ran, what the OS returned, which assertions passed, and what residue remains | `contracts/skill-execution-receipt.schema.json` |
 | advisory assertion | A model or reviewer observation that may guide work but cannot advance a hard state transition | assertion severity `advisory` |
 | hard assertion | A deterministic or independently observed condition required for `PASS` | assertion severity `hard` |
-| provider candidate | Search, symbol, graph, or memory output that nominates evidence but is not repository truth until read back against current authority | provider topology module |
+| provider candidate | Search, symbol, graph, or memory output that nominates evidence but is not repository truth until read back against current authority | `docs/knowledge-providers/` contracts |
+| memory proposal | Evidence-bound add/supersede/delete request that cannot mutate canonical memory without Human Admit | `docs/knowledge-providers/contracts/memory-proposal.schema.json` |
 
 ## Task modules
 
 - Host and file-format compatibility: [`modules/host-skill-compatibility.md`](modules/host-skill-compatibility.md)
 - Executable Skill and assertion boundary: [`modules/executable-skill-contract.md`](modules/executable-skill-contract.md)
 - Host-owned portable runner and named isolation limits: [`modules/portable-runner.md`](modules/portable-runner.md)
-- Serena / GrepAI / graph / memory ownership: [`modules/knowledge-provider-topology.md`](modules/knowledge-provider-topology.md)
+- Provider topology overview: [`modules/knowledge-provider-topology.md`](modules/knowledge-provider-topology.md)
+- Executable provider contracts and registry: [`../../../docs/knowledge-providers/README.md`](../../../docs/knowledge-providers/README.md)
 
 ## Non-negotiable authority order
 

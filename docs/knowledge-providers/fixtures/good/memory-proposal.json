@@ -1,0 +1,33 @@
+{
+  "schema_version": "knowledge-memory-proposal/v1",
+  "proposal_id": "fixture-memory-proposal",
+  "operation": "add",
+  "scope": {
+    "user": null,
+    "project": "ed3c/bettor-arena",
+    "session": "fixture"
+  },
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "1111111111111111111111111111111111111111",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "memory_class": "rejected-approach",
+  "content": "A direct provider call bypassed the public capability port and was rejected.",
+  "provenance": [
+    "receipt:fixture-serena-query",
+    "source:AGENTS.md"
+  ],
+  "retention": {
+    "policy": "session",
+    "expires_at": null,
+    "redaction_class": "internal"
+  },
+  "conflicts": [],
+  "authority": {
+    "proposal_only": true,
+    "auto_apply": false,
+    "overrides_current_authority": false,
+    "human_admit_required": true
+  }
+}

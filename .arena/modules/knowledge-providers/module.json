@@ -1,0 +1,93 @@
+{
+  "schema": "bettor-arena/module/v1",
+  "id": "knowledge-providers",
+  "interface_version": "1.0.0",
+  "summary": "Subject-bound, read-only provider query contracts and proposal-only project memory governance for Serena, GrepAI, Code-Graph-RAG, Mem0, and future implementations.",
+  "roots": [
+    "docs/knowledge-providers",
+    "scripts/check_knowledge_providers.py",
+    "tests/knowledge-providers",
+    "tests/test_knowledge_providers.py"
+  ],
+  "components": {
+    "contracts": {
+      "required": true,
+      "paths": [
+        "docs/knowledge-providers/contracts"
+      ]
+    },
+    "registry": {
+      "required": true,
+      "paths": [
+        "docs/knowledge-providers/registry.json",
+        "docs/knowledge-providers/providers"
+      ]
+    },
+    "proof": {
+      "required": true,
+      "paths": [
+        "scripts/check_knowledge_providers.py",
+        "tests/knowledge-providers",
+        "tests/test_knowledge_providers.py"
+      ]
+    }
+  },
+  "provides": [
+    "knowledge-provider.query/v1",
+    "knowledge-provider.memory-proposal/v1"
+  ],
+  "requires": [
+    "arena.module-catalog/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "conflicts": [],
+  "skills": {
+    "required": [
+      "repo-agent-native"
+    ],
+    "optional": [],
+    "repo_owned": []
+  },
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "loops": [
+    {
+      "id": "knowledge-providers",
+      "class": "provider",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/check_knowledge_providers.py",
+      "external_policy": "denied"
+    }
+  ],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "proof": {
+    "verify": [
+      "python3",
+      "scripts/check_knowledge_providers.py"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/check_knowledge_providers.py",
+      "--selftest"
+    ],
+    "control": [
+      "sh",
+      "tests/knowledge-providers/run-all.sh"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/check_knowledge_providers.py",
+      "--selftest"
+    ]
+  }
+}

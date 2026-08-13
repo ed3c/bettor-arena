@@ -35,6 +35,14 @@
     },
     {
       "components": [
+        "contracts",
+        "proof",
+        "registry"
+      ],
+      "id": "knowledge-providers"
+    },
+    {
+      "components": [
         "context",
         "mcp",
         "proof",

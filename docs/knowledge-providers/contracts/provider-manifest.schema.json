@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-manifest.v1.schema.json",
+  "title": "Knowledge Provider Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provider_id",
+    "source",
+    "admission",
+    "capabilities",
+    "adapter",
+    "index",
+    "authority",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-provider-manifest/v1"
+    },
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "license"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "runtime_state",
+        "live_claim"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "CANDIDATE",
+            "CONFIGURED",
+            "ADMITTED",
+            "REJECTED"
+          ]
+        },
+        "runtime_state": {
+          "enum": [
+            "NOT_CONFIGURED",
+            "NOT_EXERCISED",
+            "PASS",
+            "FAIL",
+            "ABSENT"
+          ]
+        },
+        "live_claim": {
+          "type": "boolean"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transport",
+        "identity_state",
+        "digest",
+        "read_only"
+      ],
+      "properties": {
+        "transport": {
+          "enum": [
+            "mcp",
+            "cli",
+            "library",
+            "none"
+          ]
+        },
+        "identity_state": {
+          "enum": [
+            "PINNED",
+            "UNPINNED",
+            "NOT_CONFIGURED"
+          ]
+        },
+        "digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "read_only": {
+          "type": "boolean"
+        },
+        "allowed_operations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "denied_operations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "subject_bound",
+        "rebuildable",
+        "freshness_required"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "subject_bound": {
+          "type": "boolean"
+        },
+        "rebuildable": {
+          "type": "boolean"
+        },
+        "freshness_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_class",
+        "may_write_repository",
+        "may_write_memory",
+        "may_advance_state",
+        "may_waive_gate",
+        "may_mark_tested",
+        "may_human_admit"
+      ],
+      "properties": {
+        "result_class": {
+          "enum": [
+            "CANDIDATE_ONLY",
+            "MEMORY_PROPOSAL_ONLY"
+          ]
+        },
+        "may_write_repository": {
+          "const": false
+        },
+        "may_write_memory": {
+          "const": false
+        },
+        "may_advance_state": {
+          "const": false
+        },
+        "may_waive_gate": {
+          "const": false
+        },
+        "may_mark_tested": {
+          "const": false
+        },
+        "may_human_admit": {
+          "const": false
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_results",
+        "max_bytes"
+      ],
+      "properties": {
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    }
+  }
+}

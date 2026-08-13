@@ -21,6 +21,7 @@ The manifest owns interface and closure facts. The README explains intent, publi
 | [`project-bootstrapper`](project-bootstrapper/) | Transactional external-project plan/apply/verify/rollback |
 | [`environment-contracts`](environment-contracts/) | GitHub/Forgejo logical release and Browser Contract v2 |
 | [`agent-runtime-integration`](agent-runtime-integration/) | Skills/runtime-env bindings and host adapter verdicts |
+| [`knowledge-providers`](knowledge-providers/) | Subject-bound read-only provider queries and proposal-only memory governance |
 | [`mcp-adapters`](mcp-adapters/) | Higher-level MCP adapters and production migration |
 | [`perfect-seed-factory`](perfect-seed-factory/) | Typed seed-repository micro loop |
 | [`openwiki`](openwiki/) | Portable OpenWiki update and projection |
