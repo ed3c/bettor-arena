@@ -32,6 +32,21 @@ jobs:
 
       - name: Apply and remove one-shot knowledge-provider migration
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/migrations/apply_knowledge_provider_contract.py")
+          text = path.read_text(encoding="utf-8")
+          old = '    compressed = base64.b64decode(BUNDLE.encode("ascii"), validate=True)'
+          new = (
+              '    payload = "".join(BUNDLE.split())\n'
+              '    payload += "=" * (-len(payload) % 4)\n'
+              '    compressed = base64.b64decode(payload.encode("ascii"), validate=True)'
+          )
+          if old not in text:
+              raise SystemExit("migration decoder marker missing")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
           python3 scripts/migrations/apply_knowledge_provider_contract.py
           git rm -f scripts/migrations/apply_knowledge_provider_contract.py
 
