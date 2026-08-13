@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-memory-proposal.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "proposal_id", "provider_id", "operation", "subject", "scope", "memory_class", "content_digest", "evidence_refs", "retention", "effects", "status", "requires_human_admit"],
+  "properties": {
+    "schema_version": {"const": "knowledge-provider-memory-proposal/v1"},
+    "proposal_id": {"type": "string"},
+    "provider_id": {"const": "mem0"},
+    "operation": {"enum": ["memory.write-proposal", "memory.delete-proposal"]},
+    "subject": {"type": "object"},
+    "scope": {"type": "object"},
+    "memory_class": {"type": "string"},
+    "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_refs": {"type": "array", "minItems": 1},
+    "retention": {"type": "object"},
+    "effects": {"type": "object"},
+    "status": {"const": "PROPOSED"},
+    "requires_human_admit": {"const": true}
+  }
+}

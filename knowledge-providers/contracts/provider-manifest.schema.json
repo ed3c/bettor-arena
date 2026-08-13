@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-manifest.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "family", "upstream_repository", "observed_commit", "version", "admission_state", "runtime_state", "capabilities", "effect_mode", "adapter", "index", "authority", "fallback", "canary_artifacts"],
+  "properties": {
+    "schema_version": {"const": "knowledge-provider-manifest/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "family": {"enum": ["symbol", "semantic", "graph", "memory"]},
+    "upstream_repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "observed_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "version": {"type": "string"},
+    "admission_state": {"enum": ["CANDIDATE", "ADMITTED", "REJECTED"]},
+    "runtime_state": {"enum": ["NOT_EXERCISED", "PASS", "FAIL", "ABSENT"]},
+    "capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "effect_mode": {"enum": ["READ_ONLY", "PROPOSAL_ONLY"]},
+    "adapter": {"type": "object"},
+    "index": {"type": "object"},
+    "authority": {"type": "object"},
+    "fallback": {"type": "string", "minLength": 1},
+    "canary_artifacts": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "knowledge-provider-registry/v1",
+  "providers": [
+    "providers/code-graph-rag.json",
+    "providers/grepai.json",
+    "providers/mem0.json",
+    "providers/serena.json"
+  ],
+  "authority_order": [
+    "current-source-manifest-test-runtime-receipt-adr-loopx",
+    "provider-candidate",
+    "model-prose"
+  ],
+  "live_claim_requirements": [
+    "immutable-provider-source",
+    "immutable-adapter-digest",
+    "exact-index-subject-and-digest",
+    "current-canary-artifacts",
+    "cleanup-and-staleness-receipt"
+  ]
+}

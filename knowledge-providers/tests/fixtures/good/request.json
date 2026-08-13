@@ -1,0 +1,11 @@
+{
+  "schema_version": "knowledge-provider-query-request/v1",
+  "request_id": "fixture-symbol-lookup-001",
+  "subject": {"repository": "ed3c/bettor-arena", "commit": "0123456789abcdef0123456789abcdef01234567", "tree": "89abcdef0123456789abcdef0123456789abcdef"},
+  "provider": {"id": "serena", "version": "source@5107b11fb3c", "adapter_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "index": {"subject_commit": "0123456789abcdef0123456789abcdef01234567", "subject_tree": "89abcdef0123456789abcdef0123456789abcdef", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+  "capability": "symbol.lookup",
+  "effect_mode": "READ_ONLY",
+  "query": {"parameters": {"symbol": "Adapter.run"}, "max_results": 5},
+  "query_digest": "sha256:a59f11d805490af72efbc63c1175c6a4a08517b318a98d888e14acd499521205"
+}
