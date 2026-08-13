@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/knowledge_providers/contracts/memory-proposal.schema.json",
+  "title": "Episodic Memory Proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "subject",
+    "provider",
+    "action",
+    "memory_key",
+    "claim_kind",
+    "content",
+    "evidence_refs",
+    "scope",
+    "status",
+    "canonical_write_performed",
+    "requires_human_admit"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "episodic-memory-proposal/v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_ref",
+        "adapter_digest"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ADD",
+        "UPDATE",
+        "DELETE"
+      ]
+    },
+    "memory_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_kind": {
+      "type": "string",
+      "enum": [
+        "OBSERVATION",
+        "INFERENCE",
+        "HYPOTHESIS",
+        "NORMATIVE"
+      ]
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "paths",
+        "invalidation_conditions"
+      ],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "invalidation_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "status": {
+      "const": "PROPOSED"
+    },
+    "canonical_write_performed": {
+      "const": false
+    },
+    "requires_human_admit": {
+      "const": true
+    }
+  }
+}
