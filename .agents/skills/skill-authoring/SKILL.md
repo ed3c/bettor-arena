@@ -2,40 +2,83 @@
 name: skill-authoring
 description: |
   skill-bettor 的 skill 設計規範(家規層)——新建/重構/審查本 repo 任一 skill 前先讀。
-  涵蓋:兩類 skill 的分界(families/ 領域資產 vs .claude/skills/ 工程編排)、Claude Code 格式
-  checklist、slim+modules 拆分、語意真相/低壓縮產出契約、semantic loss ledger、legacy snapshot、canonical terms、canonical 指針頭注慣例、固化範例指針。
+  涵蓋 portable Agent Skills core、Codex/Claude host projection、兩類 skill 分界、typed execution、
+  hard/advisory assertions、slim+modules、semantic loss ledger、canonical terms 與行為 A/B。
   觸發詞:新建 skill、skill 規範、skill 設計、frontmatter、固化範例、skill-authoring。
-  NOT for:判「該不該新建」(先走 fold-in 不變量 1);通用 Claude Code 格式細節(內建 write-a-skill)。
+  NOT for:判「該不該新建」(先走 fold-in 不變量 1);執行某支既有 skill 的業務程序。
 ---
 
 # Skill: skill-authoring — skill-bettor 的 skill 設計規範(家規層)
 
-> **Role**:內建 `write-a-skill` 管 Claude Code 平台通用格式;本檔只管
-> **skill-bettor 家規**—— 兩類 skill 的分界與各自規範、本 repo 的慣例。**本檔自己
-> 也用此規範寫(dogfood):slim+全形冒號+ 指針不抄**。「該不該新建」的判準不在本檔——先走
+> **Role**:官方共同面與 host 差異由
+> [official-agent-skills-profile](modules/official-agent-skills-profile.md) 固定；本檔負責
+> **skill-bettor 家規**、兩類 skill 分界與 acceptance。**本檔自己也用此規範寫
+> (dogfood):portable core + slim + 指針不抄**。「該不該新建」的判準不在本檔——先走
 > [fold-in](../fold-in/SKILL.md) 不變量 1 (預設 fold 不造新;真未覆蓋
 > niche+人核才新建)。
 
-## 兩類 skill 的分界(skill-bettor 特有,最重要的一條)
+## Current procedure
 
-| | **領域資產 skill**(`families/<family>/`) | **工程編排 skill**(`.claude/skills/`) |
+1. **Match**：先找 2–3 個相似 Skill 與現有 owner；能 additive fold-in 就不另建同義 Skill。
+2. **Freeze baseline**：重構前固定 exact commit/blob digest，建立 semantic-loss ledger；每個舊語意只能標 `ACTIVE_IN_SKILL`、`PRESERVED_IN_MODULE`、`LEGACY_ARCHIVED` 或 `CANONICAL_OWNER_WITH_LEGACY_COPY`。
+3. **Write portable core**：canonical package 住 `.agents/skills/<name>`；frontmatter 只用 portable fields；`scripts/`、`references/`、`assets/` 可選，`modules/` 是 Bettor extension。
+4. **Preserve continuity**：外部指針前先留本地摘要，縮寫首次展開，`PASS`、`NOT_EXERCISED`、`NOT_CONFIGURED` 等狀態不折疊；`CONTEXT.md`/ADR/README 是 domain context，不是 discovery format。
+5. **Design execution**：Skill 只提程序；runner 接 typed `executable` + `argv[]`，明示 cwd/env/timeout/network/writable paths，禁止 raw shell string、absolute host path、path traversal、secret value 與 implicit branch。
+6. **Design assertions**：hard assertions 用 exit/schema/hash/diff/AST/LSP/test report/exact subject；LLM/human review 是 advisory，不能覆寫 hard failure。
+7. **Build the gate**：至少一個 positive、一個 hollow，且每條 load-bearing rule 各有 planted mutation；同一問題最多三次修正。
+8. **Project hosts**：Codex 用 canonical `.agents/skills` 與可選 `agents/openai.yaml`；Claude 用 `.claude/skills/<name>` thin symlink；不得複製第二份 `SKILL.md`。
+9. **Prove behavior**：以 `no_skill`、`current_skill`、`candidate_skill`、`wrong_skill` 四臂比較；保存 host/version/seed/Skill digest/tool calls/output/verdict/wall time。沒有 physical run 就標 `NOT_EXERCISED`。
+10. **Deliver**：receipt 證明 exact head 某次發生什麼；GitHub/Forgejo live audit 另證明當下狀態；promotion/merge 留 Human Admit。
+
+Repository conformance 的實際入口：
+
+```text
+python3 scripts/gates/check_skill_conformance.py --selftest
+python3 scripts/gates/check_skill_conformance.py --root .
+```
+
+## Current invariants
+
+- `SKILL.md` 程序不等於真執行；script 存在、MCP wired 或模型聲稱已測試都不等於 PASS。
+- 收據綁 exact repository commit、context digest、Skill digest、command、observed exit、artifact digests、assertions 與 cleanup。
+- Current source/tests/receipts 優先於 semantic index、graph projection、memory projection 與模型記憶。
+- 新檔先對映 `ARCHITECTURE.md` §2，再更新 nearest README/catalog/lock；收手前正常跑 hook，禁止 `--no-verify`。
+- YAML block scalar 內 ASCII colon 合法；用 parser 驗格式，不用字元迷信。
+- Codex `$skill-name` 與 Claude `/skill-name` 是不同 host surface；`allowed-tools` 不是 portable sandbox。
+
+現行細節只需按任務讀：
+
+- [Official Agent Skills profile](modules/official-agent-skills-profile.md)：portable core、Codex/Claude projection 與 primary-source links。
+- [Execution and assertions](modules/execution-and-assertions.md)：typed request、hard/advisory assertions、subject-bound receipt 與狀態分離。
+- [Semantic-loss ledger](modules/semantic-loss-ledger.md)：本次重構如何保留或降級舊語意。
+
+## Legacy reference — do not use as current runtime truth
+
+以下段落保存 modular migration 前的 skill-bettor 家規與歷史測量。`families/`、舊 `scripts/check_*.py`、舊 GCR/eval inventory 只供追溯；若與上方 Current procedure 或目前磁碟衝突，以目前磁碟與真跑 receipt 為準。
+
+### 兩類 skill 的分界（legacy skill-bettor model）
+
+| | **領域資產 skill**(`families/<family>/`) | **工程編排 skill**(`.agents/skills/`) |
 |---|---|---|
 | 給誰用 | 訂閱者的 agent+eval harness 的被測體 | 大迴圈(主 session)自己 |
 | 品質閘 | **eval 分數**(runner.py G 閘+holdout+人 admit)——這是產品,曲線=賣點 | selftest/自審——這是工具,壞了自己疼 |
 | 改動路徑 | **只准走演化 op 沙盒**(proposals→verify→diff→eval→admit),直接 Edit=違反知識單向流 | fold-in 直接 Edit(additive,commit 說 why) |
-| 結構契約 | 路由器 SKILL.md(只地圖)+子技能(<500 行+references/+scripts/)+shared/(引用不複製) | slim SKILL.md(確定性程序+Gotchas)+modules/(know-why)+retarget-map(若為移植) |
+| 結構契約 | 路由器 SKILL.md(只地圖)+子技能(<500 行+references/+scripts/)+shared/(引用不複製) | portable SKILL.md+scripts/references/assets+modules；Claude 只放 symlink projection |
 | 觸發設計 | description 要 pushy(模型傾向 under-trigger),列具體語境;受 trigger-evals 正交性檢查 | 觸發詞明列;NOT for 指向鄰接 skill 防互搶 |
 
 **分界判準**:內容會被 eval 判分、會發佈給訂閱者 → 家族;內容是「怎麼運營這個工廠」→
-`.claude/skills/`。 混放=把工廠說明書賣給客人,或把商品當內部工具改(繞過 eval 閘)。
+`.agents/skills/`。混放=把工廠說明書賣給客人,或把商品當內部工具改(繞過 eval 閘)。
 
-## 確定性 checklist(新建/重構前逐項)
+### Legacy checklist（不可直接當目前 executable checklist）
 ```
 [ ] 1. 先過 fold-in 不變量 1:確認是真未覆蓋 niche+人核,不是 husk/domain-fact 傾倒
-[ ] 2. 目錄式:.claude/skills/<name>/SKILL.md(全大寫);name 小寫-連字號
-[ ] 3. frontmatter description 用 | block scalar;全文禁 ASCII 冒號+空格(YAML 靜默跳過整支 skill,
-      連名字都 recall 不到)——一律用全形「:」;觸發詞+NOT for 必列;官方硬約束
-      (name≤64/description≤1024/body≤500 行/禁保留字)機械閘=`scripts/check_skill_conformance.py`
+[ ] 2. canonical 目錄式:.agents/skills/<name>/SKILL.md(全大寫);Claude projection=
+      .claude/skills/<name> symlink;name 符合 portable lower-kebab-case 且等於父目錄
+[ ] 3. portable frontmatter 必有 name+description;可選 license/compatibility/metadata/allowed-tools。
+      `argument-hint` 等 host extension 不進 canonical core;description 清楚寫 what+when。
+      YAML 可用合法 plain/quoted/block scalar，不禁 ASCII 冒號；以 parser 判定，不用字元迷信。
+      官方 hard=name 1-64、description 1-1024、compatibility≤500；body≤500 行是 Bettor 家規。
+      機械閘=`scripts/gates/check_skill_conformance.py`
 [ ] 4. slim:SKILL.md 只留 Role/When to Use/Not For/確定性程序/不變量/Gotchas/Modules;
       know-why 一律下放 modules/(排版拆行不算違反 slim——slim 管內容取捨,不管換行數,見條款 11)
 [ ] 5. 語意真相與低壓縮產出契約:skill 本文與該 skill 會產生的計畫/報告/派工包,
@@ -59,9 +102,10 @@ description: |
 [ ] 8. 移植類必附 modules/retarget-map.md(誠實帳本:搬了什麼/拿掉什麼/為何拿掉不是簡化);
       引用外部 repo 的規範一律「canonical 指針頭注」——指針不抄內容(防雙圖漂移)
 [ ] 9. 禁 dangling 編號 jargon:引用決策碼/不變量帶一句語義或磁碟路徑
-[ ] 10. 含確定性邏輯 → 該邏輯必須真在 load-bearing 檔案落地(runner.py/engine.sh/腳本),
-      skill 只指向;無鐵錨的「已優化」散文=husk,不收;skill 目錄內附帶可執行腳本時
-      另過條款 f(聲明式調用+注入=執行半徑安全面),見 modules/authoring-clauses.md
+[ ] 10. 含確定性邏輯 → 真正在 runner/engine/script 落地；命令用 typed executable+argv，
+      禁 shell string。hard assertions 與 advisory review 分開，PASS 綁 exact subject、Skill digest、
+      observed exit、artifact digests、hard assertion results、cleanup。完整契約見
+      modules/execution-and-assertions.md；帶腳本者另過條款 f 的執行半徑檢查
 [ ] 11. 新 skill/load-bearing 檔落地後同步登記:①迴圈類回 harness-wiki 組件卡 ②工程層回
       modules/panorama.md 名片 ③新 load-bearing SSOT 檔加進 defense-form-ssot 指針清單
       ——機械閘=`check_card_sync.py`(名片)+`check_ssot_index.py`(指針無懸空);先落地才登記
@@ -80,7 +124,7 @@ description: |
       `scripts/check_unknown_discovery_routes.py`。
 ```
 
-## 固化範例(worked examples,新 skill 照這些寫)
+### Legacy worked examples
 - **地圖類**:[harness-wiki](../harness-wiki/SKILL.md)——組件卡+不變量+
   「只指針不抄」鐵律+誠實現況標記。
 - **規範類**:
@@ -94,13 +138,17 @@ description: |
 - **領域資產類**:`families/pinescript-audit/`——路由器+子技能+shared+
   evals 全套結構契約。
 
-## Gotchas
-- **ASCII 冒號+空格是最貴的一個字元**:出現在 frontmatter description 任一處 →
-  YAML 解析成 mapping → 整支 skill 靜默消失。多行一律 `|` block scalar+全形
-  冒號。
-- **改 skill 後同 session 觸發 ≠ 最新版**(2026-07-11 實測):Skill 工具可能
-  載入註冊時的快照, 剛 commit 的段落不在其中。驗證一律以磁碟檔為準(`cat` 檔案),
-  別用「觸發後看到什麼」當驗收。
+### Legacy gotchas
+- **不要把 YAML 風格偏好冒充 parser 規則**：description 中的冒號在 block/quoted scalar
+  內完全合法；plain scalar 是否合法交給 YAML parser。Bettor 偏好 block scalar 是可讀性家規，
+  不是因 ASCII 冒號必然讓整支 skill 消失。
+- **改 skill 後的載入時機是 host-specific**：Claude Code 會監看既有 skill 目錄，但已 invocation
+  的內容留在 context，不會在後續 turn 自動重讀；新目錄可能需要 restart。Codex 驗收以磁碟、
+  discovery root 與 fresh invocation receipt 為準，不用舊 session 記憶判失敗。
+- **Claude `/skill-name` 不等於 Codex invocation**：Codex 使用 `/skills` 或 `$skill-name`。
+  Slash command 不是 portable Agent Skills core。
+- **`allowed-tools` 不是 sandbox**：它是 experimental/host-dependent metadata；filesystem、process、
+  network、secret 與 writable path 仍由 host policy 和 runner 強制。
 - **Edit 錨字串先 Read 目標行原文**(2026-07-17 三次實撞):本 repo skill 檔多用
   全形標點 (「，」「（）」「：」),context 裡的轉錄常變半形 → Edit old_string 必
   miss。已解:先 Read 再 Edit; 仍 miss 時用 python 子串定位替換。禁回退用「憑
@@ -112,9 +160,8 @@ description: |
   八大基座 組件卡核設計規範,防 authoring 時把基座規範飄移。
 - **行為指引型 skill(紀律/流程類,無確定性邏輯可 1:1 測)的評測法＝行為遵循消融**:乾淨 cell 雙
   臂 (with/without SKILL.md)+pre-registered 期望表+機械斷言+人工覆核,量紀律
-  軸轉移 delta;方法 SSOT＝
-  `/Users/neon/antigravity/.agents/skills/antigravity-skill-authoring/modules/skill-verification-methodology.md`
-  §行為指引型(2026-07-20 dr-to-mvp 自測 delta +2.16/4 軸實錨)。**副產:
+  軸轉移 delta。每個 arm 要保存 host/version、seed、Skill digest、tool calls、output、verdict 與
+  wall time；wrong-skill 與 no-skill 是獨立 control。**副產:
   trigger-evals 缺的 runner 接線 答案**——model-triggered=
   PreToolUse hook matcher `Skill`;顯式 `/skill`=
   `UserPromptExpansion` hook (官方 hooks.md:1181,兩路互斥)——
@@ -154,7 +201,12 @@ description: |
   semantic_question、grounding_state、independence_tier、needs_diamond、human_gate;
   缺任一項即不能把 findings 交給下一個 LLM 當可判輸入。
 
-## Modules
+### Legacy module index
+- [modules/official-agent-skills-profile.md](modules/official-agent-skills-profile.md)
+  — portable Agent Skills core、Codex discovery/invocation、Claude projection 與 Bettor house profile；
+  每個官方 claim 都有直接 primary-source URL。
+- [modules/execution-and-assertions.md](modules/execution-and-assertions.md)
+  — typed execution、hard/advisory assertions、subject-bound receipt、狀態分離與三次重試上限。
 - [modules/panorama.md](modules/panorama.md) — skill 層業務全景圖
   (17 支名片+主流程圖+ 外部標準對照;人面投影,pointer-only;新 skill 落地/退場時
   additive 更新)
