@@ -3,6 +3,11 @@
   "id": "semantic-provider-registry",
   "family": "semantic",
   "capability": "search.semantic",
+  "subject_ref": "../subject.json",
+  "query": {
+    "text": "find provider declarations",
+    "path_scope": ["docs", "scripts"]
+  },
   "participants": ["exact-search-control", "grepai"],
   "oracle": {
     "relevant_ids": ["provider-registry"],
