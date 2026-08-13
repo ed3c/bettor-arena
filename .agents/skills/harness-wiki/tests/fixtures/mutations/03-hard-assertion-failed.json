@@ -1,0 +1,7 @@
+{
+  "description": "Reject PASS when a hard assertion failed.",
+  "mutations": [
+    {"path": "receipt.assertions.1.status", "value": "FAIL"}
+  ],
+  "expected_errors": ["PASS receipt has non-PASS hard assertion: exit-zero"]
+}

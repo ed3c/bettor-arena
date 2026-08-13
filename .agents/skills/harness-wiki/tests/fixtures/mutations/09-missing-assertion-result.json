@@ -1,0 +1,7 @@
+{
+  "description": "Reject a PASS receipt with a missing assertion result.",
+  "mutations": [
+    {"path": "receipt.assertions.2", "value": null}
+  ],
+  "expected_errors": ["missing receipt result for assertion: result-exists"]
+}

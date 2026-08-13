@@ -1,0 +1,7 @@
+{
+  "description": "Reject a receipt produced under a different Skill identity.",
+  "mutations": [
+    {"path": "receipt.skill.name", "value": "other-skill"}
+  ],
+  "expected_errors": ["receipt skill does not match request"]
+}

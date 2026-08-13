@@ -1,0 +1,7 @@
+{
+  "description": "Reject duplicate assertion identities.",
+  "mutations": [
+    {"path": "assertions.assertions.1.id", "value": "subject-exact"}
+  ],
+  "expected_errors": ["duplicate assertion id: subject-exact"]
+}
