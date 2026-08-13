@@ -6,6 +6,8 @@
 - 啟用:`sh bootstrap.sh`(冪等;doctor+相對 hooksPath)。
 - skill 內容單份住 `.agents/skills/`(host-neutral 家;.claude/skills 全 symlink 指向它)。
 - `.codex/config.toml` 僅可攜 MCP 宣告;host 段(permissions/network/sockets)人補後才可信。
+- 本機 Agent stack:碰 CGR/Mem0/Herdr 的啟停、健康、索引、onboarding 或 MCP/host 接線前,
+  先讀 `docs/local-agent-stack.md`;installed/running/wired/data-ready 四態分記,以重測為準。
 - commit 前:§3 鐵律 2 的 T0 閘;落新檔前:§2 槽位對映。
 
 ---
