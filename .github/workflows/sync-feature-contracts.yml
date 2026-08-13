@@ -82,6 +82,7 @@ jobs:
             .agents/skills/harness-wiki/modules/portable-runner.md \
             .arena/modules/agent-runtime-integration/module.json \
             .arena/modules/agent-runtime-integration/README.md \
+            .arena/compositions/bettor-arena.requirements.json \
             scripts/check_agent_runtime_module.py \
             loopctl/contract.json \
             loopctl/loopctl.sh \
