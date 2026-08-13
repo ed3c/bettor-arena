@@ -1,0 +1,7 @@
+{
+  "id": "serena",
+  "kind": "provider",
+  "families": ["symbol"],
+  "manifest_path": "providers/serena.json",
+  "human_admit_required": true
+}
