@@ -4,9 +4,8 @@
     {
       "id": "generated-host-projections",
       "kind": "generated",
-      "description": "Versioned Claude/Codex/MCP, Context Capsule locks, and repo-binding projections generated from canonical module, Skill, or runtime contracts. Executable host hooks are owned by arena-core instead of this class.",
+      "description": "Versioned Claude/Codex/MCP and repo-binding projections generated from canonical module, Skill, or runtime contracts. Executable host hooks are owned by arena-core instead of this class.",
       "paths": [
-        ".arena/contexts.lock.json",
         ".claude",
         ".codex",
         ".mcp.json",
