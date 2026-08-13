@@ -1,5 +1,6 @@
 name: harness-wiki Portable Execution Contract
 
+# Exact-head evidence: offline runner PASS never proxies a live host, provider, or physical sandbox canary.
 on:
   pull_request:
     types:
