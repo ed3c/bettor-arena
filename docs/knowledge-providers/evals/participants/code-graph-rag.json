@@ -1,0 +1,7 @@
+{
+  "id": "code-graph-rag",
+  "kind": "provider",
+  "families": ["graph"],
+  "manifest_path": "providers/code-graph-rag.json",
+  "human_admit_required": true
+}
