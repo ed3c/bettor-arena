@@ -1,0 +1,7 @@
+{
+  "id": "mem0",
+  "kind": "provider",
+  "families": ["memory"],
+  "manifest_path": "providers/mem0.json",
+  "human_admit_required": true
+}
