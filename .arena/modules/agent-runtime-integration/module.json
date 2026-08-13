@@ -20,6 +20,15 @@
         "scripts/runtime-env"
       ],
       "required": true
+    },
+    "portable_skill_execution": {
+      "paths": [
+        ".agents/skills/harness-wiki/contracts",
+        ".agents/skills/harness-wiki/scripts/run_portable_skill.py",
+        ".agents/skills/harness-wiki/tests/run-execution-selftest.py",
+        "scripts/check_agent_runtime_module.py"
+      ],
+      "required": true
     }
   },
   "conflicts": [],
@@ -30,7 +39,7 @@
     "secrets": "none"
   },
   "id": "agent-runtime-integration",
-  "interface_version": "1.1.0",
+  "interface_version": "1.2.0",
   "loops": [
     {
       "class": "aggregate",
@@ -38,29 +47,38 @@
       "id": "agent-runtime",
       "interface_version": "1.0.0",
       "public_port": "sh loopctl/loopctl.sh agent-runtime"
+    },
+    {
+      "class": "aggregate",
+      "external_policy": "control-only",
+      "id": "skill-execution",
+      "interface_version": "1.0.0",
+      "public_port": "sh loopctl/loopctl.sh skill-execution"
     }
   ],
   "proof": {
     "control": [
       "sh",
-      "proof_workflow/control_agent_runtime_entry.sh",
+      "proof_workflow/control_agent_runtime_module.sh",
       "--json"
     ],
     "mutation": [
       "sh",
-      "proof_workflow/control_agent_runtime_entry.sh",
+      "proof_workflow/control_agent_runtime_module.sh",
       "--json"
     ],
-    "selftest": null,
+    "selftest": [
+      "python3",
+      "scripts/check_agent_runtime_module.py"
+    ],
     "verify": [
       "python3",
-      "scripts/agent_runtime.py",
-      "check",
-      "--offline"
+      "scripts/check_agent_runtime_module.py"
     ]
   },
   "provides": [
-    "agent-runtime.aggregate/v1"
+    "agent-runtime.aggregate/v1",
+    "skill-execution.runner/v1"
   ],
   "requires": [
     "arena.module-catalog/v1",
@@ -73,7 +91,8 @@
     "scripts/agent_runtime.py",
     "scripts/runtime-env",
     "docs/agent-runtime-integration.md",
-    "docs/runtime-env-integration.md"
+    "docs/runtime-env-integration.md",
+    "scripts/check_agent_runtime_module.py"
   ],
   "runtime": {
     "profiles": [
@@ -82,16 +101,20 @@
     "tools": [
       "claude",
       "codex",
-      "python3"
+      "git",
+      "python3",
+      "sh"
     ]
   },
   "schema": "bettor-arena/module/v1",
   "skills": {
     "optional": [],
-    "repo_owned": [],
+    "repo_owned": [
+      "harness-wiki"
+    ],
     "required": [
       "shared-skills-infra"
     ]
   },
-  "summary": "Resolved skills-shared/runtime-env closure, generated runtime helpers, and Claude Code/Codex CLI adapter verdicts."
+  "summary": "Resolved skills-shared/runtime-env closure, generated host projections, Claude Code/Codex CLI adapter verdicts, and a host-owned portable Skill execution/assertion port that cannot advance state on Worker prose."
 }

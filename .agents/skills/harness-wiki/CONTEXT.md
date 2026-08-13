@@ -35,6 +35,7 @@ Do not create a root `CONTEXT-MAP.md` merely to satisfy a template. Add one only
 
 - Host and file-format compatibility: [`modules/host-skill-compatibility.md`](modules/host-skill-compatibility.md)
 - Executable Skill and assertion boundary: [`modules/executable-skill-contract.md`](modules/executable-skill-contract.md)
+- Host-owned portable runner and named isolation limits: [`modules/portable-runner.md`](modules/portable-runner.md)
 - Serena / GrepAI / graph / memory ownership: [`modules/knowledge-provider-topology.md`](modules/knowledge-provider-topology.md)
 
 ## Non-negotiable authority order

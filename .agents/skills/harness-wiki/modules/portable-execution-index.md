@@ -4,7 +4,8 @@ Read these modules in this order only when the task crosses host, execution, ass
 
 1. [`host-skill-compatibility.md`](host-skill-compatibility.md)
 2. [`executable-skill-contract.md`](executable-skill-contract.md)
-3. [`knowledge-provider-topology.md`](knowledge-provider-topology.md)
+3. [`portable-runner.md`](portable-runner.md)
+4. [`knowledge-provider-topology.md`](knowledge-provider-topology.md)
 
 Machine contracts:
 
@@ -12,10 +13,12 @@ Machine contracts:
 - [`../contracts/skill-assertion-set.schema.json`](../contracts/skill-assertion-set.schema.json)
 - [`../contracts/skill-execution-receipt.schema.json`](../contracts/skill-execution-receipt.schema.json)
 
-Deterministic contract gate:
+Deterministic contract and executable gates:
 
 ```bash
 sh .agents/skills/harness-wiki/tests/run-all.sh
+sh loopctl/loopctl.sh skill-execution test
+sh loopctl/loopctl.sh skill-execution prove
 ```
 
-This gate validates contract shape and planted negative controls. Live host, provider, model, sandbox and cloud execution remain separate receipts.
+The local-process runner proves its explicitly declared execution boundary. Live host, provider, model, physical sandbox and cloud execution remain separate receipts.

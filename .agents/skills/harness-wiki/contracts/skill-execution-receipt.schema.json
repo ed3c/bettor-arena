@@ -20,6 +20,18 @@
         "command_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
       }
     },
+    "isolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace", "process", "environment", "network", "filesystem"],
+      "properties": {
+        "workspace": {"type": "string"},
+        "process": {"type": "string"},
+        "environment": {"type": "string"},
+        "network": {"type": "string", "enum": ["deny", "allowlisted", "inherit", "unknown"]},
+        "filesystem": {"type": "string"}
+      }
+    },
     "executed": {"type": "boolean"},
     "status": {"type": "string", "enum": ["NOT_RUN", "PASS", "FAIL", "ERROR", "ABSENT", "NOT_EXERCISED", "SKIPPED_BY_POLICY"]},
     "exit_code": {"type": ["integer", "null"]},
@@ -41,7 +53,8 @@
         "stdout": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
         "stderr": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
         "git_diff": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
-        "test_report": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+        "test_report": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "runner_diagnostics": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
       }
     },
     "assertions": {
