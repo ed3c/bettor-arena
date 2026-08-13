@@ -1,0 +1,5 @@
+{
+  "schema_version": "knowledge-provider-evals/v1",
+  "families": ["symbol", "semantic", "graph", "memory"],
+  "fixture_only": true
+}
