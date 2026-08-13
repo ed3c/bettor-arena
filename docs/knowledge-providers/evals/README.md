@@ -1,41 +1,62 @@
 # Knowledge-provider admission evaluations
 
-This directory turns the provider-neutral contracts into a reproducible comparison lane. It does not launch Serena, GrepAI, Code-Graph-RAG, Mem0, an LLM, or an MCP server. It evaluates normalized observations against immutable repository subjects, current provider manifests, independent controls, and explicit hard gates.
+This directory turns the provider-neutral contracts into a reproducible
+provider-versus-control comparison lane. It does not launch Serena, GrepAI,
+Code-Graph-RAG, Mem0, an LLM, or an MCP server. It evaluates normalized
+observations against immutable repository subjects, current provider
+manifests, independent controls, and explicit hard gates.
 
 ## Authority boundary
 
 ```text
 provider or deterministic control
 → normalized observation
-→ exact subject / query / provider identity checks
-→ source-readback and coverage checks
-→ precision / recall / cost metrics
+→ exact subject / query / participant / manifest checks
+→ source-readback, coverage, budget, cleanup, and authority gates
+→ paired metrics
 → candidate recommendation
 → Human Admit
 ```
 
-A green fixture proves the evaluator can recognize a valid packet. It does not prove that a provider is installed, healthy, fresh, complete, better than its control, or suitable for production.
+A green checked-in fixture proves only that the evaluator recognizes a valid
+packet and rejects planted defects. It does not prove that a provider is
+installed, healthy, fresh, complete, better than its control, or suitable for
+production.
 
-## Files
+## Directory contract
 
 ```text
 evals/
 ├── README.md
-├── participants.json
+├── STATUS.md
+├── config.json
+├── subject.json
 ├── contracts/
-│   ├── participants.schema.json
+│   ├── participant.schema.json
 │   ├── eval-case.schema.json
 │   ├── eval-observation.schema.json
-│   └── eval-report.schema.json
+│   ├── eval-report.schema.json
+│   ├── eval-config.schema.json
+│   └── subject.schema.json
+├── participants/
+│   ├── exact-search-control.json
+│   ├── repository-authority-control.json
+│   ├── serena.json
+│   ├── grepai.json
+│   ├── code-graph-rag.json
+│   └── mem0.json
 ├── cases/
 │   ├── symbol-public-skill-port.json
-│   ├── semantic-provider-registry.json
-│   ├── graph-provider-impact.json
-│   └── memory-authority-conflict.json
+│   ├── semantic.json
+│   ├── graph.json
+│   └── memory.json
 └── fixtures/
-    ├── good/observations.json
-    └── hollow/observations.json
+    ├── good/observations.json.gz
+    └── hollow/observations.json.gz
 ```
+
+The gzip files contain complete JSON arrays. Compression is a storage detail,
+not semantic compression. The evaluator reads them transparently.
 
 ## Case families
 
@@ -46,43 +67,60 @@ evals/
 | graph | Code-Graph-RAG | manifest/import/source traversal | Cross-module impact without converting coverage gaps into absence |
 | memory | Mem0 | current repository authority | Historical hint recall while preserving conflict and current-authority priority |
 
-The controls are participants, not hidden oracles. Provider observations and control observations use the same subject, query digest, budgets, cleanup requirements, and output vocabulary.
+Every case has exactly one provider and one control. The default contract
+requires all eight case/participant pairs. Omitting a failed participant is a
+hard failure rather than a smaller successful experiment.
+
+## Hard gates
+
+The evaluator fails closed on:
+
+- subject, tree, query, participant, or provider-manifest drift;
+- duplicate or missing case/participant pairs;
+- mixed fixture and live evidence in one report;
+- `PASS` without physical execution;
+- stale or mismatched index subjects;
+- `FOUND` without current-source readback;
+- `NO_FLOW` where coverage must remain `UNKNOWN`;
+- authority escalation, repository writes, memory writes, gate waiver,
+  `TESTED`, promotion, or Human Admit by a provider;
+- result, context, latency, or tool-call budget overflow;
+- cleanup failure or residue;
+- memory conflict erasure or stale memory overriding current authority;
+- absolute paths, traversal paths, unexpected fields, or malformed ranks.
 
 ## Metrics
 
-The deterministic evaluator reports:
+The deterministic report contains:
 
-- verified precision and verified recall;
+- verified precision and recall;
 - false-positive count;
-- preservation of `UNKNOWN` where coverage is incomplete;
+- preservation of `UNKNOWN`;
 - latency, context bytes, tool calls, and result count;
-- subject, query, participant, manifest, and index identity;
-- source-readback coverage;
-- cleanup and residue;
-- memory conflict preservation and current-authority outcome.
+- complete paired-coverage status;
+- fixture versus subject-bound evidence scope;
+- candidate recommendation and explicit Human Admit requirement.
 
-`FOUND` is allowed only with `SOURCE_READBACK_CONFIRMED` when the case requires source readback. A graph or semantic candidate is not confirmed merely because the provider returned it. `NO_FLOW` is forbidden for an oracle item whose declared coverage remains unknown.
-
-## Recommendations are not admission
-
-The report may emit:
+Recommendations use:
 
 ```text
 PRIMARY_CANDIDATE
 SECONDARY_CANDIDATE
 EXPERIMENTAL
+CONTROL_BASELINE
 REJECTED
 NOT_EXERCISED
 FIXTURE_ONLY
 ```
 
-No recommendation performs admission. `FIXTURE_ONLY` can never elect a winner. A non-fixture candidate still requires Human Admit, exact runtime identity, immutable index subject, privacy and retention review, and current canary artifacts.
+No recommendation performs admission. `FIXTURE_ONLY` never elects a winner.
 
 ## Commands
 
 ```bash
 python3 scripts/evaluate_knowledge_providers.py
 python3 scripts/evaluate_knowledge_providers.py --selftest
+
 python3 scripts/evaluate_knowledge_providers.py \
   --observations <subject-bound-observations.json> \
   --output <report.json>
@@ -95,27 +133,20 @@ sh tests/knowledge-provider-evals/run-all.sh
 Exit semantics:
 
 ```text
-0   valid suite and required hard gates pass
-2   parsed subject disagrees with the contract or a hard gate fails
-64  invalid invocation or unreadable input
+0   valid suite and all required hard gates pass
+2   checked subject or evidence disagrees with the contract
+64  invalid invocation, unreadable input, or missing runtime dependency
 ```
 
-## Live rollout
+## Fixture-only lock
 
-The checked-in cases bind the exact Bettor subject on which the evaluation contract was authored. Their checked-in observations are marked `fixture: true`; they exercise evaluator behavior only.
+The checked-in `config.json` has `fixture_only: true`. Non-fixture
+observations are rejected until a separate Human-admitted change pins the
+provider adapter, index/storage identity, privacy/retention policy, runtime
+profile, and live canary receipt. This prevents a synthetic fixture from
+being relabeled as production evidence.
 
-A live run must:
-
-1. create an exact case or intentionally reuse an exact immutable case subject;
-2. pin provider adapter and index identity;
-3. run the provider and its independent control in isolated, bounded workspaces;
-4. normalize each result into `knowledge-provider-eval-observation/v1`;
-5. preserve `NOT_EXERCISED`, `ABSENT`, `SKIPPED_BY_POLICY`, and `FAIL`;
-6. run this evaluator;
-7. compare paired metrics without hiding hard-gate failures;
-8. submit the report and raw receipt digests for Human Admit.
-
-Current repository state remains:
+## Current live state
 
 ```text
 Serena live observation          NOT_EXERCISED
@@ -123,4 +154,5 @@ GrepAI live observation          NOT_EXERCISED
 Code-Graph-RAG adapter/index     NOT_CONFIGURED
 Mem0 adapter/storage/writeback   NOT_CONFIGURED
 cross-provider winner            NOT_EXERCISED
+automatic admission              FORBIDDEN
 ```

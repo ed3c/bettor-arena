@@ -16,7 +16,10 @@ OK, FAIL, FATAL = 0, 2, 64
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
-    parser.add_argument("--observations", default=str(EVALS / "fixtures/good/observations.json.gz"))
+    parser.add_argument(
+        "--observations",
+        default=str(EVALS / "fixtures/good/observations.json.gz"),
+    )
     parser.add_argument("--output")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args(argv)
@@ -25,8 +28,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.selftest:
             result = run_selftest(root)
             print(
-                f"knowledge-provider-evals selftest PASS: {result['positive']} positive, "
-                f"{result['hollow']} hollow, {result['mutations']} mutations"
+                "knowledge-provider-evals selftest PASS: "
+                f"{result['positive']} positive, "
+                f"{result['hollow']} hollow, "
+                f"{result['mutations']} mutations"
             )
             return OK
         path = Path(args.observations)
@@ -37,8 +42,12 @@ def main(argv: list[str] | None = None) -> int:
             output = Path(args.output)
             save(output if output.is_absolute() else root / output, report)
         print(
-            f"knowledge-provider-evals {report['status']}: {report['suite']['case_count']} cases, "
-            f"{report['suite']['observation_count']} observations, scope={report['evidence_scope']}"
+            f"knowledge-provider-evals {report['status']}: "
+            f"{report['suite']['case_count']} cases, "
+            f"{report['suite']['observation_count']} observations, "
+            f"pairs={report['pair_coverage']['observed']}/"
+            f"{report['pair_coverage']['expected']}, "
+            f"scope={report['evidence_scope']}"
         )
         return OK if report["status"] == "PASS" else FAIL
     except ContractError as exc:

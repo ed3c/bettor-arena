@@ -1,5 +1,1 @@
-{
-  "schema_version": "knowledge-provider-evals/v1",
-  "families": ["symbol", "semantic", "graph", "memory"],
-  "fixture_only": true
-}
+{"schema_version":"knowledge-provider-evals/v1","families":["symbol","semantic","graph","memory"],"fixture_only":true,"require_complete_pair_coverage":true,"allow_mixed_fixture_scope":false,"automatic_admission":false}
