@@ -9,6 +9,16 @@ on:
       - synchronize
     paths:
       - '.agents/skills/harness-wiki/**'
+      - '.arena/modules/agent-runtime-integration/**'
+      - '.arena/compositions/bettor-arena.requirements.json'
+      - 'scripts/check_agent_runtime_module.py'
+      - 'loopctl/contract.json'
+      - 'loopctl/loopctl.sh'
+      - 'loopctl/selftest.sh'
+      - 'loopctl/surface.lock'
+      - 'proof_workflow/prove_skill_execution.sh'
+      - 'proof_workflow/control_skill_execution_entry.sh'
+      - 'proof_workflow/control_agent_runtime_module.sh'
       - '.github/workflows/harness-wiki-portable-execution.yml'
   push:
     branches:
@@ -17,6 +27,16 @@ on:
       - 'integration/**'
     paths:
       - '.agents/skills/harness-wiki/**'
+      - '.arena/modules/agent-runtime-integration/**'
+      - '.arena/compositions/bettor-arena.requirements.json'
+      - 'scripts/check_agent_runtime_module.py'
+      - 'loopctl/contract.json'
+      - 'loopctl/loopctl.sh'
+      - 'loopctl/selftest.sh'
+      - 'loopctl/surface.lock'
+      - 'proof_workflow/prove_skill_execution.sh'
+      - 'proof_workflow/control_skill_execution_entry.sh'
+      - 'proof_workflow/control_agent_runtime_module.sh'
       - '.github/workflows/harness-wiki-portable-execution.yml'
       - '.arena/locks/bettor-arena.lock.json'
       - 'data/module-proof/release-receipt.json'
@@ -35,13 +55,21 @@ jobs:
   contract:
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.12'
-      - name: Validate good, hollow, and independent mutation controls
+      - name: Validate contracts, executable runner, hollow and mutation controls
         run: sh .agents/skills/harness-wiki/tests/run-all.sh
+      - name: Validate loopctl surface and public execution port
+        run: |
+          sh loopctl/loopctl.sh --selftest
+          sh loopctl/loopctl.sh skill-execution test
+          sh loopctl/loopctl.sh skill-execution prove
+      - name: Validate aggregate module gate
+        run: python3 scripts/check_agent_runtime_module.py
