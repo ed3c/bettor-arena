@@ -1,0 +1,7 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "graph-provider-impact",
+  "family": "graph",
+  "participants": ["exact-search-control", "code-graph-rag"],
+  "fixture_subject": true
+}
