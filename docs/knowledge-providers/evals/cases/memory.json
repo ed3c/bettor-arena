@@ -1,0 +1,7 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "memory-authority-conflict",
+  "family": "memory",
+  "participants": ["repository-authority-control", "mem0"],
+  "fixture_subject": true
+}
