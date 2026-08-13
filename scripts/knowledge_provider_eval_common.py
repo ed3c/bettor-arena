@@ -1,6 +1,7 @@
 """Shared deterministic helpers for knowledge-provider admission evals."""
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import re
@@ -41,6 +42,9 @@ def digest(value: Any) -> str:
 
 def load(path: Path) -> Any:
     try:
+        if path.suffix == ".gz":
+            with gzip.open(path, "rt", encoding="utf-8") as handle:
+                return json.load(handle)
         return json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise ContractError(f"ABSENT: {path}") from exc

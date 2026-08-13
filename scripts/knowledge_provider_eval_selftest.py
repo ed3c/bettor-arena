@@ -22,13 +22,13 @@ def expect_failure(root: Path, values: list[dict], text: str, name: str) -> None
 
 
 def run(root: Path) -> dict:
-    good_path = root / EVALS / "fixtures/good/observations.json"
+    good_path = root / EVALS / "fixtures/good/observations.json.gz"
     good = load(good_path)
     report = evaluate(root, good_path)
     require(report["status"] == "PASS", "positive fixture")
     require(report["evidence_scope"] == "FIXTURE_ONLY", "fixture scope")
     require(report["admission"]["winner"] is None, "fixture winner")
-    hollow = load(root / EVALS / "fixtures/hollow/observations.json")
+    hollow = load(root / EVALS / "fixtures/hollow/observations.json.gz")
     expect_failure(root, hollow, "memory overrode authority", "hollow")
     mutations = [
         ("subject", "subject drift", lambda x: x[0]["subject"].update(commit="f" * 40)),

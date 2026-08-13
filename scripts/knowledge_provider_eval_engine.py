@@ -22,32 +22,24 @@ def evaluate(root: Path, path: Path) -> dict:
         pair = (value.get("case_id"), value.get("participant_id"))
         require(oid not in ids, f"duplicate observation: {oid}")
         require(pair not in pairs, f"duplicate pair: {pair}")
-        ids.add(oid)
-        pairs.add(pair)
+        ids.add(oid); pairs.add(pair)
         checked.append(score(value, validate_packet(value, suite, people)))
     fixture_only = all(item["fixture"] for item in checked)
     return {
         "schema_version": "knowledge-provider-eval-report/v1",
         "suite": {
-            "case_count": len(suite),
-            "participant_count": len(people),
+            "case_count": len(suite), "participant_count": len(people),
             "observation_count": len(checked),
             "families": ["graph", "memory", "semantic", "symbol"],
         },
         "evidence_scope": "FIXTURE_ONLY" if fixture_only else "SUBJECT_BOUND_OBSERVATIONS",
         "status": "PASS" if all(item["hard_gates_passed"] for item in checked) else "FAIL",
-        "observations": sorted(
-            checked,
-            key=lambda item: (item["family"], item["case_id"], item["participant_id"]),
-        ),
+        "observations": sorted(checked, key=lambda item: (item["family"], item["case_id"], item["participant_id"])),
         "admission": {
             "automatic_admission": False,
             "human_admit_required": True,
             "winner": None,
-            "reason": (
-                "Fixture observations test the evaluator only."
-                if fixture_only
-                else "Recommendations are candidates; no provider is admitted automatically."
-            ),
+            "reason": "Fixture observations test the evaluator only." if fixture_only
+            else "Recommendations are candidates; no provider is admitted automatically.",
         },
     }

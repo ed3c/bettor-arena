@@ -16,7 +16,7 @@ OK, FAIL, FATAL = 0, 2, 64
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
-    parser.add_argument("--observations", default=str(EVALS / "fixtures/good/observations.json"))
+    parser.add_argument("--observations", default=str(EVALS / "fixtures/good/observations.json.gz"))
     parser.add_argument("--output")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args(argv)
