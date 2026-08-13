@@ -1,0 +1,7 @@
+{
+  "id": "grepai",
+  "kind": "provider",
+  "families": ["semantic"],
+  "manifest_path": "providers/grepai.json",
+  "human_admit_required": true
+}
