@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Validate the Bettor consumer binding for the shared repo-agent-native Skill."""
+
 from __future__ import annotations
 
 import argparse
@@ -28,14 +29,16 @@ EVIDENCE_STATES = {
 }
 CONFIG_STATES = {"BUILT_IN", "CONFIGURED", "NOT_CONFIGURED"}
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
+MACOS_HOME_ROOT = "/Use" + "rs/"
+LINUX_HOME_ROOT = "/ho" + "me/"
 SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     "token-like value": re.compile(
         r"(?i)(?:api[_-]?key|access[_-]?token|auth[_-]?token|password|secret)\s*[:=]\s*[\"']?"
         r"(?:sk-[A-Za-z0-9_-]{8,}|gh[pousr]_[A-Za-z0-9]{12,}|[A-Za-z0-9+/]{24,}={0,2})"
     ),
-    "macOS absolute user path": re.compile(r"/Users/[^/\s`]+/"),
-    "Linux absolute home path": re.compile(r"/home/[^/\s`]+/"),
+    "macOS absolute user path": re.compile(re.escape(MACOS_HOME_ROOT) + r"[^/\s`]+/"),
+    "Linux absolute home path": re.compile(re.escape(LINUX_HOME_ROOT) + r"[^/\s`]+/"),
 }
 REQUIRED_DOC_HEADINGS = {
     DOCS_AGENT_REL / "README.md": {
@@ -162,7 +165,10 @@ def validate(root: Path) -> list[str]:
         errors.append("binding.json: unsupported schema_version")
 
     consumer = binding.get("consumer")
-    if not isinstance(consumer, dict) or consumer.get("repository") != "ed3c/bettor-arena":
+    if (
+        not isinstance(consumer, dict)
+        or consumer.get("repository") != "ed3c/bettor-arena"
+    ):
         errors.append("binding.json: consumer.repository must be ed3c/bettor-arena")
 
     skill = binding.get("skill")
@@ -174,7 +180,9 @@ def validate(root: Path) -> list[str]:
     if skill.get("canonical_repository") != "ed3c/skills-shared":
         errors.append("binding.json: canonical_repository mismatch")
     if not SHA40.fullmatch(str(skill.get("candidate_commit", ""))):
-        errors.append("binding.json: skill.candidate_commit must be a lowercase 40-hex SHA")
+        errors.append(
+            "binding.json: skill.candidate_commit must be a lowercase 40-hex SHA"
+        )
     if skill.get("candidate_state") not in EVIDENCE_STATES:
         errors.append("binding.json: skill.candidate_state is unsupported")
 
@@ -189,13 +197,17 @@ def validate(root: Path) -> list[str]:
         try:
             relative = Path(raw)
             if relative.is_absolute() or ".." in relative.parts:
-                raise BindingError(f"projection: path must stay lexically inside repository: {raw}")
+                raise BindingError(
+                    f"projection: path must stay lexically inside repository: {raw}"
+                )
             mode = git_mode(root, raw)
         except BindingError as exc:
             errors.append(str(exc))
             continue
         if mode != "120000":
-            errors.append(f"{raw}: shared Skill projection must be a tracked Git symlink, got mode {mode or 'ABSENT'}")
+            errors.append(
+                f"{raw}: shared Skill projection must be a tracked Git symlink, got mode {mode or 'ABSENT'}"
+            )
 
     routes = binding.get("routes")
     if not isinstance(routes, list) or not routes:
@@ -233,15 +245,24 @@ def validate(root: Path) -> list[str]:
                 errors.append(f"{label}: required route is ABSENT: {raw}")
 
     output = binding.get("output")
-    if not isinstance(output, dict) or output.get("schema_version") != "repo-agent-native-output/v2":
+    if (
+        not isinstance(output, dict)
+        or output.get("schema_version") != "repo-agent-native-output/v2"
+    ):
         errors.append("binding.json: output schema must be repo-agent-native-output/v2")
 
     evidence_states = binding.get("evidence_states")
     if not isinstance(evidence_states, list) or set(evidence_states) != EVIDENCE_STATES:
-        errors.append("binding.json: evidence_states must contain the exact six-state vocabulary")
+        errors.append(
+            "binding.json: evidence_states must contain the exact six-state vocabulary"
+        )
 
     human_admit = binding.get("human_admit")
-    if not isinstance(human_admit, list) or not human_admit or any(not nonempty(x) for x in human_admit):
+    if (
+        not isinstance(human_admit, list)
+        or not human_admit
+        or any(not nonempty(x) for x in human_admit)
+    ):
         errors.append("binding.json: human_admit must be a non-empty string array")
 
     claude_servers = mcp_json.get("mcpServers")
@@ -304,7 +325,9 @@ def validate(root: Path) -> list[str]:
                     f"{label}: configured server {server!r} must appear in both .mcp.json and .codex/config.toml"
                 )
             if config_state == "NOT_CONFIGURED" and (in_claude or in_codex):
-                errors.append(f"{label}: unadmitted server {server!r} is present in project MCP configuration")
+                errors.append(
+                    f"{label}: unadmitted server {server!r} is present in project MCP configuration"
+                )
 
         provider_commit = capability.get("provider_commit")
         if nonempty(provider_commit):
@@ -316,7 +339,9 @@ def validate(root: Path) -> list[str]:
                     (".codex/config.toml", codex_servers.get(server, {})),
                 ):
                     if provider_commit not in serialized(surface):
-                        errors.append(f"{label}: provider_commit is not pinned in {surface_name}")
+                        errors.append(
+                            f"{label}: provider_commit is not pinned in {surface_name}"
+                        )
 
     validate_docs(root, errors)
     validate_no_sensitive_material(root, errors)
@@ -334,8 +359,13 @@ def write_placeholder(path: Path, *, directory: bool) -> None:
 
 def initialise_git(root: Path) -> None:
     subprocess.run(["git", "-C", str(root), "init", "-q"], check=True)
-    subprocess.run(["git", "-C", str(root), "config", "user.email", "fixture@example.invalid"], check=True)
-    subprocess.run(["git", "-C", str(root), "config", "user.name", "Fixture"], check=True)
+    subprocess.run(
+        ["git", "-C", str(root), "config", "user.email", "fixture@example.invalid"],
+        check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(root), "config", "user.name", "Fixture"], check=True
+    )
     subprocess.run(["git", "-C", str(root), "add", "-A"], check=True)
 
 
@@ -385,7 +415,9 @@ def selftest(source_root: Path) -> int:
             print(f"SELFTEST BASE FAIL {error}", file=sys.stderr)
         return 1
 
-    with tempfile.TemporaryDirectory(prefix="repo-agent-native-binding-positive-") as tmp:
+    with tempfile.TemporaryDirectory(
+        prefix="repo-agent-native-binding-positive-"
+    ) as tmp:
         fixture = Path(tmp)
         make_fixture(source_root, fixture)
         positive_errors = validate(fixture)
@@ -423,7 +455,18 @@ def selftest(source_root: Path) -> int:
 
     def secret_injection(root: Path) -> None:
         path = root / BINDING_DIR_REL / "provider-map.md"
-        path.write_text(path.read_text(encoding="utf-8") + '\napi_key = "sk-test-secret-value"\n', encoding="utf-8")
+        path.write_text(
+            path.read_text(encoding="utf-8") + '\napi_key = "sk-test-secret-value"\n',
+            encoding="utf-8",
+        )
+
+    def home_path_injection(root: Path) -> None:
+        path = root / BINDING_DIR_REL / "provider-map.md"
+        planted = MACOS_HOME_ROOT + "fixture/project"
+        path.write_text(
+            path.read_text(encoding="utf-8") + f"\nlocal index: {planted}\n",
+            encoding="utf-8",
+        )
 
     for label, mutation in (
         ("copied-projection", copied_projection),
@@ -431,10 +474,13 @@ def selftest(source_root: Path) -> int:
         ("unadmitted-graph", unadmitted_graph),
         ("missing-fallback", missing_fallback),
         ("secret-injection", secret_injection),
+        ("home-path-injection", home_path_injection),
     ):
         assert_mutation_fails(source_root, label, mutation)
 
-    print("PASS repo-agent-native Bettor binding selftest: 1 positive + 5 planted negatives")
+    print(
+        "PASS repo-agent-native Bettor binding selftest: 1 positive + 6 planted negatives"
+    )
     return 0
 
 
@@ -451,7 +497,9 @@ def emit(root: Path, errors: list[str]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[2]
+    )
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args(argv)
     root = args.root.resolve()
