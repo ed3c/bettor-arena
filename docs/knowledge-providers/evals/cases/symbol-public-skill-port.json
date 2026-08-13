@@ -1,0 +1,7 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "symbol-public-skill-port",
+  "family": "symbol",
+  "participants": ["exact-search-control", "serena"],
+  "fixture_subject": true
+}
