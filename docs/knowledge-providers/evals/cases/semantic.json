@@ -3,11 +3,16 @@
   "id": "semantic-provider-registry",
   "family": "semantic",
   "capability": "search.semantic",
-  "subject_ref": "../subject.json",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  },
   "query": {
-    "text": "find provider declarations",
+    "text": "find where knowledge provider authority ceilings and current runtime states are declared",
     "path_scope": ["docs", "scripts"]
   },
+  "query_digest": "sha256:d0b1a8dcc92c21ceef71e9e0e0d9066d7f6cc85ebc55a967d43923c343e535b9",
   "participants": ["exact-search-control", "grepai"],
   "oracle": {
     "relevant_ids": ["provider-registry"],
