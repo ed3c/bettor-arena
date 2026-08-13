@@ -1,10 +1,10 @@
 {
   "composition": "bettor-arena",
-  "composition_lock_sha256": "3fd5db1fd774cccdd36149a9178ea58be959cd428d9301c8cc0abc5d3fae596f",
-  "content_sha256": "117838259b94f3e9d697c2b1ada0da35e49f0cbb7c81b514830ee912d4ee4e77",
+  "composition_lock_sha256": "140d9cba873f540b91eb5ef3ac59492718c0f83b3eb8df776a4e61e974ccb3ba",
+  "content_sha256": "adfd9d78ffc71190411ee61106e439d6fdeac39132a1deeb619b2becfd3d261c",
   "modules": [
     {
-      "closure_sha256": "ac2608bfb081d5cd5915bf4be7ccdb054a0ae832cd3ebb26c7b0f95dd065a15b",
+      "closure_sha256": "edb207f3515c6a41099793e62b0ed3ab7d903114fd8c03df3aa2883ff52923be",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
@@ -22,12 +22,12 @@
           "provider": "proof-kernel"
         }
       ],
-      "files_sha256": "5a5f1aea3212a55aefcfe4fe867a78cd0f9cec8fc03a5c046f8e397826767fd5",
+      "files_sha256": "de3dbd01f750c77f63b78ebc079d8e7f510166987217fde1975314620376e868",
       "id": "agent-runtime-integration",
       "interface_version": "1.1.0",
-      "local_sha256": "74abaefc0c8eac266debb8f443b23b2698a94bd1b8fd6ef4113549db1f1fac5c",
+      "local_sha256": "0e922f3b2f1766af6cb579434f080be6f3e5a9272054d02f9d5ed483912d3166",
       "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea",
-      "owned_files": 85,
+      "owned_files": 86,
       "proof_spec_sha256": "7653b385445229150ce10e4fb3de43e5a3ee6c2e9045eb0280071663537e50e2",
       "runtime": {
         "profiles": [
