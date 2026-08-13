@@ -1,0 +1,7 @@
+{
+  "description": "Reject PASS when no process was observed.",
+  "mutations": [
+    {"path": "receipt.executed", "value": false}
+  ],
+  "expected_errors": ["PASS requires executed=true"]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Reject working-directory traversal.",
+  "mutations": [
+    {"path": "request.command.cwd", "value": "../outside"}
+  ],
+  "expected_errors": ["command.cwd must be repository-relative without traversal"]
+}

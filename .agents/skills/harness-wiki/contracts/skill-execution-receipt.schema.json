@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/skill-execution-receipt.v1.schema.json",
+  "title": "Skill Execution Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "subject", "skill", "runner", "executed", "status", "timing", "artifacts", "assertions", "cleanup", "human_admit_required"],
+  "properties": {
+    "schema_version": {"const": "skill-execution-receipt/v1"},
+    "request_id": {"type": "string"},
+    "subject": {"type": "object"},
+    "skill": {"type": "object"},
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "command_digest"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "command_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "isolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace", "process", "environment", "network", "filesystem"],
+      "properties": {
+        "workspace": {"type": "string"},
+        "process": {"type": "string"},
+        "environment": {"type": "string"},
+        "network": {"type": "string", "enum": ["deny", "allowlisted", "inherit", "unknown"]},
+        "filesystem": {"type": "string"}
+      }
+    },
+    "executed": {"type": "boolean"},
+    "status": {"type": "string", "enum": ["NOT_RUN", "PASS", "FAIL", "ERROR", "ABSENT", "NOT_EXERCISED", "SKIPPED_BY_POLICY"]},
+    "exit_code": {"type": ["integer", "null"]},
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "ended_at", "duration_ms"],
+      "properties": {
+        "started_at": {"type": "string", "format": "date-time"},
+        "ended_at": {"type": "string", "format": "date-time"},
+        "duration_ms": {"type": "integer", "minimum": 0}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stdout", "stderr"],
+      "properties": {
+        "stdout": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "stderr": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "git_diff": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "test_report": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "runner_diagnostics": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "status", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "severity": {"type": "string", "enum": ["hard", "advisory"]},
+          "status": {"type": "string", "enum": ["PASS", "FAIL", "ERROR", "UNKNOWN", "NOT_RUN"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "residue"],
+      "properties": {
+        "status": {"type": "string", "enum": ["PASS", "FAIL", "PRESERVED_FOR_REVIEW", "NOT_RUN"]},
+        "residue": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "human_admit_required": {"type": "boolean"}
+  }
+}

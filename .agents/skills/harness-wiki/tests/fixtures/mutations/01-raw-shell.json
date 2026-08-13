@@ -1,0 +1,7 @@
+{
+  "description": "Reject a model-proposed shell execution flag.",
+  "mutations": [
+    {"path": "request.command.shell", "value": true}
+  ],
+  "expected_errors": ["forbidden key $.command.shell"]
+}

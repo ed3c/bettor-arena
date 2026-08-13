@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/skill-execution-request.v1.schema.json",
+  "title": "Skill Execution Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "subject", "skill", "command", "sandbox", "assertion_set"],
+  "properties": {
+    "schema_version": {"const": "skill-execution-request/v1"},
+    "request_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "context_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "canonical_source", "content_digest", "host_projection"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64},
+        "canonical_source": {"type": "string", "minLength": 1},
+        "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "host_projection": {"type": "string", "enum": ["codex-cli", "claude-code", "grok-build", "opencode", "pi", "ante", "loopctl"]}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "argv", "cwd", "stdin", "env_allowlist", "timeout_ms"],
+      "properties": {
+        "executable": {"type": "string", "minLength": 1, "maxLength": 256},
+        "argv": {"type": "array", "items": {"type": "string", "maxLength": 4096}, "maxItems": 128},
+        "cwd": {"type": "string", "minLength": 1, "maxLength": 512},
+        "stdin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": {"type": "string", "enum": ["closed", "artifact", "literal"]},
+            "artifact_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "literal": {"type": "string", "maxLength": 4096}
+          }
+        },
+        "env_allowlist": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z_][A-Z0-9_]*$"}, "uniqueItems": true, "maxItems": 64},
+        "timeout_ms": {"type": "integer", "minimum": 1, "maximum": 900000}
+      }
+    },
+    "sandbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network", "writable_paths", "read_only_paths", "max_output_bytes", "process_group", "cleanup"],
+      "properties": {
+        "network": {"type": "string", "enum": ["deny", "allowlisted", "inherit"]},
+        "network_allowlist": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "writable_paths": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "read_only_paths": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "max_output_bytes": {"type": "integer", "minimum": 1, "maximum": 104857600},
+        "process_group": {"const": true},
+        "cleanup": {"type": "string", "enum": ["required", "preserve-for-review"]}
+      }
+    },
+    "assertion_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "digest"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "expected_artifacts": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  }
+}

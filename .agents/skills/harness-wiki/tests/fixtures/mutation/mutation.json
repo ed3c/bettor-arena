@@ -1,0 +1,7 @@
+{
+  "description": "Reject PASS when no process ran and one hard assertion failed.",
+  "mutations": [
+    {"path": "receipt.executed", "value": false},
+    {"path": "receipt.assertions.1.status", "value": "FAIL"}
+  ]
+}
