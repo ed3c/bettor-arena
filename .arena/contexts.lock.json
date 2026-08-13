@@ -1,5 +1,5 @@
 {
-  "content_sha256": "872ad0087327d09804120d2312f50a755334466aec7c4502ea82dbd3a9cfad25",
+  "content_sha256": "2eb42921fe01c1e80095c3802e34f3bdbc936903f623d6b35b66dde3614b2fd8",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "f204735bbcf16920c1f8803ededf0e6bf6a900a17a09f477f4b93e145258d070",
+      "context_sha256": "4810031587d494819cd20bae1dcdeb931df3a4dc0052780960826b660411c375",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -56,7 +56,7 @@
           "path": "CLAUDE.md"
         },
         {
-          "blob": "bf1f3607d32b7343c00ad950872a929bd1950a59",
+          "blob": "e7d8c2cb6202d06d8a89ebeaea34cae3cb382ecc",
           "mode": "100644",
           "path": "docs/agent-runtime-integration.md"
         },
@@ -175,7 +175,7 @@
         "docs/architecture/modular-integration-status.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "cc57acb2b062a84529ec80e4c9fb6c703dcce627e0f65226e41fc1ffb560738e",
+      "context_sha256": "afbe4c4843277110869699850f02b3ab5d016cccd76adef3646c2ff46034c0fb",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -209,7 +209,7 @@
           "path": "CONTEXT.md"
         },
         {
-          "blob": "bf1f3607d32b7343c00ad950872a929bd1950a59",
+          "blob": "e7d8c2cb6202d06d8a89ebeaea34cae3cb382ecc",
           "mode": "100644",
           "path": "docs/agent-runtime-integration.md"
         },
