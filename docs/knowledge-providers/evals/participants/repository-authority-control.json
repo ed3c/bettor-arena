@@ -1,0 +1,12 @@
+{
+  "id": "repository-authority-control",
+  "kind": "control",
+  "families": ["memory"],
+  "control_contract": {
+    "kind": "repository-authority",
+    "operations": ["context-read", "adr-read", "source-read", "receipt-read"],
+    "authority": "current repository authority",
+    "network": "none"
+  },
+  "human_admit_required": true
+}
