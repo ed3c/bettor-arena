@@ -2,5 +2,11 @@
   "schema_version": "knowledge-provider-eval-case/v1",
   "id": "semantic-provider-registry",
   "family": "semantic",
+  "capability": "search.semantic",
+  "participants": ["exact-search-control", "grepai"],
+  "oracle": {
+    "relevant_ids": ["provider-registry"],
+    "must_remain_unknown": []
+  },
   "fixture_subject": true
 }
