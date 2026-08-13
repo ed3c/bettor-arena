@@ -36,7 +36,7 @@ jobs:
         run: |
           python3 scripts/migrations/apply_skill_execution_surface.py
           python3 scripts/migrations/fix_skill_execution_module_enums.py
-          rm -f \
+          git rm -f \
             scripts/migrations/apply_skill_execution_surface.py \
             scripts/migrations/fix_skill_execution_module_enums.py
 
@@ -79,9 +79,6 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A \
-            scripts/migrations/apply_skill_execution_surface.py \
-            scripts/migrations/fix_skill_execution_module_enums.py
           git add \
             .agents/skills/harness-wiki/CONTEXT.md \
             .agents/skills/harness-wiki/modules/portable-execution-index.md \
