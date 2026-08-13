@@ -8,7 +8,7 @@
     "name": "repo-agent-native",
     "canonical_repository": "ed3c/skills-shared",
     "required_version": "2.0.0",
-    "candidate_commit": "9d11099c8c43bf0a3b0807349efb5499ff8425ce",
+    "candidate_commit": "9d1106dfe48b9f72654375ca691f847ec830343e",
     "candidate_state": "NOT_EXERCISED",
     "projection_paths": [
       ".agents/skills/repo-agent-native",
