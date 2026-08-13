@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/knowledge_providers/contracts/query-request.schema.json",
+  "title": "Knowledge Provider Query Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "operation",
+    "provider_requirement",
+    "query",
+    "authority"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-provider-query-request/v1"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "symbol.lookup",
+        "symbol.references",
+        "symbol.rename_plan",
+        "search.semantic",
+        "callgraph.trace",
+        "graph.neighbors",
+        "graph.path",
+        "graph.impact",
+        "structural.search",
+        "memory.recall"
+      ]
+    },
+    "provider_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "preferred_ids",
+        "allow_fallback"
+      ],
+      "properties": {
+        "capability": {
+          "type": "string",
+          "enum": [
+            "index.status",
+            "symbol.lookup",
+            "symbol.references",
+            "symbol.rename_plan",
+            "search.semantic",
+            "callgraph.trace",
+            "graph.neighbors",
+            "graph.path",
+            "graph.impact",
+            "structural.search",
+            "memory.recall",
+            "memory.write_proposal",
+            "memory.delete_proposal"
+          ]
+        },
+        "preferred_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]*$"
+          }
+        },
+        "allow_fallback": {
+          "type": "boolean"
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "limit",
+        "include_source"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "include_source": {
+          "type": "boolean"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_only",
+        "result_is_projection",
+        "requires_source_verification"
+      ],
+      "properties": {
+        "read_only": {
+          "const": true
+        },
+        "result_is_projection": {
+          "const": true
+        },
+        "requires_source_verification": {
+          "const": true
+        }
+      }
+    }
+  }
+}
