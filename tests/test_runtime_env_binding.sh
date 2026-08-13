@@ -12,6 +12,15 @@ grep -Fq 'python3 scripts/gates/check_runtime_env_binding.py --staged' \
   exit 1
 }
 
+grep -Fq 'verify-consumer' "$GATE" || {
+  echo "FAIL: repo-local gate does not delegate to the installed runtime-env public seam" >&2
+  exit 1
+}
+grep -Fq 'bettor-arena-local' "$GATE" || {
+  echo "FAIL: repo-local gate does not pin the bettor-arena binding id" >&2
+  exit 1
+}
+
 python3 "$GATE"
 
 echo "PASS: runtime-env binding gate seam"

@@ -4,6 +4,8 @@ Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md); the complete modular t
 
 `AGENTS.md` and `CLAUDE.md` are governed projections. Repo-local staged gates validate them without reading sibling checkouts. Cross-repository generators are promotion-time tools only.
 
+Before changing the local Agent stack (Code-Graph-RAG, Mem0, Herdr), its health, indexes, onboarding, or MCP/host wiring, read [`docs/local-agent-stack.md`](docs/local-agent-stack.md). Record `installed`, `running`, `wired`, and `data-ready` separately and trust a fresh measurement over prose.
+
 ## Mandatory multi-hop read order
 
 For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adapter, browser, GitHub/Forgejo origin, external bootstrap, or Agent Shield work, read in order:

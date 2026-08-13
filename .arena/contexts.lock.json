@@ -1,5 +1,5 @@
 {
-  "content_sha256": "2fb91bae9b7e0afb0a54955ab97f2b607a516c9d8052fe7406af553bc66d723c",
+  "content_sha256": "d835efdea1211e0f9e6dc9a707a07739a49c70fdb8ed92161560644ade70e6fa",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "7be00dae49a4d483e0144515702a59a0148857aaa8ef067e4aa1b0cc3301b4a8",
+      "context_sha256": "bc93e93bf9359b18ad70919ac1f25388d8d049be8ba4689c684b4f980e328115",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -41,12 +41,12 @@
           "path": ".runtime-env/requirements.json"
         },
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -90,7 +90,7 @@
         "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
         "loop_wiki/code-truth-graph/modules/exchange-formats.md"
       ],
-      "context_sha256": "bca8ab85b069839e20e673ca9598df18753d76f3db3f6d8bdeb8e764058d8a1a",
+      "context_sha256": "7fbf392650e59084657a2509846ea37c8ed6c3743da911030db7395aa4b932d6",
       "cwd": "loop_wiki/code-truth-graph",
       "drivers": {
         "claude-code": {
@@ -104,12 +104,12 @@
       },
       "files": [
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -171,11 +171,14 @@
         "CLAUDE.md",
         "ARCHITECTURE.md",
         "CONTEXT.md",
-        "docs/architecture/modular-integration-requirements.md",
-        "docs/architecture/modular-integration-status.md",
-        "docs/agent-runtime-integration.md"
+        "docs/agents/domain.md",
+        "docs/knowledge-providers/README.md",
+        "docs/knowledge-providers/CONTEXT.md",
+        "docs/knowledge-providers/registry.json",
+        "docs/knowledge-providers/alternatives.md",
+        ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "b94e29935b34b0b4ce8245c4398042cfb70080ef49d95b6b3a83b6c4e075ffb5",
+      "context_sha256": "d8c6a154b69630cfcc64735dba8c02ecd940855aa18407a4cecada55b6abc5eb",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -189,12 +192,97 @@
       },
       "files": [
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "b33c5b3de82f6b7f14a0cbd7825125f489441d29",
+          "mode": "100644",
+          "path": ".arena/modules/knowledge-providers/module.json"
+        },
+        {
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
+          "mode": "100644",
+          "path": "ARCHITECTURE.md"
+        },
+        {
+          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "mode": "100644",
+          "path": "CLAUDE.md"
+        },
+        {
+          "blob": "a89c7ff104a35e70856878d000fba1fdcacc26ad",
+          "mode": "100644",
+          "path": "CONTEXT.md"
+        },
+        {
+          "blob": "a17a3edcf374a7dadb5ff321cc7a82da7c607bea",
+          "mode": "100644",
+          "path": "docs/agents/domain.md"
+        },
+        {
+          "blob": "ccaf71b1cfccd53d73cbd71f1e1b742c16edb640",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/CONTEXT.md"
+        },
+        {
+          "blob": "0efdf257a01e57b89d05c0c719619bb1be8b1311",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/README.md"
+        },
+        {
+          "blob": "7d9c61398df460807b5afd512d466229c78ae025",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/alternatives.md"
+        },
+        {
+          "blob": "e180510b65443818bf58260643c6c64639868501",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/registry.json"
+        }
+      ],
+      "id": "knowledge-providers",
+      "loop": "knowledge-providers",
+      "module": "knowledge-providers",
+      "policy": {
+        "immutable_ref_required": true,
+        "max_seconds": 180,
+        "mutation": "none",
+        "network": "host-policy",
+        "secrets": "host-only"
+      }
+    },
+    {
+      "common": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "CONTEXT.md",
+        "docs/architecture/modular-integration-requirements.md",
+        "docs/architecture/modular-integration-status.md",
+        "docs/agent-runtime-integration.md"
+      ],
+      "context_sha256": "21627b810d7dfb6dfd99540ff6a3c9a99719d7d6c7bf12cf5dd4d64513b531ee",
+      "cwd": ".",
+      "drivers": {
+        "claude-code": {
+          "binary": "claude",
+          "entry": "CLAUDE.md"
+        },
+        "codex-cli": {
+          "binary": "codex",
+          "entry": "AGENTS.md"
+        }
+      },
+      "files": [
+        {
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
+          "mode": "100644",
+          "path": "AGENTS.md"
+        },
+        {
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -245,7 +333,7 @@
         ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "c371ca6d13a1cbbbdaae74f1d721a3c407e6457afe2dc91ecab7cbb8a04a6311",
+      "context_sha256": "c4e98403e92a948dcbfd96652681ab8a00b840357be1c7067290ba644f84b509",
       "cwd": "notebooklm",
       "drivers": {
         "claude-code": {
@@ -269,12 +357,12 @@
           "path": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"
         },
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -315,7 +403,7 @@
         "kb-ingest/port/README.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "f7e32950a525d5f20099076ac156c1024c5755aa830aedf2b6a8bb50e20f6995",
+      "context_sha256": "282d25e8ea2342e3377a5a8ae8750bb021b0f429ca4bb353a559f6864e0a280e",
       "cwd": "kb-ingest",
       "drivers": {
         "claude-code": {
@@ -329,12 +417,12 @@
       },
       "files": [
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -388,7 +476,7 @@
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
       ],
-      "context_sha256": "1e90927905bbe6735e569eb1f6feddf46ea20500394ae9f126246618b3a89010",
+      "context_sha256": "351d89d17d16c9b176f8e8b71a2b7b17c1134225ab5c5ca6badd4f64514ad650",
       "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
       "drivers": {
         "claude-code": {
@@ -402,12 +490,12 @@
       },
       "files": [
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
@@ -476,7 +564,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "f18ad9f9f371238ecd22b220ceaaac089dff8cdea25ab47bccc5ca05ddd376a1",
+      "context_sha256": "341779a3b86b586f2e586faabaa2a0f653ded734525c1708585cbe3db3a9b017",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -490,12 +578,12 @@
       },
       "files": [
         {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
+          "blob": "498221c22dffa3e99f5ae0ca282f8031efe310b7",
           "mode": "100644",
           "path": "AGENTS.md"
         },
         {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
+          "blob": "0a6b2589488cf7ac336d6ccc2d4eca4a60053dc2",
           "mode": "100644",
           "path": "ARCHITECTURE.md"
         },
