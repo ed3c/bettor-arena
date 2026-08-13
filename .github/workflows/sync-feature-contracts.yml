@@ -95,7 +95,6 @@ jobs:
             proof_workflow/control_skill_execution_entry.sh \
             proof_workflow/control_agent_runtime_module.sh \
             proof_workflow/prove_agent_runtime.sh \
-            .github/workflows/harness-wiki-portable-execution.yml \
             .arena/locks/bettor-arena.lock.json \
             .arena/contexts.lock.json \
             data/context-capsules/driver-parity.json \
