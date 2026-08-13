@@ -12,6 +12,8 @@
 - 啟用：`sh bootstrap.sh`（冪等；doctor + 相對 hooksPath）。
 - Skill 內容單份住 `.agents/skills/`；`.claude/skills` 只作 pointer/forwarder。
 - `.codex/config.toml` 只保存可攜 MCP 宣告；host permissions/network/sockets 由人配置。
+- 本機 Agent stack：碰 CGR／Mem0／Herdr 的啟停、健康、索引、onboarding 或 MCP／host 接線前，
+  先讀 `docs/local-agent-stack.md`；installed／running／wired／data-ready 四態分記，以重測為準。
 - commit 前走 `ARCHITECTURE.md` §3 的 T0 閘；落新檔前先查 §2 槽位與 module owner。
 
 ## Mandatory read order
