@@ -1,0 +1,7 @@
+{
+  "description": "Reject PASS when sandbox cleanup failed.",
+  "mutations": [
+    {"path": "receipt.cleanup.status", "value": "FAIL"}
+  ],
+  "expected_errors": ["PASS requires cleanup PASS"]
+}

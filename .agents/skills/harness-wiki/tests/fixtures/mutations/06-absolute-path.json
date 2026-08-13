@@ -1,0 +1,7 @@
+{
+  "description": "Reject an absolute host path.",
+  "mutations": [
+    {"path": "request.sandbox.writable_paths.0", "value": "/tmp/artifacts"}
+  ],
+  "expected_errors": ["sandbox.writable_paths[0] must be repository-relative without traversal"]
+}

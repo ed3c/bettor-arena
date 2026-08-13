@@ -41,6 +41,7 @@ EVIDENCE_KINDS = ("proof", "control", "mutation")
 EVIDENCE_STATES = {"PASS", "FAIL", "ABSENT", "NOT_EXERCISED"}
 RELEASE_PROJECTION_PREFIXES = (
     ".arena/compositions",
+    ".arena/contexts.lock.json",
     ".arena/locks",
     ".arena/presets",
 )

@@ -16,24 +16,27 @@
     "notebooklm.harvest/v1": "notebooklm",
     "repo-wiki.projection/v1": "openwiki",
     "seed-repo.build/v1": "perfect-seed-factory",
+    "skill-execution.runner/v1": "agent-runtime-integration",
     "technical-equivalence.evaluate/v1": "technical-equivalence",
     "wiki-update-request.consume/v1": "openwiki",
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "112f579678a1364226cef4e486f87833465aba13901f6bef9a3ec01da751dc1e",
+  "content_sha256": "5e17fa50923f26ce9580d0e9d50a7e6217f554ef64221ccf1df11c6b489e936f",
   "modules": [
     {
       "components": [
         "bindings",
+        "portable_skill_execution",
         "requirements",
         "runtime"
       ],
       "id": "agent-runtime-integration",
-      "interface_version": "1.1.0",
-      "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea",
+      "interface_version": "1.2.0",
+      "manifest_sha256": "4559928169c66d23aee30606b9585b4ffb521fa37adb34b4e49c9af9eb69f619",
       "provides": [
-        "agent-runtime.aggregate/v1"
+        "agent-runtime.aggregate/v1",
+        "skill-execution.runner/v1"
       ]
     },
     {
@@ -194,8 +197,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "1e703ad1aad567c7d2277f5e445df3bc8e7dbd2fa5c0ea8483f54d7866be3a6e",
-  "requirements_sha256": "c5b8b901db08f27d19ebd3ba020acd1a4a568b3cf686d581857f6e0bcaf085ed",
+  "ownership_sha256": "73c6743e5c6aac333473342d17db5cb881b0d61ea27a6059f14ac3becab774a6",
+  "requirements_sha256": "210ff6861c9dc58ca887ab7f135b62e904b05e5fd893e9f886e056459762625b",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1272
+  "tracked_files": 1313
 }

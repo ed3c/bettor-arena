@@ -1,26 +1,26 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "ab41b079df5c9dcf54a70dd4bb677717aaed9ea8",
+  "workflow_commit": "80cd97057dd6449c6d2fe4e5e64f06e8fd7fb27c",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-ab41b079df5c-dirty.json",
-    "container": "container-ab41b079df5c-dirty.json",
-    "ctg": "ctg-ab41b079df5c-dirty.json",
-    "equivalence": "equivalence-ab41b079df5c-dirty.json",
-    "harness": "harness-ab41b079df5c-dirty.json",
-    "macro": "macro-ab41b079df5c-dirty.json",
-    "micro": "micro-ab41b079df5c-dirty.json",
-    "notebooklm": "notebooklm-ab41b079df5c-dirty.json",
-    "openwiki": "openwiki-ab41b079df5c-dirty.json",
-    "policy": "policy-ab41b079df5c-dirty.json",
-    "workflow": "workflow-ab41b079df5c-dirty.json"
+    "agent-runtime": "agent-runtime-80cd97057dd6-dirty.json",
+    "container": "container-80cd97057dd6-dirty.json",
+    "ctg": "ctg-80cd97057dd6-dirty.json",
+    "equivalence": "equivalence-80cd97057dd6-dirty.json",
+    "harness": "harness-80cd97057dd6-dirty.json",
+    "macro": "macro-80cd97057dd6-dirty.json",
+    "micro": "micro-80cd97057dd6-dirty.json",
+    "notebooklm": "notebooklm-80cd97057dd6-dirty.json",
+    "openwiki": "openwiki-80cd97057dd6-dirty.json",
+    "policy": "policy-80cd97057dd6-dirty.json",
+    "workflow": "workflow-80cd97057dd6-dirty.json"
   },
   "counts": {
-    "artifact": 34,
+    "artifact": 31,
     "context": 59,
     "harness": 139
   },
-  "workflow_digest": "75ecd46587e8009dc0cfed3a42c2dcee6798e1173c06e264456c7b4e15fba034",
+  "workflow_digest": "c6541faa28792fe79613719e182a38f22f4b8c3b2158b02b25c1ba485c6b7890",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -145,7 +145,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "a77a2492c91da2255d73ff37ee97d6507c39dae88a78954512c6545caee36190",
+      "sha256": "bc3557cc04c11aebf42094060f452a665d3b9b84474a29fe7799ef08d726199c",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -162,7 +162,7 @@
       ]
     },
     "CLAUDE.md": {
-      "sha256": "2855110735be79ae2201714d3a644fa4e9ad0ca456b6b86bd9e6147f6e2df8b1",
+      "sha256": "5391b7afad58a66058cb1cd79a8522c6507c7b87ad9cb39a28d676d107edb930",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -170,7 +170,7 @@
       ]
     },
     "CONTEXT.md": {
-      "sha256": "99c0aec92e45d1dfa626f310356c6f3913d47301d9733b8b4a9efe1f83741621",
+      "sha256": "86fdaa15aa8f951db909abc6c05ed8e279e6b82a1aee8552145876fcd58e665d",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -185,23 +185,6 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-ab41b079df5c9dcf54a70dd4bb677717aaed9ea8.json": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "hash_source": "index",
-      "kind": "artifact",
-      "loops": [
-        "macro"
-      ]
-    },
-    "data/wiki-update/request-dr-example.json": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "hash_source": "index",
-      "kind": "artifact",
-      "loops": [
-        "micro",
-        "openwiki"
-      ]
-    },
     "delivery.json": {
       "sha256": "50c62f5fd059566a50252b439f2d244240c05cbfd950598452e71394288837b6",
       "hash_source": "index",
@@ -211,7 +194,7 @@
       ]
     },
     "docs/agent-runtime-integration.md": {
-      "sha256": "634233948e025632bc3ab1d2b0e67e29378a956ebc21826a069469e96c38f57c",
+      "sha256": "56a53949cde7a3e20a6234c9901a9d7d8bfe00b9e1d4e7e74da6cf5f9c72fbaa",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -702,14 +685,6 @@
       "sha256": "f89c8fbb4950dcd70489d2ff0967f2e32c57e415ab3fb8ccea2e82b54d568f8d",
       "hash_source": "index",
       "kind": "context",
-      "loops": [
-        "micro"
-      ]
-    },
-    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "hash_source": "index",
-      "kind": "artifact",
       "loops": [
         "micro"
       ]

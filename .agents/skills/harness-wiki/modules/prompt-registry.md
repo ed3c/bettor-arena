@@ -64,6 +64,29 @@ If a generated context reveals a new load-bearing prompt, fold it into the
 owning loop's fixed-context module or dispatch file first, then update this
 registry with a pointer.
 
+## Portable Skill Execution And Host Projection
+
+The host-neutral procedure, host projections, execution request, assertions,
+and receipts have separate owners:
+
+| surface | owner |
+|---|---|
+| canonical portable Skill body | immutable `skills-shared/skills/<name>/SKILL.md` or an explicitly repo-owned Skill |
+| repository document route | root `AGENTS.md` + thin `CLAUDE.md` + `ARCHITECTURE.md` + root `CONTEXT.md` + nearest README/ADR route |
+| host discovery/projection | binding and adapter surface; see [`portable-execution-index.md`](portable-execution-index.md) |
+| code-execution request | [`../contracts/skill-execution-request.schema.json`](../contracts/skill-execution-request.schema.json) |
+| assertion definitions | [`../contracts/skill-assertion-set.schema.json`](../contracts/skill-assertion-set.schema.json) |
+| observed execution result | [`../contracts/skill-execution-receipt.schema.json`](../contracts/skill-execution-receipt.schema.json) |
+| contract verifier / exit code | [`../scripts/check_portable_execution_contract.py`](../scripts/check_portable_execution_contract.py) |
+| task state transition | LoopX / `loopctl`, never the Worker or Skill body |
+| promotion / destructive exception | Human Admit where repository policy requires it |
+
+A Skill that contains a script still owns only the reusable implementation and
+procedure. The host-owned runner must execute an argument vector without a raw
+shell string, capture OS/artifact evidence, evaluate hard assertions, and emit
+a subject-bound receipt. Model prose, Skill discovery, provider availability,
+or a self-authored test log cannot become `PASS`.
+
 ## Drift Guard
 
 - A panorama row without a physical prompt owner is invalid.
@@ -72,3 +95,7 @@ registry with a pointer.
   explicitly labeled as a short anchor quote.
 - A raw human constraint that affects routing must be part of fixed context,
   not only a transcript memory.
+- A canonical Skill body copied once per host is a duplicate SSOT; host-specific
+  semantics belong in generated projections or sidecars.
+- A Skill script may propose or implement work, but only an independent
+  execution/assertion receipt can advance a hard state transition.
