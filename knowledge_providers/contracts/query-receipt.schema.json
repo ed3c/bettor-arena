@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/knowledge_providers/contracts/query-receipt.schema.json",
+  "title": "Knowledge Provider Query Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "query_digest",
+    "provider",
+    "index",
+    "executed",
+    "status",
+    "results",
+    "limitations",
+    "canonicality"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-provider-query-receipt/v1"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "query_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_ref",
+        "source_digest",
+        "adapter_digest",
+        "transport"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "adapter_digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "transport": {
+          "type": "string",
+          "enum": [
+            "mcp",
+            "cli",
+            "http",
+            "library",
+            "none"
+          ]
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "subject",
+        "digest",
+        "status"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "lsp-workspace",
+            "vector-index",
+            "code-graph",
+            "memory-index",
+            "none"
+          ]
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "commit",
+            "tree"
+          ],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tree": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          }
+        },
+        "digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "FRESH",
+            "STALE",
+            "MISSING",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "executed": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "EXECUTED",
+        "EMPTY",
+        "STALE",
+        "UNAVAILABLE",
+        "ERROR",
+        "NOT_EXERCISED"
+      ]
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "stable_id",
+          "evidence_digest"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "symbol",
+              "source-span",
+              "relation",
+              "graph-node",
+              "graph-path",
+              "memory"
+            ]
+          },
+          "stable_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "symbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "span": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start_line",
+              "end_line"
+            ],
+            "properties": {
+              "start_line": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "end_line": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "relation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "canonicality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "is_canonical",
+        "requires_source_verification",
+        "may_mark_tested"
+      ],
+      "properties": {
+        "is_canonical": {
+          "const": false
+        },
+        "requires_source_verification": {
+          "const": true
+        },
+        "may_mark_tested": {
+          "const": false
+        }
+      }
+    }
+  }
+}
