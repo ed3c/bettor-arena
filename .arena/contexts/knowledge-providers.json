@@ -14,17 +14,13 @@
     "docs/knowledge-providers/CONTEXT.md",
     "docs/knowledge-providers/registry.json",
     "docs/knowledge-providers/alternatives.md",
+    "docs/knowledge-providers/evals/README.md",
+    "docs/knowledge-providers/evals/participants",
     ".arena/modules/knowledge-providers/module.json"
   ],
   "drivers": {
-    "claude-code": {
-      "entry": "CLAUDE.md",
-      "binary": "claude"
-    },
-    "codex-cli": {
-      "entry": "AGENTS.md",
-      "binary": "codex"
-    }
+    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
+    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
   },
   "policy": {
     "immutable_ref_required": true,
