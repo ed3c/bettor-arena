@@ -7,13 +7,30 @@
       "items": {
         "additionalProperties": false,
         "properties": {
-          "artifact_id": {"type": "string"},
-          "max_bytes": {"minimum": 1, "type": "integer"},
-          "media_type": {"type": "string"},
-          "path": {"type": "string"},
-          "required": {"type": "boolean"}
+          "artifact_id": {
+            "type": "string"
+          },
+          "max_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
         },
-        "required": ["artifact_id", "path", "media_type", "required", "max_bytes"],
+        "required": [
+          "artifact_id",
+          "path",
+          "media_type",
+          "required",
+          "max_bytes"
+        ],
         "type": "object"
       },
       "type": "array"
@@ -21,29 +38,101 @@
     "execution": {
       "additionalProperties": false,
       "properties": {
-        "argv": {"items": {"type": "string"}, "maxItems": 128, "type": "array"},
-        "cwd": {"type": "string"},
-        "env_allowlist": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
-        "executable": {"minLength": 1, "type": "string"},
-        "network": {"enum": ["DENY", "ALLOWLISTED", "INHERIT"]},
-        "timeout_ms": {"minimum": 1, "type": "integer"}
+        "argv": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        "cwd": {
+          "type": "string"
+        },
+        "env_allowlist": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "executable": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "network": {
+          "enum": [
+            "DENY",
+            "ALLOWLISTED",
+            "INHERIT"
+          ]
+        },
+        "timeout_ms": {
+          "minimum": 1,
+          "type": "integer"
+        }
       },
-      "required": ["executable", "argv", "cwd", "env_allowlist", "timeout_ms", "network"],
+      "required": [
+        "executable",
+        "argv",
+        "cwd",
+        "env_allowlist",
+        "timeout_ms",
+        "network"
+      ],
       "type": "object"
     },
-    "gate_id": {"type": "string"},
-    "name": {"minLength": 1, "type": "string"},
-    "observation_class": {"enum": ["EXIT_CODE", "LSP_DIAGNOSTICS", "LINTER_REPORT", "TEST_REPORT", "DIFF_ALLOWLIST", "ARTIFACT_DIGEST", "JSON_SCHEMA"]},
+    "gate_id": {
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "observation_class": {
+      "enum": [
+        "EXIT_CODE",
+        "LSP_DIAGNOSTICS",
+        "LINTER_REPORT",
+        "TEST_REPORT",
+        "DIFF_ALLOWLIST",
+        "ARTIFACT_DIGEST",
+        "JSON_SCHEMA"
+      ]
+    },
     "oracle": {
       "additionalProperties": false,
-      "properties": {"expected": {}, "type": {"type": "string"}},
-      "required": ["type", "expected"],
+      "properties": {
+        "expected": {},
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "expected"
+      ],
       "type": "object"
     },
-    "schema_version": {"const": "loopx/gate-definition/v1"},
-    "severity": {"enum": ["CRITICAL", "ADVISORY"]}
+    "schema_version": {
+      "const": "loopx/gate-definition/v1"
+    },
+    "severity": {
+      "enum": [
+        "CRITICAL",
+        "ADVISORY"
+      ]
+    }
   },
-  "required": ["schema_version", "gate_id", "name", "severity", "observation_class", "execution", "oracle", "artifacts"],
+  "required": [
+    "schema_version",
+    "gate_id",
+    "name",
+    "severity",
+    "observation_class",
+    "execution",
+    "oracle",
+    "artifacts"
+  ],
   "title": "loopx/gate-definition/v1",
   "type": "object"
 }
