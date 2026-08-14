@@ -35,22 +35,6 @@ jobs:
         with:
           bun-version: 1.3.11
 
-      - name: Normalize the legacy README Stack heading
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path("README.md")
-          text = path.read_text(encoding="utf-8")
-          old = "## Molecular Stack PR index"
-          new = "## Git Town / molecular Stack PR index"
-          if new in text:
-              raise SystemExit(0)
-          if old not in text:
-              raise SystemExit("README Stack heading is absent")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          PY
-
       - name: Render the coherent feature-branch release projections
         run: |
           python3 scripts/arena_lock.py resolve \
@@ -82,12 +66,11 @@ jobs:
           bun scripts/gates/check_project_bootstrap.ts
           bun scripts/gates/check_environment_contracts.ts
 
-      - name: Commit generated contracts and the compatibility marker
+      - name: Commit only generated modular contracts
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add \
-            README.md \
             .arena/locks/bettor-arena.lock.json \
             .arena/contexts.lock.json \
             data/context-capsules/driver-parity.json \
