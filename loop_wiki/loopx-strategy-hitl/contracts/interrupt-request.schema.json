@@ -1,0 +1,33 @@
+{
+  "$id": "https://ed3c.example/loopx/interrupt-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_decisions": {
+      "items": {"enum": ["RETRY_AFTER_FIX", "UPDATE_CONTRACT", "CANCEL_TASK", "SCOPED_EXCEPTION"]},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "evidence_refs": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "expected_state_revision": {"minimum": 0, "type": "integer"},
+    "gate_ids": {"items": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"}, "type": "array", "uniqueItems": true},
+    "reason": {"enum": ["QUOTA_EXHAUSTED", "GATE_FAILURE", "CAPABILITY_MISMATCH", "AUTHORIZATION_REQUIRED", "POLICY_BLOCK", "MANUAL_REVIEW"]},
+    "request_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "requested_by": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "class": {"enum": ["LOOPX", "STRATEGY", "GATE_ENGINE", "HUMAN_OPERATOR"]}
+      },
+      "required": ["actor_id", "class"],
+      "type": "object"
+    },
+    "schema_version": {"const": "loopx/interrupt-request/v1"},
+    "subject": {"type": "object"},
+    "todo_id": {"anyOf": [{"type": "null"}, {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"}]}
+  },
+  "required": ["schema_version", "request_id", "subject", "expected_state_revision", "reason", "todo_id", "gate_ids", "evidence_refs", "allowed_decisions", "requested_by"],
+  "title": "LoopX Interrupt Request v1",
+  "type": "object"
+}
