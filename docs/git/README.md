@@ -55,7 +55,9 @@ Current consumer selection: `NOT_SELECTED`.
 
 Full historical human index: [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md).
 
-## Ordered completion State Machine
+## State Machine
+
+### Ordered completion
 
 ```text
 PDF GAP INVENTORY
@@ -84,7 +86,7 @@ final convergence              #68
 
 Queue order and ancestry are separate. Global completion is serial; branch topology follows real byte dependency. A true child consumes unmerged parent bytes. Path-disjoint work starts from the updated `main` after its predecessor lands.
 
-## Git Town runtime State Machine
+### Git Town runtime
 
 ```text
 SHARED_METHOD_PINNED
