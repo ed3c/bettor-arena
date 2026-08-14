@@ -1,0 +1,60 @@
+{
+  "$id": "https://ed3c.example/loopx/strategy-proposal.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "performs_human_admit": {"const": false},
+        "promotes_release": {"const": false},
+        "proposal_only": {"const": true},
+        "writes_gate_verdict": {"const": false},
+        "writes_loopx_state": {"const": false}
+      },
+      "required": ["proposal_only", "writes_loopx_state", "writes_gate_verdict", "performs_human_admit", "promotes_release"],
+      "type": "object"
+    },
+    "proposal_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "proposed_command": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+        "expected_state_revision": {"minimum": 0, "type": "integer"},
+        "kind": {"enum": ["DISPATCH_TODO", "RETRY_TODO", "REQUEST_HUMAN", "HANDOFF", "COMPLETE_TODO", "FAIL_TASK", "CANCEL_TASK"]},
+        "reason_ref": {"type": "object"},
+        "todo_id": {"anyOf": [{"type": "null"}, {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"}]}
+      },
+      "required": ["command_id", "kind", "expected_state_revision", "todo_id", "reason_ref"],
+      "type": "object"
+    },
+    "rationale_ref": {"type": "object"},
+    "schema_version": {"const": "loopx/strategy-proposal/v1"},
+    "snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "ledger_head_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "lifecycle": {"enum": ["READY", "RUNNING", "VERIFYING", "RETRY_AVAILABLE", "HITL_PENDING", "COMPLETED", "COMPLETED_WITH_EXCEPTION", "FAILED", "CANCELLED"]},
+        "state_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "state_revision": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["state_revision", "ledger_head_digest", "state_digest", "lifecycle"],
+      "type": "object"
+    },
+    "strategy": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "implementation": {"enum": ["DETERMINISTIC_POLICY", "LANGGRAPH_ADAPTER", "HUMAN_PROPOSAL"]},
+        "strategy_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+        "version": {"pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$", "type": "string"}
+      },
+      "required": ["strategy_id", "version", "digest", "implementation"],
+      "type": "object"
+    },
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "proposal_id", "subject", "snapshot", "strategy", "proposed_command", "rationale_ref", "authority"],
+  "title": "LoopX Strategy Proposal v1",
+  "type": "object"
+}
