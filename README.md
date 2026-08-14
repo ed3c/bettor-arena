@@ -18,7 +18,7 @@ this branch:       feat/git-town-stack-governance-v1
 
 GitHub base/head metadata and exact-head checks are publication truth. This Markdown is a routed snapshot, not a substitute for GitHub.
 
-## PDF Harness Integration verdict
+## LoopX Harness PDF integration verdict
 
 The attached 41-page **LLM 泛化：模型權重與 Harness** PDF is a requirement/hypothesis source. It proposes a LoopX state kernel around Objective, Todos, Gates, Evidence and Quota, deterministic out-of-band verification, heterogeneous workers, LangGraph HITL, episodic memory, worktree fleets, cloud/local execution and observability.
 
@@ -53,6 +53,22 @@ Read:
 - [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
 - [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
 - [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+
+### Missing LoopX control flow
+
+The repository still lacks the complete canonical runtime flow on current `main`:
+
+```text
+Objective + Todos + Gates + Evidence + Quota
+→ append-only single-writer ledger
+→ strategy proposal
+→ leased Worker execution
+→ host-owned hard Gates
+→ LoopX reducer commit
+→ memory / retry / HITL / complete
+```
+
+The open LoopX Stack is implementation evidence for unmerged feature subjects. It is not current-main runtime or production admission.
 
 ## Read order
 
@@ -172,7 +188,7 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
 │
 ├─ PR #60 feat/pdf-loopx-modular-verifier-v1
 │    └─ PR #81 feat/git-town-stack-governance-v1
-│         issue #80; true-child documentation/governance terminal; OPEN DRAFT
+│         issue #80; true-child documentation/governance terminal; OPEN / READY FOR REVIEW / UNMERGED
 │
 ├─ PR #74 feat/loopx-contract-v1
 │    ├─ PR #75 feat/loopx-ledger-v1
