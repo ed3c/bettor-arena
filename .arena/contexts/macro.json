@@ -9,13 +9,24 @@
     "CLAUDE.md",
     "ARCHITECTURE.md",
     "CONTEXT.md",
+    "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+    "docs/architecture/pdf-harness-integration.matrix.json",
+    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/architecture/STATE_MACHINES.md",
+    "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
   "drivers": {
-    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
-    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
+    "claude-code": {
+      "entry": "CLAUDE.md",
+      "binary": "claude"
+    },
+    "codex-cli": {
+      "entry": "AGENTS.md",
+      "binary": "codex"
+    }
   },
   "policy": {
     "immutable_ref_required": true,
