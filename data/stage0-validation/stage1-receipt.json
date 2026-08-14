@@ -1,0 +1,615 @@
+{
+  "authority_ceilings": [
+    {
+      "claim": "worker may not write canonical state",
+      "declared_in": "loop_wiki/loopx-worker-gateway/contracts/AUTHORITY.md",
+      "present": true
+    },
+    {
+      "claim": "memory admission is proposal-only until Human admit",
+      "declared_in": "loop_wiki/loopx-decision-memory/contracts",
+      "present": true
+    },
+    {
+      "claim": "graph is an evidence plane, not an authority",
+      "declared_in": "loop_wiki/code-truth-graph-v2/contracts",
+      "present": true
+    }
+  ],
+  "deliveries": [
+    {
+      "capability": "loopx.contracts/v1",
+      "closure": {
+        "interface_version": "1.0.0",
+        "missing_paths": [],
+        "provides": [
+          "loopx.contracts/v1"
+        ],
+        "requires": [
+          "arena.proof-kernel/v1"
+        ],
+        "state": "COMPLETE"
+      },
+      "head": "0731b667d0832c49b7844d7a2788c435518a654f",
+      "issue": 62,
+      "merge_commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+      "module": "loopx-kernel",
+      "pr": 74,
+      "reachability": {
+        "changed_paths": [
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "af6a4b1fedbd42515c6c0632c44b33b97ff953a4",
+                "subject": "style(loopx-kernel,code-truth-graph-v2): clear the last two ruff-gate blockers"
+              },
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-kernel/scripts/check_contracts.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "af6a4b1fedbd42515c6c0632c44b33b97ff953a4",
+                "subject": "style(loopx-kernel,code-truth-graph-v2): clear the last two ruff-gate blockers"
+              },
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-kernel/scripts/contract_common.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "af6a4b1fedbd42515c6c0632c44b33b97ff953a4",
+                "subject": "style(loopx-kernel,code-truth-graph-v2): clear the last two ruff-gate blockers"
+              },
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-kernel/scripts/contract_validate.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "af6a4b1fedbd42515c6c0632c44b33b97ff953a4",
+                "subject": "style(loopx-kernel,code-truth-graph-v2): clear the last two ruff-gate blockers"
+              },
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-kernel/scripts/control_contracts.py"
+          }
+        ],
+        "main_tree": "86010032f5e63f41cc2a3edd7d62949ff932e8b9",
+        "path": "loop_wiki/loopx-kernel",
+        "pr_head_tree": "f6fb7c118e885aecc724e9735dbfe2d294bfe18c",
+        "state": "PRESENT_WITH_ATTRIBUTED_CHANGES",
+        "unattributable_count": 0
+      },
+      "suite": {
+        "exit_code": 0,
+        "reported": [
+          "loopx-contracts PASS: 5 schemas, bundle=/private/tmp/bettor-stage1/loop_wiki/loopx-kernel/tests/fixtures/good/bundle.json",
+          "loopx-contracts selftest PASS: 1 positive, 1 hollow, 16 mutations",
+          "loopx-contracts control PASS: positive=0 mutation-matrix=0 checked-negative=2 missing=64 invocation=64",
+          "loopx-contracts JSON PASS: 9 files"
+        ],
+        "state": "PASS",
+        "suite": "loop_wiki/loopx-kernel/tests/run-all.sh"
+      }
+    },
+    {
+      "capability": "loopx.ledger/v1",
+      "closure": {
+        "interface_version": "1.0.0",
+        "missing_paths": [],
+        "provides": [
+          "loopx.ledger/v1",
+          "loopx.reducer/v1"
+        ],
+        "requires": [
+          "arena.proof-kernel/v1",
+          "loopx.contracts/v1"
+        ],
+        "state": "COMPLETE"
+      },
+      "head": "8fa52730754c49da3128474423ddbc75007c5ae4",
+      "issue": 63,
+      "merge_commit": "2fd05408f585f6b8999a7922d4995d8379795eb2",
+      "module": "loopx-ledger",
+      "pr": 75,
+      "reachability": {
+        "changed_paths": [
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/check_contracts.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/control_ledger.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_cli.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_common.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_contract.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_contract_helpers.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_engine.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_event.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_reduce.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_selftest.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-ledger/scripts/ledger_store.py"
+          }
+        ],
+        "main_tree": "acc32e066e5b423560784e82230bbacae9d86bb0",
+        "path": "loop_wiki/loopx-ledger",
+        "pr_head_tree": "4b6447aec7b70cb52d1758ef4ddf2104d9696627",
+        "state": "PRESENT_WITH_ATTRIBUTED_CHANGES",
+        "unattributable_count": 0
+      },
+      "suite": {
+        "exit_code": 0,
+        "reported": [
+          "loopx-ledger-contracts PASS: 4 schemas, 7 events, revision=7",
+          "loopx-ledger-contracts selftest PASS: schema digest and snapshot drift controls",
+          "loopx-ledger selftest PASS: 1 positive replay, 1 hollow, 15 mutations/controls",
+          "loopx-ledger control PASS: init/append/verify/replay=0 duplicate=NOOP tamper=2 missing=64 invocation=64",
+          "loopx-ledger JSON PASS: 15 files"
+        ],
+        "state": "PASS",
+        "suite": "loop_wiki/loopx-ledger/tests/run-all.sh"
+      }
+    },
+    {
+      "capability": "loopx.worker-gateway/v1",
+      "closure": {
+        "interface_version": "1.0.0",
+        "missing_paths": [],
+        "provides": [
+          "loopx.worker-gateway/v1"
+        ],
+        "requires": [
+          "arena.proof-kernel/v1",
+          "loopx.contracts/v1",
+          "skill-execution.runner/v1"
+        ],
+        "state": "COMPLETE"
+      },
+      "head": "4ebdfdfb0e20b9177b2e11834c49af41b3bbd228",
+      "issue": 64,
+      "merge_commit": "c6c0a25f7c7f35d34d2530a37983058a65eadf1b",
+      "module": "loopx-worker-gateway",
+      "pr": 76,
+      "reachability": {
+        "changed_paths": [
+          {
+            "at_pr_head": true,
+            "attribution": "UNATTRIBUTABLE_SQUASHED_HISTORY",
+            "changed_by": [],
+            "on_main": false,
+            "path": "loop_wiki/loopx-worker-gateway/.no-merge"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/.ready"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "UNATTRIBUTABLE_SQUASHED_HISTORY",
+            "changed_by": [],
+            "on_main": false,
+            "path": "loop_wiki/loopx-worker-gateway/.review-only"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/.terminal"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "UNATTRIBUTABLE_SQUASHED_HISTORY",
+            "changed_by": [],
+            "on_main": false,
+            "path": "loop_wiki/loopx-worker-gateway/DO_NOT_MERGE.md"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/adapters/unimplemented.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/check_gateway.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/control_gateway.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/fake_worker.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/gateway.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/gateway_common.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/gateway_contract.py"
+          },
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-worker-gateway/scripts/gateway_runtime.py"
+          }
+        ],
+        "main_tree": "0d391fa6a5ea88229c276adf45147e2b0effc8bd",
+        "path": "loop_wiki/loopx-worker-gateway",
+        "pr_head_tree": "b4e9b1e3673be6f26a083481513d32d9b8d025e2",
+        "state": "PRESENT_WITH_ATTRIBUTED_CHANGES",
+        "unattributable_count": 3
+      },
+      "suite": {
+        "exit_code": 0,
+        "reported": [
+          "loopx-worker-gateway PASS: 4 schemas, 6 adapters, live_matrix=NOT_EXERCISED, states={\"ante\": \"NOT_IMPLEMENTED\", \"claude-code\": \"NOT_EXERCISED\", \"codex-cli\": \"NOT_EXERCISED\", \"grok-build\": \"NOT_EXERCISED\", \"opencode\": \"NOT_EXERCISED\", \"pi\": \"NOT_EXERCISED\"}",
+          "loopx-worker-gateway selftest PASS: 1 positive, 1 not-exercised, 14 mutations",
+          "loopx-worker-gateway control PASS: fixture=PASS codex=NOT_EXERCISED traversal=2 skill-mismatch=2 invocation=64 cleanup=PASS",
+          "loopx-worker-gateway JSON PASS: 20 files"
+        ],
+        "state": "PASS",
+        "suite": "loop_wiki/loopx-worker-gateway/tests/run-all.sh"
+      }
+    },
+    {
+      "capability": "loopx.decision-memory/v1",
+      "closure": {
+        "interface_version": "1.0.0",
+        "missing_paths": [],
+        "provides": [
+          "loopx.decision-memory/v1"
+        ],
+        "requires": [
+          "arena.proof-kernel/v1",
+          "knowledge-provider.memory-proposal/v1",
+          "loopx.contracts/v1"
+        ],
+        "state": "COMPLETE"
+      },
+      "head": "1f0eb3acef73b9b22bf71f886a28b5363a09cc9c",
+      "issue": 42,
+      "merge_commit": "489958df1bc1e0f5d8ccfed451a089001cef5419",
+      "module": "loopx-decision-memory",
+      "pr": 78,
+      "reachability": {
+        "changed_paths": [
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/loopx-decision-memory/scripts/memory.py"
+          }
+        ],
+        "main_tree": "274b2995404fe4e4e4c67911b47d4ce82cc33af7",
+        "path": "loop_wiki/loopx-decision-memory",
+        "pr_head_tree": "3c8dd8ebfb984c430443f92e3d8acb30c4445855",
+        "state": "PRESENT_WITH_ATTRIBUTED_CHANGES",
+        "unattributable_count": 0
+      },
+      "suite": {
+        "exit_code": 0,
+        "reported": [
+          "loopx-decision-memory contracts PASS: 4 schemas",
+          "loopx-decision-memory selftest PASS: 1 positive, 17 mutations/controls",
+          "loopx-decision-memory JSON PASS: 5 files"
+        ],
+        "state": "PASS",
+        "suite": "loop_wiki/loopx-decision-memory/tests/run-all.sh"
+      }
+    },
+    {
+      "capability": "code-truth-graph.build/v2",
+      "closure": {
+        "interface_version": "1.0.0",
+        "missing_paths": [],
+        "provides": [
+          "code-truth-graph.evidence/v2"
+        ],
+        "requires": [
+          "arena.proof-kernel/v1",
+          "code-truth-graph.build/v1",
+          "loopx.contracts/v1"
+        ],
+        "state": "COMPLETE"
+      },
+      "head": "966e74fa11fac99b4a0eeb5cf8c7d80aeaa8d10c",
+      "issue": 69,
+      "merge_commit": "437ad4004ced51ba2e2ee7c3253897c0fe61f8d2",
+      "module": "code-truth-graph-v2",
+      "pr": 79,
+      "reachability": {
+        "changed_paths": [
+          {
+            "at_pr_head": true,
+            "attribution": "ATTRIBUTED",
+            "changed_by": [
+              {
+                "commit": "af6a4b1fedbd42515c6c0632c44b33b97ff953a4",
+                "subject": "style(loopx-kernel,code-truth-graph-v2): clear the last two ruff-gate blockers"
+              },
+              {
+                "commit": "d194df1ad7a9e114dab1952d2be57fdf86b7b44d",
+                "subject": "Add LoopX Contract v1 authority boundary (#74)"
+              }
+            ],
+            "on_main": true,
+            "path": "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py"
+          }
+        ],
+        "main_tree": "d23b134d2d105af62b41073d71d97c700760336e",
+        "path": "loop_wiki/code-truth-graph-v2",
+        "pr_head_tree": "b82b5b4f3303ff050d38a2cf47ab13f02a2da9b7",
+        "state": "PRESENT_WITH_ATTRIBUTED_CHANGES",
+        "unattributable_count": 0
+      },
+      "suite": {
+        "exit_code": 0,
+        "reported": [
+          "code-truth-graph-v2 contracts PASS: 4 schemas",
+          "code-truth-graph-v2 selftest PASS: FOUND, NO_FLOW, UNKNOWN, 18 mutations/controls",
+          "code-truth-graph-v2 JSON PASS: 5 files"
+        ],
+        "state": "PASS",
+        "suite": "loop_wiki/code-truth-graph-v2/tests/run-all.sh"
+      }
+    }
+  ],
+  "failures": [],
+  "observed_at": "2026-08-14T15:49:26Z",
+  "predecessor": {
+    "disposition": "issue #82 closed 2026-08-14: all eight PR#77 files proved redundant by planting each uniquely-named control into the landed module's own fixtures; four refused, two positive controls confirmed the calls reached the checks",
+    "issue": 82
+  },
+  "reachability_method": "content, not commit ancestry: four squash merges left every child PR head unreachable from main while their contents were present, so ancestry would report absent for a module that is fully landed",
+  "result": "PASS",
+  "schema_version": "bettor-arena/loopx-stage1-receipt/v1",
+  "subject": {
+    "commit": "c860b0884ec6469a75bb56ea482866c1f9314536",
+    "repository": "ed3c/bettor-arena",
+    "tree": "831243e34dcd7b2eeb921553163fc514eade3979",
+    "worktree_clean": true
+  }
+}

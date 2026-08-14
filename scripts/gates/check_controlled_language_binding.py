@@ -6,6 +6,7 @@ Exit 2: input was readable but violated the contract.
 Exit 64: usage or input was absent, unreadable, or malformed.
 Exit 70: the evaluator itself could not complete.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -79,9 +80,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(json.dumps(result, sort_keys=True))
     else:
         detail = (
-            f" and {mutation_count} mutations"
-            if mutation_count is not None
-            else ""
+            f" and {mutation_count} mutations" if mutation_count is not None else ""
         )
         print(f"CTL BINDING GREEN: exact consumer binding{detail} passed")
     return 0

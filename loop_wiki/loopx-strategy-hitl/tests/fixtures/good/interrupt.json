@@ -1,0 +1,26 @@
+{
+  "allowed_decisions": [
+    "RETRY_AFTER_FIX",
+    "SCOPED_EXCEPTION",
+    "CANCEL"
+  ],
+  "created_at": "2026-08-14T12:00:00Z",
+  "gate_ids": [
+    "gate-flaky-timing"
+  ],
+  "interrupt_digest": "sha256:69980099844c0dc11c94519da3a87f29f5ad1008bfe4ececb6c6726009d5c216",
+  "interrupt_id": "int-0007",
+  "reason": "MANUAL_GATE",
+  "schema_version": "loopx/hitl-interrupt/v1",
+  "state": {
+    "ledger_head": "sha256:a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "state_revision": 7
+  },
+  "subject": {
+    "commit": "0731b667d0832c49b7844d7a2788c435518a654f",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-strategy-hitl-fixture",
+    "tree": "7f508545279eee4fbca6ae0b60df4e324028f487"
+  },
+  "todo_id": "todo-verify-contracts"
+}

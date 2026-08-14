@@ -1,0 +1,21 @@
+{
+  "authority": {
+    "authority_receipt_ref": "sha256:b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+    "kind": "HUMAN",
+    "signer_id": "repository-owner"
+  },
+  "created_at": "2026-08-14T12:05:00Z",
+  "decision": "SCOPED_EXCEPTION",
+  "decision_id": "dec-0007",
+  "exception": null,
+  "interrupt_digest": "sha256:69980099844c0dc11c94519da3a87f29f5ad1008bfe4ececb6c6726009d5c216",
+  "rationale_artifact_ref": "sha256:c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+  "revalidation_required": true,
+  "schema_version": "loopx/human-decision/v1",
+  "subject": {
+    "commit": "0731b667d0832c49b7844d7a2788c435518a654f",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-strategy-hitl-fixture",
+    "tree": "7f508545279eee4fbca6ae0b60df4e324028f487"
+  }
+}

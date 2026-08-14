@@ -1,0 +1,76 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/strategy-proposal/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "gate_verdict": {"const": false},
+        "human_decision": {"const": false},
+        "state_write": {"const": false}
+      },
+      "required": ["state_write", "gate_verdict", "human_decision"],
+      "type": "object"
+    },
+    "based_on": {
+      "additionalProperties": false,
+      "properties": {
+        "ledger_head": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "state_revision": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["state_revision", "ledger_head"],
+      "type": "object"
+    },
+    "command": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {"type": ["string", "null"]},
+        "expected_state_revision": {"minimum": 0, "type": "integer"},
+        "rationale_artifact_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "target_todo": {"type": ["string", "null"]},
+        "type": {"enum": ["DISPATCH", "RETRY", "REQUEST_HUMAN", "CANCEL", "COMPLETE_TASK"]}
+      },
+      "required": ["type", "target_todo", "adapter_id", "expected_state_revision", "rationale_artifact_ref"],
+      "type": "object"
+    },
+    "planner": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_authority": {"const": "PROJECTION_ONLY"},
+        "checkpoint_ref": {"type": ["string", "null"]},
+        "identity_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "kind": {"enum": ["DETERMINISTIC", "LANGGRAPH", "HUMAN"]}
+      },
+      "required": ["kind", "identity_digest", "checkpoint_ref", "checkpoint_authority"],
+      "type": "object"
+    },
+    "preconditions": {
+      "additionalProperties": false,
+      "properties": {
+        "critical_gates": {"enum": ["ALL_PASS", "PENDING", "FAILED", "UNKNOWN"]},
+        "interrupt_reason": {"enum": ["NONE", "QUOTA_EXHAUSTED", "MANUAL_GATE", "CONTRACT_CONFLICT", "POLICY_REFUSAL"]},
+        "quota": {"enum": ["AVAILABLE", "EXHAUSTED", "UNKNOWN"]},
+        "todo_state": {"enum": ["READY", "RUNNING", "BLOCKED", "DONE", "UNKNOWN"]}
+      },
+      "required": ["todo_state", "critical_gates", "quota", "interrupt_reason"],
+      "type": "object"
+    },
+    "proposal_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+    "schema_version": {"const": "loopx/strategy-proposal/v1"},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"type": "string"},
+        "task_id": {"type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    }
+  },
+  "required": ["schema_version", "proposal_id", "subject", "based_on", "planner", "preconditions", "command", "authority"],
+  "title": "LoopX Strategy Proposal v1",
+  "type": "object"
+}
