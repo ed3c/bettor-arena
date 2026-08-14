@@ -78,17 +78,17 @@ physical cloud/local integration         NOT_EXERCISED
 
 Git Town is optional local stack tooling. **GitHub base/head metadata plus exact-head checks are publication truth.** A child PR may be merged only into a parent branch and still be absent from `main`.
 
-Snapshot at the LoopX audit baseline:
+Current publication topology:
 
 ```text
-main @ 77267aba27ad94dde85a4dbda7dacc70a3057fb0
+main @ 9a5549e9994a7915201862a3e76be9906a4be13c
 ├─ #43 repo-agent-native binding                              MERGED TO MAIN
 ├─ #51 knowledge-provider contracts + current runner bytes    MERGED TO MAIN
 ├─ #57 first PDF modular traceability                         MERGED TO MAIN
 ├─ #53 historical portable-Skill convergence                  OPEN / DIVERGED / SUPERSEDED CANDIDATE
 ├─ #56 provider admission evaluations                         OPEN / RED EXACT HEAD
 ├─ #58 runtime-env + Agent Shield second-PDF audit             OPEN DRAFT / BASE MAIN
-└─ LoopX PDF executable traceability                          THIS WORKSTREAM
+└─ #60 LoopX PDF executable traceability                      OPEN / MERGEABLE / HUMAN REVIEW
 ```
 
 Portable Skill execution is present on current `main`:
@@ -101,6 +101,8 @@ Portable Skill execution is present on current `main`:
 Therefore PR #53 is not current integration authority. Treat it as a stale/diverged historical branch until a Human compares unique delta and closes, supersedes or rebuilds it.
 
 PR #56 is not merge-authorized while its exact head is red. Fixture-only provider evaluation cannot prove Serena, GrepAI, Code-Graph-RAG or Mem0 live health. PR #58 is a Draft documentation audit and cannot proxy runtime/product completion.
+
+PR #60 is the current LoopX traceability leaf. Its dedicated LoopX gate, Modular contracts and `repo-agent-native` binding checks were green before this Stack-only metadata update. Re-run all exact-head checks after every update; do not auto-merge. Human Admit owns merge, promotion and rollback.
 
 Whenever GitHub topology changes, refresh the Stack index in root README, both PDF traceability documents and the LoopX JSON manifest.
 
@@ -161,7 +163,7 @@ release
 → exact subject + proof/control/mutation + Human decision
 ```
 
-Do not copy PDF example latency, memory usage, market/adoption claims, model behavior, provider availability or license conclusions into repository truth without independent current evidence.
+Do not copy PDF latency, memory usage, market/adoption claims, model behavior, provider availability or license conclusions into repository truth without independent current evidence.
 
 ## Shared document-route interface
 
@@ -198,9 +200,9 @@ The only seam is the public interface, typed packet, artifact reference, exact e
 ## Internal / external consumption
 
 ```text
-Symlink       local development projection
-Bundle + lock reproducible execution
-CLI / MCP     public consumption
+Symlink        local development projection
+Bundle + lock  reproducible execution
+CLI / MCP      public consumption
 ```
 
 - Same-module adapters may invoke executables in their own closure.
