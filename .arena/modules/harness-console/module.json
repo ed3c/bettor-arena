@@ -1,0 +1,80 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/harness-console/contracts"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/harness-console/service",
+        "loop_wiki/harness-console/app"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "harness-console",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "harness-console",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/harness-console/service/hitlapi.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/harness-console/service/control_hitl.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/harness-console/service/hitlapi.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/harness-console/service/hitlapi.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "tests/harness-console/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.harness-console/v1",
+    "loopx.hitl-request/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/harness-console"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "The Harness Console's read-only projection, eight bounded view models and signed HITL request path, where the projection is a pure function of canonical events, a missing event makes it INCOMPLETE rather than continuous history, COMPLETED_WITH_EXCEPTION is counted apart from completion, and the console can ask but never merge, mark a gate PASS, or write a ledger event. Rendering is NOT_IMPLEMENTED."
+}

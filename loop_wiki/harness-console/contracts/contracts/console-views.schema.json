@@ -1,0 +1,66 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/harness-console/views/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The eight bounded views, as data. Rendering is NOT_IMPLEMENTED: there is no HTML, no websocket and no browser here. Every view truncates and every view says it truncated, because a truncated list that does not say so is a shorter list, and a shorter list looks complete.",
+  "properties": {
+    "authority": {
+      "const": "READ_ONLY_PROJECTION"
+    },
+    "completeness": {
+      "enum": [
+        "COMPLETE",
+        "INCOMPLETE"
+      ]
+    },
+    "ledger_head": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "render_state": {
+      "const": "NOT_IMPLEMENTED"
+    },
+    "schema_version": {
+      "const": "loopx/console-views/v1"
+    },
+    "state_revision": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "view_count": {
+      "const": 8
+    },
+    "views": {
+      "propertyNames": {
+        "enum": [
+          "diagnostics_panel",
+          "gate_evidence_inspector",
+          "git_diff_viewer",
+          "hitl_dialog",
+          "provenance_panel",
+          "quota_retry_panel",
+          "receipt_links",
+          "thread_task_graph"
+        ]
+      },
+      "type": "object"
+    },
+    "views_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ledger_head",
+    "state_revision",
+    "completeness",
+    "views",
+    "view_count",
+    "render_state",
+    "authority",
+    "views_digest"
+  ],
+  "title": "Harness Console views",
+  "type": "object"
+}
