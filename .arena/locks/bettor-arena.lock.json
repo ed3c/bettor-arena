@@ -13,27 +13,32 @@
     "arena.proof-kernel/v1": "proof-kernel",
     "arena.stateless-mcp/v1": "loop-runtime",
     "code-truth-graph.build/v1": "code-truth-graph",
+    "knowledge-provider.memory-proposal/v1": "knowledge-providers",
+    "knowledge-provider.query/v1": "knowledge-providers",
     "notebooklm.harvest/v1": "notebooklm",
     "repo-wiki.projection/v1": "openwiki",
     "seed-repo.build/v1": "perfect-seed-factory",
+    "skill-execution.runner/v1": "agent-runtime-integration",
     "technical-equivalence.evaluate/v1": "technical-equivalence",
     "wiki-update-request.consume/v1": "openwiki",
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "949bc7cadbf8bdf8e28d418bc61a2c60e59ef18281147d6958e558225e0a58ea",
+  "content_sha256": "85cafe3738e5bc5d8e2514517dfa4f6522102796c97c9fe2554b14e6fb99f545",
   "modules": [
     {
       "components": [
         "bindings",
+        "portable_skill_execution",
         "requirements",
         "runtime"
       ],
       "id": "agent-runtime-integration",
-      "interface_version": "1.1.0",
-      "manifest_sha256": "91622f21870146d217f907d2718197ecc09b9c0f484657abfdd3f366c82985ea",
+      "interface_version": "1.2.0",
+      "manifest_sha256": "4559928169c66d23aee30606b9585b4ffb521fa37adb34b4e49c9af9eb69f619",
       "provides": [
-        "agent-runtime.aggregate/v1"
+        "agent-runtime.aggregate/v1",
+        "skill-execution.runner/v1"
       ]
     },
     {
@@ -74,6 +79,20 @@
       "provides": [
         "arena.browser-contract/v2",
         "arena.logical-release/v1"
+      ]
+    },
+    {
+      "components": [
+        "contracts",
+        "proof",
+        "registry"
+      ],
+      "id": "knowledge-providers",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "68f767e90b3cdf7957738a3fd449cff3de92930d07a3fb767526b8f72d52db61",
+      "provides": [
+        "knowledge-provider.memory-proposal/v1",
+        "knowledge-provider.query/v1"
       ]
     },
     {
@@ -194,8 +213,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "bd42f95f5e7478c82d9d07b1f5ad86b5bf3a677d94128a8a05a0ee46008e5eba",
-  "requirements_sha256": "c5b8b901db08f27d19ebd3ba020acd1a4a568b3cf686d581857f6e0bcaf085ed",
+  "ownership_sha256": "c9acda7ea38a308ccb5fb4cf4cfabbd13a5abc889e6c201390dfb3ac59f59498",
+  "requirements_sha256": "9156e8c3725aff80f97910708d842c8da495397a96939498542dfdbaf074115a",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1260
+  "tracked_files": 1343
 }

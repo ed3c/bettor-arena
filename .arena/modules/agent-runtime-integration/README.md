@@ -1,23 +1,25 @@
 # `agent-runtime-integration` module
 
 Machine authority: [`module.json`](module.json)
-Interface version: `1.1.0`
+Interface version: `1.2.0`
 
 ## Role
 
-Resolves the selected `skills-shared` and `runtime-env` closure, binds it to bettor-arena, and reports Claude Code/Codex CLI adapter readiness without storing secret values.
+Resolves the selected `skills-shared` and `runtime-env` closure, binds it to bettor-arena, reports host-adapter readiness without storing secret values, and owns the host-only portable Skill execution/assertion port.
 
 ## Public ports
 
 | Loop | Class | Interface | External policy | Entry |
 |---|---|---|---|---|
 | `agent-runtime` | aggregate | `1.0.0` | control-only | `sh loopctl/loopctl.sh agent-runtime` |
+| `skill-execution` | execution-port | `1.0.0` | host-only | `sh loopctl/loopctl.sh skill-execution` |
 
 ## Capability boundary
 
 **Provides**
 
 - `agent-runtime.aggregate/v1`
+- `skill-execution.runner/v1`
 
 **Requires**
 
@@ -30,25 +32,29 @@ Resolves the selected `skills-shared` and `runtime-env` closure, binds it to bet
 - `.agents/`
 - `.runtime-env/`
 - `scripts/agent_runtime.py`
+- `scripts/check_agent_runtime_module.py`
 - `scripts/runtime-env/`
 - `docs/agent-runtime-integration.md`
 - `docs/runtime-env-integration.md`
 
+`proof_workflow/` remains owned by `proof-kernel`; its traversal/control scripts bind evidence to this module without transferring ownership.
+
 ## Runtime and Skills
 
-- Runtime: `claude`, `codex`, `python3`; profile `bettor-arena-runtime-local`
-- Skills: required `shared-skills-infra`
+- Runtime: `claude`, `codex`, `git`, `python3`, `sh`; profile `bettor-arena-runtime-local`
+- Skills: required upstream `shared-skills-infra`; repo-owned `harness-wiki`
 
 ## Evidence
 
-- Verify: `python3 scripts/agent_runtime.py check --offline`
-- Independent control: `sh proof_workflow/control_agent_runtime_entry.sh --json`
-- Mutation / hollow evidence: `sh proof_workflow/control_agent_runtime_entry.sh --json`
+- Verify/selftest: `python3 scripts/check_agent_runtime_module.py`
+- Independent aggregate control/mutation: `sh proof_workflow/control_agent_runtime_module.sh --json`
+- Portable execution proof: `sh loopctl/loopctl.sh skill-execution prove`
+- Portable public-port control: `sh loopctl/loopctl.sh skill-execution test`
 
 ## External boundary
 
-Not MCP-exposed. Live host adapters need human-owned credentials/subscriptions; offline PASS cannot proxy a live run.
+Not MCP-exposed. A local process receipt cannot proxy a physical sandbox, live host, live provider or Human Admit. `network=deny` and `network=allowlisted` fail closed until an admitted sandbox adapter can enforce and attest them.
 
 ## Change discipline
 
-`module.json` is the source of truth for ownership, components, capabilities, effects and proof commands. This README is navigation only. Internal refactors do not require an interface bump unless input/output, named exits, effects, required flags or artifact contracts change.
+`module.json` is the source of truth for ownership, components, capabilities, effects and proof commands. This README is navigation only. Public input/output, named exits, required flags, effects or artifact contracts require an interface bump.

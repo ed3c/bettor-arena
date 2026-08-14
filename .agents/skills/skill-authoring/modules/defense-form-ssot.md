@@ -1,5 +1,7 @@
 # defense-form-ssot — 終極防禦形態 SSOT 歸屬索引(誤改防護地圖)
 
+> **LEGACY REFERENCE**：本檔是 modular migration 前的 gate inventory。清單內多個 `scripts/check_*.py` 已不在目前 repository，故本檔不再是 executable SSOT，也不得用來宣稱 gate 已接線。現役 gate 以 `.githooks/pre-commit`、`scripts/gates/` 與 `.github/workflows/` 的可讀檔案及真跑 exit code 為準。
+
 > **這是索引不是副本**——每個提示詞/判斷邏輯的真相留在它的真檔,本圖只**指針**。
 > 抄任何提示詞/邏輯內文進來=雙圖漂移(fold-in 不變量 6:fold 是最大漂移源)。
 > **改任一階段 skill 前先查此圖**:看該階段的資料流歸誰、判斷邏輯住哪、提示詞 SSOT 在哪、
@@ -19,7 +21,7 @@
 
 | 物理閘 | 守什麼 | 物理檔(SSOT) | 層 | gcr 組件映射 |
 |---|---|---|---|---|
-| 結構閘 | 官方 spec(name≤64/desc≤1024/body≤500/禁保留字) | `scripts/check_skill_conformance.py` | L1 | gcr validator |
+| 結構閘 | portable spec(name/description/optional fields)＋Bettor body≤500 家規 | `scripts/gates/check_skill_conformance.py` | L1 | gcr validator |
 | 名片閘 | 全景圖名片 vs skill 目錄無漂移 | `scripts/check_card_sync.py` | L1 | skill-bettor 獨有 |
 | 索引閘 | **本圖指針無懸空 + §C 分層完備性(SSOT 歸屬防漂移)** | `scripts/check_ssot_index.py` | L1 | skill-bettor 獨有(本次新增) |
 | 排版閘 | 拆行不拆量(內容保全,改版時) | `scripts/check_reflow.py` | per-change | skill-bettor 獨有 |
@@ -223,7 +225,7 @@ launchd**——那是新機制、新失敗模式、新孤兒。L2 的載體=`pro
 > 這是整份層契約唯一真正防止「下一個人重接一次」的機制,其餘都是文件。
 
 ```defense-layers
-scripts/check_skill_conformance.py	L1
+scripts/gates/check_skill_conformance.py	L1
 scripts/check_card_sync.py	L1
 scripts/check_ssot_index.py	L1
 scripts/check_unknown_discovery_routes.py	L1
@@ -282,7 +284,7 @@ scripts/audit_peer_session_diff.py	不接-歸屬併發人裁報表(非閘;自證
 ## §指針清單(機械驗;check_ssot_index.py 逐條驗存在,懸空=漂移 exit 3)
 
 ```ssot-pointers
-scripts/check_skill_conformance.py
+scripts/gates/check_skill_conformance.py
 scripts/check_card_sync.py
 scripts/check_ssot_index.py
 scripts/check_reflow.py
@@ -321,9 +323,11 @@ scripts/build_equivalence_matrix.py
 scripts/audit_peer_session_diff.py
 .githooks/commit-msg
 .claude/skills/harness-wiki/SKILL.md
-.claude/skills/skill-authoring/modules/panorama.md
-.claude/skills/skill-authoring/modules/authoring-clauses.md
-.claude/skills/skill-authoring/modules/fluff-blacklist.txt
+.agents/skills/skill-authoring/modules/panorama.md
+.agents/skills/skill-authoring/modules/authoring-clauses.md
+.agents/skills/skill-authoring/modules/fluff-blacklist.txt
+.agents/skills/skill-authoring/modules/official-agent-skills-profile.md
+.agents/skills/skill-authoring/modules/execution-and-assertions.md
 .claude/skills/external-verify/modules/verified-truth.md
 .githooks/pre-commit
 .githooks/pre-push

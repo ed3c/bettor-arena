@@ -1,164 +1,196 @@
-# AGENTS.md — bettor-arena（Codex／跨 host 強制入口）
+# AGENTS.md — bettor-arena Codex / cross-host entry
 
-工程 SSOT＝`ARCHITECTURE.md`：放置契約＝§2、鐵律全文＝§3。完整模組化 MVP 契約＝
-`docs/architecture/modular-integration-requirements.md`。本檔只負責**強制讀取順序、不可違反邊界與完成報告**，
-禁止把完整規格複製進 root passive context。
+Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md); the complete modular target is [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md). This file owns mandatory routing, non-negotiable boundaries, and the completion report. Do not copy the full specification into passive root context.
 
-`AGENTS.md`／`CLAUDE.md` 是本 repo 的 governed entry projections：內容必須同時服從
-`ARCHITECTURE.md`、完整模組化契約與 `docs/architecture/agent-entrypoints.contract.json`。
-常設 gate 只讀本 repo staged bytes，禁止依賴 sibling checkout；跨 repo generator 只能作 promotion-time
-同步工具，不能成為 pre-commit 的隱性執行依賴。
+`AGENTS.md` and `CLAUDE.md` are governed projections. Repo-local staged gates validate them without reading sibling checkouts. Cross-repository generators are promotion-time tools only.
 
-- 啟用：`sh bootstrap.sh`（冪等；doctor + 相對 hooksPath）。
-- Skill 內容單份住 `.agents/skills/`；`.claude/skills` 只作 pointer/forwarder。
-- `.codex/config.toml` 只保存可攜 MCP 宣告；host permissions/network/sockets 由人配置。
-- commit 前走 `ARCHITECTURE.md` §3 的 T0 閘；落新檔前先查 §2 槽位與 module owner。
+Before changing the local Agent stack (Code-Graph-RAG, Mem0, Herdr), its health, indexes, onboarding, or MCP/host wiring, read [`docs/local-agent-stack.md`](docs/local-agent-stack.md). Record `installed`, `running`, `wired`, and `data-ready` separately and trust a fresh measurement over prose.
 
-## Mandatory read order
+## Mandatory multi-hop read order
 
-涉及 module、大小迴圈、Skills、runtime-env、proof、MCP、Claude/Codex adapter、browser route、
-GitHub/Forgejo origin、外部專案初始化或 Agent Shield 整合時，動手前依序讀取：
+For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adapter, browser, GitHub/Forgejo origin, external bootstrap, or Agent Shield work, read in order:
 
-1. `ARCHITECTURE.md` §1–§3；
-2. `docs/architecture/modular-integration-requirements.md`；
-3. `docs/architecture/modular-integration-status.md`；
-4. `docs/agent-runtime-integration.md`；
-5. `sh loopctl/loopctl.sh contract`；
-6. 目標 module/loop 宣告的 passive context，例如 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；缺席必須具名，不得臆造；
-7. 最新 proof/control receipt 與 named exclusions。
+1. [`README.md`](README.md)
+2. [`CONTEXT.md`](CONTEXT.md)
+3. [`ARCHITECTURE.md`](ARCHITECTURE.md) §1–§3
+4. [`docs/INDEX.md`](docs/INDEX.md)
+5. [`docs/architecture/DOCUMENT_ROUTING.md`](docs/architecture/DOCUMENT_ROUTING.md)
+6. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
+7. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
+8. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
+9. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+10. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+11. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+12. `sh loopctl/loopctl.sh contract`
+13. the target module/loop nearest README, passive context (`AGENTS.md`, `CLAUDE.md`, `PROMPT.md`, `ROUTES.md`, `PLAN.md`, law layer), machine manifest/contract, and current receipts.
 
-修改 `AGENTS.md`／`CLAUDE.md` 後，必須開新 Agent session 才能驗證 passive context。
+A missing route, owner, module, issue, parent, eval, or evidence subject is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
-`modular-integration-requirements.md` 是 target contract，不是完成宣告。不存在的 `.arena/` manifests、
-module-scoped proof v2、Context Capsule、project initializer、multi-origin release 或 browser contract v2
-必須回報 `NOT_IMPLEMENTED`；存在但未跑的 live/provider path 必須回報 `NOT_EXERCISED`。
+The target contract is not a completion declaration. Only exact current files and subject-bound receipts establish `IMPLEMENTED` or `PASS`; a mechanism that exists but has not run remains `NOT_EXERCISED`.
+
+## Three-strike recovery and dual-origin delivery
+
+The same failure signature or acceptance criterion gets at most three materially different attempts. Record each attempt; after the third, stop editing and follow the canonical issue-first state machine in [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md#private-github-local-forgejo-delivery-loop). Its repo-contained packet, exact `owner/repo`, GitHub connector route, host-specific issue ownership, WIP=1 delivery order, stop conditions, and standing non-destructive merge authorization are normative; an issue/PR URL plus a short instruction is not sufficient context. Required receipts must be complete and commit gates green, while a contract-declared checked-red proof stays red and is reported rather than being recolored or mistaken for an absent receipt.
+
+Verified capability snapshot (2026-08-14): local Codex CLI `0.146.0` supports `codex app <repo>` to open the ChatGPT desktop workspace; a [`codex://threads/new?...` deep link](https://learn.chatgpt.com/docs/reference/commands#deep-links) prefills but does not submit. Desktop Worktrees are created in the App; CLI only enters an existing standard worktree with `codex -C <path>` ([CLI `codex app`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-codex-app), [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)). Local `agy models` also listed `gemini-3.7-flash-high`; re-resolve inventory before use, and treat it only as cross-family review while `external-verify` and official primary sources own external claims ([Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)). Current measurements override these dated snapshots.
 
 ## Bettor Arena role
-
-本 repo 必須被理解為：
 
 ```text
 Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper
 ```
 
-模組化最低判準仍是：零入向 private code reference、自有 verify、自有 selftest、隔離環境 relocation 綠，
-且每個綠有能使它轉紅的 hollow／mutation evidence。
+The minimum modularity test remains: no inbound private-code dependency, module-owned verify and selftest, real relocation/isolation, and a hollow/mutation control that can turn each green result red.
+
+## Shared document-route interface
+
+Bettor Arena implements the same route names consumed by `skills-shared`, `runtime-env`, and `agent-shield-monorepo`:
+
+```text
+README.md
+AGENTS.md
+CLAUDE.md
+CONTEXT.md
+ARCHITECTURE.md
+docs/INDEX.md
+docs/architecture/DOCUMENT_ROUTING.md
+docs/architecture/STATE_MACHINES.md
+docs/integration/CROSS_REPO_INTEGRATION.md
+docs/traceability/TRACEABILITY_INDEX.md
+<governed-directory>/README.md
+```
+
+A README explains ownership and routing; it never replaces manifests, schemas, CLI contracts, scripts, verifiers, receipts, or Git history. Each hop leaves a local summary before linking away.
 
 ## Macro / Micro boundary
 
-| | 大迴圈 Macro / Composition | 小迴圈 Micro / Task |
+| | Macro / Composition loop | Micro / Task loop |
 |---|---|---|
-| 擁有 | module selection、dependency/conflict、projection、proof matrix、Human Admit、lock、promotion/rollback | typed task、bounded iteration、local state、typed result、named exits、module proof/control |
-| 可讀 | manifests、composition locks、public capabilities、receipts | 自己的 passive context、source、private executable |
-| 使用其他 module | 只走 capability / `loopctl` public port | typed packet → public port → artifact/receipt ref |
-| 禁止 | 學習 private flags、prompt fragments、per-run temp | source/import 另一 module internal、讀另一 module `_engine-run/` |
+| Owns | module selection, dependency/conflict resolution, projection, proof matrix, Human Admit, lock, promotion/rollback | typed task, bounded iteration, module-local state, typed result, named exits, module proof/control |
+| Reads | manifests, composition locks, public capabilities, receipts | its own passive context, source, private executable |
+| Uses another module | capability and `loopctl` public port | typed packet → public port → artifact/receipt ref |
+| Must not | learn private flags, prompt fragments, per-run temp | source/import another module internals or read another `_engine-run/` |
 
-大小迴圈的縫合面只能是 public interface、typed packet、artifact reference、exit code 與 receipt。
-Human Admit、promotion、production rollback 只屬於大迴圈或 trusted host operator。
+The only seam is the public interface, typed packet, artifact reference, exit code, and receipt. Human Admit, promotion, and production rollback belong to the Macro/trusted operator plane.
 
-## Internal / External consumption
+## Internal / external consumption
 
 ```text
-Symlink = Local Development Channel
-Bundle + Lock = Reproducible Execution Channel
-CLI / MCP = Public Consumption Channel
+Symlink = local development channel
+Bundle + lock = reproducible execution channel
+CLI / MCP = public consumption channel
 ```
 
-- 同一 module 內部：public adapter 可呼叫自己 closure 內的 executable。
-- 同 repo 跨 module：stable library API 或 `loopctl`。
-- 外部 repo：預設 immutable bettor release + stateless MCP；離線／客製才用 embedded bundle。
-- Symlink 只允許 shared Skill/passive instruction 的本機投影；禁止承載跨 repo executable、venv、
-  `node_modules`、runtime checkout、browser profile、cookie、credential 或 cloud dependency。
+- Inside one module, its public adapter may call executables in its own closure.
+- Same-repo cross-module use goes through a stable library API or `loopctl`.
+- External repositories default to immutable bettor release + stateless MCP; embedded bundles are for offline/custom ownership.
+- Symlinks may project shared Skill/passive instructions locally; they must not carry cross-repo executables, venvs, `node_modules`, runtime checkouts, browser profiles, cookies, credentials, or cloud dependencies.
 
 ## CLI, MCP, and passive context
 
-1. `loopctl` 是唯一 canonical CLI；MCP tools 必須由 CLI contract 生成。
-2. 未明確宣告 `external_policy.exposed=true` 的 command，預設不出現在 `tools/list`。
-3. 每個 MCP call 必須 pin immutable release，使用 disposable worktree／bundle，不讀 owner live checkout。
-4. Caller 不得指定 server-host absolute path、任意 `cwd`、private flag、secret 或 browser profile。
-5. 只接受 typed packet、inline bundle 或 content-addressed artifact ref；完成後清除所有 runtime state。
-6. 大迴圈不能包成一個長 MCP call；拆成 `plan → resolve → verify → status` continuation packets。
-7. Apply live repo、Human Admit、promotion、production rollback、secret rotation、permission widening 不對模型暴露。
+1. `loopctl` is the canonical CLI; MCP tools are generated from the CLI contract.
+2. Commands default hidden unless `external_policy.exposed=true`.
+3. Every MCP call pins an immutable release and uses a disposable worktree/bundle, never the owner live checkout.
+4. Callers cannot provide server-host paths, arbitrary `cwd`, private flags, secrets, or browser profiles.
+5. Accept only typed packets, inline bundles, or content-addressed artifact references; verify cleanup.
+6. Macro work is packetized (`plan → resolve → verify → status`), not one long stateful call.
+7. Live-repo apply, Human Admit, promotion, production rollback, secret rotation, and permission widening are never model tools.
 
-MCP 封裝的是 **Context Materialization**，不是任意 prompt execution：
+MCP wraps **context materialization**, not arbitrary prompt execution:
 
 ```text
-resolve immutable release
-  → materialize root + loop native context files
-  → verify/freeze context digest
-  → cwd = loop root
-  → launch allowlisted claude -p / codex exec adapter
-  → validate typed output
-  → emit context + driver receipt
+immutable release
+→ materialize root + loop native context
+→ freeze digest
+→ cwd = loop root
+→ allowlisted claude -p / codex exec
+→ typed output validation
+→ context + driver receipt
 ```
 
-Root context 保存全域法則；loop context 保存 `PROMPT.md`、`ROUTES.md`、`PLAN.md` 與八大基座的具體落點。
-禁止把兩層上下文壓平成一段 MCP prompt 後刪掉 native files。
+Root context owns global laws; loop context owns `PROMPT.md`, `ROUTES.md`, `PLAN.md`, and the eight-base mapping. Do not flatten both layers into one ad-hoc MCP prompt and delete the native files.
 
 ## Proof and anti-jitter
 
-每個 module 必須有不同抵達：
+Each module needs independent arrival paths:
 
-- `proof`：context/harness/artifact traversal；
-- `control`：真從 public port 執行並觀察 touched paths/exits；
-- `mutation`／hollow：load-bearing guard 失效時必須轉紅；
-- `consumer-canary`：外部 Claude/Codex 經 released adapter 真呼叫；
-- `release-receipt`：composition promotion 時聚合同一 subject 的 evidence。
+- `proof`: traversed context/harness/artifact claim;
+- `control`: execute the real public port and observe paths/exits;
+- `mutation` or hollow: a load-bearing guard must turn red when broken;
+- `consumer-canary`: external Claude/Codex calls the released adapter;
+- `release-receipt`: aggregate evidence for one composition subject.
 
-ABSENT、FAIL、NOT_EXERCISED、hashed-not-run 與 PASS 不可互相代理；exit code 原樣傳到底。
-目標 proof v2 以 module closure digest 作 validity key：修改 A 只使 A 與 transitive dependents stale，
-不得重寫無依賴關係的 B receipt 追隨 repo HEAD。
+`ABSENT`, `FAIL`, `NOT_EXERCISED`, hashed-not-run, and `PASS` never proxy one another. Exit codes propagate unchanged. Module proof identity is closure-scoped: changing A invalidates A and transitive dependents, not unrelated B merely because repository HEAD moved.
 
 ## Conflict, Skills, runtime, origins, browser
 
-- 每個 tracked path 只能有一個 module owner。
-- Root projections 由 module fragments deterministic generation；module 不維護平行版本。
-- Module 間只傳 typed packet/artifact/receipt；entrypoint 使用 exact environment allowlist。
-- Skills 對 selected modules 求 requirements-filtered closure；shared/repo-owned 同名或不相容 bytes 時 RED。
-- `runtime-env` 只同步 secret-free projections；consumer gate 不讀 sibling checkout、不連網、不自動 sync。
-- Forgejo＝local authoring origin，GitHub＝cloud distribution origin；兩者屬同一 logical release，
-  必須驗 `exact-commit`、`same-tree` 或 `same-release-manifest`，禁止 fallback 到 mutable `main`。
-- Claude Code、Codex CLI、agy 是 actors；Playwright、stealth-browser、Antigravity CDP 是 transports/adapters。
-  Signed-in profile/session 不得 local→cloud file sync。
-- `gemini-conversation-research` 正文 file-only；`dr-research-loop` browser lane 是 optional raw Stage 1；
-  `external-verify` raw primary first，browser fallback 必須標 evidence downgrade。
+- Every tracked path has exactly one module owner or an explicit generated/evidence classification.
+- Root projections are deterministically generated from module fragments; modules do not maintain parallel root copies.
+- Modules exchange typed packets/artifacts/receipts; entrypoints receive exact environment allowlists.
+- Skill closure is requirements-filtered for selected modules. Shared/repo-owned name collision or incompatible bytes is RED.
+- `SKILL.md` contains generalized procedure/method/laws; shared `references/` contains generic contracts; shared `modules/` contains domain examples loaded on demand. Consumer-specific facts live in `.skill-bindings/` and nearest READMEs.
+- `runtime-env` synchronizes secret-free projections. Consumer gates are offline, sibling-independent, and never auto-sync.
+- Forgejo may be local authoring and GitHub cloud distribution for one logical release; equivalence requires exact commit, tree, or release-manifest evidence. Never fall back to mutable `main`.
+- Claude Code, Codex CLI, and agy are actors; Playwright, stealth-browser, and Antigravity CDP are transports/adapters. Signed-in profiles/sessions never file-sync local→cloud.
+- `gemini-conversation-research` body is file-only; `dr-research-loop` browser lane is optional untrusted Stage 1; `external-verify` prefers raw primary evidence and records browser downgrade.
 
-Agent Shield domain product 應由 `agent-shield-monorepo` 擁有；bettor-arena 只消費 selected immutable modules。
-PDF parsing/document ingestion 是獨立 module。E2B、Firecracker、啟動延遲、成本、授權與 provider capability
-是 research inputs，未經 `external-verify` + runtime canary 不得升格為不變量。
+Agent Shield product implementation belongs in `agent-shield-monorepo`; bettor consumes selected immutable modules. PDF/document ingest is an independent module. E2B/Firecracker, startup latency, cost, license, isolation, provider capability, mobile, wallet, and security claims are source inputs until independently verified and exercised.
+
+## Four-repository integration
+
+```text
+skills-shared immutable procedural Skill release
++ runtime-env secret-free binding/workload/policy
+→ bettor module/Skill/runtime composition and proof subject
+→ immutable loopctl/MCP/bootstrap release
+→ Agent Shield provider/product canaries
+→ bettor external-release acceptance
+→ Human promotion or rollback
+```
+
+Read [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md). Mutable sibling checkouts and local symlinks are never release identity.
+
+## Evidence vocabulary
+
+```text
+PASS
+FAIL
+ABSENT
+NOT_IMPLEMENTED
+NOT_EXERCISED
+SKIPPED_BY_POLICY
+```
+
+Source prose, diagrams, package presence, old SHAs, skipped/no-runner jobs, another provider, or another environment cannot create live PASS.
 
 ## Completion contract
 
-任何觸及此整合面的 Agent，收手前必須報告：
+Before stopping, report:
 
 ```text
-changed module ids / interface versions / closure digests
+changed module IDs / interface versions / closure digests
+changed document routes and directory owners
 affected transitive dependents
 changed public CLI / MCP surface
 path ownership conflicts
 proof / control / mutation-hollow results
 Claude / Codex adapter results
 GitHub / Forgejo origin and equivalence status
-browser / live canary status
-remaining NOT_IMPLEMENTED / NOT_EXERCISED
+browser / provider / external-consumer canary status
+remaining ABSENT / NOT_IMPLEMENTED / NOT_EXERCISED / SKIPPED_BY_POLICY
 rollback subject
+Human Admit and next merge order
 ```
 
-缺少適用項目，不得宣稱 modular integration complete。
+Missing an applicable item forbids a claim that modular integration is complete.
 
-## Rule → Evidence routing
+## Rule → evidence routing
 
-完整 requirement 與 current/target 差距讀 `docs/architecture/modular-integration-requirements.md`；
-目前八大基座 worked evidence 由
-`loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md` 承載。
+Detailed requirements and current/target gaps live in the modular requirements/status documents. Eight-base worked evidence lives in `loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md`.
 
-| 法則主題 | 實證 Harness |
+| Law | Evidence Harness |
 |---|---|
-| 綠燈價值取決於抵達；兩種獨立抵達才 settled | eight-base-laws 抵達分層表；SANDBOX 綠不能代理 PROD/Human Admit。 |
-| 儀器該紅時真的會紅 | B3：`selftest.sh` hollow + `portability.sh` 負控。 |
-| 缺席≠否；狀態碼傳到底 | B2：各段 exit 分記，未執行為 `not_run`。 |
-| 模組不向上依賴；搬一次才算解耦 | B5：抽出、獨立安裝、verify 與負控。 |
-| Shared worktree staging 是公共狀態 | §7：commit 被拒後先退自己的 stage，再以單一命令 stage+commit。 |
-| 推翻是時間線，note 必填 | B8：append 誤信原因，禁改寫歷史。 |
-
-<!-- 新增 module evidence 時，先更新 canonical requirement/manifests 與 agent-entrypoints contract，再更新本路由。 -->
+| Green value depends on arrival; two independent arrivals settle | eight-base arrival table; sandbox green cannot proxy production/Human Admit |
+| An instrument must turn red | B3 `selftest.sh` hollow + `portability.sh` negative control |
+| Absence is not denial; status propagates | B2 per-step exits; unexecuted state is `not_run` |
+| A module does not depend upward; relocation proves separation | B5 extraction, isolated install, verify, and negative control |

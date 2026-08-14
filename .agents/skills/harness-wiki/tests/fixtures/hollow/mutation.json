@@ -1,0 +1,6 @@
+{
+  "description": "Reject a model-proposed raw shell execution field.",
+  "mutations": [
+    {"path": "request.command.shell", "value": true}
+  ]
+}

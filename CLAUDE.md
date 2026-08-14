@@ -1,41 +1,32 @@
-# CLAUDE.md — bettor-arena（Claude Code 薄派生）
+# CLAUDE.md — bettor-arena Claude Code thin projection
 
-工程 SSOT＝`ARCHITECTURE.md`：放置契約＝§2、鐵律全文＝§3。規則原文只住 canonical 文件，
-本檔只保留 Claude Code 專屬入口與強制讀取順序，禁止複述另一份模組化規格。
+Read [`AGENTS.md`](AGENTS.md) first, then [`README.md`](README.md), [`CONTEXT.md`](CONTEXT.md), [`ARCHITECTURE.md`](ARCHITECTURE.md), and [`docs/INDEX.md`](docs/INDEX.md).
 
-`CLAUDE.md`／`AGENTS.md` 是本 repo 的 governed entry projections；staged bytes 由
-`scripts/gates/check_agent_docs.py` 對 repo-local contract 驗證。常設 gate 禁止讀 sibling checkout；
-跨 repo generator 只能作 promotion-time 同步工具。
-
-- 啟用：`sh bootstrap.sh`；專案 MCP（`.mcp.json`）與 hook（`.claude/settings.json`）啟用＝人 admit。
-- commit 前：走 `ARCHITECTURE.md` §3 的 T0 閘；落新檔前：先查 §2 槽位與 module owner。
-- 迭代期間 root passive context 凍結；改本檔後必須開新 Claude Code session 才能驗證。
+`CLAUDE.md` and `AGENTS.md` are governed entry projections. The repo-local gate validates staged bytes; promotion-time cross-repository generators may update them, but pre-commit never reads a sibling checkout.
 
 ## Mandatory modular-integration read order
 
-任何涉及 module、大小迴圈、Skills、runtime-env、proof、MCP、browser route、GitHub/Forgejo origin、
-外部 project bootstrap 或 Agent Shield integration 的工作，動手前依序讀取：
+For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, browser, origin, external bootstrap, or Agent Shield work, continue through:
 
-1. `ARCHITECTURE.md` §1–§3；
-2. `docs/architecture/modular-integration-requirements.md`；
-3. `docs/architecture/modular-integration-status.md`；
-4. `docs/agent-runtime-integration.md`；
-5. `sh loopctl/loopctl.sh contract`；
-6. 目標 module/loop 宣告的 passive context，例如 `AGENTS.md`、`CLAUDE.md`、`PROMPT.md`、`ROUTES.md`、`PLAN.md` 與法則層；缺席必須具名，不得臆造；
-7. 最新 proof/control receipt 與 named exclusions。
+1. [`docs/architecture/DOCUMENT_ROUTING.md`](docs/architecture/DOCUMENT_ROUTING.md)
+2. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
+3. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
+4. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
+5. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+6. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+7. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+8. `sh loopctl/loopctl.sh contract`
+9. the target module/loop passive context, nearest README, machine manifest/contract, and latest proof/control/mutation receipts.
 
-`docs/architecture/modular-integration-requirements.md` 是 target contract，不是完成宣告。不存在的 `.arena/`
-manifest、module-scoped proof v2、project initializer、browser contract v2 等必須回報 `NOT_IMPLEMENTED`；
-未跑的 live/provider path 必須回報 `NOT_EXERCISED`。
+## Claude Code boundary
 
 Claude Code 不得：
 
-- 繞過 `loopctl` 直呼另一 module 的 private entrypoint；
-- 以 symlink 當 reproducible execution/release；
-- 把 root 與 loop 八大基座壓平成一段任意 MCP prompt；
-- 自行 Human Admit、promotion、production rollback、secret rotation 或 permission widening；
-- 把 ABSENT、FAIL、NOT_EXERCISED 讀成 PASS。
+- bypass `loopctl` or call another module's private executable;
+- treat a symlink, mutable checkout, package declaration, or old SHA as release identity;
+- flatten root/loop native context into an arbitrary MCP prompt;
+- place credentials, browser/device sessions, or host-specific secret paths in Git, bundles, MCP payloads, or receipts;
+- promote `ABSENT`, `FAIL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED`, or `SKIPPED_BY_POLICY` to PASS;
+- invent Human Admit, or merge without the issue-bound standing owner authorization and exact-head gates defined by [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md); release promotion, production rollback, secret rotation, and permission widening remain human-only.
 
-完成報告欄位與大小迴圈、Context Capsule、stateless MCP、proof/control、Skills/runtime、origins、browser
-及 external project 初始化的完整契約，統一讀 `AGENTS.md` 與
-`docs/architecture/modular-integration-requirements.md`。
+A target mechanism described in Markdown may still be `NOT_IMPLEMENTED`. A mechanism present in code but not run for the exact subject remains `NOT_EXERCISED`. Open a new Claude session after changing passive context before claiming it was read.

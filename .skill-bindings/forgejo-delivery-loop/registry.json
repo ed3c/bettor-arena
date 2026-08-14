@@ -1,5 +1,5 @@
 {
-  "_schema": "forgejo-delivery-registry@0.1.0 — 每條線一項；delivery.json（物理收據，落在物化 repo 根）必含 required_receipt_fields 全部欄位。新線先在此登記再物化，T0 閘才有可驗面。位址一律 Forgejo，禁 github.com（人裁 2026-08-06：不用雲端 GitHub）。",
+  "_schema": "forgejo-delivery-registry@0.1.0 — 每條線一項；delivery.json（物理收據，落在物化 repo 根）必含 required_receipt_fields 全部欄位。新線先在此登記再物化，T0 閘才有可驗面。本 registry 的追蹤位址一律 Forgejo；GitHub cloud distribution 由 logical-origin contract 與 GitHub delivery loop 另行留證，不把 GitHub URL 混入 Forgejo receipt 欄位。",
   "forge": {
     "kind": "forgejo",
     "base_url": "http://localhost:3000",
@@ -29,7 +29,8 @@
         "http://localhost:3000/neon/bettor-arena/issues/26",
         "http://localhost:3000/neon/bettor-arena/issues/27",
         "http://localhost:3000/neon/bettor-arena/issues/32",
-        "http://localhost:3000/neon/bettor-arena/issues/34"
+        "http://localhost:3000/neon/bettor-arena/issues/34",
+        "http://localhost:3000/neon/bettor-arena/issues/35"
       ],
       "pr_urls": [
         "http://localhost:3000/neon/bettor-arena/pulls/1",

@@ -1,0 +1,36 @@
+{
+  "schema": "bettor-arena/context-capsule/v1",
+  "id": "knowledge-providers",
+  "module": "knowledge-providers",
+  "loop": "knowledge-providers",
+  "cwd": ".",
+  "common": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "ARCHITECTURE.md",
+    "CONTEXT.md",
+    "docs/agents/domain.md",
+    "docs/knowledge-providers/README.md",
+    "docs/knowledge-providers/CONTEXT.md",
+    "docs/knowledge-providers/registry.json",
+    "docs/knowledge-providers/alternatives.md",
+    ".arena/modules/knowledge-providers/module.json"
+  ],
+  "drivers": {
+    "claude-code": {
+      "entry": "CLAUDE.md",
+      "binary": "claude"
+    },
+    "codex-cli": {
+      "entry": "AGENTS.md",
+      "binary": "codex"
+    }
+  },
+  "policy": {
+    "immutable_ref_required": true,
+    "mutation": "none",
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
+  }
+}

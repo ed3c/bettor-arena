@@ -1,6 +1,6 @@
 {
   "schema_version": "bettor-arena-loopctl-contract@1.0.0",
-  "surface_version": "2.9.0",
+  "surface_version": "3.0.0",
   "stability": [
     "surface_version covers ONLY what an outside caller can say: the set of loops, the set",
     "of modes, and each command's required and optional flags. That is the promise, and it",
@@ -359,23 +359,107 @@
       ],
       "io": {
         "input": "portable module-set closure; live turns remain named not-run",
-        "output": ["data/proof-workflow/agent-runtime-<commit12>[-dirty].json"],
+        "output": [
+          "data/proof-workflow/agent-runtime-<commit12>[-dirty].json"
+        ],
         "exit": "0 portable traversal passed · 2 a step red · 64 missing context/tool or receipt collision"
       },
-      "writes": ["data/proof-workflow/agent-runtime-<commit12>[-dirty].json"]
+      "writes": [
+        "data/proof-workflow/agent-runtime-<commit12>[-dirty].json"
+      ]
     },
     {
       "loop": "agent-runtime",
       "mode": "test",
       "target": "proof_workflow/control_agent_runtime_entry.sh",
       "required": [],
-      "optional": ["--json"],
+      "optional": [
+        "--json"
+      ],
       "io": {
         "input": "synthetic clean module set plus four isolated planted defects",
-        "output": ["proof_workflow/data/<run_id>/"],
+        "output": [
+          "proof_workflow/data/<run_id>/"
+        ],
         "exit": "0 baseline passed and shared/runtime/Claude/Codex defects all turned red · 2 a control failed · 64 fixture/tool failure"
       },
-      "writes": ["proof_workflow/data/<run_id>/"]
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
+    },
+    {
+      "loop": "skill-execution",
+      "mode": "run",
+      "target": ".agents/skills/harness-wiki/scripts/run_portable_skill.py",
+      "mcp_exposed": false,
+      "required": [
+        "--assertions",
+        "--output",
+        "--repo",
+        "--request"
+      ],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": {
+          "--request": "path to one skill-execution-request/v1 document bound to an exact repository commit/tree and Skill digest",
+          "--assertions": "path to the independent skill-assertion-set/v1 document whose canonical digest is pinned by the request",
+          "--repo": "trusted host path to the source Git repository; never accepted through MCP",
+          "--output": "fresh host-owned directory for the immutable request, assertion set, content-addressed artifacts and receipt"
+        },
+        "output": [
+          "<output>/request.json and assertions.json — canonical execution inputs",
+          "<output>/artifacts/<sha256> — stdout, stderr, change artifact and runner diagnostics",
+          "<output>/receipt.json — skill-execution-receipt/v1 with exact subject, independent assertion verdicts and cleanup state"
+        ],
+        "exit": "0 executed and every hard assertion passed · 2 checked failure or fail-closed policy skip · 64 usage, absent executable, malformed input or receipt collision",
+        "note": "The local-process adapter attests a detached worktree, process group, timeout, explicit environment and post-run path boundary. It cannot attest network denial or OS filesystem isolation, so deny/allowlisted requests fail closed until a physical sandbox adapter is bound."
+      },
+      "writes": [
+        "<output>/ only; never LoopX state, promotion state or Human Admit"
+      ]
+    },
+    {
+      "loop": "skill-execution",
+      "mode": "prove",
+      "target": "proof_workflow/prove_skill_execution.sh",
+      "mcp_exposed": false,
+      "required": [],
+      "optional": [
+        "--force-receipt",
+        "--json"
+      ],
+      "io": {
+        "input": "tracked runner, schemas, context route and executable selftest at the current checkout",
+        "output": [
+          "data/proof-workflow/skill-execution-<commit12>[-dirty].json"
+        ],
+        "exit": "0 traversal and executable selftest passed · 2 a proof step went red · 64 missing context/tool or receipt collision"
+      },
+      "writes": [
+        "data/proof-workflow/skill-execution-<commit12>[-dirty].json"
+      ]
+    },
+    {
+      "loop": "skill-execution",
+      "mode": "test",
+      "target": "proof_workflow/control_skill_execution_entry.sh",
+      "mcp_exposed": false,
+      "required": [],
+      "optional": [
+        "--json"
+      ],
+      "io": {
+        "input": "synthetic Git repository plus one positive and ten independent planted negatives",
+        "output": [
+          "proof_workflow/data/<run_id>/skill-execution-control.json and captured streams"
+        ],
+        "exit": "0 positive passed and every planted defect turned red · 2 the public port missed a defect · 64 fixture/tool failure"
+      },
+      "writes": [
+        "proof_workflow/data/<run_id>/"
+      ]
     },
     {
       "loop": "workflow",
@@ -703,25 +787,45 @@
         "input_schema": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["bundle"],
+          "required": [
+            "bundle"
+          ],
           "properties": {
             "bundle": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["packet_ref", "files"],
+              "required": [
+                "packet_ref",
+                "files"
+              ],
               "properties": {
-                "packet_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+                "packet_ref": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+                },
                 "files": {
                   "type": "array",
                   "minItems": 1,
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["artifact_ref", "sha256", "content_base64"],
+                    "required": [
+                      "artifact_ref",
+                      "sha256",
+                      "content_base64"
+                    ],
                     "properties": {
-                      "artifact_ref": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
-                      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-                      "content_base64": {"type": "string"}
+                      "artifact_ref": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "content_base64": {
+                        "type": "string"
+                      }
                     }
                   }
                 }

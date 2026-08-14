@@ -1,7 +1,7 @@
 #!/bin/sh
 # loopctl.sh — the one CLI over this repo's declared loops.
 #
-#   loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|ctg> <mode> [flags]
+#   loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|skill-execution|ctg> <mode> [flags]
 #   loopctl.sh contract      print the declared surface and its sha256
 #   loopctl.sh --selftest    prove the surface and the wiring still agree
 #
@@ -32,7 +32,7 @@ HERE=$(cd "$(dirname "$0")" && pwd -P)
 CONTRACT="$HERE/contract.json"
 
 usage() {
-  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|equivalence|ctg> <mode> [flags]" >&2
+  echo "usage: loopctl.sh <macro|micro|openwiki|notebooklm|agent-runtime|skill-execution|equivalence|ctg> <mode> [flags]" >&2
   echo "       loopctl.sh contract | --selftest" >&2
   echo "       flags per command: loopctl.sh contract" >&2
 }
@@ -325,6 +325,18 @@ case "$LOOP/$MODE" in
     fi ;;
   agent-runtime/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
   agent-runtime/test) sh "$ROOT/$TARGET" ;;
+  skill-execution/run)
+    _skill_request=$(value_of --request "$@")
+    _skill_assertions=$(value_of --assertions "$@")
+    _skill_repo=$(value_of --repo "$@")
+    _skill_output=$(value_of --output "$@")
+    python3 "$ROOT/$TARGET" run \
+      --request "$_skill_request" \
+      --assertions "$_skill_assertions" \
+      --repo "$_skill_repo" \
+      --output "$_skill_output" ;;
+  skill-execution/prove) if has_flag --force-receipt "$@"; then PROVE_FORCE_RECEIPT=1 sh "$ROOT/$TARGET"; else sh "$ROOT/$TARGET"; fi ;;
+  skill-execution/test) sh "$ROOT/$TARGET" ;;
   ctg/run)
     _ctg_packet=$(value_of --packet "$@")
     _ctg_output=$(value_of --output "$@")

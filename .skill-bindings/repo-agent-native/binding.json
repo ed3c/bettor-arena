@@ -1,0 +1,122 @@
+{
+  "schema_version": "repo-agent-native-binding/v1",
+  "consumer": {
+    "repository": "ed3c/bettor-arena",
+    "role": "integration-and-acceptance-plane"
+  },
+  "skill": {
+    "name": "repo-agent-native",
+    "canonical_repository": "ed3c/skills-shared",
+    "required_version": "2.0.0",
+    "candidate_commit": "9d1106dfe48b9f72654375ca691f847ec830343e",
+    "candidate_state": "NOT_EXERCISED",
+    "projection_paths": [
+      ".agents/skills/repo-agent-native",
+      ".claude/skills/repo-agent-native"
+    ]
+  },
+  "routes": [
+    {"path": "README.md", "kind": "file", "required": true},
+    {"path": "AGENTS.md", "kind": "file", "required": true},
+    {"path": "CLAUDE.md", "kind": "file", "required": true},
+    {"path": "ARCHITECTURE.md", "kind": "file", "required": true},
+    {"path": "CONTEXT.md", "kind": "file", "required": true},
+    {"path": "CONTEXT-MAP.md", "kind": "file", "required": false},
+    {"path": "docs/README.md", "kind": "file", "required": true},
+    {"path": "docs/agents/README.md", "kind": "file", "required": true},
+    {"path": "docs/agents/domain.md", "kind": "file", "required": true},
+    {"path": "docs/agents/issue-tracker.md", "kind": "file", "required": true},
+    {"path": "docs/adr", "kind": "directory", "required": false},
+    {"path": "docs/architecture/modular-integration-requirements.md", "kind": "file", "required": true},
+    {"path": "docs/architecture/modular-integration-status.md", "kind": "file", "required": true},
+    {"path": "docs/agent-runtime-integration.md", "kind": "file", "required": true}
+  ],
+  "output": {
+    "schema_version": "repo-agent-native-output/v2",
+    "default_pattern": "docs/plans/<date>-<topic>/invariants/<slug>/repo-analysis.json",
+    "human_view_optional": true
+  },
+  "capabilities": [
+    {
+      "id": "exact-source-read",
+      "config_state": "BUILT_IN",
+      "runtime_state": "NOT_EXERCISED",
+      "authority_ceiling": "A after current source readback",
+      "surfaces": ["git", "rg", "direct-read"],
+      "fallback": "Fail with SOURCE_UNREADABLE when current source bytes cannot be read."
+    },
+    {
+      "id": "semantic-retrieval",
+      "provider": "grepai",
+      "upstream_observed_commit": "c4f294b38552dc4dad253d6a8118ba2799a2d61d",
+      "runtime_identity": "host-path-unpinned",
+      "config_state": "CONFIGURED",
+      "runtime_state": "NOT_EXERCISED",
+      "mcp_server": "grepai",
+      "authority_ceiling": "B+ candidate until current source readback",
+      "surfaces": [".mcp.json", ".codex/config.toml"],
+      "fallback": "Use exact search, regular expressions, and direct source read."
+    },
+    {
+      "id": "source-bound-python-context",
+      "provider": "repo-context-pack",
+      "runtime_identity": "repository-frozen-uv-lock",
+      "config_state": "CONFIGURED",
+      "runtime_state": "NOT_EXERCISED",
+      "mcp_server": "repo-context-pack",
+      "authority_ceiling": "B+ candidate; cannot prove absence",
+      "surfaces": [".mcp.json", ".codex/config.toml"],
+      "fallback": "Use exact search and direct Python source read."
+    },
+    {
+      "id": "symbol-operations",
+      "provider": "serena",
+      "provider_commit": "32308a871c13f8fa5936c7d44a8bca710001277e",
+      "upstream_observed_commit": "5107b11fb3cace69fcb4f35e5c74b5fb55d6fa4c",
+      "config_state": "CONFIGURED",
+      "runtime_state": "NOT_EXERCISED",
+      "mcp_server": "serena",
+      "authority_ceiling": "A- only after current definition/reference source readback",
+      "surfaces": [".mcp.json", ".codex/config.toml"],
+      "fallback": "Use exact search and direct source read; refuse an unsafe symbol edit when completeness cannot be bounded."
+    },
+    {
+      "id": "code-graph-impact",
+      "provider": "code-graph-rag",
+      "upstream_observed_commit": "34426d21770508a0870157e6be1026f827142d24",
+      "config_state": "NOT_CONFIGURED",
+      "runtime_state": "NOT_EXERCISED",
+      "mcp_server": "code-graph-rag",
+      "authority_ceiling": "B+ graph candidate until source/manifest/test/runtime readback",
+      "surfaces": [],
+      "fallback": "Use manifests, imports, exact search, Serena references, tests, and public contracts."
+    },
+    {
+      "id": "project-memory",
+      "provider": "mem0",
+      "upstream_observed_commit": "14c431735b1e8b94027949497a53a0022c214de7",
+      "config_state": "NOT_CONFIGURED",
+      "runtime_state": "NOT_EXERCISED",
+      "mcp_server": "mem0",
+      "authority_ceiling": "B+ advisory hint; never repository authority",
+      "surfaces": [],
+      "fallback": "Use CONTEXT.md, ADRs, issues/PRs, source, tests, and receipts."
+    }
+  ],
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "human_admit": [
+    "project MCP trust and provider activation",
+    "provider credential or network admission",
+    "code-graph write or destructive operations",
+    "memory retention and writeback policy",
+    "merge and shared Skill promotion",
+    "production rollback"
+  ]
+}

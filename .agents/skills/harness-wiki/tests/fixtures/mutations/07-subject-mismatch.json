@@ -1,0 +1,7 @@
+{
+  "description": "Reject a receipt for a different immutable subject.",
+  "mutations": [
+    {"path": "receipt.subject.commit", "value": "9999999999999999999999999999999999999999"}
+  ],
+  "expected_errors": ["receipt subject does not match request"]
+}

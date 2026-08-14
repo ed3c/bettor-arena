@@ -1,5 +1,7 @@
 # authoring-clauses — 條款全文(checklist 指針目標)
 
+> **LEGACY REFERENCE**：本檔保存 modular migration 前的 skill-bettor 家規與歷史測量。現行 portable/frontmatter、執行與斷言規則以父層 `SKILL.md`、`official-agent-skills-profile.md`、`execution-and-assertions.md` 為準；下文提到已不存在的 `families/` 或 `scripts/check_*.py` 不代表目前 runtime 可用。
+
 > 源計劃=docs/plans/2026-07-20-skill-spec-decompression/02+09(2026-07-20 admit)
 
 ## 統一 eval/test 契約(所有 skill 遵守;「Skills Need Evals」對 skill-bettor 的落地)
@@ -9,9 +11,9 @@
 > **非** gcr Gemini 藍圖(其 validator/ablation/llm_judge/git_gate 在 skill-bettor 已有
 > 等價物,不重蓋;對映帳=計劃 09)。分兩類,不共用一套閘:
 
-| 閘 | 工程層 `.claude/skills/` | families 分發資產 | 綁定點 |
+| 閘 | 工程層 `.agents/skills/` | families 分發資產 | 綁定點 |
 |---|---|---|---|
-| conformance(官方 name≤64/desc≤1024/body≤500/禁保留字) | 必過 | 必過 | product-ops 晨檢 + 本 checklist 3 |
+| conformance(portable 必填欄位/長度/名稱；Bettor body≤500) | 必過 | 必過 | pre-commit + 本 checklist 3 |
 | card_sync(名片同步) | 必過 | N/A | product-ops 晨檢 |
 | reflow(拆行不拆量,改版時) | 必過(條款 b) | 必過 | 重排 commit 前 |
 | fluff(no-op 散文) | WARN | FAIL(條款 e) | authoring + families op |
@@ -20,14 +22,15 @@
 | eval 分數(runner G 閘+holdout) | N/A(自審工具) | **必過=產品閘** | 演化 op + 畢業段 |
 | 行為遵循消融(L2,▣ 選配) | 試點已跑(非 husk,計劃 09/11) | 已含於 eval | 待人 admit |
 
-機械閘全在 `scripts/check_*.py`(各帶 --selftest);L0(conformance)+L1(selftest 存在性)
+機械閘以 `scripts/gates/check_skill_conformance.py` 為 portable core 入口；其他家規閘各自帶
+`--selftest`。L0(conformance)+L1(selftest 存在性)
 已綁定晨檢=每日生效;L2 消融待 ▣。**新增/改 skill 前跑對應閘,非綠不 ship。**
 
 ## 人面可讀性規範(雙受眾分離/拆行不拆量/條件配圖;checklist 第 11 項指向本節;兩類 skill 皆適用)
 
 **a. 雙受眾分離**:SKILL.md 是模型面,token 量維持 tight,不因人面理解需求增補
 (harness-spec.md §3❷ 實測被動上下文膨脹使任務完成率 91.6%→71.3%,tight 是正確性
-約束非風格偏好)。人面理解一律導向派生投影——`.claude/skills/` 落地/退場/職責變更後
+約束非風格偏好)。人面理解一律導向派生投影——`.agents/skills/` 落地/退場/職責變更後
 additive 登記 [panorama.md](panorama.md) 名片(一句話+上游+下游);families
 已有路由器 SKILL.md+FAMILY.yaml 承接同等功能,不重造第二張圖。先落地才登記,不占位。
 
@@ -64,7 +67,7 @@ python3 -c "print(max(len(l.rstrip()) for l in open('SKILL.md')))"
 ## 安全與品質左移(僅 families 分發資產;checklist 第 12 項指向本節)
 
 > 適用範圍:本節兩條款(d/e)只約束 `families/<family>/` 這類發佈給訂閱者執行的分發資產;
-> `.claude/skills/` 工程編排 skill 不適用**分發面**(自用工具,無第三方執行面)——但**注入面**
+> `.agents/skills/` 工程編排 skill 不適用**分發面**(自用工具,無第三方執行面)——但**執行面**
 > (skill 目錄內 bundle 可執行腳本)由條款 f 管,適用面廣於 d/e。出廠(publish)閘
 > 為第二層 defense-in-depth,非唯一層——第一層在本節的 authoring 自查
 > (左移依據=源計劃 PLAN.md §1b gcr 機制映射,2026-07-20 操作者修正)。
@@ -87,12 +90,12 @@ rg -P '[\x{E0000}-\x{E007F}]' families/<family>/ -n
 
 自查命令(逐行讀黑名單當 pattern,略過 `#` 頭注行):
 ```bash
-grep -vE '^#' .claude/skills/skill-authoring/modules/fluff-blacklist.txt \
+grep -vE '^#' .agents/skills/skill-authoring/modules/fluff-blacklist.txt \
   | grep -inEf - families/<family>/**/*.md
 ```
 命中者逐條核:同段落內有檔案路徑/行號/exit code/可跑命令等鐵錨 → 留;無錨 → 刪或改寫。
 
-## 附帶腳本的注入契約(checklist 第 9 項指向本節;適用面廣於 d/e)
+## 附帶腳本的執行契約(checklist 第 10 項指向本節;適用面廣於 d/e)
 
 > 源=antigravity gcr「Skills Need Evals, Don't Ship Blindly」
 > (P9/P4/輔助執行層);收錄紀律同源計劃 PLAN.md §1b
@@ -103,29 +106,28 @@ grep -vE '^#' .claude/skills/skill-authoring/modules/fluff-blacklist.txt \
 > ——注入面廣於分發面。
 > 註:repo-root 共享工具(如 `scripts/check_reflow.py`)非「注入某 skill」,走各自 selftest。
 
-**f. 附帶腳本的契約**——官方兩種機制,共通鐵律「**只有輸出進 context、程式碼本身不進**」
-(2026-07-20 external-verify primary 錨,兩輪查證;**修正首版誤斷**:官方確有「動態上下文
-注入」機制,「注入」非 Gemini-ism):
-- **`scripts/` helper**:Claude 用 bash 工具執行、只 stdout 回 context(execute-not-load)。
-- **`!`cmd`` 行內注入**:引擎送 LLM 前 preprocessing、命令 stdout 取代該行(官方 "Inject
-  dynamic context";作用在 SKILL.md body,`!` 在行首或空白後才觸發,多行用 ```! fence)。
-- **`context: fork`**:frontmatter 設之→skill body 當 prompt 派生隔離 subagent、不見對話
-  歷史、只回摘要(防 context 汙染;配套 `agent` 欄位選 subagent 型)。
+**f. 附帶腳本的契約**——portable Agent Skills 只規定 skill 可附 `scripts/`，不保證任何 host
+會自動執行，也不保證「只有 stdout 進 context」。Codex/Claude 都由 agent 依 host tool policy
+呼叫腳本；Claude 的 `!` command expansion、`context: fork`、`agent` 等是 Claude-specific
+projection，不能放進 canonical portable frontmatter。Codex 的 `$skill-name` 與 `/skills` 也只是
+Codex invocation surface。共同契約只有：**程序可以建議執行，權限與真實執行由 host/runner 決定**。
 兩面契約(下沉可靠性 + 執行安全)各一條:
 1. **聲明式調用(可靠性)**:固定順序/高危/需確定性重現的邏輯 → 下沉成腳本,
    skill 只聲明式調用(明確「執行 `<script>`」+ GOAL/CONSTRAINTS),
    **禁 inline 複述腳本內部步驟**(model 每次重解釋=非確定性回歸)。
    反面:需 model 自由度的探索性判斷別硬編碼成腳本(剝奪彈性)。
    補全 checklist 7「確定性邏輯落腳本」缺的**何時下沉+怎麼調用**。
-2. **執行即執行半徑(安全)**:skill 目錄內可執行腳本經 bash 以 agent 權限運行=blast radius。
+2. **執行即執行半徑(安全)**:skill 目錄內可執行腳本以 agent/runner 權限運行=blast radius。
    須過 d 的四項 + 無隱藏後門(未聲明的覆蓋全局行為檔,如私自 rules-file/hook)+ 依賴鎖。
-   官方安全模型=權限規則(`Skill()` allow-deny)+ workspace trust + 用戶自審,**非沙盒**
-   (官方無腳本沙盒/憑證隔離保證,見 verified-truth.md)——別假設有沙盒兜底。
+   `allowed-tools` 是 experimental/host-dependent hint，**不是 portable sandbox**。Filesystem、process、
+   network、secret 與 writable path 必須由 host policy 或 runner 強制；完整 receipt 契約見
+   [execution-and-assertions.md](execution-and-assertions.md)。
 
 機械面複用 `scripts/check_dist_safety.py`(對 target 掃憑證/隱藏字元,
 對 `<target>/scripts` 掃未宣告外呼)——給帶腳本的 skill 目錄當 target 即可,非 families 專屬。
-官方 spec 硬約束(name≤64/description≤1024/body≤500 行/禁保留字)=`scripts/check_skill_conformance.py`
-(所有 skill 統一閘)。
+portable spec 與 Bettor house policy 的分界由
+`scripts/gates/check_skill_conformance.py` 機械驗；body≤500 行只標為 `BETTOR-*`，不得冒充官方
+invalidity。官方來源與 host 差異見 [official-agent-skills-profile.md](official-agent-skills-profile.md)。
 
 ## 替代方案裁定(§4 摘,方案 B guideline 已選定)
 
