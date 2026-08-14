@@ -5,7 +5,7 @@
 GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This document records the relationship and last observed immutable subjects.
 
 ```text
-observed_at: 2026-08-14T08:44:56Z
+observed_at: 2026-08-14T09:33:48Z
 current main: 10380005fa485d6035539589c01b9f740acff15d
 machine snapshot: ../git/stack-prs.index.json
 repository profile: ../git/REPO_PROFILE.md
@@ -58,9 +58,11 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
      PDF Harness integration audit
      LoopX PDF modular integration
      repo-agent-native Bettor Binding
-   └─ issue #80 feat/git-town-stack-governance-v1
-      true-child documentation/governance terminal
-      PR NOT_CREATED at this snapshot
+   └─ PR #81 feat/git-town-stack-governance-v1
+      issue #80; true-child documentation/governance terminal
+      observed head 857b6239b5faaff12910b37b73c32e5121b4f291
+      OPEN DRAFT / MERGEABLE
+      Modular contracts PASS; focused Git Town job skipped while Draft
       rollback ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
 ```
 

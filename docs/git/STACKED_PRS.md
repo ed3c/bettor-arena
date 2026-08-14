@@ -5,7 +5,7 @@
 GitHub base/head/state/check metadata is publication truth. This document is a snapshot and must be refreshed whenever a PR base, head, state, mergeability, check or reachability changes.
 
 ```text
-observed_at: 2026-08-14T08:44:56Z
+observed_at: 2026-08-14T09:33:48Z
 main: 10380005fa485d6035539589c01b9f740acff15d
 canonical shared method:
   ed3c/skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1
@@ -43,9 +43,11 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
 └─ PR #60 feat/pdf-loopx-modular-verifier-v1
    head ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
    OPEN / mergeable / exact-head checks PASS
-   └─ issue #80 feat/git-town-stack-governance-v1
-      true-child terminal
-      PR NOT_CREATED at this snapshot
+   └─ PR #81 feat/git-town-stack-governance-v1
+      issue #80; true-child terminal
+      observed head 857b6239b5faaff12910b37b73c32e5121b4f291
+      OPEN DRAFT / MERGEABLE
+      Modular contracts PASS; focused Git Town job skipped while Draft
 ```
 
 Issue #80 changes the same routed root documentation introduced by #60, so it is a true child rather than a path-overlapping sibling.
@@ -145,7 +147,7 @@ Parent program: issue #61.
 | 9 | #71 | Code → Knowledge fold-back | `PR ABSENT` |
 | 10 | #72 | Skill/prompt evolution | `PR ABSENT` |
 | 11 | #67 | observability/signed HITL projection | `PR ABSENT` |
-| 12 | #68 | final shared convergence | `BLOCKED_BY_TERMINALS` |
+| 12 | #68 | final convergence | `BLOCKED_BY_TERMINALS` |
 
 Only #68 may select all settled terminal modules in the shared composition, regenerate final shared indexes, run the required live matrix and record Human promotion/rollback.
 
@@ -160,7 +162,7 @@ PR #56
 PR #53
   historical portable-Skill aggregate
   not current integration authority
-  unique delta must be extracted before any Human close or merge decision
+  unique delta must be extracted before any Human merge decision
 
 PR #58
   runtime-env / Agent Shield documentation audit
@@ -208,7 +210,7 @@ human_owned:
   - promotion and rollback
 ```
 
-## Publication State Machine
+## Publication state machine
 
 ```text
 ISSUE + TASK PACKET

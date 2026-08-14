@@ -1,6 +1,6 @@
 {
   "schema": "bettor-arena/stack-pr-index/v1",
-  "observed_at": "2026-08-14T08:44:56Z",
+  "observed_at": "2026-08-14T09:33:48Z",
   "authority": {
     "current": "GITHUB_API_AND_REPOSITORY_BYTES",
     "snapshot_policy": "SNAPSHOT_ONLY",
@@ -67,20 +67,20 @@
           "human_boundary": "Human owns merge, retarget, close and rollback"
         },
         {
-          "id": "issue-80",
-          "kind": "ISSUE_ONLY",
+          "id": "pr-81",
+          "kind": "PULL_REQUEST",
           "issue": 80,
-          "pr": null,
+          "pr": 81,
           "branch": "feat/git-town-stack-governance-v1",
           "base_branch": "feat/pdf-loopx-modular-verifier-v1",
-          "observed_head_sha": null,
+          "observed_head_sha": "857b6239b5faaff12910b37b73c32e5121b4f291",
           "relation": "TRUE_CHILD",
-          "publication_state": "NOT_CREATED",
+          "publication_state": "OPEN",
           "main_presence": "NOT_ON_MAIN",
-          "mergeability": "NOT_APPLICABLE",
+          "mergeability": "MERGEABLE",
           "checks": [
-            {"name": "Git Town Stack governance docs", "conclusion": "NOT_OBSERVED"},
-            {"name": "Modular contracts", "conclusion": "NOT_OBSERVED"}
+            {"name": "Modular contracts", "conclusion": "SUCCESS"},
+            {"name": "Git Town Stack governance docs", "conclusion": "NOT_OBSERVED"}
           ],
           "path_roots": ["README.md", "AGENTS.md", "CLAUDE.md", "docs/git", "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md", "docs/architecture/STATE_MACHINES.md", "docs/traceability/STACK_PR_INDEX.md", "scripts/gates/check_git_town_stack_docs.py", "tests/test_git_town_stack_docs.py"],
           "rollback_subject": "ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90",

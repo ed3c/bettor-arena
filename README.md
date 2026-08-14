@@ -171,8 +171,8 @@ merge / ship / rollback                  HUMAN-OWNED
 main @ 10380005fa485d6035539589c01b9f740acff15d
 │
 ├─ PR #60 feat/pdf-loopx-modular-verifier-v1
-│    └─ issue #80 / feat/git-town-stack-governance-v1
-│         true-child documentation/governance terminal; PR pending
+│    └─ PR #81 feat/git-town-stack-governance-v1
+│         issue #80; true-child documentation/governance terminal; OPEN DRAFT
 │
 ├─ PR #74 feat/loopx-contract-v1
 │    ├─ PR #75 feat/loopx-ledger-v1
