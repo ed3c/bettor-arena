@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 93,
-    "active_order": 9,
+    "active_issue": 104,
+    "active_order": 10,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -354,7 +354,7 @@
         "stage-04-runtime-fabric"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Admit Mem0 as an optional rebuildable projection"
     },
@@ -382,7 +382,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement immutable YouTube/PDF/Notes source ingest"
     },

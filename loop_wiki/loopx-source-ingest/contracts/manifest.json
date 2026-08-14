@@ -1,0 +1,57 @@
+{
+  "admissible_locator_origin": "READ_FROM_ARTIFACT",
+  "blocked_sources_recorded": true,
+  "capture_states": [
+    "ABSENT",
+    "BLOCKED_BY_ACCESS",
+    "BLOCKED_BY_RIGHTS",
+    "CAPTURED",
+    "GAP"
+  ],
+  "interface_version": "1.0.0",
+  "locator_origins": [
+    "ASSUMED",
+    "ESTIMATED",
+    "READ_FROM_ARTIFACT"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1"
+  ],
+  "rights_states": [
+    "AUTHORIZED",
+    "NOT_AUTHORIZED",
+    "UNKNOWN"
+  ],
+  "schema_version": "loopx/source-ingest-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/source-ingest/manifest/v1",
+      "path": "evidence-manifest.schema.json",
+      "sha256": "abc37148d1423f56b71b4b3127938e7465c3bc29e3186a2919bb27d530aa2366"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/source-ingest/declaration/v1",
+      "path": "source-declaration.schema.json",
+      "sha256": "7fa647845f48b1d24d5f91675f0f0d174facfa7a36072d91555f7485eafd47fe"
+    }
+  ],
+  "source_content_is_data": true,
+  "source_types": [
+    "ARTICLE",
+    "COMMAND_OUTPUT",
+    "KEYFRAME",
+    "LOG",
+    "MARKDOWN",
+    "PAPER",
+    "PDF_FIGURE",
+    "PDF_PAGE",
+    "RUNTIME_ARTIFACT",
+    "SCREENSHOT",
+    "SOURCE_CODE",
+    "SRT",
+    "TEST_ARTIFACT",
+    "VTT",
+    "YOUTUBE_TRANSCRIPT"
+  ]
+}
