@@ -13,6 +13,7 @@ Each child directory is one independently owned module. `module.json` is the mac
 | [`knowledge-providers`](knowledge-providers/) | provider manifest → bounded query/memory proposal → readback → candidate | provider query and proposal-only memory contracts |
 | [`loop-runtime`](loop-runtime/) | CLI parse/validate → public dispatch → Context Capsule/MCP result | `arena.loopctl/v1`, context carrier, stateless MCP |
 | [`loopx-kernel`](loopx-kernel/) | Objective/Todos/Gates/Evidence/Quota contract → typed state boundary | `loopx.contracts/v1`; terminal leaf, not composition-selected |
+| [`loopx-worker-gateway`](loopx-worker-gateway/) | six-host request/event/receipt protocol → bounded Worker observation | `loopx.worker-gateway/v1`; terminal leaf, not composition-selected |
 | [`loopx-ledger`](loopx-ledger/) | append event → validate hash chain/authority → deterministic reduce/replay | host-local single-writer ledger; child leaf, not composition-selected |
 | [`mcp-adapters`](mcp-adapters/) | typed high-level adapter → policy check → public capability | `arena.mcp-adapters/v1` |
 | [`module-catalog`](module-catalog/) | module proposal → ownership/composition resolve → deterministic lock | `arena.module-catalog/v1` |
