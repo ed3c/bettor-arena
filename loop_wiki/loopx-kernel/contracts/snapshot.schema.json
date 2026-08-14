@@ -1,0 +1,112 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_authority": {
+      "const": "LOOPX_LEDGER"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "ledger": {
+      "additionalProperties": false,
+      "properties": {
+        "event_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "head_event_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "head_event_digest",
+        "event_count"
+      ],
+      "type": "object"
+    },
+    "rebuildable": {
+      "const": true
+    },
+    "reducer": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/snapshot/v1"
+    },
+    "state": {
+      "type": "object"
+    },
+    "state_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "state_revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "subject",
+    "reducer",
+    "state_revision",
+    "ledger",
+    "canonical_authority",
+    "rebuildable",
+    "state",
+    "state_digest",
+    "content_digest"
+  ],
+  "title": "loopx/snapshot/v1",
+  "type": "object"
+}
