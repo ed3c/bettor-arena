@@ -1,0 +1,40 @@
+name: LoopX Decision Memory v1
+
+on:
+  push:
+    branches:
+      - 'feat/loopx-decision-memory-v1'
+    paths:
+      - 'loop_wiki/loopx-decision-memory/**'
+      - '.arena/modules/loopx-decision-memory/**'
+      - '.github/workflows/loopx-decision-memory.yml'
+  pull_request:
+    paths:
+      - 'loop_wiki/loopx-decision-memory/**'
+      - '.arena/modules/loopx-decision-memory/**'
+      - '.github/workflows/loopx-decision-memory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loopx-decision-memory-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate decision-memory contracts, compiler and planted controls
+        run: sh loop_wiki/loopx-decision-memory/tests/run-all.sh
+      - name: Validate module catalog without composition selection
+        run: python3 scripts/arena_modules.py catalog >/dev/null
