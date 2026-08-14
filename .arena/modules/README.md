@@ -17,6 +17,8 @@ The manifest owns interface and closure facts. The README explains intent, publi
 | [`arena-core`](arena-core/) | Root SSOT, passive entrypoints, bootstrap and repository gates |
 | [`module-catalog`](module-catalog/) | Manifests, ownership, composition resolution and locks |
 | [`loop-runtime`](loop-runtime/) | `loopctl`, Context Capsules and stateless MCP runtime |
+| [`loopx-kernel`](loopx-kernel/) | Objective/Todos/Gates/Evidence/Quota contracts and state-authority boundaries; terminal leaf, not composition-selected |
+| [`loopx-worker-gateway`](loopx-worker-gateway/) | Six-host Worker request/event/receipt protocol and epistemic adapter registry; terminal leaf, not composition-selected |
 | [`proof-kernel`](proof-kernel/) | Module closure subjects, controls, mutation and release aggregation |
 | [`project-bootstrapper`](project-bootstrapper/) | Transactional external-project plan/apply/verify/rollback |
 | [`environment-contracts`](environment-contracts/) | GitHub/Forgejo logical release and Browser Contract v2 |
