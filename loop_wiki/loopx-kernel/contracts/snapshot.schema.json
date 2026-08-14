@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "canonical_authority": {
-      "const": "LOOPX_LEDGER"
+      "const": "LOOPX_LEDGER_REDUCER"
     },
     "content_digest": {
       "pattern": "^sha256:[0-9a-f]{64}$",
@@ -14,17 +14,25 @@
       "additionalProperties": false,
       "properties": {
         "event_count": {
-          "minimum": 1,
+          "minimum": 0,
           "type": "integer"
         },
-        "head_event_digest": {
+        "head_digest": {
           "pattern": "^sha256:[0-9a-f]{64}$",
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_sequence": {
+          "minimum": -1,
+          "type": "integer"
         }
       },
       "required": [
-        "head_event_digest",
-        "event_count"
+        "event_count",
+        "last_sequence",
+        "head_digest"
       ],
       "type": "object"
     },
