@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Shared deterministic primitives for the LoopX append-only ledger."""
+
 from __future__ import annotations
 
 import hashlib
@@ -17,33 +19,95 @@ H40 = re.compile(r"^[0-9a-f]{40}$")
 REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 SUBJECT_KEYS = {"repository", "commit", "tree", "task_id"}
-ARTIFACT_KEYS = {"artifact_id", "kind", "path", "digest", "bytes", "media_type", "producer"}
-EVENT_KEYS = {"schema_version", "event_id", "subject", "sequence", "previous_event_digest", "event_digest", "occurred_at", "type", "actor", "payload"}
-EVENT_PAYLOAD_KEYS = {"todo_id", "command_id", "request_ref", "worker_result_ref", "gate_observation", "quota_delta", "human_decision", "transition"}
-PRIVATE_KEYS = {"thought", "thought_stream", "chain_of_thought", "private_reasoning", "raw_thought"}
-FORBIDDEN_PATH_PARTS = {".git", ".env", "credentials", "cookies", "auth.json", "keychain"}
-ARTIFACT_KINDS = {"STDOUT", "STDERR", "GIT_DIFF", "LSP_DIAGNOSTICS", "LINTER_REPORT", "TEST_REPORT", "FILE", "TRACE", "HUMAN_DECISION"}
-ALLOWED_TRANSITIONS = {
-    ("READY", "DISPATCHED"), ("RETRY", "DISPATCHED"),
-    ("DISPATCHED", "RUNNING"), ("RUNNING", "RETRY"),
-    ("RUNNING", "HITL_PENDING"), ("RETRY", "HITL_PENDING"),
-    ("HITL_PENDING", "READY"), ("HITL_PENDING", "CANCELLED"),
-    ("RUNNING", "COMPLETED"), ("RUNNING", "COMPLETED_WITH_EXCEPTION"),
-    ("RUNNING", "FAILED"), ("READY", "CANCELLED"),
+ARTIFACT_KEYS = {
+    "artifact_id",
+    "kind",
+    "path",
+    "digest",
+    "bytes",
+    "media_type",
+    "producer",
 }
+EVENT_KEYS = {
+    "schema_version",
+    "event_id",
+    "subject",
+    "sequence",
+    "previous_event_digest",
+    "event_digest",
+    "occurred_at",
+    "type",
+    "actor",
+    "payload",
+}
+EVENT_PAYLOAD_KEYS = {
+    "todo_id",
+    "command_id",
+    "request_ref",
+    "worker_result_ref",
+    "gate_observation",
+    "quota_delta",
+    "human_decision",
+    "transition",
+}
+PRIVATE_KEYS = {
+    "thought",
+    "thought_stream",
+    "chain_of_thought",
+    "private_reasoning",
+    "raw_thought",
+}
+FORBIDDEN_PATH_PARTS = {
+    ".git",
+    ".env",
+    "credentials",
+    "cookies",
+    "auth.json",
+    "keychain",
+}
+ARTIFACT_KINDS = {
+    "STDOUT",
+    "STDERR",
+    "GIT_DIFF",
+    "LSP_DIAGNOSTICS",
+    "LINTER_REPORT",
+    "TEST_REPORT",
+    "FILE",
+    "TRACE",
+    "HUMAN_DECISION",
+}
+ALLOWED_TRANSITIONS = {
+    ("READY", "DISPATCHED"),
+    ("RETRY", "DISPATCHED"),
+    ("DISPATCHED", "RUNNING"),
+    ("RUNNING", "RETRY"),
+    ("RUNNING", "HITL_PENDING"),
+    ("RETRY", "HITL_PENDING"),
+    ("HITL_PENDING", "READY"),
+    ("HITL_PENDING", "CANCELLED"),
+    ("RUNNING", "COMPLETED"),
+    ("RUNNING", "COMPLETED_WITH_EXCEPTION"),
+    ("RUNNING", "FAILED"),
+    ("READY", "CANCELLED"),
+}
+
 
 class ContractError(ValueError):
     pass
 
+
 class InputError(ValueError):
     pass
+
 
 class BusyError(RuntimeError):
     pass
 
 
 def canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
 
 
 def digest(value: Any) -> str:
@@ -79,7 +143,12 @@ def exact_object(value: Any, keys: set[str], label: str) -> dict[str, Any]:
 
 
 def bounded_text(value: Any, label: str, maximum: int = 4096) -> str:
-    if not isinstance(value, str) or not value.strip() or len(value) > maximum or "\0" in value:
+    if (
+        not isinstance(value, str)
+        or not value.strip()
+        or len(value) > maximum
+        or "\0" in value
+    ):
         raise ContractError(f"{label} must be a non-empty bounded string")
     return value
 
@@ -104,27 +173,35 @@ def relative_path(value: Any, label: str, allow_dot: bool = False) -> str:
     if text == "." and allow_dot:
         return text
     path = PurePosixPath(text)
-    if "\\" in text or path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
+    if (
+        "\\" in text
+        or path.is_absolute()
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
         raise ContractError(f"{label} must be a normalized relative path")
     if any(part.lower() in FORBIDDEN_PATH_PARTS for part in path.parts):
         raise ContractError(f"{label} enters a forbidden secret/control path")
     return text
 
 
-
 def validate_rfc3339_utc(value: Any, label: str) -> str:
     text = bounded_text(value, label, 32)
     try:
-        parsed = datetime.strptime(text, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        parsed = datetime.strptime(text, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=timezone.utc
+        )
     except ValueError as exc:
         raise ContractError(f"{label} must be canonical UTC RFC3339 seconds") from exc
     if parsed.year < 2000:
         raise ContractError(f"{label} is implausible")
     return text
 
+
 def validate_subject(value: Any, label: str) -> dict[str, Any]:
     subject = exact_object(value, SUBJECT_KEYS, label)
-    if not REPO.fullmatch(bounded_text(subject["repository"], f"{label}.repository", 256)):
+    if not REPO.fullmatch(
+        bounded_text(subject["repository"], f"{label}.repository", 256)
+    ):
         raise ContractError(f"{label}.repository must be owner/name")
     for key in ("commit", "tree"):
         if not isinstance(subject[key], str) or not H40.fullmatch(subject[key]):
@@ -167,7 +244,10 @@ def validate_event_digest(event: dict[str, Any], label: str) -> None:
 
 def atomic_write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    raw = json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8") + b"\n"
+    raw = (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8")
+        + b"\n"
+    )
     fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     temp_path = Path(temp_name)
     try:
@@ -195,7 +275,9 @@ def append_fsync(path: Path, raw_line: bytes) -> None:
         os.fsync(handle.fileno())
 
 
-def snapshot_summary(snapshot: dict[str, Any] | None, events_path: Path) -> dict[str, Any]:
+def snapshot_summary(
+    snapshot: dict[str, Any] | None, events_path: Path
+) -> dict[str, Any]:
     if snapshot is None:
         return {
             "event_count": 0,

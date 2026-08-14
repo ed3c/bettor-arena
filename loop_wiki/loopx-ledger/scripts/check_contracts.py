@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Validate LoopX Ledger v1 schemas and deterministic fixture projection."""
+
 from __future__ import annotations
 
 import argparse
@@ -10,8 +12,21 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from ledger_common import BAD, OK, USAGE, ContractError, InputError, canonical_bytes, load_json
-from ledger_engine import apply_event, make_snapshot, validate_contract, validate_event_shape
+from ledger_common import (
+    BAD,
+    OK,
+    USAGE,
+    ContractError,
+    InputError,
+    canonical_bytes,
+    load_json,
+)
+from ledger_engine import (
+    apply_event,
+    make_snapshot,
+    validate_contract,
+    validate_event_shape,
+)
 
 MANIFEST_KEYS = {
     "schema_version",
@@ -45,7 +60,11 @@ def exact_object(value: Any, keys: set[str], label: str) -> dict[str, Any]:
 
 def validate_manifest(root: Path, manifest_value: Any | None = None) -> dict[str, Any]:
     contracts = root / "contracts"
-    loaded = load_json(contracts / "manifest.json") if manifest_value is None else manifest_value
+    loaded = (
+        load_json(contracts / "manifest.json")
+        if manifest_value is None
+        else manifest_value
+    )
     manifest = exact_object(loaded, MANIFEST_KEYS, "ledger manifest")
     if manifest["schema_version"] != "loopx/ledger-contract-manifest/v1":
         raise ContractError("ledger manifest schema version drifted")
@@ -81,7 +100,9 @@ def validate_manifest(root: Path, manifest_value: Any | None = None) -> dict[str
         raise ContractError("ledger manifest must enumerate four schemas")
     seen: set[str] = set()
     for index, entry in enumerate(entries):
-        entry = exact_object(entry, {"id", "path", "sha256"}, f"ledger manifest.schemas[{index}]")
+        entry = exact_object(
+            entry, {"id", "path", "sha256"}, f"ledger manifest.schemas[{index}]"
+        )
         name = entry["path"]
         if name in seen or name not in SCHEMA_NAMES:
             raise ContractError(f"unexpected or duplicate ledger schema: {name}")
@@ -98,7 +119,10 @@ def validate_manifest(root: Path, manifest_value: Any | None = None) -> dict[str
             raise ContractError(f"ledger schema dialect drifted: {name}")
         if schema.get("$id") != entry["id"] or not entry["id"].endswith("/" + name):
             raise ContractError(f"ledger schema identity drifted: {name}")
-        if schema.get("type") != "object" or schema.get("additionalProperties") is not False:
+        if (
+            schema.get("type") != "object"
+            or schema.get("additionalProperties") is not False
+        ):
             raise ContractError(f"ledger schema must fail closed: {name}")
         version = schema.get("properties", {}).get("schema_version", {}).get("const")
         if version != SCHEMA_NAMES[name]:
@@ -136,7 +160,9 @@ def replay_fixture(root: Path) -> tuple[dict[str, Any], int]:
     snapshot = make_snapshot(contract, state, events)
     expected = load_json(fixtures / "expected-snapshot.json")
     if canonical_bytes(snapshot) != canonical_bytes(expected):
-        raise ContractError("positive expected snapshot disagrees with deterministic replay")
+        raise ContractError(
+            "positive expected snapshot disagrees with deterministic replay"
+        )
     return snapshot, len(events)
 
 
@@ -152,16 +178,22 @@ def run_selftest(root: Path) -> None:
         pass
     else:
         raise ContractError("schema-digest mutation unexpectedly passed")
-    bad_snapshot = load_json(root / "tests" / "fixtures" / "good" / "expected-snapshot.json")
+    bad_snapshot = load_json(
+        root / "tests" / "fixtures" / "good" / "expected-snapshot.json"
+    )
     bad_snapshot["state_revision"] += 1
     if canonical_bytes(bad_snapshot) == canonical_bytes(replay_fixture(root)[0]):
         raise ContractError("snapshot-drift mutation did not disagree")
-    print("loopx-ledger-contracts selftest PASS: schema digest and snapshot drift controls")
+    print(
+        "loopx-ledger-contracts selftest PASS: schema digest and snapshot drift controls"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[1]
+    )
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args(argv)
     root = args.root.resolve()

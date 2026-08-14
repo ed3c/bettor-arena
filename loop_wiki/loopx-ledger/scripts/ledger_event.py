@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """LoopX Ledger event shape and authority validator."""
+
 from __future__ import annotations
 
 from typing import Any
 from ledger_common import *
 from ledger_contract_helpers import *
+
 
 def validate_event_shape(
     event: Any,
@@ -16,10 +19,16 @@ def validate_event_shape(
     prior_event_ids: set[str] | None = None,
 ) -> dict[str, Any]:
     event = exact_object(event, EVENT_KEYS, "event")
-    if event["schema_version"] != "loopx/event/v1" or validate_subject(event["subject"], "event.subject") != subject:
+    if (
+        event["schema_version"] != "loopx/event/v1"
+        or validate_subject(event["subject"], "event.subject") != subject
+    ):
         raise ContractError("event version/subject mismatch")
     stable_id(event["event_id"], "event.event_id")
-    if event["sequence"] != sequence or event["previous_event_digest"] != previous_digest:
+    if (
+        event["sequence"] != sequence
+        or event["previous_event_digest"] != previous_digest
+    ):
         raise ContractError("event sequence or previous digest mismatch")
     sha256_ref(event["event_digest"], "event.event_digest")
     validate_event_digest(event, "event")
@@ -33,18 +42,33 @@ def validate_event_shape(
         if payload[key] is not None:
             validate_artifact(payload[key], f"event.payload.{key}")
     if payload["gate_observation"] is not None:
-        validate_gate_observation(payload["gate_observation"], "event.payload.gate_observation")
+        validate_gate_observation(
+            payload["gate_observation"], "event.payload.gate_observation"
+        )
     if payload["human_decision"] is not None:
-        validate_human_decision(payload["human_decision"], "event.payload.human_decision")
+        validate_human_decision(
+            payload["human_decision"], "event.payload.human_decision"
+        )
     if payload["quota_delta"] is not None:
-        if not isinstance(payload["quota_delta"], dict) or set(payload["quota_delta"]) != {
-            "attempts", "worker_seconds", "output_bytes", "tokens", "cost_microunits"
+        if not isinstance(payload["quota_delta"], dict) or set(
+            payload["quota_delta"]
+        ) != {
+            "attempts",
+            "worker_seconds",
+            "output_bytes",
+            "tokens",
+            "cost_microunits",
         }:
             raise ContractError("event.payload.quota_delta shape invalid")
-        if any(type(amount) is not int or amount < 0 for amount in payload["quota_delta"].values()):
+        if any(
+            type(amount) is not int or amount < 0
+            for amount in payload["quota_delta"].values()
+        ):
             raise ContractError("event.payload.quota_delta cannot be negative")
     if payload["transition"] is not None:
-        validate_transition(payload["transition"], "event.payload.transition", prior_event_ids)
+        validate_transition(
+            payload["transition"], "event.payload.transition", prior_event_ids
+        )
     expected = {
         "TASK_INITIALIZED": ("LOOPX", "STATE_COMMIT", {"request_ref"}),
         "COMMAND_ACCEPTED": ("LOOPX", "STATE_COMMIT", {"command_id"}),
@@ -74,4 +98,3 @@ def validate_event_shape(
         raise ContractError("Worker attempted to submit a Gate verdict")
     reject_private_fields(event, "event")
     return event
-
