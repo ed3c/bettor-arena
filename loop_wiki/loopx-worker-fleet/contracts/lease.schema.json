@@ -1,0 +1,90 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/worker-fleet/lease/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One Worker, one branch, one worktree, one path set. The four are leased together because they fail together.",
+  "properties": {
+    "leases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "branch": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "expires_at": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "type": "string"
+          },
+          "granted_at": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "type": "string"
+          },
+          "heartbeat_interval_s": {
+            "description": "Must be shorter than the lease, or a dead Worker can never miss a beat before expiry.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "lease_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "path_globs": {
+            "description": "Compared by path component, never by string prefix: loop_wiki/ab is a sibling of loop_wiki/a, not a child.",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "state": {
+            "description": "REQUESTED is separate from GRANTED: leasing happens at dispatch, so a lease defined with its queue item must not already count as held.",
+            "enum": [
+              "ACTIVE",
+              "EXPIRED",
+              "GRANTED",
+              "RELEASED",
+              "REQUESTED",
+              "REVOKED"
+            ]
+          },
+          "task_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "worker_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "worktree_path": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "branch",
+          "expires_at",
+          "granted_at",
+          "heartbeat_interval_s",
+          "lease_id",
+          "path_globs",
+          "state",
+          "task_id",
+          "worker_id",
+          "worktree_path"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/worker-fleet-lease/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "leases"
+  ],
+  "title": "Worker fleet lease",
+  "type": "object"
+}
