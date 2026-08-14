@@ -1,0 +1,109 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/runtime-receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What a runtime observed. It carries the adapter's enforcement ceiling on its face, and its outcome vocabulary deliberately excludes a gate verdict: a runtime observes, it never decides.",
+  "properties": {
+    "artifacts": {
+      "type": "array"
+    },
+    "authority": {
+      "const": "OBSERVATION_ONLY"
+    },
+    "canonical_writer": {
+      "const": "LOOPX_LEDGER_REDUCER"
+    },
+    "cleanup": {
+      "type": "object"
+    },
+    "enforcement_ceiling": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object"
+    },
+    "lease_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "missing_artifacts": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "network": {
+      "type": "object"
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "TASK_FAILURE",
+        "POLICY_REFUSAL",
+        "PROVIDER_UNAVAILABLE",
+        "PROVIDER_ERROR",
+        "LEASE_REFUSAL"
+      ]
+    },
+    "provider": {
+      "type": "object"
+    },
+    "receipt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/runtime-receipt/v1"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "request_id",
+    "lease_id",
+    "subject",
+    "provider",
+    "enforcement_ceiling",
+    "network",
+    "execution",
+    "artifacts",
+    "missing_artifacts",
+    "cleanup",
+    "outcome",
+    "authority",
+    "canonical_writer"
+  ],
+  "title": "LoopX Runtime Receipt v1",
+  "type": "object"
+}

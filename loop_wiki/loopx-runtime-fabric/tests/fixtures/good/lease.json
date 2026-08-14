@@ -1,0 +1,16 @@
+{
+  "expected_state_revision": 0,
+  "expires_at": "2026-08-15T11:00:00Z",
+  "granted_at": "2026-08-15T10:00:00Z",
+  "lease_id": "l-0001",
+  "owner": "worker-codex-cli",
+  "provider_id": "local-process",
+  "schema_version": "loopx/runtime-lease/v1",
+  "subject": {
+    "commit": "536449a000000000000000000000000000000000",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-runtime-fabric-fixture",
+    "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+  },
+  "workspace_root": "/ephemeral/loopx-fabric-0001"
+}
