@@ -1,0 +1,54 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/ci-parity/index/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Required workflows and the local commands that stand as their equivalents, with the jobs each local command actually covers. An index fails in one direction: a workflow it never declared is one nobody hears about, so the gate also reports what is in the tree and undeclared.",
+  "properties": {
+    "schema_version": {
+      "const": "loopx/ci-parity-index/v1"
+    },
+    "workflows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "local_command": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "local_covers": {
+            "description": "Job names only. A GitHub-only surface here is refused: nothing local can observe billing, token permissions, or the hosted image.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "note": {
+            "type": "string"
+          },
+          "workflow": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "workflow",
+          "local_covers",
+          "local_command",
+          "note"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "workflows"
+  ],
+  "title": "CI parity workflow index",
+  "type": "object"
+}

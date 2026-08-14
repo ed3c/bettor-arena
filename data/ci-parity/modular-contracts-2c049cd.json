@@ -1,0 +1,59 @@
+{
+  "compared_jobs": {
+    "contracts": {
+      "agrees": true,
+      "local": "PASS",
+      "remote": "PASS"
+    }
+  },
+  "covered_jobs": [
+    "contracts"
+  ],
+  "findings": [],
+  "github_only_surfaces": [
+    "TOKEN_PERMISSIONS",
+    "HOSTED_RUNNER_IMAGE",
+    "CACHE_SERVICE",
+    "ARTIFACT_SERVICE",
+    "BILLING",
+    "CONCURRENCY_CANCELLATION",
+    "SECRETS_STORE"
+  ],
+  "head": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+  "local": {
+    "billed": false,
+    "commit": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+    "jobs": {
+      "contracts": "PASS"
+    },
+    "proxies_remote": false,
+    "result_digest": "sha256:285b5316d2dc7be51b1aacba0437deb8c4045256c6a45d0b102392ad1f26a425",
+    "runner": "local-native",
+    "side": "LOCAL",
+    "workflow": "modular-contracts.yml"
+  },
+  "local_proxies_remote": false,
+  "publication": {
+    "blocks_publication": false,
+    "may_claim_remote_verified": true,
+    "must_publish_to_learn_more": false,
+    "owner": "HUMAN_OR_TRUSTED_OPERATOR",
+    "reason": "publication, workflow rerun, merge and billing recovery are Human-owned. This gate reports what was compared and what was not",
+    "verdict": "PARITY"
+  },
+  "receipt_digest": "sha256:a55bec9818f7a272ab083e10c19a62a06e0879a972eb1a3ed7a51e7f279adf5a",
+  "remote": {
+    "billed": true,
+    "commit": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+    "jobs": {
+      "contracts": "PASS"
+    },
+    "result_digest": "sha256:fba7c72d284bf5729b5170283bf67d42e1d5452211f49f5adbb284a77bbc5437",
+    "run_id": 31836185958,
+    "runner": "ubuntu-latest",
+    "side": "REMOTE",
+    "workflow": "modular-contracts.yml"
+  },
+  "schema_version": "loopx/ci-parity-receipt/v1",
+  "verdict": "PARITY"
+}
