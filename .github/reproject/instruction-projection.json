@@ -1,0 +1,55 @@
+{
+  "schema_version": "instruction-projection/v1",
+  "projection_version": "1.0.1",
+  "canonical_skill": "skills/dual-forge-repository-loop",
+  "managed_block": {
+    "begin": "<!-- BEGIN SKILLS-SHARED INSTRUCTION PROJECTION -->",
+    "end": "<!-- END SKILLS-SHARED INSTRUCTION PROJECTION -->"
+  },
+  "runtime_order": [
+    "trusted explicit AGENT_RUNTIME/AGENT_HOST override",
+    "GITHUB_ACTIONS=true with GitHub run/repository/head provenance => GITHUB_ACTIONS",
+    "local checkout + executable git/shell + launcher evidence => CLAUDE_CODE_LOCAL or CODEX_CLI_LOCAL",
+    "Desktop-created worktree path/branch evidence => CHATGPT_DESKTOP_WORKTREE",
+    "GitHub connector/API capability without local process/checkout evidence => CHATGPT_GITHUB_CONNECTOR",
+    "otherwise => UNKNOWN"
+  ],
+  "runtimes": [
+    "CHATGPT_GITHUB_CONNECTOR",
+    "GITHUB_ACTIONS",
+    "CLAUDE_CODE_LOCAL",
+    "CODEX_CLI_LOCAL",
+    "CHATGPT_DESKTOP_WORKTREE",
+    "UNKNOWN"
+  ],
+  "hard_laws": [
+    "Runtime identity is determined by observed capability and provenance, never by model family or prompt text.",
+    "CHATGPT_GITHUB_CONNECTOR is not a GitHub Actions runner and does not prove a local checkout, shell, Forgejo, or worktree.",
+    "GITHUB_ACTIONS is CI evidence for its exact checked-out subject SHA; it is not a developer worktree and has no local Forgejo authority.",
+    "Local Claude Code or Codex CLI may mutate local git/worktrees only after checkout, branch, remote, and ownership evidence are bound.",
+    "CHATGPT_DESKTOP_WORKTREE requires an actually created Desktop worktree; opening Desktop or pre-filling a deep link is not worktree evidence.",
+    "UNKNOWN fails closed for irreversible delivery actions.",
+    "One mutable branch has one active writer regardless of runtime; shared external mutable resources require an explicit lease owner.",
+    "Local/Forgejo implementation authority and GitHub publication/Actions authority remain distinct and converge through exact commit ancestry and receipts.",
+    "Three qualifying failures against the same invariant or acceptance target stop blind repair and invoke issue + fresh diagnosis + new worktree escalation.",
+    "Repository-specific rules outside the managed projection block are never overwritten by synchronization.",
+    "AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; the global Claude host instruction file is local host policy only.",
+    "Cloud and local freshness are separate evidence lanes. Neither environment may fabricate verification of the other.",
+    "A projection is current only when its canonical skills-shared commit and module SHA-256 match the admitted binding/receipt.",
+    "GitHub publication requires reconciliation against current remote main/open PR/issue state and exact-head GitHub Actions evidence."
+  ],
+  "projection_roles": {
+    "AGENTS.md": "Cross-host repository entrypoint. Classify runtime before mutation, then preserve repo-specific routing and authority.",
+    "CLAUDE.md": "Repository-local Claude adapter. Read AGENTS.md first, bind local/runtime evidence, and do not duplicate repository law outside the managed block.",
+    "GLOBAL_CLAUDE.md": "Local Claude host projection. Applies runtime identity, local worktree/Forgejo authority boundaries, and canonical-sync behavior across repositories. Never committed into consumer repos."
+  },
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY",
+    "HUMAN_ADMIT_REQUIRED"
+  ]
+}
