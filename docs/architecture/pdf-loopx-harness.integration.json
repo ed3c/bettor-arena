@@ -255,7 +255,7 @@
       {"pr":56,"role":"fixture-only provider admission evaluations","base":"main","head":"integration/provider-admission-packets-v1","state":"OPEN_RED_EXACT_HEAD","on_main":false},
       {"pr":57,"role":"first PDF modular documentation convergence","base":"main","head":"docs/pdf-modular-integration-2026-08-14","state":"MERGED_TO_MAIN","on_main":true},
       {"pr":58,"role":"runtime-env and Agent Shield second-PDF audit","base":"main","head":"docs/agent-shield-runtime-pdf-audit-2026-08-14","state":"OPEN_DRAFT","on_main":false},
-      {"pr":0,"role":"LoopX Harness PDF executable traceability leaf (this workstream)","base":"main","head":"feat/pdf-loopx-modular-verifier-v1","state":"BRANCH_BEFORE_PR","on_main":false}
+      {"pr":60,"role":"LoopX Harness PDF executable traceability leaf","base":"main","head":"feat/pdf-loopx-modular-verifier-v1","state":"OPEN","on_main":false}
     ]
   },
   "forbidden_promotions": [
