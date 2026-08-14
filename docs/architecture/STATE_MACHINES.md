@@ -1,14 +1,14 @@
 # State Machines — bettor-arena
 
-Machine manifests, contracts, scripts, tests, receipts and current GitHub metadata remain authoritative over this Markdown.
+Machine manifests, contracts, source, tests, receipts and current GitHub metadata remain authoritative over this routing document.
 
-## 1. Agent/document routing
+## 1. Agent and document routing
 
 ```text
 TASK
 → README / AGENTS / CLAUDE
 → CONTEXT + ARCHITECTURE
-→ PDF AUDIT / TARGET / STATUS
+→ PDF AUDIT / TARGET / CURRENT STATUS
 → DIRECTORY OWNER
 → docs/git PROFILE + STACK when branch work applies
 → MACHINE CONTRACT
@@ -16,9 +16,9 @@ TASK
 → EXACT ISSUE / PR / HEAD / CHECKS
 ```
 
-Missing route, owner, subject, branch edge or evidence is `ABSENT`.
+A missing route, branch edge, owner, subject, Gate or receipt is `ABSENT`.
 
-## 2. Macro / composition
+## 2. Macro composition
 
 ```text
 MODULE PROPOSED
@@ -35,9 +35,9 @@ MODULE PROPOSED
 → MERGE / PROMOTE / ROLLBACK
 ```
 
-Desired, locked and released module sets must agree.
+The desired, locked, Context-selected, proof-subject and released module sets must agree.
 
-## 3. Micro / bounded task
+## 3. Micro bounded task
 
 ```text
 TYPED REQUEST
@@ -50,7 +50,7 @@ TYPED REQUEST
 → CALLER NEXT EDGE
 ```
 
-Micro cannot merge, promote, widen permission or Human Admit.
+A Micro loop cannot merge, promote, widen permissions or Human Admit.
 
 ## 4. Module lifecycle
 
@@ -67,7 +67,7 @@ PROPOSED
 → SUPERSEDED / ROLLED BACK
 ```
 
-`IMPLEMENTED` is mechanism presence; `PASS` is an executed exact subject.
+`IMPLEMENTED` means mechanism presence. `PASS` means an executed exact subject.
 
 ## 5. Context Capsule
 
@@ -83,7 +83,7 @@ ROOT + LOOP NATIVE FILES
 → RECEIPT
 ```
 
-Context is input projection, not canonical task state.
+Context is an input projection, never canonical task state.
 
 ## 6. Portable Skill execution
 
@@ -116,9 +116,9 @@ CLI CONTRACT
 → CLEANUP
 ```
 
-No generic shell, host path, secret, browser profile or Human Admit tool.
+No generic shell, host path, secret, browser profile or Human Admit tool is allowed.
 
-## 8. Proof
+## 8. Proof kernel
 
 ```text
 CLAIM
@@ -130,7 +130,7 @@ CLAIM
 → RELEASE AGGREGATION
 ```
 
-A proof receipt does not proxy a live provider.
+A proof receipt does not proxy a live provider or production environment.
 
 ## 9. Project bootstrap
 
@@ -140,14 +140,14 @@ DESIRED CAPABILITIES
 → RESOLVE
 → TEMP TREE
 → VERIFY
-→ CONFLICT/DRIFT CHECK
+→ CONFLICT / DRIFT CHECK
 → APPLY
 → RECEIPT
 → VERIFY TARGET
 → CONTENT-BOUND ROLLBACK
 ```
 
-## 10. OpenWiki
+## 10. OpenWiki and knowledge projection
 
 ```text
 WIKI REQUEST
@@ -161,7 +161,7 @@ WIKI REQUEST
 → TRACKED PROJECTION
 ```
 
-OpenWiki remains rebuildable.
+OpenWiki is rebuildable and cannot replace its sources.
 
 ## 11. Code Truth Graph
 
@@ -174,7 +174,7 @@ CLOSED SOURCE PACKET
 → RESULT
 ```
 
-Static graph evidence does not prove runtime behavior.
+Static graph evidence does not prove runtime behavior. Unsupported coverage remains `UNKNOWN`, not `NO_FLOW`.
 
 ## 12. Knowledge providers
 
@@ -189,9 +189,9 @@ MANIFEST
 → HUMAN ADMIT
 ```
 
-Provider output remains candidate-only.
+Serena, GrepAI, Code-Graph-RAG and Mem0 remain replaceable candidates within their admitted capability ceilings.
 
-## 13. Origin/browser/external release
+## 13. Origin, browser and external release
 
 ```text
 LOGICAL RELEASE
@@ -202,9 +202,9 @@ LOGICAL RELEASE
 → HUMAN PROMOTION
 ```
 
-Signed-in sessions stay host-owned.
+Signed-in sessions and credentials stay host-owned.
 
-## 14. Git Town shared-method adoption
+## 14. Git Town shared-method admission
 
 ```text
 SHARED SKILL SUBJECT PINNED
@@ -220,7 +220,7 @@ Current state:
 
 ```text
 shared method pin        PINNED
-repo-owned profile       candidate in issue #80
+repo-owned profile       candidate in issue #80 / PR #81
 executable/config        ABSENT
 canaries                 NOT_EXERCISED
 Human Admit              NOT_PERFORMED
@@ -247,17 +247,17 @@ Relations:
 
 ```text
 sibling      path-disjoint and independent
-true child   consumes unmerged parent
+true child   consumes unmerged parent bytes
 terminal     one behavior plus evidence
 convergence  shared selection/index/live/release owner
 ```
 
 Hard rules:
 
-- one Worker/worktree/branch/path lease;
+- one Worker, one linked worktree, one branch and one path lease;
 - no primary-checkout unattended edits;
 - no semantic conflict auto-resolution;
-- no push/merge/ship/close/delete;
+- no push, merge, ship, close or delete;
 - `MERGED_TO_PARENT` is not `MERGED_TO_MAIN`;
 - duplicate issue/path writers are blocking.
 
@@ -285,7 +285,23 @@ SOURCE / INCIDENT
 → HUMAN ADMIT
 ```
 
-Git Town local sync and GitHub publication remain separate State Machines.
+Git Town local synchronization and GitHub publication remain separate State Machines.
+
+## LoopX compatibility state machine
+
+The older PDF compatibility contract uses these exact transition markers:
+
+```text
+OBJECTIVE_ACCEPTED
+→ MODULE_REQUIREMENTS_RESOLVED
+→ TYPED_TODO_DISPATCHED
+→ WORKER_OBSERVED
+→ HARD_GATES_EVALUATED
+→ EVIDENCE_SUBJECT_BOUND
+→ READY_FOR_HUMAN_ADMIT
+```
+
+This is a compatibility projection of the detailed target below. It is not a claim that the runtime exists on `main`.
 
 ## 17. LoopX task-state target
 
@@ -312,9 +328,9 @@ LoopX reducer commits
 Human admits
 ```
 
-Current main does not contain the unmerged LoopX contract/ledger candidates.
+The current `main` does not contain the unmerged LoopX contract/ledger candidates.
 
-## 18. LoopX branch candidate topology
+## 18. LoopX candidate Stack
 
 ```text
 main
@@ -326,7 +342,7 @@ main
    └─ PR #79 Code Truth Graph v2
 ```
 
-Issue #68 owns final convergence only after terminal resolution.
+Issue #68 owns final shared convergence only after terminal settlement.
 
 ## 19. Strategy Graph and HITL target
 
@@ -343,7 +359,7 @@ CURRENT LOOPX SNAPSHOT
 → RESUME / ABORT / SCOPED EXCEPTION
 ```
 
-Checkpoint is projection, not canonical truth. Generic `force_skip` is forbidden.
+A LangGraph checkpoint is a projection, not canonical truth. Generic `force_skip` is forbidden.
 
 ## 20. Decision memory target
 
@@ -359,7 +375,7 @@ OBSERVATION / DEAD END / QUIRK / DECISION
 → EXPIRY / DELETE RECEIPT
 ```
 
-Never store private chain-of-thought.
+Never persist private chain-of-thought or raw Thought Stream.
 
 ## 21. Runtime fabric target
 
@@ -376,7 +392,7 @@ RUNTIME REQUEST
 → RECEIPT
 ```
 
-Local/cloud equivalence is `NOT_EXERCISED`.
+Physical local/cloud equivalence remains `NOT_EXERCISED`.
 
 ## 22. Observability and signed HITL projection
 
@@ -410,11 +426,11 @@ SUPERSEDED_CANDIDATE
 
 ## 24. Change protocol
 
-A State Machine change must update:
+A State Machine change updates:
 
 ```text
 owner
-inputs/outputs
+inputs and outputs
 transitions
 terminal states
 authority
@@ -426,4 +442,4 @@ Stack index
 exact-head evidence
 ```
 
-Merge, ship, conflict resolution, promotion and rollback remain Human-owned.
+Merge, ship, semantic conflict resolution, promotion and rollback remain Human-owned.
