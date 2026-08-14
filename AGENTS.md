@@ -8,7 +8,7 @@ Before changing the local Agent stack (Code-Graph-RAG, Mem0, Herdr), its health,
 
 ## Mandatory multi-hop read order
 
-For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adapter, browser, GitHub/Forgejo origin, external bootstrap, or Agent Shield work, read in order:
+For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adapter, browser, GitHub/Forgejo origin, external bootstrap, Agent Shield, or PDF/SKILL.md/MCP architecture work, read in order:
 
 1. [`README.md`](README.md)
 2. [`CONTEXT.md`](CONTEXT.md)
@@ -18,15 +18,37 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adap
 6. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
 7. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
 8. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
-9. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-10. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-11. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-12. `sh loopctl/loopctl.sh contract`
-13. the target module/loop nearest README, passive context (`AGENTS.md`, `CLAUDE.md`, `PROMPT.md`, `ROUTES.md`, `PLAN.md`, law layer), machine manifest/contract, and current receipts.
+9. [`docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md) when the task references the SKILL.md + MCP PDF architecture
+10. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+11. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+12. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+13. `sh loopctl/loopctl.sh contract`
+14. the target module/loop nearest README, passive context (`AGENTS.md`, `CLAUDE.md`, `PROMPT.md`, `ROUTES.md`, `PLAN.md`, law layer), machine manifest/contract, and current receipts.
 
 A missing route, owner, module, issue, parent, eval, or evidence subject is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
 The target contract is not a completion declaration. Only exact current files and subject-bound receipts establish `IMPLEMENTED` or `PASS`; a mechanism that exists but has not run remains `NOT_EXERCISED`.
+
+## Publication and Stack truth
+
+Git Town is optional local stack tooling. **GitHub base/head metadata and exact-head checks are publication truth.** Never infer that an intermediate child PR is on `main` just because GitHub reports that child as merged: it may have merged only into its parent branch.
+
+Current portable-Skill execution topology at this snapshot:
+
+```text
+main
+└─ #43 repo-agent-native Bettor binding                     MERGED TO MAIN
+   └─ #48 harness-wiki portable execution contracts         MERGED INTO STACK PARENT
+      └─ #50 host-owned executable Skill runner             MERGED INTO STACK PARENT
+         └─ #52 provider-neutral knowledge boundary         MERGED INTO STACK PARENT
+            └─ #53 portable-skill-execution convergence     OPEN / DIVERGED FROM MAIN
+```
+
+Therefore #48/#50/#52 are **not** to be described as integrated into current `main` until #53 is rebuilt/synchronized, exact-head gates rerun, and the convergence leaf is merged.
+
+Provider admission PR #56 is also open and currently has failing exact-head GitHub checks. Fixture-only evaluator PASS cannot override that failure or prove live provider health.
+
+When stack topology changes, update root `README.md` and [`docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md) in the same workstream.
 
 ## Bettor Arena role
 
@@ -35,6 +57,35 @@ Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Boot
 ```
 
 The minimum modularity test remains: no inbound private-code dependency, module-owned verify and selftest, real relocation/isolation, and a hollow/mutation control that can turn each green result red.
+
+## PDF architecture translation boundary
+
+The PDF is a requirement/hypothesis source, not repository evidence. Translate its useful ideas into Bettor's modular authorities:
+
+```text
+SKILL.md governance
+→ immutable Skill + consumer binding
+
+MCP tool use
+→ public loopctl contract + default-deny MCP projection
+
+sandbox execution
+→ typed host-owned execution provider
+
+self-healing
+→ bounded recovery with named exits and preserved errors
+
+Arena benchmark
+→ proof + control + mutation/hollow + external canary
+
+runtime safety
+→ code/policy/schema/authz, never a Promptfoo/eval score
+
+release
+→ subject-bound receipt + Human Admit + rollback
+```
+
+Do not copy PDF example success rates, latency, adoption, YC preference, market share, user counts, or provider capability into current truth. E2B/Firecracker/Stagehand-like providers remain adapters/candidates until independently verified and physically exercised.
 
 ## Shared document-route interface
 
