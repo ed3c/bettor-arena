@@ -51,7 +51,7 @@
   "universal_measurement_protocol": {
     "authority_repository": "ed3c/skills-shared",
     "authority_commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
-    "authority_publication_state": "LOCAL_ONLY",
+    "authority_publication_state": "FORGEJO_FEATURE_BRANCH",
     "catalog": "evals/universal/catalog.json",
     "profile": "evals/universal/profiles/source-grounded-analysis-v2.json",
     "engine": "scripts/measure_skill_generalization.py",

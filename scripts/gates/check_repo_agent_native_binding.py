@@ -392,7 +392,7 @@ def validate(root: Path) -> list[str]:
     expected_universal = {
         "authority_repository": "ed3c/skills-shared",
         "authority_commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
-        "authority_publication_state": "LOCAL_ONLY",
+        "authority_publication_state": "FORGEJO_FEATURE_BRANCH",
         "catalog": "evals/universal/catalog.json",
         "profile": "evals/universal/profiles/source-grounded-analysis-v2.json",
         "engine": "scripts/measure_skill_generalization.py",
@@ -436,6 +436,15 @@ def validate(root: Path) -> list[str]:
                 if source.get("commit") != universal.get("authority_commit"):
                     errors.append(
                         "binding.json: universal protocol source commit mismatch"
+                    )
+                if (
+                    source.get("publication_state")
+                    != universal.get("authority_publication_state")
+                    or source.get("publication_ref")
+                    != "forgejo/feat/repo-agent-native-v2-ab"
+                ):
+                    errors.append(
+                        "binding.json: universal protocol publication mismatch"
                     )
                 if source.get("measurement_closure_sha256") != universal.get(
                     "measurement_closure_sha256"

@@ -107,7 +107,8 @@ provider winner              NOT_EXERCISED
 Universal measurement protocol trace:
 
 ```text
-skills-shared@3d3c179d773e251ad1ae49c9453e428784219f00 (local-only)
+skills-shared@3d3c179d773e251ad1ae49c9453e428784219f00
+→ Forgejo feature branch feat/repo-agent-native-v2-ab (not canonical release)
 → measurement closure 306e01a0b5741a18579956917359233484b7b1410d039133cf8ce51425b9cbc6
 → five archetypes / 23 catalogued Skills / 20 of 20 protocol mutations killed
 → data/receipts/skill-measurement-universal-v2-dev.json

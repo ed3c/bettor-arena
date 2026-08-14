@@ -5,7 +5,8 @@
   "source": {
     "repository": "ed3c/skills-shared",
     "commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
-    "publication_state": "LOCAL_ONLY",
+    "publication_state": "FORGEJO_FEATURE_BRANCH",
+    "publication_ref": "forgejo/feat/repo-agent-native-v2-ab",
     "measurement_closure_sha256": "306e01a0b5741a18579956917359233484b7b1410d039133cf8ce51425b9cbc6"
   },
   "protocol_conformance": {
