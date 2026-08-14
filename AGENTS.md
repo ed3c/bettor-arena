@@ -1,110 +1,91 @@
 # AGENTS.md — bettor-arena Codex / cross-host entry
 
-Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md). The complete modular target is [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md); current implementation truth is [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md). This file owns mandatory Agent routing, trust boundaries and the completion report.
+Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md); the complete modular target is [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md). This file owns mandatory routing, non-negotiable boundaries, PDF-integration verification, molecular delivery routing, and the completion report. Do not copy the full specification into passive root context.
 
-`AGENTS.md` and `CLAUDE.md` are governed projections. Repository-local gates validate their bytes without reading sibling checkouts. Cross-repository generators are promotion-time tools only.
+`AGENTS.md` and `CLAUDE.md` are governed projections. Repo-local staged gates validate them without reading sibling checkouts. Cross-repository generators are promotion-time tools only.
 
 ## Mandatory multi-hop read order
 
-For modules, Macro/Micro loops, Skills, runtime-env, proof, MCP, workers, browser, origins, external consumers, Agent Shield, or either PDF architecture:
+For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex/Grok/OpenCode/Pi/Ante adapter, browser, GitHub/Forgejo origin, external bootstrap, Agent Shield, LoopX, HITL, memory, provider or PDF-architecture work, read in order:
 
 1. [`README.md`](README.md)
 2. [`CONTEXT.md`](CONTEXT.md)
 3. [`ARCHITECTURE.md`](ARCHITECTURE.md) §1–§3
 4. [`docs/INDEX.md`](docs/INDEX.md)
 5. [`docs/architecture/DOCUMENT_ROUTING.md`](docs/architecture/DOCUMENT_ROUTING.md)
-6. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
-7. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
-8. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
-9. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) when the task references LoopX, Harness, LangGraph, monolithic workers, episodic memory, Notes Repo/OpenWiki, cloud/local separation, Grok Build, Pi, OpenCode or Ante
-10. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json) for the executable LoopX audit state
-11. [`docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md) when the task references the separate SKILL.md + MCP PDF
-12. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-13. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-14. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-15. `sh loopctl/loopctl.sh contract`
-16. the target module/loop nearest README, Context Capsule, machine manifest/contract, source, tests, proof/control/mutation receipts and exact issue/PR.
+6. [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md)
+7. [`docs/architecture/pdf-harness-integration.matrix.json`](docs/architecture/pdf-harness-integration.matrix.json)
+8. [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
+9. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
+10. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
+11. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
+12. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+13. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
+14. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+15. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+16. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+17. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+18. `sh loopctl/loopctl.sh contract`
+19. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
 
-A missing owner, route, path, module, issue, parent, eval, receipt or current provider subject is `ABSENT`; do not reconstruct it from chat or memory. A mechanism that exists but has not run for the exact subject remains `NOT_EXERCISED`. A target described only in prose may remain `NOT_IMPLEMENTED`.
+A missing route, owner, module, issue, parent, eval, provider subject, host receipt or evidence link is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
-After changing passive context, open a fresh Agent session before claiming that a host loaded the new bytes.
+The target contract and the attached PDF are not completion declarations. Only exact current files and subject-bound receipts establish `IMPLEMENTED` or `PASS`; a mechanism that exists but has not run remains `NOT_EXERCISED`.
+
+## PDF Harness verification protocol
+
+The attached **LLM 泛化：模型權重與 Harness** PDF is an untrusted source proposal. It proposes:
+
+```text
+LoopX Objective / Todos / Gates / Evidence / Quota
+→ deterministic task-state transitions
+→ heterogeneous workers
+→ hard verification
+→ episodic memory
+→ LangGraph HITL
+→ cloud/local runtime and observability
+```
+
+Before saying “the PDF architecture is integrated”:
+
+1. Run:
+
+   ```sh
+   python3 scripts/gates/check_pdf_harness_integration.py
+   python3 scripts/gates/check_pdf_harness_integration.py --selftest
+   ```
+
+2. Compare the desired module set, composition lock and release receipt. They must contain the same module IDs.
+3. Read the PDF audit matrix. `loopctl` must not be relabeled as a LoopX task-state kernel.
+4. Verify each `IMPLEMENTED` component through existing paths and each live claim through a current receipt.
+5. Preserve the current gaps: no `.loopx` kernel, no single-writer event ledger, no quota reducer, no LangGraph interrupt/resume contract, no admitted episodic-memory ledger, no six-host live matrix, no cloud/local equivalence and no observability console.
+6. If a new implementation closes a gap, update the matrix, audit, directory map, status ledger, tests, Context Capsule and Stack index in the same terminal leaf.
+
+Never import these PDF examples into production without redesign:
+
+- raw shell strings or `shell=True`;
+- Agent/Worker direct writes to task state;
+- `force_skip` without a scoped Human exception receipt;
+- LangGraph checkpoint as a second canonical state;
+- raw Thought Stream or private chain-of-thought as durable memory;
+- Provider output promoted directly to `TESTED` or gate PASS;
+- unverified performance, RAM, latency, cost, license or certainty claims.
 
 ## LoopX PDF verification protocol
 
-The source **《LLM 泛化：模型權重與 Harness》** is a 41-page requirement/hypothesis source. It proposes LoopX, hard gates, LangGraph HITL, monolithic workers, episodic memory, OpenWiki/retrieval, worktree orchestration and cloud/local topology. Source examples and product claims are not repository evidence.
-
-Before modifying or declaring this architecture:
+The executable LoopX-specific audit is
+[`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md),
+backed by [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json).
+It narrows the broader PDF Harness audit to Objective/Todos/Gates/Evidence/Quota,
+single-writer authority, Worker boundaries, HITL and episodic-memory gaps.
 
 ```sh
 python3 scripts/gates/check_pdf_loopx_harness_integration.py
 python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
-python3 scripts/gates/check_arena_core.py
-python3 scripts/gates/check_arena_core.py --selftest
 ```
 
-The machine contract is:
-
-```text
-docs/architecture/pdf-loopx-harness.integration.json
-```
-
-Rules:
-
-1. Map every PDF requirement to exact pages, owner module, State Machine, tracked paths, deterministic gates, implementation state and blockers.
-2. Treat `IMPLEMENTED`, `PARTIAL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED`, `NOT_ADOPTED` and `BLOCKED` as distinct.
-3. Do not introduce `.loopx/state.json` as a competing authority without a reviewed single-writer reducer/event contract.
-4. Workers submit typed requests and observations; they do not write completion, Human Admit, promotion or rollback state.
-5. Never execute model-generated raw shell or use `shell=True`; use allowlisted executable + `argv[]`, exact environment, timeout, process-group cleanup and bounded artifacts.
-6. Do not accept `force_skip` as authority. An exception needs a subject-bound Human decision receipt with scope, reason, authority, expiry, follow-up and rollback impact.
-7. Do not persist raw chain-of-thought. Persist only externally observable, evidence-bound observations, dead ends, quirks, hypotheses with falsifiers, decisions, scope and expiry.
-8. LangGraph checkpoints, UI state, vector indexes, code graphs and memory stores are rebuildable projections; none may become a second canonical state authority.
-9. Provider installation, source visibility or fixture PASS cannot prove live capability, isolation, superiority or production readiness.
-10. Update root `README.md`, this file, `STATE_MACHINES.md`, `PDF_LOOPX_HARNESS_TRACEABILITY.md` and the JSON manifest together when the verdict or Stack topology changes.
-
-Current exact verdict:
-
-```text
-modular control plane                    IMPLEMENTED
-portable Skill execution                 IMPLEMENTED on current main
-LoopX five-part canonical kernel         PARTIAL
-single-writer append-only ledger         NOT_IMPLEMENTED
-LangGraph interrupt/resume               NOT_IMPLEMENTED
-episodic-memory runtime                  PARTIAL
-Grok/Pi/OpenCode/Ante live parity         NOT_EXERCISED or ABSENT
-physical cloud/local integration         NOT_EXERCISED
-```
-
-## Publication and Stack truth
-
-Git Town is optional local stack tooling. **GitHub base/head metadata plus exact-head checks are publication truth.** A child PR may be merged only into a parent branch and still be absent from `main`.
-
-Current publication topology:
-
-```text
-main @ 9a5549e9994a7915201862a3e76be9906a4be13c
-├─ #43 repo-agent-native binding                              MERGED TO MAIN
-├─ #51 knowledge-provider contracts + current runner bytes    MERGED TO MAIN
-├─ #57 first PDF modular traceability                         MERGED TO MAIN
-├─ #53 historical portable-Skill convergence                  OPEN / DIVERGED / SUPERSEDED CANDIDATE
-├─ #56 provider admission evaluations                         OPEN / RED EXACT HEAD
-├─ #58 runtime-env + Agent Shield second-PDF audit             OPEN DRAFT / BASE MAIN
-└─ #60 LoopX PDF executable traceability                      OPEN / MERGEABLE / HUMAN REVIEW
-```
-
-Portable Skill execution is present on current `main`:
-
-- `.arena/modules/agent-runtime-integration/module.json` selects `portable_skill_execution`;
-- the module provides `skill-execution.runner/v1`;
-- `loopctl/contract.json` declares `skill-execution` `run/prove/test`;
-- `.agents/skills/harness-wiki/scripts/run_portable_skill.py` emits a subject-bound receipt and never writes LoopX state.
-
-Therefore PR #53 is not current integration authority. Treat it as a stale/diverged historical branch until a Human compares unique delta and closes, supersedes or rebuilds it.
-
-PR #56 is not merge-authorized while its exact head is red. Fixture-only provider evaluation cannot prove Serena, GrepAI, Code-Graph-RAG or Mem0 live health. PR #58 is a Draft documentation audit and cannot proxy runtime/product completion.
-
-PR #60 is the current LoopX traceability leaf. Its dedicated LoopX gate, Modular contracts and `repo-agent-native` binding checks were green before this Stack-only metadata update. Re-run all exact-head checks after every update; do not auto-merge. Human Admit owns merge, promotion and rollback.
-
-Whenever GitHub topology changes, refresh the Stack index in root README, both PDF traceability documents and the LoopX JSON manifest.
+A green audit proves document/contract agreement for the exact repository bytes;
+it does not promote live worker, provider, cloud, LangGraph or production claims.
 
 ## Bettor Arena role
 
@@ -112,62 +93,11 @@ Whenever GitHub topology changes, refresh the Stack index in root README, both P
 Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper
 ```
 
-The minimum modularity test:
-
-```text
-no inbound private-code dependency
-+ one owner for every tracked path
-+ module-owned verify/selftest
-+ public typed port
-+ relocation/isolation proof
-+ independent control
-+ mutation/hollow instrument that turns red
-```
-
-## PDF translation boundary
-
-Translate useful architecture ideas into Bettor authorities:
-
-```text
-Objective / scope
-→ Macro composition requirements
-
-Todos
-→ typed bounded Micro task
-
-Gates
-→ host-owned deterministic assertions
-
-Evidence
-→ subject-bound artifacts and receipts
-
-Quota
-→ bounded retry/resource policy with named exits
-
-SKILL.md
-→ immutable procedure + consumer binding
-
-MCP
-→ public loopctl contract + default-deny projection
-
-worker execution
-→ typed request + disposable provider
-
-episodic memory
-→ evidence-bound proposal, conflict/expiry controls
-
-HITL
-→ Human Admit / exception receipt
-
-release
-→ exact subject + proof/control/mutation + Human decision
-```
-
-Do not copy PDF latency, memory usage, market/adoption claims, model behavior, provider availability or license conclusions into repository truth without independent current evidence.
+The minimum modularity test remains: no inbound private-code dependency, module-owned verify and selftest, real relocation/isolation, and a hollow/mutation control that can turn each green result red.
 
 ## Shared document-route interface
 
-Bettor implements the same route names consumed by `skills-shared`, `runtime-env` and `agent-shield-monorepo`:
+Bettor implements the same route names consumed by `skills-shared`, `runtime-env`, and `agent-shield-monorepo`:
 
 ```text
 README.md
@@ -177,121 +107,211 @@ CONTEXT.md
 ARCHITECTURE.md
 docs/INDEX.md
 docs/architecture/DOCUMENT_ROUTING.md
+docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md
+docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
 docs/architecture/STATE_MACHINES.md
 docs/integration/CROSS_REPO_INTEGRATION.md
 docs/traceability/TRACEABILITY_INDEX.md
+docs/traceability/STACK_PR_INDEX.md
 <governed-directory>/README.md
 ```
 
-A README explains ownership, State Machine, input/output, evidence and navigation. It never replaces module manifests, schemas, CLI contracts, scripts, tests, receipts or Git history.
+A README explains ownership, state machine and routing; it never replaces manifests, schemas, CLI contracts, scripts, verifiers, receipts or Git history. Each hop leaves a local summary before linking away.
+
+## Directory and State Machine discipline
+
+Every governed directory must name:
+
+```text
+owner
+purpose
+inputs
+outputs
+transitions
+terminal/non-success states
+public call surface
+evidence and receipts
+allowed/forbidden changes
+Human Admit boundary
+```
+
+Use [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md) as the current map.
+
+Rules:
+
+1. A new root placement requires an `ARCHITECTURE.md` change first.
+2. A new module requires `module.json`, sibling `README.md`, single-valued path ownership, composition selection, Context Capsule and proof/control/mutation.
+3. A generated lock or receipt is regenerated, never hand-authored.
+4. Cross-module work uses a capability/public port and typed packet, not a private import or copied implementation.
+5. The strategy plane may propose commands; it may not commit task state.
+6. A Worker may edit only its leased workspace and submit events/artifacts; it may not mark gates, advance state or Human Admit.
+7. A UI or trace store is a projection; it cannot become state authority.
 
 ## Macro / Micro boundary
 
-| | Macro / Composition | Micro / Task |
+| | Macro / Composition loop | Micro / Task loop |
 |---|---|---|
-| Owns | module selection, dependency/conflict resolution, projection, proof matrix, Human Admit, lock, promotion/rollback | typed task, bounded iteration, private module state, typed result, named exits |
-| Reads | manifests, public capabilities, locks, receipts | own Context Capsule, source, own private closure |
-| Cross-module seam | capability + `loopctl` public port | typed packet → public port → artifact/receipt ref |
-| Must not | learn private flags or per-run temp | import another module’s private executable or read another run directory |
-| State authority | trusted resolver/reducer/operator | no Human Admit, promotion or production rollback |
+| Owns | module selection, dependency/conflict resolution, projection, proof matrix, Human Admit, lock, promotion/rollback | typed task, bounded iteration, module-local state, typed result, named exits, module proof/control |
+| Reads | manifests, composition locks, public capabilities, receipts | its own passive context, source and private executable |
+| Uses another module | capability and `loopctl` public port | typed packet → public port → artifact/receipt ref |
+| Must not | learn private flags, prompt fragments or per-run temp | source/import another module internals or read another `_engine-run/` |
 
-The only seam is the public interface, typed packet, artifact reference, exact exit and receipt.
+The only seam is the public interface, typed packet, artifact reference, exit code and receipt. Human Admit, promotion and production rollback belong to the Macro/trusted operator plane.
+
+The proposed LoopX extension must add a third authority without collapsing these two loops:
+
+```text
+strategy graph proposes
+worker executes
+gates observe
+LoopX reducer alone commits
+Human alone admits
+```
 
 ## Internal / external consumption
 
 ```text
-Symlink        local development projection
-Bundle + lock  reproducible execution
-CLI / MCP      public consumption
+Symlink = local development channel
+Bundle + lock = reproducible execution channel
+CLI / MCP = public consumption channel
 ```
 
-- Same-module adapters may invoke executables in their own closure.
-- Same-repo cross-module use goes through a stable API or `loopctl`.
-- External repositories default to immutable Bettor release + stateless MCP.
-- Symlinks must not carry cross-repo executables, environments, browser profiles, credentials or cloud dependencies.
+- Inside one module, its public adapter may call executables in its own closure.
+- Same-repo cross-module use goes through a stable library API or `loopctl`.
+- External repositories default to immutable Bettor release + stateless MCP; embedded bundles are for offline/custom ownership.
+- Symlinks may project shared Skill/passive instructions locally; they must not carry cross-repo executables, venvs, `node_modules`, runtime checkouts, browser profiles, cookies, credentials or cloud dependencies.
 
 ## CLI, MCP, and passive context
 
-1. `loopctl/contract.json` is canonical; MCP tools derive from it.
-2. Commands default hidden unless both the public command and policy expose them.
-3. Every external call pins an immutable subject and runs in a disposable workspace/bundle.
-4. Callers cannot provide server-host paths, arbitrary `cwd`, private flags, secrets, sessions or browser profiles.
-5. Accept only typed packets, closed inline bundles or content-addressed artifact references.
-6. Macro work is packetized (`plan → resolve → verify → status`), not one hidden long-lived call.
-7. Human Admit, live-repo apply, promotion, production rollback, secret rotation and permission widening are never model tools.
-8. Context materialization preserves root and loop native files; do not flatten them into one ad-hoc prompt.
+1. `loopctl` is the canonical CLI; MCP tools are generated from the CLI contract.
+2. Commands default hidden unless `external_policy.exposed=true`.
+3. Every MCP call pins an immutable release and uses a disposable worktree/bundle, never the owner live checkout.
+4. Callers cannot provide server-host paths, arbitrary `cwd`, private flags, secrets or browser profiles.
+5. Accept only typed packets, inline bundles or content-addressed artifact references; verify cleanup.
+6. Macro work is packetized (`plan → resolve → verify → status`), not one long stateful call.
+7. Live-repo apply, Human Admit, promotion, production rollback, secret rotation and permission widening are never model tools.
+
+MCP wraps **context materialization**, not arbitrary prompt execution:
 
 ```text
 immutable release
-→ root/loop context selected
-→ tracked bytes materialized
-→ digest frozen
-→ allowlisted host driver
-→ typed output
-→ context/driver receipt
+→ materialize root + loop native context
+→ freeze digest
+→ cwd = loop root
+→ allowlisted worker driver
+→ typed output validation
+→ context + driver receipt
 ```
 
-## LoopX-compatible hard execution boundary
+Root context owns global laws; loop context owns task-local native files. Do not flatten both layers into one ad-hoc prompt and delete the native files.
+
+## Portable Skills and Worker authority
+
+Canonical portable Skill flow:
 
 ```text
-typed request + exact subject + assertion digest
-→ host-owned runner
-→ disposable worktree/process group
-→ executable + argv[]
-→ stdout/stderr/diff/artifact observations
+skills-shared or repo-owned SKILL.md
+→ immutable Bettor binding
+→ host projection/discovery
+→ Agent execution proposal
+→ typed executable + argv request
+→ host-owned disposable execution
 → independent assertions
 → subject-bound receipt
-→ trusted reducer/Human Admit
+→ caller/LoopX transition
 ```
 
-The Worker cannot:
+The host compatibility surface covers Codex CLI, Claude Code, Grok Build, OpenCode, Pi and Ante. Documentation support is not a live canary. All six must remain `NOT_EXERCISED` unless exact current receipts exist.
 
-- mark a Todo complete;
-- write gate PASS;
-- change quota;
-- write durable memory directly;
-- waive a hard gate;
-- promote or roll back a release.
+A Worker must never:
 
-A local process runner cannot claim network/filesystem isolation it did not physically enforce.
+- submit raw shell text;
+- write LoopX/loopctl state;
+- write an assertion verdict;
+- claim source readback without source refs;
+- infer hidden tool calls for a gray-box host;
+- reuse another worker's mutable workspace;
+- retain credentials or browser sessions in artifacts.
 
 ## Proof and anti-jitter
 
 Each module needs independent arrival paths:
 
-- `proof`: traversal/artifact claim;
-- `control`: execute the real public port;
-- `mutation` or hollow: prove a load-bearing guard turns red;
-- `consumer-canary`: exercise released adapter from outside its owner checkout;
-- `release-receipt`: aggregate one exact composition subject.
+- `proof`: traversed context/harness/artifact claim;
+- `control`: execute the real public port and observe paths/exits;
+- `mutation` or hollow: a load-bearing guard must turn red when broken;
+- `consumer-canary`: external host calls the released adapter;
+- `release-receipt`: aggregate evidence for one composition subject.
 
-`ABSENT`, `FAIL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED`, hashed-not-run and `PASS` never proxy one another. Exit codes propagate unchanged. Module proof identity is closure-scoped; an unrelated repository HEAD move does not invalidate an isolated module.
+`ABSENT`, `FAIL`, `NOT_EXERCISED`, hashed-not-run and `PASS` never proxy one another. Exit codes propagate unchanged. Module proof identity is closure-scoped: changing A invalidates A and transitive dependents, not unrelated B merely because repository HEAD moved.
 
-## Conflict, Skills, runtime, providers and memory
+The desired module IDs, lock module IDs and release-receipt module IDs must be identical. A stale generated projection is RED even when a focused feature test passes.
 
-- Every tracked path has exactly one module owner or explicit generated/evidence classification.
-- Root projections are deterministic; modules do not maintain parallel authority copies.
-- `SKILL.md` contains generalized procedure, laws and resource routing. Consumer-specific facts belong in `.skill-bindings/` and nearest READMEs.
-- `runtime-env` synchronizes secret-free projections; consumer gates are offline and never auto-sync source.
-- Serena, GrepAI, Code-Graph-RAG and Mem0 are capability providers, not truth stores.
-- Current source, manifests, tests, runtime receipts and current ADRs outrank provider/memory output.
-- Memory mutation is proposal-only until retention, provenance, conflict, privacy and Human Admit gates pass.
-- Claude Code, Codex, Grok Build, Pi, OpenCode and Ante are actors/adapters with independent trace completeness and live evidence.
-- Signed-in sessions, cookies, profiles and secret values never enter Git, bundles, MCP payloads or receipts.
+## Conflict, Skills, runtime, origins, browser
+
+- Every tracked path has exactly one module owner or an explicit generated/evidence classification.
+- Root projections are deterministically generated from module fragments; modules do not maintain parallel root copies.
+- Modules exchange typed packets/artifacts/receipts; entrypoints receive exact environment allowlists.
+- Skill closure is requirements-filtered for selected modules. Shared/repo-owned name collision or incompatible bytes is RED.
+- `SKILL.md` contains generalized procedure/method/laws; shared `references/` contains generic contracts; shared `modules/` contains domain examples loaded on demand. Consumer facts live in `.skill-bindings/` and nearest READMEs.
+- `runtime-env` synchronizes secret-free projections. Consumer gates are offline, sibling-independent and never auto-sync.
+- Forgejo may be local authoring and GitHub cloud distribution for one logical release; equivalence requires exact commit, tree or release-manifest evidence. Never fall back to mutable `main`.
+- Claude Code, Codex CLI and other coding Agents are actors; browser/device drivers are transports. Signed-in profiles/sessions never file-sync local→cloud.
+- Memory and code-graph results are candidate projections until current repository authority reads them back.
+- Agent Shield product implementation belongs in `agent-shield-monorepo`; Bettor consumes selected immutable releases.
+
+PDF/document ingest, E2B/Firecracker, startup latency, cost, license, isolation, provider capability, mobile, wallet, security, hardware and model-performance claims remain source inputs until independently verified and exercised.
 
 ## Four-repository integration
 
 ```text
-skills-shared immutable procedural release
-+ runtime-env secret-free runtime contract
-→ Bettor module/Skill/runtime composition
-→ loopctl/MCP/bootstrap release
+skills-shared immutable procedural Skill release
++ runtime-env secret-free binding/workload/policy
+→ Bettor module/Skill/runtime composition and proof subject
+→ immutable loopctl/MCP/bootstrap release
 → Agent Shield provider/product canaries
 → Bettor external-release acceptance
 → Human promotion or rollback
 ```
 
-Mutable sibling checkouts, local symlinks and `main` branch names are not release identity.
+Read [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md). Mutable sibling checkouts and local symlinks are never release identity.
+
+## Molecular Stack PR policy
+
+Before modifying issues, branches, generated locks or shared indexes, read
+[`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md).
+
+Repository status:
+
+```text
+.git-town.toml                         ABSENT
+.git-town                              ABSENT
+git-town-stacked-pr-worker selected    ABSENT
+molecular sibling/child policy         IMPLEMENTED
+```
+
+Do not claim Git Town is configured. Use the terms only as delivery semantics:
+
+- independent path-disjoint work is a sibling;
+- a true child consumes unmerged parent bytes;
+- one terminal leaf owns one reviewable behavior;
+- shared locks/indexes/final acceptance belong to one convergence leaf.
+
+Record for every branch/PR:
+
+```text
+parent issue
+sibling/child/terminal/convergence relation
+base and head
+exact head SHA
+allowed paths
+acceptance and non-goals
+current checks
+rollback
+Human Admit owner
+```
+
+Do not merge, close, delete branches, widen permissions, promote or rewrite historical evidence without Human Admit.
 
 ## Evidence vocabulary
 
@@ -304,40 +324,52 @@ NOT_EXERCISED
 SKIPPED_BY_POLICY
 ```
 
-`IMPLEMENTED` describes current bytes/contracts; it does not mean a live environment was exercised. Source prose, diagrams, package presence, old SHAs, skipped jobs, another provider or another environment cannot create live PASS.
+Source prose, diagrams, package presence, old SHAs, skipped/no-runner jobs, another provider or another environment cannot create live PASS.
 
 ## Completion contract
 
 Before stopping, report:
 
 ```text
-audit subject and source class
 changed module IDs / interface versions / closure digests
 changed document routes and directory owners
-directory → State Machine → input/output/evidence delta
+PDF matrix components changed and why
+desired / lock / release module-set equality
 affected transitive dependents
 changed public CLI / MCP surface
 path ownership conflicts
 proof / control / mutation-hollow results
-LoopX requirement states and blockers
-Claude / Codex / Grok / Pi / OpenCode / Ante adapter status
-GitHub / Forgejo origin and exact-head status
+six-host adapter results
+GitHub / Forgejo origin and equivalence status
 browser / provider / external-consumer canary status
+molecular Stack leaf and exact PR head
+Git Town configuration state
 remaining ABSENT / NOT_IMPLEMENTED / NOT_EXERCISED / SKIPPED_BY_POLICY
-Stack PR base/head/merge order
 rollback subject
-Human Admit boundary
+Human Admit and next merge order
 ```
 
-Missing an applicable item forbids a claim that modular integration is complete.
+Applicable commands include:
+
+```sh
+python3 scripts/gates/check_pdf_harness_integration.py
+python3 scripts/gates/check_pdf_harness_integration.py --selftest
+python3 scripts/gates/check_agent_docs.py
+python3 scripts/gates/check_readme_coverage.py
+python3 scripts/gates/check_module_catalog.py
+python3 scripts/arena_context.py check
+python3 scripts/arena_proof.py check
+```
+
+Missing an applicable item forbids a claim that modular integration or the PDF architecture is complete.
 
 ## Rule → evidence routing
 
-| Law | Evidence |
+Detailed requirements and current/target gaps live in the modular requirements/status documents. Eight-base worked evidence lives in `loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md`.
+
+| Law | Evidence Harness |
 |---|---|
-| Green depends on arrival path | proof + independent control + external canary remain separate |
-| An instrument must turn red | module selftests and mutation/hollow fixtures |
-| Absence is not denial | explicit `ABSENT` / `NOT_EXERCISED` states |
-| A module does not depend upward | ownership roots, public ports and relocation/isolation controls |
-| Worker prose is not verdict | OS/artifact observations + independent assertions |
-| A UI/checkpoint is not authority | subject-bound reducer/receipt + Human Admit |
+| Green value depends on arrival; two independent arrivals settle | eight-base arrival table; sandbox green cannot proxy production/Human Admit |
+| An instrument must turn red | B3 `selftest.sh` hollow + `portability.sh` negative control |
+| Absence is not denial; status propagates | B2 per-step exits; unexecuted state is `not_run` |
+| A module does not depend upward; relocation proves separation | B5 extraction, isolated install, verify and negative control |
