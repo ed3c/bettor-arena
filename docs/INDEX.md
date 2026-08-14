@@ -15,6 +15,8 @@
 - [`architecture/pdf-harness-integration.matrix.json`](architecture/pdf-harness-integration.matrix.json) — machine-readable component states and evidence paths.
 - [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) — directory owners, inputs, outputs, transitions and data flow.
 - [`architecture/STATE_MACHINES.md`](architecture/STATE_MACHINES.md) — current state machines and missing LoopX target.
+- [`architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) — LoopX-specific requirement, authority and gap audit.
+- [`architecture/pdf-loopx-harness.integration.json`](architecture/pdf-loopx-harness.integration.json) — executable LoopX audit contract.
 - [`integration/CROSS_REPO_INTEGRATION.md`](integration/CROSS_REPO_INTEGRATION.md) — four-repository ownership and release flow.
 - [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt index.
 - [`traceability/STACK_PR_INDEX.md`](traceability/STACK_PR_INDEX.md) — molecular sibling/child/terminal/convergence topology.

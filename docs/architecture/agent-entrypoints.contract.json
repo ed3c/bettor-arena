@@ -5,6 +5,8 @@
     "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+    "docs/architecture/pdf-loopx-harness.integration.json",
     "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
@@ -18,6 +20,7 @@
         "docs/architecture/modular-integration-requirements.md",
         "## Mandatory multi-hop read order",
         "## PDF Harness verification protocol",
+        "## LoopX PDF verification protocol",
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",

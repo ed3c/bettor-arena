@@ -21,12 +21,14 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex/Grok
 9. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
 10. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
 11. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
-12. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-13. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-14. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-15. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-16. `sh loopctl/loopctl.sh contract`
-17. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
+12. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+13. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
+14. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+15. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+16. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+17. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+18. `sh loopctl/loopctl.sh contract`
+19. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
 
 A missing route, owner, module, issue, parent, eval, provider subject, host receipt or evidence link is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
@@ -70,6 +72,22 @@ Never import these PDF examples into production without redesign:
 - raw Thought Stream or private chain-of-thought as durable memory;
 - Provider output promoted directly to `TESTED` or gate PASS;
 - unverified performance, RAM, latency, cost, license or certainty claims.
+
+## LoopX PDF verification protocol
+
+The executable LoopX-specific audit is
+[`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md),
+backed by [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json).
+It narrows the broader PDF Harness audit to Objective/Todos/Gates/Evidence/Quota,
+single-writer authority, Worker boundaries, HITL and episodic-memory gaps.
+
+```sh
+python3 scripts/gates/check_pdf_loopx_harness_integration.py
+python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+```
+
+A green audit proves document/contract agreement for the exact repository bytes;
+it does not promote live worker, provider, cloud, LangGraph or production claims.
 
 ## Bettor Arena role
 

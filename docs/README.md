@@ -10,6 +10,7 @@ This directory is the human navigation layer. It does not replace machine-readab
 | Agent entry | [`../AGENTS.md`](../AGENTS.md) / [`../CLAUDE.md`](../CLAUDE.md) | mandatory routing and completion contract |
 | Bounded context | [`../CONTEXT.md`](../CONTEXT.md) | current handoff and stable glossary |
 | PDF integration audit | [`architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) | source proposal versus current repository |
+| LoopX PDF audit | [`architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) | executable LoopX-specific requirement and authority mapping |
 | Directory/state map | [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) | directory owner, inputs, outputs and transitions |
 | Normative target | [`architecture/modular-integration-requirements.md`](architecture/modular-integration-requirements.md) | complete modular-integration target contract |
 | Mutable status | [`architecture/modular-integration-status.md`](architecture/modular-integration-status.md) | what has actually landed and what remains unexercised |
@@ -58,6 +59,8 @@ python3 scripts/gates/check_pdf_harness_integration.py --selftest
 - [`agents/issue-tracker.md`](agents/issue-tracker.md) — GitHub/Forgejo authority and molecular delivery.
 - [`architecture/README.md`](architecture/README.md) — architecture contracts and status ledgers.
 - [`architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) — exact PDF-to-repository verdict.
+- [`architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) — LoopX/Harness requirement and gap traceability.
+- [`architecture/pdf-loopx-harness.integration.json`](architecture/pdf-loopx-harness.integration.json) — machine-readable LoopX audit.
 - [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) — root-directory state machines and data flow.
 - [`architecture/STATE_MACHINES.md`](architecture/STATE_MACHINES.md) — current Macro/Micro/module/MCP/proof/project/origin machines plus missing LoopX target.
 - [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt index.
