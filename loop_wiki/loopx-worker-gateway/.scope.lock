@@ -1,0 +1,5 @@
+owned=loop_wiki/loopx-worker-gateway/**,.arena/modules/loopx-worker-gateway/**,.github/workflows/loopx-worker-gateway.yml
+composition=unselected
+mcp=unexposed
+live=not-exercised
+merge=human-only

@@ -1,0 +1,81 @@
+{
+  "schema_version": "repo-agent-native-consumer-measurement/v1",
+  "repository": "ed3c/bettor-arena",
+  "observed_at": "2026-08-14T02:04:49Z",
+  "state": "FAIL",
+  "measurement_authority_commit": "cdcf8b59fbd32de07a199333be32ad4665092639",
+  "subject": {
+    "fixture_commit": "e3755da769513f84050c9228eedf2f4b4f1a1f45",
+    "subject_bundle_sha256": "6568591d936406520afa23829aa2d5a43746dd37b102f367a6c138a5f3d9fd2c",
+    "candidate_instruction_sha256": "6197ce1c1a841fc641d3420126fe11ec8d380bba35842cd22c9518fff13736b1",
+    "baseline_commit": "d277e56870c0cc18455c9dd5e572a43ca08b444b",
+    "baseline_instruction_sha256": "3861c683671508610da7a81f7126b5e6c2baed9a8a8bd4a7a8f9b376b2cef36b"
+  },
+  "evaluator": {
+    "schema_sha256": "4839a153eee8d422a1c8990a039755cc948702ba8e17d5ea0a23de18ec1f14b4",
+    "ground_truth_sha256": "4d9cf1017898a132e480d9a6285f342ccf15df73f6851e4bac6d0fe18da85d11",
+    "eval_config_sha256": "52024744938623a5ab64962415d6c38d8607aa55e224481362002c7bfc641b44",
+    "scorer_sha256": "df009d124aa03a1d64e9800b75311e79de6cd6f1d66526fb7387211f8d47ae5d",
+    "predicate_evaluator_sha256": "c03d1e59492a5dfcc5219dd7843f58ad2b8c9ff64ba8bb23d5d1e524a8835e56"
+  },
+  "matrix": {
+    "case": "AB-RETRY-01",
+    "expected_cells": 24,
+    "observed_cells": 24,
+    "conditions": ["no_skill", "current_skill", "candidate_skill", "wrong_skill"],
+    "repetitions_per_condition": 3,
+    "harnesses": ["codex-cli-0.146.0", "claude-code-2.1.221"],
+    "deterministic_verifier_pass": 3,
+    "deterministic_verifier_fail": 21,
+    "mechanism_error": 0
+  },
+  "results": {
+    "claude": {
+      "model": "claude-sonnet-5",
+      "candidate_pass_rate": 1.0,
+      "control_pass_rates": {"current_skill": 0.0, "no_skill": 0.0, "wrong_skill": 0.0},
+      "candidate_median_quality": 1.0,
+      "control_median_quality": 0.5,
+      "candidate_lift": 0.5,
+      "candidate_median_wall_seconds": 156.904,
+      "observed_cost_usd": 1.5751088
+    },
+    "codex": {
+      "model": "gpt-5.4",
+      "candidate_pass_rate": 0.0,
+      "control_pass_rates": {"current_skill": 0.0, "no_skill": 0.0, "wrong_skill": 0.0},
+      "candidate_median_quality": 0.5,
+      "control_median_quality": 0.5,
+      "candidate_lift": 0.0,
+      "candidate_median_wall_seconds": 109.045,
+      "observed_cost_usd": null
+    },
+    "cross_harness_candidate_pass_rate_gap": 1.0,
+    "admission_failure": "candidate median lift is below 0.01 on Codex and all Codex candidate hard gates failed"
+  },
+  "operations": {
+    "total_runs": 24,
+    "total_wall_seconds": 2692.301,
+    "total_tool_calls": 244,
+    "total_output_tokens": 213612,
+    "claude_total_cost_usd": 4.5505261
+  },
+  "artifacts": {
+    "matrix_summary_sha256": "2f712707c9c241d1e60ee3890c51c11989b16d07b44ba79fa5055d974f3d8f78",
+    "cross_harness_summary_sha256": "8c575da6be6b00132324a6fd5c80ad53a90edd8b7ca3ca218118f39d4cb38204",
+    "operational_summary_sha256": "7e5634a95386fdbffd091efafd0166f178394845c40f7157ea55b8afa6237271",
+    "digest_manifest_sha256": "eb2df1b2f707ba052dd84adc156dbcf2811b7e4bd81672b008c416e691a44892",
+    "raw_archive": {
+      "storage": "external-runtime-not-committed",
+      "sha256": "2b6834374b991bd3e8d375767b6ccb3e301a4458681476f754b1aba6191768b9",
+      "bytes": 712299
+    }
+  },
+  "named_exclusions": [
+    "This receipt covers AB-RETRY-01 only; provider degradation, memory conflict, and cross-module impact remain separate eval cases.",
+    "Per-run reports, stdout, stderr, subject bundles, and canonical evidence bundles remain outside Git and are addressed by the raw archive digest.",
+    "Codex did not expose a monetary cost field, so cross-provider cost totals are not comparable.",
+    "Provider configuration and this Skill behavior matrix do not establish GrepAI, Serena, Code-Graph-RAG, or Mem0 runtime health."
+  ],
+  "human_admit_required": true
+}

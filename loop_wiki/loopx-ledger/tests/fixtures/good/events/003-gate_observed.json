@@ -1,0 +1,46 @@
+{
+  "actor": {
+    "actor_id": "gate-engine",
+    "authority": "OBSERVATION",
+    "class": "GATE_ENGINE"
+  },
+  "event_digest": "sha256:a409c3a5cc5cb47cebbafb9c28ffc99a7182556977cdf2aa11696b6f06f4441d",
+  "event_id": "event-003",
+  "occurred_at": "2026-08-14T00:00:03Z",
+  "payload": {
+    "command_id": null,
+    "gate_observation": {
+      "artifact_refs": [
+        {
+          "artifact_id": "ev-lint-pass",
+          "bytes": 12,
+          "digest": "sha256:570698939f9a90d948d8468d022d0be2785cc3e048979f32a96d81ba99a3fef5",
+          "kind": "LINTER_REPORT",
+          "media_type": "application/json",
+          "path": "artifacts/lint.json",
+          "producer": "gate-engine"
+        }
+      ],
+      "evaluator_digest": "sha256:547fc8c647712d3b3d8835bd05f2b22d02450069b69a285fefddd14accdecdc2",
+      "gate_id": "gate-lint",
+      "observed_exit_code": 0,
+      "verdict": "PASS"
+    },
+    "human_decision": null,
+    "quota_delta": null,
+    "request_ref": null,
+    "todo_id": "todo-contract",
+    "transition": null,
+    "worker_result_ref": null
+  },
+  "previous_event_digest": "sha256:07a2301d972ee2e0abbe260cc61c59be0d897e293f771a2bfe3ebd623ce5dc79",
+  "schema_version": "loopx/event/v1",
+  "sequence": 3,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "type": "GATE_OBSERVED"
+}

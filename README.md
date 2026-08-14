@@ -190,25 +190,24 @@ merge / ship / rollback                  HUMAN-OWNED
 <!-- Molecular Stack PR index -->
 
 ```text
-main @ 10380005fa485d6035539589c01b9f740acff15d
+main @ ea8c4a101bcf44ffe54c78ef53da583afa9efad2
 │
-├─ PR #60 feat/pdf-loopx-modular-verifier-v1
+├─ PR #60 feat/pdf-loopx-modular-verifier-v1        MERGED_TO_MAIN
 │    └─ PR #81 feat/git-town-stack-governance-v1
-│         issue #80; true-child documentation/governance terminal; OPEN / READY FOR REVIEW / UNMERGED
+│         issue #80; documentation/governance terminal; retargeted to main once #60 landed; OPEN
 │
-├─ PR #74 feat/loopx-contract-v1
-│    ├─ PR #75 feat/loopx-ledger-v1
-│    │    MERGED INTO #74 PARENT — NOT ON MAIN
-│    ├─ PR #76 feat/loopx-worker-gateway-v1
+├─ PR #74 feat/loopx-contract-v1                    MERGED_TO_MAIN
+│    ├─ PR #75 feat/loopx-ledger-v1                 MERGED_TO_MAIN via #74
+│    ├─ PR #76 feat/loopx-worker-gateway-v1         MERGED_TO_MAIN via #74
 │    ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
-│    │    #76/#77 overlap the same issue and paths: BLOCKED_DUPLICATE_TERMINAL
-│    ├─ PR #78 feat/loopx-decision-memory-v1
-│    └─ PR #79 feat/loopx-code-truth-graph-v2
+│    │    #76/#77 implemented issue #64 twice over the same paths.
+│    │    RESOLVED_BY_HUMAN: #76 (82 files) admitted, #77 (19 files) closed as
+│    │    SUPERSEDED_CANDIDATE; its 8 unique files are tracked in issue #82.
+│    ├─ PR #78 feat/loopx-decision-memory-v1        MERGED_TO_MAIN via #74
+│    └─ PR #79 feat/loopx-code-truth-graph-v2       MERGED_TO_MAIN via #74
 │
-├─ PR #56 provider admission evaluations
-│    focused fixture value; publication remains separate
-├─ PR #53 historical aggregate
-│    non-authoritative until unique delta is extracted
+├─ PR #56 provider admission evaluations            MERGED_TO_MAIN
+├─ PR #53 historical aggregate                      SUPERSEDED_CANDIDATE, closed by the owner
 └─ issue #68 final LoopX convergence
      shared composition/index/live canary/release owner only
 ```
@@ -276,6 +275,16 @@ BLOCKED_DUPLICATE_TERMINAL
 SUPERSEDED_CANDIDATE
 NOT_CREATED
 ```
+
+Conflict states, which belong to the conflict record rather than to a node:
+
+```text
+BLOCKED_HUMAN_DECISION
+RESOLVED_BY_HUMAN
+```
+
+A resolved conflict keeps its record. Dropping it would make an index where the
+duplicate was settled indistinguishable from one that never noticed it.
 
 A child marked `merged=true` may have merged only into its feature parent. Only reachability from current `main` proves `MERGED_TO_MAIN`.
 

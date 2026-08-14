@@ -27,8 +27,14 @@
     "docs/agent-runtime-integration.md"
   ],
   "drivers": {
-    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
-    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
+    "claude-code": {
+      "entry": "CLAUDE.md",
+      "binary": "claude"
+    },
+    "codex-cli": {
+      "entry": "AGENTS.md",
+      "binary": "codex"
+    }
   },
   "policy": {
     "immutable_ref_required": true,

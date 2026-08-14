@@ -1,0 +1,36 @@
+{
+  "adapter_entry": "adapters/unimplemented.py",
+  "adapter_id": "grok-build",
+  "binary": "grok",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": true,
+    "offline": false,
+    "session_resume": true,
+    "streaming": true,
+    "structured_output": true
+  },
+  "classification": "WHITE_BOX_REFERENCE",
+  "content_digest": "sha256:3ed4df11712d46c540a7187b4a58c1f2b66b2cf8fd86e11f679624be38f32e51",
+  "host_id": "grok-build",
+  "implementation_state": "NOT_EXERCISED",
+  "instruction_routes": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    ".grok/skills",
+    ".agents/skills"
+  ],
+  "source_identity": {
+    "digest": "sha256:60f44217e7d640175b5f95822222b2ae2872e12872ed99aa8838580b35459742",
+    "ref": "e5fd4816d43260c15ba785f103990c1ed6cea230",
+    "repository": "xai-org/grok-build"
+  },
+  "trace_ceiling": "SOURCE_VERIFIED_INTERNAL",
+  "transport": "CLI",
+  "version_argv": [
+    "--version"
+  ]
+}

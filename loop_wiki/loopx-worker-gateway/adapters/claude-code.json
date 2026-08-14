@@ -1,0 +1,31 @@
+{
+  "adapter_entry": "adapters/unimplemented.py",
+  "adapter_id": "claude-code",
+  "binary": "claude",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": false,
+    "offline": false,
+    "session_resume": true,
+    "streaming": true,
+    "structured_output": true
+  },
+  "classification": "GRAY_BOX",
+  "content_digest": "sha256:a9c13d6f3ae733c78d0ea6a8a49bd2b576b43c271624e4e2655331ebab8bc370",
+  "host_id": "claude-code",
+  "implementation_state": "NOT_EXERCISED",
+  "instruction_routes": [
+    "CLAUDE.md",
+    "AGENTS.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    ".claude/skills"
+  ],
+  "source_identity": null,
+  "trace_ceiling": "PROCESS_ONLY",
+  "transport": "CLI",
+  "version_argv": [
+    "--version"
+  ]
+}

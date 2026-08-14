@@ -18,6 +18,11 @@ non-PASS provider states name a fallback
 provider evidence ceilings are explicit
 binding/docs contain no secret-shaped value or machine-local path
 core evidence vocabulary and Human boundaries remain present
+measurement authority commit equals the pinned shared Skill candidate
+the generalized dev matrix is exactly three causal conditions × four families × two variants × three repetitions × Codex/Claude = 144 cells
+`wrong_skill` is required only by an automatic-routing profile, not by explicit treatment invocation
+physical PASS or FAIL is impossible without a repo-local consumer receipt; `NOT_EXERCISED` cannot cite one
+the generalized behavioral `FAIL` and identity `NOT_EXERCISED` cannot be promoted by editing summary prose
 ```
 
 Run:
@@ -35,6 +40,11 @@ required route removed
 unadmitted graph provider silently added
 provider fallback removed
 secret-shaped or machine-local value injected
+measurement commit differs from the Skill candidate
+one A/B condition is omitted
+one generalized matrix cell is omitted
+generalized behavior FAIL is rewritten as PASS
+incomplete identity is rewritten as PASS
 ```
 
 ## Source/output assertions

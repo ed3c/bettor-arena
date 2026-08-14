@@ -1,0 +1,92 @@
+{
+  "components": {
+    "adapters": {
+      "paths": [
+        "loop_wiki/loopx-worker-gateway/adapters"
+      ],
+      "required": true
+    },
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-worker-gateway/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-worker-gateway/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-worker-gateway/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-worker-gateway",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "aggregate",
+      "external_policy": "control-only",
+      "id": "loopx-worker-gateway",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-worker-gateway/scripts/gateway.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-worker-gateway/scripts/control_gateway.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-worker-gateway/scripts/check_gateway.py",
+      "--selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-worker-gateway/scripts/check_gateway.py",
+      "--selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-worker-gateway/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.worker-gateway/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "skill-execution.runner/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-worker-gateway"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Host-neutral Worker request/event/receipt protocol and six-host epistemic adapter registry with disposable fixture execution."
+}

@@ -55,12 +55,12 @@ Issue #80 changes the same routed root documentation introduced by #60, so it is
 ## LoopX Contract and terminal candidate Stack
 
 ```text
-main @ 10380005fa485d6035539589c01b9f740acff15d
+main @ ea8c4a101bcf44ffe54c78ef53da583afa9efad2
 └─ PR #74 feat/loopx-contract-v1
    issue #62
-   head 2fd05408f585f6b8999a7922d4995d8379795eb2
-   OPEN / mergeable
-   checks:
+   head 0731b667d0832c49b7844d7a2788c435518a654f
+   MERGED_TO_MAIN at d194df1ad7a9e114dab1952d2be57fdf86b7b44d
+   checks at that head:
      Modular contracts                  PASS
      PDF Harness integration audit      PASS
      LoopX Contract v1                  PASS
@@ -69,37 +69,38 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
    │
    ├─ PR #75 feat/loopx-ledger-v1
    │  issue #63
-   │  MERGED_TO_PARENT at 2fd05408f585f6b8999a7922d4995d8379795eb2
-   │  NOT_REACHABLE_FROM_MAIN
+   │  head 8fa52730754c49da3128474423ddbc75007c5ae4
+   │  MERGED_TO_MAIN via #74
    │
    ├─ PR #76 feat/loopx-worker-gateway-v1
    │  issue #64
-   │  head 60caac70f75b1f214b2ce05f2c37a5f2b85a9268
-   │  OPEN / non-mergeable metadata
-   │  exact-head Worker/Modular/PDF checks PASS
+   │  head 4ebdfdfb0e20b9177b2e11834c49af41b3bbd228
+   │  MERGED_TO_MAIN via #74
    │
    ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
    │  issue #64
-   │  head 8778b3dd16dceccc7d3904f954a2ade249fce468
-   │  OPEN / non-mergeable metadata
-   │  exact-head Modular/PDF checks PASS
+   │  head fa2c120ee573c1991ef60e0b8ac3dee3c645f92e
+   │  SUPERSEDED_CANDIDATE — closed unmerged; see the duplicate record below
    │
    ├─ PR #78 feat/loopx-decision-memory-v1
    │  issue #42
-   │  head 166e0ee4ca69690f9e7da46b14d5452bc25df4b8
-   │  OPEN / non-mergeable metadata
-   │  exact-head Decision-Memory/Modular/PDF checks PASS
+   │  head 1f0eb3acef73b9b22bf71f886a28b5363a09cc9c
+   │  MERGED_TO_MAIN via #74
    │
    └─ PR #79 feat/loopx-code-truth-graph-v2
       issue #69
-      head 371083a4baeda129434aea2ebad538dde8004f07
-      OPEN / non-mergeable metadata
-      exact-head CTG-v2/Modular/PDF checks PASS
+      head 966e74fa11fac99b4a0eeb5cf8c7d80aeaa8d10c
+      MERGED_TO_MAIN via #74
 ```
 
-## Blocking duplicate terminal
+Every child here landed into `feat/loopx-contract-v1` first and reached `main`
+only when #74 itself merged. A child reporting `merged=true` against a feature
+parent stays `NOT_ON_MAIN` until that parent lands; the two states were
+genuinely different for several hours on 2026-08-14.
 
-PR #76 and PR #77 are not parallel-safe:
+## Resolved duplicate terminal
+
+PR #76 and PR #77 were not parallel-safe:
 
 ```text
 same owner issue:
@@ -115,10 +116,11 @@ overlapping paths:
   loopctl/workflow.lock
 
 state:
-  BLOCKED_DUPLICATE_TERMINAL
+  RESOLVED_BY_HUMAN on 2026-08-14
 ```
 
-Green focused checks do not resolve duplicate authority. Human options are:
+Green focused checks did not resolve duplicate authority; the owner did. The
+options were:
 
 ```text
 select one leaf
@@ -128,6 +130,17 @@ mark one superseded
 close one
 ```
 
+What was chosen: #76, the 82-file implementation, was admitted and reached
+`main`; #77, a separate 19-file implementation of the same module, was closed as
+`SUPERSEDED_CANDIDATE`. Merging both would have left the module with two
+`module.json` declarations (`aggregate` versus `provider`) and two selftest
+entrypoints. The 8 files that exist only on #77 — the host-descriptor schema and
+registry, `gateway_engine.py`, `gateway_selftest.py`, `check_contracts.py` and
+three fixtures — are tracked in issue #82 rather than discarded.
+
+The record stays after resolution on purpose: an index that simply dropped the
+conflict would be indistinguishable from one that never detected it.
+
 No Agent may choose or execute the resolution.
 
 ## Remaining LoopX program leaves
@@ -136,13 +149,13 @@ Parent program: issue #61.
 
 | Order | Issue | Terminal behavior | Current publication state |
 |---:|---:|---|---|
-| 1 | #62 / PR #74 | LoopX task contracts | `OPEN CANDIDATE` |
-| 2 | #63 / PR #75 | append-only ledger/reducer | `MERGED_TO_PARENT`, not main |
-| 3 | #64 / PRs #76/#77 | six-host Worker Gateway | `BLOCKED_DUPLICATE_TERMINAL` |
+| 1 | #62 / PR #74 | LoopX task contracts | `MERGED_TO_MAIN` |
+| 2 | #63 / PR #75 | append-only ledger/reducer | `MERGED_TO_MAIN` via #74 |
+| 3 | #64 / PRs #76/#77 | six-host Worker Gateway | #76 `MERGED_TO_MAIN`; #77 `SUPERSEDED_CANDIDATE`, delta in #82 |
 | 4 | #65 | Strategy Graph + HITL | `PR ABSENT` |
-| 5 | #42 / PR #78 | decision-memory admission | `OPEN CANDIDATE` |
+| 5 | #42 / PR #78 | decision-memory admission | `MERGED_TO_MAIN` via #74 |
 | 6 | #66 | runtime fabric/local-cloud parity | `PR ABSENT` |
-| 7 | #69 / PR #79 | Code Truth Graph v2 | `OPEN CANDIDATE` |
+| 7 | #69 / PR #79 | Code Truth Graph v2 | `MERGED_TO_MAIN` via #74 |
 | 8 | #70 | Notes Repo → Scaffold | `PR ABSENT` |
 | 9 | #71 | Code → Knowledge fold-back | `PR ABSENT` |
 | 10 | #72 | Skill/prompt evolution | `PR ABSENT` |

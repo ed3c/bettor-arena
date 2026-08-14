@@ -1,0 +1,31 @@
+{
+  "adapter_entry": "adapters/unimplemented.py",
+  "adapter_id": "codex-cli",
+  "binary": "codex",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": false,
+    "offline": false,
+    "session_resume": true,
+    "streaming": true,
+    "structured_output": true
+  },
+  "classification": "SOURCE_VISIBLE_GRAY_MODEL",
+  "content_digest": "sha256:15cf563da37807d448c120c6fcc4b781a5030bb96bcc8318a6fe7e7fa2990d65",
+  "host_id": "codex-cli",
+  "implementation_state": "NOT_EXERCISED",
+  "instruction_routes": [
+    "AGENTS.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    ".agents/skills",
+    ".codex/skills"
+  ],
+  "source_identity": null,
+  "trace_ceiling": "PROCESS_ONLY",
+  "transport": "CLI",
+  "version_argv": [
+    "--version"
+  ]
+}
