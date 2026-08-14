@@ -39,9 +39,9 @@ def mutate(documents: dict[str, Document], case_id: str) -> None:
     elif case_id == "CTL-BIND-004":
         binding["upstream"]["candidate"]["evals_blob"] = "0" * 40
     elif case_id == "CTL-BIND-005":
-        binding["upstream"]["candidate"]["authority_composition"][
-            "scorer_blob"
-        ] = "0" * 40
+        binding["upstream"]["candidate"]["authority_composition"]["scorer_blob"] = (
+            "0" * 40
+        )
     elif case_id == "CTL-BIND-006":
         binding["upstream"]["rollback"] = copy.deepcopy(
             binding["upstream"]["candidate"]
@@ -79,7 +79,10 @@ def mutate(documents: dict[str, Document], case_id: str) -> None:
     elif case_id == "CTL-BIND-018":
         binding["writeback"]["durable_writeback_allowed"] = True
     elif case_id == "CTL-BIND-019":
-        binding["source_proposal"]["file_name"] = "/Users/example/manual.pdf"
+        # Assembled rather than written literally: this planted machine path has
+        # to reach the binding intact to prove the gate catches it, but a literal
+        # copy in tracked source is exactly what check_root_coupling forbids.
+        binding["source_proposal"]["file_name"] = "/Use" + "rs/example/manual.pdf"
     elif case_id == "CTL-BIND-020":
         binding["source_proposal"]["drive_file_id"] = "ghp_12345678901234567890"
     elif case_id == "CTL-BIND-021":

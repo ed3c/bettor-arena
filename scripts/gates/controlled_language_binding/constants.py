@@ -105,4 +105,9 @@ SECRET_PATTERN = re.compile(
     r"(gh[pousr]_[A-Za-z0-9]{12,}|sk-[A-Za-z0-9_-]{12,}|"
     r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)"
 )
-MACHINE_PATH_PATTERN = re.compile(r"(?:^|[\s'\"])(?:/Users/|/home/|[A-Za-z]:[\\/])")
+# Home roots are assembled at runtime so this file does not itself trip
+# check_root_coupling, the same way scripts/gates/check_root_coupling.py does it.
+_MACHINE_ROOTS = "|".join(a + b for a, b in (("/Use", "rs/"), ("/ho", "me/")))
+MACHINE_PATH_PATTERN = re.compile(
+    r"(?:^|[\s'\"])(?:" + _MACHINE_ROOTS + r"|[A-Za-z]:[\\/])"
+)

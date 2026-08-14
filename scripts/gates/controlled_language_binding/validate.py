@@ -134,8 +134,9 @@ def validate_upstream(binding: dict[str, Any]) -> None:
         raise Red("candidate Skill tree differs from the selected immutable subject")
     if candidate.get("evals_blob") != CANDIDATE["evals_blob"]:
         raise Red("candidate evals blob differs from the selected immutable subject")
-    if candidate.get("authority_composition", {}).get("scorer_blob") != (
-        CANDIDATE["authority_composition"]["scorer_blob"]
+    if (
+        candidate.get("authority_composition", {}).get("scorer_blob")
+        != (CANDIDATE["authority_composition"]["scorer_blob"])
     ):
         raise Red("candidate authority scorer differs from the selected bundle")
     if candidate != CANDIDATE:
@@ -215,9 +216,10 @@ def validate_evaluation(binding: dict[str, Any]) -> None:
         raise Red("physical matrix expected-cell count drifted")
     state = evaluation.get("consumer_physical_matrix_state")
     if state == "NOT_EXERCISED":
-        if evaluation.get("consumer_receipt") is not None or evaluation.get(
-            "observed_cells"
-        ) != 0:
+        if (
+            evaluation.get("consumer_receipt") is not None
+            or evaluation.get("observed_cells") != 0
+        ):
             raise Red("unexecuted physical matrix cannot cite results")
     elif not (
         state in {"PASS", "FAIL"}
@@ -227,9 +229,7 @@ def validate_evaluation(binding: dict[str, Any]) -> None:
         raise Red("physical PASS requires an exact receipt and complete cells")
 
 
-def validate_bundle(
-    documents: dict[str, Document], root: Path | None = None
-) -> None:
+def validate_bundle(documents: dict[str, Document], root: Path | None = None) -> None:
     binding = documents["binding"].value
     privacy = documents["privacy"].value
     termbase = documents["termbase"].value
@@ -253,9 +253,10 @@ def validate_bundle(
     source = binding.get("source_proposal")
     if not isinstance(source, dict):
         raise Red("source proposal identity is absent")
-    if source.get("classification") != "SOURCE_PROPOSAL" or source.get(
-        "authority"
-    ) != "NON_NORMATIVE":
+    if (
+        source.get("classification") != "SOURCE_PROPOSAL"
+        or source.get("authority") != "NON_NORMATIVE"
+    ):
         raise Red("SOURCE_PROPOSAL cannot become official authority")
     if source != SOURCE_PROPOSAL:
         raise Red("source proposal identity drifted")
