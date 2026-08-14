@@ -1,0 +1,15 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/code-truth-graph-v2/query/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "max_depth": {"maximum": 32, "minimum": 1, "type": "integer"},
+    "relations": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "schema_version": {"const": "code-truth-graph-v2/query/v1"},
+    "source_node": {"minLength": 3, "type": "string"},
+    "target_node": {"minLength": 3, "type": "string"}
+  },
+  "required": ["schema_version", "source_node", "target_node", "relations", "max_depth"],
+  "title": "Code Truth Graph v2 Query",
+  "type": "object"
+}

@@ -1,0 +1,26 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/code-truth-graph-v2/observation-bundle/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analyzers": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "coverage": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "edges": {"items": {"type": "object"}, "type": "array"},
+    "evidence": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "nodes": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "schema_version": {"const": "code-truth-graph-v2/observation-bundle/v1"},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree"],
+      "type": "object"
+    }
+  },
+  "required": ["schema_version", "subject", "analyzers", "coverage", "evidence", "nodes", "edges"],
+  "title": "Code Truth Graph v2 Observation Bundle",
+  "type": "object"
+}
