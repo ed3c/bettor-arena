@@ -1,0 +1,65 @@
+{
+  "revisions": [
+    {
+      "admitted_at": "2026-08-10T09:00:00Z",
+      "admitted_by": "ed3c",
+      "canonical_key": "component:ledger-append-semantics",
+      "claim": "the append is compare-and-set and a refusal does not move the head",
+      "evidence_class": "STATIC",
+      "origin_digest": "genesis:component:ledger-append-semantics",
+      "patch_kind": "UPDATE",
+      "revision": 1,
+      "revision_id": "rev-827f9364cda9b743",
+      "state": "ADMITTED",
+      "supersedes_revision_id": null,
+      "supporting_anchor_ids": [
+        "an-append"
+      ]
+    },
+    {
+      "admitted_at": "2026-08-10T09:00:00Z",
+      "admitted_by": "ed3c",
+      "canonical_key": "rule:retry-interval",
+      "claim": "retries always use a fixed 5s interval",
+      "evidence_class": "STATIC",
+      "origin_digest": "genesis:rule:retry-interval",
+      "patch_kind": "UPDATE",
+      "revision": 1,
+      "revision_id": "rev-4ad396c54085ea8e",
+      "state": "ADMITTED",
+      "supersedes_revision_id": null,
+      "supporting_anchor_ids": [
+        "an-retry"
+      ]
+    },
+    {
+      "admitted_at": "2026-08-10T09:00:00Z",
+      "admitted_by": "ed3c",
+      "canonical_key": "adr:retry-policy-decision",
+      "claim": "retry policy is decided by the platform team and must not change without an ADR",
+      "evidence_class": "STATIC",
+      "origin_digest": "genesis:adr:retry-policy-decision",
+      "patch_kind": "UPDATE",
+      "revision": 1,
+      "revision_id": "rev-b3bf5a43d4778254",
+      "state": "ADMITTED",
+      "supersedes_revision_id": null,
+      "supporting_anchor_ids": []
+    },
+    {
+      "admitted_at": "2026-08-10T09:00:00Z",
+      "admitted_by": "ed3c",
+      "canonical_key": "rule:cache-warming",
+      "claim": "the card cache is warmed on boot",
+      "evidence_class": "STATIC",
+      "origin_digest": "genesis:rule:cache-warming",
+      "patch_kind": "UPDATE",
+      "revision": 1,
+      "revision_id": "rev-1b89dea4febeff2c",
+      "state": "ADMITTED",
+      "supersedes_revision_id": null,
+      "supporting_anchor_ids": []
+    }
+  ],
+  "schema_version": "loopx/foldback-revision-history/v1"
+}
