@@ -1,5 +1,5 @@
 {
-  "content_sha256": "e6ec72a690ec202cffd303846f7ba062b62c87bb71f6301d1b93b74b3c488b92",
+  "content_sha256": "cdfeda66d7101bd174edd36b226806f9fd4b95358eef6fd76cabd1b0052654a9",
   "contexts": [
     {
       "common": [
@@ -266,7 +266,7 @@
         "docs/architecture/pdf-loopx-harness.integration.json",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "e6d554787d8ee7ba7463b0340028f2b9d7ffe4281e86a816a06024a203ac8957",
+      "context_sha256": "42b454642cb921eb76b3f3b02af7e7591540e6aeeb152eff4e299974d3ed253b",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -325,7 +325,7 @@
           "path": "docs/architecture/modular-integration-status.md"
         },
         {
-          "blob": "43700836a84093ea22228ea72f7ce37047a3c825",
+          "blob": "f3a42e2325ffd8281c150e36f7bcb829caf9ab52",
           "mode": "100644",
           "path": "docs/architecture/pdf-loopx-harness.integration.json"
         }
