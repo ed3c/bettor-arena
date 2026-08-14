@@ -20,6 +20,8 @@ GitHub base/head metadata and exact-head checks are publication truth. This Mark
 
 ## LoopX Harness PDF integration verdict
 
+<!-- PDF Harness Integration verdict -->
+
 The attached 41-page **LLM 泛化：模型權重與 Harness** PDF is a requirement/hypothesis source. It proposes a LoopX state kernel around Objective, Todos, Gates, Evidence and Quota, deterministic out-of-band verification, heterogeneous workers, LangGraph HITL, episodic memory, worktree fleets, cloud/local execution and observability.
 
 Current repository verdict:
@@ -85,7 +87,9 @@ The open LoopX Stack is implementation evidence for unmerged feature subjects. I
 11. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
 12. the nearest module README, `module.json`, contracts, source, tests and current receipts
 
-## Directory → State Machine ownership
+## Directory → State Machine → input/output/evidence
+
+<!-- Directory → State Machine ownership -->
 
 | Directory / route | Owner | State Machine | Inputs | Outputs / evidence | Current state |
 |---|---|---|---|---|---|
