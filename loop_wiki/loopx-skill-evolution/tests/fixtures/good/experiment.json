@@ -1,0 +1,70 @@
+{
+  "advisory_judges": [
+    "clarity",
+    "concision"
+  ],
+  "arms": [
+    {
+      "arm": "current",
+      "content_bytes": "# Repository procedure (current release)\n\n- Generated files are rendered, never hand-edited.\n- Read a failure before editing anything.\n- Do not claim runtime behaviour from a diff.\n",
+      "content_digest": "sha256:84f51d6a2e923acc018ee859a7831417f59e2a3e2a162356010137da2362c913",
+      "notes": "the released procedure"
+    },
+    {
+      "arm": "candidate",
+      "content_bytes": "# Repository procedure (candidate)\n\n- Generated files are rendered, never hand-edited. When a gate names a stale\n  projection, run the render command the gate prints -- and then run the repo's\n  own verifier, because the gate only checks the projections it knows about.\n- Read a failure before editing anything.\n- Do not claim runtime behaviour from a diff. A passing test shows execution\n  under the inputs the test supplies, which is a different claim.\n- A gate that blocks you is the check working. Never bypass it.\n",
+      "content_digest": "sha256:98e297c2cecd44deb47030556fbf69408fc855852e34d12b81919474204729dc",
+      "notes": "adds the verifier step and the bypass refusal"
+    },
+    {
+      "arm": "baseline",
+      "content_bytes": "",
+      "content_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "notes": "no skill"
+    }
+  ],
+  "dev_case_set_digest": "sha256:b8e00ebb28a3448d18b5b09fc3151cf579b71d134c8dd16ac48969eccbb43b4e",
+  "execution_contract": {
+    "context_policy": "stable-prefix-then-task",
+    "host_id": "claude-code",
+    "max_context_tokens": 32768,
+    "model_id": "claude-opus-5",
+    "ordering": "INTERLEAVED",
+    "provider_id": "anthropic",
+    "repetitions": 3,
+    "stopping_rule": "FIXED_REPETITIONS",
+    "tools_allowlist": [
+      "Bash",
+      "Edit",
+      "Read"
+    ]
+  },
+  "experiment_id": "exp-repo-procedure-002",
+  "hard_gates": [
+    "cites-repo-command",
+    "no-gate-bypass",
+    "no-hand-edited-generated-file",
+    "no-unsupported-claim",
+    "reads-before-editing"
+  ],
+  "mutation_suite": {
+    "case_count": 3,
+    "derived_from": "PRIOR_INCIDENTS",
+    "sealed_at": "2026-08-15T08:00:00Z",
+    "suite_digest": "sha256:f10c5409d05475df6e293eca5040ff50d449f38b2dbfe8db99543d517847a1cc"
+  },
+  "schema_version": "loopx/skill-evolution-experiment/v1",
+  "sealed_holdout": {
+    "case_count": 3,
+    "reveal_authority": "GRADER_ONLY",
+    "seal": "sha256:ab78f5d20b1cc76c700177c275fdb37c75b0beaab30402630fbb5d63f45974eb",
+    "sealed_at": "2026-08-15T08:00:00Z"
+  },
+  "subject": {
+    "commit": "7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+    "ref_kind": "IMMUTABLE_RELEASE",
+    "repository": "ed3c/skills-shared",
+    "skill_id": "repository-procedure",
+    "skill_release": "repository-procedure@1.4.0"
+  }
+}

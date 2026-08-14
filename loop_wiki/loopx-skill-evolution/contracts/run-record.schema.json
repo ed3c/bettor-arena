@@ -1,0 +1,147 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/skill-evolution/run-record/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One arm, one case, one repetition. Gate results and judge scores are separate columns and are never blended.",
+  "properties": {
+    "runs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "arm": {
+            "enum": [
+              "current",
+              "candidate",
+              "baseline"
+            ]
+          },
+          "case_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "elapsed_ms": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "gate_results": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "detail": {
+                  "type": "string"
+                },
+                "gate_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "state": {
+                  "enum": [
+                    "PASS",
+                    "FAIL",
+                    "NOT_EXERCISED"
+                  ]
+                }
+              },
+              "required": [
+                "detail",
+                "gate_id",
+                "state"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "host_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "judge_scores": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "calibrated_against": {
+                  "description": "Null means uncalibrated. An uncalibrated judge is kept and reported but cannot move the decision.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "calibration_receipt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "judge_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "score": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "calibrated_against",
+                "calibration_receipt",
+                "judge_id",
+                "score"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "model_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "provider_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "repetition": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "run_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "tokens": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "unsupported_claims": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "arm",
+          "case_id",
+          "elapsed_ms",
+          "gate_results",
+          "host_id",
+          "judge_scores",
+          "model_id",
+          "provider_id",
+          "repetition",
+          "run_id",
+          "tokens",
+          "unsupported_claims"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/skill-evolution-run-record/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "runs"
+  ],
+  "title": "Skill evolution run record",
+  "type": "object"
+}

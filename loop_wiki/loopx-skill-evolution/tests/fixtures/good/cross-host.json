@@ -1,0 +1,23 @@
+[
+  {
+    "gate_pass_rate": 0.92,
+    "host_id": "claude-code",
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "state": "REPLICATED"
+  },
+  {
+    "gate_pass_rate": 0.88,
+    "host_id": "codex-cli",
+    "model_id": "gpt-5-codex",
+    "provider_id": "openai",
+    "state": "REPLICATED"
+  },
+  {
+    "gate_pass_rate": 0.0,
+    "host_id": "opencode",
+    "model_id": "unknown",
+    "provider_id": "unknown",
+    "state": "NOT_EXERCISED"
+  }
+]

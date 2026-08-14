@@ -1,0 +1,14 @@
+[
+  {
+    "canonical_digest": "sha256:98e297c2cecd44deb47030556fbf69408fc855852e34d12b81919474204729dc",
+    "derivation": "GENERATED_FROM_CANONICAL",
+    "host_id": "claude-code",
+    "projection_digest": "sha256:b36b5e2becc597973561adf5a270cc27e85cc55f6f00d07c706c80f7f20ec1d1"
+  },
+  {
+    "canonical_digest": "sha256:98e297c2cecd44deb47030556fbf69408fc855852e34d12b81919474204729dc",
+    "derivation": "GENERATED_FROM_CANONICAL",
+    "host_id": "codex-cli",
+    "projection_digest": "sha256:4bb7c38a1f1effc668cb48e5d1db0ca908360299cc1940b19e0bef937385ea11"
+  }
+]
