@@ -18,6 +18,9 @@ non-PASS provider states name a fallback
 provider evidence ceilings are explicit
 binding/docs contain no secret-shaped value or machine-local path
 core evidence vocabulary and Human boundaries remain present
+measurement authority commit equals the pinned shared Skill candidate
+the required matrix is exactly four conditions × three repetitions × Codex/Claude
+physical PASS or FAIL is impossible without a repo-local consumer receipt; `NOT_EXERCISED` cannot cite one
 ```
 
 Run:
@@ -35,6 +38,8 @@ required route removed
 unadmitted graph provider silently added
 provider fallback removed
 secret-shaped or machine-local value injected
+measurement commit differs from the Skill candidate
+one A/B condition is omitted
 ```
 
 ## Source/output assertions

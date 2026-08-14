@@ -8,7 +8,7 @@ It does not contain a copy of `SKILL.md`. The projected Skill remains a symlink 
 
 | Path | Authority |
 |---|---|
-| [`binding.json`](binding.json) | machine-readable Skill identity, routes, capability slots, evidence ceilings, and output contract |
+| [`binding.json`](binding.json) | machine-readable Skill identity, canonical measurement pin, routes, capability slots, evidence ceilings, and output contract |
 | [`provider-map.md`](provider-map.md) | why each capability is assigned to its current or candidate provider |
 | [`assertions.md`](assertions.md) | executable and advisory assertion classes |
 | `../../AGENTS.md` | repository-wide Agent operating law |
@@ -107,8 +107,10 @@ A provider configuration proves only that a launch surface is declared. It does 
 - Serena is pinned in both host surfaces; GrepAI currently resolves from host `PATH`, so its executable identity remains unpinned.
 - `code-graph-rag` and `mem0` are research/admission candidates and are intentionally absent from project MCP configuration.
 - No physical current-versus-candidate Claude Code or Codex A/B receipt is created by this binding branch.
+- The canonical evaluator/adapter/matrix implementation is pinned to `skills-shared@cdcf8b59fbd32de07a199333be32ad4665092639`; Bettor does not copy those scripts or schemas.
+- The complete `AB-RETRY-01` 24-cell matrix is recorded at `data/receipts/repo-agent-native-cdcf8b5-physical-matrix.json`. Claude improved from `0/3` to `3/3`; Codex remained `0/3`, so the cross-host admission state is `FAIL` rather than a partial PASS.
 
-Use `NOT_EXERCISED` for live provider and physical A/B state until subject-bound receipts exist.
+Provider runtime states remain `NOT_EXERCISED`; the physical A/B matrix is independently `FAIL`. Neither state may overwrite the other.
 
 ## Code and assertions
 
@@ -117,7 +119,7 @@ python3 scripts/gates/check_repo_agent_native_binding.py --selftest
 python3 scripts/gates/check_repo_agent_native_binding.py
 ```
 
-The gate checks projection shape, routes, MCP configuration, candidate absence, pins, evidence ceilings, fallbacks, and secret/path leakage. It includes planted mutations. Model self-review and Markdown checklists remain advisory.
+The gate checks projection shape, immutable measurement authority, the four-arm/three-repeat/two-harness contract, routes, MCP configuration, candidate absence, pins, evidence ceilings, fallbacks, and secret/path leakage. It includes planted mutations. Model self-review and Markdown checklists remain advisory.
 
 ## Change contract
 

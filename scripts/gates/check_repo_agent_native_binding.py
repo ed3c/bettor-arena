@@ -186,6 +186,97 @@ def validate(root: Path) -> list[str]:
     if skill.get("candidate_state") not in EVIDENCE_STATES:
         errors.append("binding.json: skill.candidate_state is unsupported")
 
+    measurement = binding.get("measurement")
+    if not isinstance(measurement, dict):
+        errors.append("binding.json: measurement must be an object")
+        measurement = {}
+    if measurement.get("authority_repository") != "ed3c/skills-shared":
+        errors.append("binding.json: measurement authority must be ed3c/skills-shared")
+    if measurement.get("authority_commit") != skill.get("candidate_commit"):
+        errors.append(
+            "binding.json: measurement authority_commit must equal candidate_commit"
+        )
+    expected_measurement_paths = {
+        "case": "evals/cases/repo-agent-native/retry-source-contract.json",
+        "verifier": "evals/verifiers/verify_repo_agent_native_output.py",
+        "normalizer": "evals/adapters/normalize_repo_agent_native.py",
+        "matrix_aggregator": "evals/adapters/summarize_repo_agent_native_matrix.py",
+        "canonical_run_schema": "evals/schema/run-trace.schema.json",
+        "canonical_evidence_schema": "evals/schema/evidence-bundle.schema.json",
+    }
+    for key, expected in expected_measurement_paths.items():
+        if measurement.get(key) != expected:
+            errors.append(
+                f"binding.json: measurement.{key} must point to canonical skills-shared authority"
+            )
+    if measurement.get("conditions") != [
+        "no_skill",
+        "current_skill",
+        "candidate_skill",
+        "wrong_skill",
+    ]:
+        errors.append(
+            "binding.json: measurement conditions must preserve the four-arm order"
+        )
+    if measurement.get("minimum_repetitions_per_condition") != 3:
+        errors.append(
+            "binding.json: measurement requires three repetitions per condition"
+        )
+    if measurement.get("harnesses") != ["codex", "claude"]:
+        errors.append("binding.json: measurement requires Codex and Claude harnesses")
+    matrix_state = measurement.get("physical_matrix_state")
+    if matrix_state not in EVIDENCE_STATES:
+        errors.append("binding.json: physical_matrix_state is unsupported")
+    if matrix_state in {"PASS", "FAIL"}:
+        receipt = measurement.get("consumer_receipt")
+        if not nonempty(receipt):
+            errors.append(
+                f"binding.json: physical matrix {matrix_state} requires consumer_receipt"
+            )
+        else:
+            try:
+                receipt_path = inside(
+                    root, receipt, label="measurement.consumer_receipt"
+                )
+                if not receipt_path.is_file():
+                    errors.append(
+                        f"binding.json: physical matrix {matrix_state} receipt is ABSENT"
+                    )
+                else:
+                    matrix_receipt = load_json(receipt_path)
+                    if (
+                        matrix_receipt.get("schema_version")
+                        != "repo-agent-native-consumer-measurement/v1"
+                    ):
+                        errors.append(
+                            "binding.json: unsupported physical matrix receipt schema"
+                        )
+                    if matrix_receipt.get("state") != matrix_state:
+                        errors.append(
+                            "binding.json: physical matrix receipt state mismatch"
+                        )
+                    if matrix_receipt.get(
+                        "measurement_authority_commit"
+                    ) != measurement.get("authority_commit"):
+                        errors.append(
+                            "binding.json: physical matrix receipt authority mismatch"
+                        )
+                    matrix = matrix_receipt.get("matrix")
+                    if (
+                        not isinstance(matrix, dict)
+                        or matrix.get("observed_cells") != 24
+                        or matrix.get("expected_cells") != 24
+                    ):
+                        errors.append(
+                            "binding.json: physical matrix receipt is incomplete"
+                        )
+            except BindingError as exc:
+                errors.append(str(exc))
+    elif measurement.get("consumer_receipt") is not None:
+        errors.append(
+            "binding.json: unexecuted physical matrix must not cite a receipt"
+        )
+
     projection_paths = skill.get("projection_paths")
     if not isinstance(projection_paths, list) or not projection_paths:
         errors.append("binding.json: skill.projection_paths must be a non-empty array")
@@ -382,6 +473,12 @@ def make_fixture(source_root: Path, destination: Path) -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_root / relative, target)
 
+    consumer_receipt = binding.get("measurement", {}).get("consumer_receipt")
+    if nonempty(consumer_receipt):
+        receipt_target = destination / consumer_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / consumer_receipt, receipt_target)
+
     for route in binding["routes"]:
         path = destination / route["path"]
         if path.exists():
@@ -468,6 +565,18 @@ def selftest(source_root: Path) -> int:
             encoding="utf-8",
         )
 
+    def measurement_subject_drift(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["measurement"]["authority_commit"] = "0" * 40
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def incomplete_measurement_matrix(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["measurement"]["conditions"].remove("wrong_skill")
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
     for label, mutation in (
         ("copied-projection", copied_projection),
         ("missing-route", missing_route),
@@ -475,11 +584,13 @@ def selftest(source_root: Path) -> int:
         ("missing-fallback", missing_fallback),
         ("secret-injection", secret_injection),
         ("home-path-injection", home_path_injection),
+        ("measurement-subject-drift", measurement_subject_drift),
+        ("incomplete-measurement-matrix", incomplete_measurement_matrix),
     ):
         assert_mutation_fails(source_root, label, mutation)
 
     print(
-        "PASS repo-agent-native Bettor binding selftest: 1 positive + 6 planted negatives"
+        "PASS repo-agent-native Bettor binding selftest: 1 positive + 8 planted negatives"
     )
     return 0
 

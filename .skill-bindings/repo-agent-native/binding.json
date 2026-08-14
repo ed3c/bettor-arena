@@ -7,13 +7,28 @@
   "skill": {
     "name": "repo-agent-native",
     "canonical_repository": "ed3c/skills-shared",
-    "required_version": "2.0.0",
-    "candidate_commit": "9d1106dfe48b9f72654375ca691f847ec830343e",
-    "candidate_state": "NOT_EXERCISED",
+    "required_version": "2.1.0",
+    "candidate_commit": "cdcf8b59fbd32de07a199333be32ad4665092639",
+    "candidate_state": "FAIL",
     "projection_paths": [
       ".agents/skills/repo-agent-native",
       ".claude/skills/repo-agent-native"
     ]
+  },
+  "measurement": {
+    "authority_repository": "ed3c/skills-shared",
+    "authority_commit": "cdcf8b59fbd32de07a199333be32ad4665092639",
+    "case": "evals/cases/repo-agent-native/retry-source-contract.json",
+    "verifier": "evals/verifiers/verify_repo_agent_native_output.py",
+    "normalizer": "evals/adapters/normalize_repo_agent_native.py",
+    "matrix_aggregator": "evals/adapters/summarize_repo_agent_native_matrix.py",
+    "canonical_run_schema": "evals/schema/run-trace.schema.json",
+    "canonical_evidence_schema": "evals/schema/evidence-bundle.schema.json",
+    "conditions": ["no_skill", "current_skill", "candidate_skill", "wrong_skill"],
+    "minimum_repetitions_per_condition": 3,
+    "harnesses": ["codex", "claude"],
+    "physical_matrix_state": "FAIL",
+    "consumer_receipt": "data/receipts/repo-agent-native-cdcf8b5-physical-matrix.json"
   },
   "routes": [
     {"path": "README.md", "kind": "file", "required": true},
