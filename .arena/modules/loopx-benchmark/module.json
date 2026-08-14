@@ -1,0 +1,85 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-benchmark/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-benchmark/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-benchmark/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-benchmark",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-benchmark",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-benchmark/scripts/loopxbench.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-benchmark/scripts/control_loopxbench.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-benchmark/scripts/loopxbench.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-benchmark/scripts/loopxbench.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-benchmark/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.benchmark/v1",
+    "loopx.claim-verdict/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-benchmark"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "A benchmark contract where every trial is retained including the failures, a warm run is never summarised with a cold one, five successful trials are the floor before a percentile means anything, and a claim starts at CLAIM_UNVERIFIED and only reaches CORROBORATED on genuinely independent profiles. A source-proposal number is never evidence and promotion is Human Admit."
+}

@@ -55,6 +55,17 @@
         "tests/harness-console/run-all.sh"
       ],
       "note": "Console projection, bounded views and the signed request path. Its physical control spawns subprocesses and reads HITL_SIGNER_KEY from the environment, so the local and hosted runs genuinely differ in what is configured -- which is why the unset-key case is part of the control rather than something CI papers over."
+    },
+    {
+      "workflow": ".github/workflows/loopx-benchmark.yml",
+      "local_covers": [
+        "loopx-benchmark"
+      ],
+      "local_command": [
+        "sh",
+        "loop_wiki/loopx-benchmark/tests/run-all.sh"
+      ],
+      "note": "The one workflow whose local and hosted runs are expected to differ in what they measure and not just in where: the module's own contract forbids CI from publishing a timing number, so CI runs the synthetic lane and the real measurement stays LOCAL."
     }
   ]
 }

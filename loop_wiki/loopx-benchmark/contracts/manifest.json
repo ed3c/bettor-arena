@@ -1,0 +1,73 @@
+{
+  "cache_states": [
+    "COLD",
+    "UNKNOWN",
+    "WARM"
+  ],
+  "case_families": [
+    "gate_startup_and_execution",
+    "gc_residue_and_ceilings",
+    "host_startup_and_task_latency",
+    "knowledge_build_and_query",
+    "ledger_append_replay_snapshot",
+    "local_cloud_same_workload",
+    "lsp_cold_warm_and_pool_reuse",
+    "prompt_prefix_suffix_bytes",
+    "worktree_bootstrap_and_cleanup"
+  ],
+  "claim_origins": [
+    "MEASURED_HERE",
+    "SOURCE_PROPOSAL",
+    "VENDOR_BENCHMARK"
+  ],
+  "failures_retained": true,
+  "gate_may_promote_claim": false,
+  "interface_version": "1.0.0",
+  "live_hardware_matrix_state": "NOT_EXERCISED",
+  "local_result_is_a_guarantee": false,
+  "locales": [
+    "CLOUD_VPS",
+    "LOCAL",
+    "SHARED_RUNNER",
+    "SYNTHETIC"
+  ],
+  "min_ok_trials": 5,
+  "promotion_owner": "HUMAN_ADMIT",
+  "schema_version": "loopx/benchmark-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/benchmark/report/v1",
+      "path": "benchmark-report.schema.json",
+      "sha256": "7c8d764afd77f83a186501f412ddef992e9140f2afa55e1f1304a471f248cc4b"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/benchmark/claim-verdict/v1",
+      "path": "claim-verdict.schema.json",
+      "sha256": "b5e3b566a0c28f56faf04cf61c8c224589aac0d46e74e8cf950819517c2393b9"
+    }
+  ],
+  "source_proposal_is_evidence": false,
+  "states": [
+    "WORKLOAD_SUBJECT_ENVIRONMENT_PINNED",
+    "ADAPTER_HOST_MODEL_PROVIDER_PINNED",
+    "WARMUP_POLICY_APPLIED",
+    "RAW_TRIALS_EXECUTED",
+    "FAILURES_RETAINED",
+    "OBSERVATIONS_RECORDED",
+    "SUMMARY_DERIVED",
+    "COMPARABILITY_GATES",
+    "PROFILE_SCOPED_REPORT",
+    "CLAIM_VERDICT"
+  ],
+  "trial_outcomes": [
+    "FAILED",
+    "OK",
+    "OOM",
+    "TIMEOUT"
+  ],
+  "verdicts": [
+    "CLAIM_UNVERIFIED",
+    "PROFILE_OBSERVED",
+    "CORROBORATED"
+  ]
+}
