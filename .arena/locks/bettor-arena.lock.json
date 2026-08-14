@@ -9,6 +9,7 @@
     "arena.mcp-adapters/v1": "mcp-adapters",
     "arena.module-catalog/v1": "module-catalog",
     "arena.passive-context/v1": "arena-core",
+    "arena.pdf-loopx-traceability/v1": "arena-core",
     "arena.project-bootstrap/v1": "project-bootstrapper",
     "arena.proof-kernel/v1": "proof-kernel",
     "arena.stateless-mcp/v1": "loop-runtime",
@@ -24,7 +25,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "126d97eb7f9c72bcc8f6a63c751232b6e900ca63747963fffe6c22890d80f944",
+  "content_sha256": "d997ca558be3d438e324b2e34047aebade84394eca0f3bde22b9d008fc6b145c",
   "modules": [
     {
       "components": [
@@ -48,11 +49,12 @@
         "proof"
       ],
       "id": "arena-core",
-      "interface_version": "1.1.0",
-      "manifest_sha256": "3d9ee08d2dee4fc4fe3834fabe2f7c7fd7e95309766ebeaebb7dc2e80c1808bb",
+      "interface_version": "1.2.0",
+      "manifest_sha256": "cdbd1ee804c6057ec3bec606db4e9ffe0ee182cfe8e5cfd33103c30835550edd",
       "provides": [
         "arena.host-gates/v1",
-        "arena.passive-context/v1"
+        "arena.passive-context/v1",
+        "arena.pdf-loopx-traceability/v1"
       ]
     },
     {
@@ -213,8 +215,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "9a54536bd23c2bd3d1e0e20efa6113c2589efefb94d8916d2867c9edf17f4a27",
+  "ownership_sha256": "fe80aff5e3a0a7bfcd627f6cd402f9b98975a865e875463439a6c77c64b0802c",
   "requirements_sha256": "9156e8c3725aff80f97910708d842c8da495397a96939498542dfdbaf074115a",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1337
+  "tracked_files": 1344
 }
