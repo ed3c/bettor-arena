@@ -1,0 +1,59 @@
+{
+  "backend_adapters": [
+    "langfuse",
+    "opentelemetry-collector",
+    "local-jsonl"
+  ],
+  "backend_admission_state": "NOT_EXERCISED",
+  "canonical_authority": "LOOPX_LEDGER_REDUCER",
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "interface_version": "1.0.0",
+  "projection_authority": "PROJECTION_ONLY",
+  "redaction_floor_keys": [
+    "authorization",
+    "chain_of_thought",
+    "cookie",
+    "credential",
+    "env",
+    "page_body",
+    "password",
+    "private_key",
+    "reasoning_trace",
+    "scratchpad",
+    "secret",
+    "session",
+    "thought_stream",
+    "token"
+  ],
+  "requires_capabilities": [
+    "loopx.contracts/v1",
+    "loopx.ledger/v1",
+    "loopx.hitl/v1"
+  ],
+  "runtime_state_checked_in": false,
+  "schema_version": "loopx/observability-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/hitl-action-request/v1",
+      "path": "hitl-action-request.schema.json",
+      "sha256": "4b3420e5045598ca137142ed6ca64af1b98da298ecffb1397cf9500fdce3b12e"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/observability-envelope/v1",
+      "path": "observability-envelope.schema.json",
+      "sha256": "42f34c500a62544818a32e1620ac49f4c9654a9f4b479f0c37f3bf145d8f2595"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/redaction-policy/v1",
+      "path": "redaction-policy.schema.json",
+      "sha256": "b994222c4f34d05e6e7c0b170b7e09d68b5590e97e46dafd872de65ee8e76b7e"
+    }
+  ]
+}
