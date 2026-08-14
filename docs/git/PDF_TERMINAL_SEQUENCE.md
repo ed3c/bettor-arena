@@ -50,6 +50,10 @@ A global order does not justify a 26-deep branch chain. Future branches remain u
 
 Only one queue item may be `ACTIVE`. A later item cannot be reported complete unless every predecessor is complete on an immutable subject or a Human has recorded an explicit scoped waiver.
 
+A landed stage is marked `COMPLETE`, and the `ACTIVE` item is **derived**: it is the lowest-ordered item that is not `COMPLETE`. The gate checks that relation rather than naming a stage, so advancing the queue is a data change and not a gate change — the earlier rule pinned the head to *order 0 / issue 82*, which made finishing a stage require editing the assertion, and the snapshot went stale instead of advancing.
+
+`COMPLETE` items must form a prefix. A stage finished ahead of its predecessor leaves a hole that reads correctly item by item and is wrong only in sequence, so `STRICT_GLOBAL_COMPLETION` requires the Human waiver named above to be recorded rather than left as a gap.
+
 ## Authority law
 
 ```text
@@ -80,12 +84,12 @@ PR #77 is a closed superseded Worker Gateway candidate. Issue #82 owns executabl
 
 | Order | Issue(s) | Expected branch | Terminal behavior | Queue state |
 |---:|---|---|---|---|
-| 0 | #82 | `feat/loopx-worker-gateway-residue-v1` | fold or reject PR #77-only files with execution evidence | `ACTIVE` |
-| 1 | #90 | `feat/loopx-stage0-validation-v1` | validate current-main Contract/Ledger/Gateway/Memory/CTG | `BLOCKED_BY_PREDECESSOR` |
-| 2 | #65 | `feat/loopx-strategy-hitl-v1` | Strategy Graph plus interrupt/resume/scoped exception | `BLOCKED_BY_PREDECESSOR` |
-| 3 | #67 | `feat/loopx-observability-v1` | redacted event projection and signed HITL requests | `BLOCKED_BY_PREDECESSOR` |
-| 4 | #66 | `feat/loopx-runtime-fabric-v1` | physical runtime leases, isolation, cleanup and local/cloud parity | `BLOCKED_BY_PREDECESSOR` |
-| 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `BLOCKED_BY_PREDECESSOR` |
+| 0 | #82 | `feat/loopx-worker-gateway-residue-v1` | fold or reject PR #77-only files with execution evidence | `COMPLETE` |
+| 1 | #90 | `feat/loopx-stage0-validation-v1` | validate current-main Contract/Ledger/Gateway/Memory/CTG | `COMPLETE` |
+| 2 | #65 | `feat/loopx-strategy-hitl-v1` | Strategy Graph plus interrupt/resume/scoped exception | `COMPLETE` |
+| 3 | #67 | `feat/loopx-observability-v1` | redacted event projection and signed HITL requests | `COMPLETE` |
+| 4 | #66 | `feat/loopx-runtime-fabric-v1` | physical runtime leases, isolation, cleanup and local/cloud parity | `COMPLETE` |
+| 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `ACTIVE` |
 | 6 | #97 | `feat/loopx-resource-gc-v1` | worktree/artifact/cache/vector/graph/WAL retention and GC | `BLOCKED_BY_PREDECESSOR` |
 | 7 | #96 | `feat/loopx-lsp-pool-v1` | worktree-aware LSP pool and bounded CLI fallback | `BLOCKED_BY_PREDECESSOR` |
 | 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `BLOCKED_BY_PREDECESSOR` |

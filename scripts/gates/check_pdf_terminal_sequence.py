@@ -33,6 +33,17 @@ STACK = Path("docs/traceability/STACK_PR_INDEX.md")
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 STAGE_ID = re.compile(r"^stage-([0-9]{2})-[a-z0-9-]+$")
 
+# COMPLETE is what a stage becomes when it lands. Without it the queue could
+# only say "not started" or "blocked", so advancing by one stage meant editing
+# the gate's assertion rather than the data -- and a snapshot that costs a gate
+# change to update is a snapshot that stops being updated.
+QUEUE_STATES = {
+    "COMPLETE",
+    "ACTIVE",
+    "BLOCKED_BY_PREDECESSOR",
+    "FINAL_CONVERGENCE",
+}
+
 
 class SequenceError(ValueError):
     pass
@@ -149,8 +160,20 @@ def validate_shape(value: Any) -> dict[str, Any]:
     require(isinstance(current, dict), "current queue state missing")
     require(current.get("program_issue") == 61, "program issue drift")
     require(current.get("index_issue") == 102, "index issue drift")
-    require(current.get("active_order") == 0, "active order drift")
-    require(current.get("active_issue") == 82, "active issue drift")
+    # `active_order` and `active_issue` were pinned here too, to the same literal
+    # head. They are checked against the items in validate_items instead, where
+    # the queue itself says which stage is active -- a summary field agreeing
+    # with a constant proves nothing about the list it summarises.
+    order = current.get("active_order")
+    require(
+        isinstance(order, int) and not isinstance(order, bool) and 0 <= order <= 25,
+        "active order must be an order in this queue",
+    )
+    issue = current.get("active_issue")
+    require(
+        isinstance(issue, int) and not isinstance(issue, bool) and issue > 0,
+        "active issue must be a positive issue number",
+    )
     require(current.get("convergence_issue") == 68, "convergence issue drift")
     return value
 
@@ -269,16 +292,57 @@ def validate_items(value: dict[str, Any]) -> list[dict[str, Any]]:
 
         state = item.get("queue_state")
         require(
-            state in {"ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"},
+            state in QUEUE_STATES,
             f"{item_id}: invalid queue state",
         )
         if state == "ACTIVE":
             active.append(item)
 
     require(len(active) == 1, f"exactly one ACTIVE item required, found {len(active)}")
+
+    # The head is derived, not pinned. Naming the ACTIVE item by order and issue
+    # made finishing a stage a gate edit, and a rule that has to be rewritten
+    # every time the thing it describes changes is a rule that will eventually
+    # be left alone while the data goes stale instead.
+    completed = [item for item in items[:-1] if item["queue_state"] == "COMPLETE"]
+    first_open = next(
+        (item for item in items if item["queue_state"] != "COMPLETE"), None
+    )
+    require(first_open is not None, "every item is COMPLETE but nothing converged")
     require(
-        active[0].get("order") == 0 and active[0].get("issues") == [82],
-        "ACTIVE item must be order 0 / issue 82",
+        active[0]["order"] == first_open["order"],
+        f"ACTIVE is order {active[0]['order']} but the lowest item that is not "
+        f"COMPLETE is order {first_open['order']}; the queue is either working out "
+        "of order or has stopped recording what finished",
+    )
+
+    # COMPLETE forms a prefix. Without this, a stage finished ahead of its
+    # predecessor leaves a hole, and the hole is invisible: every individual
+    # item still reads correctly and only the sequence is wrong.
+    completed_orders = sorted(item["order"] for item in completed)
+    if completed_orders and completed_orders != list(range(len(completed_orders))):
+        missing = sorted(set(range(max(completed_orders) + 1)) - set(completed_orders))
+        require(
+            False,
+            f"COMPLETE items are not a prefix; orders {missing} are unfinished but "
+            f"later orders are COMPLETE. STRICT_GLOBAL_COMPLETION means a stage "
+            "finished ahead of its predecessor needs the Human waiver the policy "
+            "names, recorded as such rather than left as a gap",
+        )
+
+    # The summary agrees with the list it summarises. Checking `current` against
+    # a constant, as this gate did, cannot catch the case the whole issue was
+    # about: the items advancing while the summary stays where it was.
+    current = value.get("current", {})
+    require(
+        current.get("active_order") == active[0]["order"],
+        f"current.active_order is {current.get('active_order')} but the ACTIVE item "
+        f"is order {active[0]['order']}; the summary and the queue disagree",
+    )
+    require(
+        current.get("active_issue") in active[0]["issues"],
+        f"current.active_issue is {current.get('active_issue')} but the ACTIVE item "
+        f"carries issues {active[0]['issues']}",
     )
 
     for item in items:
@@ -295,10 +359,12 @@ def validate_items(value: dict[str, Any]) -> list[dict[str, Any]]:
                 by_id[prerequisite]["order"] < order,
                 f"{item_id}: prerequisite is not earlier: {prerequisite}",
             )
-        if order > 0 and order < 25:
+        if 0 < order < 25 and order > active[0]["order"]:
             require(
                 item["queue_state"] == "BLOCKED_BY_PREDECESSOR",
-                f"{item_id}: future item completed or active without queue advance",
+                f"{item_id}: item after the ACTIVE head is {item['queue_state']}, "
+                "not BLOCKED_BY_PREDECESSOR; work started or finished past the head "
+                "without the queue advancing to it",
             )
 
     final = items[-1]
@@ -473,13 +539,58 @@ def run_selftest(root: Path) -> dict[str, Any]:
     )
     mutate_items(
         "two-active",
-        lambda value: value["items"][1].update(queue_state="ACTIVE"),
+        lambda value: value["items"][6].update(queue_state="ACTIVE"),
         "exactly one ACTIVE",
     )
     mutate_items(
-        "future-complete",
-        lambda value: value["items"][2].update(queue_state="ACTIVE"),
-        "exactly one ACTIVE",
+        "work-started-past-the-head",
+        lambda value: value["items"][7].update(queue_state="FINAL_CONVERGENCE"),
+        "not BLOCKED_BY_PREDECESSOR",
+    )
+    # The three that check the derived head. Pinning ACTIVE to a literal order
+    # is what made advancing the queue a gate edit, so the replacement rule
+    # needs its own controls or the fix is untested.
+    mutate_items(
+        "head-skipped-an-unfinished-stage",
+        # ACTIVE moved to order 6 while order 5 is neither COMPLETE nor active.
+        # `current` is moved with it, so the summary agrees and only the derived
+        # head rule can catch this -- which is the rule under test.
+        lambda value: (
+            value["items"][5].update(queue_state="BLOCKED_BY_PREDECESSOR"),
+            value["items"][6].update(queue_state="ACTIVE"),
+            value["current"].update(
+                active_order=6, active_issue=value["items"][6]["issues"][0]
+            ),
+        ),
+        "lowest item that is not COMPLETE",
+    )
+    mutate_items(
+        "summary-left-behind-when-the-queue-advanced",
+        # The exact failure #111 reported: items move, `current` does not.
+        lambda value: value["current"].update(active_order=0, active_issue=82),
+        "the summary and the queue disagree",
+    )
+    mutate_items(
+        "completed-stage-left-unmarked",
+        # A landed stage nobody marked. The head then sits past it, which is the
+        # same diagnosis as skipping one -- and it is the right diagnosis: the
+        # queue has stopped recording what finished.
+        lambda value: value["items"][3].update(queue_state="BLOCKED_BY_PREDECESSOR"),
+        "lowest item that is not COMPLETE",
+    )
+    mutate_items(
+        "hole-in-the-completed-prefix",
+        # Deliberately shaped to pass the derived-head rule so the prefix rule is
+        # the only thing that can catch it: ACTIVE moves back to the hole, so the
+        # head is correct and only the sequence is wrong.
+        lambda value: (
+            value["items"][2].update(queue_state="ACTIVE"),
+            value["items"][5].update(queue_state="BLOCKED_BY_PREDECESSOR"),
+            value["current"].update(
+                active_order=2, active_issue=value["items"][2]["issues"][0]
+            ),
+        ),
+        "COMPLETE items are not a prefix",
     )
     mutate_items(
         "unknown-prerequisite",

@@ -1,111 +1,120 @@
 {
-  "schema": "bettor-arena/pdf-terminal-sequence/v1",
-  "observed_at": "2026-08-14T15:01:43Z",
-  "repository": {
-    "full_name": "ed3c/bettor-arena",
-    "repository_id": 1330387399,
-    "default_branch": "main",
-    "base_sha": "844b7121789e57ebe00f1a07a67b27c1542cf05b"
+  "convergence": {
+    "branch": "integration/loopx-harness-convergence-v1",
+    "issue": 68,
+    "order": 25,
+    "shared_artifacts": [
+      ".arena/compositions/bettor-arena.requirements.json",
+      ".arena/locks/bettor-arena.lock.json",
+      ".arena/contexts.lock.json",
+      "loopctl/contract.json",
+      ".arena/mcp-policy.json",
+      "data/module-proof/subjects.lock.json",
+      "data/module-proof/release-receipt.json",
+      "README.md",
+      "AGENTS.md",
+      "docs/git/pdf-terminal-sequence.json",
+      "docs/traceability/STACK_PR_INDEX.md"
+    ]
   },
-  "source": {
-    "title": "LLM 泛化：模型權重與 Harness",
-    "pages": 41,
-    "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
-    "authority": "SOURCE_PROPOSAL_ONLY",
-    "repository_copy": "ABSENT"
-  },
-  "shared_skill": {
-    "repository": "ed3c/skills-shared",
-    "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
-    "blob": "eb2d915bca3e8a3938625f7d33a10fae95a15769",
-    "path": "skills/git-town-stacked-pr-worker/SKILL.md",
-    "selection_state": "NOT_SELECTED"
+  "current": {
+    "active_issue": 94,
+    "active_order": 5,
+    "convergence_issue": 68,
+    "index_issue": 102,
+    "program_issue": 61
   },
   "foundation_subjects": [
     {
       "issue": 62,
-      "pr": 74,
       "module": "loopx-kernel",
+      "pr": 74,
       "state": "MERGED_TO_MAIN",
       "validation_item": "stage-01-main-validation"
     },
     {
       "issue": 63,
-      "pr": 75,
       "module": "loopx-ledger",
+      "pr": 75,
       "state": "MERGED_TO_MAIN",
       "validation_item": "stage-01-main-validation"
     },
     {
       "issue": 64,
-      "pr": 76,
       "module": "loopx-worker-gateway",
+      "pr": 76,
       "state": "MERGED_TO_MAIN",
       "validation_item": "stage-01-main-validation"
     },
     {
       "issue": 42,
-      "pr": 78,
       "module": "loopx-decision-memory",
+      "pr": 78,
       "state": "MERGED_TO_MAIN",
       "validation_item": "stage-01-main-validation"
     },
     {
       "issue": 69,
-      "pr": 79,
       "module": "code-truth-graph-v2",
+      "pr": 79,
       "state": "MERGED_TO_MAIN",
       "validation_item": "stage-01-main-validation"
     }
   ],
-  "queue_policy": {
-    "ordering": "STRICT_GLOBAL_COMPLETION",
-    "active_limit": 1,
-    "later_completion": "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER",
-    "branch_topology": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN",
-    "future_branch_creation": "BLOCKED_UNTIL_QUEUE_ITEM_ACTIVE"
-  },
-  "current": {
-    "program_issue": 61,
-    "index_issue": 102,
-    "active_order": 0,
-    "active_issue": 82,
-    "convergence_issue": 68
-  },
+  "human_owned_operations": [
+    "semantic conflict resolution",
+    "Git Town continue, skip or undo",
+    "remote publication",
+    "merge, ship, close or branch deletion",
+    "provider, model, runtime and credential activation",
+    "scoped exception and destructive cleanup admission",
+    "release promotion",
+    "production rollback"
+  ],
   "items": [
     {
-      "order": 0,
-      "id": "stage-00-gateway-residue",
-      "title": "Resolve PR #77-only Worker Gateway files",
-      "issues": [82],
-      "prs": [76, 77],
-      "expected_branch": "feat/loopx-worker-gateway-residue-v1",
-      "stack_relation": "ROOT",
-      "prerequisite_items": [],
-      "owner_paths": [
-        "loop_wiki/loopx-worker-gateway",
-        ".arena/modules/loopx-worker-gateway",
-        "docs/git",
-        "docs/traceability"
-      ],
-      "queue_state": "ACTIVE",
       "acceptance": [
         "All eight PR #77-only files are folded or rejected with an explicit reason",
         "Overlapping behavior is compared by execution rather than filename",
         "Worker Gateway positive and mutation suites remain green"
       ],
       "evidence_boundary": "This stage proves residual-file disposition and current module behavior; it does not prove a live host.",
-      "human_boundary": "Human owns semantic conflict decisions, merge, branch deletion and rollback."
+      "expected_branch": "feat/loopx-worker-gateway-residue-v1",
+      "human_boundary": "Human owns semantic conflict decisions, merge, branch deletion and rollback.",
+      "id": "stage-00-gateway-residue",
+      "issues": [
+        82
+      ],
+      "order": 0,
+      "owner_paths": [
+        "loop_wiki/loopx-worker-gateway",
+        ".arena/modules/loopx-worker-gateway",
+        "docs/git",
+        "docs/traceability"
+      ],
+      "prerequisite_items": [],
+      "prs": [
+        76,
+        77
+      ],
+      "queue_state": "COMPLETE",
+      "stack_relation": "ROOT",
+      "title": "Resolve PR #77-only Worker Gateway files"
     },
     {
-      "order": 1,
-      "id": "stage-01-main-validation",
-      "title": "Validate the merged LoopX foundation on current main",
-      "issues": [90],
-      "prs": [74, 75, 76, 78, 79],
+      "acceptance": [
+        "Current-main reachability and exact subjects are pinned",
+        "Contract, Ledger, Gateway, Memory and Code Truth controls execute",
+        "Module, Context and proof projections agree at exact head"
+      ],
+      "evidence_boundary": "Reachability and deterministic controls do not prove composition selection, live providers or production admission.",
       "expected_branch": "feat/loopx-stage0-validation-v1",
-      "stack_relation": "TRUE_CHILD",
-      "prerequisite_items": ["stage-00-gateway-residue"],
+      "human_boundary": "Human owns any implementation repair merge and Stage-0 admission.",
+      "id": "stage-01-main-validation",
+      "issues": [
+        90
+      ],
+      "order": 1,
       "owner_paths": [
         "loop_wiki/loopx-kernel",
         "loop_wiki/loopx-ledger",
@@ -114,460 +123,700 @@
         "loop_wiki/code-truth-graph-v2",
         ".arena/modules"
       ],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
-      "acceptance": [
-        "Current-main reachability and exact subjects are pinned",
-        "Contract, Ledger, Gateway, Memory and Code Truth controls execute",
-        "Module, Context and proof projections agree at exact head"
+      "prerequisite_items": [
+        "stage-00-gateway-residue"
       ],
-      "evidence_boundary": "Reachability and deterministic controls do not prove composition selection, live providers or production admission.",
-      "human_boundary": "Human owns any implementation repair merge and Stage-0 admission."
+      "prs": [
+        74,
+        75,
+        76,
+        78,
+        79
+      ],
+      "queue_state": "COMPLETE",
+      "stack_relation": "TRUE_CHILD",
+      "title": "Validate the merged LoopX foundation on current main"
     },
     {
-      "order": 2,
-      "id": "stage-02-strategy-hitl",
-      "title": "Implement Strategy Graph and scoped HITL",
-      "issues": [65],
-      "prs": [],
-      "expected_branch": "feat/loopx-strategy-hitl-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-01-main-validation"],
-      "owner_paths": ["loop_wiki/loopx-strategy-hitl", ".arena/modules/loopx-strategy-hitl"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Graph emits typed proposals only",
         "Interrupt, resume, cancel and scoped-exception receipts bind exact ledger state",
         "Stale checkpoint and duplicate-resume controls turn red"
       ],
       "evidence_boundary": "LangGraph checkpoints remain projections and never become task-state authority.",
-      "human_boundary": "Human signs decisions and owns exception, merge and activation."
+      "expected_branch": "feat/loopx-strategy-hitl-v1",
+      "human_boundary": "Human signs decisions and owns exception, merge and activation.",
+      "id": "stage-02-strategy-hitl",
+      "issues": [
+        65
+      ],
+      "order": 2,
+      "owner_paths": [
+        "loop_wiki/loopx-strategy-hitl",
+        ".arena/modules/loopx-strategy-hitl"
+      ],
+      "prerequisite_items": [
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "COMPLETE",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement Strategy Graph and scoped HITL"
     },
     {
-      "order": 3,
-      "id": "stage-03-observability",
-      "title": "Implement redacted observability and signed HITL projection",
-      "issues": [67],
-      "prs": [],
-      "expected_branch": "feat/loopx-observability-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-02-strategy-hitl"],
-      "owner_paths": ["loop_wiki/loopx-observability", ".arena/modules/loopx-observability", "data/observability"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Redacted event envelopes rebuild deterministically from the ledger",
         "Backend absence cannot alter a LoopX verdict",
         "Signed HITL requests bind state revision and ledger head"
       ],
       "evidence_boundary": "Trace and UI projections observe state; they do not prove semantic correctness or commit state.",
-      "human_boundary": "Human owns signer admission, backend activation, merge and retention policy."
+      "expected_branch": "feat/loopx-observability-v1",
+      "human_boundary": "Human owns signer admission, backend activation, merge and retention policy.",
+      "id": "stage-03-observability",
+      "issues": [
+        67
+      ],
+      "order": 3,
+      "owner_paths": [
+        "loop_wiki/loopx-observability",
+        ".arena/modules/loopx-observability",
+        "data/observability"
+      ],
+      "prerequisite_items": [
+        "stage-02-strategy-hitl"
+      ],
+      "prs": [],
+      "queue_state": "COMPLETE",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement redacted observability and signed HITL projection"
     },
     {
-      "order": 4,
-      "id": "stage-04-runtime-fabric",
-      "title": "Implement physical Runtime Fabric and local/cloud parity",
-      "issues": [66],
-      "prs": [],
-      "expected_branch": "feat/loopx-runtime-fabric-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-01-main-validation", "stage-02-strategy-hitl"],
-      "owner_paths": ["loop_wiki/loopx-runtime-fabric", ".arena/modules/loopx-runtime-fabric", ".runtime-env"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Workspace, process, network, secret and resource policies have observable enforcement ceilings",
         "Cleanup, orphan recovery and residue controls execute",
         "Local and cloud results remain separate exact-subject receipts"
       ],
       "evidence_boundary": "A local fixture or provider declaration cannot proxy physical cloud isolation.",
-      "human_boundary": "Human owns runtime/provider activation, credentials, merge and rollback."
+      "expected_branch": "feat/loopx-runtime-fabric-v1",
+      "human_boundary": "Human owns runtime/provider activation, credentials, merge and rollback.",
+      "id": "stage-04-runtime-fabric",
+      "issues": [
+        66
+      ],
+      "order": 4,
+      "owner_paths": [
+        "loop_wiki/loopx-runtime-fabric",
+        ".arena/modules/loopx-runtime-fabric",
+        ".runtime-env"
+      ],
+      "prerequisite_items": [
+        "stage-01-main-validation",
+        "stage-02-strategy-hitl"
+      ],
+      "prs": [],
+      "queue_state": "COMPLETE",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement physical Runtime Fabric and local/cloud parity"
     },
     {
-      "order": 5,
-      "id": "stage-05-worker-fleet",
-      "title": "Implement Herdr/tmux-compatible Worker Fleet",
-      "issues": [94],
-      "prs": [],
-      "expected_branch": "feat/loopx-worker-fleet-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-04-runtime-fabric"],
-      "owner_paths": ["loop_wiki/loopx-worker-fleet", ".arena/modules/loopx-worker-fleet", "data/worker-fleet"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "One Worker, branch, worktree and path lease are enforced",
         "Queue dependencies, backpressure, cancellation and resource slots are observable",
         "Orphan recovery is fail-closed and non-destructive"
       ],
       "evidence_boundary": "tmux session or Herdr exit status cannot establish task, Gate or release PASS.",
-      "human_boundary": "Human owns collision resolution, destructive cleanup, adapter activation and merge."
+      "expected_branch": "feat/loopx-worker-fleet-v1",
+      "human_boundary": "Human owns collision resolution, destructive cleanup, adapter activation and merge.",
+      "id": "stage-05-worker-fleet",
+      "issues": [
+        94
+      ],
+      "order": 5,
+      "owner_paths": [
+        "loop_wiki/loopx-worker-fleet",
+        ".arena/modules/loopx-worker-fleet",
+        "data/worker-fleet"
+      ],
+      "prerequisite_items": [
+        "stage-04-runtime-fabric"
+      ],
+      "prs": [],
+      "queue_state": "ACTIVE",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement Herdr/tmux-compatible Worker Fleet"
     },
     {
-      "order": 6,
-      "id": "stage-06-resource-gc",
-      "title": "Implement resource retention, disk budgets and GC",
-      "issues": [97],
-      "prs": [],
-      "expected_branch": "feat/loopx-resource-gc-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-05-worker-fleet"],
-      "owner_paths": ["loop_wiki/loopx-resource-gc", ".arena/modules/loopx-resource-gc", "data/resource-gc"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Live, protected, blocked and expired resources are classified",
         "Dry-run cleanup preserves ledger, Human decisions and blocked evidence",
         "Residue and projection rebuild controls execute"
       ],
       "evidence_boundary": "GC receipts prove named resource cleanup only; they do not authorize deleting audit history.",
-      "human_boundary": "Human owns destructive classes, retention policy, merge and rollback."
+      "expected_branch": "feat/loopx-resource-gc-v1",
+      "human_boundary": "Human owns destructive classes, retention policy, merge and rollback.",
+      "id": "stage-06-resource-gc",
+      "issues": [
+        97
+      ],
+      "order": 6,
+      "owner_paths": [
+        "loop_wiki/loopx-resource-gc",
+        ".arena/modules/loopx-resource-gc",
+        "data/resource-gc"
+      ],
+      "prerequisite_items": [
+        "stage-05-worker-fleet"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement resource retention, disk budgets and GC"
     },
     {
-      "order": 7,
-      "id": "stage-07-lsp-pool",
-      "title": "Implement a worktree-aware LSP pool",
-      "issues": [96],
-      "prs": [],
-      "expected_branch": "feat/loopx-lsp-pool-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-04-runtime-fabric", "stage-05-worker-fleet"],
-      "owner_paths": ["loop_wiki/lsp-pool", ".arena/modules/lsp-pool", "data/lsp-pool"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Server, workspace, commit, config and freshness identities are bound",
         "Cross-worktree, stale-index, OOM and cleanup controls turn red",
         "A bounded CLI fallback has an explicit capability ceiling"
       ],
       "evidence_boundary": "LSP diagnostics are source evidence inputs, not runtime facts or Gate verdicts.",
-      "human_boundary": "Human owns language-server admission, resource policy and merge."
+      "expected_branch": "feat/loopx-lsp-pool-v1",
+      "human_boundary": "Human owns language-server admission, resource policy and merge.",
+      "id": "stage-07-lsp-pool",
+      "issues": [
+        96
+      ],
+      "order": 7,
+      "owner_paths": [
+        "loop_wiki/lsp-pool",
+        ".arena/modules/lsp-pool",
+        "data/lsp-pool"
+      ],
+      "prerequisite_items": [
+        "stage-04-runtime-fabric",
+        "stage-05-worker-fleet"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement a worktree-aware LSP pool"
     },
     {
-      "order": 8,
-      "id": "stage-08-decision-memory-runtime",
-      "title": "Implement canonical Decision Memory runtime",
-      "issues": [103],
-      "prs": [78],
-      "expected_branch": "feat/loopx-decision-memory-runtime-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-01-main-validation", "stage-02-strategy-hitl"],
-      "owner_paths": ["loop_wiki/loopx-decision-memory/runtime", ".arena/modules/loopx-decision-memory-runtime", "data/loopx-memory"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Human-admitted proposals become reducer-owned ledger events",
         "Expiry, supersession, conflict, export and delete are executable",
         "Replay is deterministic and projections rebuild from canonical events"
       ],
       "evidence_boundary": "Candidate compilation is not durable memory; projections remain lower authority than source and ledger.",
-      "human_boundary": "Human owns admission, deletion/export authorization, merge and retention changes."
+      "expected_branch": "feat/loopx-decision-memory-runtime-v1",
+      "human_boundary": "Human owns admission, deletion/export authorization, merge and retention changes.",
+      "id": "stage-08-decision-memory-runtime",
+      "issues": [
+        103
+      ],
+      "order": 8,
+      "owner_paths": [
+        "loop_wiki/loopx-decision-memory/runtime",
+        ".arena/modules/loopx-decision-memory-runtime",
+        "data/loopx-memory"
+      ],
+      "prerequisite_items": [
+        "stage-01-main-validation",
+        "stage-02-strategy-hitl"
+      ],
+      "prs": [
+        78
+      ],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement canonical Decision Memory runtime"
     },
     {
-      "order": 9,
-      "id": "stage-09-mem0-projection",
-      "title": "Admit Mem0 as an optional rebuildable projection",
-      "issues": [93],
-      "prs": [],
-      "expected_branch": "feat/loopx-mem0-projection-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-08-decision-memory-runtime", "stage-04-runtime-fabric"],
-      "owner_paths": ["loop_wiki/loopx-decision-memory/providers/mem0", "data/memory-projections/mem0", ".runtime-env/modules"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Only admitted memory events enter the projection",
         "Authority conflict, namespace leakage, delete/export and rebuild controls execute",
         "Provider absence remains a typed non-PASS state"
       ],
       "evidence_boundary": "Mem0 retrieval is advisory and cannot become canonical memory or writeback authority.",
-      "human_boundary": "Human owns provider mode, retention, writeback, activation and merge."
+      "expected_branch": "feat/loopx-mem0-projection-v1",
+      "human_boundary": "Human owns provider mode, retention, writeback, activation and merge.",
+      "id": "stage-09-mem0-projection",
+      "issues": [
+        93
+      ],
+      "order": 9,
+      "owner_paths": [
+        "loop_wiki/loopx-decision-memory/providers/mem0",
+        "data/memory-projections/mem0",
+        ".runtime-env/modules"
+      ],
+      "prerequisite_items": [
+        "stage-08-decision-memory-runtime",
+        "stage-04-runtime-fabric"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Admit Mem0 as an optional rebuildable projection"
     },
     {
-      "order": 10,
-      "id": "stage-10-source-ingest",
-      "title": "Implement immutable YouTube/PDF/Notes source ingest",
-      "issues": [104],
-      "prs": [],
-      "expected_branch": "feat/loopx-notes-source-ingest-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-01-main-validation"],
-      "owner_paths": ["kb-ingest/source-manifest", "notes-ingest", "data/source-manifests", ".arena/modules/notes-source-ingest"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Raw artifacts, rights, dependency keys and locators are exact",
         "Blocked media/transcript/OCR states remain explicit",
         "Injection, duplicate-origin and destination-authorization controls turn red"
       ],
       "evidence_boundary": "Missing source bytes or rights cannot be replaced by generated summaries or estimated locators.",
-      "human_boundary": "Human owns source rights, external destinations, admission and merge."
+      "expected_branch": "feat/loopx-notes-source-ingest-v1",
+      "human_boundary": "Human owns source rights, external destinations, admission and merge.",
+      "id": "stage-10-source-ingest",
+      "issues": [
+        104
+      ],
+      "order": 10,
+      "owner_paths": [
+        "kb-ingest/source-manifest",
+        "notes-ingest",
+        "data/source-manifests",
+        ".arena/modules/notes-source-ingest"
+      ],
+      "prerequisite_items": [
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement immutable YouTube/PDF/Notes source ingest"
     },
     {
-      "order": 11,
-      "id": "stage-11-notes-retrieval",
-      "title": "Build OpenWiki and vector/graph Notes projections",
-      "issues": [105],
-      "prs": [],
-      "expected_branch": "feat/loopx-notes-retrieval-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-10-source-ingest", "stage-01-main-validation"],
-      "owner_paths": ["openwiki/notes", "notes-retrieval", "data/notes-retrieval", ".arena/modules/notes-retrieval"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Static and optional vector/graph projections bind the exact Notes Repo subject",
         "Every returned unit retains provenance and locator",
         "Freshness, UNKNOWN, delete and rebuild controls execute"
       ],
       "evidence_boundary": "OpenWiki, vector and graph results are rebuildable candidates, never source truth or absence proof.",
-      "human_boundary": "Human owns provider selection, external embedding destinations, activation and merge."
+      "expected_branch": "feat/loopx-notes-retrieval-v1",
+      "human_boundary": "Human owns provider selection, external embedding destinations, activation and merge.",
+      "id": "stage-11-notes-retrieval",
+      "issues": [
+        105
+      ],
+      "order": 11,
+      "owner_paths": [
+        "openwiki/notes",
+        "notes-retrieval",
+        "data/notes-retrieval",
+        ".arena/modules/notes-retrieval"
+      ],
+      "prerequisite_items": [
+        "stage-10-source-ingest",
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Build OpenWiki and vector/graph Notes projections"
     },
     {
-      "order": 12,
-      "id": "stage-12-code-intelligence-live",
-      "title": "Run live Serena and GrepAI canaries",
-      "issues": [92],
-      "prs": [],
-      "expected_branch": "feat/loopx-code-intelligence-canaries-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-07-lsp-pool", "stage-04-runtime-fabric", "stage-01-main-validation"],
-      "owner_paths": ["docs/knowledge-providers/live/serena", "docs/knowledge-providers/live/grepai", "data/provider-canaries"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Executable, workspace, index, model and freshness identities are exact",
         "Positive results require current-source readback",
         "Stale, unsupported, outage and cleanup controls remain distinct"
       ],
       "evidence_boundary": "Symbol and semantic providers emit candidates only and cannot establish source absence or Gate PASS.",
-      "human_boundary": "Human owns provider activation, external services and merge."
+      "expected_branch": "feat/loopx-code-intelligence-canaries-v1",
+      "human_boundary": "Human owns provider activation, external services and merge.",
+      "id": "stage-12-code-intelligence-live",
+      "issues": [
+        92
+      ],
+      "order": 12,
+      "owner_paths": [
+        "docs/knowledge-providers/live/serena",
+        "docs/knowledge-providers/live/grepai",
+        "data/provider-canaries"
+      ],
+      "prerequisite_items": [
+        "stage-07-lsp-pool",
+        "stage-04-runtime-fabric",
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Run live Serena and GrepAI canaries"
     },
     {
-      "order": 13,
-      "id": "stage-13-code-graph-rag",
-      "title": "Admit a read-only Code-Graph-RAG adapter",
-      "issues": [41],
-      "prs": [],
-      "expected_branch": "feat/code-graph-rag-readonly-admission-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-12-code-intelligence-live"],
-      "owner_paths": ["loop_wiki/code-truth-graph/providers/code-graph-rag", "data/provider-canaries/code-graph-rag", ".runtime-env/modules"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Read-only query surface and exact graph/index identity are enforced",
         "Coverage, freshness, source provenance and delete/rebuild receipts exist",
         "Write, delete and autonomous-edit tools stay outside normal Agent sessions"
       ],
       "evidence_boundary": "A graph edge is a candidate until current source or runtime evidence confirms it.",
-      "human_boundary": "Human owns provider deployment, storage, privileged tools and merge."
+      "expected_branch": "feat/code-graph-rag-readonly-admission-v1",
+      "human_boundary": "Human owns provider deployment, storage, privileged tools and merge.",
+      "id": "stage-13-code-graph-rag",
+      "issues": [
+        41
+      ],
+      "order": 13,
+      "owner_paths": [
+        "loop_wiki/code-truth-graph/providers/code-graph-rag",
+        "data/provider-canaries/code-graph-rag",
+        ".runtime-env/modules"
+      ],
+      "prerequisite_items": [
+        "stage-12-code-intelligence-live"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Admit a read-only Code-Graph-RAG adapter"
     },
     {
-      "order": 14,
-      "id": "stage-14-notes-scaffold",
-      "title": "Compile Notes Repo knowledge into scaffold candidates",
-      "issues": [70],
-      "prs": [],
-      "expected_branch": "feat/loopx-notes-scaffold-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-11-notes-retrieval", "stage-01-main-validation"],
-      "owner_paths": ["loop_wiki/notes-scaffold", ".arena/modules/notes-scaffold", "data/scaffolds"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Evidence and assertions compile into typed cards, System Spec IR and CodeOp IR",
         "Scaffold generation occurs only in a disposable workspace",
         "Every generated contract, symbol and test maps back to source evidence"
       ],
       "evidence_boundary": "A generated scaffold is a candidate and cannot update source knowledge or release state automatically.",
-      "human_boundary": "Human owns scaffold admission, architectural choices, merge and release."
+      "expected_branch": "feat/loopx-notes-scaffold-v1",
+      "human_boundary": "Human owns scaffold admission, architectural choices, merge and release.",
+      "id": "stage-14-notes-scaffold",
+      "issues": [
+        70
+      ],
+      "order": 14,
+      "owner_paths": [
+        "loop_wiki/notes-scaffold",
+        ".arena/modules/notes-scaffold",
+        "data/scaffolds"
+      ],
+      "prerequisite_items": [
+        "stage-11-notes-retrieval",
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Compile Notes Repo knowledge into scaffold candidates"
     },
     {
-      "order": 15,
-      "id": "stage-15-knowledge-foldback",
-      "title": "Fold verified code and runtime evidence back into knowledge",
-      "issues": [71],
-      "prs": [],
-      "expected_branch": "feat/loopx-code-knowledge-foldback-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-14-notes-scaffold", "stage-01-main-validation"],
-      "owner_paths": ["loop_wiki/code-knowledge-foldback", ".arena/modules/code-knowledge-foldback", "data/knowledge-foldback"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Diff, symbol, test and runtime deltas map to affected knowledge identities",
         "UPDATE, SUPERSEDE, CONFLICT, UNKNOWN and NOOP remain distinct",
         "Knowledge patches require evidence and Human admission"
       ],
       "evidence_boundary": "A code change does not automatically rewrite Notes, OpenWiki, cards or ADRs.",
-      "human_boundary": "Human owns semantic reconciliation, card/ADR admission, merge and rollback."
+      "expected_branch": "feat/loopx-code-knowledge-foldback-v1",
+      "human_boundary": "Human owns semantic reconciliation, card/ADR admission, merge and rollback.",
+      "id": "stage-15-knowledge-foldback",
+      "issues": [
+        71
+      ],
+      "order": 15,
+      "owner_paths": [
+        "loop_wiki/code-knowledge-foldback",
+        ".arena/modules/code-knowledge-foldback",
+        "data/knowledge-foldback"
+      ],
+      "prerequisite_items": [
+        "stage-14-notes-scaffold",
+        "stage-01-main-validation"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Fold verified code and runtime evidence back into knowledge"
     },
     {
-      "order": 16,
-      "id": "stage-16-context-assembly",
-      "title": "Implement prompt-cache-stable Context Assembly",
-      "issues": [95],
-      "prs": [],
-      "expected_branch": "feat/loopx-context-assembly-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-08-decision-memory-runtime", "stage-11-notes-retrieval", "stage-15-knowledge-foldback"],
-      "owner_paths": ["loop_wiki/loopx-context-assembly", ".arena/modules/loopx-context-assembly", ".agents/generated/host-projections"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Stable prefix and dynamic suffix are separately content-addressed",
         "One Prompt IR renders all six host projections without normative drift",
         "Budget overflow, cache comparability, secret and private-reasoning controls turn red"
       ],
       "evidence_boundary": "Cache observations are host/model/profile specific and cannot become universal performance claims.",
-      "human_boundary": "Human owns normative prompt law, production projection promotion and merge."
+      "expected_branch": "feat/loopx-context-assembly-v1",
+      "human_boundary": "Human owns normative prompt law, production projection promotion and merge.",
+      "id": "stage-16-context-assembly",
+      "issues": [
+        95
+      ],
+      "order": 16,
+      "owner_paths": [
+        "loop_wiki/loopx-context-assembly",
+        ".arena/modules/loopx-context-assembly",
+        ".agents/generated/host-projections"
+      ],
+      "prerequisite_items": [
+        "stage-08-decision-memory-runtime",
+        "stage-11-notes-retrieval",
+        "stage-15-knowledge-foldback"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement prompt-cache-stable Context Assembly"
     },
     {
-      "order": 17,
-      "id": "stage-17-skill-prompt-evolution",
-      "title": "Implement Skill and Prompt evolution with sealed holdout",
-      "issues": [72],
-      "prs": [],
-      "expected_branch": "feat/loopx-skill-prompt-evolution-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-16-context-assembly"],
-      "owner_paths": ["evals/loopx-skill-prompt", "mutations/loopx", "data/skill-evolution"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Current, candidate and no-skill baselines use identical execution contracts",
         "Mutation/trap cases and sealed holdout stay separated",
         "Hard-gate failure cannot be offset by LLM-as-a-Judge scoring"
       ],
       "evidence_boundary": "One host/model success cannot establish generalized capability or production promotion.",
-      "human_boundary": "Human owns holdout access, candidate promotion, rollback and merge."
+      "expected_branch": "feat/loopx-skill-prompt-evolution-v1",
+      "human_boundary": "Human owns holdout access, candidate promotion, rollback and merge.",
+      "id": "stage-17-skill-prompt-evolution",
+      "issues": [
+        72
+      ],
+      "order": 17,
+      "owner_paths": [
+        "evals/loopx-skill-prompt",
+        "mutations/loopx",
+        "data/skill-evolution"
+      ],
+      "prerequisite_items": [
+        "stage-16-context-assembly"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement Skill and Prompt evolution with sealed holdout"
     },
     {
-      "order": 18,
-      "id": "stage-18-ci-parity",
-      "title": "Implement local and exact-head GitHub Actions parity",
-      "issues": [98],
-      "prs": [],
-      "expected_branch": "feat/loopx-ci-parity-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-17-skill-prompt-evolution"],
-      "owner_paths": [".github-delivery/ci-parity", "scripts/gates/ci_parity", "tests/ci-parity", "data/ci-parity"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Repository-native and optional simulator lanes are machine-indexed",
         "Exact-head GitHub runs are compared rather than inferred",
         "Skipped, stale, action-required and billing states remain distinct"
       ],
       "evidence_boundary": "Local scripts or act cannot proxy GitHub-hosted runner permissions, services or exact-head status.",
-      "human_boundary": "Human or trusted operator owns workflow dispatch, billing recovery, publication and merge."
+      "expected_branch": "feat/loopx-ci-parity-v1",
+      "human_boundary": "Human or trusted operator owns workflow dispatch, billing recovery, publication and merge.",
+      "id": "stage-18-ci-parity",
+      "issues": [
+        98
+      ],
+      "order": 18,
+      "owner_paths": [
+        ".github-delivery/ci-parity",
+        "scripts/gates/ci_parity",
+        "tests/ci-parity",
+        "data/ci-parity"
+      ],
+      "prerequisite_items": [
+        "stage-17-skill-prompt-evolution"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement local and exact-head GitHub Actions parity"
     },
     {
-      "order": 19,
-      "id": "stage-19-six-host-live",
-      "title": "Run the six-host live Worker matrix",
-      "issues": [91],
-      "prs": [],
-      "expected_branch": "feat/loopx-six-host-live-matrix-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-04-runtime-fabric", "stage-16-context-assembly", "stage-17-skill-prompt-evolution", "stage-18-ci-parity"],
-      "owner_paths": ["loop_wiki/loopx-worker-gateway/live", "data/host-canaries", ".runtime-env/workloads"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Codex, Claude, Grok Build, OpenCode, Pi and Ante have independent exact-subject states",
         "Every PASS includes execution, Gate and cleanup evidence",
         "White-box, source-visible and gray-box trace ceilings remain explicit"
       ],
       "evidence_boundary": "Source visibility, package installation or another host's PASS cannot proxy a live host canary.",
-      "human_boundary": "Human owns credentials, provider/model selection, host activation and merge."
+      "expected_branch": "feat/loopx-six-host-live-matrix-v1",
+      "human_boundary": "Human owns credentials, provider/model selection, host activation and merge.",
+      "id": "stage-19-six-host-live",
+      "issues": [
+        91
+      ],
+      "order": 19,
+      "owner_paths": [
+        "loop_wiki/loopx-worker-gateway/live",
+        "data/host-canaries",
+        ".runtime-env/workloads"
+      ],
+      "prerequisite_items": [
+        "stage-04-runtime-fabric",
+        "stage-16-context-assembly",
+        "stage-17-skill-prompt-evolution",
+        "stage-18-ci-parity"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Run the six-host live Worker matrix"
     },
     {
-      "order": 20,
-      "id": "stage-20-codex-claude-ab",
-      "title": "Run paired Codex and Claude behavioral A/B",
-      "issues": [45],
-      "prs": [],
-      "expected_branch": "feat/loopx-codex-claude-ab-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-19-six-host-live"],
-      "owner_paths": ["evals/codex-claude", "data/host-comparisons"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Both hosts use the same immutable tasks, Context and Gate contract",
         "Raw paired outcomes, failures and costs are retained",
         "No host is selected from prose, a single case or incomparable subjects"
       ],
       "evidence_boundary": "Paired cases describe the pinned hosts and workloads only; they are not universal model rankings.",
-      "human_boundary": "Human owns provider spend, model selection, promotion and merge."
+      "expected_branch": "feat/loopx-codex-claude-ab-v1",
+      "human_boundary": "Human owns provider spend, model selection, promotion and merge.",
+      "id": "stage-20-codex-claude-ab",
+      "issues": [
+        45
+      ],
+      "order": 20,
+      "owner_paths": [
+        "evals/codex-claude",
+        "data/host-comparisons"
+      ],
+      "prerequisite_items": [
+        "stage-19-six-host-live"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Run paired Codex and Claude behavioral A/B"
     },
     {
-      "order": 21,
-      "id": "stage-21-provider-evaluation",
-      "title": "Converge provider admission evaluation",
-      "issues": [46, 56],
-      "prs": [56],
-      "expected_branch": "eval/loopx-provider-convergence-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-09-mem0-projection", "stage-12-code-intelligence-live", "stage-13-code-graph-rag", "stage-20-codex-claude-ab"],
-      "owner_paths": ["docs/knowledge-providers/evals", "data/provider-evaluations", "scripts/evaluate_knowledge_providers.py"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Every provider and deterministic control use the same immutable case contract",
         "Complete participant-pair coverage and source readback are enforced",
         "Fixture, live, unavailable and superiority states remain separate"
       ],
       "evidence_boundary": "Provider evaluation produces candidate recommendations; it cannot activate a provider or mark task state.",
-      "human_boundary": "Human owns provider admission, comparison thresholds, activation and merge."
+      "expected_branch": "eval/loopx-provider-convergence-v1",
+      "human_boundary": "Human owns provider admission, comparison thresholds, activation and merge.",
+      "id": "stage-21-provider-evaluation",
+      "issues": [
+        46,
+        56
+      ],
+      "order": 21,
+      "owner_paths": [
+        "docs/knowledge-providers/evals",
+        "data/provider-evaluations",
+        "scripts/evaluate_knowledge_providers.py"
+      ],
+      "prerequisite_items": [
+        "stage-09-mem0-projection",
+        "stage-12-code-intelligence-live",
+        "stage-13-code-graph-rag",
+        "stage-20-codex-claude-ab"
+      ],
+      "prs": [
+        56
+      ],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Converge provider admission evaluation"
     },
     {
-      "order": 22,
-      "id": "stage-22-harness-console",
-      "title": "Implement the Harness Console",
-      "issues": [99],
-      "prs": [],
-      "expected_branch": "feat/loopx-harness-console-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-02-strategy-hitl", "stage-03-observability", "stage-19-six-host-live"],
-      "owner_paths": ["apps/harness-console", "services/hitl-api", "packages/harness-console-contracts"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Task graph, Gate evidence, diff, quota and provenance views are read-only projections",
         "Signed actions bind exact revision and ledger head",
         "Stale, duplicate, unsigned and projection-drift controls turn red"
       ],
       "evidence_boundary": "The Console prepares requests and cannot mutate state, mark Gates, merge, promote or rollback.",
-      "human_boundary": "Human owns signer identity, action confirmation, production activation and merge."
+      "expected_branch": "feat/loopx-harness-console-v1",
+      "human_boundary": "Human owns signer identity, action confirmation, production activation and merge.",
+      "id": "stage-22-harness-console",
+      "issues": [
+        99
+      ],
+      "order": 22,
+      "owner_paths": [
+        "apps/harness-console",
+        "services/hitl-api",
+        "packages/harness-console-contracts"
+      ],
+      "prerequisite_items": [
+        "stage-02-strategy-hitl",
+        "stage-03-observability",
+        "stage-19-six-host-live"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Implement the Harness Console"
     },
     {
-      "order": 23,
-      "id": "stage-23-benchmark",
-      "title": "Produce profile-scoped Harness benchmark evidence",
-      "issues": [100],
-      "prs": [],
-      "expected_branch": "feat/loopx-benchmark-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-04-runtime-fabric", "stage-07-lsp-pool", "stage-16-context-assembly", "stage-18-ci-parity", "stage-19-six-host-live"],
-      "owner_paths": ["benchmarks/loopx", "loop_wiki/loopx-benchmark", ".arena/modules/loopx-benchmark", "data/benchmarks"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Raw failures, timeouts and OOM trials remain in versioned reports",
         "Comparability binds workload, subject, environment and provider identities",
         "Memory, TTFT, cache, cost and hardware claims remain profile-scoped"
       ],
       "evidence_boundary": "PDF or vendor numbers are source proposals until reproduced on exact profiles; five trials do not characterize a tail.",
-      "human_boundary": "Human owns benchmark thresholds, claim promotion, spend and merge."
+      "expected_branch": "feat/loopx-benchmark-v1",
+      "human_boundary": "Human owns benchmark thresholds, claim promotion, spend and merge.",
+      "id": "stage-23-benchmark",
+      "issues": [
+        100
+      ],
+      "order": 23,
+      "owner_paths": [
+        "benchmarks/loopx",
+        "loop_wiki/loopx-benchmark",
+        ".arena/modules/loopx-benchmark",
+        "data/benchmarks"
+      ],
+      "prerequisite_items": [
+        "stage-04-runtime-fabric",
+        "stage-07-lsp-pool",
+        "stage-16-context-assembly",
+        "stage-18-ci-parity",
+        "stage-19-six-host-live"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Produce profile-scoped Harness benchmark evidence"
     },
     {
-      "order": 24,
-      "id": "stage-24-git-town-runtime",
-      "title": "Admit the Git Town executable and bounded no-push runtime",
-      "issues": [101],
-      "prs": [],
-      "expected_branch": "feat/git-town-runtime-admission-v1",
-      "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "prerequisite_items": ["stage-01-main-validation", "stage-18-ci-parity"],
-      "owner_paths": ["docs/git/runtime", "scripts/git-town", "tests/git-town", "fixtures/git-town", ".github-delivery/git-town", "data/git-town"],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
       "acceptance": [
         "Executable, checksum, provenance, license and config are exact",
         "Dry-run then live local no-push canaries and fail-closed controls execute",
         "Local sync, GitHub publication, merge and release receipts remain separate"
       ],
       "evidence_boundary": "Git Town may synchronize admitted local branches; it cannot decide semantic conflicts, publication, merge or release.",
-      "human_boundary": "Human owns conflict resolution, publication, merge/ship, promotion and rollback."
+      "expected_branch": "feat/git-town-runtime-admission-v1",
+      "human_boundary": "Human owns conflict resolution, publication, merge/ship, promotion and rollback.",
+      "id": "stage-24-git-town-runtime",
+      "issues": [
+        101
+      ],
+      "order": 24,
+      "owner_paths": [
+        "docs/git/runtime",
+        "scripts/git-town",
+        "tests/git-town",
+        "fixtures/git-town",
+        ".github-delivery/git-town",
+        "data/git-town"
+      ],
+      "prerequisite_items": [
+        "stage-01-main-validation",
+        "stage-18-ci-parity"
+      ],
+      "prs": [],
+      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "stack_relation": "ROOT_AFTER_PREDECESSOR",
+      "title": "Admit the Git Town executable and bounded no-push runtime"
     },
     {
-      "order": 25,
-      "id": "stage-25-final-convergence",
-      "title": "Converge modules, live acceptance, release and rollback",
-      "issues": [68],
-      "prs": [],
+      "acceptance": [
+        "Selected module, Context, proof and release sets are identical at exact head",
+        "Cold-start, Ledger, HITL, memory, Worker, provider, runtime, CI and projection canaries execute",
+        "Every exclusion remains named and Human Admit records release and rollback"
+      ],
+      "evidence_boundary": "Terminal green checks create release inputs; only convergence and Human Admit can produce an immutable release.",
       "expected_branch": "integration/loopx-harness-convergence-v1",
-      "stack_relation": "CONVERGENCE",
+      "human_boundary": "Human alone admits the release, promotion, rollback and any scoped exclusion.",
+      "id": "stage-25-final-convergence",
+      "issues": [
+        68
+      ],
+      "order": 25,
+      "owner_paths": [
+        ".arena/compositions",
+        ".arena/locks",
+        ".arena/contexts.lock.json",
+        "loopctl",
+        "mcp",
+        "data/module-proof",
+        "README.md",
+        "AGENTS.md",
+        "docs/traceability"
+      ],
       "prerequisite_items": [
         "stage-00-gateway-residue",
         "stage-01-main-validation",
@@ -595,53 +844,39 @@
         "stage-23-benchmark",
         "stage-24-git-town-runtime"
       ],
-      "owner_paths": [
-        ".arena/compositions",
-        ".arena/locks",
-        ".arena/contexts.lock.json",
-        "loopctl",
-        "mcp",
-        "data/module-proof",
-        "README.md",
-        "AGENTS.md",
-        "docs/traceability"
-      ],
+      "prs": [],
       "queue_state": "FINAL_CONVERGENCE",
-      "acceptance": [
-        "Selected module, Context, proof and release sets are identical at exact head",
-        "Cold-start, Ledger, HITL, memory, Worker, provider, runtime, CI and projection canaries execute",
-        "Every exclusion remains named and Human Admit records release and rollback"
-      ],
-      "evidence_boundary": "Terminal green checks create release inputs; only convergence and Human Admit can produce an immutable release.",
-      "human_boundary": "Human alone admits the release, promotion, rollback and any scoped exclusion."
+      "stack_relation": "CONVERGENCE",
+      "title": "Converge modules, live acceptance, release and rollback"
     }
   ],
-  "convergence": {
-    "issue": 68,
-    "order": 25,
-    "branch": "integration/loopx-harness-convergence-v1",
-    "shared_artifacts": [
-      ".arena/compositions/bettor-arena.requirements.json",
-      ".arena/locks/bettor-arena.lock.json",
-      ".arena/contexts.lock.json",
-      "loopctl/contract.json",
-      ".arena/mcp-policy.json",
-      "data/module-proof/subjects.lock.json",
-      "data/module-proof/release-receipt.json",
-      "README.md",
-      "AGENTS.md",
-      "docs/git/pdf-terminal-sequence.json",
-      "docs/traceability/STACK_PR_INDEX.md"
-    ]
+  "observed_at": "2026-08-14T15:01:43Z",
+  "queue_policy": {
+    "active_limit": 1,
+    "branch_topology": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN",
+    "future_branch_creation": "BLOCKED_UNTIL_QUEUE_ITEM_ACTIVE",
+    "later_completion": "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER",
+    "ordering": "STRICT_GLOBAL_COMPLETION"
   },
-  "human_owned_operations": [
-    "semantic conflict resolution",
-    "Git Town continue, skip or undo",
-    "remote publication",
-    "merge, ship, close or branch deletion",
-    "provider, model, runtime and credential activation",
-    "scoped exception and destructive cleanup admission",
-    "release promotion",
-    "production rollback"
-  ]
+  "repository": {
+    "base_sha": "844b7121789e57ebe00f1a07a67b27c1542cf05b",
+    "default_branch": "main",
+    "full_name": "ed3c/bettor-arena",
+    "repository_id": 1330387399
+  },
+  "schema": "bettor-arena/pdf-terminal-sequence/v1",
+  "shared_skill": {
+    "blob": "eb2d915bca3e8a3938625f7d33a10fae95a15769",
+    "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
+    "path": "skills/git-town-stacked-pr-worker/SKILL.md",
+    "repository": "ed3c/skills-shared",
+    "selection_state": "NOT_SELECTED"
+  },
+  "source": {
+    "authority": "SOURCE_PROPOSAL_ONLY",
+    "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
+    "pages": 41,
+    "repository_copy": "ABSENT",
+    "title": "LLM \u6cdb\u5316\uff1a\u6a21\u578b\u6b0a\u91cd\u8207 Harness"
+  }
 }
