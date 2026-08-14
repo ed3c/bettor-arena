@@ -98,7 +98,7 @@ It verifies symlink projection rather than a shadow copy, document-route closure
 6. 有意花費兩個 canary turn 時跑 `agent-runtime run --live`；最後 strict `agent-runtime run`。
 7. 產 proof/control receipt、stage 全 closure、過 pre-commit，才提交 bettor。
 
-For `repo-agent-native`, also update the exact shared candidate commit in its consumer binding, rerun the binding selftest, open fresh Claude/Codex sessions, and execute the four-condition physical A/B contract before claiming output superiority.
+For `repo-agent-native`, also record the exact shared candidate commit in its consumer binding, rerun the binding selftest, open fresh Claude/Codex sessions, and execute the profile-bound `no_skill`/`current_skill`/`candidate_skill` physical matrix before claiming output superiority. Add `wrong_skill` only when the experiment measures automatic routing rather than explicit invocation.
 
 Rollback 不手改 binding：checkout 上游舊 clean commit，用同一 requirements 重 sync。private publication
 是 delivery policy，不是 module contract；本線不 push，也不把 remote visibility 改成 public。

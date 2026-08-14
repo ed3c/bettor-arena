@@ -30,6 +30,24 @@
     "physical_matrix_state": "FAIL",
     "consumer_receipt": "data/receipts/repo-agent-native-cdcf8b5-physical-matrix.json"
   },
+  "generalization_measurement": {
+    "authority_repository": "ed3c/skills-shared",
+    "candidate_commit": "0e26e90deef3907bb08ac9b4919c920bd36093f8",
+    "candidate_publication_state": "LOCAL_ONLY",
+    "profile": "evals/profiles/source-grounded-analysis-v1.json",
+    "suite": "evals/suites/repo-agent-native-generalization-v2.json",
+    "split": "dev",
+    "conditions": ["no_skill", "current_skill", "candidate_skill"],
+    "task_families": 4,
+    "variants_per_family": 2,
+    "repetitions_per_cell": 3,
+    "harnesses": ["codex", "claude"],
+    "expected_cells": 144,
+    "observed_cells": 144,
+    "behavior_state": "FAIL",
+    "identity_state": "NOT_EXERCISED",
+    "consumer_receipt": "data/receipts/repo-agent-native-generalization-v2-dev.json"
+  },
   "routes": [
     {"path": "README.md", "kind": "file", "required": true},
     {"path": "AGENTS.md", "kind": "file", "required": true},

@@ -30,7 +30,7 @@ metadata:
 6. **Design assertions**：把可判 claim 寫成 stable predicate ID/operator/value/source，由 evaluator 對 exact subject 獨立重觀測；hard assertions 用 exit/schema/hash/diff/AST/LSP/test report，模型自述與文字 alias 只可 advisory，不能影響 admission 或覆寫 hard failure。
 7. **Build the gate**：至少一個 positive、一個 hollow，且每條 load-bearing rule 各有 planted mutation；同一問題最多三次修正。
 8. **Project hosts**：Codex 用 canonical `.agents/skills` 與可選 `agents/openai.yaml`；Claude 用 `.claude/skills/<name>` thin symlink；不得複製第二份 `SKILL.md`。
-9. **Prove behavior**：以 `no_skill`、`current_skill`、`candidate_skill`、`wrong_skill` 四臂比較；四臂須同 carrier/scenario/subject commit+bundle/evaluator digest set，只可改 treatment package。保存 host/version/seed/Skill digest/tool calls/output/verdict/wall time；跨 task/harness 的程序泛化另跑 repetitions 與 perturbations。沒有 physical run 就標 `NOT_EXERCISED`。
+9. **Prove behavior**：先選 reusable profile，再為該 Skill 預登記多個 task families、metamorphic variants 與 task-specific oracle。預設比較 `no_skill`、`current_skill`、`candidate_skill`；只有量 automatic routing 才加 `wrong_skill`，量 composition 才加 `composed_skills`。各臂須同 subject/evaluator/common-task/runner identity，且同一 harness 內 model identity 固定，只可改 treatment package；至少兩個 real harness、每格三次、counterbalanced order，並以 hard capability、paired conservative bound、worst-family、cross-host gap、metamorphic relation 分開判。public dev suite 只能淘汰，sealed post-selection holdout 才能 unlock；缺 physical 或 identity receipt 就標 `NOT_EXERCISED`。
 10. **Deliver**：receipt 證明 exact head 某次發生什麼；GitHub/Forgejo live audit 另證明當下狀態；promotion/merge 留 Human Admit。
 
 Repository conformance 的實際入口：
@@ -56,7 +56,7 @@ python3 scripts/gates/check_skill_conformance.py --root .
 按任務只載入必要細節：
 
 - [Official Agent Skills profile](modules/official-agent-skills-profile.md)：portable core、Codex/Claude host projections 與官方 primary sources。
-- [Execution and assertions](modules/execution-and-assertions.md)：typed execution、hard/advisory assertions、subject-bound receipts、四臂同 subject/evaluator 與跨 harness 量測。
+- [Execution and assertions](modules/execution-and-assertions.md)：typed execution、hard/advisory assertions、subject-bound receipts、profile-bound controls 與跨 harness 泛化量測。
 - [Authoring clauses](modules/authoring-clauses.md)：Bettor 既有產品/工程 Skill 的進階條款。
 - [Semantic-loss ledger](modules/semantic-loss-ledger.md)：舊語意的 durable home 與檢查。
 - [Archived legacy Skill](modules/legacy-skill-2026-08-14.md)：移出 model-visible core 的歷史家規與 domain instances；不作 current truth。

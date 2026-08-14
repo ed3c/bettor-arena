@@ -52,7 +52,9 @@ SHARED SKILL CANDIDATE IDENTIFIED
 → FALLBACKS VERIFIED
 → DETERMINISTIC MUTATIONS KILLED
 → FRESH SESSION MATERIALIZED
-→ CURRENT/CANDIDATE A/B EXECUTED
+→ PROFILE + MULTI-FAMILY SUITE FROZEN
+→ NO/CURRENT/CANDIDATE MATRIX EXECUTED
+→ IDENTITY + GENERALIZATION GATES EVALUATED
 → HUMAN ADMIT
 ```
 
@@ -106,11 +108,14 @@ A provider configuration proves only that a launch surface is declared. It does 
 - `grepai`, `repo-context-pack`, and `serena` have versioned launch declarations.
 - Serena is pinned in both host surfaces; GrepAI currently resolves from host `PATH`, so its executable identity remains unpinned.
 - `code-graph-rag` and `mem0` are research/admission candidates and are intentionally absent from project MCP configuration.
-- No physical current-versus-candidate Claude Code or Codex A/B receipt is created by this binding branch.
+- This binding branch preserves both the earlier retry-only receipt and the newer generalized development receipt; neither is promotion authority.
 - The canonical evaluator/adapter/matrix implementation is pinned to `skills-shared@cdcf8b59fbd32de07a199333be32ad4665092639`; Bettor does not copy those scripts or schemas.
-- The complete `AB-RETRY-01` 24-cell matrix is recorded at `data/receipts/repo-agent-native-cdcf8b5-physical-matrix.json`. Claude improved from `0/3` to `3/3`; Codex remained `0/3`, so the cross-host admission state is `FAIL` rather than a partial PASS.
+- The old `AB-RETRY-01` 24-cell matrix at `data/receipts/repo-agent-native-cdcf8b5-physical-matrix.json` is a retry-only calibration slice. Claude improved from `0/3` to `3/3`; Codex remained `0/3`, so even that bounded slice is `FAIL`.
+- The generalized development matrix is recorded at `data/receipts/repo-agent-native-generalization-v2-dev.json` and points to local `skills-shared@0e26e90deef3907bb08ac9b4919c920bd36093f8`. It covers four task families, eight variants, three causal conditions, two real hosts, and three repetitions: all 144 cells were observed.
+- The generalized candidate passed `39/48` cells versus current `32/48` and no-Skill `36/48`, but both paired 95% lower bounds are negative, 12 hard capability assertions failed, and only one of four metamorphic groups passed. Behavioral admission is therefore `FAIL`, not “better than original.”
+- The physical v2 receipts predate `common_task_sha256` and `runner_sha256`; treatment/model/subject/evaluator identities were stable, but release-grade identity remains `NOT_EXERCISED`. The candidate commit is local-only and has not replaced the canonical shared projection.
 
-Provider runtime states remain `NOT_EXERCISED`; the physical A/B matrix is independently `FAIL`. Neither state may overwrite the other.
+Provider runtime states remain `NOT_EXERCISED`; both behavioral matrices are independently `FAIL`. Neither state may overwrite the other.
 
 ## Code and assertions
 
@@ -119,7 +124,7 @@ python3 scripts/gates/check_repo_agent_native_binding.py --selftest
 python3 scripts/gates/check_repo_agent_native_binding.py
 ```
 
-The gate checks projection shape, immutable measurement authority, the four-arm/three-repeat/two-harness contract, routes, MCP configuration, candidate absence, pins, evidence ceilings, fallbacks, and secret/path leakage. It includes planted mutations. Model self-review and Markdown checklists remain advisory.
+The gate checks projection shape, immutable measurement authority, the retained calibration receipt, the generalized 144-cell profile-bound receipt, its explicit behavioral `FAIL` and identity `NOT_EXERCISED`, routes, MCP configuration, candidate absence, pins, evidence ceilings, fallbacks, and secret/path leakage. It includes planted mutations. Model self-review and Markdown checklists remain advisory.
 
 ## Change contract
 

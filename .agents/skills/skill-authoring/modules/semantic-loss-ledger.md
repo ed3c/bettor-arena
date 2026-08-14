@@ -10,7 +10,7 @@ Baseline 是 bettor-arena commit `266c0af7d6389e15b6f92cd2af7f8859c4c40b9a` 的 
 | scripts 承載確定性邏輯 | `ACTIVE_IN_SKILL` | `SKILL.md` Current procedure 5–7 | conformance selftest + mutations |
 | Codex/Claude discovery 與 invocation | `PRESERVED_IN_MODULE` | `official-agent-skills-profile.md` | primary URLs + host summary |
 | typed execution、hard/advisory assertion | `PRESERVED_IN_MODULE` | `execution-and-assertions.md` | local harness schema pointers |
-| 行為遵循消融與程序泛化 | `ACTIVE_IN_SKILL` | `SKILL.md` Current procedure 9；`execution-and-assertions.md` 行為量測與比較 | 四臂同 subject/evaluator、alias advisory、mutation/cross-harness receipt requirements |
+| 行為遵循消融與程序泛化 | `ACTIVE_IN_SKILL` | `SKILL.md` Current procedure 9；`execution-and-assertions.md` 行為量測與比較 | profile-bound controls、同 subject/evaluator/common-task/runner identity、alias advisory、metamorphic/cross-harness requirements |
 | `families/` 商品工場、舊 GCR/eval gates | `LEGACY_ARCHIVED` | `legacy-skill-2026-08-14.md`、`authoring-clauses.md`、`panorama.md` | archive banner，不再進 model-visible core 或宣稱 current |
 | 舊 `check_all_skills.py`、`check_ssot_index.py` inventory | `LEGACY_ARCHIVED` | `defense-form-ssot.md` | legacy banner + 主檔降級說明 |
 | Claude-only `!` expansion、`context: fork` | `CANONICAL_OWNER_WITH_LEGACY_COPY` | Claude official docs；舊文留 `authoring-clauses.md` | portable core 明示不得依賴 |

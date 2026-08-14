@@ -54,28 +54,32 @@ cleanup PASS
 
 ## 行為量測與比較
 
-四臂的共同面與 treatment 面必須分離：
+量測的共同面與 treatment 面必須分離：
 
 ```text
 共同：carrier id/version、scenario、fixture commit、subject bundle digest、
       output schema、ground truth、eval config、scorer、predicate evaluator
-變因：no/current/candidate/wrong 的 Skill package 與 instruction digest
+變因：no/current/candidate 的 Skill package 與 instruction digest
 ```
 
-Comparator 對共同面做 exact equality；「同 evaluator」是完整 digest set，不是同一個 script 檔名。「同 subject」是 deterministic commit + replay bundle，不是相同 path/branch。`no_skill` 只是不安裝 Skill，不會自動帶入 Skill 程序或啟動 semantic、symbol、graph、memory tools；四臂共用的 schema 只能提供可解析介面，不能重述答案或 treatment procedure。
+Comparator 對共同面做 exact equality；「同 evaluator」是完整 schema/ground-truth/config/scorer/predicate-observer digest set，不是同一個 script 檔名。「同 subject」是 deterministic commit + replay bundle，不是相同 path/branch。release-grade identity 還要固定 treatment package、共同 task prompt、runner 與每個 harness 的 model。`no_skill` 只是不安裝 Skill，不會自動帶入 Skill 程序或啟動 semantic、symbol、graph、memory tools。
+
+共同 prompt 可提供每臂都需要的 output schema 與 closed typed predicate ontology：穩定 ID、型別、operator、合法 value domain，但不得給 observed answer 或 treatment procedure。這不是答案洩漏；沒有 public ontology 時，exact scalar evaluator 只是在測模型是否碰巧猜中 evaluator 私有 alias。文字 alias 命中仍只能是 advisory。
+
+控制臂不是固定四臂。預設因果比較為 `no_skill`、`current_skill`、`candidate_skill`；只有 host 自動選 Skill 的 routing profile 才加 `wrong_skill`，只有宣稱多 Skill 組合效果時才加 `composed_skills`。顯式指定 treatment 的 runner 加 `wrong_skill` 並不會量到 routing。
 
 單次 fixture PASS 只證 bounded task。程序泛化至少另需：
 
 ```text
 >=3 repetitions / condition
 >=2 real harnesses
-held-out task/context/tool/state perturbations
+multiple task families + metamorphic task/context/tool/state variants
 source mutation + provider degradation + memory conflict + cross-module impact
-no/current/candidate/wrong paired evidence
-generalization gap and non-target regression report
+no/current/candidate paired evidence with counterbalanced execution order
+paired conservative lower bound + worst-family + cross-host gap + metamorphic report
 ```
 
-`skills-shared` 的 repository-level eval framework 擁有 behavior/generalization 的 canonical run identity、mutation admission 與 capability unlock；單支 Skill 只擁有 task contract、observer 和 local receipts。`Skill.md-native` 類 runtime plane 擁有 digest-pinned compatibility cell、sandbox/security、reproducibility、confidence 與 cost。兩者分表：前者回答「Skill 是否造成可泛化能力提升」，後者回答「在哪個 agent/runtime/model 上可重現且安全」。禁止另造一個加權總分讓 runtime 品質補償 behavior/security hard failure。
+`skills-shared` 的 repository-level eval framework 擁有 reusable profile、normalized observation、identity audit、task-blind aggregation、mutation admission 與 capability unlock；單支 Skill 只擁有 task-family suite、oracle/observer 和 local receipts。這個 seam 才能泛化到不同 Skill：協定可重用，oracle 不可硬套。public dev suite 可淘汰但不可 unlock；release 另需 candidate 選定後才解封的 holdout、完整 identity、rollback 與 Human Admit。`Skill.md-native` 類 runtime plane 擁有 digest-pinned compatibility cell、sandbox/security、reproducibility、confidence 與 cost。兩者分表：前者回答「Skill 是否造成可泛化能力提升」，後者回答「在哪個 agent/runtime/model 上可重現且安全」。禁止另造一個加權總分讓 runtime 品質補償 behavior/security hard failure。
 
 量測 evidence origin 也不得折疊：
 

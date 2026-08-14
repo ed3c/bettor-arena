@@ -277,6 +277,114 @@ def validate(root: Path) -> list[str]:
             "binding.json: unexecuted physical matrix must not cite a receipt"
         )
 
+    generalization = binding.get("generalization_measurement")
+    if not isinstance(generalization, dict):
+        errors.append("binding.json: generalization_measurement must be an object")
+        generalization = {}
+    if generalization.get("authority_repository") != "ed3c/skills-shared":
+        errors.append(
+            "binding.json: generalization authority must be ed3c/skills-shared"
+        )
+    if not SHA40.fullmatch(str(generalization.get("candidate_commit", ""))):
+        errors.append(
+            "binding.json: generalization candidate_commit must be a lowercase 40-hex SHA"
+        )
+    if generalization.get("candidate_publication_state") not in {
+        "LOCAL_ONLY",
+        "PR_HEAD",
+        "CANONICAL",
+    }:
+        errors.append(
+            "binding.json: unsupported generalization candidate_publication_state"
+        )
+    expected_generalization = {
+        "profile": "evals/profiles/source-grounded-analysis-v1.json",
+        "suite": "evals/suites/repo-agent-native-generalization-v2.json",
+        "split": "dev",
+        "conditions": ["no_skill", "current_skill", "candidate_skill"],
+        "task_families": 4,
+        "variants_per_family": 2,
+        "repetitions_per_cell": 3,
+        "harnesses": ["codex", "claude"],
+        "expected_cells": 144,
+        "observed_cells": 144,
+        "behavior_state": "FAIL",
+        "identity_state": "NOT_EXERCISED",
+    }
+    for key, expected in expected_generalization.items():
+        if generalization.get(key) != expected:
+            errors.append(
+                f"binding.json: generalization_measurement.{key} must equal {expected!r}"
+            )
+    receipt = generalization.get("consumer_receipt")
+    if not nonempty(receipt):
+        errors.append(
+            "binding.json: generalization measurement requires consumer_receipt"
+        )
+    else:
+        try:
+            receipt_path = inside(
+                root, receipt, label="generalization_measurement.consumer_receipt"
+            )
+            if not receipt_path.is_file():
+                errors.append("binding.json: generalization receipt is ABSENT")
+            else:
+                generalization_receipt = load_json(receipt_path)
+                if (
+                    generalization_receipt.get("schema_version")
+                    != "repo-agent-native-generalization-consumer-measurement/v1"
+                ):
+                    errors.append(
+                        "binding.json: unsupported generalization receipt schema"
+                    )
+                authority = generalization_receipt.get("measurement_authority", {})
+                matrix = generalization_receipt.get("matrix", {})
+                identity = generalization_receipt.get("identity_audit", {})
+                if authority.get("candidate_commit") != generalization.get(
+                    "candidate_commit"
+                ):
+                    errors.append(
+                        "binding.json: generalization receipt candidate mismatch"
+                    )
+                if authority.get("candidate_publication_state") != generalization.get(
+                    "candidate_publication_state"
+                ):
+                    errors.append(
+                        "binding.json: generalization publication state mismatch"
+                    )
+                if generalization_receipt.get("behavior_state") != "FAIL":
+                    errors.append(
+                        "binding.json: generalized candidate must preserve observed FAIL"
+                    )
+                if generalization_receipt.get("identity_state") != "NOT_EXERCISED":
+                    errors.append(
+                        "binding.json: generalized identity must preserve NOT_EXERCISED"
+                    )
+                if (
+                    matrix.get("expected_cells") != 144
+                    or matrix.get("observed_cells") != 144
+                ):
+                    errors.append(
+                        "binding.json: generalized physical matrix is incomplete"
+                    )
+                if identity.get("state") != "NOT_EXERCISED" or identity.get(
+                    "missing_fields"
+                ) != ["common_task_sha256", "runner_sha256"]:
+                    errors.append(
+                        "binding.json: generalized identity limitation is not preserved"
+                    )
+                if generalization_receipt.get("admission_failures") != [
+                    "candidate-hard-capability-failure",
+                    "candidate-delta-lcb-below-threshold",
+                    "no-skill-lift-lcb-below-threshold",
+                    "metamorphic-pass-rate",
+                ]:
+                    errors.append(
+                        "binding.json: generalized admission failures drifted"
+                    )
+        except BindingError as exc:
+            errors.append(str(exc))
+
     projection_paths = skill.get("projection_paths")
     if not isinstance(projection_paths, list) or not projection_paths:
         errors.append("binding.json: skill.projection_paths must be a non-empty array")
@@ -478,6 +586,13 @@ def make_fixture(source_root: Path, destination: Path) -> None:
         receipt_target = destination / consumer_receipt
         receipt_target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_root / consumer_receipt, receipt_target)
+    generalization_receipt = binding.get("generalization_measurement", {}).get(
+        "consumer_receipt"
+    )
+    if nonempty(generalization_receipt):
+        receipt_target = destination / generalization_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / generalization_receipt, receipt_target)
 
     for route in binding["routes"]:
         path = destination / route["path"]
@@ -577,6 +692,30 @@ def selftest(source_root: Path) -> int:
         value["measurement"]["conditions"].remove("wrong_skill")
         path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
+    def incomplete_generalization_matrix(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["generalization_measurement"]["observed_cells"] = 143
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def generalized_fail_overpromoted(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["generalization_measurement"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["behavior_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def generalized_identity_overpromoted(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["generalization_measurement"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["identity_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
     for label, mutation in (
         ("copied-projection", copied_projection),
         ("missing-route", missing_route),
@@ -586,11 +725,14 @@ def selftest(source_root: Path) -> int:
         ("home-path-injection", home_path_injection),
         ("measurement-subject-drift", measurement_subject_drift),
         ("incomplete-measurement-matrix", incomplete_measurement_matrix),
+        ("incomplete-generalization-matrix", incomplete_generalization_matrix),
+        ("generalized-fail-overpromoted", generalized_fail_overpromoted),
+        ("generalized-identity-overpromoted", generalized_identity_overpromoted),
     ):
         assert_mutation_fails(source_root, label, mutation)
 
     print(
-        "PASS repo-agent-native Bettor binding selftest: 1 positive + 8 planted negatives"
+        "PASS repo-agent-native Bettor binding selftest: 1 positive + 11 planted negatives"
     )
     return 0
 
