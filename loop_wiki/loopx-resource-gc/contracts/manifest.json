@@ -1,0 +1,76 @@
+{
+  "default_is_dry_run": true,
+  "deletion_admitting_proof_state": "PROVEN",
+  "derived_sets": [
+    "BLOCKED",
+    "EXPIRED",
+    "LIVE",
+    "PROTECTED"
+  ],
+  "destructive_authorities": [
+    "HUMAN"
+  ],
+  "immutable_evidence_admittable": false,
+  "interface_version": "1.0.0",
+  "never_deletable_retentions": [
+    "IMMUTABLE_EVIDENCE"
+  ],
+  "rebuild_proof_states": [
+    "DIVERGENT",
+    "PROVEN",
+    "UNPROVABLE"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.ledger/v1",
+    "loopx.runtime-fabric/v1",
+    "loopx.worker-fleet/v1"
+  ],
+  "resource_classes": [
+    "ARTIFACT",
+    "BLOCKED_EVIDENCE",
+    "BRANCH",
+    "CI_SIMULATION_CACHE",
+    "DEPENDENCY_CACHE",
+    "GRAPH_INDEX",
+    "HUMAN_DECISION",
+    "LEDGER_SEGMENT",
+    "LOOPX_SNAPSHOT",
+    "LSP_INDEX",
+    "MEMORY_PROJECTION",
+    "MOUNT",
+    "PORT",
+    "PROCESS",
+    "RELEASE_RECEIPT",
+    "STDIO_LOG",
+    "VECTOR_INDEX",
+    "WAL",
+    "WORKTREE"
+  ],
+  "retention_kinds": [
+    "CONTENT_ADDRESSED",
+    "EPHEMERAL",
+    "EXPIRING",
+    "IMMUTABLE_EVIDENCE",
+    "MUTABLE_RECREATABLE"
+  ],
+  "schema_version": "loopx/resource-gc-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/resource-gc/plan/v1",
+      "path": "gc-plan.schema.json",
+      "sha256": "da49f4d08bacbc3432941a79241adf7152cf51bc44b18907f1eaacb0bf3e00b8"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/resource-gc/inventory/v1",
+      "path": "inventory.schema.json",
+      "sha256": "ee8a214c6c61b65d3dc93df8b985cdaeeb82fa6d1922d0fd5167977cfc3e897e"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/resource-gc/receipt/v1",
+      "path": "receipt.schema.json",
+      "sha256": "4507a4df5638039a5dafc323d07652bd5488b3a4b9eee76c23d4c5253782453e"
+    }
+  ]
+}

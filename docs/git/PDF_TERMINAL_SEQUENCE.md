@@ -89,8 +89,8 @@ PR #77 is a closed superseded Worker Gateway candidate. Issue #82 owns executabl
 | 2 | #65 | `feat/loopx-strategy-hitl-v1` | Strategy Graph plus interrupt/resume/scoped exception | `COMPLETE` |
 | 3 | #67 | `feat/loopx-observability-v1` | redacted event projection and signed HITL requests | `COMPLETE` |
 | 4 | #66 | `feat/loopx-runtime-fabric-v1` | physical runtime leases, isolation, cleanup and local/cloud parity | `COMPLETE` |
-| 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `ACTIVE` |
-| 6 | #97 | `feat/loopx-resource-gc-v1` | worktree/artifact/cache/vector/graph/WAL retention and GC | `BLOCKED_BY_PREDECESSOR` |
+| 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `COMPLETE` |
+| 6 | #97 | `feat/loopx-resource-gc-v1` | worktree/artifact/cache/vector/graph/WAL retention and GC | `ACTIVE` |
 | 7 | #96 | `feat/loopx-lsp-pool-v1` | worktree-aware LSP pool and bounded CLI fallback | `BLOCKED_BY_PREDECESSOR` |
 | 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `BLOCKED_BY_PREDECESSOR` |
 | 9 | #93 | `feat/loopx-mem0-projection-v1` | Mem0 as an optional rebuildable projection | `BLOCKED_BY_PREDECESSOR` |

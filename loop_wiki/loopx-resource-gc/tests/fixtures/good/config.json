@@ -1,0 +1,20 @@
+{
+  "admitted": [
+    "cache-stale",
+    "graph-divergent",
+    "ledger-seg-0001",
+    "lsp-unprovable",
+    "vector-stale"
+  ],
+  "authorized_by": "HUMAN",
+  "held_leases": [
+    "lease-live"
+  ],
+  "live_subjects": [
+    "5d67ca8"
+  ],
+  "max_age_s": 604800,
+  "now": "2026-08-15T12:00:00Z",
+  "root_id": "bettor-arena@5d67ca8",
+  "schema_version": "loopx/resource-gc-config/v1"
+}
