@@ -1,0 +1,32 @@
+{
+  "authority_law": [
+    "STRATEGY_PROPOSES",
+    "WORKER_EXECUTES",
+    "GATES_OBSERVE",
+    "LOOPX_COMMITS",
+    "HUMAN_ADMITS"
+  ],
+  "canonical_hosts": [
+    "codex-cli",
+    "claude-code",
+    "grok-build",
+    "opencode",
+    "pi",
+    "ante"
+  ],
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY",
+    "ABSENT"
+  ],
+  "files": [
+    "host-descriptor.schema.json",
+    "worker-request.schema.json",
+    "worker-event.schema.json",
+    "worker-receipt.schema.json",
+    "host-registry.json"
+  ],
+  "schema_version": "loopx/worker-gateway-manifest/v1"
+}
