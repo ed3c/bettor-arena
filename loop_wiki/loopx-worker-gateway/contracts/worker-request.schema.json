@@ -1,0 +1,161 @@
+{
+  "$id": "https://ed3c.example/loopx/worker-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "context_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "expected": {
+      "additionalProperties": false,
+      "properties": {
+        "loaded_context_identity": {
+          "enum": ["REQUIRED", "OPTIONAL", "UNOBSERVABLE"]
+        },
+        "loaded_skill_identity": {
+          "enum": ["REQUIRED", "OPTIONAL", "UNOBSERVABLE"]
+        },
+        "minimum_trace": {
+          "enum": ["PROCESS_ONLY", "TOOL_EVENTS", "STRUCTURED_LOOP_EVENTS"]
+        }
+      },
+      "required": ["minimum_trace", "loaded_skill_identity", "loaded_context_identity"],
+      "type": "object"
+    },
+    "host_id": {
+      "enum": ["codex-cli", "claude-code", "grok-build", "opencode", "pi", "ante"]
+    },
+    "invocation": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "items": {"maxLength": 1024, "type": "string"},
+          "maxItems": 64,
+          "type": "array"
+        },
+        "max_output_bytes": {
+          "maximum": 16777216,
+          "minimum": 1024,
+          "type": "integer"
+        },
+        "stdin": {
+          "additionalProperties": false,
+          "properties": {"mode": {"enum": ["CLOSED", "EMPTY"]}},
+          "required": ["mode"],
+          "type": "object"
+        },
+        "timeout_ms": {
+          "maximum": 3600000,
+          "minimum": 50,
+          "type": "integer"
+        }
+      },
+      "required": ["args", "timeout_ms", "max_output_bytes", "stdin"],
+      "type": "object"
+    },
+    "policy": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_refs": {
+          "items": {
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]{1,127}$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "env_allowlist": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "filesystem": {
+          "additionalProperties": false,
+          "properties": {
+            "read_only_paths": {
+              "items": {"maxLength": 240, "type": "string"},
+              "maxItems": 64,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "writable_paths": {
+              "items": {"maxLength": 240, "type": "string"},
+              "maxItems": 64,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": ["read_only_paths", "writable_paths"],
+          "type": "object"
+        },
+        "network": {"enum": ["DENY", "ALLOWLIST", "HOST_POLICY"]},
+        "process": {
+          "additionalProperties": false,
+          "properties": {
+            "kill_process_group": {"const": true},
+            "max_children": {"maximum": 128, "minimum": 0, "type": "integer"}
+          },
+          "required": ["kill_process_group", "max_children"],
+          "type": "object"
+        }
+      },
+      "required": ["network", "filesystem", "process", "env_allowlist", "credential_refs"],
+      "type": "object"
+    },
+    "request_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$",
+      "type": "string"
+    },
+    "schema_version": {"const": "loopx/worker-request/v1"},
+    "skill": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "name": {"pattern": "^[a-z0-9][a-z0-9-]{1,63}$", "type": "string"}
+      },
+      "required": ["name", "digest"],
+      "type": "object"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "type": "string"},
+        "task_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    },
+    "workspace": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_reuse": {"const": false},
+        "lease_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+        "source_mode": {"enum": ["READ_ONLY_SNAPSHOT", "DISPOSABLE_COPY", "DISPOSABLE_WORKTREE"]}
+      },
+      "required": ["lease_id", "source_mode", "allow_reuse"],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "host_id",
+    "skill",
+    "context_digest",
+    "workspace",
+    "invocation",
+    "policy",
+    "expected"
+  ],
+  "title": "LoopX Worker Request v1",
+  "type": "object"
+}
