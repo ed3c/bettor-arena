@@ -1,0 +1,14 @@
+{
+  "adapters": [
+    "codex-cli",
+    "claude-code",
+    "grok-build",
+    "opencode",
+    "pi",
+    "ante"
+  ],
+  "content_digest": "sha256:69633f6f03ada0a5b663899b7b6bcfac3a565eca9fe19d8319010a10c26cc265",
+  "human_admit": false,
+  "live_matrix_state": "NOT_EXERCISED",
+  "schema_version": "loopx/worker-adapter-registry/v1"
+}
