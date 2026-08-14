@@ -1,5 +1,5 @@
 {
-  "content_sha256": "189a5bddabf56c5dacfca99d8223b4194774e9941b6a579552dff20ff3ce18ba",
+  "content_sha256": "2fb91bae9b7e0afb0a54955ab97f2b607a516c9d8052fe7406af553bc66d723c",
   "contexts": [
     {
       "common": [
@@ -157,94 +157,6 @@
       "id": "code-truth-graph",
       "loop": "ctg",
       "module": "code-truth-graph",
-      "policy": {
-        "immutable_ref_required": true,
-        "max_seconds": 180,
-        "mutation": "none",
-        "network": "host-policy",
-        "secrets": "host-only"
-      }
-    },
-    {
-      "common": [
-        "AGENTS.md",
-        "CLAUDE.md",
-        "ARCHITECTURE.md",
-        "CONTEXT.md",
-        "docs/agents/domain.md",
-        "docs/knowledge-providers/README.md",
-        "docs/knowledge-providers/CONTEXT.md",
-        "docs/knowledge-providers/registry.json",
-        "docs/knowledge-providers/alternatives.md",
-        ".arena/modules/knowledge-providers/module.json"
-      ],
-      "context_sha256": "cc4e2289e7a0ed65690f27d66481fdcf6ca98714406cb21e746e7bb421186efd",
-      "cwd": ".",
-      "drivers": {
-        "claude-code": {
-          "binary": "claude",
-          "entry": "CLAUDE.md"
-        },
-        "codex-cli": {
-          "binary": "codex",
-          "entry": "AGENTS.md"
-        }
-      },
-      "files": [
-        {
-          "blob": "b33c5b3de82f6b7f14a0cbd7825125f489441d29",
-          "mode": "100644",
-          "path": ".arena/modules/knowledge-providers/module.json"
-        },
-        {
-          "blob": "f26ff8793c8e395ff9acc8656b0a9b6d5e5ed49a",
-          "mode": "100644",
-          "path": "AGENTS.md"
-        },
-        {
-          "blob": "23d3df6ccd69a967b03ce8db856024b548bb3273",
-          "mode": "100644",
-          "path": "ARCHITECTURE.md"
-        },
-        {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
-          "mode": "100644",
-          "path": "CLAUDE.md"
-        },
-        {
-          "blob": "a89c7ff104a35e70856878d000fba1fdcacc26ad",
-          "mode": "100644",
-          "path": "CONTEXT.md"
-        },
-        {
-          "blob": "a17a3edcf374a7dadb5ff321cc7a82da7c607bea",
-          "mode": "100644",
-          "path": "docs/agents/domain.md"
-        },
-        {
-          "blob": "ccaf71b1cfccd53d73cbd71f1e1b742c16edb640",
-          "mode": "100644",
-          "path": "docs/knowledge-providers/CONTEXT.md"
-        },
-        {
-          "blob": "0efdf257a01e57b89d05c0c719619bb1be8b1311",
-          "mode": "100644",
-          "path": "docs/knowledge-providers/README.md"
-        },
-        {
-          "blob": "7d9c61398df460807b5afd512d466229c78ae025",
-          "mode": "100644",
-          "path": "docs/knowledge-providers/alternatives.md"
-        },
-        {
-          "blob": "e180510b65443818bf58260643c6c64639868501",
-          "mode": "100644",
-          "path": "docs/knowledge-providers/registry.json"
-        }
-      ],
-      "id": "knowledge-providers",
-      "loop": "knowledge-providers",
-      "module": "knowledge-providers",
       "policy": {
         "immutable_ref_required": true,
         "max_seconds": 180,
