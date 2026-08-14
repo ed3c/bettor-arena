@@ -17,12 +17,28 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, browser, origin, 
 7. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
 8. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
 9. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
-10. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-11. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-12. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-13. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-14. `sh loopctl/loopctl.sh contract`
-15. the target module/loop passive context, nearest README, machine manifest/contract, source and current proof/control/mutation receipts.
+10. [`docs/git/README.md`](docs/git/README.md)
+11. [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+12. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+13. [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+14. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+15. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
+16. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+17. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+18. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+19. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+20. `sh loopctl/loopctl.sh contract`
+21. the target module/loop passive context, nearest README, machine manifest/contract, source and current proof/control/mutation receipts.
+
+Canonical Git Town procedure reference:
+
+```text
+ed3c/skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1
+skills/git-town-stacked-pr-worker/SKILL.md
+blob eb2d915bca3e8a3938625f7d33a10fae95a15769
+```
+
+Bettor owns the repository profile and Stack index only. The shared Skill is currently `NOT_SELECTED` in the consumer binding, `.git-town.toml` is `ABSENT`, and live Git Town sync is `NOT_EXERCISED`.
 
 Before claiming PDF integration, run:
 
@@ -31,6 +47,8 @@ python3 scripts/gates/check_pdf_harness_integration.py
 python3 scripts/gates/check_pdf_harness_integration.py --selftest
 python3 scripts/gates/check_pdf_loopx_harness_integration.py
 python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+python3 scripts/gates/check_git_town_stack_docs.py
+python3 scripts/gates/check_git_town_stack_docs.py --selftest
 ```
 
 ## Claude Code boundary
@@ -54,8 +72,8 @@ A target mechanism described in Markdown or the attached PDF may still be `NOT_I
 <!-- BEGIN SKILLS-SHARED INSTRUCTION PROJECTION -->
 ## Shared runtime / delivery projection
 
-Canonical source: `ed3c/skills-shared@c6d322be82a0ac873955cad58475c8f5044ebd71` → `skills/dual-forge-repository-loop/references/instruction-projection.json`
-Canonical module SHA-256: `99aec7fff1eac3f77c3d4a5819d9b3e96311156fd22070f0013c28e8d8f3f3ab`
+Canonical source: `ed3c/skills-shared@abd53f016b428e7d922eecfa6d400cdccb928773` → `skills/dual-forge-repository-loop/references/instruction-projection.json`
+Canonical module SHA-256: `41f2d33c493ecc409c66e09e1f4976b7acb109ec9f8e972cf4073b06616e3d29`
 Projection role: `CLAUDE.md` — Repository-local Claude adapter. Read AGENTS.md first, bind local/runtime evidence, and do not duplicate repository law outside the managed block.
 
 Before any mutation, classify the execution runtime by evidence in this order:
@@ -79,7 +97,7 @@ Mandatory laws:
 - Local/Forgejo implementation authority and GitHub publication/Actions authority remain distinct and converge through exact commit ancestry and receipts.
 - Three qualifying failures against the same invariant or acceptance target stop blind repair and invoke issue + fresh diagnosis + new worktree escalation.
 - Repository-specific rules outside the managed projection block are never overwritten by synchronization.
-- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; global ~/.claude/CLAUDE.md is local host policy only.
+- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; the global Claude host instruction file is local host policy only.
 - Cloud and local freshness are separate evidence lanes. Neither environment may fabricate verification of the other.
 - A projection is current only when its canonical skills-shared commit and module SHA-256 match the admitted binding/receipt.
 - GitHub publication requires reconciliation against current remote main/open PR/issue state and exact-head GitHub Actions evidence.

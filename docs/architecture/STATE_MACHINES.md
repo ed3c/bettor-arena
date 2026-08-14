@@ -1,86 +1,56 @@
-# State machines — bettor-arena
+# State Machines — bettor-arena
 
-This route names the state owners and transitions represented by current repository bytes, then separates the missing LoopX state machines proposed by the attached PDF.
+Machine manifests, contracts, source, tests, receipts and current GitHub metadata remain authoritative over this routing document.
 
-Machine manifests, scripts, contracts, tests and receipts remain authoritative over this Markdown.
-
-## 1. Agent/document routing
+## 1. Agent and document routing
 
 ```text
-TASK RECEIVED
+TASK
 → README / AGENTS / CLAUDE
 → CONTEXT + ARCHITECTURE
 → PDF AUDIT / TARGET / CURRENT STATUS
 → DIRECTORY OWNER
+→ docs/git PROFILE + STACK when branch work applies
 → MACHINE CONTRACT
 → SOURCE / TEST / RECEIPT
-→ EXACT ISSUE / STACK PR
+→ EXACT ISSUE / PR / HEAD / CHECKS
 ```
 
-Non-success:
+A missing route, branch edge, owner, subject, Gate or receipt is `ABSENT`.
 
-```text
-missing route / owner / subject / evidence → ABSENT
-stale or conflicting prose                → FAIL until corrected
-```
-
-Owner: `arena-core`.
-
-## 2. Macro / composition state machine
+## 2. Macro composition
 
 ```text
 MODULE PROPOSED
-→ module.json + sibling README
-→ TRACKED PATH OWNER ASSIGNED
-→ COMPOSITION REQUIREMENT SELECTED
+→ MANIFEST + README
+→ PATH OWNER
+→ REQUIREMENT SELECTED
 → CAPABILITY / DEPENDENCY / CONFLICT RESOLVED
 → COMPOSITION LOCK
-→ CONTEXT CAPSULE LOCK
-→ MODULE CLOSURE SUBJECTS
+→ CONTEXT LOCK
+→ PROOF SUBJECTS
 → PROOF / CONTROL / MUTATION
 → RELEASE RECEIPT
 → HUMAN ADMIT
 → MERGE / PROMOTE / ROLLBACK
 ```
 
-Hard rules:
+The desired, locked, Context-selected, proof-subject and released module sets must agree.
 
-- desired, locked and released module ID sets must be equal;
-- every tracked path has one owner or reviewed generated/evidence class;
-- a focused feature PASS cannot proxy a stale composition lock;
-- generated digests are regenerated, never hand-authored;
-- Human Admit is not inferred from a green gate.
-
-Owners: `module-catalog`, `proof-kernel`, trusted operator.
-
-## 3. Micro / bounded task state machine
+## 3. Micro bounded task
 
 ```text
-TYPED PACKET / PUBLIC REQUEST
+TYPED REQUEST
 → CONTRACT + SUBJECT VALIDATION
 → BOUNDED RUNTIME / DISPOSABLE WORKTREE
 → ARTIFACT COLLECTION
-→ INDEPENDENT ASSERTION
-→ NAMED EXIT
-   ├─ 0  success for exact subject
-   ├─ 2  checked condition failed
-   └─ 64 usage / absent dependency / FATAL
+→ INDEPENDENT ASSERTIONS
+→ 0 / 2 / 64
 → RECEIPT
-→ CALLER SELECTS NEXT EDGE
+→ CALLER NEXT EDGE
 ```
 
-Micro cannot:
-
-```text
-Human Admit
-merge
-release-promote
-production rollback
-permission widening
-write another module's state
-```
-
-Owners: target module public port and `loop-runtime`.
+A Micro loop cannot merge, promote, widen permissions or Human Admit.
 
 ## 4. Module lifecycle
 
@@ -97,414 +67,379 @@ PROPOSED
 → SUPERSEDED / ROLLED BACK
 ```
 
-`IMPLEMENTED` describes mechanism presence. `PASS` describes an executed exact subject. `NOT_EXERCISED` remains distinct from both.
+`IMPLEMENTED` means mechanism presence. `PASS` means an executed exact subject.
 
-## 5. Context Capsule state machine
+## 5. Context Capsule
 
 ```text
 ROOT + LOOP NATIVE FILES
-→ SELECTION MANIFEST
-→ IMMUTABLE REPOSITORY REF
+→ SELECTION
+→ IMMUTABLE REF
 → MATERIALIZATION
 → DIGEST FREEZE
 → DRIVER PREPARE
 → HOST EXECUTION
-→ TYPED OUTPUT VALIDATION
-→ CONTEXT / DRIVER RECEIPT
+→ TYPED OUTPUT
+→ RECEIPT
 ```
 
-Current state:
+Context is an input projection, never canonical task state.
 
-```text
-offline selection/materialization/digest     IMPLEMENTED
-live Codex / Claude canaries                 NOT_EXERCISED
-Grok / OpenCode / Pi / Ante live canaries    NOT_EXERCISED
-```
-
-A Context Capsule is input projection, not canonical task state.
-
-## 6. Portable Skill execution state machine
+## 6. Portable Skill execution
 
 ```text
 CANONICAL SKILL
-→ IMMUTABLE CONSUMER BINDING
+→ IMMUTABLE BINDING
 → HOST PROJECTION
 → AGENT PROPOSAL
-→ TYPED EXECUTABLE + ARGV REQUEST
-→ DISPOSABLE DETACHED WORKTREE
-→ OS PROCESS + ARTIFACT CAPTURE
-→ INDEPENDENT HARD ASSERTIONS
-→ SUBJECT-BOUND RECEIPT
+→ TYPED EXECUTABLE + ARGV
+→ DISPOSABLE WORKTREE
+→ OS / ARTIFACT OBSERVATION
+→ HARD ASSERTIONS
+→ SUBJECT RECEIPT
 → CLEANUP
 ```
 
-Worker/model output is evidence input, never the verdict. Raw command strings, `shell=True`, arbitrary host paths and Worker-owned PASS are rejected.
+Worker output never owns the verdict.
 
-Owner: `agent-runtime-integration`.
-
-## 7. Stateless MCP state machine
+## 7. Stateless MCP
 
 ```text
-CANONICAL CLI CONTRACT
-→ POLICY DEFAULT DENY
-→ SELECTED EXPOSED TOOL
-→ IMMUTABLE RELEASE SUBJECT
-→ INLINE / CONTENT-ADDRESSED CARRIER
+CLI CONTRACT
+→ DEFAULT DENY
+→ EXPLICIT TOOL
+→ IMMUTABLE SUBJECT
+→ CLOSED CARRIER
 → DISPOSABLE WORKSPACE
-→ PUBLIC PORT EXECUTION
+→ PUBLIC PORT
 → TYPED RESULT
-→ CLEANUP RECEIPT
+→ CLEANUP
 ```
 
-Forbidden:
+No generic shell, host path, secret, browser profile or Human Admit tool is allowed.
 
-```text
-generic shell-over-MCP
-server-host path from caller
-secret/cookie/profile payload
-live owner checkout mutation
-implicit connection state
-Human Admit tool
-```
-
-Owner: `loop-runtime` and `mcp-adapters`.
-
-## 8. Proof state machine
+## 8. Proof kernel
 
 ```text
 CLAIM
 → MODULE SUBJECT / CLOSURE
-→ PHYSICAL PROOF TRAVERSAL
-→ INDEPENDENT CONTROL EXECUTION
+→ PHYSICAL TRAVERSAL
+→ INDEPENDENT CONTROL
 → HOLLOW / MUTATION
 → RECEIPTS
 → RELEASE AGGREGATION
 ```
 
-A proof receipt is not a live provider canary. The release aggregate remains `NOT_EXERCISED` until required evidence is present for its exact subject.
+A proof receipt does not proxy a live provider or production environment.
 
-Owner: `proof-kernel`.
-
-## 9. Project bootstrap state machine
+## 9. Project bootstrap
 
 ```text
-PRESET / DESIRED CAPABILITIES
+DESIRED CAPABILITIES
 → PLAN
-→ RESOLVE MODULES / SKILLS / RUNTIME
-→ RENDER TEMP TREE
-→ VERIFY TEMP TREE
-→ CONFLICT + DRIFT CHECK
+→ RESOLVE
+→ TEMP TREE
+→ VERIFY
+→ CONFLICT / DRIFT CHECK
 → APPLY
-→ APPLY RECEIPT
+→ RECEIPT
 → VERIFY TARGET
-→ ROLLBACK IF TARGET BYTES UNCHANGED
+→ CONTENT-BOUND ROLLBACK
 ```
 
-Owner: `project-bootstrapper`.
-
-## 10. OpenWiki state machine
+## 10. OpenWiki and knowledge projection
 
 ```text
-WIKI-UPDATE REQUEST
+WIKI REQUEST
 → CONTRACT CHECK
-→ FIXED / ITERATION / EMERGENT CONTEXT LANES
-→ DRY RUN BY DEFAULT
-→ FULL MODEL TURN ONLY WITH EXPLICIT OPT-IN
-→ PATH BOUNDARY CHECK
+→ FIXED / ITERATION / EMERGENT CONTEXT
+→ DRY RUN DEFAULT
+→ FULL EXPLICIT OPT-IN
+→ PATH BOUNDARY
 → VERIFIER
 → RECEIPT
-→ TRACKED OPENWIKI PROJECTION
+→ TRACKED PROJECTION
 ```
 
-`openwiki/` is a rebuildable projection. It does not become source authority over code, tests or receipts.
+OpenWiki is rebuildable and cannot replace its sources.
 
-Owner: `openwiki`.
-
-## 11. Code Truth Graph state machine
+## 11. Code Truth Graph
 
 ```text
 CLOSED SOURCE PACKET
-→ PINNED TOOL PROFILE
-→ STATIC PARSE / SYMBOL / EDGE BUILD
-→ CONTENT-ADDRESSED SNAPSHOT
-→ GRAPH / RESULT ARTIFACT
-→ VERIFICATION
-→ RECEIPT
+→ PINNED ANALYZER
+→ STATIC PARSE / SYMBOL / EDGE
+→ CONTENT-ADDRESSED GRAPH
+→ COVERAGE / PROVENANCE CHECK
+→ RESULT
 ```
 
-Graph edges remain bounded by parser/language/path coverage and source provenance. They do not prove runtime behavior.
+Static graph evidence does not prove runtime behavior. Unsupported coverage remains `UNKNOWN`, not `NO_FLOW`.
 
-Owner: `code-truth-graph`.
-
-## 12. Knowledge-provider state machine
+## 12. Knowledge providers
 
 ```text
-PROVIDER MANIFEST
-→ EXACT SUBJECT + BOUNDED CAPABILITY REQUEST
-→ PINNED ADAPTER / INDEX IDENTITY
+MANIFEST
+→ EXACT SUBJECT + CAPABILITY
+→ PINNED ADAPTER / INDEX
 → READ-ONLY QUERY OR MEMORY PROPOSAL
-→ SUBJECT / QUERY / FRESHNESS RECEIPT
-→ CURRENT SOURCE / MANIFEST / TEST / RUNTIME READBACK
-→ CANDIDATE RECOMMENDATION
+→ RECEIPT
+→ CURRENT AUTHORITY READBACK
+→ CANDIDATE
 → HUMAN ADMIT
+```
+
+Serena, GrepAI, Code-Graph-RAG and Mem0 remain replaceable candidates within their admitted capability ceilings.
+
+## 13. Origin, browser and external release
+
+```text
+LOGICAL RELEASE
+→ ORIGIN RECEIPTS
+→ EQUIVALENCE
+→ BROWSER / PROVIDER CANARIES
+→ EXTERNAL ACCEPTANCE
+→ HUMAN PROMOTION
+```
+
+Signed-in sessions and credentials stay host-owned.
+
+## 14. Git Town shared-method admission
+
+```text
+SHARED SKILL SUBJECT PINNED
+→ REPO PROFILE VALIDATED
+→ EXECUTABLE / LICENSE / SBOM ADMISSION
+→ CONFIG CANDIDATE
+→ ISOLATED CANARIES
+→ HUMAN ADMIT
+→ ENABLED
 ```
 
 Current state:
 
 ```text
-Serena contract                 IMPLEMENTED
-GrepAI contract                 IMPLEMENTED
-Code-Graph-RAG contract         IMPLEMENTED
-Mem0 proposal contract          IMPLEMENTED
-
-Serena live canary              NOT_EXERCISED
-GrepAI live canary              NOT_EXERCISED
-Code-Graph-RAG runtime          NOT_IMPLEMENTED
-Mem0 runtime/writeback          NOT_IMPLEMENTED
+shared method pin        PINNED
+repo-owned profile       candidate in issue #80 / PR #81
+executable/config        ABSENT
+canaries                 NOT_EXERCISED
+Human Admit              NOT_PERFORMED
 ```
 
-Owner: `knowledge-providers`.
-
-## 13. Origin and browser state machines
-
-### Logical origin
+## 15. Git Town Stacked-PR worker State Machine
 
 ```text
-SOURCE COMMIT / TREE
-→ FORGEJO OR GITHUB PUBLICATION
-→ RELEASE MANIFEST
-→ ORIGIN STATUS
-→ EQUIVALENCE RECEIPT
-→ HUMAN PROMOTION
-```
-
-Mutable `main` is not equivalence evidence.
-
-### Browser
-
-```text
-ACTOR + SURFACE
-→ TRANSPORT
-→ SESSION REFERENCE
-→ WORKFLOW
-→ EVIDENCE
-→ CLEANUP
+PARENT ISSUE
+→ TERMINAL TASK PACKET
+→ BASE / PARENT / HEAD RELATION
+→ PATH LEASE
+→ LINKED WORKTREE LEASE
+→ IMPLEMENT
+→ POSITIVE + CONTROL + MUTATION
+→ OPTIONAL LOCAL SYNC DRY RUN
+→ EXACT-HEAD GITHUB CHECKS
+→ CONVERGENCE
 → HUMAN ADMIT
-```
-
-Signed-in profiles and sessions remain host-only.
-
-Owner: `environment-contracts`.
-
-## 14. External release acceptance
-
-```text
-EXTERNAL REPOSITORY RELEASE
-→ EXACT COMMIT / MANIFEST / DIGEST
-→ SELECTED MODULES + CAPABILITIES
-→ OFFLINE CLOSURE VALIDATION
-→ OPTIONAL LIVE REACHABILITY / INITIALIZATION
-→ CONSUMER RECEIPT
-→ HUMAN ADMIT
-```
-
-Current Agent Shield reference-consumer acceptance issue is `bettor-arena#24`; no unique implementation delta exists on its historical feature branch.
-
-## 15. Molecular delivery state machine
-
-```text
-SOURCE / INCIDENT
-→ ARCHITECTURE DECISION
-→ PARENT ISSUE
-→ MOLECULAR TERMINAL ISSUE
-→ BRANCH / PR / EXACT HEAD
-→ POSITIVE + HOLLOW/MUTATION
-→ GENERATED LOCKS / INDEXES
-→ CONVERGENCE LEAF
-→ HUMAN ADMIT
+→ MERGE / SHIP / ROLLBACK
 ```
 
 Relations:
 
 ```text
-sibling      independent bytes
-true child   consumes unmerged parent
-terminal     one behavior + eval/evidence
-convergence  shared lock/index/final acceptance
+sibling      path-disjoint and independent
+true child   consumes unmerged parent bytes
+terminal     one behavior plus evidence
+convergence  shared selection/index/live/release owner
 ```
 
-No `.git-town.toml` or `.git-town` is currently tracked. These are delivery semantics, not proof of active Git Town configuration.
+Hard rules:
 
-Owner: issue/PR policy and trusted operator.
+- one Worker, one linked worktree, one branch and one path lease;
+- no primary-checkout unattended edits;
+- no semantic conflict auto-resolution;
+- no push, merge, ship, close or delete;
+- `MERGED_TO_PARENT` is not `MERGED_TO_MAIN`;
+- duplicate issue/path writers are blocking.
 
-## 16. Missing PDF LoopX state kernel
-
-The PDF proposes:
+Current blocking state:
 
 ```text
-INIT
-→ OBJECTIVE LOCKED
-→ TODO READY
-→ DISPATCHED
-→ RUNNING
-→ VERIFYING
-   ├─ GATES PASSED
-   │    → MEMORY PROPOSED
-   │    → READY FOR HUMAN ADMIT / NEXT TODO
-   ├─ RETRYABLE FAILURE
-   │    → RETRY SCHEDULED
-   ├─ QUOTA EXCEEDED
-   │    → HITL WAIT
-   ├─ CAPABILITY MISMATCH
-   │    → HANDOFF REQUIRED
-   ├─ BLOCKED
-   └─ FAILED TERMINAL
+PR #76 + PR #77
+same issue #64
+overlapping Worker Gateway paths
+→ BLOCKED_DUPLICATE_TERMINAL
+→ Human resolution
 ```
 
-Required components:
+## 16. Molecular delivery and publication
 
 ```text
-Objective / Todo / Gate / Evidence / Quota schemas
-append-only event ledger
-single-writer lease
-deterministic reducer
-derived snapshot projector
-replay and corruption controls
-quota and retry accounting
-terminal-state contract
+SOURCE / INCIDENT
+→ ARCHITECTURE DECISION
+→ PARENT ISSUE
+→ TERMINAL ISSUE
+→ BRANCH / PR / EXACT HEAD
+→ EVALS
+→ GENERATED LOCKS / INDEXES
+→ CONVERGENCE
+→ HUMAN ADMIT
 ```
 
-Current state: `NOT_IMPLEMENTED`.
-
-`loopctl` dispatch and module receipts are enabling mechanisms, not this state machine.
-
-## 17. Missing strategy graph and HITL state machine
-
-```text
-CURRENT LOOPX SNAPSHOT
-→ STRATEGY GRAPH SELECTS NEXT COMMAND
-→ LOOPX VALIDATES CAPABILITY / QUOTA / DEPENDENCIES
-→ COMMAND DISPATCH
-→ RESULT EVENT
-→ REDUCER
-→ CONTINUE OR INTERRUPT
-→ HUMAN DECISION RECEIPT
-→ RESUME / ABORT / EXCEPTION
-```
-
-Rules:
-
-- graph checkpoint is a projection, not canonical truth;
-- strategy node cannot write task state;
-- `force_skip` is replaced by a scoped exception receipt;
-- resume must re-run required hard gates.
-
-Current state: `NOT_IMPLEMENTED`.
-
-## 18. Missing decision-memory state machine
-
-```text
-OBSERVATION / DEAD END / QUIRK / DECISION
-→ EVIDENCE REFERENCES
-→ SCOPE + VALIDITY + PRIVACY
-→ CONFLICT / SUPERSESSION
-→ CAPSULE PROPOSAL
-→ HUMAN OR POLICY ADMIT
-→ IMMUTABLE CAPSULE
-→ OPTIONAL REBUILDABLE INDEX
-→ EXPIRY / DELETE / EXPORT RECEIPT
-```
-
-Never store private chain-of-thought. Store externalized rationale, observations, alternatives, evidence refs and falsifiers.
-
-Current state: `NOT_IMPLEMENTED`.
-
-## 19. Missing worker-fleet state machine
-
-```text
-CAPABILITY REQUEST
-→ WORKER PROBE
-→ VERSION / ADAPTER PIN
-→ WORKSPACE LEASE
-→ CONTEXT MATERIALIZATION
-→ EXECUTE
-→ STREAM NORMALIZED EVENTS
-→ COLLECT ARTIFACTS
-→ CANCEL / TIMEOUT / KILL GROUP
-→ DISPOSE + RESIDUE RECEIPT
-```
-
-Workers:
-
-```text
-Grok Build
-OpenCode
-Pi
-Codex CLI
-Claude Code
-Ante
-```
-
-Current state: compatibility contracts exist; live matrix `NOT_EXERCISED`.
-
-## 20. Missing observability and Harness console state machine
-
-```text
-CANONICAL EVENT / ARTIFACT REF
-→ REDACTION
-→ TRACE / METRIC PROJECTION
-→ EVIDENCE INSPECTOR
-→ HUMAN DECISION FORM
-→ SIGNED DECISION RECEIPT
-→ LOOPX REDUCER
-```
-
-A UI button never writes state directly.
-
-Current state: `NOT_IMPLEMENTED`.
+Git Town local synchronization and GitHub publication remain separate State Machines.
 
 ## LoopX compatibility state machine
 
-The LoopX-specific PDF audit maps its five-part task model onto existing
-authorities without claiming that the missing canonical reducer already exists:
+The older PDF compatibility contract uses these exact transition markers:
 
 ```text
 OBJECTIVE_ACCEPTED
 → MODULE_REQUIREMENTS_RESOLVED
 → TYPED_TODO_DISPATCHED
-→ HOST_EXECUTION_OBSERVED
+→ WORKER_OBSERVED
 → HARD_GATES_EVALUATED
-   ├─ PASS → EVIDENCE_SUBJECT_BOUND
-   │          → READY_FOR_HUMAN_ADMIT
-   │          → RELEASED | ROLLED_BACK
-   └─ FAIL → RETRY_BUDGET_DECREMENTED
-              ├─ RETRY_ALLOWED
-              └─ HUMAN_REVIEW_REQUIRED
+→ EVIDENCE_SUBJECT_BOUND
+→ READY_FOR_HUMAN_ADMIT
 ```
 
-Workers submit observations; deterministic gates evaluate artifacts; a trusted
-single writer commits canonical state; Human authority admits exception,
-promotion and rollback. LangGraph checkpoints, memory, graphs and UIs remain
-projections.
+This is a compatibility projection of the detailed target below. It is not a claim that the runtime exists on `main`.
 
-## 21. Cross-machine invariants
+## 17. LoopX task-state target
 
 ```text
-README explains; manifest/contracts decide
-strategy proposes; LoopX commits
-worker executes; gates decide
-memory suggests; current authority wins
-provider returns candidates; readback verifies
-checkpoint/cache/index/UI are projections
-Human admits merge/promotion/exception/rollback
+TASK DECLARED
+→ OBJECTIVE LOCKED
+→ TODO READY
+→ COMMAND PROPOSED
+→ COMMAND ACCEPTED / REJECTED
+→ WORKER OBSERVED
+→ GATES OBSERVED
+→ QUOTA ACCOUNTED
+→ RETRY / HITL / TODO COMPLETE
+→ NEXT TODO / TASK COMPLETE / FAIL / CANCEL
 ```
 
-Validation:
+Authority:
 
-```sh
-python3 scripts/gates/check_pdf_harness_integration.py
-python3 scripts/gates/check_pdf_harness_integration.py --selftest
-python3 scripts/gates/check_module_catalog.py
-python3 scripts/arena_context.py check
-python3 scripts/arena_proof.py check
+```text
+strategy proposes
+Worker executes
+Gates observe
+LoopX reducer commits
+Human admits
 ```
+
+The current `main` does not contain the unmerged LoopX contract/ledger candidates.
+
+## 18. LoopX candidate Stack
+
+```text
+main
+└─ PR #74 LoopX Contract
+   ├─ PR #75 Ledger — MERGED_TO_PARENT
+   ├─ PR #76 Worker Gateway — BLOCKED duplicate
+   ├─ PR #77 Worker Gateway — BLOCKED duplicate
+   ├─ PR #78 Decision Memory
+   └─ PR #79 Code Truth Graph v2
+```
+
+Issue #68 owns final shared convergence only after terminal settlement.
+
+## 19. Strategy Graph and HITL target
+
+```text
+CURRENT LOOPX SNAPSHOT
+→ STRATEGY PROPOSAL
+→ LOOPX VALIDATES CAPABILITY / QUOTA / DEPENDENCIES
+→ DISPATCH
+→ RESULT EVENT
+→ REDUCER
+→ CONTINUE OR INTERRUPT
+→ SIGNED HUMAN DECISION
+→ REVALIDATE
+→ RESUME / ABORT / SCOPED EXCEPTION
+```
+
+A LangGraph checkpoint is a projection, not canonical truth. Generic `force_skip` is forbidden.
+
+## 20. Decision memory target
+
+```text
+OBSERVATION / DEAD END / QUIRK / DECISION
+→ EVIDENCE REFS
+→ SCOPE / RETENTION / PRIVACY
+→ CONFLICT / SUPERSESSION
+→ CAPSULE PROPOSAL
+→ HUMAN ADMIT
+→ LOOPX MEMORY EVENT
+→ OPTIONAL REBUILDABLE INDEX
+→ EXPIRY / DELETE RECEIPT
+```
+
+Never persist private chain-of-thought or raw Thought Stream.
+
+## 21. Runtime fabric target
+
+```text
+RUNTIME REQUEST
+→ PROVIDER PROBE
+→ POLICY
+→ LEASE
+→ SUBJECT MATERIALIZE
+→ WORKER EXECUTE
+→ ARTIFACT COLLECT
+→ GATES
+→ CLEANUP
+→ RECEIPT
+```
+
+Physical local/cloud equivalence remains `NOT_EXERCISED`.
+
+## 22. Observability and signed HITL projection
+
+```text
+LEDGER EVENT
+→ REDACTION
+→ TRACE ENVELOPE
+→ OPTIONAL BACKEND
+→ UI INSPECTION
+→ SIGNED HUMAN REQUEST
+→ LOOPX VALIDATION
+→ LEDGER EVENT
+```
+
+Trace/UI stores cannot write canonical state.
+
+## 23. Evidence vocabulary
+
+```text
+PASS
+FAIL
+ABSENT
+NOT_IMPLEMENTED
+NOT_EXERCISED
+SKIPPED_BY_POLICY
+MERGED_TO_MAIN
+MERGED_TO_PARENT
+BLOCKED_DUPLICATE_TERMINAL
+SUPERSEDED_CANDIDATE
+```
+
+## 24. Change protocol
+
+A State Machine change updates:
+
+```text
+owner
+inputs and outputs
+transitions
+terminal states
+authority
+machine contract
+positive/control/mutation
+directory map
+Agent route
+Stack index
+exact-head evidence
+```
+
+Merge, ship, semantic conflict resolution, promotion and rollback remain Human-owned.

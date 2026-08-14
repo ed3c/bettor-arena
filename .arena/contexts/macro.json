@@ -17,6 +17,12 @@
     "docs/architecture/STATE_MACHINES.md",
     "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
     "docs/architecture/pdf-loopx-harness.integration.json",
+    "docs/git/README.md",
+    "docs/git/REPO_PROFILE.md",
+    "docs/git/STACKED_PRS.md",
+    "docs/git/WORKER_PROTOCOL.md",
+    "docs/git/GIT_TOWN_ADMISSION.md",
+    "docs/git/stack-prs.index.json",
     "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
