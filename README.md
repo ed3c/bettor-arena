@@ -23,13 +23,14 @@
 ## Current exact subject
 
 ```text
-audited main commit  77267aba27ad94dde85a4dbda7dacc70a3057fb0
-audited main tree    2083db19a1bd9e50e5e9015861190cf98a041a8a
-source PDF           LLM 泛化：模型權重與 Harness, 41 pages
-source class         REQUIREMENT_HYPOTHESIS
+audited semantic baseline  77267aba27ad94dde85a4dbda7dacc70a3057fb0
+audited baseline tree      2083db19a1bd9e50e5e9015861190cf98a041a8a
+current PR base main       9a5549e9994a7915201862a3e76be9906a4be13c
+source PDF                 LLM 泛化：模型權重與 Harness, 41 pages
+source class               REQUIREMENT_HYPOTHESIS
 ```
 
-PDF 是需求／假說來源，不是 provider、runtime、latency、memory、UI 或 production evidence。
+The five commits between the audited semantic baseline and the current PR base add only probe/NOOP files; they do not change the module, runtime, State Machine, or PDF-verdict evidence used by this audit. PDF prose remains a requirement/hypothesis source, not provider, runtime, latency, memory, UI, or production evidence。
 
 ## LoopX Harness PDF integration verdict
 
@@ -50,7 +51,7 @@ Physical local/cloud parity                    NOT_EXERCISED
 Full physical PDF integration                  NOT_EXERCISED
 ```
 
-**裁決：已做模組化控制面整合，但未完成 PDF 所描述的完整物理 runtime。**
+**裁決：已完成模組化控制面整合與可執行 traceability，但尚未完成 PDF 所描述的完整物理 runtime。**
 
 Current `main` 已實際包含 portable Skill runner：`.arena/modules/agent-runtime-integration/module.json` 選取 `portable_skill_execution` 並提供 `skill-execution.runner/v1`；`loopctl/contract.json` 有 `skill-execution` 的 `run/prove/test`；runner 只產生 subject-bound receipt，不寫 LoopX state。
 
@@ -86,7 +87,7 @@ bettor-arena/
 └── CLAUDE.md                    Claude Code thin projection
 ```
 
-`.loopx/state.json`, LangGraph, herdr, LanceDB, Langfuse UI, Grok Build, Pi, OpenCode and Ante are **not inferred** merely because the PDF proposes them. They need an admitted module/provider and current evidence。
+`.loopx/state.json`, LangGraph, herdr, LanceDB, Langfuse UI, Grok Build, Pi, OpenCode and Ante are **not inferred** merely because the PDF proposes them. They require an admitted module/provider and current exact-subject evidence。
 
 ## Directory → State Machine → input/output/evidence
 
@@ -250,21 +251,22 @@ A receipt is a subject-bound claim. A control executes the real public port. A m
 Git Town is optional local tooling. **GitHub base/head metadata and exact-head checks are publication truth.** A child PR can be merged only into its parent branch and still be absent from `main`。
 
 ```text
-current main @ 77267aba27ad94dde85a4dbda7dacc70a3057fb0
+current publication base main @ 9a5549e9994a7915201862a3e76be9906a4be13c
 ├─ #43 repo-agent-native binding                              MERGED TO MAIN
 ├─ #51 knowledge-provider contracts + current runner bytes    MERGED TO MAIN
 ├─ #57 first PDF modular traceability                         MERGED TO MAIN
 ├─ #53 historical portable-Skill convergence                  OPEN / DIVERGED / SUPERSEDED CANDIDATE
 ├─ #56 provider admission evaluations                         OPEN / RED EXACT HEAD
 ├─ #58 runtime-env + Agent Shield second-PDF audit             OPEN DRAFT / BASE MAIN
-└─ LoopX PDF executable traceability                          THIS WORKSTREAM
+└─ #60 LoopX PDF executable traceability                      OPEN / MERGEABLE / HUMAN REVIEW
 ```
 
 Important corrections:
 
 - Portable Skill execution **is present in current `main`**. PR #53 is no longer the integration authority; it is a stale/diverged historical branch whose unique delta requires comparison before Human close/supersession.
 - PR #56’s dedicated fixture evaluator is green, but its current exact head has stale generated module/context projections. It is not merge-authorized and does not prove live Serena/GrepAI/Code-Graph-RAG/Mem0 health.
-- PR #58 has been retargeted to `main`; it remains a Draft documentation audit and cannot proxy product/runtime completion。
+- PR #58 has been retargeted to `main`; it remains a Draft documentation audit and cannot proxy product/runtime completion.
+- PR #60 is the current executable LoopX traceability leaf. Its dedicated LoopX gate, Modular contracts, and `repo-agent-native` binding checks were green on the latest checked head before this Stack-metadata update; the latest head must be rechecked before Human merge.
 
 When a PR base/head/check state changes, update root README, `AGENTS.md`, both PDF traceability documents and the machine manifest in the same workstream。
 
