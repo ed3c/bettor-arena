@@ -43,7 +43,8 @@ Bettor owns repository profile, queue, task packet, path lease, Stack index, eva
 ## Ordered PDF terminal completion queue
 
 Human view: [`../git/PDF_TERMINAL_SEQUENCE.md`](../git/PDF_TERMINAL_SEQUENCE.md)  
-Machine queue: [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json)
+Machine queue: [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json)  
+Canonical repository paths: `docs/git/PDF_TERMINAL_SEQUENCE.md` and `docs/git/pdf-terminal-sequence.json`.
 
 ```text
 order 00  #82       Worker Gateway residual-file disposition       ACTIVE
