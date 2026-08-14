@@ -28,6 +28,12 @@ A missing route, owner, module, issue, parent, eval, or evidence subject is `ABS
 
 The target contract is not a completion declaration. Only exact current files and subject-bound receipts establish `IMPLEMENTED` or `PASS`; a mechanism that exists but has not run remains `NOT_EXERCISED`.
 
+## Three-strike recovery and dual-origin delivery
+
+The same failure signature or acceptance criterion gets at most three materially different attempts. Record each attempt; after the third, stop editing and follow the canonical issue-first state machine in [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md#private-github-local-forgejo-delivery-loop). Its repo-contained packet, exact `owner/repo`, GitHub connector route, host-specific issue ownership, WIP=1 delivery order, stop conditions, and standing non-destructive merge authorization are normative; an issue/PR URL plus a short instruction is not sufficient context. Required receipts must be complete and commit gates green, while a contract-declared checked-red proof stays red and is reported rather than being recolored or mistaken for an absent receipt.
+
+Verified capability snapshot (2026-08-14): local Codex CLI `0.146.0` supports `codex app <repo>` to open the ChatGPT desktop workspace; a [`codex://threads/new?...` deep link](https://learn.chatgpt.com/docs/reference/commands#deep-links) prefills but does not submit. Desktop Worktrees are created in the App; CLI only enters an existing standard worktree with `codex -C <path>` ([CLI `codex app`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-codex-app), [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)). Local `agy models` also listed `gemini-3.7-flash-high`; re-resolve inventory before use, and treat it only as cross-family review while `external-verify` and official primary sources own external claims ([Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)). Current measurements override these dated snapshots.
+
 ## Bettor Arena role
 
 ```text

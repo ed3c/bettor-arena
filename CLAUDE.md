@@ -27,6 +27,6 @@ Claude Code 不得：
 - flatten root/loop native context into an arbitrary MCP prompt;
 - place credentials, browser/device sessions, or host-specific secret paths in Git, bundles, MCP payloads, or receipts;
 - promote `ABSENT`, `FAIL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED`, or `SKIPPED_BY_POLICY` to PASS;
-- perform Human Admit, merge, release promotion, production rollback, secret rotation, or permission widening.
+- invent Human Admit, or merge without the issue-bound standing owner authorization and exact-head gates defined by [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md); release promotion, production rollback, secret rotation, and permission widening remain human-only.
 
 A target mechanism described in Markdown may still be `NOT_IMPLEMENTED`. A mechanism present in code but not run for the exact subject remains `NOT_EXERCISED`. Open a new Claude session after changing passive context before claiming it was read.

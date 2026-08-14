@@ -11,6 +11,7 @@
     "CONTEXT.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/integration/CROSS_REPO_INTEGRATION.md",
     "docs/agent-runtime-integration.md"
   ],
   "drivers": {

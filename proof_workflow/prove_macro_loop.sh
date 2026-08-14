@@ -39,6 +39,8 @@ prove_context agents-tier AGENTS.md \
   "ARCHITECTURE.md -> Codex/cross-host passive context + rule->evidence routing"
 prove_context glossary CONTEXT.md \
   "repo -> agent session: canonical terms (admit / Intent-Slice / receipt)"
+prove_context cross-repo-integration docs/integration/CROSS_REPO_INTEGRATION.md \
+  "root routing -> macro session: four-repository and dual-origin delivery state machines"
 # The document that tells an agent how to detect drift is itself a thing that can
 # drift. Covering it here is not tidiness: an unstamped edit to the laws would
 # change how every future reader interprets a red, and nothing would have said so.
