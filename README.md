@@ -185,7 +185,7 @@ publication canary                       NOT_EXERCISED
 merge / ship / rollback                  HUMAN-OWNED
 ```
 
-### Current molecular Stack
+## Git Town / molecular Stack PR index
 
 ```text
 main @ 10380005fa485d6035539589c01b9f740acff15d
@@ -213,6 +213,25 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
 
 Full human index: [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md).  
 Machine snapshot: [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json).
+
+## Current module catalog
+
+The selected current-main module IDs are indexed explicitly for the PDF/control-plane gate:
+
+- `agent-runtime-integration`
+- `arena-core`
+- `code-truth-graph`
+- `environment-contracts`
+- `knowledge-providers`
+- `loop-runtime`
+- `mcp-adapters`
+- `module-catalog`
+- `notebooklm`
+- `openwiki`
+- `perfect-seed-factory`
+- `project-bootstrapper`
+- `proof-kernel`
+- `technical-equivalence`
 
 ## Stable public surfaces
 
