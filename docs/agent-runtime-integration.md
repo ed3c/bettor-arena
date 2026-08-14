@@ -100,6 +100,15 @@ It verifies symlink projection rather than a shadow copy, document-route closure
 
 For `repo-agent-native`, also record the exact shared candidate commit in its consumer binding, rerun the binding selftest, open fresh Claude/Codex sessions, and execute the profile-bound `no_skill`/`current_skill`/`candidate_skill` physical matrix before claiming output superiority. Add `wrong_skill` only when the experiment measures automatic routing rather than explicit invocation.
 
+Cross-Skill measurement now binds a second, separate authority: the universal
+v2 protocol in `skills-shared`. It classifies outcome/evidence surfaces, not
+business domains; the common engine is identifier-blind while each physical
+suite keeps its own oracle. Bettor accepts the shared closure and conformance
+receipt in `.skill-bindings/repo-agent-native/binding.json`, but conformance can
+only prove the ruler. The legacy 144-cell repo-agent matrix remains behavior
+`FAIL`, and physical v2 remains `NOT_EXERCISED` until all paired identity and
+explicit relation-evidence fields are re-observed.
+
 Rollback 不手改 binding：checkout 上游舊 clean commit，用同一 requirements 重 sync。private publication
 是 delivery policy，不是 module contract；本線不 push，也不把 remote visibility 改成 public。
 

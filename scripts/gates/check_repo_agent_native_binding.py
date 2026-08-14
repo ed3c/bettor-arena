@@ -385,6 +385,104 @@ def validate(root: Path) -> list[str]:
         except BindingError as exc:
             errors.append(str(exc))
 
+    universal = binding.get("universal_measurement_protocol")
+    if not isinstance(universal, dict):
+        errors.append("binding.json: universal_measurement_protocol must be an object")
+        universal = {}
+    expected_universal = {
+        "authority_repository": "ed3c/skills-shared",
+        "authority_commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
+        "authority_publication_state": "LOCAL_ONLY",
+        "catalog": "evals/universal/catalog.json",
+        "profile": "evals/universal/profiles/source-grounded-analysis-v2.json",
+        "engine": "scripts/measure_skill_generalization.py",
+        "conformance_receipt": "evals/universal/receipts/protocol-conformance-v2.json",
+        "measurement_closure_sha256": "306e01a0b5741a18579956917359233484b7b1410d039133cf8ce51425b9cbc6",
+        "catalog_skills": 23,
+        "profiles": 5,
+        "conformance_suites": 5,
+        "protocol_state": "PASS",
+        "repo_agent_native_physical_v2_state": "NOT_EXERCISED",
+    }
+    for key, expected in expected_universal.items():
+        if universal.get(key) != expected:
+            errors.append(
+                f"binding.json: universal_measurement_protocol.{key} must equal {expected!r}"
+            )
+    universal_receipt = universal.get("consumer_receipt")
+    if not nonempty(universal_receipt):
+        errors.append("binding.json: universal protocol requires consumer_receipt")
+    else:
+        try:
+            receipt_path = inside(
+                root,
+                universal_receipt,
+                label="universal_measurement_protocol.consumer_receipt",
+            )
+            if not receipt_path.is_file():
+                errors.append("binding.json: universal protocol receipt is ABSENT")
+            else:
+                protocol_receipt = load_json(receipt_path)
+                source = protocol_receipt.get("source", {})
+                conformance = protocol_receipt.get("protocol_conformance", {})
+                repo_result = protocol_receipt.get("repo_agent_native", {})
+                if (
+                    protocol_receipt.get("schema_version")
+                    != "bettor-skill-measurement-acceptance/v1"
+                ):
+                    errors.append(
+                        "binding.json: unsupported universal protocol receipt"
+                    )
+                if source.get("commit") != universal.get("authority_commit"):
+                    errors.append(
+                        "binding.json: universal protocol source commit mismatch"
+                    )
+                if source.get("measurement_closure_sha256") != universal.get(
+                    "measurement_closure_sha256"
+                ):
+                    errors.append("binding.json: universal protocol closure mismatch")
+                if conformance.get("state") != "PASS" or any(
+                    conformance.get(key) != universal.get(key)
+                    for key in ("catalog_skills", "profiles", "conformance_suites")
+                ):
+                    errors.append(
+                        "binding.json: universal protocol conformance mismatch"
+                    )
+                if conformance.get("positive_admission_state") != "NOT_EXERCISED":
+                    errors.append("binding.json: synthetic conformance cannot admit")
+                if (
+                    conformance.get("mutations_planted") != 20
+                    or conformance.get("mutations_killed") != 20
+                ):
+                    errors.append(
+                        "binding.json: universal mutation controls incomplete"
+                    )
+                if (
+                    conformance.get("tests_run") != 16
+                    or conformance.get("planted_contract_tests") != 9
+                ):
+                    errors.append(
+                        "binding.json: universal conformance test count drifted"
+                    )
+                required_gaps = {
+                    "common_task_sha256",
+                    "runner_sha256",
+                    "environment_sha256",
+                    "tool_policy_sha256",
+                    "evidence_authority_and_classes",
+                    "explicit_relation_evidence",
+                }
+                if (
+                    repo_result.get("legacy_behavior_state") != "FAIL"
+                    or repo_result.get("v2_physical_state") != "NOT_EXERCISED"
+                    or set(repo_result.get("v2_missing_evidence", [])) != required_gaps
+                ):
+                    errors.append(
+                        "binding.json: repo-agent-native v2 physical limitation drifted"
+                    )
+        except BindingError as exc:
+            errors.append(str(exc))
+
     projection_paths = skill.get("projection_paths")
     if not isinstance(projection_paths, list) or not projection_paths:
         errors.append("binding.json: skill.projection_paths must be a non-empty array")
@@ -593,6 +691,13 @@ def make_fixture(source_root: Path, destination: Path) -> None:
         receipt_target = destination / generalization_receipt
         receipt_target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_root / generalization_receipt, receipt_target)
+    universal_receipt = binding.get("universal_measurement_protocol", {}).get(
+        "consumer_receipt"
+    )
+    if nonempty(universal_receipt):
+        receipt_target = destination / universal_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / universal_receipt, receipt_target)
 
     for route in binding["routes"]:
         path = destination / route["path"]
@@ -716,6 +821,21 @@ def selftest(source_root: Path) -> int:
         value["identity_state"] = "PASS"
         path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
+    def universal_catalog_drift(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["universal_measurement_protocol"]["catalog_skills"] = 22
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def conformance_overpromotes_physical(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["universal_measurement_protocol"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["repo_agent_native"]["v2_physical_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
     for label, mutation in (
         ("copied-projection", copied_projection),
         ("missing-route", missing_route),
@@ -728,11 +848,13 @@ def selftest(source_root: Path) -> int:
         ("incomplete-generalization-matrix", incomplete_generalization_matrix),
         ("generalized-fail-overpromoted", generalized_fail_overpromoted),
         ("generalized-identity-overpromoted", generalized_identity_overpromoted),
+        ("universal-catalog-drift", universal_catalog_drift),
+        ("conformance-overpromotes-physical", conformance_overpromotes_physical),
     ):
         assert_mutation_fails(source_root, label, mutation)
 
     print(
-        "PASS repo-agent-native Bettor binding selftest: 1 positive + 11 planted negatives"
+        "PASS repo-agent-native Bettor binding selftest: 1 positive + 13 planted negatives"
     )
     return 0
 

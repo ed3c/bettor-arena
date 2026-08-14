@@ -1,0 +1,69 @@
+{
+  "schema_version": "bettor-skill-measurement-acceptance/v1",
+  "repository": "ed3c/bettor-arena",
+  "observed_at": "2026-08-14T14:35:00+08:00",
+  "source": {
+    "repository": "ed3c/skills-shared",
+    "commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
+    "publication_state": "LOCAL_ONLY",
+    "measurement_closure_sha256": "306e01a0b5741a18579956917359233484b7b1410d039133cf8ce51425b9cbc6"
+  },
+  "protocol_conformance": {
+    "state": "PASS",
+    "catalog_skills": 23,
+    "profiles": 5,
+    "conformance_suites": 5,
+    "archetypes": [
+      "artifact-transformation",
+      "interactive-judgment",
+      "routing-composition",
+      "source-grounded-analysis",
+      "transactional-effect"
+    ],
+    "positive_behavior_passed": 5,
+    "positive_admission_state": "NOT_EXERCISED",
+    "tests_run": 16,
+    "planted_contract_tests": 9,
+    "mutations_planted": 20,
+    "mutations_killed": 20,
+    "property_tests": [
+      "alpha-renaming-invariance",
+      "row-and-registration-order-invariance",
+      "two-arm-treatment",
+      "composed-treatment",
+      "host-scoped-runner-identity",
+      "paired-environment-and-tool-policy",
+      "treatment-blind-physical-sampling"
+    ]
+  },
+  "repo_agent_native": {
+    "profile": "source-grounded-analysis-v2",
+    "legacy_physical_receipt": "data/receipts/repo-agent-native-generalization-v2-dev.json",
+    "legacy_behavior_state": "FAIL",
+    "v2_physical_state": "NOT_EXERCISED",
+    "v2_missing_evidence": [
+      "common_task_sha256",
+      "runner_sha256",
+      "environment_sha256",
+      "tool_policy_sha256",
+      "evidence_authority_and_classes",
+      "explicit_relation_evidence"
+    ],
+    "reason": "The 144 legacy cells cannot be upgraded by prose or default values; v2 requires a new physical matrix with paired identity and explicit oracle relation receipts."
+  },
+  "claims": {
+    "supported": [
+      "The common protocol represents all current shared Skill evidence archetypes.",
+      "The protocol result is invariant to identifier and registration-order changes.",
+      "The protocol rejects planted identity, evidence, capability, relation, and catalog defects."
+    ],
+    "not_supported": [
+      "Every catalogued Skill has completed a physical A/B run.",
+      "repo-agent-native v2 is behavior PASS or release-admissible.",
+      "No-Skill automatically uses GrepAI, Serena, Code-Graph-RAG, or Mem0.",
+      "Protocol conformance can replace a post-selection sealed holdout."
+    ]
+  },
+  "human_admit_required": true,
+  "rollback_subject": "skills-shared@0e26e90deef3907bb08ac9b4919c920bd36093f8 plus removal of this consumer protocol binding"
+}

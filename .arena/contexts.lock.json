@@ -1,5 +1,5 @@
 {
-  "content_sha256": "2e5f1429ced4e42d9dffc3bcf94afdcdadbac288da162c5b3ed9b8e56591615c",
+  "content_sha256": "3a0c9592acddc20a011fee0cb9e730ed9bf5f55ebb9442ac0df3eb4437a137ad",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "05db028f7788e31bab68250eddc1296b8815b3881cd491ffabdbe2e8db120f96",
+      "context_sha256": "caa659af5bde5a51b9b9488c17e107336c4128bd0030038e5c7654658b0dd944",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -56,7 +56,7 @@
           "path": "CLAUDE.md"
         },
         {
-          "blob": "4987e2425a527d7775ddf4b30169bdfeb19bfd5d",
+          "blob": "4f5f8b1f1079769da1f68e995f243b27cd4a327c",
           "mode": "100644",
           "path": "docs/agent-runtime-integration.md"
         },
@@ -388,7 +388,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "d817380ab2a56fd3a535a8753b9c4ccfce6af30a9b2823acc0277bccb2e1dbbc",
+      "context_sha256": "3436172dfd30c3bfb7c95dd449178dcf3ddd231db0a3dc1f7991e85e6538859b",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -422,7 +422,7 @@
           "path": "CONTEXT.md"
         },
         {
-          "blob": "4987e2425a527d7775ddf4b30169bdfeb19bfd5d",
+          "blob": "4f5f8b1f1079769da1f68e995f243b27cd4a327c",
           "mode": "100644",
           "path": "docs/agent-runtime-integration.md"
         },
@@ -447,7 +447,7 @@
           "path": "docs/architecture/modular-integration-requirements.md"
         },
         {
-          "blob": "75537ded805dba0922ec136014f45663cd8a5302",
+          "blob": "f3137fd0db7cd041b3b65f0d15206d40b1d19764",
           "mode": "100644",
           "path": "docs/architecture/modular-integration-status.md"
         },

@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "404d47840e2cd61961e41792ae855c23290c175b",
+  "workflow_commit": "d6c3fe0b8f3499526fee18f54d055fbcbac2bfab",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-404d47840e2c-dirty.json",
-    "container": "container-404d47840e2c-dirty.json",
-    "ctg": "ctg-404d47840e2c-dirty.json",
-    "equivalence": "equivalence-404d47840e2c-dirty.json",
-    "harness": "harness-404d47840e2c-dirty.json",
-    "macro": "macro-404d47840e2c-dirty.json",
-    "micro": "micro-404d47840e2c-dirty.json",
-    "notebooklm": "notebooklm-404d47840e2c-dirty.json",
-    "openwiki": "openwiki-404d47840e2c-dirty.json",
-    "policy": "policy-404d47840e2c-dirty.json",
-    "skill-execution": "skill-execution-404d47840e2c-dirty.json",
-    "workflow": "workflow-404d47840e2c-dirty.json"
+    "agent-runtime": "agent-runtime-d6c3fe0b8f34-dirty.json",
+    "container": "container-d6c3fe0b8f34-dirty.json",
+    "ctg": "ctg-d6c3fe0b8f34-dirty.json",
+    "equivalence": "equivalence-d6c3fe0b8f34-dirty.json",
+    "harness": "harness-d6c3fe0b8f34-dirty.json",
+    "macro": "macro-d6c3fe0b8f34-dirty.json",
+    "micro": "micro-d6c3fe0b8f34-dirty.json",
+    "notebooklm": "notebooklm-d6c3fe0b8f34-dirty.json",
+    "openwiki": "openwiki-d6c3fe0b8f34-dirty.json",
+    "policy": "policy-d6c3fe0b8f34-dirty.json",
+    "skill-execution": "skill-execution-d6c3fe0b8f34-dirty.json",
+    "workflow": "workflow-d6c3fe0b8f34-dirty.json"
   },
   "counts": {
     "artifact": 34,
     "context": 61,
     "harness": 143
   },
-  "workflow_digest": "af5801bfa9d6a8d09a33eaeb04b260a6c93189490ff490332ecbd23e635ef0cf",
+  "workflow_digest": "78e8b13d4bd020fca423aa4e71a83e61690731bac223270a8863ee9178656151",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -237,7 +237,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-404d47840e2cd61961e41792ae855c23290c175b.json": {
+    "data/receipts/post-commit-d6c3fe0b8f3499526fee18f54d055fbcbac2bfab.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",
@@ -263,7 +263,7 @@
       ]
     },
     "docs/agent-runtime-integration.md": {
-      "sha256": "01183de6ddf839010bf85518e96bf92bcba1cb34b048808b9a44a27d953462bc",
+      "sha256": "78cdb538e594efba9a83be02fff042f63a8fa8be4744e26cd3c22321a693dd11",
       "hash_source": "index",
       "kind": "context",
       "loops": [

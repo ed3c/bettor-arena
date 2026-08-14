@@ -62,11 +62,13 @@ cleanup PASS
 變因：no/current/candidate 的 Skill package 與 instruction digest
 ```
 
-Comparator 對共同面做 exact equality；「同 evaluator」是完整 schema/ground-truth/config/scorer/predicate-observer digest set，不是同一個 script 檔名。「同 subject」是 deterministic commit + replay bundle，不是相同 path/branch。release-grade identity 還要固定 treatment package、共同 task prompt、runner 與每個 harness 的 model。`no_skill` 只是不安裝 Skill，不會自動帶入 Skill 程序或啟動 semantic、symbol、graph、memory tools。
+Comparator 對共同面做 exact equality；「同 evaluator」是完整 schema/ground-truth/config/scorer/predicate-observer digest set，不是同一個 script 檔名。「同 subject」是 deterministic commit + replay bundle，不是相同 path/branch。正確 identity scope 是：subject/evaluator 對同一 case 固定；common task、environment 與 tool policy 對同一 case×harness×repetition 的各臂固定；treatment digest 對 condition 固定且 `no_skill` 為 null；runner/model 在同一 harness 內固定，但不同 harness 可有各自 digest。把跨 host 不同 runner 判成 drift，或容許同 host 各臂換 tools/environment，都會破壞因果比較。`no_skill` 只是不安裝 Skill，不會自動帶入 Skill 程序或啟動 semantic、symbol、graph、memory tools。
 
 共同 prompt 可提供每臂都需要的 output schema 與 closed typed predicate ontology：穩定 ID、型別、operator、合法 value domain，但不得給 observed answer 或 treatment procedure。這不是答案洩漏；沒有 public ontology 時，exact scalar evaluator 只是在測模型是否碰巧猜中 evaluator 私有 alias。文字 alias 命中仍只能是 advisory。
 
-控制臂不是固定四臂。預設因果比較為 `no_skill`、`current_skill`、`candidate_skill`；只有 host 自動選 Skill 的 routing profile 才加 `wrong_skill`，只有宣稱多 Skill 組合效果時才加 `composed_skills`。顯式指定 treatment 的 runner 加 `wrong_skill` 並不會量到 routing。
+控制臂不是固定四臂，也不以 `candidate_skill` 名稱硬編碼 treatment。profile 明示 `treatment_condition`、comparators 與 non-regression reference：新 Skill 可用 candidate/no-skill 兩臂；既有 Skill 升級可用 candidate/current/no-skill；automatic routing 或多 Skill 組合可把 `composed_skills` 當 treatment，並用 wrong/no-skill 作 comparator。顯式指定 treatment 的 runner 加 `wrong_skill` 並不會量到 routing。
+
+通用 profile 依 outcome/evidence surface 分五類：source-grounded analysis、artifact transformation、transactional effect、routing/composition、interactive judgment。這是 evidence contract，不是 domain template；每一類仍由 task-specific oracle 決定輸出是否正確。共同 aggregator 只看 normalized state、identity、evidence authority/class、capability vector、paired deltas 與 relation receipt，不得搜尋 Skill 名、family/case alias 或答案文字。
 
 單次 fixture PASS 只證 bounded task。程序泛化至少另需：
 
@@ -79,7 +81,7 @@ no/current/candidate paired evidence with counterbalanced execution order
 paired conservative lower bound + worst-family + cross-host gap + metamorphic report
 ```
 
-`skills-shared` 的 repository-level eval framework 擁有 reusable profile、normalized observation、identity audit、task-blind aggregation、mutation admission 與 capability unlock；單支 Skill 只擁有 task-family suite、oracle/observer 和 local receipts。這個 seam 才能泛化到不同 Skill：協定可重用，oracle 不可硬套。public dev suite 可淘汰但不可 unlock；release 另需 candidate 選定後才解封的 holdout、完整 identity、rollback 與 Human Admit。`Skill.md-native` 類 runtime plane 擁有 digest-pinned compatibility cell、sandbox/security、reproducibility、confidence 與 cost。兩者分表：前者回答「Skill 是否造成可泛化能力提升」，後者回答「在哪個 agent/runtime/model 上可重現且安全」。禁止另造一個加權總分讓 runtime 品質補償 behavior/security hard failure。
+`skills-shared` 的 repository-level eval framework 擁有全 Skill catalog、五類 reusable profile、normalized observation、identity audit、task-blind aggregation、mutation admission 與 capability unlock；單支 Skill 只擁有 task-family suite、oracle/observer 和 local receipts。新增而未分類的 Skill 必須讓 catalog gate 變紅；alpha-renaming、row/order permutation 不得改變數值結論。這個 seam 才能泛化到不同 Skill：協定可重用，oracle 不可硬套。public protocol conformance 只證量測器可表示該類型且 planted defect 會紅，不能冒充 physical superiority；release 另需 candidate 選定後才解封的 physical holdout、完整 identity、rollback 與 Human Admit。`Skill.md-native` 類 runtime plane 擁有 digest-pinned compatibility cell、sandbox/security、reproducibility、confidence 與 cost。兩者分表：前者回答「Skill 是否造成可泛化能力提升」，後者回答「在哪個 agent/runtime/model 上可重現且安全」。禁止另造一個加權總分讓 runtime 品質補償 behavior/security hard failure。
 
 量測 evidence origin 也不得折疊：
 

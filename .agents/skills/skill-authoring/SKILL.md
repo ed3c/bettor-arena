@@ -7,7 +7,7 @@ description: |
   觸發詞:新建 skill、skill 規範、skill 設計、frontmatter、固化範例、skill-authoring。
   NOT for:判「該不該新建」(先走 fold-in 不變量 1);執行某支既有 skill 的業務程序。
 metadata:
-  version: "3"
+  version: "4"
   entrypoint-line-budget: "120"
 ---
 
@@ -30,7 +30,7 @@ metadata:
 6. **Design assertions**：把可判 claim 寫成 stable predicate ID/operator/value/source，由 evaluator 對 exact subject 獨立重觀測；hard assertions 用 exit/schema/hash/diff/AST/LSP/test report，模型自述與文字 alias 只可 advisory，不能影響 admission 或覆寫 hard failure。
 7. **Build the gate**：至少一個 positive、一個 hollow，且每條 load-bearing rule 各有 planted mutation；同一問題最多三次修正。
 8. **Project hosts**：Codex 用 canonical `.agents/skills` 與可選 `agents/openai.yaml`；Claude 用 `.claude/skills/<name>` thin symlink；不得複製第二份 `SKILL.md`。
-9. **Prove behavior**：先選 reusable profile，再為該 Skill 預登記多個 task families、metamorphic variants 與 task-specific oracle。預設比較 `no_skill`、`current_skill`、`candidate_skill`；只有量 automatic routing 才加 `wrong_skill`，量 composition 才加 `composed_skills`。各臂須同 subject/evaluator/common-task/runner identity，且同一 harness 內 model identity 固定，只可改 treatment package；至少兩個 real harness、每格三次、counterbalanced order，並以 hard capability、paired conservative bound、worst-family、cross-host gap、metamorphic relation 分開判。public dev suite 只能淘汰，sealed post-selection holdout 才能 unlock；缺 physical 或 identity receipt 就標 `NOT_EXERCISED`。
+9. **Prove behavior**：先依 outcome/evidence surface 選 reusable profile：source-grounded analysis、artifact transformation、transactional effect、routing/composition 或 interactive judgment；這五類不是業務 domain。再預登記 task families、metamorphic variants 與 task-specific oracle。控制臂由 profile 宣告，不固定成三臂：新 Skill 可只做 candidate/no-skill；routing/composition 可用 `composed_skills`/`wrong_skill`/`no_skill`。subject/evaluator 以 case 固定；common-task/environment/tool-policy 以 case×harness×repetition 跨臂固定；runner/model 只要求同一 harness 內固定，跨 harness 可不同；treatment digest 以 condition 固定且 `no_skill` 必須為 null。用 explicit relation receipt、hard capability、paired conservative bound、worst-family 與 cross-host gap 分開判。public protocol conformance 只能證量測器能紅；physical sealed holdout 才可能 unlock，仍須 Human Admit。
 10. **Deliver**：receipt 證明 exact head 某次發生什麼；GitHub/Forgejo live audit 另證明當下狀態；promotion/merge 留 Human Admit。
 
 Repository conformance 的實際入口：
@@ -47,6 +47,7 @@ python3 scripts/gates/check_skill_conformance.py --root .
 - Current source/tests/receipts 優先於 semantic index、graph projection、memory projection 與模型記憶。
 - `no_skill` 只代表未安裝 treatment Skill；不代表自動知道程序或呼叫 semantic/symbol/graph/memory provider。共同 schema adapter 不得洩漏答案或 Skill procedure。
 - ecosystem/runtime quality 與 verified behavior/capability 分開出表；security hard failure 不可被品質加權補償，也不可用單一總分吞掉 generalization gap。
+- Skill 名、family/case/capability ID、輸出行順序與註冊順序改名後，數值結論必須不變；否則是在量 alias 或 evaluator fit，不是程序性泛化。每個新 Skill 必須進 shared catalog，未分類直接 fail closed；catalog coverage 不等於該 Skill 已跑 physical A/B。
 - 新檔先對映 `ARCHITECTURE.md` §2，再更新 nearest README/catalog/lock；收手前正常跑 hook，禁止 `--no-verify`。
 - YAML block scalar 內 ASCII colon 合法；用 parser 驗格式，不用字元迷信。
 - Codex `$skill-name` 與 Claude `/skill-name` 是不同 host surface；`allowed-tools` 不是 portable sandbox。
