@@ -1,0 +1,39 @@
+name: LoopX Strategy + HITL v1
+
+on:
+  pull_request:
+    paths:
+      - "loop_wiki/loopx-strategy-hitl/**"
+      - ".arena/modules/loopx-strategy-hitl/**"
+      - ".github/workflows/loopx-strategy-hitl.yml"
+  push:
+    branches:
+      - "feat/loopx-strategy-hitl-v1"
+    paths:
+      - "loop_wiki/loopx-strategy-hitl/**"
+      - ".arena/modules/loopx-strategy-hitl/**"
+      - ".github/workflows/loopx-strategy-hitl.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loopx-strategy-hitl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  strategy-hitl:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Validate proposals, interrupts, Human decisions, resume plans, checkpoints, and mutations
+        run: sh loop_wiki/loopx-strategy-hitl/tests/run-all.sh
+      - name: Validate the catalogued child module without selecting it
+        run: python3 scripts/arena_modules.py catalog >/dev/null
