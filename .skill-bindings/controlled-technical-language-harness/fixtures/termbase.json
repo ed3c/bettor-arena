@@ -1,0 +1,48 @@
+{
+  "fixture_id": "bettor-arena-ctl-termbase-fixture",
+  "human_review_receipt": null,
+  "production_admission": false,
+  "schema_version": "controlled-language-termbase-fixture/v1",
+  "source_classification": "FIXTURE",
+  "state": "FIXTURE_ONLY",
+  "terms": [
+    {
+      "allowed_parts_of_speech": [
+        "NOUN"
+      ],
+      "decision_state": "FIXTURE_CANDIDATE",
+      "definition": "Fixture name for a valve that releases fluid or gas.",
+      "human_review_receipt": null,
+      "production_admission": false,
+      "term": "bleed valve",
+      "term_id": "TN-FIXTURE-BLEED-VALVE",
+      "term_type": "TN"
+    },
+    {
+      "allowed_parts_of_speech": [
+        "VERB"
+      ],
+      "decision_state": "FIXTURE_CANDIDATE",
+      "definition": "Fixture verb for applying a specified torque.",
+      "general_verb_assessment": "NO_APPROVED_GENERAL_VERB",
+      "human_review_receipt": null,
+      "production_admission": false,
+      "term": "torque",
+      "term_id": "TV-FIXTURE-TORQUE",
+      "term_type": "TV"
+    },
+    {
+      "allowed_parts_of_speech": [
+        "VERB"
+      ],
+      "decision_state": "FIXTURE_REJECTED",
+      "definition": "Fixture rejected verb.",
+      "human_review_receipt": null,
+      "production_admission": false,
+      "replacement": "release the pressure",
+      "term": "depressurize",
+      "term_id": "REJECT-FIXTURE-DEPRESSURIZE",
+      "term_type": "REJECT"
+    }
+  ]
+}
