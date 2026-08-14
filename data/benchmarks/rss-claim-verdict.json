@@ -1,0 +1,51 @@
+{
+  "claim": {
+    "comparator": "lt",
+    "id": "rss-under-30mb",
+    "metric": "peak_rss_mb",
+    "origin": "MEASURED_HERE",
+    "statement": "the placement gate's peak RSS stays under 30 MB",
+    "threshold": 30
+  },
+  "evidence": [
+    {
+      "observed_p90": 19.109375,
+      "profile": {
+        "arch": "arm64",
+        "cache_states": [
+          "COLD"
+        ],
+        "cpu": "arm",
+        "host": "claude",
+        "image": "none",
+        "locale": "LOCAL",
+        "model": "opus-5",
+        "os": "darwin-25.4.0",
+        "provider": "anthropic"
+      },
+      "report_digest": "sha256:eb5424c2f38a10e512741c3f0e2b55cb91b5341fd9ace2d8407c9d3bcdeffeee"
+    }
+  ],
+  "notes": [],
+  "profiles": [
+    {
+      "arch": "arm64",
+      "cache_states": [
+        "COLD"
+      ],
+      "cpu": "arm",
+      "host": "claude",
+      "image": "none",
+      "locale": "LOCAL",
+      "model": "opus-5",
+      "os": "darwin-25.4.0",
+      "provider": "anthropic"
+    }
+  ],
+  "promotable_by_gate": false,
+  "promotion_owner": "HUMAN_ADMIT",
+  "reason": "observed on 1 profile(s), none of them independent of each other. Running the same box again raises confidence in the mean; it does not widen what the mean is about",
+  "schema_version": "loopx/benchmark-claim-verdict/v1",
+  "verdict": "PROFILE_OBSERVED",
+  "verdict_digest": "sha256:de99be37576c972e469c6bb1904a3b968056186212cdad20e148836dd09b18c4"
+}
