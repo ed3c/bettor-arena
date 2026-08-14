@@ -66,6 +66,17 @@
         "loop_wiki/loopx-benchmark/tests/run-all.sh"
       ],
       "note": "The one workflow whose local and hosted runs are expected to differ in what they measure and not just in where: the module's own contract forbids CI from publishing a timing number, so CI runs the synthetic lane and the real measurement stays LOCAL."
+    },
+    {
+      "workflow": ".github/workflows/git-town-runtime.yml",
+      "local_covers": [
+        "git-town-runtime"
+      ],
+      "local_command": [
+        "sh",
+        "tests/git-town/run-all.sh"
+      ],
+      "note": "Both sides must reach EXECUTABLE_ABSENT, and the suite asserts it -- so an image that starts shipping git-town turns the hosted side red rather than silently exercising a version nobody pinned. That is the rare case where local and hosted agreeing is itself the check."
     }
   ]
 }

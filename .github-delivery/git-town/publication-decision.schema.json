@@ -1,0 +1,57 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/git-town/publication-decision/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Whether a publication request may be made -- never whether one was made. performed is always false: there is no argument that makes it true, because there is no code here that publishes.",
+  "properties": {
+    "decision_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "github_check_head": {
+      "description": "Must be the same commit as the local receipt. Two heads are two facts about a different commit each, and 'local is green and CI is green' is true of neither.",
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "local_receipt_head": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "may_request": {
+      "type": "boolean"
+    },
+    "owner": {
+      "const": "HUMAN_OR_TRUSTED_OPERATOR"
+    },
+    "performed": {
+      "const": false
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "receipt_kinds": {
+      "description": "Kept separate. Folded into one, 'the sync ran' and 'a human admitted it' become the same record, and only one of them is a decision.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/git-town-publication-decision/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "may_request",
+    "performed",
+    "owner",
+    "reason",
+    "local_receipt_head",
+    "github_check_head",
+    "receipt_kinds",
+    "decision_digest"
+  ],
+  "title": "Git Town publication decision",
+  "type": "object"
+}

@@ -1,0 +1,79 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        ".github-delivery/git-town"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "scripts/git-town"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "git-town-runtime",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "git-town-runtime",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/git-town/gittownctl.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "scripts/git-town/control_git_town.py"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/git-town/gittownctl.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/git-town/gittownctl.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "tests/git-town/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.git-town-runtime/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "scripts/git-town"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Git Town runtime admission: a closed set of named modes rather than a caller-supplied argv, an admission that names version, checksum, provenance and licence or is refused, and bounded-sync invariants exercised against real repositories with a real bare remote. The executable is ABSENT here and the live sync is NOT_EXERCISED; semantic conflicts, publication, merge and rollback stay Human-owned."
+}
