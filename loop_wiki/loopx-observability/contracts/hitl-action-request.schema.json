@@ -1,0 +1,120 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/hitl-action-request/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A signed proposal prepared by a console, bound to the exact revision, ledger head and projection digest the operator was looking at. The binding is what makes a stale page detectable rather than merely unlucky.",
+  "properties": {
+    "created_at": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "displayed_projection_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "observed_state": {
+      "additionalProperties": false,
+      "properties": {
+        "ledger_head": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state_revision",
+        "ledger_head"
+      ],
+      "type": "object"
+    },
+    "rationale_artifact_ref": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "requested_action": {
+      "enum": [
+        "RETRY_AFTER_FIX",
+        "UPDATE_CONTRACT",
+        "CANCEL",
+        "SCOPED_EXCEPTION"
+      ]
+    },
+    "schema_version": {
+      "const": "loopx/hitl-action-request/v1"
+    },
+    "signer": {
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reference": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "signature_ref": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "identity",
+        "reference",
+        "signature_ref"
+      ],
+      "type": "object"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "todo_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "todo_id",
+    "observed_state",
+    "requested_action",
+    "signer",
+    "rationale_artifact_ref",
+    "displayed_projection_digest",
+    "created_at"
+  ],
+  "title": "LoopX HITL Action Request v1",
+  "type": "object"
+}

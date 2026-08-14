@@ -1,20 +1,20 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "78260c507c634cd9d8265cb310641caa7a26db29",
+  "workflow_commit": "536449a0ce007ecdf3133ab26908ffedfa429442",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-78260c507c63-dirty.json",
-    "container": "container-78260c507c63-dirty.json",
-    "ctg": "ctg-78260c507c63-dirty.json",
-    "equivalence": "equivalence-78260c507c63-dirty.json",
-    "harness": "harness-78260c507c63-dirty.json",
-    "macro": "macro-78260c507c63-dirty.json",
-    "micro": "micro-78260c507c63-dirty.json",
-    "notebooklm": "notebooklm-78260c507c63-dirty.json",
-    "openwiki": "openwiki-78260c507c63-dirty.json",
-    "policy": "policy-78260c507c63-dirty.json",
-    "skill-execution": "skill-execution-78260c507c63-dirty.json",
-    "workflow": "workflow-78260c507c63-dirty.json"
+    "agent-runtime": "agent-runtime-536449a0ce00-dirty.json",
+    "container": "container-536449a0ce00-dirty.json",
+    "ctg": "ctg-536449a0ce00-dirty.json",
+    "equivalence": "equivalence-536449a0ce00-dirty.json",
+    "harness": "harness-536449a0ce00-dirty.json",
+    "macro": "macro-536449a0ce00-dirty.json",
+    "micro": "micro-536449a0ce00-dirty.json",
+    "notebooklm": "notebooklm-536449a0ce00-dirty.json",
+    "openwiki": "openwiki-536449a0ce00-dirty.json",
+    "policy": "policy-536449a0ce00-dirty.json",
+    "skill-execution": "skill-execution-536449a0ce00-dirty.json",
+    "workflow": "workflow-536449a0ce00-dirty.json"
   },
   "counts": {
     "artifact": 31,
