@@ -463,6 +463,30 @@ A UI button never writes state directly.
 
 Current state: `NOT_IMPLEMENTED`.
 
+## LoopX compatibility state machine
+
+The LoopX-specific PDF audit maps its five-part task model onto existing
+authorities without claiming that the missing canonical reducer already exists:
+
+```text
+OBJECTIVE_ACCEPTED
+→ MODULE_REQUIREMENTS_RESOLVED
+→ TYPED_TODO_DISPATCHED
+→ HOST_EXECUTION_OBSERVED
+→ HARD_GATES_EVALUATED
+   ├─ PASS → EVIDENCE_SUBJECT_BOUND
+   │          → READY_FOR_HUMAN_ADMIT
+   │          → RELEASED | ROLLED_BACK
+   └─ FAIL → RETRY_BUDGET_DECREMENTED
+              ├─ RETRY_ALLOWED
+              └─ HUMAN_REVIEW_REQUIRED
+```
+
+Workers submit observations; deterministic gates evaluate artifacts; a trusted
+single writer commits canonical state; Human authority admits exception,
+promotion and rollback. LangGraph checkpoints, memory, graphs and UIs remain
+projections.
+
 ## 21. Cross-machine invariants
 
 ```text

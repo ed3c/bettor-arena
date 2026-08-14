@@ -236,7 +236,9 @@ class RepositoryContextEngine:
         if suffix != ".py":
             raise ContextPackError(f"unsupported source type {suffix!r}; only .py is admitted")
         if not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
-            raise ContextPackError("secure repository traversal is unsupported on this operating system")
+            raise ContextPackError(
+                "secure repository traversal is unsupported on this operating system"
+            )
         common_flags = os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
         directory_flags = common_flags | os.O_DIRECTORY
         directory_fd: int | None = None
@@ -271,7 +273,9 @@ class RepositoryContextEngine:
         if len(raw) > self.max_source_bytes:
             raise ContextPackError(f"source exceeds max_source_bytes: > {self.max_source_bytes}")
         if identity_before != identity_after or len(raw) != after.st_size:
-            raise ContextPackError("source changed while it was being read; retry with a fresh snapshot")
+            raise ContextPackError(
+                "source changed while it was being read; retry with a fresh snapshot"
+            )
         try:
             text = raw.decode("utf-8")
         except UnicodeDecodeError as exc:
@@ -307,7 +311,9 @@ class RepositoryContextEngine:
         collector = _ScopeCollector()
         collector.visit(tree)
         if requested_symbol:
-            exact = [scope for scope in collector.scopes if scope.qualified_name == requested_symbol]
+            exact = [
+                scope for scope in collector.scopes if scope.qualified_name == requested_symbol
+            ]
             if not exact:
                 raise ContextPackError(f"symbol not found: {requested_symbol}")
             selected = [
@@ -354,11 +360,15 @@ class RepositoryContextEngine:
         unique: dict[tuple[str, int, str], dict[str, Any]] = {}
         for item in evidence:
             unique[(item["kind"], item["line_start"], item["text"])] = item
-        evidence = sorted(unique.values(), key=lambda item: (item["line_start"], item["kind"], item["text"]))
+        evidence = sorted(
+            unique.values(), key=lambda item: (item["line_start"], item["kind"], item["text"])
+        )
         mandatory = [item for item in evidence if item["mandatory"]]
         optional = [item for item in evidence if not item["mandatory"]]
         priority = {"guard": 0, "raise": 1, "mutation": 2, "call": 3, "return": 4, "decorator": 5}
-        optional.sort(key=lambda item: (priority.get(item["kind"], 99), item["line_start"], item["text"]))
+        optional.sort(
+            key=lambda item: (priority.get(item["kind"], 99), item["line_start"], item["text"])
+        )
 
         def assemble(selected_evidence: list[dict[str, Any]]) -> dict[str, Any]:
             ordered = sorted(

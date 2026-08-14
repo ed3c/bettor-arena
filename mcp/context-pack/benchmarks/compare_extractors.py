@@ -58,7 +58,9 @@ def main() -> None:
     engine = RepositoryContextEngine(ROOT, cache_entries=0)
 
     signature_payload = signature_only(source)
-    evidence_payload = engine.build_python_context_pack(FIXTURE, symbol="Ledger.settle", max_bytes=8_000)
+    evidence_payload = engine.build_python_context_pack(
+        FIXTURE, symbol="Ledger.settle", max_bytes=8_000
+    )
     evidence_kinds = {item["kind"] for item in evidence_payload["evidence"]}
     warm_engine = RepositoryContextEngine(ROOT)
     warm_engine.build_python_context_pack(FIXTURE, symbol="Ledger.settle", max_bytes=8_000)
@@ -81,9 +83,7 @@ def main() -> None:
                 text=True,
             ).stdout.strip(),
             "benchmark_script_sha256": sha256_file(Path(__file__)),
-            "engine_sha256": sha256_file(
-                ROOT / "mcp/context-pack/src/context_pack_mcp/engine.py"
-            ),
+            "engine_sha256": sha256_file(ROOT / "mcp/context-pack/src/context_pack_mcp/engine.py"),
             "fixture_sha256": sha256_file(ROOT / FIXTURE),
             "uv_lock_sha256": sha256_file(ROOT / "mcp/context-pack/uv.lock"),
         },

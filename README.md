@@ -36,6 +36,32 @@ Read the exact mapping, rejected source shortcuts, gaps and acceptance criteria 
 The machine companion is
 [`docs/architecture/pdf-harness-integration.matrix.json`](docs/architecture/pdf-harness-integration.matrix.json).
 
+## LoopX Harness PDF integration verdict
+
+The narrower executable LoopX audit preserves the same boundary while mapping
+Objective/Todos/Gates/Evidence/Quota, Worker execution, single-writer state,
+HITL and episodic memory to current owners and explicit gaps. See
+[`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+and [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json).
+
+```sh
+python3 scripts/gates/check_pdf_loopx_harness_integration.py
+python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+```
+
+## Directory → State Machine → input/output/evidence
+
+The canonical detailed table remains the directory ownership matrix below and
+[`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md).
+The LoopX audit adds requirement-to-owner/input/output/evidence mappings without
+creating a second directory authority.
+
+## Git Town / molecular Stack PR index
+
+Git Town is optional local tooling. GitHub base/head metadata, exact-head checks
+and [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+are publication truth; a child merged to a feature base is not thereby on `main`.
+
 ## Read order
 
 1. [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md) — mandatory cross-host entry.

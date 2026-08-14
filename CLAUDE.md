@@ -15,18 +15,22 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, browser, origin, 
 5. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
 6. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
 7. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
-8. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-9. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-10. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-11. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-12. `sh loopctl/loopctl.sh contract`
-13. the target module/loop passive context, nearest README, machine manifest/contract, source and current proof/control/mutation receipts.
+8. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+9. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
+10. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+11. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+12. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+13. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+14. `sh loopctl/loopctl.sh contract`
+15. the target module/loop passive context, nearest README, machine manifest/contract, source and current proof/control/mutation receipts.
 
 Before claiming PDF integration, run:
 
 ```sh
 python3 scripts/gates/check_pdf_harness_integration.py
 python3 scripts/gates/check_pdf_harness_integration.py --selftest
+python3 scripts/gates/check_pdf_loopx_harness_integration.py
+python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
 ```
 
 ## Claude Code boundary
