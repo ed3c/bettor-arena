@@ -3,27 +3,58 @@
   "workflows": [
     {
       "workflow": ".github/workflows/modular-contracts.yml",
-      "local_covers": ["contracts"],
-      "local_command": ["sh", "scripts/gates/verify_modular_contracts.sh"],
+      "local_covers": [
+        "contracts"
+      ],
+      "local_command": [
+        "sh",
+        "scripts/gates/verify_modular_contracts.sh"
+      ],
       "note": "The repository's required workflow, declared in .github-delivery/ci-policy.json. The local command runs the same gates against the same eight generated projections; it does not run under the hosted image, the workflow token, or the artifact service."
     },
     {
       "workflow": ".github/workflows/pdf-terminal-sequence.yml",
-      "local_covers": ["sequence"],
-      "local_command": ["python3", "scripts/gates/check_pdf_terminal_sequence.py"],
+      "local_covers": [
+        "sequence"
+      ],
+      "local_command": [
+        "python3",
+        "scripts/gates/check_pdf_terminal_sequence.py"
+      ],
       "note": "Deterministic queue check with a selftest. The local and hosted commands are the same argv, which is what makes this entry a cheap comparison rather than an approximate one."
     },
     {
       "workflow": ".github/workflows/loopx-context-assembly.yml",
-      "local_covers": ["context-assembly"],
-      "local_command": ["sh", "loop_wiki/loopx-context-assembly/tests/run-all.sh"],
+      "local_covers": [
+        "context-assembly"
+      ],
+      "local_command": [
+        "sh",
+        "loop_wiki/loopx-context-assembly/tests/run-all.sh"
+      ],
       "note": "Module test runner. Its physical control group spawns subprocesses, so a local pass and a hosted pass can genuinely differ on process behaviour -- which is the case worth comparing."
     },
     {
       "workflow": ".github/workflows/loopx-notes-retrieval.yml",
-      "local_covers": ["knowledge-compiler"],
-      "local_command": ["sh", "loop_wiki/loopx-notes-retrieval/tests/run-all.sh"],
+      "local_covers": [
+        "knowledge-compiler"
+      ],
+      "local_command": [
+        "sh",
+        "loop_wiki/loopx-notes-retrieval/tests/run-all.sh"
+      ],
       "note": "Module test runner. The job name and the module name differ here on purpose: the index maps to the job the workflow declares, not to the name a reader would guess."
+    },
+    {
+      "workflow": ".github/workflows/harness-console.yml",
+      "local_covers": [
+        "harness-console"
+      ],
+      "local_command": [
+        "sh",
+        "tests/harness-console/run-all.sh"
+      ],
+      "note": "Console projection, bounded views and the signed request path. Its physical control spawns subprocesses and reads HITL_SIGNER_KEY from the environment, so the local and hosted runs genuinely differ in what is configured -- which is why the unset-key case is part of the control rather than something CI papers over."
     }
   ]
 }

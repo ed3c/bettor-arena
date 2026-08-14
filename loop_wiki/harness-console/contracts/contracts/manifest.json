@@ -1,0 +1,78 @@
+{
+  "console_marks_gate_pass": false,
+  "console_may": [
+    "REQUEST_CANCEL",
+    "REQUEST_CONTRACT_UPDATE",
+    "REQUEST_RETRY",
+    "REQUEST_SCOPED_EXCEPTION"
+  ],
+  "console_may_not": [
+    "HIDE_COMPLETED_WITH_EXCEPTION",
+    "MARK_GATE_PASS",
+    "MERGE",
+    "MUTATE_TASK_STATE",
+    "PERSIST_RAW_PAGE_BODY_OR_PRIVATE_REASONING",
+    "PROMOTE_RELEASE",
+    "ROLLBACK_PRODUCTION",
+    "UNSCOPED_FORCE_SKIP",
+    "WIDEN_TOOLS_PERMISSIONS_OR_SECRETS",
+    "WRITE_LEDGER_EVENT"
+  ],
+  "console_writes_ledger": false,
+  "exception_is_ordinary_completion": false,
+  "interface_version": "1.0.0",
+  "live_console_state": "NOT_EXERCISED",
+  "projection_authority": "READ_ONLY_PROJECTION",
+  "projection_is_rebuildable": true,
+  "render_state": "NOT_IMPLEMENTED",
+  "schema_version": "loopx/harness-console-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/harness-console/projection/v1",
+      "path": "console-projection.schema.json",
+      "sha256": "aa6fc5a432986d728f24e4edba9a1c2286fbbaf82dd34c2945866a428738ac32"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/harness-console/views/v1",
+      "path": "console-views.schema.json",
+      "sha256": "519df98ae338e58b985b7003cabfbf144ef8f393eaf2fb7f272322a94ad0e6d8"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/harness-console/decision-request/v1",
+      "path": "decision-request.schema.json",
+      "sha256": "7564cb6da3eb2196fdd2d8c40cfc80a1607cde8140778fcff6611f57559d6229"
+    }
+  ],
+  "signature_algorithm": "HMAC-SHA256",
+  "task_states": [
+    "BLOCKED",
+    "CANCELLED",
+    "COMPLETED",
+    "COMPLETED_WITH_EXCEPTION",
+    "FAILED",
+    "PENDING",
+    "RUNNING"
+  ],
+  "ui_states": [
+    "LEDGER_SUBJECT_SELECTED",
+    "REDACTED_PROJECTION_LOADED",
+    "TASK_TODO_ATTEMPT_GRAPH_RENDERED",
+    "EVIDENCE_DIFF_DIAGNOSTICS_INSPECTED",
+    "HITL_ACTION_DRAFTED",
+    "SIGNER_REVISION_LEDGER_HEAD_VERIFIED",
+    "DECISION_REQUEST_SUBMITTED",
+    "LOOPX_ACCEPTED_OR_REJECTED",
+    "REQUIRED_GATES_REVALIDATED",
+    "PROJECTION_REFRESHED"
+  ],
+  "views": [
+    "diagnostics_panel",
+    "gate_evidence_inspector",
+    "git_diff_viewer",
+    "hitl_dialog",
+    "provenance_panel",
+    "quota_retry_panel",
+    "receipt_links",
+    "thread_task_graph"
+  ]
+}
