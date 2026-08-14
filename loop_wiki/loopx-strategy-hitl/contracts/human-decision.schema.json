@@ -1,0 +1,88 @@
+{
+  "$id": "https://ed3c.example/loopx/human-decision.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "human_decision": {"const": true},
+        "performs_rollback": {"const": false},
+        "promotes_release": {"const": false},
+        "writes_gate_verdict": {"const": false},
+        "writes_loopx_state": {"const": false}
+      },
+      "required": ["human_decision", "writes_loopx_state", "writes_gate_verdict", "promotes_release", "performs_rollback"],
+      "type": "object"
+    },
+    "decision": {"enum": ["RETRY_AFTER_FIX", "UPDATE_CONTRACT", "CANCEL_TASK", "SCOPED_EXCEPTION"]},
+    "decision_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "decision_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "exception": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "additionalProperties": false,
+          "properties": {
+            "consequence": {"const": "COMPLETED_WITH_EXCEPTION"},
+            "exception_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+            "limitations": {"items": {"maxLength": 512, "minLength": 1, "type": "string"}, "minItems": 1, "type": "array"}
+          },
+          "required": ["exception_id", "limitations", "consequence"],
+          "type": "object"
+        }
+      ]
+    },
+    "expected_state_revision": {"minimum": 0, "type": "integer"},
+    "expires_at": {"format": "date-time", "type": "string"},
+    "interrupt_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "reason_ref": {"type": "object"},
+    "revalidation": {
+      "additionalProperties": false,
+      "properties": {
+        "before_resume": {"type": "boolean"},
+        "gate_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+        "required": {"type": "boolean"}
+      },
+      "required": ["required", "before_resume", "gate_ids"],
+      "type": "object"
+    },
+    "schema_version": {"const": "loopx/human-decision/v1"},
+    "scope": {
+      "additionalProperties": false,
+      "properties": {
+        "command_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+        "gate_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+        "todo_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true}
+      },
+      "required": ["todo_ids", "gate_ids", "command_ids"],
+      "type": "object"
+    },
+    "signature_ref": {"type": "object"},
+    "signature_verification": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {"type": "object"},
+        "state": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "verifier_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"}
+      },
+      "required": ["state", "verifier_digest", "artifact_ref"],
+      "type": "object"
+    },
+    "signed_at": {"format": "date-time", "type": "string"},
+    "signer": {
+      "additionalProperties": false,
+      "properties": {
+        "key_id": {"maxLength": 256, "minLength": 3, "type": "string"},
+        "principal_id": {"maxLength": 128, "minLength": 1, "type": "string"},
+        "role": {"enum": ["OWNER", "MAINTAINER", "SECURITY_APPROVER", "OPERATOR"]}
+      },
+      "required": ["principal_id", "role", "key_id"],
+      "type": "object"
+    },
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "decision_id", "subject", "interrupt_id", "expected_state_revision", "decision", "scope", "reason_ref", "signer", "signed_at", "expires_at", "decision_digest", "signature_ref", "signature_verification", "revalidation", "exception", "authority"],
+  "title": "LoopX Human Decision v1",
+  "type": "object"
+}
