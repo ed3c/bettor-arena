@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Run or inspect a LoopX Worker Gateway v1 request."""
+
 from __future__ import annotations
 
 import argparse
@@ -11,11 +13,13 @@ from gateway_common import BAD, OK, USAGE, ContractError, InputError, load_json
 from gateway_contract import validate_adapter, validate_request
 from gateway_runtime import run_fixture_or_implemented
 
+
 class UsageParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:
         self.print_usage(sys.stderr)
         print(f"FATAL: {message}", file=sys.stderr)
         raise SystemExit(USAGE)
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = UsageParser(description=__doc__)
@@ -28,6 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--receipt-id", required=True)
     run.add_argument("--allow-fixture-adapter", action="store_true")
     return parser
+
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
@@ -60,6 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"FATAL: {exc}", file=sys.stderr)
         return USAGE
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

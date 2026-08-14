@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Trusted-host execution and normalization for LoopX Worker Gateway v1."""
+
 from __future__ import annotations
 
 import copy
@@ -15,7 +17,12 @@ import tempfile
 from typing import Any
 
 from gateway_common import *
-from gateway_contract import validate_adapter, validate_event, validate_receipt, validate_request
+from gateway_contract import (
+    validate_adapter,
+    validate_event,
+    validate_receipt,
+    validate_request,
+)
 
 AUTHORITY_FALSE = {
     "wrote_loopx_state": False,
@@ -25,7 +32,10 @@ AUTHORITY_FALSE = {
     "wrote_durable_memory": False,
 }
 
-def run_git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+
+def run_git(
+    repo: Path, *args: str, check: bool = True
+) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
         ["git", "-C", str(repo), *args],
         stdin=subprocess.DEVNULL,
@@ -39,7 +49,15 @@ def run_git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedP
         raise InputError(f"git {' '.join(args)} failed: {result.stderr[-500:]}")
     return result
 
-def copy_artifact(data: bytes, output: Path, artifact_id: str, kind: str, producer: str, media_type: str) -> dict[str, Any]:
+
+def copy_artifact(
+    data: bytes,
+    output: Path,
+    artifact_id: str,
+    kind: str,
+    producer: str,
+    media_type: str,
+) -> dict[str, Any]:
     artifacts = output / "artifacts"
     artifacts.mkdir(parents=True, exist_ok=True)
     name = hashlib.sha256(data).hexdigest()
@@ -47,6 +65,7 @@ def copy_artifact(data: bytes, output: Path, artifact_id: str, kind: str, produc
     if not path.exists():
         path.write_bytes(data)
     return make_artifact(path, output, artifact_id, kind, producer, media_type)
+
 
 def nonexecution_receipt(
     request: dict[str, Any],
@@ -57,7 +76,14 @@ def nonexecution_receipt(
     reason: str,
 ) -> dict[str, Any]:
     events = b""
-    events_ref = copy_artifact(events, output, "worker-events", "WORKER_EVENT", "worker-gateway", "application/x-ndjson")
+    events_ref = copy_artifact(
+        events,
+        output,
+        "worker-events",
+        "WORKER_EVENT",
+        "worker-gateway",
+        "application/x-ndjson",
+    )
     receipt = {
         "schema_version": "loopx/worker-receipt/v1",
         "receipt_id": receipt_id,
@@ -70,7 +96,10 @@ def nonexecution_receipt(
             "binary_identity": None,
             "implementation_state": descriptor["implementation_state"],
         },
-        "skill": {"name": request["skill"]["name"], "digest": request["skill"]["digest"]},
+        "skill": {
+            "name": request["skill"]["name"],
+            "digest": request["skill"]["digest"],
+        },
         "context": {"digest": request["context"]["digest"]},
         "status": status,
         "executed": False,
@@ -97,15 +126,24 @@ def nonexecution_receipt(
     validate_receipt(receipt, request, descriptor)
     return receipt
 
+
 def ensure_request_subject(repo: Path, request: dict[str, Any]) -> None:
-    if not (repo / ".git").exists() and run_git(repo, "rev-parse", "--git-dir", check=False).returncode != 0:
+    if (
+        not (repo / ".git").exists()
+        and run_git(repo, "rev-parse", "--git-dir", check=False).returncode != 0
+    ):
         raise InputError(f"not a Git repository: {repo}")
     commit = run_git(repo, "rev-parse", request["subject"]["commit"]).stdout.strip()
-    tree = run_git(repo, "rev-parse", f"{request['subject']['commit']}^{{tree}}").stdout.strip()
+    tree = run_git(
+        repo, "rev-parse", f"{request['subject']['commit']}^{{tree}}"
+    ).stdout.strip()
     if commit != request["subject"]["commit"] or tree != request["subject"]["tree"]:
         raise ContractError("request subject does not match the source repository")
     prompt_path = repo / request["task"]["prompt_ref"]["path"]
-    if not prompt_path.is_file() or file_digest(prompt_path) != request["task"]["prompt_ref"]["digest"]:
+    if (
+        not prompt_path.is_file()
+        or file_digest(prompt_path) != request["task"]["prompt_ref"]["digest"]
+    ):
         raise ContractError("prompt artifact is absent or digest-mismatched")
     for entry in request["context"]["entry_files"]:
         if not (repo / entry).is_file():
@@ -115,6 +153,7 @@ def ensure_request_subject(repo: Path, request: dict[str, Any]) -> None:
         raise ContractError("Skill source is absent")
     if file_digest(skill_path) != request["skill"]["digest"]:
         raise ContractError("Skill digest mismatch")
+
 
 def changed_paths(worktree: Path) -> list[str]:
     result = run_git(worktree, "status", "--porcelain=v1", "-z")
@@ -129,6 +168,7 @@ def changed_paths(worktree: Path) -> list[str]:
         paths.append(value)
     return sorted(set(paths))
 
+
 def within_roots(path: str, roots: list[str]) -> bool:
     candidate = Path(path).as_posix()
     for root in roots:
@@ -136,6 +176,7 @@ def within_roots(path: str, roots: list[str]) -> bool:
         if candidate == normalized or candidate.startswith(normalized + "/"):
             return True
     return False
+
 
 def run_fixture_or_implemented(
     request: dict[str, Any],
@@ -147,11 +188,21 @@ def run_fixture_or_implemented(
     allow_fixture: bool,
 ) -> tuple[dict[str, Any], int]:
     if descriptor["implementation_state"] != "IMPLEMENTED":
-        status = "ABSENT" if descriptor["implementation_state"] == "ABSENT" else (
-            "SKIPPED_BY_POLICY" if descriptor["implementation_state"] == "SKIPPED_BY_POLICY" else "NOT_EXERCISED"
+        status = (
+            "ABSENT"
+            if descriptor["implementation_state"] == "ABSENT"
+            else (
+                "SKIPPED_BY_POLICY"
+                if descriptor["implementation_state"] == "SKIPPED_BY_POLICY"
+                else "NOT_EXERCISED"
+            )
         )
         receipt = nonexecution_receipt(
-            request, descriptor, output, status, receipt_id,
+            request,
+            descriptor,
+            output,
+            status,
+            receipt_id,
             f"adapter state is {descriptor['implementation_state']}; no live host execution was performed",
         )
         write_json_atomic(output / "receipt.json", receipt)
@@ -160,7 +211,11 @@ def run_fixture_or_implemented(
         raise ContractError("fixture adapter requires explicit --allow-fixture-adapter")
     if request["policy"]["network"] != "HOST_POLICY":
         receipt = nonexecution_receipt(
-            request, descriptor, output, "SKIPPED_BY_POLICY", receipt_id,
+            request,
+            descriptor,
+            output,
+            "SKIPPED_BY_POLICY",
+            receipt_id,
             "local gateway cannot attest requested network isolation; physical runtime adapter required",
         )
         write_json_atomic(output / "receipt.json", receipt)
@@ -177,13 +232,22 @@ def run_fixture_or_implemented(
     if not adapter_entry.is_file():
         raise ContractError(f"adapter entry is absent: {descriptor['adapter_entry']}")
 
-    with tempfile.TemporaryDirectory(prefix=f"loopx-worker-{request['host_id']}.") as temp:
+    with tempfile.TemporaryDirectory(
+        prefix=f"loopx-worker-{request['host_id']}."
+    ) as temp:
         temp_root = Path(temp)
         workspace = temp_root / "workspace"
         events_path = output / "events.jsonl"
         adapter_output = output / "adapter-output"
         adapter_output.mkdir(parents=True)
-        run_git(repo, "worktree", "add", "--detach", str(workspace), request["subject"]["commit"])
+        run_git(
+            repo,
+            "worktree",
+            "add",
+            "--detach",
+            str(workspace),
+            request["subject"]["commit"],
+        )
         timed_out = False
         cancelled = False
         killed = False
@@ -203,10 +267,14 @@ def run_fixture_or_implemented(
             argv = [
                 sys.executable,
                 str(adapter_entry),
-                "--request", str(canonical_request),
-                "--workspace", str(workspace),
-                "--events", str(events_path),
-                "--output", str(adapter_output),
+                "--request",
+                str(canonical_request),
+                "--workspace",
+                str(workspace),
+                "--events",
+                str(events_path),
+                "--output",
+                str(adapter_output),
             ]
             process = subprocess.Popen(
                 argv,
@@ -218,7 +286,9 @@ def run_fixture_or_implemented(
                 start_new_session=True,
             )
             try:
-                stdout, stderr = process.communicate(timeout=request["policy"]["timeout_ms"] / 1000)
+                stdout, stderr = process.communicate(
+                    timeout=request["policy"]["timeout_ms"] / 1000
+                )
                 exit_code = process.returncode
             except subprocess.TimeoutExpired:
                 timed_out = True
@@ -232,27 +302,62 @@ def run_fixture_or_implemented(
             changes = changed_paths(workspace)
             if request["task"]["mode"] == "READ_ONLY" and changes:
                 raise ContractError(f"read-only Worker changed paths: {changes}")
-            unauthorized = [path for path in changes if not within_roots(path, request["workspace"]["writable_paths"])]
+            unauthorized = [
+                path
+                for path in changes
+                if not within_roots(path, request["workspace"]["writable_paths"])
+            ]
             if unauthorized:
-                raise ContractError(f"Worker changed paths outside writable roots: {unauthorized}")
+                raise ContractError(
+                    f"Worker changed paths outside writable roots: {unauthorized}"
+                )
 
             events: list[dict[str, Any]] = []
             if events_path.exists():
-                for index, line in enumerate(events_path.read_text(encoding="utf-8").splitlines()):
+                for index, line in enumerate(
+                    events_path.read_text(encoding="utf-8").splitlines()
+                ):
                     if not line.strip():
                         continue
                     value = json.loads(line)
                     events.append(validate_event(value, request, descriptor, index))
             if not events or events[-1]["kind"] != "PROCESS_EXIT":
-                raise ContractError("Worker event stream lacks a terminal PROCESS_EXIT event")
+                raise ContractError(
+                    "Worker event stream lacks a terminal PROCESS_EXIT event"
+                )
             if events[-1]["payload"]["exit_code"] != exit_code:
                 raise ContractError("Worker event exit code disagrees with the OS")
 
-            stdout_ref = copy_artifact(stdout, output, "worker-stdout", "STDOUT", "worker-gateway", "text/plain")
-            stderr_ref = copy_artifact(stderr, output, "worker-stderr", "STDERR", "worker-gateway", "text/plain")
-            events_ref = copy_artifact(events_path.read_bytes(), output, "worker-events", "WORKER_EVENT", "worker-gateway", "application/x-ndjson")
-            diff = run_git(workspace, "diff", "--binary", "HEAD", check=False).stdout.encode("utf-8")
-            diff_ref = copy_artifact(diff, output, "worker-diff", "GIT_DIFF", "worker-gateway", "text/x-diff")
+            stdout_ref = copy_artifact(
+                stdout,
+                output,
+                "worker-stdout",
+                "STDOUT",
+                "worker-gateway",
+                "text/plain",
+            )
+            stderr_ref = copy_artifact(
+                stderr,
+                output,
+                "worker-stderr",
+                "STDERR",
+                "worker-gateway",
+                "text/plain",
+            )
+            events_ref = copy_artifact(
+                events_path.read_bytes(),
+                output,
+                "worker-events",
+                "WORKER_EVENT",
+                "worker-gateway",
+                "application/x-ndjson",
+            )
+            diff = run_git(
+                workspace, "diff", "--binary", "HEAD", check=False
+            ).stdout.encode("utf-8")
+            diff_ref = copy_artifact(
+                diff, output, "worker-diff", "GIT_DIFF", "worker-gateway", "text/x-diff"
+            )
             artifacts = [stdout_ref, stderr_ref, events_ref, diff_ref]
             status = "PASS" if exit_code == 0 and not timed_out else "FAIL"
         finally:
@@ -262,7 +367,11 @@ def run_fixture_or_implemented(
         residue = [] if cleanup_state == "PASS" else ["workspace"]
 
     completeness = descriptor["trace_ceiling"]
-    opaque = [] if completeness == "SOURCE_VERIFIED_INTERNAL" else ["hidden host/model internals remain UNKNOWN"]
+    opaque = (
+        []
+        if completeness == "SOURCE_VERIFIED_INTERNAL"
+        else ["hidden host/model internals remain UNKNOWN"]
+    )
     receipt = {
         "schema_version": "loopx/worker-receipt/v1",
         "receipt_id": receipt_id,
@@ -272,10 +381,15 @@ def run_fixture_or_implemented(
             "adapter_id": descriptor["adapter_id"],
             "host_id": descriptor["host_id"],
             "descriptor_digest": descriptor["content_digest"],
-            "binary_identity": f"{descriptor['binary']} fixture-adapter" if descriptor["host_id"] == "fixture-host" else descriptor["binary"],
+            "binary_identity": f"{descriptor['binary']} fixture-adapter"
+            if descriptor["host_id"] == "fixture-host"
+            else descriptor["binary"],
             "implementation_state": descriptor["implementation_state"],
         },
-        "skill": {"name": request["skill"]["name"], "digest": request["skill"]["digest"]},
+        "skill": {
+            "name": request["skill"]["name"],
+            "digest": request["skill"]["digest"],
+        },
         "context": {"digest": request["context"]["digest"]},
         "status": status,
         "executed": True,

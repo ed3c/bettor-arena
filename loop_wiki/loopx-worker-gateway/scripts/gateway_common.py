@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Deterministic primitives and validators for LoopX Worker Gateway v1."""
+
 from __future__ import annotations
 
 import copy
@@ -17,9 +19,19 @@ H40 = re.compile(r"^[0-9a-f]{40}$")
 ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 ENV = re.compile(r"^[A-Z][A-Z0-9_]{0,63}$")
-HOSTS = {"codex-cli", "claude-code", "grok-build", "opencode", "pi", "ante", "fixture-host"}
+HOSTS = {
+    "codex-cli",
+    "claude-code",
+    "grok-build",
+    "opencode",
+    "pi",
+    "ante",
+    "fixture-host",
+}
 STATUSES = {"PASS", "FAIL", "NOT_EXERCISED", "SKIPPED_BY_POLICY", "ABSENT"}
-SECRET_KEYS = re.compile(r"(?:^|_)(?:TOKEN|SECRET|PASSWORD|PASS|COOKIE|PRIVATE_KEY|API_KEY)(?:$|_)", re.I)
+SECRET_KEYS = re.compile(
+    r"(?:^|_)(?:TOKEN|SECRET|PASSWORD|PASS|COOKIE|PRIVATE_KEY|API_KEY)(?:$|_)", re.I
+)
 SECRET_VALUES = [
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
     re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
@@ -27,29 +39,45 @@ SECRET_VALUES = [
     re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{16,}", re.I),
 ]
 FORBIDDEN_AUTHORITY_KEYS = {
-    "gate_verdict", "gate_passed", "state_transition", "loopx_state",
-    "human_admit", "promotion", "rollback", "durable_memory_write",
-    "chain_of_thought", "thought_stream", "private_reasoning",
+    "gate_verdict",
+    "gate_passed",
+    "state_transition",
+    "loopx_state",
+    "human_admit",
+    "promotion",
+    "rollback",
+    "durable_memory_write",
+    "chain_of_thought",
+    "thought_stream",
+    "private_reasoning",
 }
+
 
 class ContractError(ValueError):
     pass
 
+
 class InputError(ValueError):
     pass
 
+
 def canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
 
 def digest(value: Any) -> str:
     raw = value if isinstance(value, (bytes, bytearray)) else canonical_bytes(value)
     return "sha256:" + hashlib.sha256(raw).hexdigest()
+
 
 def file_digest(path: Path) -> str:
     try:
         return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
     except OSError as exc:
         raise InputError(f"cannot read {path}: {exc}") from exc
+
 
 def load_json(path: Path) -> Any:
     try:
@@ -59,9 +87,13 @@ def load_json(path: Path) -> Any:
     except (OSError, json.JSONDecodeError) as exc:
         raise InputError(f"unreadable JSON: {path}: {exc}") from exc
 
+
 def write_json_atomic(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    raw = json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8") + b"\n"
+    raw = (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8")
+        + b"\n"
+    )
     fd, name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     temp = Path(name)
     try:
@@ -74,27 +106,33 @@ def write_json_atomic(path: Path, value: Any) -> None:
         if temp.exists():
             temp.unlink()
 
+
 def exact_object(value: Any, keys: set[str], label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ContractError(f"{label} must be an object")
     if set(value) != keys:
         raise ContractError(
-            f"{label} fields drifted; missing={sorted(keys-set(value))}, extra={sorted(set(value)-keys)}"
+            f"{label} fields drifted; missing={sorted(keys - set(value))}, extra={sorted(set(value) - keys)}"
         )
     return value
 
-def bounded(value: Any, label: str, maximum: int = 4096, allow_empty: bool = False) -> str:
+
+def bounded(
+    value: Any, label: str, maximum: int = 4096, allow_empty: bool = False
+) -> str:
     if not isinstance(value, str) or "\0" in value or len(value) > maximum:
         raise ContractError(f"{label} must be bounded text")
     if not allow_empty and not value.strip():
         raise ContractError(f"{label} is empty")
     return value
 
+
 def stable_id(value: Any, label: str) -> str:
     text = bounded(value, label, 128)
     if not ID.fullmatch(text):
         raise ContractError(f"{label} must be a stable lower identifier")
     return text
+
 
 def sha_ref(value: Any, label: str, nullable: bool = False) -> str | None:
     if value is None and nullable:
@@ -103,16 +141,26 @@ def sha_ref(value: Any, label: str, nullable: bool = False) -> str | None:
         raise ContractError(f"{label} must be sha256:<64 lower-hex>")
     return value
 
+
 def relpath(value: Any, label: str, allow_dot: bool = False) -> str:
     text = bounded(value, label, 512)
     if text == "." and allow_dot:
         return text
     path = PurePosixPath(text)
-    if "\\" in text or path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
+    if (
+        "\\" in text
+        or path.is_absolute()
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
         raise ContractError(f"{label} must be a normalized relative path")
-    if any(part.lower() in {".git", ".env", "credentials", "cookies", "auth.json", "keychain"} for part in path.parts):
+    if any(
+        part.lower()
+        in {".git", ".env", "credentials", "cookies", "auth.json", "keychain"}
+        for part in path.parts
+    ):
         raise ContractError(f"{label} enters a forbidden control/secret path")
     return text
+
 
 def validate_subject(value: Any, label: str) -> dict[str, Any]:
     subject = exact_object(value, {"repository", "commit", "tree", "task_id"}, label)
@@ -124,13 +172,20 @@ def validate_subject(value: Any, label: str) -> dict[str, Any]:
     stable_id(subject["task_id"], f"{label}.task_id")
     return subject
 
+
 def validate_artifact(value: Any, label: str) -> dict[str, Any]:
     keys = {"artifact_id", "kind", "path", "digest", "bytes", "media_type", "producer"}
     artifact = exact_object(value, keys, label)
     stable_id(artifact["artifact_id"], f"{label}.artifact_id")
     if artifact["kind"] not in {
-        "STDOUT", "STDERR", "GIT_DIFF", "FILE", "TRACE",
-        "WORKER_EVENT", "PROCESS_TREE", "CLEANUP_REPORT"
+        "STDOUT",
+        "STDERR",
+        "GIT_DIFF",
+        "FILE",
+        "TRACE",
+        "WORKER_EVENT",
+        "PROCESS_TREE",
+        "CLEANUP_REPORT",
     }:
         raise ContractError(f"{label}.kind is unsupported")
     relpath(artifact["path"], f"{label}.path")
@@ -141,6 +196,7 @@ def validate_artifact(value: Any, label: str) -> dict[str, Any]:
     stable_id(artifact["producer"], f"{label}.producer")
     return artifact
 
+
 def verify_content_digest(value: dict[str, Any], label: str) -> None:
     observed = value.get("content_digest")
     raw = copy.deepcopy(value)
@@ -148,15 +204,19 @@ def verify_content_digest(value: dict[str, Any], label: str) -> None:
     if observed != digest(raw):
         raise ContractError(f"{label}.content_digest mismatch")
 
+
 def reject_authority_or_private_fields(value: Any, label: str) -> None:
     if isinstance(value, dict):
         for key, child in value.items():
             if str(key).lower() in FORBIDDEN_AUTHORITY_KEYS:
-                raise ContractError(f"{label} contains forbidden authority/private field: {key}")
+                raise ContractError(
+                    f"{label} contains forbidden authority/private field: {key}"
+                )
             reject_authority_or_private_fields(child, f"{label}.{key}")
     elif isinstance(value, list):
         for index, child in enumerate(value):
             reject_authority_or_private_fields(child, f"{label}[{index}]")
+
 
 def reject_secret_payload(value: Any, label: str) -> None:
     if isinstance(value, dict):
@@ -172,7 +232,10 @@ def reject_secret_payload(value: Any, label: str) -> None:
             if pattern.search(value):
                 raise ContractError(f"{label} contains secret-shaped value")
 
-def make_artifact(path: Path, root: Path, artifact_id: str, kind: str, producer: str, media_type: str) -> dict[str, Any]:
+
+def make_artifact(
+    path: Path, root: Path, artifact_id: str, kind: str, producer: str, media_type: str
+) -> dict[str, Any]:
     try:
         relative = path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError as exc:
