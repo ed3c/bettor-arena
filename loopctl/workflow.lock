@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "8629caf582740a1cf3e101dcb391fa02aee05860",
+  "workflow_commit": "4bcd856502082e9390e4201ca354ee6330ddb268",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-8629caf58274-dirty.json",
-    "container": "container-8629caf58274-dirty.json",
-    "ctg": "ctg-8629caf58274-dirty.json",
-    "equivalence": "equivalence-8629caf58274-dirty.json",
-    "harness": "harness-8629caf58274-dirty.json",
-    "macro": "macro-8629caf58274-dirty.json",
-    "micro": "micro-8629caf58274-dirty.json",
-    "notebooklm": "notebooklm-8629caf58274-dirty.json",
-    "openwiki": "openwiki-8629caf58274-dirty.json",
-    "policy": "policy-8629caf58274-dirty.json",
-    "skill-execution": "skill-execution-8629caf58274-dirty.json",
-    "workflow": "workflow-8629caf58274-dirty.json"
+    "agent-runtime": "agent-runtime-4bcd85650208-dirty.json",
+    "container": "container-4bcd85650208-dirty.json",
+    "ctg": "ctg-4bcd85650208-dirty.json",
+    "equivalence": "equivalence-4bcd85650208-dirty.json",
+    "harness": "harness-4bcd85650208-dirty.json",
+    "macro": "macro-4bcd85650208-dirty.json",
+    "micro": "micro-4bcd85650208-dirty.json",
+    "notebooklm": "notebooklm-4bcd85650208-dirty.json",
+    "openwiki": "openwiki-4bcd85650208-dirty.json",
+    "policy": "policy-4bcd85650208-dirty.json",
+    "skill-execution": "skill-execution-4bcd85650208-dirty.json",
+    "workflow": "workflow-4bcd85650208-dirty.json"
   },
   "counts": {
     "artifact": 32,
     "context": 61,
     "harness": 143
   },
-  "workflow_digest": "af551e25d306a28cf6428eac7b43a36602fff294b95bda3bb6e63facbbea7b22",
+  "workflow_digest": "ecbbfaaebe8d66f17988d956347ef9b6ded3a77b4c6dfa68a615d6f1503b9c87",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -237,7 +237,7 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-8629caf582740a1cf3e101dcb391fa02aee05860.json": {
+    "data/receipts/post-commit-4bcd856502082e9390e4201ca354ee6330ddb268.json": {
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "hash_source": "index",
       "kind": "artifact",

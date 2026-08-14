@@ -1,0 +1,78 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/store-manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "contract_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "contract_path": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "events_path": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/ledger-store/v1"
+    },
+    "snapshot_path": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "writer_policy": {
+      "const": "POSIX_FLOCK_SINGLE_WRITER"
+    }
+  },
+  "required": [
+    "schema_version",
+    "subject",
+    "contract_digest",
+    "contract_path",
+    "events_path",
+    "snapshot_path",
+    "writer_policy",
+    "created_at",
+    "content_digest"
+  ],
+  "title": "loopx/ledger-store/v1",
+  "type": "object"
+}
