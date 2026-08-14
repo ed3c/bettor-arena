@@ -4,7 +4,7 @@
 >
 > Source class: `REQUIREMENT_HYPOTHESIS`. The PDF is an architecture proposal and example collection. It is not evidence that a provider, model, sandbox, memory layer, UI, latency target, resource figure, or workflow is present or healthy in this repository.
 >
-> Audit subject: `ed3c/bettor-arena@77267aba27ad94dde85a4dbda7dacc70a3057fb0`, tree `2083db19a1bd9e50e5e9015861190cf98a041a8a`.
+> Audited semantic baseline: `ed3c/bettor-arena@77267aba27ad94dde85a4dbda7dacc70a3057fb0`, tree `2083db19a1bd9e50e5e9015861190cf98a041a8a`. Current PR publication base: `main@9a5549e9994a7915201862a3e76be9906a4be13c`. The five intervening commits add only probe/NOOP files and do not alter the module/runtime evidence used by this audit.
 
 Machine-readable contract:
 
@@ -188,19 +188,21 @@ E2B, Firecracker, OpenShell, Daytona, containers, WASM or another runtime may im
 Git Town is optional local tooling. GitHub base/head metadata and exact-head checks are publication truth.
 
 ```text
-current main @ 77267aba27ad94dde85a4dbda7dacc70a3057fb0
+current publication base main @ 9a5549e9994a7915201862a3e76be9906a4be13c
 ├─ #43 repo-agent-native binding                              MERGED TO MAIN
 ├─ #51 knowledge-provider contracts + current runner bytes    MERGED TO MAIN
 ├─ #57 first PDF modular traceability                         MERGED TO MAIN
 ├─ #53 historical portable-Skill convergence                  OPEN / DIVERGED / SUPERSEDED CANDIDATE
 ├─ #56 provider admission evaluations                         OPEN / RED EXACT HEAD
 ├─ #58 runtime-env + Agent Shield second-PDF audit             OPEN DRAFT / BASE MAIN
-└─ LoopX PDF executable traceability leaf                     THIS WORKSTREAM
+└─ #60 LoopX PDF executable traceability                      OPEN / MERGEABLE / HUMAN REVIEW
 ```
 
 The portable Skill mechanism is present on current `main`: the module manifest selects `portable_skill_execution`, provides `skill-execution.runner/v1`, and the public contract contains `skill-execution` run/prove/test commands. PR #53 is therefore not the current integration authority. It is a stale/diverged historical convergence branch whose remaining unique delta must be compared before a Human closes or supersedes it.
 
 PR #56’s dedicated fixture evaluator is green, but its current exact head has stale generated modular projections. It is not merge-authorized, and fixture PASS does not prove live Serena, GrepAI, Code-Graph-RAG or Mem0 capability.
+
+PR #58 remains a Draft documentation audit. PR #60 is the current executable LoopX traceability leaf; exact-head checks must be rerun after every metadata or Context Capsule update. Human Admit owns merge, promotion and rollback.
 
 Whenever a base/head or check state changes, update:
 
