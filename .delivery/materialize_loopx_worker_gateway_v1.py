@@ -90,6 +90,16 @@ def main() -> int:
         finally:
             if temp.exists():
                 temp.unlink()
+
+    # The reviewed payload contained one Markdown hard-break marker. Repository
+    # delivery policy forbids trailing whitespace, so normalize that text-only
+    # presentation byte without changing any machine contract or executable.
+    module_readme = ROOT / ".arena/modules/loopx-worker-gateway/README.md"
+    readme_text = module_readme.read_text(encoding="utf-8")
+    normalized = "\n".join(line.rstrip() for line in readme_text.splitlines()) + "\n"
+    if normalized != readme_text:
+        module_readme.write_text(normalized, encoding="utf-8")
+
     if CORRUPT_ARCHIVE.exists():
         CORRUPT_ARCHIVE.unlink()
     for name, _ in CHUNKS:
