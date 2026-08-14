@@ -171,6 +171,35 @@ typed packet
 
 Micro cannot merge, promote, widen permissions or Human Admit.
 
+## Missing LoopX state machine
+
+```text
+INIT
+→ OBJECTIVE_LOCKED
+→ TODO_READY
+→ DISPATCHED
+→ RUNNING
+→ VERIFYING
+   ├─ GATES_PASSED → MEMORY_PROPOSED → READY_FOR_ADMIT
+   ├─ RETRYABLE_FAILURE → RETRY_SCHEDULED
+   ├─ QUOTA_EXCEEDED → HITL_WAIT
+   ├─ CAPABILITY_MISMATCH → HANDOFF_REQUIRED
+   ├─ BLOCKED
+   └─ FAILED_TERMINAL
+```
+
+Required authority rule:
+
+```text
+strategy graph proposes
+worker executes
+gates observe
+LoopX reducer alone commits
+Human alone admits
+```
+
+The current repository does not yet provide this reducer or ledger.
+
 ## Proposed LoopX authority
 
 ```text

@@ -1,5 +1,5 @@
 {
-  "content_sha256": "54069bfe4f3c5fb9153b023e7bb132601bdf3070d2e8b84660b8d608cc731944",
+  "content_sha256": "2d68d170311831a411a3f748600663b13ac5980d467418c9908ad44cbfa764c6",
   "contexts": [
     {
       "common": [
@@ -396,7 +396,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "7addfe04e665db599b633ba539c527941c7a05ce8273e6659447fa3a65ae339d",
+      "context_sha256": "fc2d9ba44723ab750ea9e4d3019c4d4164eb0ffe4dbe73dbd461fccafe7249ac",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -435,7 +435,7 @@
           "path": "docs/agent-runtime-integration.md"
         },
         {
-          "blob": "7878800bddaecd259884d930d7c35024f9fbb2ff",
+          "blob": "bc1c8d4942b3961d45da532a15e2070dbc0896df",
           "mode": "100644",
           "path": "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md"
         },
