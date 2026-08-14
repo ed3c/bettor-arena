@@ -1,0 +1,135 @@
+{
+  "evidence_scope": "CONTRACT_ONLY",
+  "hosts": [
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "codex",
+        "filesystem_attestation": "NONE",
+        "kind": "PROCESS",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "SOURCE_VISIBLE_HOST",
+      "display_name": "Codex CLI",
+      "host_id": "codex-cli",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["AGENTS.override.md", "AGENTS.md"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".agents/skills/**/SKILL.md", ".codex/skills/**/SKILL.md"],
+      "source_identity": null,
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "CLI"
+    },
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "claude",
+        "filesystem_attestation": "NONE",
+        "kind": "PROCESS",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "GRAY_BOX_HOST",
+      "display_name": "Claude Code",
+      "host_id": "claude-code",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["CLAUDE.md", "AGENTS.md"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".claude/skills/**/SKILL.md"],
+      "source_identity": null,
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "CLI"
+    },
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "grok",
+        "filesystem_attestation": "NONE",
+        "kind": "ACP",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "SOURCE_VISIBLE_HOST",
+      "display_name": "Grok Build",
+      "host_id": "grok-build",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["AGENTS.md", "CLAUDE.md"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".grok/skills/**/SKILL.md", ".agents/skills/**/SKILL.md"],
+      "source_identity": {
+        "commit": "e5fd4816d43260c15ba785f103990c1ed6cea230",
+        "repository": "xai-org/grok-build"
+      },
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "ACP"
+    },
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "opencode",
+        "filesystem_attestation": "NONE",
+        "kind": "PROCESS",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "SOURCE_VISIBLE_HOST",
+      "display_name": "OpenCode",
+      "host_id": "opencode",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["AGENTS.md", "opencode.json"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".opencode/skills/**/SKILL.md", ".agents/skills/**/SKILL.md", ".claude/skills/**/SKILL.md"],
+      "source_identity": null,
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "CLI"
+    },
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "pi",
+        "filesystem_attestation": "NONE",
+        "kind": "RPC",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "SOURCE_VISIBLE_HOST",
+      "display_name": "Pi",
+      "host_id": "pi",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["AGENTS.md"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".pi/skills/**/SKILL.md", ".agents/skills/**/SKILL.md"],
+      "source_identity": null,
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "RPC"
+    },
+    {
+      "adapter": {
+        "argv_prefix": [],
+        "binary": "ante",
+        "filesystem_attestation": "NONE",
+        "kind": "JSONL",
+        "network_attestation": "NONE",
+        "supports_process_group_kill": true,
+        "version_argv": ["--version"]
+      },
+      "classification": "EXPERIMENTAL_GRAY_BOX_HOST",
+      "display_name": "Ante",
+      "host_id": "ante",
+      "implementation_state": "NOT_EXERCISED",
+      "instruction_route": ["AGENTS.md", "CLAUDE.md"],
+      "schema_version": "loopx/worker-host-descriptor/v1",
+      "skill_discovery": [".ante/skills/**/SKILL.md", ".agents/skills/**/SKILL.md", ".claude/skills/**/SKILL.md"],
+      "source_identity": null,
+      "trace_ceiling": "PROCESS_ONLY",
+      "transport": "JSONL"
+    }
+  ],
+  "schema_version": "loopx/worker-host-registry/v1"
+}
