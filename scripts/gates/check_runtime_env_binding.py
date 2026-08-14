@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Validate bettor-arena's runtime-env consumer binding without network access.
 
-The default mode reads worktree files. ``--staged`` reads every projection from
-Git's index, which is the pre-commit contract: judge exactly the bytes being
-committed and never consult a sibling runtime-env checkout. Upstream freshness
-is deliberately outside this gate and is checked explicitly with
-``runtime-env sync --check``.
+The default and ``--staged`` modes delegate to the immutable, user-installed
+``runtime-env verify-consumer`` public seam. They never consult a sibling
+runtime-env checkout. The internal validator remains only as a hermetic
+positive/negative selftest for this repository's public gate contract.
 
 Exit codes: 0 valid · 2 missing/drifted/unsafe binding · 64 usage or Git failure.
 Selftest: --selftest runs good and planted-bad controls without network access.
@@ -15,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -586,7 +586,24 @@ def main(argv: list[str]) -> int:
     if root is None:
         print("check_runtime_env_binding: not inside a git work tree", file=sys.stderr)
         return 64
-    return run(root, staged=argv == ["--staged"])
+    runtime_env = Path.home() / ".local" / "bin" / "runtime-env"
+    if not runtime_env.is_file() or not os.access(runtime_env, os.X_OK):
+        print(
+            f"check_runtime_env_binding: installed verifier is unavailable: {runtime_env}",
+            file=sys.stderr,
+        )
+        return 64
+    command = [
+        str(runtime_env),
+        "verify-consumer",
+        "--target-root",
+        str(root),
+        "--binding",
+        BINDING_ID,
+    ]
+    if argv == ["--staged"]:
+        command.append("--staged")
+    return subprocess.run(command, check=False).returncode
 
 
 if __name__ == "__main__":

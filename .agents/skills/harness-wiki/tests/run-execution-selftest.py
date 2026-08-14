@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Synthetic positive and negative controls for portable Skill execution."""
+
 from __future__ import annotations
 
 import argparse
@@ -119,8 +120,7 @@ def fixture(base: Path) -> tuple[Path, dict[str, Any], dict[str, Any]]:
         encoding="utf-8",
     )
     (repo / "scripts" / "write_outside.py").write_text(
-        "from pathlib import Path\n"
-        "Path('src/forbidden.txt').write_text('bad')\n",
+        "from pathlib import Path\nPath('src/forbidden.txt').write_text('bad')\n",
         encoding="utf-8",
     )
     git(repo, "add", ".")
@@ -163,7 +163,7 @@ def fixture(base: Path) -> tuple[Path, dict[str, Any], dict[str, Any]]:
                 "severity": "hard",
                 "expected": {
                     "path": "artifacts/result.json",
-                    "contains": "\"ok\": true",
+                    "contains": '"ok": true',
                 },
                 "evidence_required": ["artifact_digest"],
             },
@@ -280,9 +280,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     failures: list[object] = []
 
-    with tempfile.TemporaryDirectory(
-        prefix="skill-exec-selftest."
-    ) as temporary:
+    with tempfile.TemporaryDirectory(prefix="skill-exec-selftest.") as temporary:
         base = Path(temporary)
         repo, request, assertions = fixture(base)
         result, receipt, _ = execute_case(
@@ -299,9 +297,7 @@ def main(argv: list[str] | None = None) -> int:
             or receipt["status"] != "PASS"
             or receipt["cleanup"]["status"] != "PASS"
         ):
-            failures.append(
-                ("good", result.returncode, result.stderr, receipt)
-            )
+            failures.append(("good", result.returncode, result.stderr, receipt))
 
         cases: list[
             tuple[
@@ -325,9 +321,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         candidate = copy.deepcopy(request)
         candidate["assertion_set"]["digest"] = "sha256:" + "0" * 64
-        cases.append(
-            ("assertion-digest", candidate, assertions, 2, "FAIL")
-        )
+        cases.append(("assertion-digest", candidate, assertions, 2, "FAIL"))
         candidate = copy.deepcopy(request)
         candidate["skill"]["content_digest"] = "sha256:" + "0" * 64
         cases.append(("skill-digest", candidate, assertions, 2, "FAIL"))
@@ -348,12 +342,9 @@ def main(argv: list[str] | None = None) -> int:
         changed_assertions["assertions"] = [
             item
             for item in changed_assertions["assertions"]
-            if item["id"]
-            not in {"result-exists", "result-content", "stdout-json"}
+            if item["id"] not in {"result-exists", "result-content", "stdout-json"}
         ]
-        candidate["assertion_set"]["digest"] = digest_json(
-            changed_assertions
-        )
+        candidate["assertion_set"]["digest"] = digest_json(changed_assertions)
         cases.append(
             (
                 "diff-boundary",
@@ -374,9 +365,7 @@ def main(argv: list[str] | None = None) -> int:
                 "evidence_required": [],
             }
         )
-        candidate["assertion_set"]["digest"] = digest_json(
-            changed_assertions
-        )
+        candidate["assertion_set"]["digest"] = digest_json(changed_assertions)
         cases.append(
             (
                 "unsupported",
@@ -404,9 +393,7 @@ def main(argv: list[str] | None = None) -> int:
                 or receipt is None
                 or receipt["status"] != expected_status
             ):
-                failures.append(
-                    (name, result.returncode, result.stderr, receipt)
-                )
+                failures.append((name, result.returncode, result.stderr, receipt))
 
         request_path = base / "collision.request.json"
         assertion_path = base / "collision.assertions.json"
@@ -461,8 +448,7 @@ def main(argv: list[str] | None = None) -> int:
             print(repr(failure), file=sys.stderr)
         return 2
     print(
-        "portable skill execution selftest: PASS "
-        "(1 positive, 10 independent negatives)"
+        "portable skill execution selftest: PASS (1 positive, 10 independent negatives)"
     )
     return 0
 

@@ -10,6 +10,7 @@ Exit codes:
   2  checked request was refused, execution failed, or a hard assertion failed
  64  usage/input/tool failure that prevented a meaningful checked run
 """
+
 from __future__ import annotations
 
 import argparse
@@ -220,11 +221,7 @@ def json_path_get(value: Any, path: str) -> Any:
     for part in path.split("."):
         if isinstance(current, dict) and part in current:
             current = current[part]
-        elif (
-            isinstance(current, list)
-            and part.isdigit()
-            and int(part) < len(current)
-        ):
+        elif isinstance(current, list) and part.isdigit() and int(part) < len(current):
             current = current[int(part)]
         else:
             raise KeyError(path)
@@ -250,8 +247,7 @@ def evaluate_assertion(
             head = run_git(worktree, "rev-parse", "HEAD").stdout.strip()
             tree = run_git(worktree, "rev-parse", "HEAD^{tree}").stdout.strip()
             passed = head == request["subject"]["commit"] and (
-                "tree" not in request["subject"]
-                or tree == request["subject"]["tree"]
+                "tree" not in request["subject"] or tree == request["subject"]["tree"]
             )
             evidence = [f"commit:{head}", f"tree:{tree}"]
         elif kind == "exit_code":
@@ -260,13 +256,11 @@ def evaluate_assertion(
         elif kind == "stderr_pattern":
             text = stderr.decode("utf-8", errors="replace")
             if "absent" in expected:
-                passed = re.search(
-                    str(expected["absent"]), text, re.MULTILINE
-                ) is None
+                passed = re.search(str(expected["absent"]), text, re.MULTILINE) is None
             elif "matches" in expected:
-                passed = re.search(
-                    str(expected["matches"]), text, re.MULTILINE
-                ) is not None
+                passed = (
+                    re.search(str(expected["matches"]), text, re.MULTILINE) is not None
+                )
             else:
                 raise ContractError(
                     "stderr_pattern expected requires absent or matches"
@@ -301,11 +295,7 @@ def evaluate_assertion(
             )
             if kind == "file_exists":
                 wanted_kind = expected.get("kind", "file")
-                passed = (
-                    path.is_file()
-                    if wanted_kind == "file"
-                    else path.is_dir()
-                )
+                passed = path.is_file() if wanted_kind == "file" else path.is_dir()
                 evidence = [f"path:{relative}"]
             elif not path.is_file() or path.is_symlink():
                 passed = False
@@ -344,16 +334,12 @@ def evaluate_assertion(
                     "git_diff_allowlist expected.paths must be an array"
                 )
             passed = all(
-                path_within(path, [str(item) for item in allowed])
-                for path in changes
+                path_within(path, [str(item) for item in allowed]) for path in changes
             )
             required = expected.get("required_paths", [])
             if isinstance(required, list):
                 passed = passed and all(
-                    any(
-                        path_within(path, [str(item)])
-                        for path in changes
-                    )
+                    any(path_within(path, [str(item)]) for path in changes)
                     for item in required
                 )
             evidence = ["changed:" + ",".join(changes)]
@@ -371,15 +357,12 @@ def evaluate_assertion(
                 else value
             )
             if not isinstance(diagnostics, list):
-                raise ContractError(
-                    "lsp diagnostics artifact has no diagnostics array"
-                )
+                raise ContractError("lsp diagnostics artifact has no diagnostics array")
             errors = sum(
                 1
                 for item in diagnostics
                 if isinstance(item, dict)
-                and str(item.get("severity", "")).lower()
-                in {"error", "1"}
+                and str(item.get("severity", "")).lower() in {"error", "1"}
             )
             passed = errors <= int(expected.get("max_errors", 0))
             evidence = [
@@ -404,9 +387,9 @@ def evaluate_assertion(
                 for node in root.iter()
                 if node.tag.endswith("testsuite")
             )
-            passed = failures <= int(
-                expected.get("max_failures", 0)
-            ) and errors <= int(expected.get("max_errors", 0))
+            passed = failures <= int(expected.get("max_failures", 0)) and errors <= int(
+                expected.get("max_errors", 0)
+            )
             evidence = [
                 write_artifact(artifact_store, path.read_bytes()),
                 f"tests_failures:{failures}",
@@ -423,9 +406,7 @@ def evaluate_assertion(
         json.JSONDecodeError,
         ET.ParseError,
     ) as exc:
-        return "ERROR", [
-            f"assertion_error:{type(exc).__name__}:{exc}"
-        ]
+        return "ERROR", [f"assertion_error:{type(exc).__name__}:{exc}"]
 
 
 def result_rows(
@@ -499,9 +480,7 @@ def write_receipt(
     assertions: dict[str, Any],
 ) -> None:
     (output / "request.json").write_bytes(canonical_bytes(request) + b"\n")
-    (output / "assertions.json").write_bytes(
-        canonical_bytes(assertions) + b"\n"
-    )
+    (output / "assertions.json").write_bytes(canonical_bytes(assertions) + b"\n")
     temp = output / "receipt.json.tmp"
     temp.write_bytes(
         json.dumps(
@@ -547,15 +526,11 @@ def execute(
     cleanup_status = "PASS"
     residue: list[str] = []
     status = "ERROR"
-    network_mode = str(
-        request.get("sandbox", {}).get("network", "unknown")
-    )
+    network_mode = str(request.get("sandbox", {}).get("network", "unknown"))
     command_digest = digest_json(request.get("command", {}))
 
     try:
-        contract_errors = validate_request(request) + validate_assertions(
-            assertions
-        )
+        contract_errors = validate_request(request) + validate_assertions(assertions)
         if contract_errors:
             raise ContractError("; ".join(contract_errors))
         if request["assertion_set"]["id"] != assertions.get("id"):
@@ -575,12 +550,9 @@ def execute(
             if definition.get("type") not in SUPPORTED_ASSERTIONS
         )
         if unsupported:
-            raise ContractError(
-                f"unsupported assertion type(s): {unsupported}"
-            )
+            raise ContractError(f"unsupported assertion type(s): {unsupported}")
         if any(
-            SENSITIVE_ENV.search(name)
-            for name in request["command"]["env_allowlist"]
+            SENSITIVE_ENV.search(name) for name in request["command"]["env_allowlist"]
         ):
             raise ContractError(
                 "secret-bearing environment names are not admitted by the local runner"
@@ -589,12 +561,9 @@ def execute(
         declared_exists = {
             item.get("expected", {}).get("path")
             for item in assertions["assertions"]
-            if item.get("type") == "file_exists"
-            and item.get("severity") == "hard"
+            if item.get("type") == "file_exists" and item.get("severity") == "hard"
         }
-        missing_assertions = sorted(
-            set(expected_artifacts) - declared_exists
-        )
+        missing_assertions = sorted(set(expected_artifacts) - declared_exists)
         if missing_assertions:
             raise ContractError(
                 "expected artifacts lack hard file_exists assertions: "
@@ -608,9 +577,7 @@ def execute(
             )
             raise RuntimeError("POLICY_SKIP")
         if request["sandbox"]["cleanup"] != "required":
-            raise ContractError(
-                "v1 public runner requires cleanup=required"
-            )
+            raise ContractError("v1 public runner requires cleanup=required")
 
         repo = repo.resolve()
         if not (repo / ".git").exists():
@@ -630,10 +597,7 @@ def execute(
             "rev-parse",
             f"{commit}^{{tree}}",
         ).stdout.strip()
-        if (
-            "tree" in request["subject"]
-            and observed_tree != request["subject"]["tree"]
-        ):
+        if "tree" in request["subject"] and observed_tree != request["subject"]["tree"]:
             raise ContractError(
                 "tree mismatch: "
                 f"request={request['subject']['tree']} "
@@ -665,9 +629,7 @@ def execute(
             env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
         )
         if result.returncode != 0:
-            raise ContractError(
-                result.stderr.strip() or "git worktree add failed"
-            )
+            raise ContractError(result.stderr.strip() or "git worktree add failed")
         head = run_git(worktree, "rev-parse", "HEAD").stdout.strip()
         tree = run_git(
             worktree,
@@ -692,9 +654,7 @@ def execute(
             "skill.canonical_source",
         )
         if not (skill_path / "SKILL.md").is_file():
-            raise ContractError(
-                f"canonical Skill is absent: {skill_rel}/SKILL.md"
-            )
+            raise ContractError(f"canonical Skill is absent: {skill_rel}/SKILL.md")
         observed_skill_digest = directory_digest(skill_path)
         if observed_skill_digest != request["skill"]["content_digest"]:
             raise ContractError(
@@ -709,9 +669,7 @@ def execute(
             "command.cwd",
         )
         if not cwd.is_dir():
-            raise ContractError(
-                f"command.cwd is absent: {request['command']['cwd']}"
-            )
+            raise ContractError(f"command.cwd is absent: {request['command']['cwd']}")
         executable_name = request["command"]["executable"]
         if "/" in executable_name:
             executable = inside(
@@ -720,9 +678,7 @@ def execute(
                 "command.executable",
             )
             if not executable.is_file():
-                raise ContractError(
-                    f"command executable is absent: {executable_name}"
-                )
+                raise ContractError(f"command executable is absent: {executable_name}")
             executable_value = str(executable)
         else:
             resolved = shutil.which(executable_name)
@@ -751,17 +707,16 @@ def execute(
         input_data: bytes | None = None
         if stdin_spec["mode"] == "literal":
             stdin_value = subprocess.PIPE
-            input_data = str(stdin_spec.get("literal", "")).encode(
-                "utf-8"
-            )
+            input_data = str(stdin_spec.get("literal", "")).encode("utf-8")
 
         stdout_path = output / "stdout.raw"
         stderr_path = output / "stderr.raw"
         timeout_seconds = request["command"]["timeout_ms"] / 1000.0
         executed = True
-        with stdout_path.open("wb") as stdout_file, stderr_path.open(
-            "wb"
-        ) as stderr_file:
+        with (
+            stdout_path.open("wb") as stdout_file,
+            stderr_path.open("wb") as stderr_file,
+        ):
             process = subprocess.Popen(
                 [executable_value, *request["command"]["argv"]],
                 cwd=cwd,
@@ -779,8 +734,7 @@ def execute(
                 exit_code = process.wait(timeout=timeout_seconds)
             except subprocess.TimeoutExpired:
                 diagnostics.append(
-                    "command timed out after "
-                    f"{request['command']['timeout_ms']}ms"
+                    f"command timed out after {request['command']['timeout_ms']}ms"
                 )
                 try:
                     os.killpg(process.pid, signal.SIGKILL)
@@ -804,20 +758,10 @@ def execute(
         changes = changed_paths(worktree)
         writable = request["sandbox"]["writable_paths"]
         read_only = request["sandbox"]["read_only_paths"]
-        illegal = [
-            path
-            for path in changes
-            if not path_within(path, writable)
-        ]
-        readonly_changes = [
-            path
-            for path in changes
-            if path_within(path, read_only)
-        ]
+        illegal = [path for path in changes if not path_within(path, writable)]
+        readonly_changes = [path for path in changes if path_within(path, read_only)]
         if illegal:
-            diagnostics.append(
-                f"changed path outside writable boundary: {illegal}"
-            )
+            diagnostics.append(f"changed path outside writable boundary: {illegal}")
         if readonly_changes:
             diagnostics.append(
                 f"changed path inside read-only boundary: {readonly_changes}"
@@ -868,10 +812,9 @@ def execute(
             "test_report": None,
             "runner_diagnostics": write_artifact(
                 store,
-                (
-                    "\n".join(diagnostics)
-                    + ("\n" if diagnostics else "")
-                ).encode("utf-8"),
+                ("\n".join(diagnostics) + ("\n" if diagnostics else "")).encode(
+                    "utf-8"
+                ),
             ),
         }
     except RuntimeError as exc:
@@ -947,9 +890,7 @@ def execute(
         if cleanup.returncode != 0:
             cleanup_status = "FAIL"
             residue.append(str(worktree))
-            diagnostics.append(
-                cleanup.stderr.strip() or "git worktree remove failed"
-            )
+            diagnostics.append(cleanup.stderr.strip() or "git worktree remove failed")
         elif worktree.exists():
             cleanup_status = "FAIL"
             residue.append(str(worktree))
@@ -965,10 +906,7 @@ def execute(
     )
     artifacts["runner_diagnostics"] = write_artifact(
         store,
-        (
-            "\n".join(diagnostics)
-            + ("\n" if diagnostics else "")
-        ).encode("utf-8"),
+        ("\n".join(diagnostics) + ("\n" if diagnostics else "")).encode("utf-8"),
     )
     receipt = build_receipt(
         request=request,
@@ -987,13 +925,10 @@ def execute(
     )
     write_receipt(output, receipt, request, assertions)
     if status == "PASS":
-        print(
-            f"PASS skill-execution receipt={output / 'receipt.json'}"
-        )
+        print(f"PASS skill-execution receipt={output / 'receipt.json'}")
         return EXIT_OK
     print(
-        f"RED skill-execution status={status} "
-        f"receipt={output / 'receipt.json'}",
+        f"RED skill-execution status={status} receipt={output / 'receipt.json'}",
         file=sys.stderr,
     )
     return EXIT_USAGE if status == "ABSENT" else EXIT_FAILED

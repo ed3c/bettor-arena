@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Stable compatibility entrypoint for the Bun/TypeScript stateless MCP runtime."""
+
 from __future__ import annotations
 
 import os

@@ -39,6 +39,7 @@ convergence branch:         integration/pdf-harness-convergence-v1
 | GitHub/Forgejo logical-origin contract | `IMPLEMENTED` | current equivalence canary `NOT_EXERCISED` unless receipt exists | `environment-contracts` |
 | Browser Contract v2 | `IMPLEMENTED` | signed-in/live routes subject-specific | `environment-contracts` |
 | portable Skill contracts | `IMPLEMENTED` | host discovery/live behavior separate | `harness-wiki` |
+| universal Skill measurement binding | `IMPLEMENTED` | five-archetype protocol conformance `PASS`; repo-agent-native physical v2 `NOT_EXERCISED` | `skills-shared` closure + consumer binding receipt |
 | host-owned typed-argv Skill runner | `IMPLEMENTED` | six-host matrix `NOT_EXERCISED` | `agent-runtime-integration` |
 | `repo-agent-native` consumer binding | `IMPLEMENTED` | provider degradation/live A/B separate | `.skill-bindings` |
 | OpenWiki update/projection | `IMPLEMENTED` | full model turn subject-specific | `openwiki` |
