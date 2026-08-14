@@ -1,0 +1,32 @@
+{
+  "authority_law": [
+    "STRATEGY_PROPOSES",
+    "WORKER_EXECUTES",
+    "GATES_OBSERVE",
+    "LOOPX_COMMITS",
+    "HUMAN_ADMITS"
+  ],
+  "files": [
+    "strategy-proposal.schema.json",
+    "interrupt-request.schema.json",
+    "interrupt.schema.json",
+    "human-decision.schema.json",
+    "resume-plan.schema.json",
+    "checkpoint-projection.schema.json"
+  ],
+  "forbidden_shortcuts": [
+    "force_skip",
+    "strategy_state_write",
+    "graph_checkpoint_authority",
+    "private_thought_stream",
+    "unsigned_human_decision",
+    "promotion_by_model"
+  ],
+  "human_decisions": [
+    "RETRY_AFTER_FIX",
+    "UPDATE_CONTRACT",
+    "CANCEL_TASK",
+    "SCOPED_EXCEPTION"
+  ],
+  "schema_version": "loopx/strategy-hitl-manifest/v1"
+}
