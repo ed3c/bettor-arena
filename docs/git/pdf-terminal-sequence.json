@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 96,
-    "active_order": 7,
+    "active_issue": 103,
+    "active_order": 8,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -296,7 +296,7 @@
         "stage-05-worker-fleet"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement a worktree-aware LSP pool"
     },
@@ -326,7 +326,7 @@
       "prs": [
         78
       ],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement canonical Decision Memory runtime"
     },
