@@ -1,0 +1,12 @@
+{
+  "schema": "github-ci-policy/v1",
+  "repository": "ed3c/bettor-arena",
+  "private": true,
+  "default_branch": "main",
+  "workflow": ".github/workflows/modular-contracts.yml",
+  "required_jobs": ["contracts"],
+  "local_verification": [
+    "sh",
+    "scripts/gates/verify_modular_contracts.sh"
+  ]
+}

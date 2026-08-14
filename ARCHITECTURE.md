@@ -25,6 +25,9 @@ bettor-arena/
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
 ├── .github/           # GitHub cloud verification；只跑零網路、可由 fresh clone 重現的契約閘
+├── .github-delivery/  # private repo 的 Actions 帳務閘：ci-policy.json 宣告唯一 required workflow、
+│                      #   required jobs 與其本地等價驗證 argv;讓一次 commit 先在本機證明樹是連貫的,
+│                      #   而不是每個微小 commit 都燒一個 job-minute(check → scripts/gates/verify_modular_contracts.sh)
 ├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill;
 │                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
