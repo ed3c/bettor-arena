@@ -1,0 +1,100 @@
+[
+  {
+    "actor": {
+      "actor_id": "reducer-main",
+      "class": "REDUCER"
+    },
+    "attempt": 0,
+    "event_digest": "sha256:fca454779315e85f5b62e7ee953e13bb5e014c6f63feb3d4b598955bf5e2764c",
+    "event_id": "evt-000",
+    "event_type": "TASK_INITIALIZED",
+    "lifecycle_state": "ACTIVE",
+    "payload": {
+      "objective": "verify contracts"
+    },
+    "previous_digest": null,
+    "recorded_at": "2026-08-15T09:00:00Z",
+    "sequence": 0,
+    "subject": {
+      "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "loopx-observability-fixture",
+      "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+    },
+    "todo_id": null
+  },
+  {
+    "actor": {
+      "actor_id": "strategy-graph-main",
+      "class": "STRATEGY"
+    },
+    "attempt": 0,
+    "event_digest": "sha256:6f3a1bdd6ae42f0558574d005a4153f4fa616571ac5494ccb6c1f8ef078fc7fe",
+    "event_id": "evt-001",
+    "event_type": "COMMAND_ACCEPTED",
+    "lifecycle_state": "DISPATCHED",
+    "payload": {
+      "adapter_id": "codex-cli",
+      "command": "DISPATCH"
+    },
+    "previous_digest": "sha256:fca454779315e85f5b62e7ee953e13bb5e014c6f63feb3d4b598955bf5e2764c",
+    "recorded_at": "2026-08-15T09:01:00Z",
+    "sequence": 1,
+    "subject": {
+      "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "loopx-observability-fixture",
+      "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+    },
+    "todo_id": "todo-verify-contracts"
+  },
+  {
+    "actor": {
+      "actor_id": "gate-flaky-timing",
+      "class": "GATE"
+    },
+    "attempt": 0,
+    "event_digest": "sha256:11abf77134b7e721f42f36c226eead8c151553b6621a98df1aef69db563feeb9",
+    "event_id": "evt-003",
+    "event_type": "GATE_OBSERVED",
+    "lifecycle_state": "GATE_FAIL",
+    "payload": {
+      "p95_ms": 1400,
+      "verdict": "FAIL"
+    },
+    "previous_digest": "sha256:2eba4ff663702be243fa93df530a90da74ce9e3ee0d5198aaca2c865dbaf319f",
+    "recorded_at": "2026-08-15T09:03:00Z",
+    "sequence": 3,
+    "subject": {
+      "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "loopx-observability-fixture",
+      "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+    },
+    "todo_id": "todo-verify-contracts"
+  },
+  {
+    "actor": {
+      "actor_id": "reducer-main",
+      "class": "REDUCER"
+    },
+    "attempt": 0,
+    "event_digest": "sha256:a1f8beedbaca3eea8aba795c3bda387a8ae86c8f23000ca09e962953d26de6c8",
+    "event_id": "evt-004",
+    "event_type": "HITL_RAISED",
+    "lifecycle_state": "HITL_PENDING",
+    "payload": {
+      "reason": "MANUAL_GATE"
+    },
+    "previous_digest": "sha256:11abf77134b7e721f42f36c226eead8c151553b6621a98df1aef69db563feeb9",
+    "recorded_at": "2026-08-15T09:04:00Z",
+    "sequence": 4,
+    "subject": {
+      "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "loopx-observability-fixture",
+      "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+    },
+    "todo_id": "todo-verify-contracts"
+  }
+]

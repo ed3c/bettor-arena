@@ -1,0 +1,51 @@
+name: LoopX Runtime Fabric v1
+
+on:
+  push:
+    branches:
+      - 'feat/loopx-runtime-fabric-v1'
+    paths:
+      - 'loop_wiki/loopx-runtime-fabric/**'
+      - '.arena/modules/loopx-runtime-fabric/**'
+      - '.github/workflows/loopx-runtime-fabric.yml'
+  pull_request:
+    # ready_for_review is listed explicitly: the default type set is
+    # opened/synchronize/reopened, so with the draft guard below a PR opened as
+    # a draft would skip this job and never re-run when it is marked ready.
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'loop_wiki/loopx-runtime-fabric/**'
+      - '.arena/modules/loopx-runtime-fabric/**'
+      - '.github/workflows/loopx-runtime-fabric.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loopx-runtime-fabric-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime-fabric:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      # The physical control group runs here too. It executes real subprocesses
+      # in temporary directories, so it exercises the same isolation behaviour
+      # on a Linux runner that it does on a developer's machine -- which is the
+      # only way a filesystem claim gets checked on more than one kernel.
+      - name: Validate contracts, controls, and physical isolation
+        run: sh loop_wiki/loopx-runtime-fabric/tests/run-all.sh
+
+      - name: Validate the child module catalog without selecting it in the composition
+        run: python3 scripts/arena_modules.py catalog >/dev/null

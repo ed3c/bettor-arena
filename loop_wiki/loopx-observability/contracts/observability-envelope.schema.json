@@ -1,0 +1,178 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/observability-envelope/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One redacted, OpenTelemetry-shaped view of one ledger event. Carries trace_id/span_id for correlation without importing an SDK or naming a backend, and states authority PROJECTION_ONLY on every envelope so a reader holding one envelope and no documentation still knows it has no authority over the state it describes.",
+  "properties": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "class": {
+          "enum": [
+            "STRATEGY",
+            "WORKER",
+            "GATE",
+            "REDUCER",
+            "HUMAN_OPERATOR"
+          ]
+        }
+      },
+      "required": [
+        "actor_id",
+        "class"
+      ],
+      "type": "object"
+    },
+    "attempt": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "attributes": {
+      "type": "object"
+    },
+    "authority": {
+      "const": "PROJECTION_ONLY"
+    },
+    "correlation": {
+      "additionalProperties": false,
+      "properties": {
+        "span_id": {
+          "pattern": "^[0-9a-f]{16}$",
+          "type": "string"
+        },
+        "trace_id": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "trace_id",
+        "span_id"
+      ],
+      "type": "object"
+    },
+    "envelope_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "event_type": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "ledger": {
+      "additionalProperties": false,
+      "properties": {
+        "event_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence",
+        "event_digest"
+      ],
+      "type": "object"
+    },
+    "lifecycle_state": {
+      "enum": [
+        "ACTIVE",
+        "DISPATCHED",
+        "RUNNING",
+        "GATE_PASS",
+        "GATE_FAIL",
+        "RETRY_SCHEDULED",
+        "QUOTA_EXHAUSTED",
+        "HITL_PENDING",
+        "TODO_COMPLETED",
+        "COMPLETED_WITH_EXCEPTION",
+        "TASK_FAILED",
+        "CANCELLED"
+      ]
+    },
+    "observed_at": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "redaction": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "removed_paths": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "policy_version",
+        "removed_paths"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/observability-envelope/v1"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "todo_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "envelope_id",
+    "subject",
+    "todo_id",
+    "attempt",
+    "ledger",
+    "correlation",
+    "actor",
+    "event_type",
+    "lifecycle_state",
+    "observed_at",
+    "attributes",
+    "redaction",
+    "authority"
+  ],
+  "title": "LoopX Observability Envelope v1",
+  "type": "object"
+}

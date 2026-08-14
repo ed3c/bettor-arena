@@ -1,0 +1,60 @@
+{
+  "artifacts": {
+    "capture_root": "artifacts",
+    "expected_paths": [
+      "artifacts/result.json"
+    ]
+  },
+  "closure_digest": "sha256:abababababababababababababababababababababababababababababababab",
+  "dependencies": {
+    "cache_key": null,
+    "cache_policy": "none",
+    "contamination_check": true
+  },
+  "environment": {
+    "allowlist": [
+      "PATH"
+    ],
+    "secret_refs": []
+  },
+  "network": {
+    "allowlist": [],
+    "attested": "NOT_OBSERVED",
+    "requested": "deny"
+  },
+  "process": {
+    "argv": [
+      "python3",
+      "src/run.py"
+    ],
+    "max_disk_bytes": 104857600,
+    "max_memory_bytes": 268435456,
+    "max_output_bytes": 65536,
+    "process_group": true,
+    "timeout_ms": 5000
+  },
+  "provider": {
+    "adapter_id": "local-disposable-workspace",
+    "image_ref": null,
+    "provider_id": "local-process",
+    "runtime_identity": "python3-local"
+  },
+  "request_id": "rt-0001",
+  "schema_version": "loopx/runtime-request/v1",
+  "subject": {
+    "commit": "536449a000000000000000000000000000000000",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-runtime-fabric-fixture",
+    "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+  },
+  "workspace": {
+    "cleanup": "REQUIRED",
+    "lease_id": "l-0001",
+    "read_only_paths": [
+      "src"
+    ],
+    "writable_paths": [
+      "artifacts"
+    ]
+  }
+}

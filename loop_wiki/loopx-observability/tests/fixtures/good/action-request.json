@@ -1,0 +1,24 @@
+{
+  "created_at": "2026-08-15T09:10:00Z",
+  "displayed_projection_digest": "sha256:ee1b6b7715fa67c2730d55a5ae6ad4976f679c4b1f5c14951bd9d7fef31fe287",
+  "observed_state": {
+    "ledger_head": "sha256:a1f8beedbaca3eea8aba795c3bda387a8ae86c8f23000ca09e962953d26de6c8",
+    "state_revision": 4
+  },
+  "rationale_artifact_ref": "sha256:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+  "request_id": "req-0001",
+  "requested_action": "RETRY_AFTER_FIX",
+  "schema_version": "loopx/hitl-action-request/v1",
+  "signer": {
+    "identity": "repository-owner",
+    "reference": "github:ed3c",
+    "signature_ref": "sha256:2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b"
+  },
+  "subject": {
+    "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-observability-fixture",
+    "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+  },
+  "todo_id": "todo-verify-contracts"
+}
