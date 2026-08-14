@@ -1,0 +1,216 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/worker-adapter/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_id": {
+      "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+      "type": "string"
+    },
+    "allowed_executables": {
+      "items": {
+        "pattern": "^[A-Za-z0-9._+/-]+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "human_admit": {
+          "const": false
+        },
+        "promote_release": {
+          "const": false
+        },
+        "write_durable_memory": {
+          "const": false
+        },
+        "write_gate_verdict": {
+          "const": false
+        },
+        "write_loopx_state": {
+          "const": false
+        }
+      },
+      "required": [
+        "write_loopx_state",
+        "write_gate_verdict",
+        "human_admit",
+        "promote_release",
+        "write_durable_memory"
+      ],
+      "type": "object"
+    },
+    "binary_candidates": {
+      "items": {
+        "pattern": "^[A-Za-z0-9._+-]+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "classification": {
+      "enum": [
+        "WHITE_BOX_REFERENCE",
+        "SOURCE_VISIBLE_HOST",
+        "GRAY_BOX",
+        "EXPERIMENTAL_GRAY_BOX",
+        "FIXTURE_ONLY"
+      ]
+    },
+    "host": {
+      "enum": [
+        "CODEX_CLI",
+        "CLAUDE_CODE",
+        "GROK_BUILD",
+        "OPENCODE",
+        "PI",
+        "ANTE",
+        "FIXTURE"
+      ]
+    },
+    "instruction_files": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "lifecycle": {
+      "enum": [
+        "CONTRACT_ONLY",
+        "EXPERIMENTAL",
+        "ADMITTED",
+        "FIXTURE_ONLY"
+      ]
+    },
+    "live_state": {
+      "enum": [
+        "NOT_EXERCISED",
+        "ABSENT",
+        "SKIPPED_BY_POLICY"
+      ]
+    },
+    "policy_support": {
+      "additionalProperties": false,
+      "properties": {
+        "cleanup": {
+          "enum": [
+            "SUPPORTED",
+            "UNKNOWN"
+          ]
+        },
+        "filesystem_attestation": {
+          "enum": [
+            "WORKTREE_OBSERVATION_ONLY",
+            "EXTERNAL_RUNTIME_REQUIRED",
+            "ATTESTED"
+          ]
+        },
+        "network_attestation": {
+          "enum": [
+            "NOT_ATTESTED",
+            "EXTERNAL_RUNTIME_REQUIRED",
+            "ATTESTED"
+          ]
+        },
+        "process_group": {
+          "enum": [
+            "SUPPORTED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "network_attestation",
+        "filesystem_attestation",
+        "process_group",
+        "cleanup"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/worker-adapter/v1"
+    },
+    "skill_discovery_roots": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transport": {
+      "enum": [
+        "SUBPROCESS",
+        "RPC",
+        "HTTP",
+        "SDK"
+      ]
+    },
+    "visibility": {
+      "additionalProperties": false,
+      "properties": {
+        "filesystem": {
+          "const": "OBSERVABLE"
+        },
+        "hidden_reasoning": {
+          "const": "FORBIDDEN"
+        },
+        "internal_events": {
+          "enum": [
+            "OBSERVABLE",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "observable_event_types": {
+          "items": {
+            "enum": [
+              "PROCESS",
+              "FILESYSTEM",
+              "HOST_STRUCTURED_TOOL",
+              "HOST_STRUCTURED_MESSAGE"
+            ]
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "process": {
+          "const": "OBSERVABLE"
+        }
+      },
+      "required": [
+        "process",
+        "filesystem",
+        "internal_events",
+        "hidden_reasoning",
+        "observable_event_types"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "adapter_id",
+    "host",
+    "classification",
+    "transport",
+    "lifecycle",
+    "live_state",
+    "binary_candidates",
+    "allowed_executables",
+    "skill_discovery_roots",
+    "instruction_files",
+    "visibility",
+    "authority",
+    "policy_support"
+  ],
+  "title": "LoopX Worker Adapter Manifest v1",
+  "type": "object"
+}

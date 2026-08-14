@@ -1,0 +1,162 @@
+{
+  "canonical_authority": "LOOPX_LEDGER_REDUCER",
+  "content_digest": "sha256:0b391855761f9c1712b42d5f1113b14e5cc32ebd28d23d379d50437fd476c10a",
+  "ledger": {
+    "event_count": 7,
+    "head_digest": "sha256:328e2576870193a5c67654c1584b56a059177738b6cfa4c6363d33de68b94f59",
+    "last_sequence": 6
+  },
+  "rebuildable": true,
+  "reducer": {
+    "digest": "sha256:54c5d67df960c755d48b427c35982b1d21948279df35b344c3854f65405c3d16",
+    "id": "loopx-ledger-reducer",
+    "version": "1.0.0"
+  },
+  "schema_version": "loopx/snapshot/v1",
+  "state": {
+    "current_todo_id": null,
+    "evidence": [
+      {
+        "artifact_id": "ev-task-contract",
+        "bytes": 20,
+        "digest": "sha256:2f95a85a96c046cf5b6d35edc3e6ffb608feeed333dfb1598efb032489bbcb24",
+        "kind": "FILE",
+        "media_type": "application/json",
+        "path": "artifacts/task-contract.json",
+        "producer": "loopx-reducer"
+      },
+      {
+        "artifact_id": "ev-worker-result",
+        "bytes": 19,
+        "digest": "sha256:9e3e63fac9c92100f0f15e616e1abf395028edc8912bebfc42044c65eb17e114",
+        "kind": "GIT_DIFF",
+        "media_type": "application/json",
+        "path": "artifacts/change.diff",
+        "producer": "worker-grok"
+      },
+      {
+        "artifact_id": "ev-lint-pass",
+        "bytes": 12,
+        "digest": "sha256:570698939f9a90d948d8468d022d0be2785cc3e048979f32a96d81ba99a3fef5",
+        "kind": "LINTER_REPORT",
+        "media_type": "application/json",
+        "path": "artifacts/lint.json",
+        "producer": "gate-engine"
+      },
+      {
+        "artifact_id": "ev-tests-pass",
+        "bytes": 25,
+        "digest": "sha256:83ade33eabe7394988383e3389dfd2fb3ab0cfba0b7677578862f1c633e0308d",
+        "kind": "TEST_REPORT",
+        "media_type": "application/junit+xml",
+        "path": "artifacts/tests.xml",
+        "producer": "gate-engine"
+      }
+    ],
+    "human_decision_refs": [],
+    "ledger_head_digest": "sha256:328e2576870193a5c67654c1584b56a059177738b6cfa4c6363d33de68b94f59",
+    "lifecycle": "COMPLETED",
+    "objective": {
+      "acceptance": [
+        "all critical gates pass",
+        "snapshot binds the event head"
+      ],
+      "non_goals": [
+        "implement ledger storage",
+        "run a live coding Agent"
+      ],
+      "scope": [
+        "contract schemas",
+        "authority boundaries",
+        "deterministic fixtures"
+      ],
+      "statement": "Validate the LoopX Contract v1 fixture."
+    },
+    "quota": {
+      "limits": {
+        "max_attempts": 3,
+        "max_cost_microunits": 5000000,
+        "max_output_bytes": 10485760,
+        "max_tokens": 200000,
+        "max_worker_seconds": 300
+      },
+      "state": "AVAILABLE",
+      "used": {
+        "attempts": 1,
+        "cost_microunits": 250000,
+        "output_bytes": 56,
+        "tokens": 1000,
+        "worker_seconds": 12
+      }
+    },
+    "schema_version": "loopx/task-state/v1",
+    "state_revision": 7,
+    "subject": {
+      "commit": "1111111111111111111111111111111111111111",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "fixture-loopx-contract-v1",
+      "tree": "2222222222222222222222222222222222222222"
+    },
+    "todos": [
+      {
+        "attempts": 1,
+        "depends_on": [],
+        "evidence_refs": [
+          "ev-task-contract",
+          "ev-worker-result",
+          "ev-lint-pass",
+          "ev-tests-pass"
+        ],
+        "exception_ref": null,
+        "gate_ids": [
+          "gate-lint",
+          "gate-tests"
+        ],
+        "gate_results": [
+          {
+            "attempt": 1,
+            "evaluator_digest": "sha256:547fc8c647712d3b3d8835bd05f2b22d02450069b69a285fefddd14accdecdc2",
+            "gate_id": "gate-lint",
+            "observation_ref": {
+              "artifact_id": "ev-lint-pass",
+              "bytes": 12,
+              "digest": "sha256:570698939f9a90d948d8468d022d0be2785cc3e048979f32a96d81ba99a3fef5",
+              "kind": "LINTER_REPORT",
+              "media_type": "application/json",
+              "path": "artifacts/lint.json",
+              "producer": "gate-engine"
+            },
+            "verdict": "PASS"
+          },
+          {
+            "attempt": 1,
+            "evaluator_digest": "sha256:547fc8c647712d3b3d8835bd05f2b22d02450069b69a285fefddd14accdecdc2",
+            "gate_id": "gate-tests",
+            "observation_ref": {
+              "artifact_id": "ev-tests-pass",
+              "bytes": 25,
+              "digest": "sha256:83ade33eabe7394988383e3389dfd2fb3ab0cfba0b7677578862f1c633e0308d",
+              "kind": "TEST_REPORT",
+              "media_type": "application/junit+xml",
+              "path": "artifacts/tests.xml",
+              "producer": "gate-engine"
+            },
+            "verdict": "PASS"
+          }
+        ],
+        "last_failure_ref": null,
+        "status": "COMPLETED",
+        "title": "Validate the contract bundle",
+        "todo_id": "todo-contract"
+      }
+    ]
+  },
+  "state_digest": "sha256:e83101388fd4efddb26b90ab84c4c74669ab41c9da63330b92c89c49946edc7b",
+  "state_revision": 7,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  }
+}

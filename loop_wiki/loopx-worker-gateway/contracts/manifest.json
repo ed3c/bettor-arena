@@ -1,0 +1,50 @@
+{
+  "fixture_only": true,
+  "forbidden_authorities": [
+    "LOOPX_STATE_WRITE",
+    "GATE_VERDICT",
+    "HUMAN_ADMIT",
+    "RELEASE_PROMOTION",
+    "DURABLE_MEMORY_WRITE"
+  ],
+  "host_ids": [
+    "codex-cli",
+    "claude-code",
+    "grok-build",
+    "opencode",
+    "pi",
+    "ante"
+  ],
+  "interface_version": "1.0.0",
+  "live_matrix_state": "NOT_EXERCISED",
+  "provides": [
+    "loopx.worker-gateway/v1"
+  ],
+  "requires_capabilities": [
+    "loopx.contracts/v1",
+    "skill-execution.runner/v1"
+  ],
+  "schema_version": "loopx/worker-gateway-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/adapter-descriptor.schema.json",
+      "path": "adapter-descriptor.schema.json",
+      "sha256": "c5ba659ae9725a97758f1ce05ae1dd35cdc64568d8a0f6b78850b4b11ffc25f6"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/worker-event.schema.json",
+      "path": "worker-event.schema.json",
+      "sha256": "53f09b17e3939aa52ca6059347601f2d7eebecc02c0e987ed16bba7d386ae26c"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/worker-receipt.schema.json",
+      "path": "worker-receipt.schema.json",
+      "sha256": "e38b55c3a37461b1d16a3993fb7ea4ea3b0a96f541814f417619cbb88715cc7b"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/worker-request.schema.json",
+      "path": "worker-request.schema.json",
+      "sha256": "5c9ec878904a536d739deedcad71f5b15454e8a039d1447fd506949f7b0f09a4"
+    }
+  ]
+}

@@ -110,6 +110,7 @@ bettor-arena/
 │   └── migration/     # manifest.json(v2;repo-relative 唯一)+apply receipt(per-run report-<commit>-<組件集>.json append-only,同名重跑 exit 64/--force-receipt 顯式覆寫;S3/S4 的 apply 早於 per-run 機制,其 receipt 僅存 git history 的 last-migration-report.json 版本;last-migration-report.json=最新拷貝,執行期生)
 └── docs/              # 計劃/交接文件(非模組知識);agent-runtime-integration.md=目前可執行跨 repo closure；
                        #   architecture/modular-integration-requirements.md=下一階段低壓縮 target contract；
+                       #   local-agent-stack.md=CGR/Mem0/Herdr 本機 stack 的時戳現況、操作收據與未完成接線;
                        #   audits/=具名 commit/branch 的審計交接包;adr/=架構決策記錄(0001=slice 詞彙);
                        #   plans/<date>-<topic>/as-run.md=該線執行帳(已完成/未完成/已跑/未跑),
                        #   forgejo-delivery-loop 三 SSOT 之一,與 openwiki(as-built)分工

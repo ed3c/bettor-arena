@@ -1,0 +1,38 @@
+{
+  "actor": {
+    "actor_id": "loopx-reducer",
+    "authority": "STATE_COMMIT",
+    "class": "LOOPX"
+  },
+  "event_digest": "sha256:44d9820f795c33c55442fe9f4a509c4fed7c17227124708767af18a7139b74da",
+  "event_id": "event-000",
+  "occurred_at": "2026-08-14T00:00:00Z",
+  "payload": {
+    "command_id": null,
+    "gate_observation": null,
+    "human_decision": null,
+    "quota_delta": null,
+    "request_ref": {
+      "artifact_id": "ev-task-contract",
+      "bytes": 20,
+      "digest": "sha256:2f95a85a96c046cf5b6d35edc3e6ffb608feeed333dfb1598efb032489bbcb24",
+      "kind": "FILE",
+      "media_type": "application/json",
+      "path": "artifacts/task-contract.json",
+      "producer": "loopx-reducer"
+    },
+    "todo_id": null,
+    "transition": null,
+    "worker_result_ref": null
+  },
+  "previous_event_digest": null,
+  "schema_version": "loopx/event/v1",
+  "sequence": 0,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "type": "TASK_INITIALIZED"
+}

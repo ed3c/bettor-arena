@@ -1,0 +1,120 @@
+{
+  "schema_version": "repo-agent-native-generalization-consumer-measurement/v1",
+  "repository": "ed3c/bettor-arena",
+  "observed_at": "2026-08-14T13:25:20Z",
+  "evidence_tier": "development",
+  "behavior_state": "FAIL",
+  "identity_state": "NOT_EXERCISED",
+  "measurement_authority": {
+    "repository": "ed3c/skills-shared",
+    "candidate_commit": "0e26e90deef3907bb08ac9b4919c920bd36093f8",
+    "candidate_publication_state": "LOCAL_ONLY",
+    "profile": "source-grounded-analysis-v1",
+    "suite": "repo-agent-native-generalization-v2",
+    "split": "dev"
+  },
+  "matrix": {
+    "conditions": ["no_skill", "current_skill", "candidate_skill"],
+    "task_families": 4,
+    "variants": 8,
+    "harnesses": [
+      {"id": "codex", "version": "codex-cli 0.146.0", "model": "gpt-5.4"},
+      {"id": "claude", "version": "2.1.221 (Claude Code)", "model": "claude-sonnet-5"}
+    ],
+    "repetitions_per_cell": 3,
+    "execution_order": "counterbalanced",
+    "expected_cells": 144,
+    "observed_cells": 144,
+    "missing_cells": 0,
+    "nonterminal_cells": 0
+  },
+  "treatments": {
+    "candidate_skill": {
+      "package_sha256": "dd224739817fbead19ba130193b88050ca292cf2242ab0ffd8b3e872b5bedae0",
+      "instruction_sha256": "bf998cf5a0ca6362a5049f2bff2b07e3392aa13e881b5773ee4330872a270013"
+    },
+    "current_skill": {
+      "source_commit": "d277e56870c0cc18455c9dd5e572a43ca08b444b",
+      "package_sha256": "3861c683671508610da7a81f7126b5e6c2baed9a8a8bd4a7a8f9b376b2cef36b",
+      "instruction_sha256": "3861c683671508610da7a81f7126b5e6c2baed9a8a8bd4a7a8f9b376b2cef36b"
+    },
+    "no_skill": {"package_sha256": null, "instruction_sha256": null}
+  },
+  "pass_counts": {
+    "candidate_skill": {"passed": 39, "runs": 48, "pass_rate": 0.8125},
+    "current_skill": {"passed": 32, "runs": 48, "pass_rate": 0.6666666666666666},
+    "no_skill": {"passed": 36, "runs": 48, "pass_rate": 0.75}
+  },
+  "by_harness": {
+    "codex": {
+      "candidate_skill": {"passed": 21, "runs": 24},
+      "current_skill": {"passed": 20, "runs": 24},
+      "no_skill": {"passed": 21, "runs": 24}
+    },
+    "claude": {
+      "candidate_skill": {"passed": 18, "runs": 24},
+      "current_skill": {"passed": 12, "runs": 24},
+      "no_skill": {"passed": 15, "runs": 24}
+    }
+  },
+  "by_family_pass_rate": {
+    "explicit-contract": {"candidate_skill": 1.0, "current_skill": 1.0, "no_skill": 1.0},
+    "bounded-absence": {"candidate_skill": 0.9166666666666666, "current_skill": 0.9166666666666666, "no_skill": 0.8333333333333334},
+    "dependency-impact": {"candidate_skill": 0.4166666666666667, "current_skill": 0.25, "no_skill": 0.25},
+    "authority-routing": {"candidate_skill": 0.9166666666666666, "current_skill": 0.5, "no_skill": 0.9166666666666666}
+  },
+  "causal_transfer": {
+    "method": "paired-hoeffding-range-2-lower-bound/v1",
+    "confidence_level": 0.95,
+    "candidate_vs_current_mean": 0.14583333333333334,
+    "candidate_vs_current_lcb": -0.20746848956707228,
+    "candidate_vs_no_skill_mean": 0.0625,
+    "candidate_vs_no_skill_lcb": -0.2908018229004056,
+    "paired_cells_per_comparison": 48
+  },
+  "generalization": {
+    "candidate_pass_rate_by_harness": {"codex": 0.875, "claude": 0.75},
+    "cross_harness_gap": 0.125,
+    "worst_family_delta_vs_current": 0.0,
+    "metamorphic_groups_passed": 1,
+    "metamorphic_groups_total": 4,
+    "metamorphic_pass_rate": 0.25,
+    "candidate_hard_capability_failures": 12
+  },
+  "admission_failures": [
+    "candidate-hard-capability-failure",
+    "candidate-delta-lcb-below-threshold",
+    "no-skill-lift-lcb-below-threshold",
+    "metamorphic-pass-rate"
+  ],
+  "identity_audit": {
+    "state": "NOT_EXERCISED",
+    "failures": [],
+    "missing_fields": ["common_task_sha256", "runner_sha256"]
+  },
+  "operations": {
+    "runs": 144,
+    "summed_execution_hours": 2.306243333333333,
+    "claude_cost_usd": 14.979412300000002,
+    "codex_input_tokens": 6291175,
+    "codex_output_tokens": 160204,
+    "claude_reported_input_tokens": 764,
+    "claude_output_tokens": 456974,
+    "token_accounting_note": "Provider token fields are not directly comparable; Claude cache reads are not represented by the reported input field."
+  },
+  "artifact_digests": {
+    "preregistration_manifest_sha256": "7b34c813599ed67b41395fb569bddc8161d0e4540b2d5beaad2c0de53d3274c2",
+    "normalized_observations_sha256": "3a272ac68f2d7f1448ae04b71e665652fa67723e2453553459a68a65275e6fc7",
+    "behavior_result_sha256": "9c80976674a359f521c3271afae0edc1c6488ec899a4f63762e15263919545a3",
+    "identity_audit_sha256": "339a70cc6feabef7e3a728abb342a2101df9a8972713c5689c78ae8ef67e1dd8",
+    "operations_summary_sha256": "4905105dc5745099a8198695b1a012bf07b47edeea63bae870a5a5a7538826ff"
+  },
+  "named_exclusions": [
+    "The suite is public development evidence and cannot unlock or promote the Skill.",
+    "The physical run predates common_task_sha256 and runner_sha256 receipt fields, so release-grade identity is NOT_EXERCISED.",
+    "Raw per-run artifacts remain outside Git and are content-addressed by the recorded digests.",
+    "No Skill condition automatically activates GrepAI, Serena, Code-Graph-RAG, or Mem0; the fixture used direct source reading as the common surface.",
+    "Provider token totals are not cross-provider comparable."
+  ],
+  "human_admit_required": true
+}

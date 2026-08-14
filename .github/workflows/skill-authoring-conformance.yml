@@ -1,0 +1,48 @@
+name: Skill authoring conformance
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/**'
+      - '.claude/skills/**'
+      - 'kb-ingest/skill/**'
+      - 'loop_wiki/**/.agents/skills/**'
+      - 'scripts/gates/check_skill_conformance.py'
+      - '.githooks/pre-commit'
+      - '.github/workflows/skill-authoring-conformance.yml'
+  push:
+    branches:
+      - main
+      - 'refactor/**'
+    paths:
+      - '.agents/skills/**'
+      - '.claude/skills/**'
+      - 'kb-ingest/skill/**'
+      - 'loop_wiki/**/.agents/skills/**'
+      - 'scripts/gates/check_skill_conformance.py'
+      - '.githooks/pre-commit'
+      - '.github/workflows/skill-authoring-conformance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skill-authoring-conformance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Prove positive and planted-mutation controls
+        run: python3 scripts/gates/check_skill_conformance.py --selftest
+      - name: Validate repository discovery surfaces
+        run: python3 scripts/gates/check_skill_conformance.py --root .

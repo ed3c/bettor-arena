@@ -1,0 +1,225 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/operation-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "after": {
+      "additionalProperties": false,
+      "properties": {
+        "event_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "events_file_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "head_digest": {
+          "oneOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_sequence": {
+          "minimum": -1,
+          "type": "integer"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_count",
+        "last_sequence",
+        "head_digest",
+        "state_revision",
+        "events_file_digest"
+      ],
+      "type": "object"
+    },
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+            "type": "string"
+          },
+          "bytes": {
+            "maximum": 104857600,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "STDOUT",
+              "STDERR",
+              "GIT_DIFF",
+              "LSP_DIAGNOSTICS",
+              "LINTER_REPORT",
+              "TEST_REPORT",
+              "FILE",
+              "TRACE",
+              "HUMAN_DECISION"
+            ]
+          },
+          "media_type": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "path": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "producer": {
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "kind",
+          "path",
+          "digest",
+          "bytes",
+          "media_type",
+          "producer"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "before": {
+      "additionalProperties": false,
+      "properties": {
+        "event_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "events_file_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "head_digest": {
+          "oneOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_sequence": {
+          "minimum": -1,
+          "type": "integer"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "event_count",
+        "last_sequence",
+        "head_digest",
+        "state_revision",
+        "events_file_digest"
+      ],
+      "type": "object"
+    },
+    "cleanup": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "details": {
+      "type": "object"
+    },
+    "operation": {
+      "enum": [
+        "INIT",
+        "APPEND",
+        "VERIFY",
+        "REPLAY",
+        "RECOVER"
+      ]
+    },
+    "operation_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/ledger-operation-receipt/v1"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOOP",
+        "RECOVERED"
+      ]
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "operation_id",
+    "operation",
+    "subject",
+    "status",
+    "before",
+    "after",
+    "artifacts",
+    "cleanup",
+    "details",
+    "content_digest"
+  ],
+  "title": "loopx/ledger-operation-receipt/v1",
+  "type": "object"
+}

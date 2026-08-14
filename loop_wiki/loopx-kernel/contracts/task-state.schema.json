@@ -1,0 +1,176 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/task-state.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "current_todo_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "type": "string"
+          },
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "path": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "producer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "kind",
+          "path",
+          "digest",
+          "bytes",
+          "media_type",
+          "producer"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "human_decision_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "ledger_head_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lifecycle": {
+      "enum": [
+        "DRAFT",
+        "READY",
+        "ACTIVE",
+        "HITL_PENDING",
+        "COMPLETED",
+        "COMPLETED_WITH_EXCEPTION",
+        "FAILED",
+        "CANCELLED"
+      ]
+    },
+    "objective": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "non_goals": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scope": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "statement": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "scope",
+        "non_goals",
+        "acceptance"
+      ],
+      "type": "object"
+    },
+    "quota": {
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/task-state/v1"
+    },
+    "state_revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "todos": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "subject",
+    "state_revision",
+    "ledger_head_digest",
+    "lifecycle",
+    "objective",
+    "current_todo_id",
+    "todos",
+    "evidence",
+    "quota",
+    "human_decision_refs"
+  ],
+  "title": "loopx/task-state/v1",
+  "type": "object"
+}

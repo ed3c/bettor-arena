@@ -1,0 +1,29 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/code-truth-graph-v2/evidence-graph/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analyzers": {"type": "array"},
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical": {"const": false},
+        "model_write": {"const": false},
+        "projection": {"const": true},
+        "state_write": {"const": false}
+      },
+      "required": ["projection", "canonical", "model_write", "state_write"],
+      "type": "object"
+    },
+    "coverage": {"type": "array"},
+    "edges": {"type": "array"},
+    "evidence": {"type": "array"},
+    "graph_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "nodes": {"type": "array"},
+    "schema_version": {"const": "code-truth-graph-v2/evidence-graph/v1"},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "subject", "analyzers", "coverage", "evidence", "nodes", "edges", "authority", "graph_digest"],
+  "title": "Code Truth Graph v2 Evidence Graph",
+  "type": "object"
+}
