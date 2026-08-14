@@ -1,0 +1,54 @@
+{
+  "admit_authority": "HUMAN",
+  "evidence_classes": [
+    "RUNTIME",
+    "STATIC",
+    "TEST"
+  ],
+  "history_is_append_only": true,
+  "interface_version": "1.0.0",
+  "normative_card_kinds": [
+    "ADR",
+    "NORM",
+    "POLICY"
+  ],
+  "patch_kinds": [
+    "CONFLICT",
+    "DEPRECATE",
+    "NOOP",
+    "SUPERSEDE",
+    "UNKNOWN",
+    "UPDATE"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.code-truth-graph/v2",
+    "loopx.contracts/v1",
+    "loopx.ledger/v1"
+  ],
+  "schema_version": "loopx/foldback-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/foldback/candidate-bundle/v1",
+      "path": "candidate-bundle.schema.json",
+      "sha256": "3634c5ca64e9408c31f88c31d6d9ad68d3abb59f50fa0336b958ee47304c9ffb"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/foldback/change-delta/v1",
+      "path": "change-delta.schema.json",
+      "sha256": "48e665d7fd7ae3b60d7296a90c9afd7e8b9decd348f74626edbb58e576ea6b30"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/foldback/receipt/v1",
+      "path": "foldback-receipt.schema.json",
+      "sha256": "9a89f904098918596eafa3456a3cbc314a12c7a8f76bca3e31b9fb34eb566fce"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/foldback/revision-history/v1",
+      "path": "revision-history.schema.json",
+      "sha256": "7dffdef1dd4b1b58277a2c1a8670a5bc45ecb63ee6217fdbfdc780e7a6fb807d"
+    }
+  ],
+  "similarity_may_patch": false,
+  "terminal_state": "CANDIDATE_FOLD_BACK_BUNDLE"
+}

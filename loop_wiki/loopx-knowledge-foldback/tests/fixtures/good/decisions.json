@@ -1,0 +1,23 @@
+[
+  {
+    "actor": "ed3c",
+    "at": "2026-08-15T11:00:00Z",
+    "decision": "ADMIT",
+    "note": "",
+    "patch_id": "p-001"
+  },
+  {
+    "actor": "ed3c",
+    "at": "2026-08-15T11:00:00Z",
+    "decision": "ADMIT",
+    "note": "",
+    "patch_id": "p-002"
+  },
+  {
+    "actor": "ed3c",
+    "at": "2026-08-15T11:00:00Z",
+    "decision": "REJECT",
+    "note": "leave the conflict open until the platform team revises ADR-0007",
+    "patch_id": "p-003"
+  }
+]
