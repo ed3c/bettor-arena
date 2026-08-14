@@ -4,6 +4,16 @@ name: Modular contracts
 # .github-delivery/ci-policy.json. Every clause below is load-bearing for that
 # declaration: a draft PR does not bill a run, a repair is an explicit dispatch
 # rather than a no-op commit, and the same head cancels its own older run.
+#
+# `ready_for_review` is the only pull_request type, which makes draft-first a
+# requirement rather than a preference: the event fires on the draft -> ready
+# transition, so a PR opened non-draft never triggers this workflow at all. Open
+# every PR as a draft and mark it ready when it is asking to be merged; that
+# moment is the one run this repository pays for.
+#
+# `synchronize` is deliberately absent: pushing a commit does not re-bill a run.
+# Re-verification after a fix is an explicit workflow_dispatch, which is what
+# makes scripts/gates/verify_modular_contracts.sh worth running first.
 on:
   pull_request:
     types: [ready_for_review]
@@ -20,6 +30,7 @@ concurrency:
 
 jobs:
   contracts:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     # Test the exact PR head so the merge command can pin the verified SHA.
     runs-on: ubuntu-latest
     timeout-minutes: 25
