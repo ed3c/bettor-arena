@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 104,
-    "active_order": 10,
+    "active_issue": 105,
+    "active_order": 11,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -382,7 +382,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement immutable YouTube/PDF/Notes source ingest"
     },
@@ -411,7 +411,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Build OpenWiki and vector/graph Notes projections"
     },

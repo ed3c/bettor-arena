@@ -1,0 +1,46 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/notes-retrieval/subject/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Four things together: the commit, the tree, the source-manifest digest and the compiler policy. Any one moving invalidates the index, and each moves for a different reason.",
+  "properties": {
+    "commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "policy_digest": {
+      "description": "Covers the embedding model and dimensions. An index built with one model and queried with another does not error -- it returns neighbours, and they are meaningless.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "ref_kind": {
+      "const": "IMMUTABLE_COMMIT"
+    },
+    "repository": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/notes-index-subject/v1"
+    },
+    "source_manifest_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "tree": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "repository",
+    "commit",
+    "tree",
+    "ref_kind",
+    "source_manifest_digest",
+    "policy_digest"
+  ],
+  "title": "Notes retrieval index subject",
+  "type": "object"
+}

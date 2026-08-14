@@ -1,0 +1,48 @@
+{
+  "any_state_proves_absence": false,
+  "final_authority": "CURRENT_SOURCE_AND_EVIDENCE",
+  "freshness_states": [
+    "CURRENT",
+    "NOT_BUILT",
+    "STALE_POLICY",
+    "STALE_SUBJECT"
+  ],
+  "interface_version": "1.0.0",
+  "live_provider_state": "NOT_EXERCISED",
+  "openwiki_admissible_as_evidence": false,
+  "projection_roles": [
+    "GRAPH",
+    "OPENWIKI_STATIC",
+    "VECTOR"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.source-ingest/v1"
+  ],
+  "retrieval_hit_is_a_fact": false,
+  "retrieval_states": [
+    "HIT",
+    "MISS",
+    "NOT_INDEXED",
+    "PROVIDER_ABSENT"
+  ],
+  "schema_version": "loopx/notes-retrieval-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/notes-retrieval/subject/v1",
+      "path": "index-subject.schema.json",
+      "sha256": "b38866fc0adc6f8ab6eb0e6bf3a5e9b8eec6e7d70ae032995b8cecd6db73216e"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/notes-retrieval/openwiki/v1",
+      "path": "openwiki-projection.schema.json",
+      "sha256": "926af1c1240a133c06e4e4017c52122f1cd4c9ae3eed35c4a05c6a3e43362e9e"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/notes-retrieval/result/v1",
+      "path": "retrieval-result.schema.json",
+      "sha256": "c8685d60d93daec035ada51d71714367f6e91864390880b3239e4f06006f9887"
+    }
+  ]
+}
