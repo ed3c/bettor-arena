@@ -1,0 +1,74 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/git-town/admission/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An admitted Git Town runtime. EXECUTABLE_ABSENT is a state, not a failure and not a pass: nothing ran, so nothing about Git Town's behaviour follows. Absence unlocks no mode, and a human review cannot promote it.",
+  "properties": {
+    "admission": {
+      "description": "Version, checksum, provenance and licence together. Anything less names a tool, and a tool is not a thing that ran.",
+      "type": "object"
+    },
+    "admission_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "authority": {
+      "type": "object"
+    },
+    "human_admit_required": {
+      "const": true
+    },
+    "modes_available": {
+      "description": "A closed set of named modes. A caller that can supply argv can supply --continue, and --continue resolves a semantic conflict on the agent's own judgement.",
+      "items": {
+        "enum": [
+          "config",
+          "sync_dry_run",
+          "sync_local_no_push",
+          "version"
+        ]
+      },
+      "type": "array"
+    },
+    "probe": {
+      "type": "object"
+    },
+    "profile": {
+      "description": "Closed and path-neutral. A config naming someone's home directory works exactly once, and the second machine's failure looks like a Git Town problem.",
+      "type": "object"
+    },
+    "publication_is_separate_gate": {
+      "const": true
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/git-town-admission/v1"
+    },
+    "state": {
+      "enum": [
+        "EXECUTABLE_ABSENT",
+        "EXECUTABLE_PRESENT_NOT_ADMITTED",
+        "ADMITTED_DRY_RUN_ONLY",
+        "ADMITTED_LOCAL_NO_PUSH"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "state",
+    "reason",
+    "probe",
+    "admission",
+    "profile",
+    "modes_available",
+    "authority",
+    "publication_is_separate_gate",
+    "human_admit_required",
+    "admission_digest"
+  ],
+  "title": "Git Town runtime admission",
+  "type": "object"
+}
