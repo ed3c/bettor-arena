@@ -159,7 +159,7 @@
           "uniqueItems": true,
           "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}
         },
-        "queue_state": {"enum": ["ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"]},
+        "queue_state": {"enum": ["COMPLETE", "ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"]},
         "acceptance": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "evidence_boundary": {"type": "string", "minLength": 1},
         "human_boundary": {"type": "string", "minLength": 1}
