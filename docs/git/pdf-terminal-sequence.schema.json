@@ -153,7 +153,12 @@
         "expected_branch": {"type": "string", "pattern": "^[a-zA-Z0-9._/-]+$", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}},
         "stack_relation": {"enum": ["ROOT", "TRUE_CHILD", "ROOT_AFTER_PREDECESSOR", "CONVERGENCE"]},
         "prerequisite_items": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^stage-[0-9]{2}-[a-z0-9-]+$"}},
-        "owner_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}},
+        "owner_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}
+        },
         "queue_state": {"enum": ["ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"]},
         "acceptance": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "evidence_boundary": {"type": "string", "minLength": 1},
