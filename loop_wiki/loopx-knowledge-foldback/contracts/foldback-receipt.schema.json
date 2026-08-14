@@ -1,0 +1,151 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/foldback/receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Content-addressed record of what a human admitted and rejected.",
+  "properties": {
+    "admitted": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "after": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "authority": {
+      "const": "HUMAN_ADMITTED"
+    },
+    "before": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "bundle_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "candidates_for_review": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "decisions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "actor": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "decision": {
+            "enum": [
+              "ADMIT",
+              "REJECT"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "patch_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor",
+          "at",
+          "decision",
+          "note",
+          "patch_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "receipt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "rejected": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "revisions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/foldback-receipt/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "before",
+    "after",
+    "bundle_digest",
+    "decisions",
+    "revisions",
+    "admitted",
+    "rejected",
+    "candidates_for_review",
+    "authority",
+    "receipt_digest"
+  ],
+  "title": "Fold-back receipt",
+  "type": "object"
+}

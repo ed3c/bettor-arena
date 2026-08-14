@@ -1,0 +1,58 @@
+{
+  "compiler_identity": "loopx-knowledge-compiler/1.0.0",
+  "notes_subject": {
+    "commit": "3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f",
+    "ref": "refs/heads/main",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-notes",
+    "tree": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+  },
+  "schema_version": "loopx/knowledge-source-manifest/v1",
+  "sources": [
+    {
+      "byte_digest": "sha256:00000000000000000000000000000000000000000000000024cc77fb6f5f15fd",
+      "declared_version": "v3",
+      "dependency_key": "notes/architecture.md",
+      "kind": "NOTE",
+      "locator": "notes/architecture.md#L10-L24",
+      "recorded_at": "2026-08-01T09:00:00Z",
+      "source_id": "s-arch"
+    },
+    {
+      "byte_digest": "sha256:00000000000000000000000000000000000000000000000015be7c3637a837d4",
+      "declared_version": "v1",
+      "dependency_key": "meeting-2026-08-01",
+      "kind": "TRANSCRIPT",
+      "locator": "notes/meeting.md#L100-L140",
+      "recorded_at": "2026-08-01T09:00:00Z",
+      "source_id": "s-meeting"
+    },
+    {
+      "byte_digest": "sha256:0000000000000000000000000000000000000000000000002ae4800b6eb59e7b",
+      "declared_version": "rfc7519",
+      "dependency_key": "upstream-rfc-7519",
+      "kind": "NOTE",
+      "locator": "notes/a.md#L5",
+      "recorded_at": "2026-08-01T09:00:00Z",
+      "source_id": "s-quote-a"
+    },
+    {
+      "byte_digest": "sha256:0000000000000000000000000000000000000000000000000f6fae3eb1e826d0",
+      "declared_version": "rfc7519",
+      "dependency_key": "upstream-rfc-7519",
+      "kind": "NOTE",
+      "locator": "notes/b.md#L9-L11",
+      "recorded_at": "2026-08-01T09:00:00Z",
+      "source_id": "s-quote-b"
+    },
+    {
+      "byte_digest": null,
+      "declared_version": null,
+      "dependency_key": "whiteboard-photo",
+      "kind": "DIAGRAM",
+      "locator": null,
+      "recorded_at": null,
+      "source_id": "s-whiteboard"
+    }
+  ]
+}
