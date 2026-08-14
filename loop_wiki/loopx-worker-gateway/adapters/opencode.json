@@ -1,0 +1,32 @@
+{
+  "adapter_entry": "adapters/unimplemented.py",
+  "adapter_id": "opencode",
+  "binary": "opencode",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": false,
+    "offline": true,
+    "session_resume": true,
+    "streaming": true,
+    "structured_output": true
+  },
+  "classification": "WHITE_BOX_REFERENCE",
+  "content_digest": "sha256:93940c0a8872c8be508211e816b48757631036f1f242af35f55a86ad654bc6b7",
+  "host_id": "opencode",
+  "implementation_state": "NOT_EXERCISED",
+  "instruction_routes": [
+    "AGENTS.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    ".opencode/skills",
+    ".agents/skills",
+    ".claude/skills"
+  ],
+  "source_identity": null,
+  "trace_ceiling": "TOOL_OBSERVED",
+  "transport": "CLI",
+  "version_argv": [
+    "--version"
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "commands": [
+    {
+      "actor": {
+        "actor_id": "strategy-fixture",
+        "class": "STRATEGY"
+      },
+      "command_id": "cmd-dispatch-contract",
+      "expected_state_revision": 1,
+      "kind": "DISPATCH_TODO",
+      "payload": {
+        "human_decision": null,
+        "reason_ref": null,
+        "request_ref": {
+          "artifact_id": "ev-task-contract",
+          "bytes": 20,
+          "digest": "sha256:2f95a85a96c046cf5b6d35edc3e6ffb608feeed333dfb1598efb032489bbcb24",
+          "kind": "FILE",
+          "media_type": "application/json",
+          "path": "artifacts/task-contract.json",
+          "producer": "loopx-reducer"
+        },
+        "todo_id": "todo-contract"
+      },
+      "schema_version": "loopx/command/v1",
+      "subject": {
+        "commit": "1111111111111111111111111111111111111111",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "fixture-loopx-contract-v1",
+        "tree": "2222222222222222222222222222222222222222"
+      }
+    }
+  ],
+  "contract_digest": "sha256:878affa4104e37cdb2b5f29ae9edb8c7ee7f4e75540f584ade0b861fc5f12046",
+  "gate_definitions": [
+    {
+      "artifacts": [
+        {
+          "artifact_id": "lint-report",
+          "max_bytes": 1048576,
+          "media_type": "application/json",
+          "path": "artifacts/lint.json",
+          "required": true
+        }
+      ],
+      "execution": {
+        "argv": [
+          "-m",
+          "ruff",
+          "check",
+          ".",
+          "--output-format",
+          "json"
+        ],
+        "cwd": ".",
+        "env_allowlist": [
+          "CI"
+        ],
+        "executable": "python3",
+        "network": "DENY",
+        "timeout_ms": 15000
+      },
+      "gate_id": "gate-lint",
+      "name": "Ruff linter",
+      "observation_class": "LINTER_REPORT",
+      "oracle": {
+        "expected": 0,
+        "type": "EXIT_CODE_EQUALS"
+      },
+      "schema_version": "loopx/gate-definition/v1",
+      "severity": "CRITICAL"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "test-report",
+          "max_bytes": 10485760,
+          "media_type": "application/junit+xml",
+          "path": "artifacts/tests.xml",
+          "required": true
+        }
+      ],
+      "execution": {
+        "argv": [
+          "-m",
+          "pytest",
+          "-q",
+          "--junitxml",
+          "artifacts/tests.xml"
+        ],
+        "cwd": ".",
+        "env_allowlist": [
+          "CI"
+        ],
+        "executable": "python3",
+        "network": "DENY",
+        "timeout_ms": 60000
+      },
+      "gate_id": "gate-tests",
+      "name": "Unit tests",
+      "observation_class": "TEST_REPORT",
+      "oracle": {
+        "expected": 0,
+        "type": "JUNIT_FAILURE_COUNT"
+      },
+      "schema_version": "loopx/gate-definition/v1",
+      "severity": "CRITICAL"
+    }
+  ],
+  "initial_state": {
+    "current_todo_id": "todo-contract",
+    "evidence": [
+      {
+        "artifact_id": "ev-task-contract",
+        "bytes": 20,
+        "digest": "sha256:2f95a85a96c046cf5b6d35edc3e6ffb608feeed333dfb1598efb032489bbcb24",
+        "kind": "FILE",
+        "media_type": "application/json",
+        "path": "artifacts/task-contract.json",
+        "producer": "loopx-reducer"
+      }
+    ],
+    "human_decision_refs": [],
+    "ledger_head_digest": null,
+    "lifecycle": "READY",
+    "objective": {
+      "acceptance": [
+        "all critical gates pass",
+        "snapshot binds the event head"
+      ],
+      "non_goals": [
+        "implement ledger storage",
+        "run a live coding Agent"
+      ],
+      "scope": [
+        "contract schemas",
+        "authority boundaries",
+        "deterministic fixtures"
+      ],
+      "statement": "Validate the LoopX Contract v1 fixture."
+    },
+    "quota": {
+      "limits": {
+        "max_attempts": 3,
+        "max_cost_microunits": 5000000,
+        "max_output_bytes": 10485760,
+        "max_tokens": 200000,
+        "max_worker_seconds": 300
+      },
+      "state": "AVAILABLE",
+      "used": {
+        "attempts": 0,
+        "cost_microunits": 0,
+        "output_bytes": 0,
+        "tokens": 0,
+        "worker_seconds": 0
+      }
+    },
+    "schema_version": "loopx/task-state/v1",
+    "state_revision": 0,
+    "subject": {
+      "commit": "1111111111111111111111111111111111111111",
+      "repository": "ed3c/bettor-arena",
+      "task_id": "fixture-loopx-contract-v1",
+      "tree": "2222222222222222222222222222222222222222"
+    },
+    "todos": [
+      {
+        "attempts": 0,
+        "depends_on": [],
+        "evidence_refs": [
+          "ev-task-contract"
+        ],
+        "exception_ref": null,
+        "gate_ids": [
+          "gate-lint",
+          "gate-tests"
+        ],
+        "gate_results": [],
+        "last_failure_ref": null,
+        "status": "READY",
+        "title": "Validate the contract bundle",
+        "todo_id": "todo-contract"
+      }
+    ]
+  },
+  "schema_version": "loopx/ledger-contract/v1",
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  }
+}

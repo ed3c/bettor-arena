@@ -1,0 +1,197 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/worker-event.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "event_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "host_id": {
+      "enum": [
+        "codex-cli",
+        "claude-code",
+        "grok-build",
+        "opencode",
+        "pi",
+        "ante",
+        "fixture-host"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "PROCESS_STARTED",
+        "STDOUT",
+        "STDERR",
+        "TOOL_OBSERVED",
+        "ARTIFACT",
+        "PROCESS_EXIT",
+        "CLEANUP"
+      ],
+      "type": "string"
+    },
+    "occurred_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+                  "type": "string"
+                },
+                "bytes": {
+                  "maximum": 104857600,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "STDOUT",
+                    "STDERR",
+                    "GIT_DIFF",
+                    "FILE",
+                    "TRACE",
+                    "WORKER_EVENT",
+                    "PROCESS_TREE",
+                    "CLEANUP_REPORT"
+                  ],
+                  "type": "string"
+                },
+                "media_type": {
+                  "maxLength": 128,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "path": {
+                  "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+                  "type": "string"
+                },
+                "producer": {
+                  "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "kind",
+                "path",
+                "digest",
+                "bytes",
+                "media_type",
+                "producer"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "cleanup_state": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "enum": [
+                "PASS",
+                "FAIL",
+                "NOT_RUN"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "exit_code": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "message": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maxLength": 4096,
+              "type": "string"
+            }
+          ]
+        },
+        "tool": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "message",
+        "exit_code",
+        "tool",
+        "artifact_ref",
+        "cleanup_state"
+      ],
+      "type": "object"
+    },
+    "request_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/worker-event/v1"
+    },
+    "sequence": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "visibility": {
+      "enum": [
+        "EXTERNAL",
+        "HOST_REPORTED",
+        "SOURCE_VERIFIED_INTERNAL"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "request_id",
+    "host_id",
+    "sequence",
+    "occurred_at",
+    "kind",
+    "visibility",
+    "payload",
+    "content_digest"
+  ],
+  "title": "loopx/worker-event/v1",
+  "type": "object"
+}
