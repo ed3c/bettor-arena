@@ -1,0 +1,23 @@
+{
+  "kind": "DIAGNOSTICS",
+  "language": "python",
+  "path": "src/app.py",
+  "request_id": "req-001",
+  "server": {
+    "config_digest": "sha256:11d5422264b3b5ee2e2e49475718eea7f45e44a7d57796a41fa7b42e88896877",
+    "languages": [
+      "python"
+    ],
+    "multi_root": false,
+    "server_id": "pyright-like",
+    "version": "1.4.2"
+  },
+  "workspace": {
+    "commit": "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+    "lease_id": "lease-alpha",
+    "repository": "ed3c/bettor-arena",
+    "root": "workspaces/alpha",
+    "tree": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+    "workspace_id": "ws-alpha"
+  }
+}

@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 97,
-    "active_order": 6,
+    "active_issue": 96,
+    "active_order": 7,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -268,7 +268,7 @@
         "stage-05-worker-fleet"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement resource retention, disk budgets and GC"
     },
@@ -296,7 +296,7 @@
         "stage-05-worker-fleet"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement a worktree-aware LSP pool"
     },

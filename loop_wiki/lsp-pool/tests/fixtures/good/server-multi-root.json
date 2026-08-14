@@ -1,0 +1,9 @@
+{
+  "config_digest": "sha256:d2bb8d34dd5cee5f08fb08ee90f770473a8f6445cee3ce93798ffc2d5ece6f62",
+  "languages": [
+    "python"
+  ],
+  "multi_root": true,
+  "server_id": "multi-root-server",
+  "version": "1.4.2"
+}
