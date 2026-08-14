@@ -1,0 +1,13 @@
+{
+  "id": "exact-search-control",
+  "kind": "control",
+  "families": ["symbol", "semantic", "graph"],
+  "identity_digest": "sha256:327b45503a3290eb52662255a14815197d0e9a4725cf222e560712949cbd388e",
+  "control_contract": {
+    "kind": "deterministic-repository-read",
+    "operations": ["git-grep", "direct-read", "manifest-read"],
+    "authority": "current bytes after readback",
+    "network": "none"
+  },
+  "human_admit_required": true
+}

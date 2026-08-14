@@ -1,5 +1,5 @@
 {
-  "content_sha256": "37959b8067a1303840f3e3a787d96606177ce59a84900e23473bad10653fa380",
+  "content_sha256": "2e5f1429ced4e42d9dffc3bcf94afdcdadbac288da162c5b3ed9b8e56591615c",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "455c5d03cc2d728658454a7c90fc1e2c61bdc0d0f447b9aabc7951cf6f91daa5",
+      "context_sha256": "05db028f7788e31bab68250eddc1296b8815b3881cd491ffabdbe2e8db120f96",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -41,7 +41,7 @@
           "path": ".runtime-env/requirements.json"
         },
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -51,7 +51,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -90,7 +90,7 @@
         "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
         "loop_wiki/code-truth-graph/modules/exchange-formats.md"
       ],
-      "context_sha256": "6c077e9217cc27874cb78142db4d1a0d114a66b62a28ccc635ab28476920b8dd",
+      "context_sha256": "88fb5b0b12ee6f309a0071035d3ef8cfa4d49bdd3e7d7d5d3b7c09a667c7f43e",
       "cwd": "loop_wiki/code-truth-graph",
       "drivers": {
         "claude-code": {
@@ -104,7 +104,7 @@
       },
       "files": [
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -114,7 +114,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -176,9 +176,29 @@
         "docs/knowledge-providers/CONTEXT.md",
         "docs/knowledge-providers/registry.json",
         "docs/knowledge-providers/alternatives.md",
+        "docs/knowledge-providers/evals/README.md",
+        "docs/knowledge-providers/evals/STATUS.md",
+        "docs/knowledge-providers/evals/config.json",
+        "docs/knowledge-providers/evals/subject.json",
+        "docs/knowledge-providers/evals/contracts/eval-case.schema.json",
+        "docs/knowledge-providers/evals/contracts/eval-config.schema.json",
+        "docs/knowledge-providers/evals/contracts/eval-observation.schema.json",
+        "docs/knowledge-providers/evals/contracts/eval-report.schema.json",
+        "docs/knowledge-providers/evals/contracts/participant.schema.json",
+        "docs/knowledge-providers/evals/contracts/subject.schema.json",
+        "docs/knowledge-providers/evals/participants/code-graph-rag.json",
+        "docs/knowledge-providers/evals/participants/exact-search-control.json",
+        "docs/knowledge-providers/evals/participants/grepai.json",
+        "docs/knowledge-providers/evals/participants/mem0.json",
+        "docs/knowledge-providers/evals/participants/repository-authority-control.json",
+        "docs/knowledge-providers/evals/participants/serena.json",
+        "docs/knowledge-providers/evals/cases/graph.json",
+        "docs/knowledge-providers/evals/cases/memory.json",
+        "docs/knowledge-providers/evals/cases/semantic.json",
+        "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "784ccd1261a7bf28ba4c1f38723eed7f8f783d054d21f5d2378b67744a2c1cab",
+      "context_sha256": "6b3a829d90b8df21bad4ec73f4524334ddd9a9f9555c92b83cf9f983e75d3191",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -192,12 +212,12 @@
       },
       "files": [
         {
-          "blob": "b33c5b3de82f6b7f14a0cbd7825125f489441d29",
+          "blob": "19582f801649ae45903762793b05a6bfc6298ef8",
           "mode": "100644",
           "path": ".arena/modules/knowledge-providers/module.json"
         },
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -207,12 +227,12 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
         {
-          "blob": "a89c7ff104a35e70856878d000fba1fdcacc26ad",
+          "blob": "512a49b36a8e79a95e608c049964eb55ecbfe0e5",
           "mode": "100644",
           "path": "CONTEXT.md"
         },
@@ -222,12 +242,12 @@
           "path": "docs/agents/domain.md"
         },
         {
-          "blob": "ccaf71b1cfccd53d73cbd71f1e1b742c16edb640",
+          "blob": "8b69e842165ca7ea836d7a12a6ce903fa0559335",
           "mode": "100644",
           "path": "docs/knowledge-providers/CONTEXT.md"
         },
         {
-          "blob": "0efdf257a01e57b89d05c0c719619bb1be8b1311",
+          "blob": "b41f548465b1d4d0e50e71b405fc05f655b06073",
           "mode": "100644",
           "path": "docs/knowledge-providers/README.md"
         },
@@ -235,6 +255,106 @@
           "blob": "7d9c61398df460807b5afd512d466229c78ae025",
           "mode": "100644",
           "path": "docs/knowledge-providers/alternatives.md"
+        },
+        {
+          "blob": "1ecd6161dbaca9865c1409d351c93dbd43fddc7e",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/README.md"
+        },
+        {
+          "blob": "7eca241c636482724f1f9da6e80a1b4e16b40d70",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/STATUS.md"
+        },
+        {
+          "blob": "d38ae85df2bf050eaea89a8af3550f5b5d38d44f",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/cases/graph.json"
+        },
+        {
+          "blob": "443569e03dd3cba5facdcf59ae1ca44ca01263f3",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/cases/memory.json"
+        },
+        {
+          "blob": "abcb080957ee93bd6d0330dee39018b62b359b5d",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/cases/semantic.json"
+        },
+        {
+          "blob": "01608c6c5a280664aeab0850bebe5b0defbf4267",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json"
+        },
+        {
+          "blob": "4d8db400ac0a66dded9b05df974344239ad23dbe",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/config.json"
+        },
+        {
+          "blob": "45d52a3a6e382ee8a1968f5422b740062fdc8c9e",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/eval-case.schema.json"
+        },
+        {
+          "blob": "2daf15dbb4bff0db3b1f617782ad99b3a6d3fa97",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/eval-config.schema.json"
+        },
+        {
+          "blob": "060c0c19cbcc5d89e16f2893dae3f4526e5ee0ac",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/eval-observation.schema.json"
+        },
+        {
+          "blob": "339a552c1241c8f6bfbc553210061843605ae0a8",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/eval-report.schema.json"
+        },
+        {
+          "blob": "5164e3cab1f60a58520d0529b4509d26f8e42a34",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/participant.schema.json"
+        },
+        {
+          "blob": "45b63cb2543b0fa00ec76cd064a2748feaedaf97",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/contracts/subject.schema.json"
+        },
+        {
+          "blob": "c41a604c538d0ea703a7cff8bbdaf1689b289d48",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/code-graph-rag.json"
+        },
+        {
+          "blob": "4f6a1d8571de1c00558585b7789ebb7bf6fffece",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/exact-search-control.json"
+        },
+        {
+          "blob": "b29d870e645233b56d71bd400a22d33cbbef23fb",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/grepai.json"
+        },
+        {
+          "blob": "f66db8503d3b14ea7cea37c41d07ae23fbfb5d5e",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/mem0.json"
+        },
+        {
+          "blob": "79e01b2781d88ec30a8676f76ae7c25c59129ff1",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/repository-authority-control.json"
+        },
+        {
+          "blob": "574a3e2618c0c2c31fc5018b0561d99cc184246c",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/participants/serena.json"
+        },
+        {
+          "blob": "f3b0804cac90b5ab1fca7029df63a27005d4de8b",
+          "mode": "100644",
+          "path": "docs/knowledge-providers/evals/subject.json"
         },
         {
           "blob": "e180510b65443818bf58260643c6c64639868501",
@@ -259,11 +379,16 @@
         "CLAUDE.md",
         "ARCHITECTURE.md",
         "CONTEXT.md",
+        "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+        "docs/architecture/pdf-harness-integration.matrix.json",
+        "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
         "docs/architecture/modular-integration-requirements.md",
         "docs/architecture/modular-integration-status.md",
+        "docs/architecture/STATE_MACHINES.md",
+        "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "fed3bfff6a9a83a927fa16ad70c7b93bc5e43993d0b24f7380df5fa2219f7365",
+      "context_sha256": "d817380ab2a56fd3a535a8753b9c4ccfce6af30a9b2823acc0277bccb2e1dbbc",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -277,7 +402,7 @@
       },
       "files": [
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -287,12 +412,12 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
         {
-          "blob": "a89c7ff104a35e70856878d000fba1fdcacc26ad",
+          "blob": "512a49b36a8e79a95e608c049964eb55ecbfe0e5",
           "mode": "100644",
           "path": "CONTEXT.md"
         },
@@ -302,14 +427,39 @@
           "path": "docs/agent-runtime-integration.md"
         },
         {
+          "blob": "2136f534afe414a23c6e422f2b978c24372d0811",
+          "mode": "100644",
+          "path": "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md"
+        },
+        {
+          "blob": "bbd44e3321aa1faf0e54e2faaa027c5ee154007c",
+          "mode": "100644",
+          "path": "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md"
+        },
+        {
+          "blob": "cfa9d4ce9b239a1bd443c516d0949814882c2c0a",
+          "mode": "100644",
+          "path": "docs/architecture/STATE_MACHINES.md"
+        },
+        {
           "blob": "e91f533d4591824c9794f30cc4479720de3bbbbc",
           "mode": "100644",
           "path": "docs/architecture/modular-integration-requirements.md"
         },
         {
-          "blob": "760ded8a42adb9bc9315fff607aa63c27cf5bc4b",
+          "blob": "75537ded805dba0922ec136014f45663cd8a5302",
           "mode": "100644",
           "path": "docs/architecture/modular-integration-status.md"
+        },
+        {
+          "blob": "f47aa75e26694fb86243f33c226635b9e0f04f74",
+          "mode": "100644",
+          "path": "docs/architecture/pdf-harness-integration.matrix.json"
+        },
+        {
+          "blob": "c081e4ffcc001ed86be95181732bf47db041cc8b",
+          "mode": "100644",
+          "path": "docs/traceability/STACK_PR_INDEX.md"
         }
       ],
       "id": "macro",
@@ -333,7 +483,7 @@
         ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "bd9ee359306df0575d9230a306282b3e35d7fb161d82989f89e9db10fbf668e8",
+      "context_sha256": "4bbe5452bb73ffc6326cc9a6d466dbf3e25dc1491f3c50670ff216a798b7680f",
       "cwd": "notebooklm",
       "drivers": {
         "claude-code": {
@@ -357,7 +507,7 @@
           "path": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"
         },
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -367,7 +517,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -403,7 +553,7 @@
         "kb-ingest/port/README.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "56c9670bcc25cf16a2c4161aa2e469c044f478f52c8ec9ba83a5fe259a436d29",
+      "context_sha256": "45388d91ac058063d5d826bfa5732fb464532f63b22c944924200a12804a1c7c",
       "cwd": "kb-ingest",
       "drivers": {
         "claude-code": {
@@ -417,7 +567,7 @@
       },
       "files": [
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -427,7 +577,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -476,7 +626,7 @@
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
       ],
-      "context_sha256": "7a42d921193537bf09f9b6bce7215d6b588d63aab8d453719eb3744e2ff63997",
+      "context_sha256": "b2e256904d3540649a1d9227b0d8f8bfed3966709a86b07b869cf9759cc9aca5",
       "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
       "drivers": {
         "claude-code": {
@@ -490,7 +640,7 @@
       },
       "files": [
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -500,7 +650,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -564,7 +714,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "22b2c5c2853befd3526c762c36f9c82d523d2326a2511b4aa57879f9914055b4",
+      "context_sha256": "3226a375648dc786c3f3bda896856c11f65c3a70894a089b229ebd326b05a98e",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -578,7 +728,7 @@
       },
       "files": [
         {
-          "blob": "bedfac3341ec422bcae056984ea869b5cea7c321",
+          "blob": "82dc1d8dcd23d5634fb789228bc7641836911d53",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -588,7 +738,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "2a469f9c03a141b44e079a073cacb6663daf3817",
+          "blob": "004453e0aff22a4b883c9ccc3c6862f046bf1dc7",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
