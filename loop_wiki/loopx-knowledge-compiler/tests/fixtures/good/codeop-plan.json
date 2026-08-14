@@ -1,0 +1,114 @@
+{
+  "notes_subject": {
+    "commit": "3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f",
+    "ref": "refs/heads/main",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-notes",
+    "tree": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+  },
+  "operations": [
+    {
+      "expected_diff_shape": {
+        "added_symbols": [
+          "append_event"
+        ],
+        "max_changed_files": 1,
+        "removed_symbols": [],
+        "renamed_symbols": []
+      },
+      "intent": "CREATE",
+      "op_id": "op-001",
+      "precondition": {
+        "expression": "not exists(generated/ledger_append.py)",
+        "kind": "PATH_ABSENT"
+      },
+      "provenance": {
+        "assertion_ids": [
+          "a-001",
+          "a-002"
+        ],
+        "locators": [
+          "notes/architecture.md#L10-L24",
+          "notes/meeting.md#L100-L140"
+        ],
+        "source_ids": [
+          "s-arch",
+          "s-meeting"
+        ]
+      },
+      "public_interface_change": false,
+      "requirement_ids": [
+        "r-001"
+      ],
+      "rollback": {
+        "detail": "remove generated/ledger_append.py from the output tree",
+        "kind": "DELETE_CREATED"
+      },
+      "target": {
+        "path": "generated/ledger_append.py",
+        "selector": null,
+        "selector_kind": "FILE"
+      },
+      "validation": {
+        "command": "python3 -c 'import ast,sys; ast.parse(open(\"generated/ledger_append.py\").read())'",
+        "expect_exit_code": 0
+      },
+      "version_decision": "NONE"
+    },
+    {
+      "expected_diff_shape": {
+        "added_symbols": [
+          "token_expiry_admits"
+        ],
+        "max_changed_files": 1,
+        "removed_symbols": [],
+        "renamed_symbols": []
+      },
+      "intent": "CREATE",
+      "op_id": "op-002",
+      "precondition": {
+        "expression": "not exists(generated/token_expiry.py)",
+        "kind": "PATH_ABSENT"
+      },
+      "provenance": {
+        "assertion_ids": [
+          "a-003"
+        ],
+        "locators": [
+          "notes/a.md#L5",
+          "notes/meeting.md#L100-L140"
+        ],
+        "source_ids": [
+          "s-meeting",
+          "s-quote-a"
+        ]
+      },
+      "public_interface_change": false,
+      "requirement_ids": [
+        "r-002"
+      ],
+      "rollback": {
+        "detail": "remove generated/token_expiry.py from the output tree",
+        "kind": "DELETE_CREATED"
+      },
+      "target": {
+        "path": "generated/token_expiry.py",
+        "selector": null,
+        "selector_kind": "FILE"
+      },
+      "validation": {
+        "command": "python3 -c 'import ast,sys; ast.parse(open(\"generated/token_expiry.py\").read())'",
+        "expect_exit_code": 0
+      },
+      "version_decision": "NONE"
+    }
+  ],
+  "output_lease": {
+    "lease_id": "lease-kc-001",
+    "output_root": "candidate",
+    "writable_paths": [
+      "generated"
+    ]
+  },
+  "schema_version": "loopx/knowledge-codeop-plan/v1"
+}
