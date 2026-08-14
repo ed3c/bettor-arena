@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 103,
-    "active_order": 8,
+    "active_issue": 93,
+    "active_order": 9,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -326,7 +326,7 @@
       "prs": [
         78
       ],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Implement canonical Decision Memory runtime"
     },
@@ -354,7 +354,7 @@
         "stage-04-runtime-fabric"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Admit Mem0 as an optional rebuildable projection"
     },

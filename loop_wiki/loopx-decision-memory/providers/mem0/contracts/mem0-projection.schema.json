@@ -1,0 +1,71 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/mem0/projection/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An index over Human-admitted ledger events. Not canonical memory, not repository authority, not a writeback channel. Compared on relations rather than bytes: a vector store assigns different internal ids on each build.",
+  "properties": {
+    "authority": {
+      "const": "PROJECTION_ONLY"
+    },
+    "built_at": {
+      "type": "string"
+    },
+    "canonical": {
+      "const": false
+    },
+    "canonical_source": {
+      "const": "LOOPX_LEDGER_EVENTS"
+    },
+    "identity": {
+      "type": "object"
+    },
+    "namespace": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "policy_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "record_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "records": {
+      "description": "Projected fields only. There is no field for a raw source blob, a page body or a reasoning trace.",
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relation_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/mem0-projection/v1"
+    },
+    "source_event_digests": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "identity",
+    "policy_digest",
+    "namespace",
+    "records",
+    "record_count",
+    "source_event_digests",
+    "built_at",
+    "canonical",
+    "canonical_source",
+    "authority",
+    "relation_digest"
+  ],
+  "title": "Mem0 projection",
+  "type": "object"
+}

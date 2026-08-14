@@ -44,5 +44,7 @@ jobs:
         run: sh loop_wiki/loopx-decision-memory/tests/run-all.sh
       - name: Validate the durable memory runtime
         run: sh loop_wiki/loopx-decision-memory/runtime/tests/run-all.sh
+      - name: Validate the Mem0 provider projection
+        run: sh loop_wiki/loopx-decision-memory/providers/mem0/tests/run-all.sh
       - name: Validate module catalog without composition selection
         run: python3 scripts/arena_modules.py catalog >/dev/null
