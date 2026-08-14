@@ -1,0 +1,43 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/hitl-interrupt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_decisions": {
+      "items": {"enum": ["RETRY_AFTER_FIX", "UPDATE_CONTRACT", "CANCEL", "SCOPED_EXCEPTION"]},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "created_at": {"format": "date-time", "type": "string"},
+    "gate_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "interrupt_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "interrupt_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+    "reason": {"enum": ["QUOTA_EXHAUSTED", "MANUAL_GATE", "CONTRACT_CONFLICT", "POLICY_REFUSAL"]},
+    "schema_version": {"const": "loopx/hitl-interrupt/v1"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "ledger_head": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "state_revision": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["state_revision", "ledger_head"],
+      "type": "object"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"type": "string"},
+        "task_id": {"type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    },
+    "todo_id": {"type": ["string", "null"]}
+  },
+  "required": ["schema_version", "interrupt_id", "interrupt_digest", "subject", "state", "reason", "todo_id", "gate_ids", "allowed_decisions", "created_at"],
+  "title": "LoopX HITL Interrupt v1",
+  "type": "object"
+}

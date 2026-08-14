@@ -9,6 +9,12 @@ on:
       - '.arena/modules/loopx-worker-gateway/**'
       - '.github/workflows/loopx-worker-gateway.yml'
   pull_request:
+    # ready_for_review has to be listed explicitly: the default type set is
+    # opened/synchronize/reopened, so with the draft guard below a PR that
+    # opens as a draft skips this job and never re-runs when it is marked
+    # ready -- leaving the module verified only by a branch push, against
+    # whatever commit that was rather than the head under review.
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'loop_wiki/loopx-worker-gateway/**'
       - '.arena/modules/loopx-worker-gateway/**'
