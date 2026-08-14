@@ -35,7 +35,6 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex/Grok
 23. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
 24. `sh loopctl/loopctl.sh contract`
 25. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
-26. current GitHub issue/PR base, head, checks and reachability
 
 A missing route, owner, module, issue, parent, eval, provider subject, host receipt or evidence link is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
