@@ -2,11 +2,11 @@
 
 Read [`AGENTS.md`](AGENTS.md) first, then [`README.md`](README.md), [`CONTEXT.md`](CONTEXT.md), [`ARCHITECTURE.md`](ARCHITECTURE.md), and [`docs/INDEX.md`](docs/INDEX.md).
 
-`CLAUDE.md` and `AGENTS.md` are governed entry projections. The repo-local gate validates staged bytes; promotion-time cross-repository generators may update them, but pre-commit never reads a sibling checkout.
+`CLAUDE.md` and `AGENTS.md` are governed entry projections. The repo-local gate validates tracked bytes; promotion-time cross-repository generators may update managed projections, but pre-commit never reads a mutable sibling checkout.
 
 ## Mandatory modular-integration read order
 
-For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, browser, origin, external bootstrap, Agent Shield, LoopX, memory or PDF-architecture work, continue through:
+For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, provider, browser, origin, Agent Shield, LoopX, Worker, HITL, memory, Notes, Git Town, Stack or PDF architecture work, continue through:
 
 1. [`docs/architecture/DOCUMENT_ROUTING.md`](docs/architecture/DOCUMENT_ROUTING.md)
 2. [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md)
@@ -19,16 +19,44 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, browser, origin, 
 9. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
 10. [`docs/git/README.md`](docs/git/README.md)
 11. [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
-12. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
-13. [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
-14. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
-15. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
-16. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-17. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-18. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-19. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-20. `sh loopctl/loopctl.sh contract`
-21. the target module/loop passive context, nearest README, machine manifest/contract, source and current proof/control/mutation receipts.
+12. [`docs/git/PDF_TERMINAL_SEQUENCE.md`](docs/git/PDF_TERMINAL_SEQUENCE.md)
+13. [`docs/git/pdf-terminal-sequence.json`](docs/git/pdf-terminal-sequence.json)
+14. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+15. [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+16. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+17. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
+18. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+19. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+20. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+21. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+22. the current active issue/task packet and exact GitHub base/head/checks
+23. `sh loopctl/loopctl.sh contract`
+24. the target module passive context, nearest README, machine contract, source and current proof/control/mutation receipts.
+
+## Ordered PDF terminal Stack protocol
+
+Canonical queue:
+
+```text
+human:   docs/git/PDF_TERMINAL_SEQUENCE.md
+machine: docs/git/pdf-terminal-sequence.json
+program: #61
+active:  order 0 / #82
+final:   order 25 / #68
+```
+
+Only one queue item may be active. Claude Code must not create a future terminal branch before activation. Queue order serializes acceptance, while branch ancestry follows actual byte dependency: use a true child only when unmerged parent bytes are consumed; otherwise start the next path-disjoint terminal from the updated `main`.
+
+Current sequence:
+
+```text
+#82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
+→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
+→ #101 → #68
+```
+
+A later issue, branch, fixture or focused PASS is not completion evidence. Queue advancement requires one immutable subject, positive/control/mutation evidence, cleanup, rollback identity, exact-head checks and Human review where applicable.
 
 Canonical Git Town procedure reference:
 
@@ -38,7 +66,7 @@ skills/git-town-stacked-pr-worker/SKILL.md
 blob eb2d915bca3e8a3938625f7d33a10fae95a15769
 ```
 
-Bettor owns the repository profile and Stack index only. The shared Skill is currently `NOT_SELECTED` in the consumer binding, `.git-town.toml` is `ABSENT`, and live Git Town sync is `NOT_EXERCISED`.
+Bettor owns the repository profile and Stack queue only. The shared Skill is currently `NOT_SELECTED`, `.git-town.toml` is `ABSENT`, and live Git Town sync is `NOT_EXERCISED`.
 
 Before claiming PDF integration, run:
 
@@ -47,6 +75,8 @@ python3 scripts/gates/check_pdf_harness_integration.py
 python3 scripts/gates/check_pdf_harness_integration.py --selftest
 python3 scripts/gates/check_pdf_loopx_harness_integration.py
 python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+python3 scripts/gates/check_pdf_terminal_sequence.py
+python3 scripts/gates/check_pdf_terminal_sequence.py --selftest
 python3 scripts/gates/check_git_town_stack_docs.py
 python3 scripts/gates/check_git_town_stack_docs.py --selftest
 ```
@@ -56,15 +86,17 @@ python3 scripts/gates/check_git_town_stack_docs.py --selftest
 Claude Code 不得：
 
 - bypass `loopctl` or call another module's private executable;
-- relabel `loopctl` or `.arena` as the PDF's complete LoopX task-state kernel;
-- treat a symlink, mutable checkout, package declaration or old SHA as release identity;
+- relabel a contract, fixture or current-main mechanism as the complete PDF runtime;
+- treat a symlink, mutable checkout, package declaration, branch name or old SHA as release identity;
 - flatten root/loop native context into an arbitrary MCP prompt;
 - place credentials, browser/device sessions or host-specific secret paths in Git, bundles, MCP payloads or receipts;
-- submit raw shell strings or write its own assertion/gate verdict;
-- write canonical task state, waive a gate, promote a release or Human Admit;
-- persist raw Thought Stream or private chain-of-thought as episodic memory;
+- submit raw shell strings or write its own assertion/Gate verdict;
+- write canonical task state, waive a Gate, promote a release or Human Admit;
+- persist raw Thought Stream or private chain-of-thought as Decision Memory;
 - promote `ABSENT`, `FAIL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED` or `SKIPPED_BY_POLICY` to PASS;
 - infer Git Town configuration when `.git-town.toml` and `.git-town` are absent;
+- create a future terminal branch before queue activation;
+- run Git Town continue/skip/undo or resolve semantic conflicts;
 - merge, close, delete branches, release-promote, production-rollback, rotate secrets or widen permissions.
 
 A target mechanism described in Markdown or the attached PDF may still be `NOT_IMPLEMENTED`. A mechanism present in code but not run for the exact subject remains `NOT_EXERCISED`. Open a new Claude session after changing passive context before claiming it was read.
