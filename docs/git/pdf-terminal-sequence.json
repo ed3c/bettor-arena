@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 105,
-    "active_order": 11,
+    "active_issue": 92,
+    "active_order": 12,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -411,7 +411,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Build OpenWiki and vector/graph Notes projections"
     },
@@ -440,7 +440,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Run live Serena and GrepAI canaries"
     },
