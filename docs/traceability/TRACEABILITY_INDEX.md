@@ -25,7 +25,7 @@ source / incident
 | Instruction / Method | `ed3c/skills-shared#84` | `ed3c/skills-shared#85` | independent sibling | **MERGED** at `e3b327ad49c088f1962c33167ecd5ac9d28125fb` |
 | Runtime Contract | `ed3c/runtime-env#29` | `ed3c/runtime-env#30` | independent sibling | **MERGED** at `4a333ccf106ef60bc6942b922b7f5efffb3876f5` |
 | Domain Product / Reference Consumer | `ed3c/agent-shield-monorepo#77` | `ed3c/agent-shield-monorepo#78` | independent terminal sibling | **MERGED** at `1af04c1ef5cb68eab198987feba008c93d3ec22f` |
-| Exact merged index + cold-start audit | `#38` | future convergence PR | convergence leaf | **UNBLOCKED**; Claude/Codex cold-start remains `NOT_EXERCISED` |
+| Exact merged index + cold-start audit | `#38` | `#58` contributes PDF/Stack audit; final cold-start convergence still pending | convergence workstream | **UNBLOCKED**; Claude/Codex cold-start remains `NOT_EXERCISED` |
 
 The four documentation PRs are siblings because each edits only its own repository. They are no longer Draft or blockers. Issue #38 now owns exact merged route comparison and fresh Claude/Codex cold-start evidence.
 
@@ -50,10 +50,10 @@ Canonical audit: [`../integration/AGENT_SHIELD_PDF_MODULAR_INTEGRATION_AUDIT.md`
 ```text
 main
 └─ PR #57 docs/pdf-modular-integration-2026-08-14
-   └─ docs/agent-shield-runtime-pdf-audit-2026-08-14
+   └─ PR #58 docs/agent-shield-runtime-pdf-audit-2026-08-14
 ```
 
-The second branch is a **true child** because it consumes PR #57's unmerged root README/AGENTS directory-State-Machine mapping and extends the same root documentation. Retarget or rebase the child after #57 merges.
+PR #58 is a **true child** because it consumes PR #57's unmerged root README/AGENTS directory-State-Machine mapping and extends the same root documentation. Retarget or rebase #58 after #57 merges.
 
 ## Agent Shield molecular implementation Stack
 
