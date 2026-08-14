@@ -11,7 +11,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = ROOT / ".delivery/loopx-worker-gateway-v1.tar.gz"
-EXPECTED_SHA256 = "86d0ca832a7858801b4d2d3f8643b318bd24e35ed48a36784fadca251193519c"
+EXPECTED_SHA256 = "fed2e20a4cef8c36e21086e40842bbcf8d80d5fa3b4bb44ace5c5b0ec13b3494"
 SELF = ROOT / ".delivery/materialize_loopx_worker_gateway_v1.py"
 WORKFLOW = ROOT / ".github/workflows/zz-materialize-loopx-worker-gateway-v1.yml"
 ALLOWED_EXACT = {
