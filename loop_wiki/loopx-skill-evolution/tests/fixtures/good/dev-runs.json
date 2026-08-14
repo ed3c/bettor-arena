@@ -1,0 +1,1034 @@
+[
+  {
+    "arm": "candidate",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-001",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-002",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-003",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-004",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-005",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-006",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-007",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-008",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-009",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-010",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-011",
+    "tokens": 900,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-012",
+    "tokens": 900,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-013",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-014",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-015",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-016",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-017",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-018",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-019",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-020",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-021",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-022",
+    "tokens": 1000,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-023",
+    "tokens": 1000,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "current",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [
+      {
+        "calibrated_against": "deterministic-labels-v1",
+        "calibration_receipt": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "judge_id": "clarity",
+        "score": 4.0
+      },
+      {
+        "calibrated_against": null,
+        "calibration_receipt": null,
+        "judge_id": "concision",
+        "score": 5.0
+      }
+    ],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-024",
+    "tokens": 1000,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-025",
+    "tokens": 700,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-026",
+    "tokens": 700,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-027",
+    "tokens": 700,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "r-028",
+    "tokens": 700,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-029",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-030",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-031",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 2,
+    "run_id": "r-032",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-033",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-034",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "reads-before-editing",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-035",
+    "tokens": 700,
+    "unsupported_claims": 1
+  },
+  {
+    "arm": "baseline",
+    "case_id": "dev-004",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "FAIL"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 3,
+    "run_id": "r-036",
+    "tokens": 700,
+    "unsupported_claims": 1
+  }
+]
