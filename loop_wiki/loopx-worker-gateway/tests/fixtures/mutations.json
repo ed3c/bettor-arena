@@ -1,0 +1,20 @@
+[
+  {"expected": "FAIL", "id": "duplicate-host", "target": "registry"},
+  {"expected": "FAIL", "id": "fixture-host-in-production", "target": "registry"},
+  {"expected": "FAIL", "id": "shell-binary", "target": "registry.adapter"},
+  {"expected": "FAIL", "id": "gray-box-internal-trace", "target": "registry.trace"},
+  {"expected": "FAIL", "id": "unknown-host", "target": "registry"},
+  {"expected": "FAIL", "id": "raw-shell-field", "target": "request"},
+  {"expected": "FAIL", "id": "path-traversal-arg", "target": "request.invocation.args"},
+  {"expected": "FAIL", "id": "secret-shaped-arg", "target": "request.invocation.args"},
+  {"expected": "FAIL", "id": "reusable-workspace", "target": "request.workspace"},
+  {"expected": "FAIL", "id": "trace-above-host-ceiling", "target": "request.expected"},
+  {"expected": "FAIL", "id": "fake-pass-without-execution", "target": "receipt.execution"},
+  {"expected": "FAIL", "id": "host-replay", "target": "receipt.host"},
+  {"expected": "FAIL", "id": "subject-drift", "target": "receipt.subject"},
+  {"expected": "FAIL", "id": "skill-context-drift", "target": "receipt.identity"},
+  {"expected": "FAIL", "id": "worker-authority-escalation", "target": "receipt.authority"},
+  {"expected": "FAIL", "id": "gray-box-fabricated-event", "target": "event.trace"},
+  {"expected": "FAIL", "id": "cleanup-failure", "target": "receipt.cleanup"},
+  {"expected": "CHECKED_FAIL_WITH_CLEANUP", "id": "timeout-process-group", "target": "runtime"}
+]
