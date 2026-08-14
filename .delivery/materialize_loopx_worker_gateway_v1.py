@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CORRUPT_ARCHIVE = ROOT / ".delivery/loopx-worker-gateway-v1.tar.gz"
 CHUNK_DIR = ROOT / ".delivery/loopx-worker-gateway-v1.chunks"
 SELF = ROOT / ".delivery/materialize_loopx_worker_gateway_v1.py"
-WORKFLOW = ROOT / ".github/workflows/zz-materialize-loopx-worker-gateway-v1.yml"
+TRANSIENT_WORKFLOW = ROOT / ".github/workflows/zz-materialize-loopx-worker-gateway-v1.yml"
+FINAL_WORKFLOW_PATH = ".github/workflows/loopx-worker-gateway.yml"
 EXPECTED_ARCHIVE_SHA256 = "fed2e20a4cef8c36e21086e40842bbcf8d80d5fa3b4bb44ace5c5b0ec13b3494"
 CHUNKS = [
     ("00.bin", "c50d2293642487a322762bc7129b8399c956cde401b05c2216c36b33d3e0c695"),
@@ -27,7 +28,7 @@ CHUNKS = [
 ]
 ALLOWED_EXACT = {
     ".arena/modules/README.md",
-    ".github/workflows/loopx-worker-gateway.yml",
+    FINAL_WORKFLOW_PATH,
 }
 ALLOWED_PREFIXES = (
     ".arena/modules/loopx-worker-gateway/",
@@ -65,6 +66,12 @@ def main() -> int:
                 raise SystemExit(f"unsafe archive path: {member.name!r}")
             if not member.isfile() or not admitted(name):
                 raise SystemExit(f"unadmitted archive entry: {name}")
+            # A GitHub Actions token without the workflows permission cannot
+            # create/update workflow files. Materialize ordinary module bytes
+            # here; the user-authorized Git object transaction adds the final
+            # workflow and removes this transient workflow afterwards.
+            if name == FINAL_WORKFLOW_PATH:
+                continue
             extracted = archive.extractfile(member)
             if extracted is None:
                 raise SystemExit(f"missing archive bytes: {name}")
@@ -75,7 +82,7 @@ def main() -> int:
                 raise SystemExit(f"archive path escaped repository: {name}") from exc
             staged.append((target, extracted.read(), member.mode & 0o777))
     if not staged:
-        raise SystemExit("archive contained no files")
+        raise SystemExit("archive contained no ordinary module files")
     for target, data, mode in staged:
         target.parent.mkdir(parents=True, exist_ok=True)
         fd, temporary = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
@@ -91,9 +98,6 @@ def main() -> int:
             if temp.exists():
                 temp.unlink()
 
-    # The reviewed payload contained one Markdown hard-break marker. Repository
-    # delivery policy forbids trailing whitespace, so normalize that text-only
-    # presentation byte without changing any machine contract or executable.
     module_readme = ROOT / ".arena/modules/loopx-worker-gateway/README.md"
     readme_text = module_readme.read_text(encoding="utf-8")
     normalized = "\n".join(line.rstrip() for line in readme_text.splitlines()) + "\n"
@@ -109,13 +113,14 @@ def main() -> int:
         stale.unlink()
     CHUNK_DIR.rmdir()
     SELF.unlink()
-    WORKFLOW.unlink()
     delivery = ROOT / ".delivery"
     try:
         delivery.rmdir()
     except OSError:
         pass
-    print(f"materialized {len(staged)} LoopX Worker Gateway files from sha256:{EXPECTED_ARCHIVE_SHA256}")
+    if not TRANSIENT_WORKFLOW.is_file():
+        raise SystemExit("transient materializer workflow disappeared unexpectedly")
+    print(f"materialized {len(staged)} ordinary LoopX Worker Gateway files from sha256:{EXPECTED_ARCHIVE_SHA256}")
     return 0
 
 
