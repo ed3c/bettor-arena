@@ -1,0 +1,9 @@
+{
+  "config_digest": "sha256:11d5422264b3b5ee2e2e49475718eea7f45e44a7d57796a41fa7b42e88896877",
+  "languages": [
+    "python"
+  ],
+  "multi_root": false,
+  "server_id": "pyright-like",
+  "version": "1.4.2"
+}

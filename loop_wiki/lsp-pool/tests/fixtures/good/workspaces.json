@@ -1,0 +1,18 @@
+[
+  {
+    "commit": "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+    "lease_id": "lease-alpha",
+    "repository": "ed3c/bettor-arena",
+    "root": "workspaces/alpha",
+    "tree": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+    "workspace_id": "ws-alpha"
+  },
+  {
+    "commit": "3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+    "lease_id": "lease-beta",
+    "repository": "ed3c/bettor-arena",
+    "root": "workspaces/beta",
+    "tree": "4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d",
+    "workspace_id": "ws-beta"
+  }
+]

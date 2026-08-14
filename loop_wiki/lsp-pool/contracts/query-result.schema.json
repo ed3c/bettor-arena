@@ -1,0 +1,142 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/lsp-pool/query-result/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A result and the tree it came from. CLEAN, UNKNOWN and SERVER_FAILED are three different answers that all produce an empty findings list.",
+  "properties": {
+    "findings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "column": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "line": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "ERROR",
+              "WARNING",
+              "INFORMATION",
+              "HINT"
+            ]
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "column",
+          "line",
+          "message",
+          "severity",
+          "source"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "description": "Every result names the tree it describes. A diagnostic without provenance is a claim about 'the code', and there are five worktrees.",
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "config_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "index_freshness": {
+          "enum": [
+            "CURRENT",
+            "NOT_INDEXED",
+            "STALE"
+          ]
+        },
+        "indexed_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "type": "string"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "root": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "server_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "workspace_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "commit",
+        "config_digest",
+        "index_freshness",
+        "indexed_at",
+        "repository",
+        "root",
+        "server_id",
+        "tree",
+        "version",
+        "workspace_id"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/lsp-pool-query-result/v1"
+    },
+    "state": {
+      "description": "Only ['CLEAN', 'FINDINGS'] carry evidence about the code. UNKNOWN means nobody looked; SERVER_FAILED means the server did.",
+      "enum": [
+        "CLEAN",
+        "FINDINGS",
+        "NOT_EXERCISED",
+        "SERVER_FAILED",
+        "UNKNOWN"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "state",
+    "findings",
+    "provenance",
+    "reason"
+  ],
+  "title": "LSP pool query result",
+  "type": "object"
+}
