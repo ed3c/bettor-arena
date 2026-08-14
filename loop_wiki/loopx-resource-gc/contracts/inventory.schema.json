@@ -1,0 +1,104 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/resource-gc/inventory/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Every resource under a root, with the facts the classifier needs. The class vocabulary is closed: an unclassified resource is one nobody looked at, and the default anyone would pick is the permissive one.",
+  "properties": {
+    "resources": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "blocked_evidence": {
+            "description": "Blocked conflict evidence must stay recoverable and is never selectable.",
+            "type": "boolean"
+          },
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "last_used_at": {
+            "description": "Null means unknown, which is not the same as old. A GC that expires on missing data deletes most confidently where it knows least.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lease_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "resource_class": {
+            "enum": [
+              "ARTIFACT",
+              "BLOCKED_EVIDENCE",
+              "BRANCH",
+              "CI_SIMULATION_CACHE",
+              "DEPENDENCY_CACHE",
+              "GRAPH_INDEX",
+              "HUMAN_DECISION",
+              "LEDGER_SEGMENT",
+              "LOOPX_SNAPSHOT",
+              "LSP_INDEX",
+              "MEMORY_PROJECTION",
+              "MOUNT",
+              "PORT",
+              "PROCESS",
+              "RELEASE_RECEIPT",
+              "STDIO_LOG",
+              "VECTOR_INDEX",
+              "WAL",
+              "WORKTREE"
+            ]
+          },
+          "resource_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "subject_commit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "blocked_evidence",
+          "bytes",
+          "dirty",
+          "last_used_at",
+          "lease_id",
+          "path",
+          "resource_class",
+          "resource_id",
+          "subject_commit"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "root_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/resource-gc-inventory/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "root_id",
+    "resources"
+  ],
+  "title": "Resource GC inventory",
+  "type": "object"
+}

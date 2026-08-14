@@ -1,0 +1,54 @@
+[
+  {
+    "path": "data/resource-gc/vector-stale",
+    "rebuild_argv": [
+      "python3",
+      "tools/rebuild_vector.py",
+      "{OUTPUT}"
+    ],
+    "resource_id": "vector-stale",
+    "source_paths": [
+      "data/resource-gc/sources"
+    ],
+    "timeout_ms": 30000
+  },
+  {
+    "path": "data/resource-gc/cache-stale",
+    "rebuild_argv": [
+      "python3",
+      "tools/rebuild_cache.py",
+      "{OUTPUT}"
+    ],
+    "resource_id": "cache-stale",
+    "source_paths": [
+      "data/resource-gc/sources"
+    ],
+    "timeout_ms": 30000
+  },
+  {
+    "path": "data/resource-gc/graph-divergent",
+    "rebuild_argv": [
+      "python3",
+      "tools/rebuild_divergent.py",
+      "{OUTPUT}"
+    ],
+    "resource_id": "graph-divergent",
+    "source_paths": [
+      "data/resource-gc/sources"
+    ],
+    "timeout_ms": 30000
+  },
+  {
+    "path": "data/resource-gc/lsp-unprovable",
+    "rebuild_argv": [
+      "python3",
+      "tools/rebuild_lsp.py",
+      "{OUTPUT}"
+    ],
+    "resource_id": "lsp-unprovable",
+    "source_paths": [
+      "data/resource-gc/absent-sources"
+    ],
+    "timeout_ms": 30000
+  }
+]
