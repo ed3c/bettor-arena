@@ -29,7 +29,10 @@ class PdfTerminalSequenceTest(unittest.TestCase):
     def test_mutation_matrix_passes(self) -> None:
         result = self.run_checker("--selftest")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("selftest PASS: 14 mutations", result.stdout)
+        # 15 since human-boundary gained a second control: the original mutation
+        # tripped the length floor before reaching the marker check it was
+        # written for, so the marker case and the floor case are now separate.
+        self.assertIn("selftest PASS: 15 mutations", result.stdout)
 
     def test_invalid_root_is_checked_failure(self) -> None:
         result = subprocess.run(
