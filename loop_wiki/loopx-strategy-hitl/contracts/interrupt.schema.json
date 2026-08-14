@@ -1,0 +1,24 @@
+{
+  "$id": "https://ed3c.example/loopx/interrupt.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_decisions": {"items": {"enum": ["RETRY_AFTER_FIX", "UPDATE_CONTRACT", "CANCEL_TASK", "SCOPED_EXCEPTION"]}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "canonical_authority": {"const": false},
+    "created_at": {"format": "date-time", "type": "string"},
+    "evidence_refs": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "gate_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "interrupt_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "ledger_head_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "reason": {"enum": ["QUOTA_EXHAUSTED", "GATE_FAILURE", "CAPABILITY_MISMATCH", "AUTHORIZATION_REQUIRED", "POLICY_BLOCK", "MANUAL_REVIEW"]},
+    "request_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": "loopx/interrupt/v1"},
+    "state_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "state_revision": {"minimum": 0, "type": "integer"},
+    "subject": {"type": "object"},
+    "todo_id": {"anyOf": [{"type": "null"}, {"type": "string"}]}
+  },
+  "required": ["schema_version", "interrupt_id", "request_digest", "subject", "state_revision", "ledger_head_digest", "state_digest", "reason", "todo_id", "gate_ids", "evidence_refs", "allowed_decisions", "created_at", "canonical_authority"],
+  "title": "LoopX HITL Interrupt v1",
+  "type": "object"
+}
