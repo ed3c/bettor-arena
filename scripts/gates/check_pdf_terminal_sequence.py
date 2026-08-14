@@ -537,30 +537,51 @@ def run_selftest(root: Path) -> dict[str, Any]:
         lambda value: value["items"][1].update(order=0),
         "contiguous and sorted",
     )
+
+    # These mutations locate their targets by queue state rather than by index.
+    # An earlier version used literal positions, and the first time the queue
+    # advanced, `items[6]` was already the ACTIVE item -- so the two-active
+    # mutation changed nothing and the control passed while testing nothing.
+    # That is the same position-pinning the derived-head rule replaced, left in
+    # the controls for the rule, which is exactly where it is hardest to notice.
+    def head(value: dict[str, Any]) -> dict[str, Any]:
+        return next(i for i in value["items"] if i["queue_state"] == "ACTIVE")
+
+    def blocked(value: dict[str, Any], offset: int = 0) -> dict[str, Any]:
+        return [
+            i for i in value["items"] if i["queue_state"] == "BLOCKED_BY_PREDECESSOR"
+        ][offset]
+
+    def completed(value: dict[str, Any], offset: int = -1) -> dict[str, Any]:
+        return [i for i in value["items"] if i["queue_state"] == "COMPLETE"][offset]
+
+    def point_current_at(value: dict[str, Any], item: dict[str, Any]) -> None:
+        value["current"].update(
+            active_order=item["order"], active_issue=item["issues"][0]
+        )
+
     mutate_items(
         "two-active",
-        lambda value: value["items"][6].update(queue_state="ACTIVE"),
+        lambda value: blocked(value).update(queue_state="ACTIVE"),
         "exactly one ACTIVE",
     )
     mutate_items(
         "work-started-past-the-head",
-        lambda value: value["items"][7].update(queue_state="FINAL_CONVERGENCE"),
+        lambda value: blocked(value, 1).update(queue_state="FINAL_CONVERGENCE"),
         "not BLOCKED_BY_PREDECESSOR",
     )
-    # The three that check the derived head. Pinning ACTIVE to a literal order
-    # is what made advancing the queue a gate edit, so the replacement rule
-    # needs its own controls or the fix is untested.
     mutate_items(
         "head-skipped-an-unfinished-stage",
-        # ACTIVE moved to order 6 while order 5 is neither COMPLETE nor active.
-        # `current` is moved with it, so the summary agrees and only the derived
+        # ACTIVE moves one past the head while the head itself stays unfinished.
+        # `current` moves with it, so the summary agrees and only the derived
         # head rule can catch this -- which is the rule under test.
+        # offset 1 because the first statement just made the old head the
+        # lowest BLOCKED item; offset 0 would set it straight back to ACTIVE
+        # and the mutation would cancel itself out.
         lambda value: (
-            value["items"][5].update(queue_state="BLOCKED_BY_PREDECESSOR"),
-            value["items"][6].update(queue_state="ACTIVE"),
-            value["current"].update(
-                active_order=6, active_issue=value["items"][6]["issues"][0]
-            ),
+            head(value).update(queue_state="BLOCKED_BY_PREDECESSOR"),
+            blocked(value, 1).update(queue_state="ACTIVE"),
+            point_current_at(value, head(value)),
         ),
         "lowest item that is not COMPLETE",
     )
@@ -573,22 +594,19 @@ def run_selftest(root: Path) -> dict[str, Any]:
     mutate_items(
         "completed-stage-left-unmarked",
         # A landed stage nobody marked. The head then sits past it, which is the
-        # same diagnosis as skipping one -- and it is the right diagnosis: the
-        # queue has stopped recording what finished.
-        lambda value: value["items"][3].update(queue_state="BLOCKED_BY_PREDECESSOR"),
+        # right diagnosis: the queue has stopped recording what finished.
+        lambda value: completed(value).update(queue_state="BLOCKED_BY_PREDECESSOR"),
         "lowest item that is not COMPLETE",
     )
     mutate_items(
         "hole-in-the-completed-prefix",
-        # Deliberately shaped to pass the derived-head rule so the prefix rule is
-        # the only thing that can catch it: ACTIVE moves back to the hole, so the
-        # head is correct and only the sequence is wrong.
+        # Shaped to pass the derived-head rule so the prefix rule is the only
+        # thing that can catch it: ACTIVE moves back into the hole, so the head
+        # is correct and only the sequence is wrong.
         lambda value: (
-            value["items"][2].update(queue_state="ACTIVE"),
-            value["items"][5].update(queue_state="BLOCKED_BY_PREDECESSOR"),
-            value["current"].update(
-                active_order=2, active_issue=value["items"][2]["issues"][0]
-            ),
+            head(value).update(queue_state="BLOCKED_BY_PREDECESSOR"),
+            completed(value, 0).update(queue_state="ACTIVE"),
+            point_current_at(value, head(value)),
         ),
         "COMPLETE items are not a prefix",
     )
