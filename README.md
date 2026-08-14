@@ -2,126 +2,171 @@
 
 > **Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper**
 
-`bettor-arena` 把原本散落在同一個 repository 的小迴圈，收斂成可組合、可證明、可發布的 modules。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 可以在不破壞既有 interface 的前提下快速迭代。
+`bettor-arena` 把散落的小迴圈收斂成可組合、可證明、可發布的 modules。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 可以在不破壞既有 interface 的前提下快速迭代。
+
+## PDF Harness Integration verdict
+
+The attached 41-page **LLM 泛化：模型權重與 Harness** PDF is a source proposal. It proposes a complete LoopX state kernel, deterministic gates, LangGraph HITL, white/gray-box workers, episodic memory, OpenWiki/AST/LSP, worktree fleets, cloud/local runtime, observability and a Web console.
+
+Current repository verdict:
+
+```text
+modular control-plane foundation                IMPLEMENTED
+hard gates / proof / control / mutation         IMPLEMENTED
+portable Skill → host-owned execution           IMPLEMENTED
+Context Capsules / OpenWiki / Code Truth        IMPLEMENTED
+provider-neutral query and memory contracts     IMPLEMENTED
+
+complete LoopX task-state kernel                NOT_IMPLEMENTED
+single-writer event ledger and reducer          NOT_IMPLEMENTED
+Objective / Todos / Quota canonical state       NOT_IMPLEMENTED
+LangGraph strategy + HITL interrupt/resume      NOT_IMPLEMENTED
+evidence-bound episodic memory                  NOT_IMPLEMENTED
+six-host live execution matrix                  NOT_EXERCISED
+cloud/local equivalent execution                NOT_EXERCISED
+Langfuse / OpenTelemetry / Harness console      NOT_IMPLEMENTED
+```
+
+The correct conclusion is:
+
+> Bettor modularly integrates much of the PDF's supporting Harness foundation, but it does **not** yet integrate the complete PDF architecture.
+
+Read the exact mapping, rejected source shortcuts, gaps and acceptance criteria in
+[`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md).
+The machine companion is
+[`docs/architecture/pdf-harness-integration.matrix.json`](docs/architecture/pdf-harness-integration.matrix.json).
 
 ## Read order
 
-1. [`ARCHITECTURE.md`](ARCHITECTURE.md) — engineering SSOT、placement contract 與最高優先級 invariants。
-2. [`AGENTS.md`](AGENTS.md) 或 [`CLAUDE.md`](CLAUDE.md) — host-specific thin entrypoint。
-3. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md) — normative target contract。
-4. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md) — mutable implementation ledger。
-5. [`docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md) — 《黑客松 AI 開發：SKILL.md 與 MCP》需求→模組/State Machine/evidence 對照與修正。
-6. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md) — same-name State Machine routing summary。
-7. [`.arena/README.md`](.arena/README.md) — machine-readable control plane 導航。
-8. [`loopctl/README.md`](loopctl/README.md) 與 [`proof_workflow/README.md`](proof_workflow/README.md) — public surface 與 evidence semantics。
+1. [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md) — mandatory cross-host entry.
+2. [`ARCHITECTURE.md`](ARCHITECTURE.md) — engineering SSOT, placement contract and invariants.
+3. [`CONTEXT.md`](CONTEXT.md) — current handoff and stable vocabulary.
+4. [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) — PDF proposal versus current repository.
+5. [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md) — directory owners, transitions, inputs and outputs.
+6. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md) — normative target.
+7. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md) — mutable implementation ledger.
+8. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md) — molecular terminal/convergence topology.
+9. [`.arena/README.md`](.arena/README.md), [`loopctl/README.md`](loopctl/README.md) and [`proof_workflow/README.md`](proof_workflow/README.md) — machine control, public surface and evidence semantics.
 
-完整文件索引見 [`docs/README.md`](docs/README.md)。
+Complete navigation: [`docs/README.md`](docs/README.md).
 
-## Directory topology → State Machine ownership
+## Directory → State Machine ownership
 
-```text
-bettor-arena/
-├── .arena/
-│   ├── modules/            MODULE LIFECYCLE + path/capability ownership
-│   ├── compositions/       MACRO requirements
-│   ├── locks/              immutable composition result
-│   ├── contexts/           Context Capsule inputs
-│   └── mcp-policy.json     MCP exposure allow/deny state
-├── .skill-bindings/        SKILL CONSUMER BINDING state
-├── .agents/skills/         repository-owned/projected Skill support material
-├── .runtime-env/           secret-free runtime projection
-├── loopctl/                PUBLIC PORT + STATELESS MCP state machine
-├── proof_workflow/         PROOF / CONTROL / MUTATION state machine
-├── knowledge-providers/    PROVIDER candidate/query/memory state
-├── data/
-│   ├── module-proof/       module subject + release evidence
-│   ├── mcp/                MCP exposure snapshots
-│   ├── origins/            GitHub/Forgejo observation state
-│   └── browser/            browser/provider observation state
-├── scripts/                trusted deterministic reducers and gates
-├── docs/                   Agent/human routing; never machine authority
-└── AGENTS.md               mandatory Agent route + non-negotiable boundaries
-```
+<!-- PDF_HARNESS_MATRIX_START -->
 
-## Runtime topology
+| Directory / route | Owner | State machine responsibility | Current state |
+|---|---|---|---|
+| root `*.md` | `arena-core` | `ENTRY → ROUTE → OWNER → CONTRACT → EVIDENCE` | `IMPLEMENTED` |
+| `.agents/` | `agent-runtime-integration` | Skill requirements, immutable binding and host projection | `IMPLEMENTED` |
+| `.skill-bindings/` | consumer binding | shared procedure → repository domain route/assertions | `IMPLEMENTED` |
+| `.runtime-env/` | `environment-contracts` consumer projection | declare → resolve → materialize → offline verify → live canary | mechanism `IMPLEMENTED` |
+| `.arena/modules/` | `module-catalog` | proposed → contracted → composed → proved → released | `IMPLEMENTED` |
+| `.arena/compositions/` | `module-catalog` | desired modules → capability/dependency/conflict resolution | `IMPLEMENTED` |
+| `.arena/locks/` | generated control plane | requirements → deterministic composition lock | mechanism `IMPLEMENTED`; exact bytes must be current |
+| `.arena/contexts/` | `loop-runtime` and module owners | select → materialize → freeze → driver prepare → canary | offline `IMPLEMENTED`; live hosts vary |
+| `loopctl/` | `loop-runtime` | parse → validate → dispatch public port → propagate `0/2/64` | `IMPLEMENTED` |
+| `mcp/` | `mcp-adapters` | default deny → typed tool projection → disposable call → cleanup | `IMPLEMENTED` for admitted tools |
+| `proof_workflow/` | `proof-kernel` | claim → physical traversal → independent control → mutation → receipt | `IMPLEMENTED` |
+| `data/module-proof/` | generated evidence | module closure subjects → release aggregation | mechanism `IMPLEMENTED`; release evidence may be `NOT_EXERCISED` |
+| `loop_wiki/evolve-perfect-seed-repo-factory/` | `perfect-seed-factory` | packet → build → quality/operator/validator → Human edge | `IMPLEMENTED` |
+| `kb-ingest/`, `openwiki/` | `openwiki` | request → dry/full opt-in → verify → projection/receipt | `IMPLEMENTED` mechanism |
+| `loop_wiki/code-truth-graph/` | `code-truth-graph` | closed packet → parse/build → graph/result artifacts | `IMPLEMENTED` |
+| `docs/knowledge-providers/` | `knowledge-providers` | manifest → bounded query/proposal → source readback → Human Admit | contracts `IMPLEMENTED`; live providers vary |
+| `notebooklm/` | `notebooklm` | target → resolve/auth → read/follow → scratch cleanup → receipt | mechanism `IMPLEMENTED` |
+| `scripts/gates/`, `tests/` | `arena-core` / `proof-kernel` | positive → hollow/mutation → exact-tree verdict | `IMPLEMENTED` |
+| `.github/workflows/` | cloud verifier | event → exact checkout → deterministic gate → status | `IMPLEMENTED` |
+| `.loopx/` | proposed LoopX owner | Objective/Todos/Gates/Evidence/Quota → reducer/ledger | `NOT_IMPLEMENTED` |
+| LangGraph/HITL package | proposed strategy plane | propose command → interrupt/resume → decision receipt | `NOT_IMPLEMENTED` |
+| worker fleet | proposed execution plane | probe → lease → materialize → execute → collect → dispose | live matrix `NOT_EXERCISED` |
+| telemetry/Web console | proposed projection plane | event → redact → project → inspect → signed Human action | `NOT_IMPLEMENTED` |
 
-```text
-Claude Code / Codex CLI
-        │
-        │ JSON-RPC / stdio, immutable release
-        ▼
-Stateless MCP Gateway
-        │ selected module closure + typed carrier
-        ▼
-Module Public Port
-        │ stable interface_version
-        ▼
-Bounded Micro Loop
-        │ typed result + named exits + artifacts
-        ▼
-Proof Kernel
-        └─ proof + independent control + mutation/hollow evidence
-```
+<!-- PDF_HARNESS_MATRIX_END -->
 
-Arena 的 Macro／Composition loop 只負責 module selection、dependency/conflict resolution、projection、proof matrix、Human Admit、composition lock、promotion 與 rollback。Micro loop 只處理 bounded task execution，不能自我 admit、promote 或執行 production rollback。
+Detailed state machines and data ownership:
+[`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md).
 
-## End-to-end integration data flow
+## Current implemented data flow
 
 ```text
-skills-shared immutable Skill release
-        +
-runtime-env secret-free binding/profile/workload
-        ↓
-.skill-bindings + .arena module requirements
-        ↓
-Macro resolver
-        ↓
-composition lock + selected module closure
-        ↓
-Context Capsule / host projection
-        ↓
-loopctl public contract
-        ↓
-default-deny Stateless MCP
-        ↓
-typed Skill execution request
-        ↓
-execution provider
-(local disposable process / future admitted cloud sandbox)
-        ↓
-OS + artifact observations
-        ↓
-independent assertions
-        ↓
-proof + control + mutation/hollow receipts
-        ↓
-external Claude/Codex/provider canaries
-        ↓
-composition release receipt
-        ↓
-Human Admit
-        ↓
-promotion or rollback
+skills-shared immutable Skill release ──┐
+                                        ├─→ .agents/ + .skill-bindings/
+runtime-env secret-free release ────────┘              │
+                                                       ▼
+                                            .arena composition requirements
+                                                       │
+                                                       ▼
+                                      lock + Context Capsules + proof subjects
+                                                       │
+                            ┌──────────────────────────┼────────────────────────┐
+                            ▼                          ▼                        ▼
+                     loopctl public port       default-deny MCP       host Context projection
+                            │                          │                        │
+                            └──────────────────────────┼────────────────────────┘
+                                                       ▼
+                                      bounded module / disposable Skill runner
+                                                       │
+                                              artifacts + OS exits
+                                                       │
+                                                       ▼
+                                        proof + control + mutation/hollow
+                                                       │
+                                                       ▼
+                                           subject-bound receipt
+                                                       │
+                                                       ▼
+                                             Human Admit / release
 ```
 
-## PDF architecture integration verdict
+## Missing LoopX control flow
 
-The PDF is treated as a **requirement/hypothesis source**, not factual authority. Bettor adopts the useful architecture while correcting unsafe assumptions. See [`PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md).
+The PDF's core task-state loop is not represented by the current `loopctl` name:
 
-| PDF concept | Bettor mapping | State |
-|---|---|---|
-| SKILL.md capability boundaries | `skills-shared` release + `.skill-bindings/` | contract implemented |
-| dynamic tool discovery | `loopctl` public surface + `.arena/mcp-policy.json` | implemented, default deny |
-| stateless MCP | Bun/TypeScript MCP runtime | implemented for admitted carriers |
-| isolated code execution | portable Skill execution stack | stack implemented, convergence to current `main` pending #53 |
-| E2B/Firecracker | execution-provider candidate | not an invariant; not exercised |
-| browser automation | Browser Contract v2 | deterministic contract present; live provider subject-specific |
-| Skill Arena evals | proof/control/mutation + Skill/provider evals | deterministic contract implemented |
-| Self-Healing | bounded Micro recovery + named exits | bounded only; retry-until-pass forbidden |
-| Promptfoo runtime governance | rejected as runtime authority | offline/CI adapter only if admitted |
-| Human-in-the-loop | Human Admit | explicit non-tool authority |
+```text
+Objective + Todos + Gates + Evidence + Quota
+        ↓
+append-only single-writer event ledger
+        ↓
+strategy graph proposes a typed command
+        ↓
+worker executes in an isolated workspace
+        ↓
+hard gates observe artifacts
+        ↓
+LoopX reducer alone commits the transition
+        ↓
+memory proposal / retry / HITL / complete
+```
 
-No example success rate, latency, user count, market share or YC claim from the PDF is copied into repository truth without independent evidence.
+Required authority law:
+
+```text
+strategy proposes
+worker executes
+gates observe
+LoopX commits
+Human admits
+```
+
+## Current module catalog
+
+| Module ID | Responsibility |
+|---|---|
+| `agent-runtime-integration` | Skill/runtime bindings, portable host-owned execution and adapter verdicts |
+| `arena-core` | root entrypoints, bootstrap, placement and repository gates |
+| `code-truth-graph` | source-bound Code Truth Graph builder |
+| `environment-contracts` | runtime projection, logical origins and Browser Contract |
+| `knowledge-providers` | bounded provider query and proposal-only memory contracts |
+| `loop-runtime` | `loopctl`, Context Capsules and stateless MCP runtime |
+| `mcp-adapters` | higher-level MCP adapters |
+| `module-catalog` | manifests, ownership, composition and locks |
+| `notebooklm` | authenticated bounded harvest loop |
+| `openwiki` | typed OpenWiki update and projection |
+| `perfect-seed-factory` | typed seed-repository Micro loop |
+| `project-bootstrapper` | external-project plan/apply/verify/rollback |
+| `proof-kernel` | closure subjects, controls, mutations and release aggregation |
+| `technical-equivalence` | claim-to-implementation equivalence loop |
+
+The desired, locked and released module sets must be identical. A selected module missing from the lock or release receipt is a hard integration failure.
 
 ## Stable public surfaces
 
@@ -132,11 +177,11 @@ sh loopctl/loopctl.sh contract
 sh loopctl/loopctl.sh --selftest
 ```
 
-`loopctl/contract.json` 是 canonical external surface；`loopctl.sh` 是 wiring。Private flags、driver、prompt、implementation directory 與 temporary files 不是外部 contract。
+`loopctl/contract.json` is the canonical external surface; `loopctl.sh` is wiring. Private flags, prompt fragments, implementation paths and temporary files are not external contract.
 
 ### Stateless MCP
 
-MCP tools 由 canonical contract 與 `.arena/mcp-policy.json` 生成，採 **default deny**。每次 call pin immutable subject、只 materialize selected module closure，並使用 disposable workspace。Caller 不得傳 server-host absolute path、任意 `cwd`、secret、browser profile 或 generic shell command。
+MCP tools are generated from the canonical CLI contract and `.arena/mcp-policy.json`, with default deny. Each call pins an immutable subject, materializes only the selected closure, uses a disposable workspace and verifies cleanup. No generic shell, server-host absolute path, arbitrary `cwd`, secret or browser profile is accepted.
 
 ### Project bootstrapper
 
@@ -145,17 +190,51 @@ bun scripts/arena_project.ts --help
 bun scripts/gates/check_project_bootstrap.ts
 ```
 
-Project initialization 採 `plan → resolve → render temp tree → verify → apply → receipt`。Rollback 只允許在 target bytes 未被後續修改時執行。
+Initialization follows `plan → resolve → render temp tree → verify → apply → receipt`. Rollback refuses target bytes changed after apply.
 
-## Module and evidence model
+## Molecular Stack PR index
 
-- Module manifests： [`.arena/modules/`](.arena/modules/)
-- Composition requirements： [`.arena/compositions/`](.arena/compositions/)
-- Deterministic lock： [`.arena/locks/`](.arena/locks/)
-- Context Capsules： [`.arena/contexts/`](.arena/contexts/)
-- Module proof subjects： [`data/module-proof/`](data/module-proof/)
-- MCP exposure snapshot： [`data/mcp/`](data/mcp/)
-- Origin / browser status： [`data/origins/`](data/origins/) / [`data/browser/`](data/browser/)
+Repository-level Git Town configuration is currently absent:
+
+```text
+.git-town.toml                       ABSENT
+.git-town                            ABSENT
+git-town-stacked-pr-worker selected  ABSENT
+```
+
+Molecular sibling/child/terminal/convergence semantics are still enforced by
+[`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md). The full current topology is
+[`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md).
+
+Quick view:
+
+```text
+four documentation siblings (#37, skills-shared#85, runtime-env#30, shield#78)
+        ↓ all merged
+bettor-arena#38 convergence leaf
+        ├─ pin exact merged routes
+        ├─ audit PDF mapping
+        ├─ regenerate lock/context/proof projections
+        └─ keep live host/provider checks separate
+
+repo-agent binding #43
+→ portable Skill contract #48
+→ host-owned execution #50
+→ provider contracts #51
+→ paired provider evaluator #56 (open; mixed exact-head checks)
+```
+
+PR #53 is a diverged historical aggregate and is not a merge instruction. Issue #24 remains the open immutable Agent Shield reference-consumer leaf.
+
+## Evidence model
+
+- Module manifests: [`.arena/modules/`](.arena/modules/)
+- Composition requirements: [`.arena/compositions/`](.arena/compositions/)
+- Deterministic lock: [`.arena/locks/`](.arena/locks/)
+- Context Capsules: [`.arena/contexts/`](.arena/contexts/)
+- Module proof subjects: [`data/module-proof/`](data/module-proof/)
+- MCP exposure: [`data/mcp/`](data/mcp/)
+- Origin/browser status: [`data/origins/`](data/origins/) / [`data/browser/`](data/browser/)
 
 Evidence states are not aliases:
 
@@ -163,39 +242,14 @@ Evidence states are not aliases:
 PASS ≠ FAIL ≠ ABSENT ≠ NOT_IMPLEMENTED ≠ NOT_EXERCISED
 ```
 
-A receipt is a claim. A control must execute the public port and observe behavior. A mutation or hollow control must prove that a load-bearing guard can turn red。
-
-## Git Town / molecular Stack PR index
-
-Git Town is optional local tooling; **GitHub base/head metadata is publication truth**. A child PR that says `merged=true` may have merged only into its parent branch. That does not mean its bytes are on `main`.
-
-### Portable Skill execution stack
-
-```text
-main
-└─ #43 repo-agent-native Bettor binding                     MERGED TO MAIN
-   └─ #48 harness-wiki portable execution contracts         MERGED INTO STACK PARENT
-      └─ #50 host-owned executable Skill runner             MERGED INTO STACK PARENT
-         └─ #52 provider-neutral knowledge boundary         MERGED INTO STACK PARENT
-            └─ #53 portable-skill-execution convergence     OPEN / DIVERGED FROM MAIN
-```
-
-**Current integration authority:** #53 must be rebuilt or synchronized with current `main`, rerun exact-head gates, then merged before #48/#50/#52 are described as integrated into `main`.
-
-### Knowledge-provider admission leaf
-
-```text
-main
-└─ #56 provider admission packets/evals   OPEN
-```
-
-#56 currently has failing exact-head GitHub checks, so it is not merge-authorized. Its checked-in observations are fixture-only and cannot establish Serena/GrepAI/Code-Graph-RAG/Mem0 live health or superiority.
-
-When Git Town is installed locally, use it only to manage the same dependency graph; never let local stack metadata override GitHub parent/base identity or exact-head checks.
+A receipt is a claim. A control must execute the public port. A mutation or hollow control must prove that a load-bearing guard can turn red.
 
 ## Local verification
 
 ```sh
+python3 scripts/gates/check_pdf_harness_integration.py
+python3 scripts/gates/check_pdf_harness_integration.py --selftest
+python3 scripts/gates/check_agent_docs.py
 python3 scripts/gates/check_readme_coverage.py --selftest
 python3 scripts/gates/check_readme_coverage.py
 python3 scripts/gates/check_module_catalog.py
@@ -206,14 +260,10 @@ bun scripts/gates/check_project_bootstrap.ts
 bun scripts/gates/check_environment_contracts.ts
 ```
 
-Run `sh bootstrap.sh` once to install repository-relative hooks and perform the core doctor checks. Host trust, MCP approval, network widening, browser sign-in and secret-bearing providers remain human-owned activation steps.
+Run `sh bootstrap.sh` once to install repository-relative hooks and perform core doctor checks. Host trust, MCP approval, network widening, browser sign-in and secret-bearing providers remain Human-owned activation.
 
 ## Current boundary
 
-The deterministic module catalog, ownership model, module-scoped proof identities, Context Capsules, default-deny Bun/TypeScript MCP runtime, project bootstrapper, logical-origin contract and Browser Contract v2 are present in current `main`.
+The deterministic module catalog, ownership model, module-scoped proof identity, Context Capsules, default-deny MCP runtime, transactional project bootstrap, logical-origin/browser contracts, portable Skill execution, OpenWiki, Code Truth Graph and provider-neutral contracts are present.
 
-The portable Skill execution + knowledge-provider stack is **not yet fully converged into current `main`**: #53 is the open convergence leaf. Provider admission #56 is also open and currently has failing exact-head checks. These states must not be hidden by the fact that intermediate stacked child PRs show as merged.
-
-Live Claude/Codex subscriptions, signed-in browser sessions, Forgejo/GitHub environment equivalence, cloud MicroVM providers and other external systems remain `NOT_EXERCISED` unless a current receipt says otherwise.
-
-E2B／Firecracker and similar cloud runtimes are provider candidates, not Arena invariants. They enter the architecture only after independent license/spec verification and a runtime canary.
+Live subscriptions, signed-in sessions, provider indexes, cloud MicroVMs, local/cloud parity, LoopX task-state authority, LangGraph HITL, episodic-memory writeback, observability and Web UI remain `NOT_EXERCISED` or `NOT_IMPLEMENTED` unless an exact current receipt says otherwise.

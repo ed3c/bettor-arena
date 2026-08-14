@@ -1,0 +1,55 @@
+{
+  "schema_version": "knowledge-provider-eval-observation/v1",
+  "observation_id": "obs-symbol-exact",
+  "case_id": "symbol-public-skill-port",
+  "participant_id": "exact-search-control",
+  "participant_identity_digest": "sha256:327b45503a3290eb52662255a14815197d0e9a4725cf222e560712949cbd388e",
+  "provider_manifest_digest": null,
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  },
+  "query_digest": "sha256:981e11d298c85f721d88042fbf647b88c1c9ac5092a65cfb5916042d577382af",
+  "fixture": true,
+  "execution": {
+    "state": "PASS",
+    "executed": true
+  },
+  "index": {
+    "state": "FRESH",
+    "subject_match": true
+  },
+  "results": [
+    {
+      "id": "public-skill-port",
+      "rank": 1,
+      "verdict": "FOUND",
+      "verification": "SOURCE_READBACK_CONFIRMED",
+      "source_refs": [
+        "loopctl/contract.json"
+      ]
+    }
+  ],
+  "authority": {
+    "candidate_only": true,
+    "advanced_state": false,
+    "waived_gate": false,
+    "marked_tested": false,
+    "human_admit": false,
+    "wrote_repository": false,
+    "wrote_memory": false,
+    "promoted_release": false
+  },
+  "resources": {
+    "latency_ms": 480,
+    "context_bytes": 4096,
+    "tool_calls": 3,
+    "result_count": 1
+  },
+  "cleanup": {
+    "status": "PASS",
+    "residue": []
+  },
+  "memory_policy": null
+}
