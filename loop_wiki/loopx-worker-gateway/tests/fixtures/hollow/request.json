@@ -1,0 +1,45 @@
+{
+  "context_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "expected": {
+    "loaded_context_identity": "REQUIRED",
+    "loaded_skill_identity": "REQUIRED",
+    "minimum_trace": "PROCESS_ONLY"
+  },
+  "host_id": "codex-cli",
+  "invocation": {
+    "args": ["--mode", "fail"],
+    "max_output_bytes": 131072,
+    "stdin": {"mode": "CLOSED"},
+    "timeout_ms": 3000
+  },
+  "policy": {
+    "credential_refs": [],
+    "env_allowlist": ["CI"],
+    "filesystem": {
+      "read_only_paths": ["."],
+      "writable_paths": ["artifacts"]
+    },
+    "network": "HOST_POLICY",
+    "process": {
+      "kill_process_group": true,
+      "max_children": 4
+    }
+  },
+  "request_id": "hollow-fake-pass",
+  "schema_version": "loopx/worker-request/v1",
+  "skill": {
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "name": "harness-wiki"
+  },
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-worker-gateway-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "workspace": {
+    "allow_reuse": false,
+    "lease_id": "lease-hollow",
+    "source_mode": "DISPOSABLE_COPY"
+  }
+}
