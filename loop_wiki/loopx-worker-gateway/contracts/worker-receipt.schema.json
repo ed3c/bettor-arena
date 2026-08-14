@@ -1,0 +1,140 @@
+{
+  "$id": "https://ed3c.example/loopx/worker-receipt.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {"minimum": 0, "type": "integer"},
+          "digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+          "kind": {"enum": ["STDOUT", "STDERR", "WORKER_EVENT_STREAM", "DIAGNOSTIC"]},
+          "media_type": {"maxLength": 128, "type": "string"}
+        },
+        "required": ["kind", "digest", "bytes", "media_type"],
+        "type": "object"
+      },
+      "maxItems": 64,
+      "type": "array"
+    },
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "performed_human_admit": {"const": false},
+        "promoted_release": {"const": false},
+        "waived_policy": {"const": false},
+        "wrote_gate_verdict": {"const": false},
+        "wrote_loopx_state": {"const": false}
+      },
+      "required": [
+        "wrote_loopx_state",
+        "wrote_gate_verdict",
+        "performed_human_admit",
+        "promoted_release",
+        "waived_policy"
+      ],
+      "type": "object"
+    },
+    "cleanup": {
+      "additionalProperties": false,
+      "properties": {
+        "descendants_terminated": {"type": "boolean"},
+        "residue_paths": {"items": {"type": "string"}, "maxItems": 64, "type": "array"},
+        "state": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "workspace_removed": {"type": "boolean"}
+      },
+      "required": ["state", "workspace_removed", "descendants_terminated", "residue_paths"],
+      "type": "object"
+    },
+    "context_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "events_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "cancelled": {"type": "boolean"},
+        "executed": {"type": "boolean"},
+        "exit_code": {"anyOf": [{"type": "integer"}, {"type": "null"}]},
+        "finished_at": {"format": "date-time", "type": "string"},
+        "started_at": {"format": "date-time", "type": "string"},
+        "timed_out": {"type": "boolean"}
+      },
+      "required": ["executed", "exit_code", "timed_out", "cancelled", "started_at", "finished_at"],
+      "type": "object"
+    },
+    "host": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {"enum": ["SOURCE_VISIBLE_HOST", "GRAY_BOX_HOST", "EXPERIMENTAL_GRAY_BOX_HOST"]},
+        "descriptor_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "host_id": {"enum": ["codex-cli", "claude-code", "grok-build", "opencode", "pi", "ante"]},
+        "trace_completeness": {"enum": ["PROCESS_ONLY", "TOOL_EVENTS", "STRUCTURED_LOOP_EVENTS"]}
+      },
+      "required": ["host_id", "descriptor_digest", "classification", "trace_completeness"],
+      "type": "object"
+    },
+    "identity_observation": {
+      "additionalProperties": false,
+      "properties": {
+        "loaded_context": {"enum": ["VERIFIED", "MISMATCH", "UNOBSERVABLE", "NOT_RUN"]},
+        "loaded_skill": {"enum": ["VERIFIED", "MISMATCH", "UNOBSERVABLE", "NOT_RUN"]}
+      },
+      "required": ["loaded_skill", "loaded_context"],
+      "type": "object"
+    },
+    "policy_attestation": {
+      "additionalProperties": false,
+      "properties": {
+        "filesystem": {"enum": ["NOT_ATTESTED", "REQUEST_ONLY", "ENFORCED"]},
+        "network": {"enum": ["NOT_ATTESTED", "REQUEST_ONLY", "ENFORCED"]},
+        "process_group": {"enum": ["NOT_ATTESTED", "ENFORCED"]}
+      },
+      "required": ["network", "filesystem", "process_group"],
+      "type": "object"
+    },
+    "reasons": {
+      "items": {"maxLength": 512, "type": "string"},
+      "maxItems": 32,
+      "minItems": 1,
+      "type": "array"
+    },
+    "receipt_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "request_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "request_id": {"type": "string"},
+    "schema_version": {"const": "loopx/worker-receipt/v1"},
+    "skill_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "state": {"enum": ["PASS", "FAIL", "NOT_EXERCISED", "SKIPPED_BY_POLICY", "ABSENT"]},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "type": "string"},
+        "task_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "request_id",
+    "request_digest",
+    "subject",
+    "host",
+    "skill_digest",
+    "context_digest",
+    "execution",
+    "policy_attestation",
+    "identity_observation",
+    "events_digest",
+    "artifacts",
+    "cleanup",
+    "authority",
+    "state",
+    "reasons"
+  ],
+  "title": "LoopX Worker Receipt v1",
+  "type": "object"
+}
