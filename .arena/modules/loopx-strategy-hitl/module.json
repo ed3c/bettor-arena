@@ -1,0 +1,54 @@
+{
+  "components": {
+    "contracts": {
+      "paths": ["loop_wiki/loopx-strategy-hitl/contracts"],
+      "required": true
+    },
+    "proof": {
+      "paths": ["loop_wiki/loopx-strategy-hitl/tests"],
+      "required": true
+    },
+    "runtime": {
+      "paths": ["loop_wiki/loopx-strategy-hitl/scripts"],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-strategy-hitl",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-strategy-hitl",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-strategy-hitl/scripts/hitl.py"
+    }
+  ],
+  "proof": {
+    "control": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "control"],
+    "mutation": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"],
+    "selftest": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"],
+    "verify": ["sh", "loop_wiki/loopx-strategy-hitl/tests/run-all.sh"]
+  },
+  "provides": ["loopx.strategy-port/v1", "loopx.hitl/v1"],
+  "requires": ["arena.proof-kernel/v1", "loopx.contracts/v1", "loopx.ledger/v1"],
+  "roots": ["loop_wiki/loopx-strategy-hitl"],
+  "runtime": {
+    "profiles": [],
+    "tools": ["python3", "sh"]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Proposal-only strategy port, scoped Human interrupt/decision/resume protocol, and projection-only LangGraph checkpoint boundary."
+}
