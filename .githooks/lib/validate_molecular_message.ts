@@ -101,8 +101,25 @@ function hasPrefix(paths: string[], prefixes: readonly string[]): boolean {
   return paths.some((path) => prefixes.some((prefix) => path.startsWith(prefix)));
 }
 
+/** A merge is in progress: MERGE_HEAD only exists between merge and commit. */
+function isMerge(): boolean {
+  const result = spawnSync("git", ["rev-parse", "-q", "--verify", "MERGE_HEAD"], {
+    encoding: "utf8",
+  });
+  return result.status === 0;
+}
+
+// Second amendment (2026-08-14, human ruling), same reasoning as the first: a
+// merge that carries an already-admitted gate change downstream has no slice of
+// its own either. The staged set of a merge commit is everything the base side
+// brings, so a stacked branch merging a base that touched a gate trips both
+// prefixes at once — and the gate change it carries was already named by the
+// commit that made it. Demanding a slice here would point the lineage chain at
+// whichever issue happened to be nearby, which is the fabrication the first
+// amendment refused.
 /** A gate change made by the small loop: the only role that has a slice to name. */
-export function requiresMolecular(paths: string[]): boolean {
+export function requiresMolecular(paths: string[], merging = false): boolean {
+  if (merging) return false;
   return hasPrefix(paths, PROTECTED_PREFIXES) && hasPrefix(paths, SMALL_LOOP_PREFIXES);
 }
 
@@ -182,6 +199,14 @@ docs/plan-package.yaml
   if (requiresMolecular(["README.md"])) {
     return fail("ordinary edit must not require a slice");
   }
+  // second amendment: a merge carries the base side's whole diff, so it trips
+  // both prefixes without being a small-loop gate change
+  if (requiresMolecular(["scripts/gates/x.py", "loop_wiki/some-loop/run.sh"], true)) {
+    return fail("a merge carrying an already-admitted gate change has no slice of its own");
+  }
+  if (!requiresMolecular(["scripts/gates/x.py", "loop_wiki/some-loop/run.sh"], false)) {
+    return fail("outside a merge, a small loop touching a gate must still require a slice");
+  }
   console.log("PASS: selftest");
   return 0;
 }
@@ -205,7 +230,7 @@ function main(argv: string[]): number {
   const paths = changedPathsFile
     ? readFileSync(changedPathsFile, "utf8").split(/\r?\n/).filter(Boolean)
     : stagedPaths();
-  return validateFile(messageFile, requiresMolecular(paths));
+  return validateFile(messageFile, requiresMolecular(paths, isMerge()));
 }
 
 process.exitCode = main(process.argv.slice(2));
