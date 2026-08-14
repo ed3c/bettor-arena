@@ -1,0 +1,76 @@
+name: LoopX Strategy HITL current-main validation
+
+on:
+  push:
+    branches:
+      - 'feat/loopx-strategy-hitl-validation-v2'
+    paths:
+      - 'scripts/gates/check_strategy_hitl_current.py'
+      - 'tests/test_strategy_hitl_current.py'
+      - 'data/strategy-hitl-validation/**'
+      - 'loop_wiki/loopx-strategy-hitl/**'
+      - '.arena/modules/loopx-strategy-hitl/**'
+      - 'data/stage0-validation/stage1-receipt.json'
+      - '.github/workflows/strategy-hitl-current.yml'
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'scripts/gates/check_strategy_hitl_current.py'
+      - 'tests/test_strategy_hitl_current.py'
+      - 'data/strategy-hitl-validation/**'
+      - 'loop_wiki/loopx-strategy-hitl/**'
+      - '.arena/modules/loopx-strategy-hitl/**'
+      - 'data/stage0-validation/stage1-receipt.json'
+      - '.github/workflows/strategy-hitl-current.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: strategy-hitl-current-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate the exact Strategy/HITL subject
+        run: |
+          python3 scripts/gates/check_strategy_hitl_current.py \
+            --observed-at "${GITHUB_SHA}" \
+            --output /tmp/stage2-strategy-hitl-receipt.json
+          python3 -m json.tool /tmp/stage2-strategy-hitl-receipt.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          value = json.loads(Path('/tmp/stage2-strategy-hitl-receipt.json').read_text())
+          assert value['result'] == 'PASS'
+          assert value['subject']['commit']
+          assert value['live_states']['langgraph_checkpoint_backend'] == 'NOT_EXERCISED'
+          assert value['non_admission']['composition_selected'] is False
+          print(json.dumps({
+              'result': value['result'],
+              'subject': value['subject'],
+              'schemas': len(value['contracts']['schemas']),
+              'commands': len(value['commands']),
+              'live_states': value['live_states'],
+          }, sort_keys=True))
+          PY
+      - name: Prove the validation gate turns red
+        run: python3 scripts/gates/check_strategy_hitl_current.py --selftest
+      - name: Run focused tests
+        run: python3 -m unittest -q tests/test_strategy_hitl_current.py
+      - name: Re-check module and generated projections
+        run: |
+          python3 scripts/gates/check_module_catalog.py
+          python3 scripts/arena_context.py check
+          python3 scripts/arena_proof.py check
