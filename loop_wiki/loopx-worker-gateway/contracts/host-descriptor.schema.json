@@ -1,0 +1,180 @@
+{
+  "$id": "https://ed3c.example/loopx/worker-host-descriptor.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter": {
+      "additionalProperties": false,
+      "properties": {
+        "argv_prefix": {
+          "items": {
+            "maxLength": 256,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "binary": {
+          "pattern": "^[A-Za-z0-9._+-]+$",
+          "type": "string"
+        },
+        "filesystem_attestation": {
+          "enum": [
+            "NONE",
+            "REQUEST_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "PROCESS",
+            "FIXTURE_PROCESS",
+            "SDK",
+            "RPC",
+            "HTTP",
+            "JSONL",
+            "ACP"
+          ]
+        },
+        "network_attestation": {
+          "enum": [
+            "NONE",
+            "REQUEST_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "supports_process_group_kill": {
+          "type": "boolean"
+        },
+        "version_argv": {
+          "items": {
+            "maxLength": 128,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "binary",
+        "version_argv",
+        "argv_prefix",
+        "supports_process_group_kill",
+        "network_attestation",
+        "filesystem_attestation"
+      ],
+      "type": "object"
+    },
+    "classification": {
+      "enum": [
+        "SOURCE_VISIBLE_HOST",
+        "GRAY_BOX_HOST",
+        "EXPERIMENTAL_GRAY_BOX_HOST"
+      ]
+    },
+    "display_name": {
+      "maxLength": 80,
+      "minLength": 1,
+      "type": "string"
+    },
+    "host_id": {
+      "enum": [
+        "codex-cli",
+        "claude-code",
+        "grok-build",
+        "opencode",
+        "pi",
+        "ante"
+      ]
+    },
+    "implementation_state": {
+      "enum": [
+        "CONTRACT_ONLY",
+        "NOT_EXERCISED",
+        "FIXTURE_READY",
+        "LIVE_ADMITTED",
+        "ABSENT",
+        "SKIPPED_BY_POLICY"
+      ]
+    },
+    "instruction_route": {
+      "items": {
+        "maxLength": 200,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "loopx/worker-host-descriptor/v1"
+    },
+    "skill_discovery": {
+      "items": {
+        "maxLength": 200,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "source_identity": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commit": {
+              "pattern": "^[0-9a-f]{40}$",
+              "type": "string"
+            },
+            "repository": {
+              "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "commit"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "trace_ceiling": {
+      "enum": [
+        "PROCESS_ONLY",
+        "TOOL_EVENTS",
+        "STRUCTURED_LOOP_EVENTS"
+      ]
+    },
+    "transport": {
+      "enum": [
+        "CLI",
+        "SDK",
+        "RPC",
+        "HTTP",
+        "JSONL",
+        "ACP"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "host_id",
+    "display_name",
+    "classification",
+    "transport",
+    "implementation_state",
+    "trace_ceiling",
+    "adapter",
+    "skill_discovery",
+    "instruction_route",
+    "source_identity"
+  ],
+  "title": "LoopX Worker Host Descriptor v1",
+  "type": "object"
+}
