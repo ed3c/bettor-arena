@@ -36,6 +36,8 @@
     {
       "components": [
         "contracts",
+        "eval_contracts",
+        "evals",
         "proof",
         "registry"
       ],

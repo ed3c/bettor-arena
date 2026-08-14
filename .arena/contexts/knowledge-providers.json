@@ -14,6 +14,13 @@
     "docs/knowledge-providers/CONTEXT.md",
     "docs/knowledge-providers/registry.json",
     "docs/knowledge-providers/alternatives.md",
+    "docs/knowledge-providers/evals/README.md",
+    "docs/knowledge-providers/evals/STATUS.md",
+    "docs/knowledge-providers/evals/config.json",
+    "docs/knowledge-providers/evals/subject.json",
+    "docs/knowledge-providers/evals/contracts",
+    "docs/knowledge-providers/evals/participants",
+    "docs/knowledge-providers/evals/cases",
     ".arena/modules/knowledge-providers/module.json"
   ],
   "drivers": {

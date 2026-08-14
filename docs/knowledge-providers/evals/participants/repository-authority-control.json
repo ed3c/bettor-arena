@@ -1,0 +1,13 @@
+{
+  "id": "repository-authority-control",
+  "kind": "control",
+  "families": ["memory"],
+  "identity_digest": "sha256:761b1146f2bccfe091128cd6ec091aff5998966e7251535459905b9c93353c5b",
+  "control_contract": {
+    "kind": "repository-authority",
+    "operations": ["context-read", "adr-read", "source-read", "receipt-read"],
+    "authority": "current repository authority",
+    "network": "none"
+  },
+  "human_admit_required": true
+}
