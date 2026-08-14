@@ -3,12 +3,14 @@
     "contracts": {
       "paths": [
         "loop_wiki/loopx-decision-memory/contracts",
+        "loop_wiki/loopx-decision-memory/providers/mem0/contracts",
         "loop_wiki/loopx-decision-memory/runtime/contracts"
       ],
       "required": true
     },
     "proof": {
       "paths": [
+        "loop_wiki/loopx-decision-memory/providers/mem0/tests",
         "loop_wiki/loopx-decision-memory/runtime/tests",
         "loop_wiki/loopx-decision-memory/tests"
       ],
@@ -16,6 +18,7 @@
     },
     "runtime": {
       "paths": [
+        "loop_wiki/loopx-decision-memory/providers/mem0",
         "loop_wiki/loopx-decision-memory/runtime",
         "loop_wiki/loopx-decision-memory/scripts"
       ],
@@ -63,6 +66,7 @@
   "provides": [
     "loopx.decision-memory-runtime/v1",
     "loopx.decision-memory/v1",
+    "loopx.mem0-projection/v1",
     "loopx.memory-projection/v1"
   ],
   "requires": [
@@ -87,5 +91,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Evidence-bound decision-memory proposal, Human admission, conflict, retention, expiry and deletion contracts that emit non-persisted candidate capsules while provider indexes remain rebuildable projections. The runtime under runtime/ makes an admitted proposal a reducer-written ledger event, puts memory below source, test, ADR and receipt on the authority ladder, and deletes content without deleting history."
+  "summary": "Evidence-bound decision-memory proposal, Human admission, conflict, retention, expiry and deletion contracts that emit non-persisted candidate capsules while provider indexes remain rebuildable projections. The runtime under runtime/ makes an admitted proposal a reducer-written ledger event, puts memory below source, test, ADR and receipt on the authority ladder, and deletes content without deleting history. providers/mem0 adds a rebuildable index over those events that is never canonical, never a writeback channel, and whose managed and self-hosted receipts cannot be read as evidence about each other."
 }

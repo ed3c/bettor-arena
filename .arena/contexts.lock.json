@@ -1,5 +1,5 @@
 {
-  "content_sha256": "cae696d57a67290cdc898c5fea0ed516842625d90610661ee94790c75a7a4972",
+  "content_sha256": "bbc8531f8b1c9fff6fd436aa4d54ebb78ce9e0b62b6e95218d431ccc58c5386f",
   "contexts": [
     {
       "common": [
@@ -398,7 +398,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "aad65068949887847f1941c6dd3c8effdd91f2e9f7494d33cbef1535c9e1a0a2",
+      "context_sha256": "49e91e657eaf27f5dd301f20c66eb21b67184ee50cab83644866ca04e480d872",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -482,7 +482,7 @@
           "path": "docs/git/GIT_TOWN_ADMISSION.md"
         },
         {
-          "blob": "462d573ef55fe8ff40f0f395170edb109d83d066",
+          "blob": "a44d9c073b1d3fdbbfa479a79fbccac6ec47574f",
           "mode": "100644",
           "path": "docs/git/PDF_TERMINAL_SEQUENCE.md"
         },
@@ -507,7 +507,7 @@
           "path": "docs/git/WORKER_PROTOCOL.md"
         },
         {
-          "blob": "934bbc9b5608e2d4559d76b391408a12e61d607c",
+          "blob": "3ef52cb11a0511903c37063608b077742479de4f",
           "mode": "100644",
           "path": "docs/git/pdf-terminal-sequence.json"
         },
