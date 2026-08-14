@@ -1,0 +1,87 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/code-truth-graph-v2/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/code-truth-graph-v2/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/code-truth-graph-v2/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "code-truth-graph-v2",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "code-truth-graph-v2",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "selftest"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/code-truth-graph-v2/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "code-truth-graph.evidence/v2"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "code-truth-graph.build/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/code-truth-graph-v2"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Exact-subject evidence-plane graph, analyzer identity and coverage contracts, Python AST reference adapter, provenance-preserving queries, and hard UNKNOWN-versus-NO_FLOW controls."
+}

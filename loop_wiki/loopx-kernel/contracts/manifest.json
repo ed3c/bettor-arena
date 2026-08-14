@@ -1,0 +1,48 @@
+{
+  "authority_law": [
+    "strategy proposes",
+    "worker executes",
+    "gates observe",
+    "LoopX reducer commits canonical state",
+    "Human admits scoped decisions"
+  ],
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "interface_version": "1.0.0",
+  "runtime_state_checked_in": false,
+  "runtime_state_path": ".loopx/",
+  "schema_version": "loopx/contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/command.schema.json",
+      "path": "command.schema.json",
+      "sha256": "9c97f37ac00f7273c166a8860400ac65a4313277a86df6217043d8221d108273"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/event.schema.json",
+      "path": "event.schema.json",
+      "sha256": "d93f5b038e89f88b81b0c4fc8593aabce6b5fd0462725ef0d5b76268a5e123fd"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/gate-definition.schema.json",
+      "path": "gate-definition.schema.json",
+      "sha256": "a30122e66d50569de3b133a4f3d22d434b3432b09454f6b462fe23f61c3054bd"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/snapshot.schema.json",
+      "path": "snapshot.schema.json",
+      "sha256": "b1b66a9945124b702c317e450d36af88d231be9467a40e08a183d7f098d72f22"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/task-state.schema.json",
+      "path": "task-state.schema.json",
+      "sha256": "649ff0227761e6dc0cc94ff22ed85ed3e481ddcabe66dc993a18235a32c681f1"
+    }
+  ]
+}

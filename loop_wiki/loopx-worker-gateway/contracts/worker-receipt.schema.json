@@ -1,0 +1,343 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/worker-receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "binary_identity": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maxLength": 512,
+              "type": "string"
+            }
+          ]
+        },
+        "descriptor_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "host_id": {
+          "enum": [
+            "codex-cli",
+            "claude-code",
+            "grok-build",
+            "opencode",
+            "pi",
+            "ante",
+            "fixture-host"
+          ],
+          "type": "string"
+        },
+        "implementation_state": {
+          "enum": [
+            "IMPLEMENTED",
+            "NOT_IMPLEMENTED",
+            "NOT_EXERCISED",
+            "ABSENT",
+            "SKIPPED_BY_POLICY"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "adapter_id",
+        "host_id",
+        "descriptor_digest",
+        "binary_identity",
+        "implementation_state"
+      ],
+      "type": "object"
+    },
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+            "type": "string"
+          },
+          "bytes": {
+            "maximum": 104857600,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "STDOUT",
+              "STDERR",
+              "GIT_DIFF",
+              "FILE",
+              "TRACE",
+              "WORKER_EVENT",
+              "PROCESS_TREE",
+              "CLEANUP_REPORT"
+            ],
+            "type": "string"
+          },
+          "media_type": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "path": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "producer": {
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "kind",
+          "path",
+          "digest",
+          "bytes",
+          "media_type",
+          "producer"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "performed_human_admit": {
+          "const": false
+        },
+        "promoted_release": {
+          "const": false
+        },
+        "submitted_gate_verdict": {
+          "const": false
+        },
+        "wrote_durable_memory": {
+          "const": false
+        },
+        "wrote_loopx_state": {
+          "const": false
+        }
+      },
+      "required": [
+        "wrote_loopx_state",
+        "submitted_gate_verdict",
+        "performed_human_admit",
+        "promoted_release",
+        "wrote_durable_memory"
+      ],
+      "type": "object"
+    },
+    "cleanup": {
+      "additionalProperties": false,
+      "properties": {
+        "residue_paths": {
+          "items": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "state": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_RUN"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "residue_paths"
+      ],
+      "type": "object"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "context": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "digest"
+      ],
+      "type": "object"
+    },
+    "executed": {
+      "type": "boolean"
+    },
+    "process": {
+      "additionalProperties": false,
+      "properties": {
+        "cancelled": {
+          "type": "boolean"
+        },
+        "exit_code": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "process_group_killed": {
+          "type": "boolean"
+        },
+        "timed_out": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "exit_code",
+        "timed_out",
+        "cancelled",
+        "process_group_killed"
+      ],
+      "type": "object"
+    },
+    "receipt_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "request_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/worker-receipt/v1"
+    },
+    "skill": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_EXERCISED",
+        "SKIPPED_BY_POLICY",
+        "ABSENT"
+      ],
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "trace": {
+      "additionalProperties": false,
+      "properties": {
+        "completeness": {
+          "enum": [
+            "PROCESS_ONLY",
+            "TOOL_OBSERVED",
+            "SOURCE_VERIFIED_INTERNAL"
+          ],
+          "type": "string"
+        },
+        "event_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "events_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "opaque_segments": {
+          "items": {
+            "maxLength": 256,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "completeness",
+        "events_digest",
+        "event_count",
+        "opaque_segments"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "request_id",
+    "subject",
+    "adapter",
+    "skill",
+    "context",
+    "status",
+    "executed",
+    "process",
+    "trace",
+    "artifacts",
+    "cleanup",
+    "authority",
+    "content_digest"
+  ],
+  "title": "loopx/worker-receipt/v1",
+  "type": "object"
+}

@@ -1,0 +1,18 @@
+{
+  "content_digest": "sha256:01a3c523008fedbf73e0e90ba2a79258b190f8aa51f2b5a42191a5aeca65a9e0",
+  "event_id": "fixture-process-started",
+  "host_id": "codex-cli",
+  "kind": "PROCESS_STARTED",
+  "occurred_at": "2026-08-14T00:00:00Z",
+  "payload": {
+    "artifact_ref": null,
+    "cleanup_state": null,
+    "exit_code": null,
+    "message": "fixture-only process observation",
+    "tool": null
+  },
+  "request_id": "fixture-codex-not-exercised",
+  "schema_version": "loopx/worker-event/v1",
+  "sequence": 0,
+  "visibility": "EXTERNAL"
+}

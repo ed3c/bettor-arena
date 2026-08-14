@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Aggregate offline verification for the Agent runtime integration module."""
+
 from __future__ import annotations
 
 import subprocess
@@ -9,7 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COMMANDS = [
     [sys.executable, "scripts/agent_runtime.py", "check", "--offline"],
-    [sys.executable, ".agents/skills/harness-wiki/scripts/run_portable_skill.py", "selftest"],
+    [
+        sys.executable,
+        ".agents/skills/harness-wiki/scripts/run_portable_skill.py",
+        "selftest",
+    ],
 ]
 
 

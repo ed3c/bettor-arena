@@ -1,0 +1,183 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-worker-gateway/contracts/adapter-descriptor.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_entry": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+      "type": "string"
+    },
+    "adapter_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "binary": {
+      "pattern": "^[A-Za-z0-9_.+-]+$",
+      "type": "string"
+    },
+    "capabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "loaded_context_digest": {
+          "type": "boolean"
+        },
+        "loaded_skill_digest": {
+          "type": "boolean"
+        },
+        "offline": {
+          "type": "boolean"
+        },
+        "session_resume": {
+          "type": "boolean"
+        },
+        "streaming": {
+          "type": "boolean"
+        },
+        "structured_output": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "structured_output",
+        "streaming",
+        "session_resume",
+        "loaded_skill_digest",
+        "loaded_context_digest",
+        "offline"
+      ],
+      "type": "object"
+    },
+    "classification": {
+      "enum": [
+        "WHITE_BOX_REFERENCE",
+        "SOURCE_VISIBLE_GRAY_MODEL",
+        "GRAY_BOX",
+        "EXPERIMENTAL_GRAY_BOX"
+      ],
+      "type": "string"
+    },
+    "content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "host_id": {
+      "enum": [
+        "codex-cli",
+        "claude-code",
+        "grok-build",
+        "opencode",
+        "pi",
+        "ante"
+      ],
+      "type": "string"
+    },
+    "implementation_state": {
+      "enum": [
+        "IMPLEMENTED",
+        "NOT_IMPLEMENTED",
+        "NOT_EXERCISED",
+        "ABSENT",
+        "SKIPPED_BY_POLICY"
+      ],
+      "type": "string"
+    },
+    "instruction_routes": {
+      "items": {
+        "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "loopx/worker-adapter/v1"
+    },
+    "skill_roots": {
+      "items": {
+        "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "source_identity": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "ref": {
+              "maxLength": 128,
+              "minLength": 7,
+              "type": "string"
+            },
+            "repository": {
+              "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "ref",
+            "digest"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "trace_ceiling": {
+      "enum": [
+        "PROCESS_ONLY",
+        "TOOL_OBSERVED",
+        "SOURCE_VERIFIED_INTERNAL"
+      ],
+      "type": "string"
+    },
+    "transport": {
+      "enum": [
+        "CLI",
+        "RPC",
+        "HTTP",
+        "SDK",
+        "JSONL"
+      ],
+      "type": "string"
+    },
+    "version_argv": {
+      "items": {
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "adapter_id",
+    "host_id",
+    "classification",
+    "transport",
+    "binary",
+    "version_argv",
+    "implementation_state",
+    "source_identity",
+    "skill_roots",
+    "instruction_routes",
+    "adapter_entry",
+    "trace_ceiling",
+    "capabilities",
+    "content_digest"
+  ],
+  "title": "loopx/worker-adapter/v1",
+  "type": "object"
+}

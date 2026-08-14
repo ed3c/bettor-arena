@@ -1,0 +1,86 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-decision-memory",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-decision-memory",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-decision-memory/scripts/memory.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/scripts/memory.py",
+      "selftest"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/scripts/memory.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/scripts/memory.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-decision-memory/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.decision-memory/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "knowledge-provider.memory-proposal/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-decision-memory"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Evidence-bound decision-memory proposal, Human admission, conflict, retention, expiry and deletion contracts that emit non-persisted candidate capsules while provider indexes remain rebuildable projections."
+}
