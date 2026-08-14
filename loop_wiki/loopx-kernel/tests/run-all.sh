@@ -8,6 +8,8 @@ PYTHON=${PYTHON:-python3}
 "$PYTHON" "$ROOT/scripts/check_contracts.py" --selftest
 "$PYTHON" "$ROOT/scripts/control_contracts.py"
 "$PYTHON" -m py_compile \
+  "$ROOT/scripts/contract_common.py" \
+  "$ROOT/scripts/contract_validate.py" \
   "$ROOT/scripts/check_contracts.py" \
   "$ROOT/scripts/control_contracts.py"
 
