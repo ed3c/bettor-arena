@@ -13,6 +13,8 @@
     "arena.proof-kernel/v1": "proof-kernel",
     "arena.stateless-mcp/v1": "loop-runtime",
     "code-truth-graph.build/v1": "code-truth-graph",
+    "knowledge-provider.memory-proposal/v1": "knowledge-providers",
+    "knowledge-provider.query/v1": "knowledge-providers",
     "notebooklm.harvest/v1": "notebooklm",
     "repo-wiki.projection/v1": "openwiki",
     "seed-repo.build/v1": "perfect-seed-factory",
@@ -22,7 +24,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "5e17fa50923f26ce9580d0e9d50a7e6217f554ef64221ccf1df11c6b489e936f",
+  "content_sha256": "d47950ee4133c47a87e8a653f5f1acdc5a67433d5f14a02693cb249b36c80b75",
   "modules": [
     {
       "components": [
@@ -77,6 +79,20 @@
       "provides": [
         "arena.browser-contract/v2",
         "arena.logical-release/v1"
+      ]
+    },
+    {
+      "components": [
+        "contracts",
+        "proof",
+        "registry"
+      ],
+      "id": "knowledge-providers",
+      "interface_version": "1.0.0",
+      "manifest_sha256": "68f767e90b3cdf7957738a3fd449cff3de92930d07a3fb767526b8f72d52db61",
+      "provides": [
+        "knowledge-provider.memory-proposal/v1",
+        "knowledge-provider.query/v1"
       ]
     },
     {
@@ -197,8 +213,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "73c6743e5c6aac333473342d17db5cb881b0d61ea27a6059f14ac3becab774a6",
-  "requirements_sha256": "210ff6861c9dc58ca887ab7f135b62e904b05e5fd893e9f886e056459762625b",
+  "ownership_sha256": "a9d5011da6250bd5b00d8fa78a2344ae4534c203cfd1519a612eb0feceec99f4",
+  "requirements_sha256": "9156e8c3725aff80f97910708d842c8da495397a96939498542dfdbaf074115a",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1313
+  "tracked_files": 1336
 }
