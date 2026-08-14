@@ -63,6 +63,7 @@ Run:
 ```sh
 python3 scripts/gates/check_pdf_loopx_harness_integration.py
 python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+python3 scripts/gates/check_readme_coverage.py
 ```
 
 A green audit means the repository documentation and current mechanisms agree with a **partial** integration verdict. It does not prove live LangGraph, worker, provider, cloud, browser, memory or production behavior.
@@ -93,7 +94,7 @@ Missing required context, ADR, owner, source subject or evidence is `ABSENT`, no
 2. Put stable rules in normative contracts, mutable completion state in status ledgers, and run facts in receipts.
 3. Preserve `PASS`, `FAIL`, `ABSENT`, `NOT_IMPLEMENTED`, `NOT_EXERCISED` and `SKIPPED_BY_POLICY`.
 4. Do not place absolute machine paths, credentials, cookies, OAuth material, `.env` values, browser profiles, raw chain-of-thought or signed-in page bodies in docs.
-5. Every admitted module manifest needs a sibling README; `check_readme_coverage.py` enforces it.
+5. Every admitted module manifest needs a sibling README; `scripts/gates/check_readme_coverage.py` enforces this.
 6. Per-run/digest directories inherit parent README; do not duplicate docs into every generated directory.
 7. Configured MCP/provider/Skill presence is a declaration, not health/freshness/completeness evidence.
 8. Memory, vector and graph output remain candidates until current authority reads them back.
