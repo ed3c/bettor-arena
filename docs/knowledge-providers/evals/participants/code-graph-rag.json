@@ -1,0 +1,8 @@
+{
+  "id": "code-graph-rag",
+  "kind": "provider",
+  "families": ["graph"],
+  "identity_digest": "sha256:b57fc577bcb1f79202b21182ab794a4f2bb5628d862a9e2bb7e5ab5dc01dd9d8",
+  "manifest_digest": "sha256:821bfebbacc5705f42e2f7c8fc337440368b15dd7a84050a9debfe3683ce02e4",
+  "human_admit_required": true
+}

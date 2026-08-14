@@ -13,6 +13,7 @@
     "arena.proof-kernel/v1": "proof-kernel",
     "arena.stateless-mcp/v1": "loop-runtime",
     "code-truth-graph.build/v1": "code-truth-graph",
+    "knowledge-provider.eval/v1": "knowledge-providers",
     "knowledge-provider.memory-proposal/v1": "knowledge-providers",
     "knowledge-provider.query/v1": "knowledge-providers",
     "notebooklm.harvest/v1": "notebooklm",
@@ -24,7 +25,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "fc98a02a33ff4e6cad9163b35e7314008e04406f0f0e20bc8f1d7a165344744f",
+  "content_sha256": "092431a329be23be6d6f88acb77f662f304d8aab73e6f6dde8a7be4c7f0fb983",
   "modules": [
     {
       "components": [
@@ -84,13 +85,16 @@
     {
       "components": [
         "contracts",
+        "eval_contracts",
+        "evals",
         "proof",
         "registry"
       ],
       "id": "knowledge-providers",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "68f767e90b3cdf7957738a3fd449cff3de92930d07a3fb767526b8f72d52db61",
+      "interface_version": "1.2.0",
+      "manifest_sha256": "8447deb2aff4ecb6a13731c3540bb3258877af0264f557fce0542a14cada91d2",
       "provides": [
+        "knowledge-provider.eval/v1",
         "knowledge-provider.memory-proposal/v1",
         "knowledge-provider.query/v1"
       ]
@@ -213,8 +217,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "2bfc3e81855bd54e13efe5e46db534c70863505907390131ee841cdcb6a8ad37",
-  "requirements_sha256": "9156e8c3725aff80f97910708d842c8da495397a96939498542dfdbaf074115a",
+  "ownership_sha256": "2b6ec7165819e6ac87cecc9466a1a4371f8003c5b7d277b7038179dde9b24b7a",
+  "requirements_sha256": "f609832ef81c051449431a4edb34504d875304b01367762508163cb8d78e209b",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1368
+  "tracked_files": 1412
 }

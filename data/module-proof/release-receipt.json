@@ -1,10 +1,10 @@
 {
   "composition": "bettor-arena",
-  "composition_lock_sha256": "f8a29ad88f20adea1fc7205a12d6be66be07da324976fc8e5360d868ab6507f7",
-  "content_sha256": "27fde6d47ba8f6c55a2bf9c72eb8cb6fa24ff07f662bb5a046c584129298f1f8",
+  "composition_lock_sha256": "8bd1c6e04516ced853f38013b3d9e024ab222ae7383a670c3002b1b796e03167",
+  "content_sha256": "b7e8ccf881053a338e0ad715ee2e0d6a789be9a4f2bd0efa03824791aaf9dfa2",
   "modules": [
     {
-      "closure_sha256": "e9f9900cf80d9775dcadb2b61f16cc31bba83d99e0ba7fbf841087b2cdc5dfae",
+      "closure_sha256": "89b2f4d72c32c090edd9a74d19a6933fa4dbddabee0f8560792c156ff67a34f6",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -14,7 +14,7 @@
       "interface_version": "1.2.0"
     },
     {
-      "closure_sha256": "66b85aa3e0d865c842dac5825e7d2a94a288f92d44d6fa9e8e88aaac1b0b01a7",
+      "closure_sha256": "bf536af5f3131a22249fffe546920b6422987b257f765e3c55569e3be78d837b",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -24,7 +24,7 @@
       "interface_version": "1.1.0"
     },
     {
-      "closure_sha256": "cda01f1e841f90a83d6d089023cdc61873a77c5b79dcb8989bf8131f5b9835ae",
+      "closure_sha256": "c5b62a397929220083a9c761f9c513fdf53f96e70a34ccf1afcc88aae82a53c5",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -34,7 +34,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "b48ced1462fbac34cc723aae060cef7780283a8bee8819444b81f813251b9205",
+      "closure_sha256": "df2ca93b6959f98048f5612d41f0a6b865c9f0c5a333779fe794e5492e3f3fcb",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -44,17 +44,17 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "7bf3be7338326aa06375076c18ab6be33625846c5fbcce30efa08dcef7df3165",
+      "closure_sha256": "5e611be3b8a88ba324a5e0df868d166ed339d52cda6cce1f647d80ba6f8cf3aa",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
         "proof": "NOT_EXERCISED"
       },
       "id": "knowledge-providers",
-      "interface_version": "1.0.0"
+      "interface_version": "1.2.0"
     },
     {
-      "closure_sha256": "8005ba87267b1c151aa39e5b8090099d9fc81f9e6d9a64fa7ca53494f82c2a38",
+      "closure_sha256": "a0c27c0f6e5424813e3eda286916580d51c6826545f1bbb22a88b7edaca38d47",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -64,7 +64,7 @@
       "interface_version": "1.5.0"
     },
     {
-      "closure_sha256": "d85b375b2945a1891ce49d4d70a044f9fbee8dda7efc2041012c93feb9d6be06",
+      "closure_sha256": "ce30976313d7fa4c3bb1ec14d68e945bca04a35d25c5e1a1e673dbb5e41c4f02",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -74,7 +74,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "265b26a28c3964ca99a36623d8ef3807ad48e208ca690787650b50e92a059687",
+      "closure_sha256": "b001a2fd6fcbe4fd110d8e5d9978faf6355943ba8b07c77b7bd861675453cefe",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -84,7 +84,7 @@
       "interface_version": "1.2.0"
     },
     {
-      "closure_sha256": "6ced08b219e294f2e2595b17e9d55a94fd09f04b06d93031d5abf41d20eee391",
+      "closure_sha256": "449b0136cee3c59c57c612bb73eee8912b64c93670d08f19756655aa3bc62310",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -94,7 +94,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "4f3dbf686eebdfebbff0da4119af317c6ef1e1449601c5dd269db1bf5a4807bc",
+      "closure_sha256": "39a4821d32ca1d4d0ecd270d0c99e512dc92947c742aef0b1749f78c1821dad9",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -104,7 +104,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "efb3e69b361728310e0c53d1ac77be34a7cadedc6fbae4542c9e27e253ee0d2e",
+      "closure_sha256": "97ef0e071176837182db384638a68e52e24fdeb20ce6920ec67be4afbb5492c2",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -114,7 +114,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "8e216645e8a739482088e711b39999a867c0af8365fd0e9c3c0b7855149f6bc9",
+      "closure_sha256": "aec20413e1d3ddea1f586e907af580c3b77384b5a2e53fcaeebe6debc416fd50",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -124,7 +124,7 @@
       "interface_version": "1.0.0"
     },
     {
-      "closure_sha256": "a5227ff7a4db8bee86528ed46a6c3d395825725fffaa4b24bdbfdefdb8264ed6",
+      "closure_sha256": "02643efd28c35ab268833b2483a274ae88e5a7630930e05b47a1b7dd45d00049",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -134,7 +134,7 @@
       "interface_version": "1.3.0"
     },
     {
-      "closure_sha256": "5e5e10b2cf12f54c77f3747b199504877b7ac5fb7048eada8d4a7cc49632e743",
+      "closure_sha256": "3d82b1e6ee24e44d335a813e7f787f51448dbad5840f4c41135154570696e365",
       "evidence": {
         "control": "NOT_EXERCISED",
         "mutation": "NOT_EXERCISED",
@@ -146,5 +146,5 @@
   ],
   "schema": "bettor-arena/module-release-receipt/v1",
   "status": "NOT_EXERCISED",
-  "subject_lock_sha256": "f21fe7b8ec8cd8deb6a007354a44c784dca0ad66a3970a0b391fd5fba636f1c9"
+  "subject_lock_sha256": "3491dc59f1ff238b27027b1082d6655b3f37b3c0e83790a3fc9e928dae0f33a8"
 }

@@ -1,18 +1,27 @@
 {
   "canonical_documents": [
     "ARCHITECTURE.md",
+    "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
   "entrypoints": {
     "AGENTS.md": {
       "required_markers": [
+        "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+        "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+        "docs/traceability/STACK_PR_INDEX.md",
+        "scripts/gates/check_pdf_harness_integration.py",
         "docs/architecture/modular-integration-requirements.md",
         "## Mandatory multi-hop read order",
+        "## PDF Harness verification protocol",
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",
+        "## Molecular Stack PR policy",
         "## Completion contract",
         "NOT_IMPLEMENTED",
         "NOT_EXERCISED"
@@ -21,6 +30,10 @@
     },
     "CLAUDE.md": {
       "required_markers": [
+        "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+        "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+        "docs/traceability/STACK_PR_INDEX.md",
+        "scripts/gates/check_pdf_harness_integration.py",
         "docs/architecture/modular-integration-requirements.md",
         "## Mandatory modular-integration read order",
         "Claude Code 不得",
