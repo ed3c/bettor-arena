@@ -1,0 +1,86 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-context-assembly/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-context-assembly/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-context-assembly/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-context-assembly",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-context-assembly",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-context-assembly/scripts/contextasm.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-context-assembly/scripts/control_contextasm.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-context-assembly/scripts/contextasm.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-context-assembly/scripts/contextasm.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-context-assembly/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.context-assembly/v1",
+    "loopx.prompt-ir/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.notes-retrieval/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-context-assembly"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "One canonical Prompt IR rendered into six host projections, where the delimited normative law must digest identically across all six, the cacheable prefix refuses to contain anything that varies between requests, an evidence anchor is never dropped to fit a budget, and a cache hit rate stays scoped to the single host, model and provider it was measured on."
+}

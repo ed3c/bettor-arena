@@ -95,8 +95,8 @@ PR #77 is a closed superseded Worker Gateway candidate. Issue #82 owns executabl
 | 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `COMPLETE` |
 | 9 | #93 | `feat/loopx-mem0-projection-v1` | Mem0 as an optional rebuildable projection | `COMPLETE` |
 | 10 | #104 | `feat/loopx-notes-source-ingest-v1` | authorized YT/PDF/transcript/keyframe source manifest | `COMPLETE` |
-| 11 | #105 | `feat/loopx-notes-retrieval-v1` | OpenWiki static plus optional vector/graph Notes projections | `ACTIVE` |
-| 12 | #92 | `feat/loopx-code-intelligence-canaries-v1` | live Serena/GrepAI freshness and source-readback canaries | `BLOCKED_BY_PREDECESSOR` |
+| 11 | #105 | `feat/loopx-notes-retrieval-v1` | OpenWiki static plus optional vector/graph Notes projections | `COMPLETE` |
+| 12 | #92 | `feat/loopx-code-intelligence-canaries-v1` | live Serena/GrepAI freshness and source-readback canaries | `ACTIVE` |
 | 13 | #41 | `feat/code-graph-rag-readonly-admission-v1` | read-only Code-Graph-RAG runtime admission | `BLOCKED_BY_PREDECESSOR` |
 | 14 | #70 | `feat/loopx-notes-scaffold-v1` | evidence/cards/spec/CodeOp to disposable scaffold | `BLOCKED_BY_PREDECESSOR` |
 | 15 | #71 | `feat/loopx-code-knowledge-foldback-v1` | verified code/runtime delta to knowledge patch | `BLOCKED_BY_PREDECESSOR` |

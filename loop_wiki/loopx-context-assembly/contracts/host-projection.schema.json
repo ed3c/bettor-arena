@@ -1,0 +1,59 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/context-assembly/host-projection/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One host's rendering of the IR. Provider-specific formatting is presentation; the delimited normative region must digest identically across all six.",
+  "properties": {
+    "authority": {
+      "const": "PRESENTATION_ONLY",
+      "description": "A projection never changes evidence or authority. Only the wrapper differs."
+    },
+    "host": {
+      "enum": [
+        "ante",
+        "claude",
+        "codex",
+        "grok-build",
+        "opencode",
+        "pi"
+      ]
+    },
+    "normative_digest": {
+      "description": "Digest of the delimited law. Six hosts, one value -- a renderer that reworded one line shows up here.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "prefix_digest": {
+      "description": "The cacheable region. A prompt cache keys on it byte for byte; anything varying inside it makes every request a miss, and nothing errors.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "projection_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/host-projection/v1"
+    },
+    "suffix_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "text": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "host",
+    "text",
+    "projection_digest",
+    "prefix_digest",
+    "suffix_digest",
+    "normative_digest",
+    "authority"
+  ],
+  "title": "Host projection",
+  "type": "object"
+}
