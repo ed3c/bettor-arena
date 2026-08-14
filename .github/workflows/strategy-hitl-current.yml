@@ -3,7 +3,7 @@ name: LoopX Strategy HITL current-main validation
 on:
   push:
     branches:
-      - 'feat/loopx-strategy-hitl-validation-v1'
+      - 'feat/loopx-strategy-hitl-validation-v2'
     paths:
       - 'scripts/gates/check_strategy_hitl_current.py'
       - 'tests/test_strategy_hitl_current.py'
