@@ -22,7 +22,7 @@
   "conflicts": [],
   "external_policy": {
     "exposed": false,
-    "mutation": "host-operator-only",
+    "mutation": "none",
     "network": "none",
     "secrets": "none"
   },
