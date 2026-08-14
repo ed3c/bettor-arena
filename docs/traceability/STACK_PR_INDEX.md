@@ -2,15 +2,18 @@
 
 ## Authority and freshness
 
-GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This Markdown and [`../git/stack-prs.index.json`](../git/stack-prs.index.json) are reviewed snapshots.
+GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This Markdown, [`../git/stack-prs.index.json`](../git/stack-prs.index.json) and [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json) are reviewed snapshots.
 
 ```text
-observed_at: 2026-08-14T09:33:48Z
-current main: 10380005fa485d6035539589c01b9f740acff15d
+observed queue base: 844b7121789e57ebe00f1a07a67b27c1542cf05b
+program: #61
+queue index task: #102
+current active item: #82
+final convergence: #68
 repository profile: ../git/REPO_PROFILE.md
 ```
 
-Refresh the snapshot whenever an affected base, head, state, check, reachability or path lease changes.
+Refresh the ordered queue whenever an affected issue, branch, PR, exact head, path lease, check, main reachability or Human waiver changes.
 
 ## Git Town status
 
@@ -21,10 +24,91 @@ git-town-stacked-pr-worker selected    ABSENT / NOT_SELECTED
 repository molecular-delivery policy   IMPLEMENTED
 Git Town binary/version/checksum       ABSENT
 license/SBOM/legal                     NOT_REVIEWED
-local sync/publication                 NOT_EXERCISED
+local no-push sync/publication         NOT_EXERCISED
 ```
 
-The repository uses molecular delivery semantics without claiming an admitted Git Town executable.
+The repository uses the shared Skill's molecular-delivery semantics without claiming an admitted Git Town executable.
+
+## Canonical shared Git Town method
+
+```text
+repository: ed3c/skills-shared
+commit: c5750720d960a228a0d9419f28125c09d064e3e1
+blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
+path: skills/git-town-stacked-pr-worker/SKILL.md
+```
+
+Bettor owns repository profile, queue, task packet, path lease, Stack index, evals, receipts and Human policy. It does not copy or shadow the shared Skill.
+
+## Ordered PDF terminal completion queue
+
+Human view: [`../git/PDF_TERMINAL_SEQUENCE.md`](../git/PDF_TERMINAL_SEQUENCE.md)  
+Machine queue: [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json)  
+Canonical repository paths: `docs/git/PDF_TERMINAL_SEQUENCE.md` and `docs/git/pdf-terminal-sequence.json`.
+
+```text
+order 00  #82       Worker Gateway residual-file disposition       ACTIVE
+order 01  #90       current-main LoopX foundation validation       BLOCKED_BY_PREDECESSOR
+order 02  #65       Strategy Graph + HITL                          BLOCKED_BY_PREDECESSOR
+order 03  #67       Observability + signed HITL projection         BLOCKED_BY_PREDECESSOR
+order 04  #66       Runtime Fabric + local/cloud parity            BLOCKED_BY_PREDECESSOR
+order 05  #94       Herdr/tmux-compatible Worker Fleet             BLOCKED_BY_PREDECESSOR
+order 06  #97       resource retention and GC                      BLOCKED_BY_PREDECESSOR
+order 07  #96       worktree-aware LSP Pool                        BLOCKED_BY_PREDECESSOR
+order 08  #103      canonical Decision Memory runtime              BLOCKED_BY_PREDECESSOR
+order 09  #93       Mem0 rebuildable projection                    BLOCKED_BY_PREDECESSOR
+order 10  #104      YT/PDF/Notes source ingest                     BLOCKED_BY_PREDECESSOR
+order 11  #105      OpenWiki + vector/graph Notes retrieval        BLOCKED_BY_PREDECESSOR
+order 12  #92       Serena/GrepAI live canaries                    BLOCKED_BY_PREDECESSOR
+order 13  #41       Code-Graph-RAG read-only admission             BLOCKED_BY_PREDECESSOR
+order 14  #70       Notes Repo → Scaffold                          BLOCKED_BY_PREDECESSOR
+order 15  #71       Code → Knowledge fold-back                     BLOCKED_BY_PREDECESSOR
+order 16  #95       prompt-cache-stable Context Assembly          BLOCKED_BY_PREDECESSOR
+order 17  #72       Skill/Prompt evolution + sealed holdout        BLOCKED_BY_PREDECESSOR
+order 18  #98       local/GitHub CI parity                         BLOCKED_BY_PREDECESSOR
+order 19  #91       six-host live matrix                           BLOCKED_BY_PREDECESSOR
+order 20  #45       Codex/Claude paired A/B                        BLOCKED_BY_PREDECESSOR
+order 21  #46/#56   provider evaluation convergence               BLOCKED_BY_PREDECESSOR
+order 22  #99       Harness Console                                BLOCKED_BY_PREDECESSOR
+order 23  #100      profile-scoped Harness benchmarks              BLOCKED_BY_PREDECESSOR
+order 24  #101      Git Town runtime admission                     BLOCKED_BY_PREDECESSOR
+order 25  #68       final convergence/release/rollback             FINAL_CONVERGENCE
+```
+
+Only one item may be `ACTIVE`. Queue order serializes completion, while branch ancestry follows actual byte dependency. A future implementation branch is not created before activation unless a Human records a scoped exception.
+
+## Current-main LoopX foundation
+
+```text
+PR #74  LoopX Contract v1              MERGED_TO_MAIN
+├─ PR #75  append-only Ledger/reducer  MERGED_TO_MAIN through #74
+├─ PR #76  Worker Gateway              MERGED_TO_MAIN through #74
+├─ PR #78  Decision Memory contracts   MERGED_TO_MAIN through #74
+└─ PR #79  Code Truth Graph v2         MERGED_TO_MAIN through #74
+```
+
+Reachability proves those bytes are on current `main`; it does not prove final composition selection, live host/provider execution, cloud isolation or production promotion.
+
+## Resolved duplicate terminal
+
+```text
+PR #76  admitted Worker Gateway implementation
+PR #77  closed SUPERSEDED_CANDIDATE
+issue #64 implemented twice over overlapping paths
+state: RESOLVED_BY_HUMAN
+residual action: issue #82 compares eight PR #77-only files
+```
+
+Do not delete the record. A resolved duplicate must remain distinguishable from a Stack that never noticed the conflict.
+
+## Documentation and governance lineage
+
+```text
+PR #60  PDF/LoopX executable traceability       MERGED_TO_MAIN
+PR #81  Git Town governance                     MERGED_TO_MAIN
+issue #80 governance terminal                   COMPLETED
+issue #102 ordered queue documentation leaf     OPEN / UNMERGED
+```
 
 ## Four-repository documentation convergence
 
@@ -39,7 +123,7 @@ bettor-arena#38
 integration/pdf-harness-convergence-v1
 ```
 
-Their current contract flow remains:
+Their contract flow remains:
 
 ```text
 skills-shared procedure
@@ -51,7 +135,7 @@ skills-shared procedure
 
 ## Modular platform implementation spine
 
-The landed mainline spine includes module catalog, path ownership, closure-scoped proof subjects, Context Capsules, default-deny stateless MCP, transactional project bootstrap, logical origins/browser contracts and documentation convergence. Exact current truth is read from module manifests, `loopctl/contract.json`, locks and receipts rather than this prose.
+The mainline foundation includes module catalog, path ownership, closure-scoped proof subjects, Context Capsules, default-deny MCP, transactional bootstrap, origins/browser contracts and documentation convergence. Current truth comes from manifests, public contracts, locks and receipts rather than this prose.
 
 ## Skill, host execution and provider spine
 
@@ -64,242 +148,95 @@ bettor-arena#43 repo-agent-native binding
 → bettor-arena#56 provider-evaluation lane
 ```
 
-A merged child or focused fixture PASS cannot establish current-main or live-provider integration by itself.
+A focused fixture PASS cannot establish live-provider health, current-main reachability or final release.
 
 ## Open terminal leaves required by the PDF target
 
 ```text
 bettor-arena#24 immutable Agent Shield reference-consumer acceptance
-LoopX program issues #61–#72
-LoopX implementation PRs #74–#81
+LoopX program issue #61
+ordered queue issues #82, #90–#105 and existing #41/#45/#46/#56/#65–#72
+final convergence #68
 ```
 
-These compatibility headings and tokens preserve the prior PDF audit route. They do not override the current Stack graph below.
+These compatibility tokens preserve earlier audit routes. The current order is defined only by `pdf-terminal-sequence.json`.
 
-## Canonical shared Git Town method
+## Historical provider and aggregate lanes
 
 ```text
-repository: ed3c/skills-shared
-commit: c5750720d960a228a0d9419f28125c09d064e3e1
-blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
-path: skills/git-town-stacked-pr-worker/SKILL.md
+PR #56  provider evaluation bytes on main; live convergence still issue #46/#56
+PR #53  SUPERSEDED_CANDIDATE historical aggregate
+PR #58  runtime-env / Agent Shield documentation audit, separate lane
+PR #73  Skill measurement lane, separate evidence subject
 ```
 
-Bettor owns the repository profile, task packet, path lease, Stack index, evals and Human policy. It does not copy or shadow the shared Skill.
+Extract unique delta before any reuse of a superseded aggregate.
 
 ## Relation vocabulary
 
 ```text
-sibling      path-disjoint independent leaf
-true child   consumes unmerged parent bytes
-terminal     one behavior plus positive/control/mutation evidence
-convergence  shared selection/index/live/release owner
-merged-to-parent
-             child entered feature parent but is not reachable from main
+ROOT
+  first active branch from admitted main
+
+ROOT_AFTER_PREDECESSOR
+  path-disjoint terminal created from the new main after its predecessor completes
+
+TRUE_CHILD
+  consumes unmerged parent bytes
+
+CONVERGENCE
+  owns shared selection, locks, indexes, live acceptance and release
+
+MERGED_TO_PARENT
+  child entered a feature parent but was not yet reachable from main
+
+MERGED_TO_MAIN
+  current-main reachability is proven
 ```
 
-## Documentation and Git governance Stack
-
-```text
-main @ 10380005fa485d6035539589c01b9f740acff15d
-└─ PR #60 feat/pdf-loopx-modular-verifier-v1
-   head ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-   OPEN / MERGEABLE / exact-head checks PASS
-   └─ PR #81 feat/git-town-stack-governance-v1
-      issue #80
-      TRUE_CHILD documentation/governance terminal
-      OPEN / READY FOR REVIEW / UNMERGED
-      rollback ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-```
-
-Issue #80 changes the same routed root documentation as PR #60, so it is a true child rather than a path-overlapping sibling.
-
-## LoopX completion program
-
-Parent: issue #61.  
-Final convergence owner: issue #68.
-
-```text
-main @ 10380005fa485d6035539589c01b9f740acff15d
-└─ PR #74 feat/loopx-contract-v1
-   issue #62
-   head 2fd05408f585f6b8999a7922d4995d8379795eb2
-   OPEN / MERGEABLE / exact-head checks PASS
-   │
-   ├─ PR #75 feat/loopx-ledger-v1
-   │  issue #63
-   │  MERGED_TO_PARENT at PR #74 feature head
-   │  NOT_ON_MAIN
-   │
-   ├─ PR #76 feat/loopx-worker-gateway-v1
-   │  issue #64
-   │  head 60caac70f75b1f214b2ce05f2c37a5f2b85a9268
-   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
-   │
-   ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
-   │  issue #64
-   │  head 8778b3dd16dceccc7d3904f954a2ade249fce468
-   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
-   │
-   ├─ PR #78 feat/loopx-decision-memory-v1
-   │  issue #42
-   │  head 166e0ee4ca69690f9e7da46b14d5452bc25df4b8
-   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
-   │
-   └─ PR #79 feat/loopx-code-truth-graph-v2
-      issue #69
-      head 371083a4baeda129434aea2ebad538dde8004f07
-      OPEN / NON_MERGEABLE metadata / focused checks PASS
-```
-
-## Blocking conflict: Worker Gateway duplicate terminal
-
-PR #76 and PR #77 are not parallel-safe:
-
-```text
-same issue: #64
-same parent: feat/loopx-contract-v1
-overlap:
-  .arena/modules/loopx-worker-gateway/**
-  loop_wiki/loopx-worker-gateway/**
-  loopctl/workflow.lock
-state: BLOCKED_DUPLICATE_TERMINAL
-authority: Human
-```
-
-Focused green checks do not choose a winner. Human options are to select one, extract unique delta, sequence one as a true child, mark one superseded or close one.
-
-## Program leaf ledger
-
-| Issue / PR | Terminal behavior | Relation | Current state |
-|---|---|---|---|
-| #62 / #74 | Objective/Todo/Gate/Evidence/Quota contracts | root terminal | `OPEN CANDIDATE` |
-| #63 / #75 | append-only ledger/reducer | true child | `MERGED_TO_PARENT`, not main |
-| #64 / #76/#77 | six-host Worker Gateway | duplicate child terminals | `BLOCKED_DUPLICATE_TERMINAL` |
-| #65 | Strategy Graph + HITL | planned terminal | `PR ABSENT` |
-| #42 / #78 | Decision Memory admission | sibling terminal | `OPEN CANDIDATE` |
-| #66 | Runtime Fabric/local-cloud parity | planned terminal | `PR ABSENT` |
-| #69 / #79 | Code Truth Graph v2 | sibling terminal | `OPEN CANDIDATE` |
-| #70 | Notes Repo → Scaffold | planned terminal | `PR ABSENT` |
-| #71 | Code → Knowledge fold-back | planned terminal | `PR ABSENT` |
-| #72 | Skill/Prompt evolution | planned terminal | `PR ABSENT` |
-| #67 | Observability/signed HITL | planned terminal | `PR ABSENT` |
-| #68 | final shared convergence | convergence | `BLOCKED_BY_TERMINALS` |
-
-Only issue #68 may select all settled terminal modules in the shared composition, regenerate final indexes, run the live matrix and record promotion/rollback.
-
-## Provider and historical lanes
-
-### Provider admission
-
-```text
-PR #56
-head 770b0c8990843e958f7c1a345c3359a2d71eeb82
-focused provider evaluator PASS
-Knowledge provider contracts FAIL
-Modular contracts FAIL
-state: BLOCKED
-```
-
-Fixture evidence cannot establish live provider health or superiority.
-
-### Historical portable-Skill aggregate
-
-```text
-PR #53
-head ac9d08fd9cf1e8925f628c6508d495fdeca7d3a2
-state: SUPERSEDED_CANDIDATE / historical aggregate
-```
-
-Extract unique delta before any Human merge or close decision.
-
-### Other separate lanes
-
-PR #58 remains a runtime-env / Agent Shield documentation audit. PR #73 remains a Skill measurement lane. Neither enters the LoopX implementation parent chain automatically.
-
-## Current issue #80 task packet and path lease
-
-```yaml
-parent_issue: 61
-terminal_issue: 80
-base_branch: feat/pdf-loopx-modular-verifier-v1
-parent_branch: feat/pdf-loopx-modular-verifier-v1
-head_branch: feat/git-town-stack-governance-v1
-class: true-child terminal
-allowed_paths:
-  - README.md
-  - AGENTS.md
-  - CLAUDE.md
-  - docs/git/**
-  - docs/README.md
-  - docs/INDEX.md
-  - docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
-  - docs/architecture/STATE_MACHINES.md
-  - docs/architecture/agent-entrypoints.contract.json
-  - docs/traceability/STACK_PR_INDEX.md
-  - .arena/contexts/macro.json
-  - scripts/gates/check_git_town_stack_docs.py
-  - tests/test_git_town_stack_docs.py
-  - .github/workflows/git-town-stack-docs.yml
-  - workflow-generated modular projections
-non_goals:
-  - Git Town installation/configuration
-  - sync/push/merge/ship
-  - semantic conflict resolution
-  - LoopX/runtime/provider code changes
-rollback_subject: ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-human_owned:
-  - executable/license/legal admission
-  - semantic conflict resolution
-  - PR retargeting
-  - merge/ship/close/delete
-  - promotion and rollback
-```
+Global completion order does not require a 26-deep true-child chain.
 
 ## Required receipt chain
 
 ```text
 source proposal or incident
 → architecture decision
-→ parent issue
-→ terminal issue
-→ task packet + path lease
-→ branch / PR / exact head
-→ positive + control + mutation
-→ generated projections
-→ runtime/host receipt where applicable
-→ convergence index
+→ program issue #61
+→ active terminal issue/task packet
+→ branch relation + path lease
+→ implementation PR / exact head
+→ positive + independent control + planted mutation
+→ generated projections where required
+→ runtime/host/provider receipt where applicable
+→ queue advancement receipt
+→ issue #68 convergence
 → Human Admit
 ```
 
-## Git Town State Machine boundary
+## Human-owned operations
 
-Future admitted Git Town use:
+Agents and background Workers must not:
 
-```text
-profile
-→ executable/license/SBOM/legal admission
-→ config candidate
-→ linked worktree/branch/path lease
-→ dry run
-→ local sync candidate
-→ evals
-→ GitHub exact-head publication checks
-→ Human Admit
-```
-
-Git Town does not own semantic conflict resolution, remote publication, merge/ship/close/delete, production promotion or rollback.
+- resolve semantic conflicts;
+- run Git Town continue, skip or undo;
+- create future terminal branches before activation;
+- push, merge, ship, close or delete branches;
+- change remotes, credentials or permissions;
+- activate providers, models, runtimes or secrets;
+- admit scoped exceptions or destructive cleanup;
+- promote or roll back production.
 
 ## Update protocol
 
-When Stack topology changes, update together:
+When queue or Stack topology changes, update together:
 
 - root `README.md`;
-- `AGENTS.md` / `CLAUDE.md` when routing changes;
+- `AGENTS.md` when active item or routing changes;
+- [`../git/PDF_TERMINAL_SEQUENCE.md`](../git/PDF_TERMINAL_SEQUENCE.md);
+- [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json);
 - [`../git/STACKED_PRS.md`](../git/STACKED_PRS.md);
-- [`../git/stack-prs.index.json`](../git/stack-prs.index.json);
 - this file;
-- directory/state maps when ownership changes;
+- relevant directory/State-Machine maps;
 - deterministic verifier fixtures and exact-head checks.
 
-Do not merge, ship, close, delete, promote or rollback without Human Admit.
+Do not merge, ship, close, delete, promote or roll back without Human Admit.
