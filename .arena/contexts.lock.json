@@ -1,5 +1,5 @@
 {
-  "content_sha256": "ecd270c72e4d5b92061c9d3f167c24432dfa5faf9e05409dab82bcdca65277c5",
+  "content_sha256": "e6ec72a690ec202cffd303846f7ba062b62c87bb71f6301d1b93b74b3c488b92",
   "contexts": [
     {
       "common": [
@@ -266,7 +266,7 @@
         "docs/architecture/pdf-loopx-harness.integration.json",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "5eea9d42ca95ccc8048adf4686e14513f9b26f5de0c3d1aa89c8e2724c65d8c0",
+      "context_sha256": "e6d554787d8ee7ba7463b0340028f2b9d7ffe4281e86a816a06024a203ac8957",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -305,7 +305,7 @@
           "path": "docs/agent-runtime-integration.md"
         },
         {
-          "blob": "12f0218fe9f1cdaf2e99d92fab839c6db19469b6",
+          "blob": "928373750d859930b58d8eeceeac80bb675c5153",
           "mode": "100644",
           "path": "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md"
         },
