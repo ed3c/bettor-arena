@@ -1,0 +1,34 @@
+{
+  "$id": "https://ed3c.example/loopx/resume-plan.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_authority": {"const": false},
+    "decision_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "decision_id": {"type": "string"},
+    "expected_state_revision": {"minimum": 0, "type": "integer"},
+    "interrupt_id": {"type": "string"},
+    "ledger_event_proposals": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {"const": "PROPOSAL_ONLY"},
+          "payload_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+          "type": {"enum": ["HUMAN_DECISION_RECORDED", "STATE_TRANSITION_REQUESTED"]}
+        },
+        "required": ["type", "authority", "payload_digest"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "next_action": {"enum": ["RETRY_TODO", "UPDATE_CONTRACT", "CANCEL_TASK", "APPLY_SCOPED_EXCEPTION"]},
+    "resume_plan_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "revalidation": {"type": "object"},
+    "schema_version": {"const": "loopx/hitl-resume-plan/v1"},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "resume_plan_id", "subject", "interrupt_id", "decision_id", "decision_digest", "expected_state_revision", "next_action", "revalidation", "ledger_event_proposals", "canonical_authority"],
+  "title": "LoopX HITL Resume Plan v1",
+  "type": "object"
+}
