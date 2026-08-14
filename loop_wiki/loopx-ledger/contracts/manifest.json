@@ -1,0 +1,47 @@
+{
+  "canonical_authority": "LOOPX_LEDGER_REDUCER",
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "interface_version": "1.0.0",
+  "requires_capabilities": [
+    "loopx.contracts/v1"
+  ],
+  "runtime_state_checked_in": false,
+  "runtime_store_layout": [
+    "contract.json",
+    "store.json",
+    "events.jsonl",
+    "snapshot.json",
+    ".writer.lock"
+  ],
+  "schema_version": "loopx/ledger-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/append-request.schema.json",
+      "path": "append-request.schema.json",
+      "sha256": "368a22eca5600c95aaa52ef8a768b84b6694f1539b1656a1713d61ae13966bf0"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/ledger-contract.schema.json",
+      "path": "ledger-contract.schema.json",
+      "sha256": "6dcc701279fc4618b44adae817d549f2fed34e4272bf18bc1394f093c8bd67c8"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/operation-receipt.schema.json",
+      "path": "operation-receipt.schema.json",
+      "sha256": "32cebf1d0e3461e0a273d5a42045f3a7b21ba5a9e06bb83e1a9a68c64d974d42"
+    },
+    {
+      "id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/store-manifest.schema.json",
+      "path": "store-manifest.schema.json",
+      "sha256": "c17ba5e47ed65b43d6910277aabd8854b5b66c957f16360ab270a809de153b3d"
+    }
+  ],
+  "writer_policy": "POSIX_FLOCK_SINGLE_WRITER"
+}

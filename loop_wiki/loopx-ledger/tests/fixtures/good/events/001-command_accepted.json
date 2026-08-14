@@ -1,0 +1,30 @@
+{
+  "actor": {
+    "actor_id": "loopx-reducer",
+    "authority": "STATE_COMMIT",
+    "class": "LOOPX"
+  },
+  "event_digest": "sha256:dfced57f2966c4b7bc5d75c4ff1263e0eda7bb6cbc84cfc308d5470de2bb601d",
+  "event_id": "event-001",
+  "occurred_at": "2026-08-14T00:00:01Z",
+  "payload": {
+    "command_id": "cmd-dispatch-contract",
+    "gate_observation": null,
+    "human_decision": null,
+    "quota_delta": null,
+    "request_ref": null,
+    "todo_id": "todo-contract",
+    "transition": null,
+    "worker_result_ref": null
+  },
+  "previous_event_digest": "sha256:44d9820f795c33c55442fe9f4a509c4fed7c17227124708767af18a7139b74da",
+  "schema_version": "loopx/event/v1",
+  "sequence": 1,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "type": "COMMAND_ACCEPTED"
+}
