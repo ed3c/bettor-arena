@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Aggregate provider contracts, evaluation schemas, and admission hard gates."""
+
 from __future__ import annotations
 
 import argparse
@@ -28,9 +29,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args(argv)
     root = (
-        Path(args.root).resolve()
-        if args.root
-        else Path(__file__).resolve().parents[1]
+        Path(args.root).resolve() if args.root else Path(__file__).resolve().parents[1]
     )
     if not (root / "scripts/check_knowledge_providers.py").is_file():
         print(
@@ -62,10 +61,7 @@ def main(argv: list[str] | None = None) -> int:
         if status != EXIT_OK:
             return status
 
-    print(
-        "knowledge-provider-module "
-        + ("selftest PASS" if args.selftest else "PASS")
-    )
+    print("knowledge-provider-module " + ("selftest PASS" if args.selftest else "PASS"))
     return EXIT_OK
 
 

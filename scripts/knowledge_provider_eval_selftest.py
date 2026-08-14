@@ -1,4 +1,5 @@
 """Positive, hollow, and mutation controls for the provider evaluator."""
+
 from __future__ import annotations
 
 import copy
@@ -32,19 +33,55 @@ def run(root: Path) -> dict:
     expect_failure(root, hollow, "memory overrode authority", "hollow")
     mutations = [
         ("subject", "subject drift", lambda x: x[0]["subject"].update(commit="f" * 40)),
-        ("query", "query digest mismatch", lambda x: x[0].update(query_digest="sha256:" + "f" * 64)),
-        ("identity", "participant identity drift", lambda x: x[0].update(participant_identity_digest="sha256:" + "f" * 64)),
-        ("false-pass", "false PASS", lambda x: x[0]["execution"].update(executed=False)),
+        (
+            "query",
+            "query digest mismatch",
+            lambda x: x[0].update(query_digest="sha256:" + "f" * 64),
+        ),
+        (
+            "identity",
+            "participant identity drift",
+            lambda x: x[0].update(participant_identity_digest="sha256:" + "f" * 64),
+        ),
+        (
+            "false-pass",
+            "false PASS",
+            lambda x: x[0]["execution"].update(executed=False),
+        ),
         ("stale", "stale index", lambda x: x[0]["index"].update(state="STALE")),
-        ("readback", "FOUND without source readback", lambda x: x[0]["results"][0].update(verification="CANDIDATE_ONLY")),
-        ("authority", "authority escalation", lambda x: x[0]["authority"].update(advanced_state=True)),
-        ("budget", "context budget", lambda x: x[0]["resources"].update(context_bytes=10**9)),
+        (
+            "readback",
+            "FOUND without source readback",
+            lambda x: x[0]["results"][0].update(verification="CANDIDATE_ONLY"),
+        ),
+        (
+            "authority",
+            "authority escalation",
+            lambda x: x[0]["authority"].update(advanced_state=True),
+        ),
+        (
+            "budget",
+            "context budget",
+            lambda x: x[0]["resources"].update(context_bytes=10**9),
+        ),
         ("cleanup", "cleanup failed", lambda x: x[0]["cleanup"].update(status="FAIL")),
-        ("path", "PATH_ESCAPE", lambda x: x[0]["results"][0].update(source_refs=["../outside"])),
-        ("unexpected-key", "unexpected observation keys", lambda x: x[0].update(unexpected_field="fixture")),
-        ("memory-write", "direct durable memory write", lambda x: next(
-            item for item in x if item["case_id"] == "memory-authority-conflict"
-        )["memory_policy"].update(durable_write_performed=True)),
+        (
+            "path",
+            "PATH_ESCAPE",
+            lambda x: x[0]["results"][0].update(source_refs=["../outside"]),
+        ),
+        (
+            "unexpected-key",
+            "unexpected observation keys",
+            lambda x: x[0].update(unexpected_field="fixture"),
+        ),
+        (
+            "memory-write",
+            "direct durable memory write",
+            lambda x: next(
+                item for item in x if item["case_id"] == "memory-authority-conflict"
+            )["memory_policy"].update(durable_write_performed=True),
+        ),
     ]
     for name, text, mutate in mutations:
         candidate = copy.deepcopy(good)

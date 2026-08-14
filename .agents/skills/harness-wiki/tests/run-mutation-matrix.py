@@ -6,6 +6,7 @@ unrelated defect was detected. The production validator remains standard-library
 only; this runner imports it from the Skill package and checks the expected
 failure signal for every mutation.
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -27,7 +28,9 @@ def load_validator(path: Path) -> ModuleType:
 def main() -> int:
     here = Path(__file__).resolve().parent
     skill_root = here.parent
-    validator = load_validator(skill_root / "scripts" / "check_portable_execution_contract.py")
+    validator = load_validator(
+        skill_root / "scripts" / "check_portable_execution_contract.py"
+    )
     good = validator.load_json(here / "fixtures" / "good" / "case.json")
     failures: list[str] = []
     mutation_files = sorted((here / "fixtures" / "mutations").glob("*.json"))

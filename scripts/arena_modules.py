@@ -109,9 +109,10 @@ def validate_module(module: dict[str, Any], path: Path, root: Path) -> None:
         raise ContractError(
             f"{path}: directory name {path.parent.name!r} must equal module id"
         )
-    if not isinstance(module["interface_version"], str) or not module[
-        "interface_version"
-    ]:
+    if (
+        not isinstance(module["interface_version"], str)
+        or not module["interface_version"]
+    ):
         raise ContractError(f"{path}: interface_version is required")
     if not isinstance(module["summary"], str) or not module["summary"].strip():
         raise ContractError(f"{path}: summary is required")
@@ -231,7 +232,9 @@ def validate_module(module: dict[str, Any], path: Path, root: Path) -> None:
 
 
 def re_id(value: str) -> bool:
-    return bool(value) and all(ch.islower() or ch.isdigit() or ch in "-._" for ch in value)
+    return bool(value) and all(
+        ch.islower() or ch.isdigit() or ch in "-._" for ch in value
+    )
 
 
 def load_modules(root: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Path]]:
@@ -608,7 +611,9 @@ def main(argv: list[str] | None = None) -> int:
             )
             value = resolve(root, modules, paths, requirements)
             if args.output:
-                output = args.output if args.output.is_absolute() else root / args.output
+                output = (
+                    args.output if args.output.is_absolute() else root / args.output
+                )
                 write_json(output, value)
                 print(f"WROTE {output}")
             else:

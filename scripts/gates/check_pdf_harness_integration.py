@@ -9,6 +9,7 @@ Exit codes:
   2: a checked invariant disagrees
  64: invalid invocation or unreadable input
 """
+
 from __future__ import annotations
 
 import argparse
@@ -108,9 +109,18 @@ def validate_matrix_shape(matrix: Any) -> dict[str, Any]:
 
     assessment = matrix.get("assessment")
     require(isinstance(assessment, dict), "assessment missing")
-    require(assessment.get("full_pdf_target") == "NOT_IMPLEMENTED", "full PDF target overclaimed")
-    require(assessment.get("modular_foundation") == "IMPLEMENTED", "modular foundation state")
-    require(isinstance(assessment.get("claim"), str) and assessment["claim"], "assessment claim")
+    require(
+        assessment.get("full_pdf_target") == "NOT_IMPLEMENTED",
+        "full PDF target overclaimed",
+    )
+    require(
+        assessment.get("modular_foundation") == "IMPLEMENTED",
+        "modular foundation state",
+    )
+    require(
+        isinstance(assessment.get("claim"), str) and assessment["claim"],
+        "assessment claim",
+    )
 
     components = matrix.get("components")
     require(isinstance(components, list) and components, "components missing")
@@ -123,8 +133,13 @@ def validate_matrix_shape(matrix: Any) -> dict[str, Any]:
         require(component_id not in seen, f"duplicate component: {component_id}")
         seen.add(component_id)
         require(state in ALLOWED_STATES, f"{component_id}: invalid state {state!r}")
-        require(isinstance(component.get("owner"), str), f"{component_id}: owner missing")
-        require(isinstance(component.get("pdf_pages"), str), f"{component_id}: PDF page locator")
+        require(
+            isinstance(component.get("owner"), str), f"{component_id}: owner missing"
+        )
+        require(
+            isinstance(component.get("pdf_pages"), str),
+            f"{component_id}: PDF page locator",
+        )
 
     required_ids = {
         "module-control-plane",
@@ -146,7 +161,10 @@ def validate_matrix_shape(matrix: Any) -> dict[str, Any]:
         "langfuse-opentelemetry-observability",
         "harness-console",
     }
-    require(required_ids <= seen, f"matrix missing components: {sorted(required_ids - seen)}")
+    require(
+        required_ids <= seen,
+        f"matrix missing components: {sorted(required_ids - seen)}",
+    )
     return matrix
 
 
@@ -157,31 +175,55 @@ def validate_component_paths(root: Path, matrix: dict[str, Any]) -> None:
         evidence_paths = component.get("evidence_paths", [])
         absent_paths = component.get("expected_absent_paths", [])
         require(isinstance(evidence_paths, list), f"{component_id}: evidence_paths")
-        require(isinstance(absent_paths, list), f"{component_id}: expected_absent_paths")
+        require(
+            isinstance(absent_paths, list), f"{component_id}: expected_absent_paths"
+        )
 
         if state == "IMPLEMENTED":
-            require(evidence_paths, f"{component_id}: IMPLEMENTED without evidence paths")
+            require(
+                evidence_paths, f"{component_id}: IMPLEMENTED without evidence paths"
+            )
             for raw in evidence_paths:
                 path = Path(raw)
-                require((root / path).exists(), f"{component_id}: implemented path absent: {path}")
+                require(
+                    (root / path).exists(),
+                    f"{component_id}: implemented path absent: {path}",
+                )
         elif state == "NOT_EXERCISED":
-            require(evidence_paths, f"{component_id}: NOT_EXERCISED without mechanism paths")
+            require(
+                evidence_paths, f"{component_id}: NOT_EXERCISED without mechanism paths"
+            )
             for raw in evidence_paths:
                 path = Path(raw)
-                require((root / path).exists(), f"{component_id}: mechanism path absent: {path}")
+                require(
+                    (root / path).exists(),
+                    f"{component_id}: mechanism path absent: {path}",
+                )
         elif state in {"NOT_IMPLEMENTED", "ABSENT"}:
-            require(absent_paths, f"{component_id}: non-implemented state without absence probes")
+            require(
+                absent_paths,
+                f"{component_id}: non-implemented state without absence probes",
+            )
             for raw in absent_paths:
                 path = Path(raw)
-                require(not (root / path).exists(), f"{component_id}: expected absent path exists: {path}")
+                require(
+                    not (root / path).exists(),
+                    f"{component_id}: expected absent path exists: {path}",
+                )
 
 
 def validate_module_sets(requirements: Any, lock: Any, release: Any) -> set[str]:
     desired = module_ids(requirements, "requirements")
     locked = module_ids(lock, "composition lock")
     released = module_ids(release, "release receipt")
-    require(desired == locked, f"module-set drift: requirements={sorted(desired)} lock={sorted(locked)}")
-    require(locked == released, f"module-set drift: lock={sorted(locked)} release={sorted(released)}")
+    require(
+        desired == locked,
+        f"module-set drift: requirements={sorted(desired)} lock={sorted(locked)}",
+    )
+    require(
+        locked == released,
+        f"module-set drift: lock={sorted(locked)} release={sorted(released)}",
+    )
     return desired
 
 
@@ -189,11 +231,16 @@ def validate_module_files(root: Path, modules: set[str]) -> None:
     for module_id in sorted(modules):
         manifest = root / ".arena/modules" / module_id / "module.json"
         readme = root / ".arena/modules" / module_id / "README.md"
-        require(manifest.is_file(), f"module manifest absent: {manifest.relative_to(root)}")
+        require(
+            manifest.is_file(), f"module manifest absent: {manifest.relative_to(root)}"
+        )
         require(readme.is_file(), f"module README absent: {readme.relative_to(root)}")
         value = read_json(root, manifest.relative_to(root))
         require(value.get("id") == module_id, f"module manifest id drift: {module_id}")
-        require(isinstance(value.get("interface_version"), str), f"{module_id}: interface_version")
+        require(
+            isinstance(value.get("interface_version"), str),
+            f"{module_id}: interface_version",
+        )
 
 
 def require_markers(text: str, label: str, markers: list[str]) -> None:
@@ -214,7 +261,9 @@ def validate_readme_text(readme: str, modules: set[str]) -> None:
         ],
     )
     for module_id in modules:
-        require(f"`{module_id}`" in readme, f"README.md: module not indexed: {module_id}")
+        require(
+            f"`{module_id}`" in readme, f"README.md: module not indexed: {module_id}"
+        )
 
 
 def validate_stack_text(stack: str, matrix: dict[str, Any]) -> None:
@@ -239,7 +288,9 @@ def validate_stack_text(stack: str, matrix: dict[str, Any]) -> None:
         require(token in stack, f"Stack index missing token: {token}")
 
 
-def validate_git_town(root: Path, matrix: dict[str, Any], shared_skills: dict[str, Any]) -> None:
+def validate_git_town(
+    root: Path, matrix: dict[str, Any], shared_skills: dict[str, Any]
+) -> None:
     state = matrix.get("git_town")
     require(isinstance(state, dict), "git_town matrix section missing")
     paths = state.get("configuration_paths")
@@ -247,7 +298,9 @@ def validate_git_town(root: Path, matrix: dict[str, Any], shared_skills: dict[st
     present = [path for path in paths if (root / path).exists()]
     expected_state = state.get("repository_config")
     if expected_state == "ABSENT":
-        require(not present, f"Git Town config appeared without matrix update: {present}")
+        require(
+            not present, f"Git Town config appeared without matrix update: {present}"
+        )
     else:
         require(bool(present), "Git Town claimed configured but no config exists")
 
@@ -256,10 +309,15 @@ def validate_git_town(root: Path, matrix: dict[str, Any], shared_skills: dict[st
     selected = "git-town-stacked-pr-worker" in shared
     expected_skill = state.get("selected_shared_skill")
     if expected_skill == "ABSENT":
-        require(not selected, "git-town-stacked-pr-worker selected without matrix update")
+        require(
+            not selected, "git-town-stacked-pr-worker selected without matrix update"
+        )
     else:
         require(selected, "Git Town Skill claimed but not selected")
-    require(state.get("molecular_delivery_policy") == "IMPLEMENTED", "molecular delivery policy")
+    require(
+        state.get("molecular_delivery_policy") == "IMPLEMENTED",
+        "molecular delivery policy",
+    )
 
 
 def validate_docs(root: Path, matrix: dict[str, Any], modules: set[str]) -> None:
@@ -330,11 +388,15 @@ def validate_contract_routes(root: Path) -> None:
         require(isinstance(config, dict), f"entrypoint contract missing: {filename}")
         content = read_text(root, Path(filename))
         for marker in config.get("required_markers", []):
-            require(marker in content, f"{filename}: entrypoint marker missing: {marker}")
+            require(
+                marker in content, f"{filename}: entrypoint marker missing: {marker}"
+            )
 
     coverage = read_json(root, README_COVERAGE)
     required_readmes = coverage.get("required_readmes", [])
-    require(isinstance(required_readmes, list) and required_readmes, "README coverage list")
+    require(
+        isinstance(required_readmes, list) and required_readmes, "README coverage list"
+    )
     for raw in required_readmes:
         require((root / raw).is_file(), f"README coverage path absent: {raw}")
     markers = coverage.get("required_markers", {})
@@ -409,7 +471,9 @@ def run_selftest(root: Path) -> dict[str, Any]:
     outcomes.append("module-set-drift")
 
     false_loopx = copy.deepcopy(matrix)
-    component_by_id(false_loopx, "loopx-objective-todos-gates-evidence-quota-kernel")["state"] = "IMPLEMENTED"
+    component_by_id(false_loopx, "loopx-objective-todos-gates-evidence-quota-kernel")[
+        "state"
+    ] = "IMPLEMENTED"
     expect_failure(
         "false-loopx-implemented",
         lambda: validate_component_paths(root, false_loopx),
@@ -419,7 +483,12 @@ def run_selftest(root: Path) -> dict[str, Any]:
 
     expect_failure(
         "readme-map-missing",
-        lambda: validate_readme_text(readme.replace("Directory → State Machine ownership", "Directory map removed"), modules),
+        lambda: validate_readme_text(
+            readme.replace(
+                "Directory → State Machine ownership", "Directory map removed"
+            ),
+            modules,
+        ),
         "Directory → State Machine ownership",
     )
     outcomes.append("readme-map-missing")
@@ -477,7 +546,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     elif args.selftest:
-        print(f"pdf-harness-integration selftest PASS: {len(result['mutations'])} mutations")
+        print(
+            f"pdf-harness-integration selftest PASS: {len(result['mutations'])} mutations"
+        )
     else:
         print(
             "pdf-harness-integration PASS: "

@@ -1,4 +1,5 @@
 """Load the checked-in evaluation contract, schemas, and immutable fixture subject."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -72,7 +73,15 @@ def load_contract(root: Path) -> tuple[dict, dict, dict[str, str]]:
         value = load(root / EVALS / "contracts" / filename)
         strict_keys(
             value,
-            required={"$schema", "$id", "title", "type", "additionalProperties", "properties", "required"},
+            required={
+                "$schema",
+                "$id",
+                "title",
+                "type",
+                "additionalProperties",
+                "properties",
+                "required",
+            },
             optional={"$defs", "allOf", "oneOf", "if", "then", "else"},
             label=f"schema {schema_id}",
         )
@@ -81,10 +90,11 @@ def load_contract(root: Path) -> tuple[dict, dict, dict[str, str]]:
             f"schema {schema_id}: draft",
         )
         require(value["type"] == "object", f"schema {schema_id}: root type")
-        require(value["additionalProperties"] is False, f"schema {schema_id}: closed root")
         require(
-            isinstance(value["$id"], str)
-            and value["$id"].endswith(filename),
+            value["additionalProperties"] is False, f"schema {schema_id}: closed root"
+        )
+        require(
+            isinstance(value["$id"], str) and value["$id"].endswith(filename),
             f"schema {schema_id}: id",
         )
         schemas[schema_id] = digest(value)

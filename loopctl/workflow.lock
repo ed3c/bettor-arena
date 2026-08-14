@@ -1,26 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "80cd97057dd6449c6d2fe4e5e64f06e8fd7fb27c",
+  "workflow_commit": "d6c3fe0b8f3499526fee18f54d055fbcbac2bfab",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-80cd97057dd6-dirty.json",
-    "container": "container-80cd97057dd6-dirty.json",
-    "ctg": "ctg-80cd97057dd6-dirty.json",
-    "equivalence": "equivalence-80cd97057dd6-dirty.json",
-    "harness": "harness-80cd97057dd6-dirty.json",
-    "macro": "macro-80cd97057dd6-dirty.json",
-    "micro": "micro-80cd97057dd6-dirty.json",
-    "notebooklm": "notebooklm-80cd97057dd6-dirty.json",
-    "openwiki": "openwiki-80cd97057dd6-dirty.json",
-    "policy": "policy-80cd97057dd6-dirty.json",
-    "workflow": "workflow-80cd97057dd6-dirty.json"
+    "agent-runtime": "agent-runtime-d6c3fe0b8f34-dirty.json",
+    "container": "container-d6c3fe0b8f34-dirty.json",
+    "ctg": "ctg-d6c3fe0b8f34-dirty.json",
+    "equivalence": "equivalence-d6c3fe0b8f34-dirty.json",
+    "harness": "harness-d6c3fe0b8f34-dirty.json",
+    "macro": "macro-d6c3fe0b8f34-dirty.json",
+    "micro": "micro-d6c3fe0b8f34-dirty.json",
+    "notebooklm": "notebooklm-d6c3fe0b8f34-dirty.json",
+    "openwiki": "openwiki-d6c3fe0b8f34-dirty.json",
+    "policy": "policy-d6c3fe0b8f34-dirty.json",
+    "skill-execution": "skill-execution-d6c3fe0b8f34-dirty.json",
+    "workflow": "workflow-d6c3fe0b8f34-dirty.json"
   },
   "counts": {
-    "artifact": 31,
-    "context": 59,
-    "harness": 139
+    "artifact": 34,
+    "context": 61,
+    "harness": 143
   },
-  "workflow_digest": "c6541faa28792fe79613719e182a38f22f4b8c3b2158b02b25c1ba485c6b7890",
+  "workflow_digest": "78e8b13d4bd020fca423aa4e71a83e61690731bac223270a8863ee9178656151",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -44,6 +45,56 @@
       "kind": "harness",
       "loops": [
         "agent-runtime"
+      ]
+    },
+    ".agents/skills/harness-wiki/CONTEXT.md": {
+      "sha256": "83e9e6c29361352808f95cdcec0c7baea58b1b9fa4d5a362a2d99aee7fab028f",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "agent-runtime",
+        "skill-execution"
+      ]
+    },
+    ".agents/skills/harness-wiki/contracts/skill-assertion-set.schema.json": {
+      "sha256": "12bb8d1e6e436c3d7a193443e55b9998c83b8a61e4308cfa051a4869ba3aa908",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "skill-execution"
+      ]
+    },
+    ".agents/skills/harness-wiki/contracts/skill-execution-receipt.schema.json": {
+      "sha256": "6f5a37ccffbbe87e13204ee2aa11b0ff9bc07b8cce53697f93e1c9bdce51904f",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "skill-execution"
+      ]
+    },
+    ".agents/skills/harness-wiki/contracts/skill-execution-request.schema.json": {
+      "sha256": "4d2be828fa6ea07d418140173b9cd69fa0903739d1217417eed818cac0602ab5",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "skill-execution"
+      ]
+    },
+    ".agents/skills/harness-wiki/modules/portable-runner.md": {
+      "sha256": "ea815d807f56755b48a764df3cae2d5785df9129eb435ffa64c8c2c00f84585f",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "skill-execution"
+      ]
+    },
+    ".agents/skills/harness-wiki/scripts/run_portable_skill.py": {
+      "sha256": "3b99c5874e06e9dd4f07eeb1193a5c2d93022bb8ef69ae102ce1588d42440a41",
+      "hash_source": "index",
+      "kind": "harness",
+      "loops": [
+        "agent-runtime",
+        "skill-execution"
       ]
     },
     ".agents/skills/notebooklm-workflow/SKILL.md": {
@@ -96,7 +147,7 @@
       ]
     },
     ".githooks/pre-commit": {
-      "sha256": "7b5fa6244a0ac4f03adb19fac7704f63729abab4565b9d8b65deb7ff68302b63",
+      "sha256": "02890373d980013b6cf271c346a9cc34c8728ef78404ac6fff49f7af2ef55f8b",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -121,7 +172,7 @@
       ]
     },
     ".runtime-env/bindings/bettor-arena-local.json": {
-      "sha256": "09367ad095a0f36d70534a962b563418374cf5cad36d0016c1df2b9adf436892",
+      "sha256": "86ee90dd33c1e7efa0ed8e9fb03773b016cb1fb708eeac5b5e444ae2009f8d82",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -129,7 +180,7 @@
       ]
     },
     ".runtime-env/policies/codex-openshell-chatgpt-placeholder.json": {
-      "sha256": "777189cda2628afdfb9e089613c06c9ab8db81cf47bc6b8631269fd5bde86021",
+      "sha256": "7fd13d8d0bd98702ce22f6a4a9545a765e09c69b537552d1306086fcaaf01e67",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -145,7 +196,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "bc3557cc04c11aebf42094060f452a665d3b9b84474a29fe7799ef08d726199c",
+      "sha256": "c19ae659fc70847f0c540bcd3e85032b7a45f070b3521e2b7741f9db1994a492",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -153,7 +204,7 @@
       ]
     },
     "ARCHITECTURE.md": {
-      "sha256": "947c6286cc6a1982f44bced8989771934a1a5a8c2173a566c919e7c16108ed20",
+      "sha256": "afb121ef471ba57651e277fd0f952b3d5e13c1e7831175cf367092161ec2dd98",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -162,7 +213,7 @@
       ]
     },
     "CLAUDE.md": {
-      "sha256": "5391b7afad58a66058cb1cd79a8522c6507c7b87ad9cb39a28d676d107edb930",
+      "sha256": "87ff438c363b120b9cf116d79b6b814b659b5a42208ca861ef414012761fbf6f",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -170,11 +221,12 @@
       ]
     },
     "CONTEXT.md": {
-      "sha256": "86fdaa15aa8f951db909abc6c05ed8e279e6b82a1aee8552145876fcd58e665d",
+      "sha256": "d1897e753bceef8d07d8a514d64ec2b56f2f7fff1b14b3d850d07b70a1498b61",
       "hash_source": "index",
       "kind": "context",
       "loops": [
-        "macro"
+        "macro",
+        "skill-execution"
       ]
     },
     "bootstrap.sh": {
@@ -183,6 +235,23 @@
       "kind": "harness",
       "loops": [
         "macro"
+      ]
+    },
+    "data/receipts/post-commit-d6c3fe0b8f3499526fee18f54d055fbcbac2bfab.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "macro"
+      ]
+    },
+    "data/wiki-update/request-dr-example.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro",
+        "openwiki"
       ]
     },
     "delivery.json": {
@@ -194,7 +263,7 @@
       ]
     },
     "docs/agent-runtime-integration.md": {
-      "sha256": "56a53949cde7a3e20a6234c9901a9d7d8bfe00b9e1d4e7e74da6cf5f9c72fbaa",
+      "sha256": "78cdb538e594efba9a83be02fff042f63a8fa8be4744e26cd3c22321a693dd11",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -689,6 +758,14 @@
         "micro"
       ]
     },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
     "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh": {
       "sha256": "0beb4c2b50534afc8927d5615c06d8b3500a61900361a15cb5f5a99ea9a0d454",
       "hash_source": "index",
@@ -1050,7 +1127,7 @@
       ]
     },
     "loopctl/contract.json": {
-      "sha256": "400c3db47fda0c73159da3bb4db5e2edb6324cd2d5056ea334f3dd4eea0ee116",
+      "sha256": "f8e540b436cdd8cf97520f44b5a769bebae934623354f3bb8ff52ceb4cd58a7f",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1076,7 +1153,7 @@
       ]
     },
     "loopctl/loopctl.sh": {
-      "sha256": "ce843aef734cc95a89b0e76cb5d745753b9891005aa789d8840d1a74ce3430dc",
+      "sha256": "55f01cd27e752c55f511b6c181f9c32878a8f84955c2d1871c27b3cca81f9cbf",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1094,7 +1171,7 @@
       ]
     },
     "loopctl/mcp_server.py": {
-      "sha256": "621e19e633f8d79ea203034091ce3cdeef6615b0e3beef4b9dc3ea62fa9e5c20",
+      "sha256": "1be291e0ac6e28a3175369aaebd1c53769464f9dcccda474230105af76f36a9d",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1103,7 +1180,7 @@
       ]
     },
     "loopctl/mcp_tools.py": {
-      "sha256": "368f4a41db995900ab576ab18213c3c0d1a713da15855f06450f81d24fc1f3f0",
+      "sha256": "3090f70b87f24828f093ba27474b72be926e49c72739396443a04dab7a669de4",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1145,7 +1222,7 @@
       ]
     },
     "loopctl/selftest.sh": {
-      "sha256": "10133aefd7e51d82f2715220d079ae24c9470155b2560800dccfc661d43c467f",
+      "sha256": "d614057ed0a55290c03686e1c764baf8768dd80c60e4a0c66d6909c7d3547dcf",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1161,7 +1238,7 @@
       ]
     },
     "loopctl/surface.lock": {
-      "sha256": "32c8050cb89aa06e1249ef66d5346ed8bfbe40a4712809d32dbc1dc28acb8dc9",
+      "sha256": "0695d4d0e5ac95c21a8d0ac64b68e567cf684ec6cf0a58f5a0fcde1eeebcbe2a",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1666,7 +1743,7 @@
       ]
     },
     "proof_workflow/prove_agent_runtime.sh": {
-      "sha256": "6f1fe97e8a37da1e2d6d0ede532a87536b9cd28606ebbdf3e07201746c9f5217",
+      "sha256": "87901da5b02943944018d7f56b39e9889714abff9bbcbb6b9d5252116583bd0f",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1753,8 +1830,8 @@
         "harness"
       ]
     },
-    "scripts/agent_runtime.py": {
-      "sha256": "46a15eb5517584272f7e8577a43d774233077a59cbaef9d729d130b97025cce8",
+    "scripts/check_agent_runtime_module.py": {
+      "sha256": "6c4aea1255d62e7160167a1530d24cbaba7476bee191ca7fc65593c167eb4f5c",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1802,7 +1879,7 @@
       ]
     },
     "scripts/gates/check_runtime_env_binding.py": {
-      "sha256": "c25baeb615555e2190d05b691c7ce22f76926e62998a72fd30db0255b75dda54",
+      "sha256": "c76644415b94c7ab126c9f4370c2e29a13eeefb5afa0ddbc59a44d3a5056a1e4",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

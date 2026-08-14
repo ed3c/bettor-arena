@@ -113,11 +113,11 @@ causal implementation spine, not as proof of active Git Town configuration.
 
 | Issue / PR | Relation | State | Current authority |
 |---|---|---|---|
-| [`bettor-arena#40`](https://github.com/ed3c/bettor-arena/issues/40) / [`#43`](https://github.com/ed3c/bettor-arena/pull/43) | terminal consumer-binding leaf | `MERGED` | `.skill-bindings/repo-agent-native/` |
-| [`bettor-arena#47`](https://github.com/ed3c/bettor-arena/issues/47) / [`#48`](https://github.com/ed3c/bettor-arena/pull/48) | terminal portable-Skill leaf | `MERGED` | `.agents/skills/harness-wiki/` |
-| [`bettor-arena#49`](https://github.com/ed3c/bettor-arena/issues/49) / [`#50`](https://github.com/ed3c/bettor-arena/pull/50) | true child of the portable contract | `MERGED` | typed runner + `loopctl` port |
+| [`bettor-arena#40`](https://github.com/ed3c/bettor-arena/issues/40) / [`bettor-arena#43`](https://github.com/ed3c/bettor-arena/pull/43) | terminal consumer-binding leaf | `MERGED` | `.skill-bindings/repo-agent-native/` |
+| [`bettor-arena#47`](https://github.com/ed3c/bettor-arena/issues/47) / [`bettor-arena#48`](https://github.com/ed3c/bettor-arena/pull/48) | terminal portable-Skill leaf | `MERGED` | `.agents/skills/harness-wiki/` |
+| [`bettor-arena#49`](https://github.com/ed3c/bettor-arena/issues/49) / [`bettor-arena#50`](https://github.com/ed3c/bettor-arena/pull/50) | true child of the portable contract | `MERGED` | typed runner + `loopctl` port |
 | [`bettor-arena#51`](https://github.com/ed3c/bettor-arena/pull/51) | provider-contract terminal leaf on `main` | `MERGED` | `docs/knowledge-providers/` and module manifest |
-| [`bettor-arena#46`](https://github.com/ed3c/bettor-arena/issues/46) / [`#56`](https://github.com/ed3c/bettor-arena/pull/56) | active provider-eval terminal leaf | `OPEN` | observed head `770b0c8990843e958f7c1a345c3359a2d71eeb82` |
+| [`bettor-arena#46`](https://github.com/ed3c/bettor-arena/issues/46) / [`bettor-arena#56`](https://github.com/ed3c/bettor-arena/pull/56) | active provider-eval terminal leaf | `OPEN` | observed head `770b0c8990843e958f7c1a345c3359a2d71eeb82` |
 
 ### Active PR #56 exact observed state
 

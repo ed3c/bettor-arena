@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Evaluate normalized provider/control observations without launching tools."""
+
 from __future__ import annotations
 
 import argparse

@@ -22,9 +22,7 @@ class KnowledgeProviderEvalTests(unittest.TestCase):
         )
 
     def test_fixture_suite(self) -> None:
-        completed = self.run_command(
-            "scripts/evaluate_knowledge_providers.py"
-        )
+        completed = self.run_command("scripts/evaluate_knowledge_providers.py")
         self.assertEqual(
             completed.returncode,
             0,

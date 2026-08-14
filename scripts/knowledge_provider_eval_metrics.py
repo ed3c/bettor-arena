@@ -1,4 +1,5 @@
 """Score validated provider observations without performing admission."""
+
 from __future__ import annotations
 
 from knowledge_provider_eval_common import require
@@ -13,11 +14,21 @@ def score(value: dict, packet: dict) -> dict:
     resources = value.get("resources", {})
     budgets = case["budgets"]
     for key in ("latency_ms", "context_bytes", "tool_calls", "result_count"):
-        require(isinstance(resources.get(key), int) and resources[key] >= 0, f"{oid}: resource {key}")
+        require(
+            isinstance(resources.get(key), int) and resources[key] >= 0,
+            f"{oid}: resource {key}",
+        )
     require(resources["result_count"] == len(results), f"{oid}: result_count drift")
-    require(resources["result_count"] <= budgets["max_results"], f"{oid}: result budget")
-    require(resources["context_bytes"] <= budgets["max_context_bytes"], f"{oid}: context budget")
-    require(resources["latency_ms"] <= budgets["max_latency_ms"], f"{oid}: latency budget")
+    require(
+        resources["result_count"] <= budgets["max_results"], f"{oid}: result budget"
+    )
+    require(
+        resources["context_bytes"] <= budgets["max_context_bytes"],
+        f"{oid}: context budget",
+    )
+    require(
+        resources["latency_ms"] <= budgets["max_latency_ms"], f"{oid}: latency budget"
+    )
     require(resources["tool_calls"] <= budgets["max_tool_calls"], f"{oid}: tool budget")
     cleanup = value.get("cleanup", {})
     if state == "PASS" and case["hard_gates"]["cleanup_required"]:
@@ -25,9 +36,17 @@ def score(value: dict, packet: dict) -> dict:
         require(cleanup.get("residue") == [], f"{oid}: cleanup residue")
     if case["family"] == "memory":
         policy = value.get("memory_policy", {})
-        require(policy.get("conflict_preserved") is True, f"{oid}: memory conflict erased")
-        require(policy.get("current_authority_won") is True, f"{oid}: memory overrode authority")
-        require(policy.get("durable_write_performed") is False, f"{oid}: direct durable memory write")
+        require(
+            policy.get("conflict_preserved") is True, f"{oid}: memory conflict erased"
+        )
+        require(
+            policy.get("current_authority_won") is True,
+            f"{oid}: memory overrode authority",
+        )
+        require(
+            policy.get("durable_write_performed") is False,
+            f"{oid}: direct durable memory write",
+        )
         require(policy.get("human_admit") is False, f"{oid}: provider Human Admit")
     else:
         require(value.get("memory_policy") is None, f"{oid}: unexpected memory policy")
@@ -35,8 +54,10 @@ def score(value: dict, packet: dict) -> dict:
     relevant = set(case["oracle"]["relevant_ids"])
     unknown = set(case["oracle"]["must_remain_unknown"])
     found = {
-        item["id"] for item in results
-        if item["verdict"] == "FOUND" and item["verification"] == "SOURCE_READBACK_CONFIRMED"
+        item["id"]
+        for item in results
+        if item["verdict"] == "FOUND"
+        and item["verification"] == "SOURCE_READBACK_CONFIRMED"
     }
     precision = len(found & relevant) / len(found) if found else 0.0
     recall = len(found & relevant) / len(relevant)

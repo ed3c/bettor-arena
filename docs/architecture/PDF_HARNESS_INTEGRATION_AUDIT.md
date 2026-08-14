@@ -213,7 +213,7 @@ The next implementation leaves should remain separate:
 
 ## Completion criteria
 
-The full PDF architecture cannot be marked integrated until all of the following are true:
+The complete PDF architecture cannot be marked integrated until all of the following are true:
 
 ```text
 requirements module set == composition-lock module set

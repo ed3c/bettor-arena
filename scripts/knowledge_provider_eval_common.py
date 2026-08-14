@@ -1,4 +1,5 @@
 """Shared deterministic helpers for knowledge-provider admission evals."""
+
 from __future__ import annotations
 
 import gzip
@@ -82,7 +83,11 @@ def strict_keys(
     missing = required_set - keys
     unexpected = keys - required_set - optional_set
     require(not missing, f"{label}: missing keys: {sorted(missing)}")
-    unexpected_label = "unexpected observation keys" if label == "observation" else f"{label}: unexpected keys"
+    unexpected_label = (
+        "unexpected observation keys"
+        if label == "observation"
+        else f"{label}: unexpected keys"
+    )
     require(not unexpected, f"{unexpected_label}: {sorted(unexpected)}")
 
 

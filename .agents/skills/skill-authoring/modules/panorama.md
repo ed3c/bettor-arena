@@ -1,5 +1,7 @@
 # Skill 全景圖(homed 2026-07-20;源計劃=docs/plans/2026-07-20-skill-spec-decompression/)
 
+> **LEGACY REFERENCE**：這是舊 skill-bettor 資產工場的歷史 topology，不是目前 bettor-arena discovery catalog。現況以 `.agents/skills/`、`harness-wiki` 與 generated module catalog 為準；本檔只保留語意追溯，不再 additive 更新。
+
 > **紀律**:本圖=人面投影,只放「名稱+一句人話+關係」,禁抄任何 skill 內部程序
 > (抄=雙圖漂移,同 harness-wiki 鐵律)。事實漂移以各 SKILL.md 為準。
 > **再生觸發**:新 skill 落地/退場/職責變更時 additive 更新本圖(同 harness-wiki 組件卡慣例)。
