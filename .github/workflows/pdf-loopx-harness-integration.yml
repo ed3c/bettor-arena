@@ -1,0 +1,60 @@
+name: LoopX PDF modular integration
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'docs/README.md'
+      - 'docs/INDEX.md'
+      - 'docs/architecture/STATE_MACHINES.md'
+      - 'docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md'
+      - 'docs/architecture/pdf-loopx-harness.integration.json'
+      - 'docs/architecture/pdf-loopx-harness.integration.schema.json'
+      - 'scripts/gates/check_agent_docs.py'
+      - 'scripts/gates/check_arena_core.py'
+      - 'scripts/gates/check_pdf_loopx_harness_integration.py'
+      - 'tests/test_pdf_loopx_harness_integration.py'
+      - '.arena/modules/arena-core/**'
+      - '.github/workflows/pdf-loopx-harness-integration.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'docs/architecture/**'
+      - 'scripts/gates/check_arena_core.py'
+      - 'scripts/gates/check_pdf_loopx_harness_integration.py'
+      - 'tests/test_pdf_loopx_harness_integration.py'
+      - '.arena/modules/arena-core/**'
+      - '.github/workflows/pdf-loopx-harness-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loopx-pdf-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Check LoopX PDF integration contract
+        run: python3 scripts/gates/check_pdf_loopx_harness_integration.py
+      - name: Prove planted mutations turn red
+        run: python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+      - name: Run focused test wrapper
+        run: python3 -m unittest -q tests/test_pdf_loopx_harness_integration.py
+      - name: Check arena-core aggregate
+        run: python3 scripts/gates/check_arena_core.py

@@ -3,7 +3,9 @@
     "ARCHITECTURE.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
-    "docs/agent-runtime-integration.md"
+    "docs/agent-runtime-integration.md",
+    "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+    "docs/architecture/pdf-loopx-harness.integration.json"
   ],
   "entrypoints": {
     "AGENTS.md": {
@@ -13,6 +15,7 @@
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",
+        "## LoopX PDF verification protocol",
         "## Completion contract",
         "NOT_IMPLEMENTED",
         "NOT_EXERCISED"
@@ -22,6 +25,8 @@
     "CLAUDE.md": {
       "required_markers": [
         "docs/architecture/modular-integration-requirements.md",
+        "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+        "pdf-loopx-harness.integration.json",
         "## Mandatory modular-integration read order",
         "Claude Code 不得",
         "NOT_IMPLEMENTED",

@@ -1,0 +1,277 @@
+{
+  "schema": "bettor-arena/pdf-loopx-harness-integration/v1",
+  "source": {
+    "title": "LLM 泛化：模型權重與 Harness",
+    "page_count": 41,
+    "source_class": "REQUIREMENT_HYPOTHESIS",
+    "locator": "uploaded PDF, pages 1-41",
+    "authority": "Input architecture proposal; never repository or runtime evidence"
+  },
+  "audit_subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "77267aba27ad94dde85a4dbda7dacc70a3057fb0",
+    "tree": "2083db19a1bd9e50e5e9015861190cf98a041a8a"
+  },
+  "verdict": {
+    "state": "PARTIAL",
+    "summary": "The current main contains a modular control plane, public ports, host-owned Skill execution, independent proof/control/mutation, Context Capsules, default-deny MCP, provider boundaries, and immutable receipts. It does not yet contain a canonical LoopX event ledger, LangGraph interrupt/resume runtime, evidence-bound episodic-memory distiller, full white/gray worker parity, or physical cloud/local canaries.",
+    "full_physical_integration": "NOT_EXERCISED"
+  },
+  "requirements": [
+    {
+      "id": "LX-01",
+      "pdf_pages": [1, 2],
+      "requirement": "Agent-agnostic state kernel with Objective, Todos, Gates, Evidence, and Quota",
+      "owner_modules": ["arena-core", "loop-runtime", "proof-kernel"],
+      "state_machines": ["macro-composition", "micro-task", "proof-kernel"],
+      "paths": [".arena/modules/arena-core/module.json", ".arena/modules/loop-runtime/module.json", ".arena/modules/proof-kernel/module.json", "loopctl/contract.json"],
+      "deterministic_gates": [["python3", "scripts/gates/check_module_catalog.py"], ["python3", "scripts/arena_proof.py", "check"]],
+      "status": "PARTIAL",
+      "blockers": ["No canonical append-only LoopX event ledger or one schema combining Objective/Todos/Gates/Evidence/Quota exists on current main.", "Quota is expressed across bounded loops and host policy, not one canonical kernel contract."],
+      "corrections": ["Do not treat .loopx/state.json as the only authority; generated locks, receipts, and runtime state remain separate."]
+    },
+    {
+      "id": "LX-02",
+      "pdf_pages": [2, 5],
+      "requirement": "Host-owned hard constraints replace model self-reporting",
+      "owner_modules": ["agent-runtime-integration", "proof-kernel"],
+      "state_machines": ["skill-execution", "proof-kernel"],
+      "paths": [".agents/skills/harness-wiki/scripts/run_portable_skill.py", ".agents/skills/harness-wiki/contracts/skill-execution-request.schema.json", "proof_workflow/control_skill_execution_entry.sh", ".arena/modules/agent-runtime-integration/module.json"],
+      "deterministic_gates": [["python3", "scripts/check_agent_runtime_module.py"], ["sh", "proof_workflow/control_skill_execution_entry.sh"]],
+      "status": "IMPLEMENTED",
+      "blockers": [],
+      "corrections": ["Raw shell strings are rejected; the runner emits a receipt and never writes LoopX state."]
+    },
+    {
+      "id": "LX-03",
+      "pdf_pages": [3, 5],
+      "requirement": "Fail-fast multi-gate verification across linter, semantic/type checks, and tests",
+      "owner_modules": ["proof-kernel", "arena-core"],
+      "state_machines": ["proof-kernel", "micro-task"],
+      "paths": ["proof_workflow", "scripts/gates", "tests", ".githooks/pre-commit"],
+      "deterministic_gates": [["python3", "scripts/arena_proof.py", "check"], ["python3", "scripts/gates/check_module_catalog.py"]],
+      "status": "PARTIAL",
+      "blockers": ["There is no single task-scoped multi-gate schema that normalizes Linter/LSP/UnitTest observations for every worker.", "LSP pool/resource policy is not a current executable contract."],
+      "corrections": ["Gate commands must be typed argv, not shell=True command strings."]
+    },
+    {
+      "id": "LX-04",
+      "pdf_pages": [5, 10],
+      "requirement": "Quota exhaustion triggers durable HITL interrupt and resume",
+      "owner_modules": ["arena-core"],
+      "state_machines": ["human-admit", "macro-composition"],
+      "paths": ["AGENTS.md", "docs/architecture/STATE_MACHINES.md"],
+      "deterministic_gates": [["python3", "scripts/gates/check_agent_docs.py"]],
+      "status": "NOT_IMPLEMENTED",
+      "blockers": ["No LangGraph checkpointer/interrupt/resume adapter or subject-bound resume receipt exists on current main."],
+      "corrections": ["A force_skip string is not authority; exceptions need an explicit Human Admit receipt, scope, reason, expiry, and follow-up."]
+    },
+    {
+      "id": "LX-05",
+      "pdf_pages": [7, 10],
+      "requirement": "Web UI visualizes graph state, evidence, diffs, and HITL decisions",
+      "owner_modules": ["arena-core"],
+      "state_machines": ["observability"],
+      "paths": ["data/module-proof", "data/mcp", "data/origins", "data/browser"],
+      "deterministic_gates": [["python3", "scripts/arena_proof.py", "check"]],
+      "status": "NOT_IMPLEMENTED",
+      "blockers": ["Evidence artifacts exist, but no LoopX/LangGraph HITL console or SSE/WebSocket UI is implemented."],
+      "corrections": ["UI projections must not become state authority."]
+    },
+    {
+      "id": "LX-06",
+      "pdf_pages": [10, 11, 20, 23, 35, 39],
+      "requirement": "White-box and gray-box workers share one typed adapter boundary",
+      "owner_modules": ["agent-runtime-integration", "loop-runtime"],
+      "state_machines": ["agent-runtime", "context-capsule", "skill-execution"],
+      "paths": [".arena/modules/agent-runtime-integration/module.json", ".arena/modules/loop-runtime/module.json", ".agents/skills/harness-wiki/modules/host-skill-compatibility.md"],
+      "deterministic_gates": [["python3", "scripts/check_agent_runtime_module.py"], ["python3", "scripts/arena_context.py", "check"]],
+      "status": "PARTIAL",
+      "blockers": ["Current fixed drivers cover Claude Code and Codex CLI; current-subject Grok Build, Pi, OpenCode, and Ante canaries are absent or not exercised.", "Source visibility of a harness does not prove model/provider behavior."],
+      "corrections": ["Every adapter must report trace completeness and opaque segments instead of inventing internal tool traces."]
+    },
+    {
+      "id": "LX-07",
+      "pdf_pages": [11, 16],
+      "requirement": "Monolithic micro-cell preserves continuity while graph routing remains macro-level",
+      "owner_modules": ["arena-core", "loop-runtime"],
+      "state_machines": ["macro-composition", "micro-task", "context-capsule"],
+      "paths": [".arena/contexts", "scripts/arena_context.py", "loop_wiki/evolve-perfect-seed-repo-factory"],
+      "deterministic_gates": [["python3", "scripts/arena_context.py", "check"], ["python3", "scripts/arena_proof.py", "check"]],
+      "status": "PARTIAL",
+      "blockers": ["Context Capsules and bounded micro loops exist, but there is no explicit monolithic-cell lifecycle or handoff-loss benchmark."],
+      "corrections": ["Do not persist raw private reasoning; persist evidence-bound observations, decisions, dead ends, and falsifiers."]
+    },
+    {
+      "id": "LX-08",
+      "pdf_pages": [11, 18],
+      "requirement": "Episodic memory carries dead ends, quirks, hypotheses, and strategy across agents",
+      "owner_modules": ["knowledge-providers", "proof-kernel"],
+      "state_machines": ["provider-memory-proposal", "proof-kernel"],
+      "paths": ["docs/knowledge-providers/contracts/memory-proposal.schema.json", "docs/knowledge-providers/providers/mem0.json", "docs/knowledge-providers/README.md"],
+      "deterministic_gates": [["python3", "scripts/check_knowledge_providers.py"]],
+      "status": "PARTIAL",
+      "blockers": ["A proposal-only memory contract exists; no admitted distiller, retention/writeback runtime, or cross-agent live canary exists."],
+      "corrections": ["Memory cannot override current source, ADRs, tests, receipts, or Human Admit; raw chain-of-thought is forbidden."]
+    },
+    {
+      "id": "LX-09",
+      "pdf_pages": [21, 22, 32, 33],
+      "requirement": "Single-writer state authority prevents multi-worktree races",
+      "owner_modules": ["agent-runtime-integration", "module-catalog"],
+      "state_machines": ["skill-execution", "module-lifecycle"],
+      "paths": [".agents/skills/harness-wiki/scripts/run_portable_skill.py", ".arena/locks/bettor-arena.lock.json"],
+      "deterministic_gates": [["python3", "scripts/check_agent_runtime_module.py"], ["python3", "scripts/gates/check_module_catalog.py"]],
+      "status": "PARTIAL",
+      "blockers": ["The Skill runner explicitly does not write state, but a canonical single-writer append-only LoopX ledger is not implemented."],
+      "corrections": ["Workers emit observations/receipts; only a trusted reducer may commit state."]
+    },
+    {
+      "id": "LX-10",
+      "pdf_pages": [18, 24, 35, 41],
+      "requirement": "Cloud/local separation uses secret-free contracts and replaceable providers",
+      "owner_modules": ["agent-runtime-integration", "environment-contracts"],
+      "state_machines": ["runtime-binding", "origin-browser"],
+      "paths": [".runtime-env", ".arena/modules/environment-contracts/module.json", "docs/runtime-env-integration.md"],
+      "deterministic_gates": [["bun", "scripts/gates/check_environment_contracts.ts"], ["python3", "scripts/check_agent_runtime_module.py"]],
+      "status": "PARTIAL",
+      "blockers": ["Secret-free projection exists; physical local/cloud parity and named cloud sandbox providers remain not exercised."],
+      "corrections": ["localhost, credentials, sessions, and browser profiles are execution-plane resources, not portable repository bytes."]
+    },
+    {
+      "id": "LX-11",
+      "pdf_pages": [24, 33],
+      "requirement": "Worktree isolation, resource budgets, cleanup, and garbage collection are enforced",
+      "owner_modules": ["loop-runtime", "agent-runtime-integration"],
+      "state_machines": ["stateless-mcp", "skill-execution"],
+      "paths": ["loopctl/mcp_core.ts", ".agents/skills/harness-wiki/scripts/run_portable_skill.py", "proof_workflow/control_skill_execution_entry.sh"],
+      "deterministic_gates": [["bun", "test", "loopctl/mcp_core.test.ts"], ["sh", "proof_workflow/control_skill_execution_entry.sh"]],
+      "status": "PARTIAL",
+      "blockers": ["Disposable worktree cleanup is implemented for admitted paths; herdr/tmux orchestration, LSP pooling, and system-wide disk GC are not current contracts."],
+      "corrections": ["tmux is session persistence, not task/worktree governance."]
+    },
+    {
+      "id": "LX-12",
+      "pdf_pages": [31, 35],
+      "requirement": "Notes and repositories compile into static OpenWiki plus precise retrieval surfaces",
+      "owner_modules": ["openwiki", "perfect-seed-factory", "code-truth-graph"],
+      "state_machines": ["openwiki", "micro-task", "ctg"],
+      "paths": ["openwiki", "kb-ingest", "loop_wiki/code-truth-graph", ".arena/modules/openwiki/module.json"],
+      "deterministic_gates": [["python3", "scripts/arena_proof.py", "check"]],
+      "status": "PARTIAL",
+      "blockers": ["Repository/document ingestion and OpenWiki contracts exist; YouTube multimodal ingestion, LanceDB note indexing, and notes-to-code bidirectional mapping are not fully implemented."],
+      "corrections": ["Generated wiki/vector/graph projections are rebuildable views, not source truth."]
+    },
+    {
+      "id": "LX-13",
+      "pdf_pages": [31, 41],
+      "requirement": "Serena, GrepAI, graph, and memory providers are capability-bound and source-read back",
+      "owner_modules": ["knowledge-providers"],
+      "state_machines": ["provider-query", "provider-memory-proposal"],
+      "paths": ["docs/knowledge-providers/registry.json", "docs/knowledge-providers/providers", "docs/knowledge-providers/contracts"],
+      "deterministic_gates": [["python3", "scripts/check_knowledge_providers.py"], ["python3", "scripts/check_knowledge_providers.py", "--selftest"]],
+      "status": "IMPLEMENTED",
+      "blockers": [],
+      "corrections": ["Provider outputs remain candidates; live health/superiority requires separate current-subject receipts."]
+    },
+    {
+      "id": "LX-14",
+      "pdf_pages": [17, 18, 33],
+      "requirement": "Prompt/Skill evolution uses paired evaluations, mutation controls, and Human Admit",
+      "owner_modules": ["proof-kernel", "knowledge-providers"],
+      "state_machines": ["proof-kernel", "provider-eval"],
+      "paths": ["proof_workflow", "tests", "docs/knowledge-providers"],
+      "deterministic_gates": [["python3", "scripts/arena_proof.py", "check"], ["python3", "scripts/check_knowledge_providers.py", "--selftest"]],
+      "status": "PARTIAL",
+      "blockers": ["Deterministic proof and provider fixture controls exist; cross-host live prompt evolution and sealed holdout promotion are not fully integrated on current main."],
+      "corrections": ["LLM-as-a-Judge is advisory unless calibrated against deterministic or human labels."]
+    },
+    {
+      "id": "LX-15",
+      "pdf_pages": [27, 31],
+      "requirement": "CI and local simulation preserve exact-head evidence without conflating skipped jobs",
+      "owner_modules": ["arena-core", "proof-kernel"],
+      "state_machines": ["ci-proof", "proof-kernel"],
+      "paths": [".github/workflows/modular-contracts.yml", "scripts/gates", "proof_workflow"],
+      "deterministic_gates": [["python3", "scripts/gates/check_agent_docs.py"], ["python3", "scripts/arena_proof.py", "check"]],
+      "status": "PARTIAL",
+      "blockers": ["GitHub Actions gates exist; an admitted nektos/act parity receipt is not present."],
+      "corrections": ["Local act success cannot proxy GitHub-hosted exact-head checks."]
+    }
+  ],
+  "directory_state_machines": [
+    {"id":"DIR-ARENA-MODULES","path":".arena/modules","owner_module":"module-catalog","state_machine":"MANIFEST_PROPOSED -> OWNERSHIP_RESOLVED -> CAPABILITY_RESOLVED -> CLOSURE_DIGESTED -> SELECTED","inputs":["module.json","component selection","dependency capabilities"],"outputs":["module closure","interface identity"],"evidence":[".arena/locks/bettor-arena.lock.json","data/module-proof/subjects.lock.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-ARENA-COMPOSITIONS","path":".arena/compositions","owner_module":"module-catalog","state_machine":"REQUIREMENTS_DECLARED -> DEPENDENCIES_RESOLVED -> CONFLICTS_CHECKED -> LOCK_READY","inputs":["composition requirements","preset"],"outputs":["resolved module/component set"],"evidence":[".arena/locks/bettor-arena.lock.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-ARENA-LOCKS","path":".arena/locks","owner_module":"module-catalog","state_machine":"UNRESOLVED -> RESOLVED -> VERIFIED -> SUPERSEDED","inputs":["module manifests","composition requirements"],"outputs":["immutable composition lock"],"evidence":["scripts/arena_lock.py"],"status":"IMPLEMENTED"},
+    {"id":"DIR-ARENA-CONTEXTS","path":".arena/contexts","owner_module":"loop-runtime","state_machine":"CONTEXT_SELECTED -> PATHS_VERIFIED -> BYTES_MATERIALIZED -> DIGEST_FROZEN -> DRIVER_RECEIPT","inputs":["root/loop context manifests","immutable ref"],"outputs":["Context Capsule lock","driver projection"],"evidence":[".arena/contexts.lock.json","data/context-capsules/driver-parity.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-SKILL-BINDINGS","path":".skill-bindings","owner_module":"agent-runtime-integration","state_machine":"REQUIREMENTS_SELECTED -> IMMUTABLE_SKILL_BOUND -> HOST_PROJECTED -> VERIFIED","inputs":["skills-shared release identity","consumer-specific binding"],"outputs":["projected Skill closure","binding verdict"],"evidence":[".agents/bindings/bettor-arena.json","scripts/check_agent_runtime_module.py"],"status":"IMPLEMENTED"},
+    {"id":"DIR-AGENT-SKILLS","path":".agents/skills","owner_module":"agent-runtime-integration","state_machine":"DISCOVERED -> CONTEXT_LOADED -> REQUEST_EMITTED -> HOST_EXECUTED -> RECEIPT","inputs":["SKILL.md package","typed execution request"],"outputs":["candidate artifact","subject-bound execution receipt"],"evidence":[".agents/skills/harness-wiki/contracts","proof_workflow/control_skill_execution_entry.sh"],"status":"IMPLEMENTED"},
+    {"id":"DIR-RUNTIME-ENV","path":".runtime-env","owner_module":"agent-runtime-integration","state_machine":"REQUIREMENTS_BOUND -> SECRET_FREE_PROJECTED -> OFFLINE_VERIFIED -> LIVE_CANARY_PENDING","inputs":["runtime-env release/binding","profile/workload/policy"],"outputs":["consumer projection","runtime verdict"],"evidence":["docs/runtime-env-integration.md","scripts/check_agent_runtime_module.py"],"status":"PARTIAL"},
+    {"id":"DIR-LOOPCTL","path":"loopctl","owner_module":"loop-runtime","state_machine":"REQUEST_PARSED -> SURFACE_VALIDATED -> POLICY_AUTHORIZED -> PUBLIC_PORT_DISPATCHED -> EXIT_PROPAGATED","inputs":["typed CLI/MCP request","immutable ref","policy allowlist"],"outputs":["typed result","artifact refs","exit code"],"evidence":["loopctl/contract.json","loopctl/surface.lock","data/mcp/exposure.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-PROOF","path":"proof_workflow","owner_module":"proof-kernel","state_machine":"CLAIM_RECEIVED -> PROOF_RUN -> CONTROL_RUN -> MUTATION/HOLLOW -> RECEIPT_AGGREGATED","inputs":["module subject","public port","negative control"],"outputs":["proof/control/mutation receipts"],"evidence":["data/module-proof/subjects.lock.json","data/module-proof/release-receipt.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-KNOWLEDGE-PROVIDERS","path":"docs/knowledge-providers","owner_module":"knowledge-providers","state_machine":"PROVIDER_DECLARED -> SUBJECT_BOUND_QUERY -> CANDIDATE_RESULT -> SOURCE_READBACK -> ADMISSION_PENDING","inputs":["provider manifest","query request","memory proposal"],"outputs":["candidate receipt","proposal-only memory change"],"evidence":["docs/knowledge-providers/registry.json","scripts/check_knowledge_providers.py"],"status":"IMPLEMENTED"},
+    {"id":"DIR-OPENWIKI","path":"openwiki","owner_module":"openwiki","state_machine":"REQUEST_VALIDATED -> DRY_RUN_OR_MODEL_TURN -> PATH_BOUNDARY_CHECKED -> WIKI_RECEIPT","inputs":["wiki-update request","source refs","context lanes"],"outputs":["wiki projection","update receipt"],"evidence":["data/wiki-update","proof_workflow"],"status":"PARTIAL"},
+    {"id":"DIR-CTG","path":"loop_wiki/code-truth-graph","owner_module":"code-truth-graph","state_machine":"SUBJECT_MATERIALIZED -> STATIC_GRAPH_BUILT -> VERIFIED -> ARTIFACT_PUBLISHED","inputs":["closed bundle or trusted-local manifest"],"outputs":["code-truth-graph artifact","verification report"],"evidence":["data/proof-workflow","loopctl/contract.json"],"status":"IMPLEMENTED"},
+    {"id":"DIR-DATA","path":"data","owner_module":"proof-kernel","state_machine":"OBSERVATION_WRITTEN -> SUBJECT_BOUND -> CHECKED -> RELEASE_AGGREGATED -> RETAINED_OR_SUPERSEDED","inputs":["OS/artifact observations","proof/control results"],"outputs":["snapshots","receipts","release evidence"],"evidence":["data/module-proof","data/mcp","data/origins","data/browser"],"status":"IMPLEMENTED"},
+    {"id":"DIR-DOCS","path":"docs","owner_module":"arena-core","state_machine":"SOURCE_CLASSIFIED -> ROUTE_UPDATED -> MARKERS_CHECKED -> MACHINE_AUTHORITY_LINKED","inputs":["requirements/hypotheses","current machine contracts"],"outputs":["Agent/human navigation"],"evidence":["scripts/gates/check_agent_docs.py","scripts/gates/check_readme_coverage.py"],"status":"IMPLEMENTED"}
+  ],
+  "data_flow": {
+    "nodes": [
+      {"id":"SOURCE","kind":"external","owner":"human/source","artifact":"PDF, notes, repository bytes"},
+      {"id":"SKILL","kind":"external-release","owner":"skills-shared","artifact":"immutable procedural Skill release"},
+      {"id":"RUNTIME","kind":"external-release","owner":"runtime-env","artifact":"secret-free binding/profile/workload/policy"},
+      {"id":"BIND","kind":"repository","owner":"agent-runtime-integration","artifact":".skill-bindings + .runtime-env + .agents binding"},
+      {"id":"RESOLVE","kind":"repository","owner":"module-catalog","artifact":"composition lock + selected closure"},
+      {"id":"CONTEXT","kind":"repository","owner":"loop-runtime","artifact":"immutable Context Capsule / host projection"},
+      {"id":"PORT","kind":"repository","owner":"loop-runtime","artifact":"loopctl public contract + default-deny MCP"},
+      {"id":"WORKER","kind":"execution-plane","owner":"host/provider","artifact":"candidate code/artifact observation"},
+      {"id":"GATES","kind":"repository","owner":"proof-kernel","artifact":"hard assertions + proof/control/mutation"},
+      {"id":"MEMORY","kind":"repository","owner":"knowledge-providers","artifact":"evidence-bound memory proposal"},
+      {"id":"RELEASE","kind":"repository","owner":"proof-kernel","artifact":"composition release receipt"},
+      {"id":"HUMAN","kind":"external-authority","owner":"human","artifact":"admit/exception/rollback decision"}
+    ],
+    "edges": [
+      {"from":"SOURCE","to":"SKILL","type":"informs","feedback":false},
+      {"from":"SKILL","to":"BIND","type":"immutable_input","feedback":false},
+      {"from":"RUNTIME","to":"BIND","type":"secret_free_input","feedback":false},
+      {"from":"BIND","to":"RESOLVE","type":"requirements","feedback":false},
+      {"from":"RESOLVE","to":"CONTEXT","type":"selected_closure","feedback":false},
+      {"from":"CONTEXT","to":"PORT","type":"typed_context","feedback":false},
+      {"from":"PORT","to":"WORKER","type":"typed_request","feedback":false},
+      {"from":"WORKER","to":"GATES","type":"untrusted_observation","feedback":false},
+      {"from":"GATES","to":"MEMORY","type":"failure_or_handoff_evidence","feedback":false},
+      {"from":"GATES","to":"RELEASE","type":"verified_evidence","feedback":false},
+      {"from":"MEMORY","to":"CONTEXT","type":"advisory_projection","feedback":true},
+      {"from":"RELEASE","to":"HUMAN","type":"admission_packet","feedback":false}
+    ]
+  },
+  "stack_snapshot": {
+    "snapshot_only": true,
+    "authority": "GitHub base/head metadata plus exact-head checks",
+    "entries": [
+      {"pr":43,"role":"repo-agent-native binding","base":"main","head":"integration/repo-agent-native-v2","state":"MERGED_TO_MAIN","on_main":true},
+      {"pr":51,"role":"knowledge-provider contracts and current portable execution bytes","base":"main","head":"integration/knowledge-provider-contracts-v1","state":"MERGED_TO_MAIN","on_main":true},
+      {"pr":53,"role":"historical portable-skill convergence branch","base":"main","head":"integration/portable-skill-execution-runner-v1","state":"OPEN_DIVERGED_SUPERSEDED_CANDIDATE","on_main":false},
+      {"pr":56,"role":"fixture-only provider admission evaluations","base":"main","head":"integration/provider-admission-packets-v1","state":"OPEN_RED_EXACT_HEAD","on_main":false},
+      {"pr":57,"role":"first PDF modular documentation convergence","base":"main","head":"docs/pdf-modular-integration-2026-08-14","state":"MERGED_TO_MAIN","on_main":true},
+      {"pr":58,"role":"runtime-env and Agent Shield second-PDF audit","base":"main","head":"docs/agent-shield-runtime-pdf-audit-2026-08-14","state":"OPEN_DRAFT","on_main":false},
+      {"pr":0,"role":"LoopX Harness PDF executable traceability leaf (this workstream)","base":"main","head":"feat/pdf-loopx-modular-verifier-v1","state":"BRANCH_BEFORE_PR","on_main":false}
+    ]
+  },
+  "forbidden_promotions": [
+    "PDF prose or diagram -> runtime PASS",
+    "provider installation or configuration -> provider health PASS",
+    "fixture-only evaluator PASS -> live provider superiority",
+    "Worker/model prose -> hard-gate verdict",
+    "merged child PR -> bytes present on main without convergence",
+    "LangGraph checkpoint -> canonical LoopX authority",
+    "raw chain-of-thought -> durable episodic memory",
+    "force_skip string -> Human Admit or exception authority"
+  ],
+  "required_document_markers": {
+    "README.md": ["## LoopX Harness PDF integration verdict", "## Directory → State Machine → input/output/evidence", "## Git Town / molecular Stack PR index"],
+    "AGENTS.md": ["## LoopX PDF verification protocol", "PDF_LOOPX_HARNESS_TRACEABILITY.md", "check_pdf_loopx_harness_integration.py"],
+    "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md": ["# LoopX Harness PDF → bettor-arena modular integration", "## Requirement matrix", "## Corrections to unsafe examples", "## Exact current verdict"],
+    "docs/architecture/STATE_MACHINES.md": ["## LoopX compatibility state machine", "OBJECTIVE_ACCEPTED", "READY_FOR_HUMAN_ADMIT"]
+  }
+}
