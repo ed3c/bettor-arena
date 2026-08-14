@@ -2,172 +2,210 @@
 
 ## Authority and freshness
 
-This index records the molecular delivery topology observed while auditing
-`ed3c/bettor-arena` against the attached Harness architecture PDF.
-
-GitHub issue/PR metadata remains the current authority for open/closed/head/check
-state. This Markdown records the relationship and the last observed immutable
-subjects; it must be updated when a branch head, base or terminal decision
-changes.
-
-Audit baseline:
+GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This document records the relationship and last observed immutable subjects.
 
 ```text
-bettor-arena main: d291523856988cfa54316dba967fea8470194b72
-tree:              71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43
-convergence issue: bettor-arena#38
-convergence branch: integration/pdf-harness-convergence-v1
+observed_at: 2026-08-14T08:44:56Z
+current main: 10380005fa485d6035539589c01b9f740acff15d
+machine snapshot: ../git/stack-prs.index.json
+repository profile: ../git/REPO_PROFILE.md
 ```
 
-## Git Town status
+Refresh this index whenever any affected GitHub field changes.
+
+## Canonical shared Git Town method
 
 ```text
-.git-town.toml                         ABSENT
-.git-town                              ABSENT
-selected git-town-stacked-pr-worker    ABSENT
-repository molecular-delivery policy   IMPLEMENTED
+repository: ed3c/skills-shared
+commit: c5750720d960a228a0d9419f28125c09d064e3e1
+blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
+path: skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-No repository-level Git Town configuration is currently tracked, and
-`.agents/shared-skills.requirements.json` does not select a
-`git-town-stacked-pr-worker` Skill. Therefore this index does **not** claim that
-Git Town CLI is configured or that any branch relation was created by Git Town.
+Bettor owns the profile, work packet, path lease, Stack index, evals and Human policy. It does not copy the shared Skill.
 
-The repository still uses the molecular terms defined in
-[`../agents/issue-tracker.md`](../agents/issue-tracker.md):
+Current admission:
 
 ```text
-sibling      independent path-disjoint slice
+shared Skill reference            PINNED
+consumer binding selection        NOT_SELECTED
+.git-town.toml                    ABSENT
+Git Town binary/version/checksum  ABSENT
+license/SBOM/legal                NOT_REVIEWED
+live sync/publication             NOT_EXERCISED
+```
+
+## Relation vocabulary
+
+```text
+sibling      path-disjoint independent leaf
 true child   consumes unmerged parent bytes
-terminal     one reviewable behavior plus eval/evidence
-convergence  shared indexes, generated locks and final acceptance
+terminal     one behavior plus eval/evidence
+convergence  shared selection/index/live/release owner
+merged-to-parent
+             child entered feature parent, not current main
 ```
 
-## Four-repository documentation convergence
-
-Parent: [`bettor-arena#35`](https://github.com/ed3c/bettor-arena/issues/35)
-
-| Role | Repository leaf | Relation | State | Exact merged identity |
-|---|---|---|---|---|
-| Integration / Acceptance | [`bettor-arena#37`](https://github.com/ed3c/bettor-arena/pull/37) | independent sibling | `MERGED` | `1f94d3d77992a1396959a15b2ada7836c07bf300` |
-| Instruction / Method | [`skills-shared#85`](https://github.com/ed3c/skills-shared/pull/85) | independent sibling | `MERGED` | `e3b327ad49c088f1962c33167ecd5ac9d28125fb` |
-| Runtime Contract | [`runtime-env#30`](https://github.com/ed3c/runtime-env/pull/30) | independent sibling | `MERGED` | `4a333ccf106ef60bc6942b922b7f5efffb3876f5` |
-| Domain Product / Reference Consumer | [`agent-shield-monorepo#78`](https://github.com/ed3c/agent-shield-monorepo/pull/78) | independent sibling | `MERGED` | `1af04c1ef5cb68eab198987feba008c93d3ec22f` |
-| Exact route/PDF audit | [`bettor-arena#38`](https://github.com/ed3c/bettor-arena/issues/38) | convergence owner | `ACTIVE` | branch `integration/pdf-harness-convergence-v1`; PR pending in the first documentation commit |
-
-All four blockers named by #38 are merged. The convergence leaf may now pin
-their exact merge commits, compare route/state-machine vocabulary, and record
-remaining cold-start/live gaps. It must not infer a live Claude/Codex read from
-the documentation changes themselves.
-
-## Modular platform implementation spine
-
-These are historical vertical slices landed on `main`. They are shown as a
-causal implementation spine, not as proof of active Git Town configuration.
+## Documentation and governance Stack
 
 ```text
-#4  module catalog + composition contract
- ↓
-#8  complete tracked-path ownership
- ↓
-#10 module-closure proof subjects
- ↓
-#12 Context Capsules and fixed Claude/Codex preparation
- ↓
-#15 default-deny stateless MCP contract
- ↓
-#21 Bun/TypeScript stateless MCP implementation
- ↓
-#22 transactional external-project bootstrap
- ↓
-#23 GitHub/Forgejo logical origin + Browser Contract v2
- ↓
-#29 README and current-status convergence
+main @ 10380005fa485d6035539589c01b9f740acff15d
+└─ PR #60 feat/pdf-loopx-modular-verifier-v1
+   head ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
+   OPEN / MERGEABLE
+   exact-head checks PASS:
+     Modular contracts
+     PDF Harness integration audit
+     LoopX PDF modular integration
+     repo-agent-native Bettor Binding
+   └─ issue #80 feat/git-town-stack-governance-v1
+      true-child documentation/governance terminal
+      PR NOT_CREATED at this snapshot
+      rollback ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
 ```
 
-| PR | Terminal behavior | Main state |
-|---|---|---|
-| [`bettor-arena#4`](https://github.com/ed3c/bettor-arena/pull/4) | module manifest, composition requirement and deterministic lock | `MERGED` |
-| [`bettor-arena#8`](https://github.com/ed3c/bettor-arena/pull/8) | exactly one owner or reviewed class per tracked path | `MERGED` |
-| [`bettor-arena#10`](https://github.com/ed3c/bettor-arena/pull/10) | module-local/transitive proof identity | `MERGED` |
-| [`bettor-arena#12`](https://github.com/ed3c/bettor-arena/pull/12) | immutable Context Capsules and offline driver parity | `MERGED` |
-| [`bettor-arena#15`](https://github.com/ed3c/bettor-arena/pull/15) | default-deny MCP policy and disposable closure | `MERGED` |
-| [`bettor-arena#21`](https://github.com/ed3c/bettor-arena/pull/21) | typed Bun stateless MCP runtime | `MERGED` |
-| [`bettor-arena#22`](https://github.com/ed3c/bettor-arena/pull/22) | project plan/apply/verify/rollback | `MERGED` |
-| [`bettor-arena#23`](https://github.com/ed3c/bettor-arena/pull/23) | logical origins and browser contract | `MERGED` |
-| [`bettor-arena#29`](https://github.com/ed3c/bettor-arena/pull/29) | nearest README coverage and mutable status correction | `MERGED` |
+Issue #80 is a child because it changes the same root routing documents as #60.
 
-## Skill, host execution and provider spine
+## LoopX completion program
+
+Parent: issue #61.  
+Final convergence owner: issue #68.
 
 ```text
-#40 / #43  shared repo-agent procedure → Bettor consumer binding
-      ↓
-#47 / #48  portable SKILL.md and six-host compatibility contract
-      ↓
-#49 / #50  host-owned typed-argv execution and assertion receipts
-      ↓
-#51        provider-neutral query/memory proposal contracts
-      ↓
-#46 / #56  paired fixture-only provider admission evaluator
+main @ 10380005fa485d6035539589c01b9f740acff15d
+└─ PR #74 feat/loopx-contract-v1
+   issue #62
+   head 2fd05408f585f6b8999a7922d4995d8379795eb2
+   OPEN / MERGEABLE / exact-head checks PASS
+   │
+   ├─ PR #75 feat/loopx-ledger-v1
+   │  issue #63
+   │  MERGED_TO_PARENT at #74 head
+   │  NOT_ON_MAIN
+   │
+   ├─ PR #76 feat/loopx-worker-gateway-v1
+   │  issue #64
+   │  head 60caac70f75b1f214b2ce05f2c37a5f2b85a9268
+   │  OPEN / NON_MERGEABLE
+   │  focused + Modular + PDF checks PASS
+   │
+   ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
+   │  issue #64
+   │  head 8778b3dd16dceccc7d3904f954a2ade249fce468
+   │  OPEN / NON_MERGEABLE
+   │  Modular + PDF checks PASS
+   │
+   ├─ PR #78 feat/loopx-decision-memory-v1
+   │  issue #42
+   │  head 166e0ee4ca69690f9e7da46b14d5452bc25df4b8
+   │  OPEN / NON_MERGEABLE
+   │  Decision-Memory + Modular + PDF checks PASS
+   │
+   └─ PR #79 feat/loopx-code-truth-graph-v2
+      issue #69
+      head 371083a4baeda129434aea2ebad538dde8004f07
+      OPEN / NON_MERGEABLE
+      CTG-v2 + Modular + PDF checks PASS
 ```
 
-| Issue / PR | Relation | State | Current authority |
+## Blocking conflict: Worker Gateway duplicate terminal
+
+PR #76 and PR #77:
+
+```text
+same issue: #64
+same parent: feat/loopx-contract-v1
+overlap:
+  .arena/modules/loopx-worker-gateway/**
+  loop_wiki/loopx-worker-gateway/**
+  loopctl/workflow.lock
+state: BLOCKED_DUPLICATE_TERMINAL
+authority: Human
+```
+
+The two PRs are not sibling-safe. Focused green checks do not choose a winner.
+
+## Program leaf ledger
+
+| Issue / PR | Terminal behavior | Relation | Current state |
 |---|---|---|---|
-| [`bettor-arena#40`](https://github.com/ed3c/bettor-arena/issues/40) / [`bettor-arena#43`](https://github.com/ed3c/bettor-arena/pull/43) | terminal consumer-binding leaf | `MERGED` | `.skill-bindings/repo-agent-native/` |
-| [`bettor-arena#47`](https://github.com/ed3c/bettor-arena/issues/47) / [`bettor-arena#48`](https://github.com/ed3c/bettor-arena/pull/48) | terminal portable-Skill leaf | `MERGED` | `.agents/skills/harness-wiki/` |
-| [`bettor-arena#49`](https://github.com/ed3c/bettor-arena/issues/49) / [`bettor-arena#50`](https://github.com/ed3c/bettor-arena/pull/50) | true child of the portable contract | `MERGED` | typed runner + `loopctl` port |
-| [`bettor-arena#51`](https://github.com/ed3c/bettor-arena/pull/51) | provider-contract terminal leaf on `main` | `MERGED` | `docs/knowledge-providers/` and module manifest |
-| [`bettor-arena#46`](https://github.com/ed3c/bettor-arena/issues/46) / [`bettor-arena#56`](https://github.com/ed3c/bettor-arena/pull/56) | active provider-eval terminal leaf | `OPEN` | observed head `770b0c8990843e958f7c1a345c3359a2d71eeb82` |
+| #62 / #74 | LoopX Objective/Todo/Gate/Evidence/Quota contracts | root terminal | `OPEN CANDIDATE` |
+| #63 / #75 | append-only ledger/reducer | true child | `MERGED_TO_PARENT`, not main |
+| #64 / #76/#77 | six-host Worker Gateway | duplicate child terminals | `BLOCKED_DUPLICATE_TERMINAL` |
+| #65 | Strategy Graph + HITL | planned terminal | `PR ABSENT` |
+| #42 / #78 | Decision Memory admission | sibling terminal | `OPEN CANDIDATE` |
+| #66 | Runtime Fabric/local-cloud parity | planned terminal | `PR ABSENT` |
+| #69 / #79 | Code Truth Graph v2 | sibling terminal | `OPEN CANDIDATE` |
+| #70 | Notes Repo → Scaffold | planned terminal | `PR ABSENT` |
+| #71 | Code → Knowledge fold-back | planned terminal | `PR ABSENT` |
+| #72 | Skill/Prompt evolution | planned terminal | `PR ABSENT` |
+| #67 | Observability/signed HITL | planned terminal | `PR ABSENT` |
+| #68 | final shared convergence | convergence | `BLOCKED_BY_TERMINALS` |
 
-### Active PR #56 exact observed state
+## Provider and Skill lanes
+
+### Provider admission
 
 ```text
-base: main @ d291523856988cfa54316dba967fea8470194b72
-head: integration/provider-admission-packets-v1
-head SHA: 770b0c8990843e958f7c1a345c3359a2d71eeb82
-GitHub mergeable metadata: true
-
-Knowledge provider admission evals: PASS
-harness-wiki portable execution:   PASS
-Knowledge provider contracts:      FAIL
-Modular contracts:                 FAIL
+PR #56
+head 770b0c8990843e958f7c1a345c3359a2d71eeb82
+focused provider evaluator PASS
+Knowledge provider contracts FAIL
+Modular contracts FAIL
+state: BLOCKED
 ```
 
-The failing modular path is load-bearing. The observed sync run could generate a
-new composition lock, then stopped because a Context Capsule listed
-`docs/knowledge-providers/evals/cases` as a directory rather than tracked file
-bytes. The PR must replace directory entries with exact files or a supported
-manifest expansion, regenerate all projections, and pass exact-head checks.
-Fixture evaluator PASS cannot proxy the modular failure.
+Fixture evidence cannot establish live provider health.
 
-## Non-authoritative or stale branch subjects
+### Historical portable-Skill aggregate
 
-| PR / branch | State | Why it must not be merged as-is |
-|---|---|---|
-| [`bettor-arena#52`](https://github.com/ed3c/bettor-arena/pull/52) | merged to a non-`main` feature base | alternate provider slice; not current `main` release identity |
-| [`bettor-arena#53`](https://github.com/ed3c/bettor-arena/pull/53) | `OPEN`, diverged, non-mergeable | historical aggregate branch; extract any unique delta into new terminal leaves instead of merging the aggregate |
-| [`bettor-arena#55`](https://github.com/ed3c/bettor-arena/pull/55) | closed without merge | publication subject and generated-head identity were invalid |
-| `feat/agent-shield-reference` | behind `main`, zero unique commits | not an implementation of issue #24 |
+```text
+PR #53
+head ac9d08fd9cf1e8925f628c6508d495fdeca7d3a2
+state: SUPERSEDED_CANDIDATE / historical aggregate
+```
 
-Do not delete historical branches merely because this index marks them
-non-authoritative. Close, supersede or delete remains a Human decision.
+Extract unique delta before any Human close or merge decision.
 
-## Open terminal leaves required by the PDF target
+### Skill measurement
 
-| Owner issue | Terminal leaf | Current state |
-|---|---|---|
-| [`bettor-arena#24`](https://github.com/ed3c/bettor-arena/issues/24) | immutable Agent Shield reference-consumer acceptance | `OPEN`; implementation branch has no unique delta |
-| LoopX contracts | Objective/Todo/Gate/Evidence/Quota + command/event/snapshot schemas | `ABSENT` issue/PR |
-| LoopX ledger | single writer, hash chain, replay and split-brain controls | `ABSENT` issue/PR |
-| Worker gateway | Grok/OpenCode/Pi/Codex/Claude/Ante adapter contract and canaries | `ABSENT` issue/PR |
-| Strategy/HITL | graph command port, interrupt/resume/exception receipts | `ABSENT` issue/PR |
-| Decision memory | evidence-bound capsule, expiry, conflict, deletion and admit | `ABSENT` issue/PR |
-| Runtime fabric | worktree/container/provider isolation and local/cloud canary | `ABSENT` issue/PR |
-| Observability/UI | redacted event projection and signed HITL console | `ABSENT` issue/PR |
+PR #73 remains a separate measurement lane. Its universal protocol conformance does not promote the measured Skill and does not enter the LoopX implementation parent chain.
 
-Each row should become a separate terminal issue/PR unless a current issue
-already owns the exact behavior. Shared lock/index regeneration and final
-acceptance belong only to one convergence leaf.
+## Runtime-env / Agent Shield documentation lane
+
+PR #58 remains a separate documentation audit. It must not be used to prove runtime pin freshness, live host/provider execution or product completion.
+
+## Current issue #80 path lease
+
+```text
+parent: PR #60
+base: feat/pdf-loopx-modular-verifier-v1
+head: feat/git-town-stack-governance-v1
+class: true-child terminal
+
+allowed:
+  README.md
+  AGENTS.md
+  CLAUDE.md
+  docs/git/**
+  docs/README.md
+  docs/INDEX.md
+  docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
+  docs/architecture/STATE_MACHINES.md
+  docs/architecture/agent-entrypoints.contract.json
+  docs/traceability/STACK_PR_INDEX.md
+  .arena/contexts/macro.json
+  scripts/gates/check_git_town_stack_docs.py
+  tests/test_git_town_stack_docs.py
+  .github/workflows/git-town-stack-docs.yml
+  generated modular projections through workflow
+
+excluded:
+  LoopX implementation directories
+  loopctl public surface
+  MCP policy
+  provider credentials/live receipts
+```
 
 ## Required receipt chain
 
@@ -175,15 +213,52 @@ acceptance belong only to one convergence leaf.
 source proposal or incident
 → architecture decision
 → parent issue
-→ molecular terminal issue
+→ terminal issue
+→ task packet + path lease
 → branch / PR / exact head
-→ positive + hollow/mutation controls
-→ immutable implementation subject
-→ runtime/provider/host receipt where applicable
+→ positive + control + mutation
+→ generated projections
+→ runtime/host receipt when applicable
 → convergence index
 → Human Admit
 ```
 
-Missing links remain `ABSENT`. Similar names, mutable branch heads, old green
-runs, package installation, generated prose or another environment's receipt do
-not fill the chain.
+## Git Town State Machine boundary
+
+Future admitted Git Town use:
+
+```text
+profile
+→ executable/legal admission
+→ config candidate
+→ linked worktree/branch/path lease
+→ dry run
+→ local sync candidate
+→ evals
+→ GitHub publication checks
+→ Human Admit
+```
+
+Git Town does not own:
+
+```text
+semantic conflict resolution
+remote publication
+merge / ship / close / delete
+production promotion
+rollback
+```
+
+## Update protocol
+
+When Stack topology changes, update together:
+
+- root `README.md`;
+- `AGENTS.md` / `CLAUDE.md` when routing changes;
+- [`../git/STACKED_PRS.md`](../git/STACKED_PRS.md);
+- [`../git/stack-prs.index.json`](../git/stack-prs.index.json);
+- this file;
+- directory/state maps when ownership changes;
+- deterministic verifier fixtures and exact-head checks.
+
+Do not merge, ship, close, delete, promote or rollback without Human Admit.
