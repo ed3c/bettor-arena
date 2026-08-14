@@ -2,16 +2,79 @@
 
 ## Authority and freshness
 
-GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This document records the relationship and last observed immutable subjects.
+GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This Markdown and [`../git/stack-prs.index.json`](../git/stack-prs.index.json) are reviewed snapshots.
 
 ```text
 observed_at: 2026-08-14T09:33:48Z
 current main: 10380005fa485d6035539589c01b9f740acff15d
-machine snapshot: ../git/stack-prs.index.json
 repository profile: ../git/REPO_PROFILE.md
 ```
 
-Refresh this index whenever any affected GitHub field changes.
+Refresh the snapshot whenever an affected base, head, state, check, reachability or path lease changes.
+
+## Git Town status
+
+```text
+.git-town.toml                         ABSENT
+.git-town                              ABSENT
+git-town-stacked-pr-worker selected    ABSENT / NOT_SELECTED
+repository molecular-delivery policy   IMPLEMENTED
+Git Town binary/version/checksum       ABSENT
+license/SBOM/legal                     NOT_REVIEWED
+local sync/publication                 NOT_EXERCISED
+```
+
+The repository uses molecular delivery semantics without claiming an admitted Git Town executable.
+
+## Four-repository documentation convergence
+
+Historical merged route leaves retained for compatibility and traceability:
+
+```text
+bettor-arena#37
+skills-shared#85
+runtime-env#30
+agent-shield-monorepo#78
+bettor-arena#38
+integration/pdf-harness-convergence-v1
+```
+
+Their current contract flow remains:
+
+```text
+skills-shared procedure
++ runtime-env secret-free runtime contract
+→ bettor-arena integration/acceptance
+→ agent-shield-monorepo reference product/canaries
+→ Human promotion or rollback
+```
+
+## Modular platform implementation spine
+
+The landed mainline spine includes module catalog, path ownership, closure-scoped proof subjects, Context Capsules, default-deny stateless MCP, transactional project bootstrap, logical origins/browser contracts and documentation convergence. Exact current truth is read from module manifests, `loopctl/contract.json`, locks and receipts rather than this prose.
+
+## Skill, host execution and provider spine
+
+```text
+bettor-arena#43 repo-agent-native binding
+→ bettor-arena#48 portable Skill compatibility
+→ bettor-arena#50 host-owned execution/assertion runner
+→ bettor-arena#51 provider-neutral query/memory contracts
+→ bettor-arena#53 historical aggregate
+→ bettor-arena#56 provider-evaluation lane
+```
+
+A merged child or focused fixture PASS cannot establish current-main or live-provider integration by itself.
+
+## Open terminal leaves required by the PDF target
+
+```text
+bettor-arena#24 immutable Agent Shield reference-consumer acceptance
+LoopX program issues #61–#72
+LoopX implementation PRs #74–#81
+```
+
+These compatibility headings and tokens preserve the prior PDF audit route. They do not override the current Stack graph below.
 
 ## Canonical shared Git Town method
 
@@ -22,51 +85,34 @@ blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
 path: skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-Bettor owns the profile, work packet, path lease, Stack index, evals and Human policy. It does not copy the shared Skill.
-
-Current admission:
-
-```text
-shared Skill reference            PINNED
-consumer binding selection        NOT_SELECTED
-.git-town.toml                    ABSENT
-Git Town binary/version/checksum  ABSENT
-license/SBOM/legal                NOT_REVIEWED
-live sync/publication             NOT_EXERCISED
-```
+Bettor owns the repository profile, task packet, path lease, Stack index, evals and Human policy. It does not copy or shadow the shared Skill.
 
 ## Relation vocabulary
 
 ```text
 sibling      path-disjoint independent leaf
 true child   consumes unmerged parent bytes
-terminal     one behavior plus eval/evidence
+terminal     one behavior plus positive/control/mutation evidence
 convergence  shared selection/index/live/release owner
 merged-to-parent
-             child entered feature parent, not current main
+             child entered feature parent but is not reachable from main
 ```
 
-## Documentation and governance Stack
+## Documentation and Git governance Stack
 
 ```text
 main @ 10380005fa485d6035539589c01b9f740acff15d
 └─ PR #60 feat/pdf-loopx-modular-verifier-v1
    head ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-   OPEN / MERGEABLE
-   exact-head checks PASS:
-     Modular contracts
-     PDF Harness integration audit
-     LoopX PDF modular integration
-     repo-agent-native Bettor Binding
+   OPEN / MERGEABLE / exact-head checks PASS
    └─ PR #81 feat/git-town-stack-governance-v1
-      issue #80; true-child documentation/governance terminal
-      observed head 857b6239b5faaff12910b37b73c32e5121b4f291
-      OPEN DRAFT / MERGEABLE
-      Modular contracts PASS; focused Git Town job skipped while Draft
+      issue #80
+      TRUE_CHILD documentation/governance terminal
+      OPEN / READY FOR REVIEW / UNMERGED
       rollback ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
 ```
 
-Issue #80 is a child because it changes the same root routing documents as #60.
+Issue #80 changes the same routed root documentation as PR #60, so it is a true child rather than a path-overlapping sibling.
 
 ## LoopX completion program
 
@@ -82,37 +128,33 @@ main @ 10380005fa485d6035539589c01b9f740acff15d
    │
    ├─ PR #75 feat/loopx-ledger-v1
    │  issue #63
-   │  MERGED_TO_PARENT at #74 head
+   │  MERGED_TO_PARENT at PR #74 feature head
    │  NOT_ON_MAIN
    │
    ├─ PR #76 feat/loopx-worker-gateway-v1
    │  issue #64
    │  head 60caac70f75b1f214b2ce05f2c37a5f2b85a9268
-   │  OPEN / NON_MERGEABLE
-   │  focused + Modular + PDF checks PASS
+   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
    │
    ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
    │  issue #64
    │  head 8778b3dd16dceccc7d3904f954a2ade249fce468
-   │  OPEN / NON_MERGEABLE
-   │  Modular + PDF checks PASS
+   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
    │
    ├─ PR #78 feat/loopx-decision-memory-v1
    │  issue #42
    │  head 166e0ee4ca69690f9e7da46b14d5452bc25df4b8
-   │  OPEN / NON_MERGEABLE
-   │  Decision-Memory + Modular + PDF checks PASS
+   │  OPEN / NON_MERGEABLE metadata / focused checks PASS
    │
    └─ PR #79 feat/loopx-code-truth-graph-v2
       issue #69
       head 371083a4baeda129434aea2ebad538dde8004f07
-      OPEN / NON_MERGEABLE
-      CTG-v2 + Modular + PDF checks PASS
+      OPEN / NON_MERGEABLE metadata / focused checks PASS
 ```
 
 ## Blocking conflict: Worker Gateway duplicate terminal
 
-PR #76 and PR #77:
+PR #76 and PR #77 are not parallel-safe:
 
 ```text
 same issue: #64
@@ -125,13 +167,13 @@ state: BLOCKED_DUPLICATE_TERMINAL
 authority: Human
 ```
 
-The two PRs are not sibling-safe. Focused green checks do not choose a winner.
+Focused green checks do not choose a winner. Human options are to select one, extract unique delta, sequence one as a true child, mark one superseded or close one.
 
 ## Program leaf ledger
 
 | Issue / PR | Terminal behavior | Relation | Current state |
 |---|---|---|---|
-| #62 / #74 | LoopX Objective/Todo/Gate/Evidence/Quota contracts | root terminal | `OPEN CANDIDATE` |
+| #62 / #74 | Objective/Todo/Gate/Evidence/Quota contracts | root terminal | `OPEN CANDIDATE` |
 | #63 / #75 | append-only ledger/reducer | true child | `MERGED_TO_PARENT`, not main |
 | #64 / #76/#77 | six-host Worker Gateway | duplicate child terminals | `BLOCKED_DUPLICATE_TERMINAL` |
 | #65 | Strategy Graph + HITL | planned terminal | `PR ABSENT` |
@@ -144,7 +186,9 @@ The two PRs are not sibling-safe. Focused green checks do not choose a winner.
 | #67 | Observability/signed HITL | planned terminal | `PR ABSENT` |
 | #68 | final shared convergence | convergence | `BLOCKED_BY_TERMINALS` |
 
-## Provider and Skill lanes
+Only issue #68 may select all settled terminal modules in the shared composition, regenerate final indexes, run the live matrix and record promotion/rollback.
+
+## Provider and historical lanes
 
 ### Provider admission
 
@@ -157,7 +201,7 @@ Modular contracts FAIL
 state: BLOCKED
 ```
 
-Fixture evidence cannot establish live provider health.
+Fixture evidence cannot establish live provider health or superiority.
 
 ### Historical portable-Skill aggregate
 
@@ -167,46 +211,49 @@ head ac9d08fd9cf1e8925f628c6508d495fdeca7d3a2
 state: SUPERSEDED_CANDIDATE / historical aggregate
 ```
 
-Extract unique delta before any Human close or merge decision.
+Extract unique delta before any Human merge or close decision.
 
-### Skill measurement
+### Other separate lanes
 
-PR #73 remains a separate measurement lane. Its universal protocol conformance does not promote the measured Skill and does not enter the LoopX implementation parent chain.
+PR #58 remains a runtime-env / Agent Shield documentation audit. PR #73 remains a Skill measurement lane. Neither enters the LoopX implementation parent chain automatically.
 
-## Runtime-env / Agent Shield documentation lane
+## Current issue #80 task packet and path lease
 
-PR #58 remains a separate documentation audit. It must not be used to prove runtime pin freshness, live host/provider execution or product completion.
-
-## Current issue #80 path lease
-
-```text
-parent: PR #60
-base: feat/pdf-loopx-modular-verifier-v1
-head: feat/git-town-stack-governance-v1
+```yaml
+parent_issue: 61
+terminal_issue: 80
+base_branch: feat/pdf-loopx-modular-verifier-v1
+parent_branch: feat/pdf-loopx-modular-verifier-v1
+head_branch: feat/git-town-stack-governance-v1
 class: true-child terminal
-
-allowed:
-  README.md
-  AGENTS.md
-  CLAUDE.md
-  docs/git/**
-  docs/README.md
-  docs/INDEX.md
-  docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
-  docs/architecture/STATE_MACHINES.md
-  docs/architecture/agent-entrypoints.contract.json
-  docs/traceability/STACK_PR_INDEX.md
-  .arena/contexts/macro.json
-  scripts/gates/check_git_town_stack_docs.py
-  tests/test_git_town_stack_docs.py
-  .github/workflows/git-town-stack-docs.yml
-  generated modular projections through workflow
-
-excluded:
-  LoopX implementation directories
-  loopctl public surface
-  MCP policy
-  provider credentials/live receipts
+allowed_paths:
+  - README.md
+  - AGENTS.md
+  - CLAUDE.md
+  - docs/git/**
+  - docs/README.md
+  - docs/INDEX.md
+  - docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
+  - docs/architecture/STATE_MACHINES.md
+  - docs/architecture/agent-entrypoints.contract.json
+  - docs/traceability/STACK_PR_INDEX.md
+  - .arena/contexts/macro.json
+  - scripts/gates/check_git_town_stack_docs.py
+  - tests/test_git_town_stack_docs.py
+  - .github/workflows/git-town-stack-docs.yml
+  - workflow-generated modular projections
+non_goals:
+  - Git Town installation/configuration
+  - sync/push/merge/ship
+  - semantic conflict resolution
+  - LoopX/runtime/provider code changes
+rollback_subject: ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
+human_owned:
+  - executable/license/legal admission
+  - semantic conflict resolution
+  - PR retargeting
+  - merge/ship/close/delete
+  - promotion and rollback
 ```
 
 ## Required receipt chain
@@ -220,7 +267,7 @@ source proposal or incident
 → branch / PR / exact head
 → positive + control + mutation
 → generated projections
-→ runtime/host receipt when applicable
+→ runtime/host receipt where applicable
 → convergence index
 → Human Admit
 ```
@@ -231,25 +278,17 @@ Future admitted Git Town use:
 
 ```text
 profile
-→ executable/legal admission
+→ executable/license/SBOM/legal admission
 → config candidate
 → linked worktree/branch/path lease
 → dry run
 → local sync candidate
 → evals
-→ GitHub publication checks
+→ GitHub exact-head publication checks
 → Human Admit
 ```
 
-Git Town does not own:
-
-```text
-semantic conflict resolution
-remote publication
-merge / ship / close / delete
-production promotion
-rollback
-```
+Git Town does not own semantic conflict resolution, remote publication, merge/ship/close/delete, production promotion or rollback.
 
 ## Update protocol
 
