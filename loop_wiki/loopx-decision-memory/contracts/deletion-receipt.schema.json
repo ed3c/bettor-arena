@@ -1,0 +1,38 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/memory-deletion-receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_receipt_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "kind": {"const": "HUMAN"},
+        "signer_id": {"minLength": 3, "type": "string"}
+      },
+      "required": ["kind", "signer_id", "authority_receipt_ref"],
+      "type": "object"
+    },
+    "capsule_id": {"pattern": "^memory-[0-9a-f]{16}$", "type": "string"},
+    "deleted_at": {"format": "date-time", "type": "string"},
+    "deletion_event_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "projections": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "provider": {"enum": ["mem0", "vector", "graph"]},
+          "residue_count": {"minimum": 0, "type": "integer"},
+          "state": {"enum": ["PASS", "NOT_CONFIGURED", "FAIL"]}
+        },
+        "required": ["provider", "state", "residue_count"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {"const": "loopx/memory-deletion-receipt/v1"},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "capsule_id", "subject", "deletion_event_ref", "authority", "projections", "deleted_at"],
+  "title": "LoopX Decision Memory Deletion Receipt v1",
+  "type": "object"
+}
