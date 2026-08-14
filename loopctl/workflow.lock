@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "155eda7bf50a7a1788e1bc0edb64511a155ba4dd",
+  "workflow_commit": "78260c507c634cd9d8265cb310641caa7a26db29",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-155eda7bf50a-dirty.json",
-    "container": "container-155eda7bf50a-dirty.json",
-    "ctg": "ctg-155eda7bf50a-dirty.json",
-    "equivalence": "equivalence-155eda7bf50a-dirty.json",
-    "harness": "harness-155eda7bf50a-dirty.json",
-    "macro": "macro-155eda7bf50a-dirty.json",
-    "micro": "micro-155eda7bf50a-dirty.json",
-    "notebooklm": "notebooklm-155eda7bf50a-dirty.json",
-    "openwiki": "openwiki-155eda7bf50a-dirty.json",
-    "policy": "policy-155eda7bf50a-dirty.json",
-    "skill-execution": "skill-execution-155eda7bf50a-dirty.json",
-    "workflow": "workflow-155eda7bf50a-dirty.json"
+    "agent-runtime": "agent-runtime-78260c507c63-dirty.json",
+    "container": "container-78260c507c63-dirty.json",
+    "ctg": "ctg-78260c507c63-dirty.json",
+    "equivalence": "equivalence-78260c507c63-dirty.json",
+    "harness": "harness-78260c507c63-dirty.json",
+    "macro": "macro-78260c507c63-dirty.json",
+    "micro": "micro-78260c507c63-dirty.json",
+    "notebooklm": "notebooklm-78260c507c63-dirty.json",
+    "openwiki": "openwiki-78260c507c63-dirty.json",
+    "policy": "policy-78260c507c63-dirty.json",
+    "skill-execution": "skill-execution-78260c507c63-dirty.json",
+    "workflow": "workflow-78260c507c63-dirty.json"
   },
   "counts": {
     "artifact": 31,
     "context": 61,
     "harness": 143
   },
-  "workflow_digest": "363dd1a7be3929480b0d5f78927a1983715401904cbbc6a5f8a2ef2576e75ea0",
+  "workflow_digest": "97390496d68f63ee255670aadf3581036bcc96934f693b41deb623cd0e7291ad",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -196,7 +196,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "c43131bf6390a0778af673af3cd7a3019c2a37b36c31045a3160133e0a1f4ddf",
+      "sha256": "c18d651c02305916a0ce915d301ea59d65769b78a132e68f291fb61cba527e66",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -213,7 +213,7 @@
       ]
     },
     "CLAUDE.md": {
-      "sha256": "be7f3bb8745082c24c492a5f7eb66e64770b8634bb8f6cc025ed9b777ee1b6ff",
+      "sha256": "2225ff0b0e365b0282b48534e0bf2774fd1da208b9feb58bc7bf14fbb59657cd",
       "hash_source": "index",
       "kind": "context",
       "loops": [

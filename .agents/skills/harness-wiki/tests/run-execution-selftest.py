@@ -379,6 +379,23 @@ def main(argv: list[str] | None = None) -> int:
         candidate["shell"] = True
         cases.append(("raw-shell", candidate, assertions, 2, "FAIL"))
 
+        # An expected artifact the run never produces. Without this control, a
+        # runner that forgot to check expected_artifacts would still report PASS
+        # on a run that produced nothing, and the receipt would say so.
+        candidate = copy.deepcopy(request)
+        candidate["expected_artifacts"] = [
+            "artifacts/result.json",
+            "artifacts/never-written.json",
+        ]
+        cases.append(("missing-artifact", candidate, assertions, 2, "FAIL"))
+
+        # Cleanup declared as not required. The disposable-workspace guarantee is
+        # the reason this runner may execute anything at all, so a request that
+        # opts out of it must be refused rather than honoured.
+        candidate = copy.deepcopy(request)
+        candidate["sandbox"]["cleanup"] = "optional"
+        cases.append(("cleanup-mutation", candidate, assertions, 2, "FAIL"))
+
         for name, candidate, assertion_set, expected_rc, expected_status in cases:
             result, receipt, _ = execute_case(
                 base,
@@ -447,8 +464,13 @@ def main(argv: list[str] | None = None) -> int:
         for failure in failures:
             print(repr(failure), file=sys.stderr)
         return 2
+    # Counted rather than written down. The literal was accurate when it was
+    # written -- nine cases plus the append-only collision -- but it does not
+    # move when a control is added, so the next person to add one gets a summary
+    # that under-reports what actually ran.
     print(
-        "portable skill execution selftest: PASS (1 positive, 10 independent negatives)"
+        f"portable skill execution selftest: PASS (1 positive, "
+        f"{len(cases) + 1} independent negatives)"
     )
     return 0
 
