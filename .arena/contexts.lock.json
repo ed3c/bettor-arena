@@ -1,5 +1,5 @@
 {
-  "content_sha256": "c5465f9bba02c496171c721e225abaef7a593fa930ecc163c09f617ee26a38d0",
+  "content_sha256": "aa8c1f6c0a72756cd52cfc429440acfea6f607994192b80139844de8337d45ba",
   "contexts": [
     {
       "common": [
@@ -396,7 +396,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "dd5939f2c907b64650ca86acc125a38fb12c4f6e26a15c6eada1d51f7056899a",
+      "context_sha256": "bac373f2acd5ef1395630246bda401fecd9eec5dc7827c1c894a5e99ebcf577a",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -490,7 +490,7 @@
           "path": "docs/git/REPO_PROFILE.md"
         },
         {
-          "blob": "a84debc9a7f2db80710352c4602a7790ad211468",
+          "blob": "ce5cfff53b1a8555cb96f058e213e2d79731fa64",
           "mode": "100644",
           "path": "docs/git/STACKED_PRS.md"
         },
@@ -500,12 +500,12 @@
           "path": "docs/git/WORKER_PROTOCOL.md"
         },
         {
-          "blob": "2b81ad01ae0f4874687e5e7e2aed751c4f748f0f",
+          "blob": "e5548551eb5aa8d35b006587517f5ab07a73563b",
           "mode": "100644",
           "path": "docs/git/stack-prs.index.json"
         },
         {
-          "blob": "75e043d7d7060fe639caf7292bbd0ada18443192",
+          "blob": "1c952818e75ee8c7af499f52a65393829b62ca47",
           "mode": "100644",
           "path": "docs/traceability/STACK_PR_INDEX.md"
         }
