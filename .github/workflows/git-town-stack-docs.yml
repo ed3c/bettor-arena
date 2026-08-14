@@ -1,4 +1,5 @@
 name: Git Town Stack governance docs
+# Exact-head trigger after generated contract sync; no runtime or publication authority.
 
 on:
   pull_request:
