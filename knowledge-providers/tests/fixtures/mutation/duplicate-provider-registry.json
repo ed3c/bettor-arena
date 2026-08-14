@@ -1,9 +1,0 @@
-{
-  "schema_version": "knowledge-provider-registry/v1",
-  "providers": [
-    "providers/serena.json",
-    "providers/grepai.json",
-    "providers/code-graph-rag.json",
-    "providers/serena.json"
-  ]
-}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "knowledge-provider-manifest/v1",
+  "provider_id": "mem0",
+  "source": {
+    "repository": "mem0ai/mem0",
+    "commit": "14c431735b1e8b94027949497a53a0022c214de7",
+    "license": "Apache-2.0"
+  },
+  "admission": {
+    "state": "CANDIDATE",
+    "runtime_state": "NOT_CONFIGURED",
+    "live_claim": false
+  },
+  "capabilities": [
+    "memory.recall",
+    "memory.write-proposal",
+    "memory.delete-proposal"
+  ],
+  "adapter": {
+    "transport": "none",
+    "identity_state": "NOT_CONFIGURED",
+    "digest": null,
+    "read_only": true,
+    "allowed_operations": [
+      "search"
+    ],
+    "denied_operations": [
+      "add",
+      "update",
+      "delete",
+      "reset",
+      "direct_writeback"
+    ]
+  },
+  "index": {
+    "required": true,
+    "subject_bound": true,
+    "rebuildable": true,
+    "freshness_required": true
+  },
+  "authority": {
+    "result_class": "MEMORY_PROPOSAL_ONLY",
+    "may_write_repository": false,
+    "may_write_memory": false,
+    "may_advance_state": false,
+    "may_waive_gate": false,
+    "may_mark_tested": false,
+    "may_human_admit": false
+  },
+  "limits": {
+    "max_results": 50,
+    "max_bytes": 131072
+  }
+}

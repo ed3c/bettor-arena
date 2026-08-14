@@ -1,0 +1,43 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "memory-authority-conflict",
+  "family": "memory",
+  "capability": "memory.recall",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  },
+  "query": {
+    "text": "recall the current provider activation decision and preserve conflict with older notes",
+    "path_scope": ["CONTEXT.md", "docs", "data"]
+  },
+  "query_digest": "sha256:ee4dd7a31c5a27d39f6f5b9734a2873c955356eb09f5f3084b4045d34c6e122f",
+  "participants": ["repository-authority-control", "mem0"],
+  "oracle": {
+    "relevant_ids": ["current-provider-state"],
+    "must_remain_unknown": ["future-provider-admission"]
+  },
+  "hard_gates": {
+    "source_readback_required": true,
+    "fresh_index_required": true,
+    "candidate_only": true,
+    "no_authority_escalation": true,
+    "cleanup_required": true,
+    "min_verified_precision": 1.0,
+    "min_verified_recall": 1.0
+  },
+  "budgets": {
+    "max_results": 10,
+    "max_context_bytes": 32768,
+    "max_latency_ms": 10000,
+    "max_tool_calls": 8
+  },
+  "eligible_recommendations": ["EXPERIMENTAL"],
+  "fixture_subject": true,
+  "memory_policy": {
+    "preserve_conflict": true,
+    "current_authority_wins": true,
+    "durable_write_requires_human_admit": true
+  }
+}

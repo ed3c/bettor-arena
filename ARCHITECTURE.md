@@ -47,8 +47,6 @@ bettor-arena/
 │                      #   examples/ 是可重算 dotenv；workloads/ 固定入口/收據/對照組；policies/ 分離 Claude/Codex 原生設定。
 │                      #   pre-commit 驗 staged manifest 全閉包，禁連網/讀 sibling/自動同步；README.md 記顯式 sync/check 路徑
 ├── kb-ingest/         # repo-wiki 模組(openwiki/=上游逐字;port/=本地執行層;S4 落地)
-├── knowledge-providers/ # 可選 code/memory provider 的中立契約層；Serena/GrepAI/CGR/Mem0 只產 subject-bound candidate/proposal，
-│                      #   validator+正/負控擋 stale、漂移、越權與 false-live；source/test/receipt/Human Admit 仍在其外
 ├── notebooklm/        # NotebookLM 業務迴圈模組(README.md=法則層+抖動迴圈+已抓到的缺陷,開這個目錄的
 │                      #   agent 先讀它;workflow.py=唯一入口,drive_fetch.py=認證過的 Drive 路徑,
 │                      #   registry.json=互動資料(notebook pin/harvest target;憑證只留指針,絕不落值),

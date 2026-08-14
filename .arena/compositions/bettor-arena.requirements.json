@@ -27,19 +27,21 @@
     },
     {
       "components": [
-        "context",
-        "contracts",
-        "proof"
-      ],
-      "id": "knowledge-providers"
-    },
-    {
-      "components": [
         "browser",
         "origins",
         "proof"
       ],
       "id": "environment-contracts"
+    },
+    {
+      "components": [
+        "contracts",
+        "eval_contracts",
+        "evals",
+        "proof",
+        "registry"
+      ],
+      "id": "knowledge-providers"
     },
     {
       "components": [

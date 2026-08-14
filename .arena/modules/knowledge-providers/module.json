@@ -1,87 +1,86 @@
 {
+  "schema": "bettor-arena/module/v1",
+  "id": "knowledge-providers",
+  "interface_version": "1.2.0",
+  "summary": "Subject-bound read-only provider query contracts, complete paired provider-versus-control admission evaluations, and proposal-only project memory governance.",
+  "roots": [
+    "docs/knowledge-providers",
+    "scripts/check_knowledge_providers.py",
+    "scripts/evaluate_knowledge_providers.py",
+    "scripts/check_knowledge_provider_module.py",
+    "scripts/knowledge_provider_eval_common.py",
+    "scripts/knowledge_provider_eval_contracts.py",
+    "scripts/knowledge_provider_eval_registry.py",
+    "scripts/knowledge_provider_eval_cases.py",
+    "scripts/knowledge_provider_eval_packet.py",
+    "scripts/knowledge_provider_eval_metrics.py",
+    "scripts/knowledge_provider_eval_engine.py",
+    "scripts/knowledge_provider_eval_selftest.py"
+  ],
   "components": {
     "contracts": {
+      "required": true,
       "paths": [
-        "knowledge-providers/contracts",
-        "knowledge-providers/providers",
-        "knowledge-providers/registry.json"
-      ],
-      "required": true
+        "docs/knowledge-providers/contracts"
+      ]
     },
-    "context": {
+    "registry": {
+      "required": true,
       "paths": [
-        "knowledge-providers/CONTEXT.md",
-        "knowledge-providers/README.md",
-        "knowledge-providers/architecture-decision.md",
-        "knowledge-providers/host-state.md",
-        ".arena/contexts/knowledge-providers.json"
-      ],
-      "required": true
+        "docs/knowledge-providers/registry.json",
+        "docs/knowledge-providers/providers"
+      ]
+    },
+    "eval_contracts": {
+      "required": true,
+      "paths": [
+        "docs/knowledge-providers/evals/config.json",
+        "docs/knowledge-providers/evals/subject.json",
+        "docs/knowledge-providers/evals/contracts"
+      ]
+    },
+    "evals": {
+      "required": true,
+      "paths": [
+        "docs/knowledge-providers/evals/participants",
+        "docs/knowledge-providers/evals/cases",
+        "docs/knowledge-providers/evals/fixtures",
+        "scripts/evaluate_knowledge_providers.py",
+        "scripts/knowledge_provider_eval_common.py",
+        "scripts/knowledge_provider_eval_contracts.py",
+        "scripts/knowledge_provider_eval_registry.py",
+        "scripts/knowledge_provider_eval_cases.py",
+        "scripts/knowledge_provider_eval_packet.py",
+        "scripts/knowledge_provider_eval_metrics.py",
+        "scripts/knowledge_provider_eval_engine.py",
+        "scripts/knowledge_provider_eval_selftest.py"
+      ]
     },
     "proof": {
+      "required": true,
       "paths": [
-        "knowledge-providers/scripts/check_knowledge_providers.py",
-        "knowledge-providers/tests"
-      ],
-      "required": true
+        "scripts/check_knowledge_providers.py",
+        "scripts/check_knowledge_provider_module.py"
+      ]
     }
-  },
-  "conflicts": [],
-  "external_policy": {
-    "exposed": false,
-    "mutation": "none",
-    "network": "none",
-    "secrets": "none"
-  },
-  "id": "knowledge-providers",
-  "interface_version": "1.0.0",
-  "loops": [
-    {
-      "class": "provider",
-      "external_policy": "control-only",
-      "id": "knowledge-providers",
-      "interface_version": "1.0.0",
-      "public_port": "python3 knowledge-providers/scripts/check_knowledge_providers.py"
-    }
-  ],
-  "proof": {
-    "control": [
-      "python3",
-      "knowledge-providers/scripts/check_knowledge_providers.py",
-      "check",
-      "--root",
-      "knowledge-providers"
-    ],
-    "mutation": [
-      "python3",
-      "knowledge-providers/tests/run_controls.py",
-      "--root",
-      "knowledge-providers"
-    ],
-    "selftest": [
-      "sh",
-      "knowledge-providers/tests/run-all.sh"
-    ],
-    "verify": [
-      "python3",
-      "knowledge-providers/scripts/check_knowledge_providers.py",
-      "check",
-      "--root",
-      "knowledge-providers"
-    ]
   },
   "provides": [
-    "knowledge-provider.contracts/v1",
-    "knowledge-provider.candidate-receipt/v1",
-    "knowledge-provider.memory-proposal/v1"
+    "knowledge-provider.query/v1",
+    "knowledge-provider.memory-proposal/v1",
+    "knowledge-provider.eval/v1"
   ],
   "requires": [
     "arena.module-catalog/v1",
-    "arena.passive-context/v1"
+    "arena.proof-kernel/v1"
   ],
-  "roots": [
-    "knowledge-providers"
-  ],
+  "conflicts": [],
+  "skills": {
+    "required": [
+      "repo-agent-native"
+    ],
+    "optional": [],
+    "repo_owned": []
+  },
   "runtime": {
     "profiles": [],
     "tools": [
@@ -89,13 +88,46 @@
       "sh"
     ]
   },
-  "schema": "bettor-arena/module/v1",
-  "skills": {
-    "optional": [],
-    "repo_owned": [],
-    "required": [
-      "repo-agent-native"
-    ]
+  "loops": [
+    {
+      "id": "knowledge-providers",
+      "class": "provider",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/check_knowledge_providers.py",
+      "external_policy": "denied"
+    },
+    {
+      "id": "knowledge-provider-evals",
+      "class": "provider",
+      "interface_version": "1.1.0",
+      "public_port": "python3 scripts/evaluate_knowledge_providers.py",
+      "external_policy": "denied"
+    }
+  ],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
   },
-  "summary": "Provider-neutral, subject-bound contracts and deterministic controls for optional symbolic, semantic, graph and memory projections that cannot become repository or gate authority."
+  "proof": {
+    "verify": [
+      "python3",
+      "scripts/check_knowledge_provider_module.py"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/check_knowledge_provider_module.py",
+      "--selftest"
+    ],
+    "control": [
+      "sh",
+      "tests/knowledge-provider-evals/run-all.sh"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/evaluate_knowledge_providers.py",
+      "--selftest"
+    ]
+  }
 }

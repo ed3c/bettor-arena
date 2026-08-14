@@ -1,45 +1,49 @@
 # `knowledge-providers` module
 
-Machine authority: [`module.json`](module.json)
-Interface version: `1.0.0`
+Owner: subject-bound read-only knowledge-provider contracts, deterministic
+provider-versus-control admission evaluations, and proposal-only memory
+governance.
 
-## Role
+The module owns:
 
-Defines a provider-neutral boundary for optional symbol, semantic, graph, and project-memory projections. Provider output remains a subject-bound candidate or proposal and cannot replace current source, tests, receipts, gates, or Human Admit.
+- `docs/knowledge-providers/`;
+- `scripts/check_knowledge_providers.py`;
+- `scripts/check_knowledge_provider_module.py`;
+- `scripts/evaluate_knowledge_providers.py`;
+- `scripts/knowledge_provider_eval_*.py`.
 
-## Public port
+Repository-level test wrappers under `tests/` remain owned by `proof-kernel`.
+Referencing those controls does not transfer ownership.
 
-| Loop | Class | Interface | External policy | Entry |
-|---|---|---|---|---|
-| `knowledge-providers` | provider | `1.0.0` | control-only | `python3 knowledge-providers/scripts/check_knowledge_providers.py` |
+It does not own provider installation, MCP credentials, index daemons,
+persistent stores, source truth, LoopX transitions, gate waivers, Human
+Admit, or production promotion.
 
-## Capability boundary
+```text
+exact immutable subject
+→ paired provider/control observation
+→ identity, freshness, readback, budget, cleanup, and authority gates
+→ deterministic report
+→ candidate recommendation
+→ Human Admit
+```
 
-**Provides**
+Public capabilities:
 
-- `knowledge-provider.contracts/v1`
-- `knowledge-provider.candidate-receipt/v1`
-- `knowledge-provider.memory-proposal/v1`
+```text
+knowledge-provider.query/v1
+knowledge-provider.memory-proposal/v1
+knowledge-provider.eval/v1
+```
 
-**Requires**
+Verification:
 
-- `arena.module-catalog/v1`
-- `arena.passive-context/v1`
+```bash
+python3 scripts/check_knowledge_provider_module.py
+python3 scripts/check_knowledge_provider_module.py --selftest
+sh tests/knowledge-provider-evals/run-all.sh
+```
 
-## Owned implementation root
-
-- `knowledge-providers/`
-
-## Evidence
-
-- Verify/control: `python3 knowledge-providers/scripts/check_knowledge_providers.py check --root knowledge-providers`
-- Positive, hollow, and mutation controls: `sh knowledge-providers/tests/run-all.sh`
-- Host-state protocol: `knowledge-providers/host-state.md`; live results remain remeasured host receipts, not proof of this module
-
-## External boundary
-
-This module performs no live provider call, network access, code edit, direct memory mutation, state transition, gate verdict, release promotion, or Human Admit. Live adapters require a separately admitted runtime identity, exact index subject, canaries, cleanup evidence, and paired A/B results.
-
-## Change discipline
-
-`module.json` owns interface, closure, effects, and proof commands. Provider manifests own candidate capability and authority ceilings. The human README and ADR are navigation and rationale, not a second machine API.
+Checked-in observations remain fixture-only. They test the evaluator and its
+negative controls; they do not prove live provider execution or elect a
+winner.

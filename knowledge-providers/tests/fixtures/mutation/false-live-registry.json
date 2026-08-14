@@ -1,9 +1,0 @@
-{
-  "schema_version": "knowledge-provider-registry/v1",
-  "providers": [
-    "tests/fixtures/mutation/false-live-serena.json",
-    "providers/grepai.json",
-    "providers/code-graph-rag.json",
-    "providers/mem0.json"
-  ]
-}

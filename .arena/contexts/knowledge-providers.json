@@ -9,11 +9,32 @@
     "CLAUDE.md",
     "ARCHITECTURE.md",
     "CONTEXT.md",
-    "knowledge-providers/CONTEXT.md",
-    "knowledge-providers/README.md",
-    "knowledge-providers/architecture-decision.md",
-    "knowledge-providers/host-state.md",
-    "knowledge-providers/registry.json"
+    "docs/agents/domain.md",
+    "docs/knowledge-providers/README.md",
+    "docs/knowledge-providers/CONTEXT.md",
+    "docs/knowledge-providers/registry.json",
+    "docs/knowledge-providers/alternatives.md",
+    "docs/knowledge-providers/evals/README.md",
+    "docs/knowledge-providers/evals/STATUS.md",
+    "docs/knowledge-providers/evals/config.json",
+    "docs/knowledge-providers/evals/subject.json",
+    "docs/knowledge-providers/evals/contracts/eval-case.schema.json",
+    "docs/knowledge-providers/evals/contracts/eval-config.schema.json",
+    "docs/knowledge-providers/evals/contracts/eval-observation.schema.json",
+    "docs/knowledge-providers/evals/contracts/eval-report.schema.json",
+    "docs/knowledge-providers/evals/contracts/participant.schema.json",
+    "docs/knowledge-providers/evals/contracts/subject.schema.json",
+    "docs/knowledge-providers/evals/participants/code-graph-rag.json",
+    "docs/knowledge-providers/evals/participants/exact-search-control.json",
+    "docs/knowledge-providers/evals/participants/grepai.json",
+    "docs/knowledge-providers/evals/participants/mem0.json",
+    "docs/knowledge-providers/evals/participants/repository-authority-control.json",
+    "docs/knowledge-providers/evals/participants/serena.json",
+    "docs/knowledge-providers/evals/cases/graph.json",
+    "docs/knowledge-providers/evals/cases/memory.json",
+    "docs/knowledge-providers/evals/cases/semantic.json",
+    "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
+    ".arena/modules/knowledge-providers/module.json"
   ],
   "drivers": {
     "claude-code": {
@@ -28,8 +49,8 @@
   "policy": {
     "immutable_ref_required": true,
     "mutation": "none",
-    "network": "none",
-    "secrets": "none",
-    "max_seconds": 120
+    "network": "host-policy",
+    "secrets": "host-only",
+    "max_seconds": 180
   }
 }
