@@ -9,6 +9,12 @@ on:
       - '.arena/modules/loopx-strategy-hitl/**'
       - '.github/workflows/loopx-strategy-hitl.yml'
   pull_request:
+    # ready_for_review has to be listed explicitly: the default type set is
+    # opened/synchronize/reopened, so with the draft guard below a PR that opens
+    # as a draft skips this job and never re-runs it when it is marked ready.
+    # The module would then be verified only by the branch push, against
+    # whatever commit that was -- never against the head being reviewed.
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'loop_wiki/loopx-strategy-hitl/**'
       - '.arena/modules/loopx-strategy-hitl/**'
