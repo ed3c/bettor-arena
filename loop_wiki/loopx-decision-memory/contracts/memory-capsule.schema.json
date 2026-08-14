@@ -1,0 +1,69 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/memory-capsule/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_store": {"const": "LOOPX_MEMORY_LEDGER"},
+        "model_write": {"const": false},
+        "persisted": {"const": false},
+        "state_writer": {"const": "TRUSTED_REDUCER"}
+      },
+      "required": ["canonical_store", "state_writer", "model_write", "persisted"],
+      "type": "object"
+    },
+    "canonical_key": {"type": "string"},
+    "conflict": {
+      "additionalProperties": false,
+      "properties": {
+        "current_repository_wins": {"const": true},
+        "known_conflicts": {"items": {"type": "string"}, "type": "array"},
+        "state": {"enum": ["NONE", "OPEN"]}
+      },
+      "required": ["state", "known_conflicts", "current_repository_wins"],
+      "type": "object"
+    },
+    "created_at": {"format": "date-time", "type": "string"},
+    "decision_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_receipt_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "decision_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "decision_id": {"type": "string"}
+      },
+      "required": ["decision_id", "decision_digest", "authority_receipt_ref"],
+      "type": "object"
+    },
+    "epistemic": {"type": "object"},
+    "evidence_refs": {"minItems": 1, "type": "array"},
+    "kind": {"type": "string"},
+    "privacy": {"type": "object"},
+    "projections": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {"const": "REBUILDABLE_CACHE"},
+          "provider": {"enum": ["mem0", "vector", "graph"]},
+          "state": {"enum": ["NOT_CONFIGURED", "NOT_EXERCISED", "PROJECTED"]}
+        },
+        "required": ["provider", "state", "authority"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "proposal_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "retention": {"type": "object"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_version": {"const": "loopx/memory-capsule/v1"},
+    "scope": {"type": "object"},
+    "stable_id": {"pattern": "^memory-[0-9a-f]{16}$", "type": "string"},
+    "statement": {"type": "string"},
+    "status": {"enum": ["CANDIDATE_ACTIVE", "CANDIDATE_CONTESTED"]},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "stable_id", "canonical_key", "revision", "status", "proposal_digest", "subject", "kind", "statement", "epistemic", "evidence_refs", "scope", "retention", "privacy", "conflict", "decision_ref", "projections", "authority", "created_at"],
+  "title": "LoopX Decision Memory Candidate Capsule v1",
+  "type": "object"
+}

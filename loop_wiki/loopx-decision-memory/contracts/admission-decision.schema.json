@@ -1,0 +1,52 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/memory-admission-decision/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_receipt_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "kind": {"const": "HUMAN"},
+        "signer_id": {"minLength": 3, "type": "string"}
+      },
+      "required": ["kind", "signer_id", "authority_receipt_ref"],
+      "type": "object"
+    },
+    "created_at": {"format": "date-time", "type": "string"},
+    "decision": {"enum": ["ADMIT", "REJECT", "DEFER", "CONFLICT"]},
+    "decision_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+    "proposal_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "rationale_artifact_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "retention_override": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expires_at": {"format": "date-time", "type": "string"},
+            "max_age_seconds": {"maximum": 31536000, "minimum": 60, "type": "integer"},
+            "review_required_at": {"format": "date-time", "type": "string"}
+          },
+          "required": ["max_age_seconds", "expires_at", "review_required_at"],
+          "type": "object"
+        }
+      ]
+    },
+    "schema_version": {"const": "loopx/memory-admission-decision/v1"},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"type": "string"},
+        "task_id": {"type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    }
+  },
+  "required": ["schema_version", "decision_id", "proposal_digest", "subject", "decision", "authority", "rationale_artifact_ref", "retention_override", "created_at"],
+  "title": "LoopX Memory Admission Decision v1",
+  "type": "object"
+}
