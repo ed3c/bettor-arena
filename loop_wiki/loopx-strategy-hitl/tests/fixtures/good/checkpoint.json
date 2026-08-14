@@ -1,0 +1,22 @@
+{
+  "based_on": {
+    "ledger_head": "sha256:a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "state_revision": 7
+  },
+  "checkpoint_id": "ckpt-0007",
+  "graph_cache": {
+    "last_prompt_ref": "artifact:prompt-3"
+  },
+  "graph_cursor": {
+    "attempt": 2,
+    "node": "await_gate"
+  },
+  "resume_token": "resume-0007-a",
+  "schema_version": "loopx/graph-checkpoint/v1",
+  "subject": {
+    "commit": "0731b667d0832c49b7844d7a2788c435518a654f",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-strategy-hitl-fixture",
+    "tree": "7f508545279eee4fbca6ae0b60df4e324028f487"
+  }
+}
