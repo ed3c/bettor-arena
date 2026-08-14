@@ -1,0 +1,98 @@
+{
+  "cpu_slots_total": 4,
+  "disk_mb_total": 32768,
+  "items": [
+    {
+      "budgets": {
+        "cpu_slots": 1,
+        "disk_mb": 4096,
+        "max_output_bytes": 1048576,
+        "max_processes": 64,
+        "memory_mb": 2048,
+        "timeout_ms": 900000
+      },
+      "cache_scope": "scope:resource-gc",
+      "depends_on": [],
+      "order": 0,
+      "priority": 10,
+      "requested_lease": "lease-gc",
+      "subject": {
+        "commit": "4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c",
+        "issue": 97,
+        "repository": "ed3c/bettor-arena"
+      },
+      "task_id": "task-resource-gc"
+    },
+    {
+      "budgets": {
+        "cpu_slots": 1,
+        "disk_mb": 4096,
+        "max_output_bytes": 1048576,
+        "max_processes": 64,
+        "memory_mb": 2048,
+        "timeout_ms": 900000
+      },
+      "cache_scope": "scope:lsp-pool",
+      "depends_on": [],
+      "order": 1,
+      "priority": 10,
+      "requested_lease": "lease-lsp",
+      "subject": {
+        "commit": "4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c",
+        "issue": 96,
+        "repository": "ed3c/bettor-arena"
+      },
+      "task_id": "task-lsp-pool"
+    },
+    {
+      "budgets": {
+        "cpu_slots": 1,
+        "disk_mb": 4096,
+        "max_output_bytes": 1048576,
+        "max_processes": 64,
+        "memory_mb": 2048,
+        "timeout_ms": 900000
+      },
+      "cache_scope": "scope:decision-memory",
+      "depends_on": [
+        "task-resource-gc"
+      ],
+      "order": 2,
+      "priority": 5,
+      "requested_lease": "lease-memory",
+      "subject": {
+        "commit": "4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c",
+        "issue": 103,
+        "repository": "ed3c/bettor-arena"
+      },
+      "task_id": "task-decision-memory"
+    },
+    {
+      "budgets": {
+        "cpu_slots": 2,
+        "disk_mb": 4096,
+        "max_output_bytes": 1048576,
+        "max_processes": 64,
+        "memory_mb": 4096,
+        "timeout_ms": 900000
+      },
+      "cache_scope": "scope:mem0",
+      "depends_on": [
+        "task-decision-memory"
+      ],
+      "order": 3,
+      "priority": 5,
+      "requested_lease": "lease-mem0",
+      "subject": {
+        "commit": "4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c",
+        "issue": 93,
+        "repository": "ed3c/bettor-arena"
+      },
+      "task_id": "task-mem0"
+    }
+  ],
+  "max_parallelism": 2,
+  "memory_mb_total": 8192,
+  "owner_checkout": "checkouts/owner-live",
+  "schema_version": "loopx/worker-fleet-queue/v1"
+}
