@@ -185,7 +185,9 @@ publication canary                       NOT_EXERCISED
 merge / ship / rollback                  HUMAN-OWNED
 ```
 
-## Git Town / molecular Stack PR index
+## Git Town / Molecular Stack PR index
+
+<!-- Molecular Stack PR index -->
 
 ```text
 main @ 10380005fa485d6035539589c01b9f740acff15d
