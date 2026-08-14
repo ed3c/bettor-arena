@@ -1,0 +1,38 @@
+{
+  "actor": {
+    "actor_id": "worker-grok",
+    "authority": "OBSERVATION",
+    "class": "WORKER"
+  },
+  "event_digest": "sha256:07a2301d972ee2e0abbe260cc61c59be0d897e293f771a2bfe3ebd623ce5dc79",
+  "event_id": "event-002",
+  "occurred_at": "2026-08-14T00:00:02Z",
+  "payload": {
+    "command_id": "cmd-dispatch-contract",
+    "gate_observation": null,
+    "human_decision": null,
+    "quota_delta": null,
+    "request_ref": null,
+    "todo_id": "todo-contract",
+    "transition": null,
+    "worker_result_ref": {
+      "artifact_id": "ev-worker-result",
+      "bytes": 19,
+      "digest": "sha256:9e3e63fac9c92100f0f15e616e1abf395028edc8912bebfc42044c65eb17e114",
+      "kind": "GIT_DIFF",
+      "media_type": "application/json",
+      "path": "artifacts/change.diff",
+      "producer": "worker-grok"
+    }
+  },
+  "previous_event_digest": "sha256:dfced57f2966c4b7bc5d75c4ff1263e0eda7bb6cbc84cfc308d5470de2bb601d",
+  "schema_version": "loopx/event/v1",
+  "sequence": 2,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "type": "WORKER_OBSERVED"
+}

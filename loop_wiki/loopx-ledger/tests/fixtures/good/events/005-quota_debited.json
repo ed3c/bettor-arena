@@ -1,0 +1,36 @@
+{
+  "actor": {
+    "actor_id": "loopx-reducer",
+    "authority": "STATE_COMMIT",
+    "class": "LOOPX"
+  },
+  "event_digest": "sha256:6fb108ebae79711afa42ad3a13c5e32c279badbb4c7e3236681eef62e93b1dbe",
+  "event_id": "event-005",
+  "occurred_at": "2026-08-14T00:00:05Z",
+  "payload": {
+    "command_id": null,
+    "gate_observation": null,
+    "human_decision": null,
+    "quota_delta": {
+      "attempts": 0,
+      "cost_microunits": 250000,
+      "output_bytes": 56,
+      "tokens": 1000,
+      "worker_seconds": 12
+    },
+    "request_ref": null,
+    "todo_id": "todo-contract",
+    "transition": null,
+    "worker_result_ref": null
+  },
+  "previous_event_digest": "sha256:a04cc88751b70f0e16a64c4f469e3b210e8278087e702e80a519b03792242ccf",
+  "schema_version": "loopx/event/v1",
+  "sequence": 5,
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-loopx-contract-v1",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "type": "QUOTA_DEBITED"
+}
