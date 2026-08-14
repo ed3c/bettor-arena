@@ -1,0 +1,29 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-ledger/contracts/append-request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "event": {
+      "$ref": "../../loopx-kernel/contracts/event.schema.json"
+    },
+    "expected_state_revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "request_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/append-request/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "expected_state_revision",
+    "event"
+  ],
+  "title": "loopx/append-request/v1",
+  "type": "object"
+}
