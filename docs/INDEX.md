@@ -17,6 +17,12 @@
 - [`architecture/STATE_MACHINES.md`](architecture/STATE_MACHINES.md) — current state machines and missing LoopX target.
 - [`architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) — LoopX-specific requirement, authority and gap audit.
 - [`architecture/pdf-loopx-harness.integration.json`](architecture/pdf-loopx-harness.integration.json) — executable LoopX audit contract.
+- [`git/README.md`](git/README.md) — repository-owned Git Town adoption and Stack policy.
+- [`git/REPO_PROFILE.md`](git/REPO_PROFILE.md) — observed repository shape the Stack policy is bound to.
+- [`git/STACKED_PRS.md`](git/STACKED_PRS.md) — stacked-PR construction, retarget and land order.
+- [`git/WORKER_PROTOCOL.md`](git/WORKER_PROTOCOL.md) — what a Worker session may and may not do to a Stack.
+- [`git/GIT_TOWN_ADMISSION.md`](git/GIT_TOWN_ADMISSION.md) — admission state of the Git Town binary itself.
+- [`git/stack-prs.index.json`](git/stack-prs.index.json) — machine-readable Stack topology, checked by `scripts/gates/check_git_town_stack_docs.py`.
 - [`integration/CROSS_REPO_INTEGRATION.md`](integration/CROSS_REPO_INTEGRATION.md) — four-repository ownership and release flow.
 - [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt index.
 - [`traceability/STACK_PR_INDEX.md`](traceability/STACK_PR_INDEX.md) — molecular sibling/child/terminal/convergence topology.

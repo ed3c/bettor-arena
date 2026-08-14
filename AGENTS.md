@@ -23,12 +23,18 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex/Grok
 11. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
 12. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
 13. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
-14. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-15. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-16. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-17. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-18. `sh loopctl/loopctl.sh contract`
-19. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
+14. [`docs/git/README.md`](docs/git/README.md)
+15. [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+16. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+17. [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+18. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+19. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
+20. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
+21. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+22. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+23. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+24. `sh loopctl/loopctl.sh contract`
+25. the target module/loop nearest README, passive context, machine manifest/contract, current source and subject-bound receipts.
 
 A missing route, owner, module, issue, parent, eval, provider subject, host receipt or evidence link is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
 
@@ -83,6 +89,89 @@ python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
 ```
 
 A green audit proves document/contract agreement for the exact repository bytes; it does not promote live worker, provider, cloud, LangGraph or production claims.
+
+## Git Town Stacked-PR Worker route
+
+Canonical shared method:
+
+```text
+repository: ed3c/skills-shared
+commit: c5750720d960a228a0d9419f28125c09d064e3e1
+blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
+path: skills/git-town-stacked-pr-worker/SKILL.md
+```
+
+Bettor must not create a local same-name `SKILL.md` or silently shadow the shared procedure. Repository-owned policy lives under [`docs/git/`](docs/git/README.md).
+
+Current admission:
+
+```text
+shared Skill exact reference            PINNED
+shared Skill selected in binding         NOT_SELECTED
+.git-town.toml                           ABSENT
+Git Town executable/version/checksum     ABSENT
+license/SBOM/legal review                NOT_REVIEWED
+live sync/publication                    NOT_EXERCISED
+merge/ship/rollback                      HUMAN-OWNED
+```
+
+Before branch or Stack work, read:
+
+- [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+- [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+- [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+- [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+- [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
+- [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+
+### Required task packet
+
+Every new terminal leaf declares before implementation:
+
+```text
+parent issue
+goal and non-goals
+base branch
+parent branch
+head branch
+sibling / true-child / terminal / convergence class
+allowed paths
+excluded paths
+dependencies
+parallel-safe siblings
+required evals
+negative or mutation controls
+evidence boundary
+cleanup contract
+rollback subject
+Human-owned operations
+```
+
+### Branch and worktree laws
+
+- One Worker owns one linked worktree, one branch and one path lease.
+- Independent path-disjoint work is a sibling.
+- A true child consumes unmerged parent bytes.
+- A terminal leaf owns one reviewable behavior plus eval/evidence.
+- Shared locks, root indexes, final live canaries and release admission belong to one convergence leaf.
+- Generated-contract sync does not grant semantic conflict authority.
+- A child merged to a feature parent is `MERGED_TO_PARENT`, not `MERGED_TO_MAIN`.
+- Reachability from current `main` is required before claiming main integration.
+- Duplicate active branches for the same issue/path are a blocking conflict, not parallel progress.
+
+### Prohibited Git Town operations for Agents
+
+Agents and background Workers must not:
+
+- resolve semantic conflicts;
+- execute continue/skip/undo after conflict;
+- push, merge, ship, close or delete branches;
+- change remotes, credential helpers or permissions;
+- create `.git-town.toml` before executable/version/legal admission;
+- convert a local sync into publication evidence;
+- promote a candidate or perform rollback.
+
+Git Town executable actions remain Human/trusted-operator owned until [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md) is fully satisfied.
 
 ## Bettor Arena role
 
@@ -398,7 +487,7 @@ Mandatory laws:
 - Local/Forgejo implementation authority and GitHub publication/Actions authority remain distinct and converge through exact commit ancestry and receipts.
 - Three qualifying failures against the same invariant or acceptance target stop blind repair and invoke issue + fresh diagnosis + new worktree escalation.
 - Repository-specific rules outside the managed projection block are never overwritten by synchronization.
-- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; global ~/.claude/CLAUDE.md is local host policy only.
+- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; the global `$HOME/.claude/CLAUDE.md` is local host policy only.
 - Cloud and local freshness are separate evidence lanes. Neither environment may fabricate verification of the other.
 - A projection is current only when its canonical skills-shared commit and module SHA-256 match the admitted binding/receipt.
 - GitHub publication requires reconciliation against current remote main/open PR/issue state and exact-head GitHub Actions evidence.
