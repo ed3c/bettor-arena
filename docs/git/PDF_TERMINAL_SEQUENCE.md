@@ -91,8 +91,8 @@ PR #77 is a closed superseded Worker Gateway candidate. Issue #82 owns executabl
 | 4 | #66 | `feat/loopx-runtime-fabric-v1` | physical runtime leases, isolation, cleanup and local/cloud parity | `COMPLETE` |
 | 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `COMPLETE` |
 | 6 | #97 | `feat/loopx-resource-gc-v1` | worktree/artifact/cache/vector/graph/WAL retention and GC | `COMPLETE` |
-| 7 | #96 | `feat/loopx-lsp-pool-v1` | worktree-aware LSP pool and bounded CLI fallback | `ACTIVE` |
-| 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `BLOCKED_BY_PREDECESSOR` |
+| 7 | #96 | `feat/loopx-lsp-pool-v1` | worktree-aware LSP pool and bounded CLI fallback | `COMPLETE` |
+| 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `ACTIVE` |
 | 9 | #93 | `feat/loopx-mem0-projection-v1` | Mem0 as an optional rebuildable projection | `BLOCKED_BY_PREDECESSOR` |
 | 10 | #104 | `feat/loopx-notes-source-ingest-v1` | authorized YT/PDF/transcript/keyframe source manifest | `BLOCKED_BY_PREDECESSOR` |
 | 11 | #105 | `feat/loopx-notes-retrieval-v1` | OpenWiki static plus optional vector/graph Notes projections | `BLOCKED_BY_PREDECESSOR` |
