@@ -1,0 +1,61 @@
+{
+  "compared_jobs": {
+    "context-assembly": {
+      "agrees": false,
+      "local": "PASS",
+      "remote": "SKIPPED"
+    }
+  },
+  "covered_jobs": [
+    "context-assembly"
+  ],
+  "findings": [
+    "job 'context-assembly' concluded SKIPPED on GitHub. That is not a failure and not a pass -- it is the absence of a result, and a cancelled run is the one that hides hardest because concurrency can remove the only run at this head"
+  ],
+  "github_only_surfaces": [
+    "TOKEN_PERMISSIONS",
+    "HOSTED_RUNNER_IMAGE",
+    "CACHE_SERVICE",
+    "ARTIFACT_SERVICE",
+    "BILLING",
+    "CONCURRENCY_CANCELLATION",
+    "SECRETS_STORE"
+  ],
+  "head": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+  "local": {
+    "billed": false,
+    "commit": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+    "jobs": {
+      "context-assembly": "PASS"
+    },
+    "proxies_remote": false,
+    "result_digest": "sha256:d1cb94a3861ad01fe111398c60f4ec992a8102fb43b62e877d92c52d05aa5865",
+    "runner": "local-native",
+    "side": "LOCAL",
+    "workflow": "loopx-context-assembly.yml"
+  },
+  "local_proxies_remote": false,
+  "publication": {
+    "blocks_publication": false,
+    "may_claim_remote_verified": false,
+    "must_publish_to_learn_more": false,
+    "owner": "HUMAN_OR_TRUSTED_OPERATOR",
+    "reason": "publication, workflow rerun, merge and billing recovery are Human-owned. This gate reports what was compared and what was not",
+    "verdict": "DIVERGED"
+  },
+  "receipt_digest": "sha256:386bd87a96fed623401d9bac1450a1a79e44866359b91ec7d503ed15296a524e",
+  "remote": {
+    "billed": true,
+    "commit": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+    "jobs": {
+      "context-assembly": "SKIPPED"
+    },
+    "result_digest": "sha256:930300050dc76a021584c835d20ba872bd955c55182fc01e6f469cf82b08c6bc",
+    "run_id": 31836180760,
+    "runner": "ubuntu-latest",
+    "side": "REMOTE",
+    "workflow": "loopx-context-assembly.yml"
+  },
+  "schema_version": "loopx/ci-parity-receipt/v1",
+  "verdict": "DIVERGED"
+}

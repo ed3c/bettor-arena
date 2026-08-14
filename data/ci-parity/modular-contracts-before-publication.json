@@ -1,0 +1,44 @@
+{
+  "compared_jobs": {},
+  "covered_jobs": [
+    "contracts"
+  ],
+  "findings": [
+    "no GitHub run at this head has been ingested. The local run says the commands succeed on this machine; it says nothing about the hosted runner, and it did not bill anything"
+  ],
+  "github_only_surfaces": [
+    "TOKEN_PERMISSIONS",
+    "HOSTED_RUNNER_IMAGE",
+    "CACHE_SERVICE",
+    "ARTIFACT_SERVICE",
+    "BILLING",
+    "CONCURRENCY_CANCELLATION",
+    "SECRETS_STORE"
+  ],
+  "head": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+  "local": {
+    "billed": false,
+    "commit": "2c049cde1e51b479c6b2ebed9da751b51b4cc99e",
+    "jobs": {
+      "contracts": "PASS"
+    },
+    "proxies_remote": false,
+    "result_digest": "sha256:285b5316d2dc7be51b1aacba0437deb8c4045256c6a45d0b102392ad1f26a425",
+    "runner": "local-native",
+    "side": "LOCAL",
+    "workflow": "modular-contracts.yml"
+  },
+  "local_proxies_remote": false,
+  "publication": {
+    "blocks_publication": false,
+    "may_claim_remote_verified": false,
+    "must_publish_to_learn_more": true,
+    "owner": "HUMAN_OR_TRUSTED_OPERATOR",
+    "reason": "publication, workflow rerun, merge and billing recovery are Human-owned. This gate reports what was compared and what was not",
+    "verdict": "NOT_EXERCISED"
+  },
+  "receipt_digest": "sha256:fdd937a41406411d16426179c358d8bf43d9327ac08a36e339bf5f49ab1b3dc2",
+  "remote": null,
+  "schema_version": "loopx/ci-parity-receipt/v1",
+  "verdict": "NOT_EXERCISED"
+}

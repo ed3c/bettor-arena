@@ -1,0 +1,69 @@
+{
+  "github_conclusions": [
+    "action_required",
+    "cancelled",
+    "failure",
+    "neutral",
+    "skipped",
+    "startup_failure",
+    "success",
+    "timed_out"
+  ],
+  "github_only_surfaces": [
+    "ARTIFACT_SERVICE",
+    "BILLING",
+    "CACHE_SERVICE",
+    "CONCURRENCY_CANCELLATION",
+    "HOSTED_RUNNER_IMAGE",
+    "SECRETS_STORE",
+    "TOKEN_PERMISSIONS"
+  ],
+  "interface_version": "1.0.0",
+  "live_simulator_state": "NOT_EXERCISED",
+  "local_proxies_remote": false,
+  "not_evidence_conclusions": [
+    "ACTION_REQUIRED",
+    "CANCELLED",
+    "NEUTRAL",
+    "SKIPPED"
+  ],
+  "publication_owner": "HUMAN_OR_TRUSTED_OPERATOR",
+  "schema_version": "loopx/ci-parity-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/ci-parity/receipt/v1",
+      "path": "parity-receipt.schema.json",
+      "sha256": "9d8a4fb07ede7f1c9615e3f7d0aba219cb1721e4bebcece050565b280aba35eb"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/ci-parity/index/v1",
+      "path": "workflow-index.schema.json",
+      "sha256": "590c10efbb149dc5264ab4930a37a95746a379d4d45612f24bdc017bd1ff6220"
+    }
+  ],
+  "simulator_equals_hosted_runner": false,
+  "simulator_states": [
+    "SIMULATOR_ABSENT",
+    "SIMULATOR_PINNED",
+    "SIMULATOR_UNPINNED"
+  ],
+  "skipped_is_pass": false,
+  "stale_head_may_be_reused": false,
+  "states": [
+    "WORKFLOW_AND_ACTION_IDENTITIES_PINNED",
+    "REQUIRED_JOB_STEP_SURFACE_INVENTORIED",
+    "LOCAL_SIMULATOR_IDENTITY_PINNED_OR_ABSENT",
+    "EVENT_PAYLOAD_MATERIALIZED",
+    "LOCAL_RUN_COMPLETE",
+    "GITHUB_EXACT_HEAD_RUN_INGESTED",
+    "DIFFERENCES_NORMALIZED",
+    "PARITY_VERDICT",
+    "PUBLICATION_POLICY_DECISION"
+  ],
+  "verdicts": [
+    "DIVERGED",
+    "NOT_EXERCISED",
+    "PARITY",
+    "PARTIAL"
+  ]
+}
