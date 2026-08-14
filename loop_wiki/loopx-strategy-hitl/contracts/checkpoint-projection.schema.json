@@ -1,0 +1,21 @@
+{
+  "$id": "https://ed3c.example/loopx/checkpoint-projection.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_authority": {"const": false},
+    "graph_thread_id": {"pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{2,255}$", "type": "string"},
+    "interrupt_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "interrupt_id": {"type": "string"},
+    "ledger_head_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "rebuildable": {"const": true},
+    "resume_requires_checked_human_decision": {"const": true},
+    "schema_version": {"const": "loopx/graph-checkpoint-projection/v1"},
+    "state_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "state_revision": {"minimum": 0, "type": "integer"},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "graph_thread_id", "subject", "state_revision", "ledger_head_digest", "state_digest", "interrupt_id", "interrupt_digest", "rebuildable", "canonical_authority", "resume_requires_checked_human_decision"],
+  "title": "LoopX Graph Checkpoint Projection v1",
+  "type": "object"
+}
