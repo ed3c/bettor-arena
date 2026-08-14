@@ -1,0 +1,104 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/memory-proposal/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonical_key": {"minLength": 8, "type": "string"},
+    "conflict": {
+      "additionalProperties": false,
+      "properties": {
+        "current_repository_wins": {"const": true},
+        "known_conflicts": {"items": {"type": "string"}, "type": "array"},
+        "state": {"enum": ["NONE", "OPEN", "UNKNOWN"]}
+      },
+      "required": ["state", "known_conflicts", "current_repository_wins"],
+      "type": "object"
+    },
+    "epistemic": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_kind": {"enum": ["OBSERVATION", "INFERENCE", "HYPOTHESIS", "NORMATIVE"]},
+        "confidence": {"enum": ["LOW", "MEDIUM", "HIGH"]},
+        "falsifier": {"minLength": 1, "type": "string"},
+        "verification": {"enum": ["SUPPORTED", "TESTED", "CONTESTED", "UNCHECKED"]}
+      },
+      "required": ["claim_kind", "verification", "confidence", "falsifier"],
+      "type": "object"
+    },
+    "evidence_refs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+          "evidence_id": {"minLength": 3, "type": "string"},
+          "kind": {"enum": ["SOURCE_SPAN", "TEST_RESULT", "RUNTIME_RECEIPT", "ADR", "INCIDENT", "COUNTEREXAMPLE"]},
+          "locator": {"minLength": 1, "type": "string"},
+          "subject_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+        },
+        "required": ["evidence_id", "kind", "digest", "locator", "subject_commit"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "kind": {"enum": ["DEAD_END", "CODEBASE_QUIRK", "HYPOTHESIS", "DECISION", "INCIDENT_POINTER", "PROJECT_PREFERENCE"]},
+    "privacy": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {"enum": ["PUBLIC", "INTERNAL", "SENSITIVE_POINTER_ONLY"]},
+        "contains_private_reasoning": {"const": false},
+        "contains_secret_value": {"const": false},
+        "redaction_state": {"enum": ["PASS", "NOT_REQUIRED"]}
+      },
+      "required": ["classification", "contains_private_reasoning", "contains_secret_value", "redaction_state"],
+      "type": "object"
+    },
+    "producer": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_class": {"enum": ["WORKER", "GATE", "HUMAN", "SYSTEM"]},
+        "receipt_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"}
+      },
+      "required": ["actor_class", "receipt_ref"],
+      "type": "object"
+    },
+    "proposal_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+    "retention": {
+      "additionalProperties": false,
+      "properties": {
+        "expires_at": {"format": "date-time", "type": "string"},
+        "max_age_seconds": {"maximum": 31536000, "minimum": 60, "type": "integer"},
+        "review_required_at": {"format": "date-time", "type": "string"}
+      },
+      "required": ["max_age_seconds", "expires_at", "review_required_at"],
+      "type": "object"
+    },
+    "schema_version": {"const": "loopx/memory-proposal/v1"},
+    "scope": {
+      "additionalProperties": false,
+      "properties": {
+        "invalidated_by": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array"},
+        "paths": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+        "symbols": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+        "valid_from_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["valid_from_commit", "paths", "symbols", "invalidated_by"],
+      "type": "object"
+    },
+    "statement": {"maxLength": 4096, "minLength": 8, "type": "string"},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "type": "string"},
+        "task_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    }
+  },
+  "required": ["schema_version", "proposal_id", "subject", "kind", "statement", "canonical_key", "epistemic", "evidence_refs", "scope", "retention", "privacy", "conflict", "producer"],
+  "title": "LoopX Decision Memory Proposal v1",
+  "type": "object"
+}

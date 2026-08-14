@@ -33,19 +33,25 @@
   "required_markers": {
     "README.md": [
       "Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper",
+      "PDF Harness Integration verdict",
+      "Directory → State Machine ownership",
       "PASS ≠ FAIL ≠ ABSENT ≠ NOT_IMPLEMENTED ≠ NOT_EXERCISED"
     ],
     "docs/README.md": [
       "Authority order",
+      "PDF_HARNESS_INTEGRATION_AUDIT.md",
+      "STACK_PR_INDEX.md",
       "scripts/gates/check_readme_coverage.py"
     ],
     ".arena/README.md": [
       "machine-readable",
+      "Directory → State Machine map",
       "Adding or changing a module"
     ],
     ".arena/modules/README.md": [
       "module.json",
-      "README.md"
+      "README.md",
+      "Current modules and State Machine roles"
     ],
     "data/README.md": [
       "navigation only",

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bettor-arena/pdf-loopx-harness-integration/v1",
+  "title": "Bettor Arena LoopX Harness PDF Integration Audit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "source", "audit_subject", "verdict", "requirements", "directory_state_machines", "data_flow", "stack_snapshot", "forbidden_promotions", "required_document_markers"],
+  "properties": {
+    "schema": {"const": "bettor-arena/pdf-loopx-harness-integration/v1"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "page_count", "source_class", "locator", "authority"],
+      "properties": {
+        "title": {"const": "LLM 泛化：模型權重與 Harness"},
+        "page_count": {"const": 41},
+        "source_class": {"const": "REQUIREMENT_HYPOTHESIS"},
+        "locator": {"type": "string", "minLength": 1},
+        "authority": {"type": "string", "minLength": 1}
+      }
+    },
+    "audit_subject": {"$ref": "#/$defs/subject"},
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "summary", "full_physical_integration"],
+      "properties": {
+        "state": {"enum": ["IMPLEMENTED", "PARTIAL", "NOT_IMPLEMENTED", "NOT_EXERCISED", "NOT_ADOPTED", "BLOCKED"]},
+        "summary": {"type": "string", "minLength": 40},
+        "full_physical_integration": {"enum": ["PASS", "FAIL", "NOT_EXERCISED", "ABSENT"]}
+      }
+    },
+    "requirements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/requirement"}},
+    "directory_state_machines": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/directoryStateMachine"}},
+    "data_flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/node"}},
+        "edges": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/edge"}}
+      }
+    },
+    "stack_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_only", "authority", "entries"],
+      "properties": {
+        "snapshot_only": {"const": true},
+        "authority": {"type": "string", "minLength": 1},
+        "entries": {"type": "array", "items": {"$ref": "#/$defs/stackEntry"}}
+      }
+    },
+    "forbidden_promotions": {"type": "array", "minItems": 8, "uniqueItems": true, "items": {"type": "string", "minLength": 8}},
+    "required_document_markers": {"type": "object", "minProperties": 4, "additionalProperties": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}}
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "tree"],
+      "properties": {
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+        "commit": {"pattern": "^[0-9a-f]{40}$"},
+        "tree": {"pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "pdf_pages", "requirement", "owner_modules", "state_machines", "paths", "deterministic_gates", "status", "blockers", "corrections"],
+      "properties": {
+        "id": {"pattern": "^LX-[0-9]{2}$"},
+        "pdf_pages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1, "maximum": 41}},
+        "requirement": {"type": "string", "minLength": 12},
+        "owner_modules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 2}},
+        "state_machines": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 2}},
+        "paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "deterministic_gates": {"type": "array", "items": {"type": "array", "minItems": 2, "items": {"type": "string"}}},
+        "status": {"enum": ["IMPLEMENTED", "PARTIAL", "NOT_IMPLEMENTED", "NOT_EXERCISED", "NOT_ADOPTED", "BLOCKED"]},
+        "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 8}},
+        "corrections": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 8}}
+      }
+    },
+    "directoryStateMachine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "owner_module", "state_machine", "inputs", "outputs", "evidence", "status"],
+      "properties": {
+        "id": {"pattern": "^DIR-[A-Z0-9-]+$"},
+        "path": {"type": "string", "minLength": 1},
+        "owner_module": {"type": "string", "minLength": 2},
+        "state_machine": {"type": "string", "minLength": 10},
+        "inputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "outputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "status": {"enum": ["IMPLEMENTED", "PARTIAL", "NOT_IMPLEMENTED", "NOT_EXERCISED", "NOT_ADOPTED", "BLOCKED"]}
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "owner", "artifact"],
+      "properties": {"id": {"pattern": "^[A-Z][A-Z0-9_-]*$"}, "kind": {"type": "string", "minLength": 2}, "owner": {"type": "string", "minLength": 2}, "artifact": {"type": "string", "minLength": 2}}
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "type", "feedback"],
+      "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "type": {"type": "string", "minLength": 2}, "feedback": {"type": "boolean"}}
+    },
+    "stackEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pr", "role", "base", "head", "state", "on_main"],
+      "properties": {
+        "pr": {"type": "integer", "minimum": 0},
+        "role": {"type": "string", "minLength": 5},
+        "base": {"type": "string", "minLength": 2},
+        "head": {"type": "string", "minLength": 2},
+        "state": {"enum": ["MERGED_TO_MAIN", "OPEN_DIVERGED_SUPERSEDED_CANDIDATE", "OPEN_RED_EXACT_HEAD", "OPEN_DRAFT", "OPEN", "BRANCH_BEFORE_PR", "CLOSED_SUPERSEDED"]},
+        "on_main": {"type": "boolean"}
+      }
+    }
+  }
+}

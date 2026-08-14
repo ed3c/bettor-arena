@@ -1,108 +1,445 @@
-# Bettor Arena state machines — route summary
+# State Machines — bettor-arena
 
-The full normative target is [`modular-integration-requirements.md`](modular-integration-requirements.md); current state is [`modular-integration-status.md`](modular-integration-status.md). This file is the same-name routing summary.
+Machine manifests, contracts, source, tests, receipts and current GitHub metadata remain authoritative over this routing document.
 
-## Macro composition
+## 1. Agent and document routing
 
 ```text
-GOAL_RECEIVED
-→ MODULE_REQUIREMENTS_SELECTED
-→ CAPABILITY/CONFLICT_RESOLVED
-→ SKILL/RUNTIME/HOST PROJECTIONS
-→ PROOF MATRIX
-→ HUMAN ADMIT
+TASK
+→ README / AGENTS / CLAUDE
+→ CONTEXT + ARCHITECTURE
+→ PDF AUDIT / TARGET / CURRENT STATUS
+→ DIRECTORY OWNER
+→ docs/git PROFILE + STACK when branch work applies
+→ MACHINE CONTRACT
+→ SOURCE / TEST / RECEIPT
+→ EXACT ISSUE / PR / HEAD / CHECKS
+```
+
+A missing route, branch edge, owner, subject, Gate or receipt is `ABSENT`.
+
+## 2. Macro composition
+
+```text
+MODULE PROPOSED
+→ MANIFEST + README
+→ PATH OWNER
+→ REQUIREMENT SELECTED
+→ CAPABILITY / DEPENDENCY / CONFLICT RESOLVED
 → COMPOSITION LOCK
-→ IMMUTABLE RELEASE / ROLLBACK
+→ CONTEXT LOCK
+→ PROOF SUBJECTS
+→ PROOF / CONTROL / MUTATION
+→ RELEASE RECEIPT
+→ HUMAN ADMIT
+→ MERGE / PROMOTE / ROLLBACK
 ```
 
-Owner: module catalog/resolver and Human governance. Not externally MCP-exposed.
+The desired, locked, Context-selected, proof-subject and released module sets must agree.
 
-## Micro task loop
+## 3. Micro bounded task
 
 ```text
-TYPED_TASK
-→ PUBLIC MODULE PORT
-→ BOUNDED PRIVATE ITERATIONS
-→ TYPED RESULT + NAMED EXIT
-→ ARTIFACTS
-→ PROOF/CONTROL/MUTATION RECEIPT
+TYPED REQUEST
+→ CONTRACT + SUBJECT VALIDATION
+→ BOUNDED RUNTIME / DISPOSABLE WORKTREE
+→ ARTIFACT COLLECTION
+→ INDEPENDENT ASSERTIONS
+→ 0 / 2 / 64
+→ RECEIPT
+→ CALLER NEXT EDGE
 ```
 
-A micro loop may read its own private closure; it uses other modules only through typed/public boundaries.
+A Micro loop cannot merge, promote, widen permissions or Human Admit.
 
-## Module lifecycle
+## 4. Module lifecycle
 
 ```text
-MANIFEST_ADMITTED
-→ OWNERSHIP/CAPABILITIES RESOLVED
-→ CLOSURE DIGESTED
-→ MODULE PROOF/CONTROL/MUTATION
-→ SELECTED IN COMPOSITION
-→ RELEASE SUBJECT
+PROPOSED
+→ CONTRACTED
+→ COMPOSED
+→ VERIFIED
+→ CONTROLLED
+→ MUTATION-SENSITIVE
+→ RELEASE-CANDIDATE
+→ HUMAN-ADMITTED
+→ RELEASED
+→ SUPERSEDED / ROLLED BACK
 ```
 
-Documentation-only changes must not invalidate implementation closure unless the contract/context authority changed.
+`IMPLEMENTED` means mechanism presence. `PASS` means an executed exact subject.
 
-## Context Capsule and driver
+## 5. Context Capsule
 
 ```text
-ROOT + LOOP CONTEXT SELECTED
-→ IMMUTABLE BYTES MATERIALIZED
-→ DIGEST FROZEN
-→ CLAUDE/CODEX FIXED DRIVER
+ROOT + LOOP NATIVE FILES
+→ SELECTION
+→ IMMUTABLE REF
+→ MATERIALIZATION
+→ DIGEST FREEZE
+→ DRIVER PREPARE
+→ HOST EXECUTION
 → TYPED OUTPUT
-→ CONTEXT/DRIVER RECEIPT
+→ RECEIPT
 ```
 
-## Stateless MCP
+Context is an input projection, never canonical task state.
+
+## 6. Portable Skill execution
 
 ```text
-IMMUTABLE REF
-→ EXPLICIT POLICY ALLOWLIST
-→ SELECTED MODULE CLOSURE
-→ DISPOSABLE WORKTREE/BUNDLE
-→ FIXED PUBLIC PORT
-→ BOUNDED TYPED RESULT
-→ CLEANUP VERIFIED
+CANONICAL SKILL
+→ IMMUTABLE BINDING
+→ HOST PROJECTION
+→ AGENT PROPOSAL
+→ TYPED EXECUTABLE + ARGV
+→ DISPOSABLE WORKTREE
+→ OS / ARTIFACT OBSERVATION
+→ HARD ASSERTIONS
+→ SUBJECT RECEIPT
+→ CLEANUP
 ```
 
-Unexposed commands default deny. Human Admit, promotion, secret rotation, production rollback, and generic shell are not tools.
+Worker output never owns the verdict.
 
-## Project bootstrap
+## 7. Stateless MCP
 
 ```text
-CONSUMER REQUIREMENTS
-→ PLAN (READ-ONLY)
-→ CONFLICT/OWNERSHIP CHECK
-→ APPLY TRANSACTION
+CLI CONTRACT
+→ DEFAULT DENY
+→ EXPLICIT TOOL
+→ IMMUTABLE SUBJECT
+→ CLOSED CARRIER
+→ DISPOSABLE WORKSPACE
+→ PUBLIC PORT
+→ TYPED RESULT
+→ CLEANUP
+```
+
+No generic shell, host path, secret, browser profile or Human Admit tool is allowed.
+
+## 8. Proof kernel
+
+```text
+CLAIM
+→ MODULE SUBJECT / CLOSURE
+→ PHYSICAL TRAVERSAL
+→ INDEPENDENT CONTROL
+→ HOLLOW / MUTATION
+→ RECEIPTS
+→ RELEASE AGGREGATION
+```
+
+A proof receipt does not proxy a live provider or production environment.
+
+## 9. Project bootstrap
+
+```text
+DESIRED CAPABILITIES
+→ PLAN
+→ RESOLVE
+→ TEMP TREE
 → VERIFY
-→ ROLLBACK ONLY IF AFTER-BYTES UNCHANGED
+→ CONFLICT / DRIFT CHECK
+→ APPLY
+→ RECEIPT
+→ VERIFY TARGET
+→ CONTENT-BOUND ROLLBACK
 ```
 
-Remote consumer and embedded module modes remain distinct.
-
-## Proof kernel
+## 10. OpenWiki and knowledge projection
 
 ```text
-PROOF CLAIM
-+ INDEPENDENT CONTROL
-+ HOLLOW/MUTATION
-+ EXTERNAL CONSUMER CANARY
-→ MODULE RECEIPT
-→ COMPOSITION RELEASE RECEIPT
+WIKI REQUEST
+→ CONTRACT CHECK
+→ FIXED / ITERATION / EMERGENT CONTEXT
+→ DRY RUN DEFAULT
+→ FULL EXPLICIT OPT-IN
+→ PATH BOUNDARY
+→ VERIFIER
+→ RECEIPT
+→ TRACKED PROJECTION
 ```
 
-No absence or `NOT_EXERCISED` is promoted to PASS.
+OpenWiki is rebuildable and cannot replace its sources.
 
-## Origin/browser/external release
+## 11. Code Truth Graph
+
+```text
+CLOSED SOURCE PACKET
+→ PINNED ANALYZER
+→ STATIC PARSE / SYMBOL / EDGE
+→ CONTENT-ADDRESSED GRAPH
+→ COVERAGE / PROVENANCE CHECK
+→ RESULT
+```
+
+Static graph evidence does not prove runtime behavior. Unsupported coverage remains `UNKNOWN`, not `NO_FLOW`.
+
+## 12. Knowledge providers
+
+```text
+MANIFEST
+→ EXACT SUBJECT + CAPABILITY
+→ PINNED ADAPTER / INDEX
+→ READ-ONLY QUERY OR MEMORY PROPOSAL
+→ RECEIPT
+→ CURRENT AUTHORITY READBACK
+→ CANDIDATE
+→ HUMAN ADMIT
+```
+
+Serena, GrepAI, Code-Graph-RAG and Mem0 remain replaceable candidates within their admitted capability ceilings.
+
+## 13. Origin, browser and external release
 
 ```text
 LOGICAL RELEASE
-→ GITHUB/FORGEJO ORIGIN RECEIPTS
+→ ORIGIN RECEIPTS
 → EQUIVALENCE
-→ BROWSER/DRIVER/PROVIDER CANARIES
-→ EXTERNAL RELEASE ACCEPTANCE
+→ BROWSER / PROVIDER CANARIES
+→ EXTERNAL ACCEPTANCE
 → HUMAN PROMOTION
 ```
 
-Each provider/carrier remains independently evidenced.
+Signed-in sessions and credentials stay host-owned.
+
+## 14. Git Town shared-method admission
+
+```text
+SHARED SKILL SUBJECT PINNED
+→ REPO PROFILE VALIDATED
+→ EXECUTABLE / LICENSE / SBOM ADMISSION
+→ CONFIG CANDIDATE
+→ ISOLATED CANARIES
+→ HUMAN ADMIT
+→ ENABLED
+```
+
+Current state:
+
+```text
+shared method pin        PINNED
+repo-owned profile       candidate in issue #80 / PR #81
+executable/config        ABSENT
+canaries                 NOT_EXERCISED
+Human Admit              NOT_PERFORMED
+```
+
+## 15. Git Town Stacked-PR worker State Machine
+
+```text
+PARENT ISSUE
+→ TERMINAL TASK PACKET
+→ BASE / PARENT / HEAD RELATION
+→ PATH LEASE
+→ LINKED WORKTREE LEASE
+→ IMPLEMENT
+→ POSITIVE + CONTROL + MUTATION
+→ OPTIONAL LOCAL SYNC DRY RUN
+→ EXACT-HEAD GITHUB CHECKS
+→ CONVERGENCE
+→ HUMAN ADMIT
+→ MERGE / SHIP / ROLLBACK
+```
+
+Relations:
+
+```text
+sibling      path-disjoint and independent
+true child   consumes unmerged parent bytes
+terminal     one behavior plus evidence
+convergence  shared selection/index/live/release owner
+```
+
+Hard rules:
+
+- one Worker, one linked worktree, one branch and one path lease;
+- no primary-checkout unattended edits;
+- no semantic conflict auto-resolution;
+- no push, merge, ship, close or delete;
+- `MERGED_TO_PARENT` is not `MERGED_TO_MAIN`;
+- duplicate issue/path writers are blocking.
+
+Current blocking state:
+
+```text
+PR #76 + PR #77
+same issue #64
+overlapping Worker Gateway paths
+→ BLOCKED_DUPLICATE_TERMINAL
+→ Human resolution
+```
+
+## 16. Molecular delivery and publication
+
+```text
+SOURCE / INCIDENT
+→ ARCHITECTURE DECISION
+→ PARENT ISSUE
+→ TERMINAL ISSUE
+→ BRANCH / PR / EXACT HEAD
+→ EVALS
+→ GENERATED LOCKS / INDEXES
+→ CONVERGENCE
+→ HUMAN ADMIT
+```
+
+Git Town local synchronization and GitHub publication remain separate State Machines.
+
+## LoopX compatibility state machine
+
+The older PDF compatibility contract uses these exact transition markers:
+
+```text
+OBJECTIVE_ACCEPTED
+→ MODULE_REQUIREMENTS_RESOLVED
+→ TYPED_TODO_DISPATCHED
+→ WORKER_OBSERVED
+→ HARD_GATES_EVALUATED
+→ EVIDENCE_SUBJECT_BOUND
+→ READY_FOR_HUMAN_ADMIT
+```
+
+This is a compatibility projection of the detailed target below. It is not a claim that the runtime exists on `main`.
+
+## 17. LoopX task-state target
+
+```text
+TASK DECLARED
+→ OBJECTIVE LOCKED
+→ TODO READY
+→ COMMAND PROPOSED
+→ COMMAND ACCEPTED / REJECTED
+→ WORKER OBSERVED
+→ GATES OBSERVED
+→ QUOTA ACCOUNTED
+→ RETRY / HITL / TODO COMPLETE
+→ NEXT TODO / TASK COMPLETE / FAIL / CANCEL
+```
+
+Authority:
+
+```text
+strategy proposes
+Worker executes
+Gates observe
+LoopX reducer commits
+Human admits
+```
+
+The current `main` does not contain the unmerged LoopX contract/ledger candidates.
+
+## 18. LoopX candidate Stack
+
+```text
+main
+└─ PR #74 LoopX Contract
+   ├─ PR #75 Ledger — MERGED_TO_PARENT
+   ├─ PR #76 Worker Gateway — BLOCKED duplicate
+   ├─ PR #77 Worker Gateway — BLOCKED duplicate
+   ├─ PR #78 Decision Memory
+   └─ PR #79 Code Truth Graph v2
+```
+
+Issue #68 owns final shared convergence only after terminal settlement.
+
+## 19. Strategy Graph and HITL target
+
+```text
+CURRENT LOOPX SNAPSHOT
+→ STRATEGY PROPOSAL
+→ LOOPX VALIDATES CAPABILITY / QUOTA / DEPENDENCIES
+→ DISPATCH
+→ RESULT EVENT
+→ REDUCER
+→ CONTINUE OR INTERRUPT
+→ SIGNED HUMAN DECISION
+→ REVALIDATE
+→ RESUME / ABORT / SCOPED EXCEPTION
+```
+
+A LangGraph checkpoint is a projection, not canonical truth. Generic `force_skip` is forbidden.
+
+## 20. Decision memory target
+
+```text
+OBSERVATION / DEAD END / QUIRK / DECISION
+→ EVIDENCE REFS
+→ SCOPE / RETENTION / PRIVACY
+→ CONFLICT / SUPERSESSION
+→ CAPSULE PROPOSAL
+→ HUMAN ADMIT
+→ LOOPX MEMORY EVENT
+→ OPTIONAL REBUILDABLE INDEX
+→ EXPIRY / DELETE RECEIPT
+```
+
+Never persist private chain-of-thought or raw Thought Stream.
+
+## 21. Runtime fabric target
+
+```text
+RUNTIME REQUEST
+→ PROVIDER PROBE
+→ POLICY
+→ LEASE
+→ SUBJECT MATERIALIZE
+→ WORKER EXECUTE
+→ ARTIFACT COLLECT
+→ GATES
+→ CLEANUP
+→ RECEIPT
+```
+
+Physical local/cloud equivalence remains `NOT_EXERCISED`.
+
+## 22. Observability and signed HITL projection
+
+```text
+LEDGER EVENT
+→ REDACTION
+→ TRACE ENVELOPE
+→ OPTIONAL BACKEND
+→ UI INSPECTION
+→ SIGNED HUMAN REQUEST
+→ LOOPX VALIDATION
+→ LEDGER EVENT
+```
+
+Trace/UI stores cannot write canonical state.
+
+## 23. Evidence vocabulary
+
+```text
+PASS
+FAIL
+ABSENT
+NOT_IMPLEMENTED
+NOT_EXERCISED
+SKIPPED_BY_POLICY
+MERGED_TO_MAIN
+MERGED_TO_PARENT
+BLOCKED_DUPLICATE_TERMINAL
+SUPERSEDED_CANDIDATE
+```
+
+## 24. Change protocol
+
+A State Machine change updates:
+
+```text
+owner
+inputs and outputs
+transitions
+terminal states
+authority
+machine contract
+positive/control/mutation
+directory map
+Agent route
+Stack index
+exact-head evidence
+```
+
+Merge, ship, semantic conflict resolution, promotion and rollback remain Human-owned.

@@ -1,0 +1,73 @@
+name: Controlled Language Binding
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - '.skill-bindings/controlled-technical-language-harness/**'
+      - 'scripts/gates/check_controlled_language_binding.py'
+      - 'scripts/gates/controlled_language_binding/**'
+      - 'tests/test_controlled_language_binding.py'
+      - 'data/receipts/controlled-language/README.md'
+      - '.github/workflows/controlled-language-binding.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.skill-bindings/controlled-technical-language-harness/**'
+      - 'scripts/gates/check_controlled_language_binding.py'
+      - 'scripts/gates/controlled_language_binding/**'
+      - 'tests/test_controlled_language_binding.py'
+      - 'data/receipts/controlled-language/README.md'
+      - '.github/workflows/controlled-language-binding.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: controlled-language-binding-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  binding:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Bind exact candidate head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          tree="$(git rev-parse HEAD^{tree})"
+          printf '%s\n' "expected=$EXPECTED_SHA" "observed=$observed" "tree=$tree"
+          test "$observed" = "$EXPECTED_SHA"
+
+      - name: Validate immutable binding and planted mutations
+        run: |
+          set -euo pipefail
+          python3 scripts/gates/check_controlled_language_binding.py --root . --selftest --json
+          python3 -m unittest -v tests/test_controlled_language_binding.py
+
+      - name: Validate syntax and fixture JSON
+        run: |
+          set -euo pipefail
+          python3 -m compileall -q scripts/gates/check_controlled_language_binding.py scripts/gates/controlled_language_binding tests/test_controlled_language_binding.py
+          for path in \
+            .skill-bindings/controlled-technical-language-harness/binding.json \
+            .skill-bindings/controlled-technical-language-harness/privacy-policy.json \
+            .skill-bindings/controlled-technical-language-harness/fixtures/termbase.json \
+            .skill-bindings/controlled-technical-language-harness/fixtures/cases.json
+          do
+            python3 -m json.tool "$path" >/dev/null
+          done

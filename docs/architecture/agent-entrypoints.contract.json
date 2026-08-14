@@ -1,18 +1,39 @@
 {
   "canonical_documents": [
     "ARCHITECTURE.md",
+    "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+    "docs/architecture/pdf-loopx-harness.integration.json",
+    "docs/git/README.md",
+    "docs/git/REPO_PROFILE.md",
+    "docs/git/STACKED_PRS.md",
+    "docs/git/WORKER_PROTOCOL.md",
+    "docs/git/GIT_TOWN_ADMISSION.md",
+    "docs/git/stack-prs.index.json",
+    "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
   "entrypoints": {
     "AGENTS.md": {
       "required_markers": [
+        "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+        "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+        "docs/traceability/STACK_PR_INDEX.md",
+        "scripts/gates/check_pdf_harness_integration.py",
         "docs/architecture/modular-integration-requirements.md",
+        "docs/git/REPO_PROFILE.md",
+        "skills/git-town-stacked-pr-worker/SKILL.md",
         "## Mandatory multi-hop read order",
+        "## PDF Harness verification protocol",
+        "## LoopX PDF verification protocol",
+        "## Git Town Stacked-PR Worker route",
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",
+        "## Molecular Stack PR policy",
         "## Completion contract",
         "NOT_IMPLEMENTED",
         "NOT_EXERCISED"
@@ -21,7 +42,13 @@
     },
     "CLAUDE.md": {
       "required_markers": [
+        "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+        "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+        "docs/traceability/STACK_PR_INDEX.md",
+        "scripts/gates/check_pdf_harness_integration.py",
         "docs/architecture/modular-integration-requirements.md",
+        "docs/git/REPO_PROFILE.md",
+        "skills/git-town-stacked-pr-worker/SKILL.md",
         "## Mandatory modular-integration read order",
         "Claude Code 不得",
         "NOT_IMPLEMENTED",

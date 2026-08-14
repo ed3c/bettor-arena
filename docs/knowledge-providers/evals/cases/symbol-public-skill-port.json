@@ -1,0 +1,38 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "symbol-public-skill-port",
+  "family": "symbol",
+  "capability": "symbol.lookup",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  },
+  "query": {
+    "text": "locate the public port that executes portable Skill assertions",
+    "path_scope": ["loopctl", "scripts"]
+  },
+  "query_digest": "sha256:981e11d298c85f721d88042fbf647b88c1c9ac5092a65cfb5916042d577382af",
+  "participants": ["exact-search-control", "serena"],
+  "oracle": {
+    "relevant_ids": ["public-skill-port"],
+    "must_remain_unknown": []
+  },
+  "hard_gates": {
+    "source_readback_required": true,
+    "fresh_index_required": true,
+    "candidate_only": true,
+    "no_authority_escalation": true,
+    "cleanup_required": true,
+    "min_verified_precision": 1.0,
+    "min_verified_recall": 1.0
+  },
+  "budgets": {
+    "max_results": 10,
+    "max_context_bytes": 32768,
+    "max_latency_ms": 10000,
+    "max_tool_calls": 8
+  },
+  "eligible_recommendations": ["PRIMARY_CANDIDATE", "EXPERIMENTAL"],
+  "fixture_subject": true
+}

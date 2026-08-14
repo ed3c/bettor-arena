@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Independent subprocess control for the public LoopX Ledger v1 CLI."""
+
 from __future__ import annotations
 
 import argparse
@@ -27,7 +29,9 @@ def invoke(argv: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
         text=True,
         timeout=60,
         check=False,
-        env={"PATH": str(Path(sys.executable).parent) + ":/usr/local/bin:/usr/bin:/bin"},
+        env={
+            "PATH": str(Path(sys.executable).parent) + ":/usr/local/bin:/usr/bin:/bin"
+        },
     )
 
 
@@ -72,7 +76,9 @@ def receipt_status(path: Path, expected: str, label: str) -> None:
     observed = content.pop("content_digest", None)
     import hashlib
 
-    canonical = json.dumps(content, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    canonical = json.dumps(
+        content, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
     expected_digest = "sha256:" + hashlib.sha256(canonical).hexdigest()
     if observed != expected_digest:
         raise ControlFailure(f"{label}: receipt content digest mismatch")
@@ -98,14 +104,18 @@ def main(argv: list[str] | None = None) -> int:
     try:
         with tempfile.TemporaryDirectory(prefix="loopx-ledger-control.") as temporary:
             temp = Path(temporary)
-            contract_check = invoke([sys.executable, str(checker), "--root", str(root)], root)
+            contract_check = invoke(
+                [sys.executable, str(checker), "--root", str(root)], root
+            )
             expect(
                 contract_check,
                 code=OK,
                 label="contract check",
                 stdout_marker="loopx-ledger-contracts PASS:",
             )
-            selftest = invoke([sys.executable, str(ledger), "selftest", "--root", str(root)], root)
+            selftest = invoke(
+                [sys.executable, str(ledger), "selftest", "--root", str(root)], root
+            )
             expect(
                 selftest,
                 code=OK,
@@ -210,8 +220,13 @@ def main(argv: list[str] | None = None) -> int:
             )
             expect(result, code=OK, label="replay")
             receipt_status(replay_receipt, "PASS", "replay")
-            if replay_output.read_bytes() != (fixtures / "expected-snapshot.json").read_bytes():
-                raise ControlFailure("replay does not match checked positive snapshot bytes")
+            if (
+                replay_output.read_bytes()
+                != (fixtures / "expected-snapshot.json").read_bytes()
+            ):
+                raise ControlFailure(
+                    "replay does not match checked positive snapshot bytes"
+                )
 
             assert last_request is not None
             duplicate_receipt = temp / "duplicate.json"
@@ -239,8 +254,12 @@ def main(argv: list[str] | None = None) -> int:
             lines = (tampered / "events.jsonl").read_text(encoding="utf-8").splitlines()
             event = json.loads(lines[3])
             event["event_digest"] = "sha256:" + "0" * 64
-            lines[3] = json.dumps(event, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-            (tampered / "events.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8")
+            lines[3] = json.dumps(
+                event, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            )
+            (tampered / "events.jsonl").write_text(
+                "\n".join(lines) + "\n", encoding="utf-8"
+            )
             result = invoke(
                 [
                     sys.executable,
@@ -280,8 +299,12 @@ def main(argv: list[str] | None = None) -> int:
             )
             expect(result, code=USAGE, label="missing input", stderr_marker="FATAL:")
 
-            result = invoke([sys.executable, str(ledger), "append", "--store", str(store)], root)
-            expect(result, code=USAGE, label="invalid invocation", stderr_marker="FATAL:")
+            result = invoke(
+                [sys.executable, str(ledger), "append", "--store", str(store)], root
+            )
+            expect(
+                result, code=USAGE, label="invalid invocation", stderr_marker="FATAL:"
+            )
 
             print(
                 "loopx-ledger control PASS: "

@@ -2,126 +2,237 @@
 
 > **Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper**
 
-`bettor-arena` 把原本散落在同一個 repository 的小迴圈，收斂成可組合、可證明、可發布的 modules。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 可以在不破壞既有 interface 的前提下快速迭代。
+`bettor-arena` 將多個 bounded loops、portable Skills、runtime projections、proof controls 與 release evidence 組合成可追溯的 Agent Harness。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 透過 module、typed packet、subject-bound receipt 與 Human Admit 演進。
+
+## Current publication subject
+
+```text
+GitHub repository: ed3c/bettor-arena
+current main:      10380005fa485d6035539589c01b9f740acff15d
+documentation parent PR: #60
+parent branch:     feat/pdf-loopx-modular-verifier-v1
+parent head:       ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
+this terminal issue: #80
+this branch:       feat/git-town-stack-governance-v1
+```
+
+GitHub base/head metadata and exact-head checks are publication truth. This Markdown is a routed snapshot, not a substitute for GitHub.
+
+## LoopX Harness PDF integration verdict
+
+<!-- PDF Harness Integration verdict -->
+
+The attached 41-page **LLM 泛化：模型權重與 Harness** PDF is a requirement/hypothesis source. It proposes a LoopX state kernel around Objective, Todos, Gates, Evidence and Quota, deterministic out-of-band verification, heterogeneous workers, LangGraph HITL, episodic memory, worktree fleets, cloud/local execution and observability.
+
+Current repository verdict:
+
+```text
+modular control-plane foundation                IMPLEMENTED
+hard gates / proof / control / mutation         IMPLEMENTED
+portable Skill → host-owned execution           IMPLEMENTED
+Context Capsules / OpenWiki / Code Truth        IMPLEMENTED
+provider-neutral query and memory contracts     IMPLEMENTED
+
+complete LoopX task-state kernel on main        NOT_IMPLEMENTED
+LoopX contract candidate                        OPEN STACK PR #74
+append-only ledger candidate                    MERGED INTO #74 PARENT, NOT MAIN
+six-host Worker Gateway candidates              OPEN / DUPLICATE ACTIVE TERMINALS
+LangGraph strategy + HITL                       NOT_IMPLEMENTED
+evidence-bound durable decision memory          NOT_IMPLEMENTED ON MAIN
+six-host live execution matrix                  NOT_EXERCISED
+cloud/local equivalent execution                NOT_EXERCISED
+observability / signed HITL console              NOT_IMPLEMENTED
+Git Town executable/config/live sync            ABSENT / NOT_EXERCISED
+```
+
+The correct conclusion is:
+
+> Bettor has a modular Harness foundation and several unmerged LoopX terminal candidates. It has not completed or Human-admitted the full PDF architecture.
+
+Read:
+
+- [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md)
+- [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+- [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
+- [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+
+### Missing LoopX control flow
+
+The repository still lacks the complete canonical runtime flow on current `main`:
+
+```text
+Objective + Todos + Gates + Evidence + Quota
+→ append-only single-writer ledger
+→ strategy proposal
+→ leased Worker execution
+→ host-owned hard Gates
+→ LoopX reducer commit
+→ memory / retry / HITL / complete
+```
+
+The open LoopX Stack is implementation evidence for unmerged feature subjects. It is not current-main runtime or production admission.
 
 ## Read order
 
-1. [`ARCHITECTURE.md`](ARCHITECTURE.md) — engineering SSOT、placement contract 與最高優先級 invariants。
-2. [`AGENTS.md`](AGENTS.md) 或 [`CLAUDE.md`](CLAUDE.md) — host-specific thin entrypoint。
-3. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md) — normative target contract。
-4. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md) — mutable implementation ledger。
-5. [`docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md) — 《黑客松 AI 開發：SKILL.md 與 MCP》需求→模組/State Machine/evidence 對照與修正。
-6. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md) — same-name State Machine routing summary。
-7. [`.arena/README.md`](.arena/README.md) — machine-readable control plane 導航。
-8. [`loopctl/README.md`](loopctl/README.md) 與 [`proof_workflow/README.md`](proof_workflow/README.md) — public surface 與 evidence semantics。
+1. [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md)
+2. [`ARCHITECTURE.md`](ARCHITECTURE.md)
+3. [`CONTEXT.md`](CONTEXT.md)
+4. [`docs/INDEX.md`](docs/INDEX.md)
+5. [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md)
+6. [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
+7. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
+8. [`docs/git/README.md`](docs/git/README.md)
+9. [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+10. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+11. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+12. the nearest module README, `module.json`, contracts, source, tests and current receipts
 
-完整文件索引見 [`docs/README.md`](docs/README.md)。
+## Directory → State Machine → input/output/evidence
 
-## Directory topology → State Machine ownership
+<!-- Directory → State Machine ownership -->
 
-```text
-bettor-arena/
-├── .arena/
-│   ├── modules/            MODULE LIFECYCLE + path/capability ownership
-│   ├── compositions/       MACRO requirements
-│   ├── locks/              immutable composition result
-│   ├── contexts/           Context Capsule inputs
-│   └── mcp-policy.json     MCP exposure allow/deny state
-├── .skill-bindings/        SKILL CONSUMER BINDING state
-├── .agents/skills/         repository-owned/projected Skill support material
-├── .runtime-env/           secret-free runtime projection
-├── loopctl/                PUBLIC PORT + STATELESS MCP state machine
-├── proof_workflow/         PROOF / CONTROL / MUTATION state machine
-├── knowledge-providers/    PROVIDER candidate/query/memory state
-├── data/
-│   ├── module-proof/       module subject + release evidence
-│   ├── mcp/                MCP exposure snapshots
-│   ├── origins/            GitHub/Forgejo observation state
-│   └── browser/            browser/provider observation state
-├── scripts/                trusted deterministic reducers and gates
-├── docs/                   Agent/human routing; never machine authority
-└── AGENTS.md               mandatory Agent route + non-negotiable boundaries
-```
+| Directory / route | Owner | State Machine | Inputs | Outputs / evidence | Current state |
+|---|---|---|---|---|---|
+| root `*.md` | `arena-core` | `ENTRY → ROUTE → OWNER → CONTRACT → EVIDENCE` | task + exact repo subject | bounded Agent read route | `IMPLEMENTED` |
+| `docs/git/` | repository Git governance | `PROFILE → TASK PACKET → STACK GRAPH → LEASE → DRY RUN → EVAL → HUMAN ADMIT` | shared Skill pin, GitHub metadata, task packet | profile, Stack snapshot, governance diagnostics | repo-owned docs `IMPLEMENTED`; Git Town runtime `ABSENT` |
+| `docs/traceability/` | delivery traceability | `SOURCE → ISSUE → TERMINAL → PR → EXACT HEAD → CHECKS → ADMIT` | GitHub issue/PR metadata | human Stack index | `IMPLEMENTED`, snapshot-bound |
+| `.agents/` | `agent-runtime-integration` | `REQUIRE → RESOLVE → BIND → PROJECT → DISCOVER` | shared/repo-owned Skill requirements | immutable Skill binding and host projections | `IMPLEMENTED`; Git Town Skill selection `NOT_SELECTED` |
+| `.skill-bindings/` | consumer bindings | `UPSTREAM PROCEDURE → RETARGET → ASSERT → RECEIPT` | immutable shared Skill | repo-specific facts and assertions | `IMPLEMENTED` for selected bindings |
+| `.runtime-env/` | runtime consumer projection | `DECLARE → RESOLVE → MATERIALIZE → OFFLINE VERIFY → LIVE CANARY` | secret-free runtime release | binding/workload/policy projection | mechanism `IMPLEMENTED`; live routes vary |
+| `.arena/modules/` | `module-catalog` | `PROPOSED → CONTRACTED → COMPOSED → PROVED → RELEASED` | module manifests | owners, capabilities and proof commands | `IMPLEMENTED` |
+| `.arena/compositions/` | `module-catalog` | `DESIRED → DEPENDENCY/CONFLICT RESOLVE → CANDIDATE` | module/component requirements | desired composition | `IMPLEMENTED` |
+| `.arena/locks/` | generated control plane | `REQUIREMENTS → RESOLVE → DIGEST → LOCK` | manifests and requirements | deterministic composition lock | `IMPLEMENTED`; regenerate only |
+| `.arena/contexts/` | `loop-runtime` + owners | `SELECT → MATERIALIZE → FREEZE → DRIVER PREPARE → CANARY` | immutable repository ref + native files | Context Capsule digest | offline `IMPLEMENTED`; live hosts vary |
+| `loopctl/` | `loop-runtime` | `PARSE → VALIDATE → DISPATCH PUBLIC PORT → PROPAGATE 0/2/64` | typed CLI request | typed artifacts/receipt | `IMPLEMENTED` |
+| `mcp/` | `mcp-adapters` | `DEFAULT DENY → TOOL PROJECT → DISPOSABLE CALL → CLEANUP` | CLI contract + explicit policy | JSON-RPC result | `IMPLEMENTED` for admitted tools |
+| `proof_workflow/` | `proof-kernel` | `CLAIM → TRAVERSAL → CONTROL → MUTATION → RECEIPT` | public port + context | proof/control/mutation evidence | `IMPLEMENTED` |
+| `data/module-proof/` | generated evidence | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks + proof specs | subject lock + release receipt | mechanism `IMPLEMENTED` |
+| `loop_wiki/evolve-perfect-seed-repo-factory/` | `perfect-seed-factory` | `PACKET → BUILD → QUALITY → OPERATOR → VALIDATOR → HUMAN EDGE` | typed source/task packet | seed repo + wiki request | `IMPLEMENTED` |
+| `kb-ingest/`, `openwiki/` | `openwiki` | `REQUEST → DRY/FULL OPT-IN → VERIFY → RECEIPT` | wiki-update request | tracked projection | mechanism `IMPLEMENTED` |
+| `loop_wiki/code-truth-graph/` | `code-truth-graph` | `PACKET → PARSE/BUILD → VERIFY → GRAPH ARTIFACT` | exact source packet | graph/result artifact | `IMPLEMENTED` |
+| `docs/knowledge-providers/` | `knowledge-providers` | `MANIFEST → QUERY/PROPOSAL → SOURCE READBACK → ADMIT` | exact subject + capability | candidate result or memory proposal | contracts `IMPLEMENTED`; live providers vary |
+| `.github/workflows/` | cloud verifier | `EVENT → EXACT CHECKOUT → DETERMINISTIC GATE → STATUS` | push/PR subject | GitHub check | `IMPLEMENTED`; skipped/stale is not PASS |
+| proposed LoopX kernel | future `loopx-kernel` | `OBJECTIVE → TODO → DISPATCH → GATES → REDUCE → RETRY/HITL/COMPLETE` | task contract + events | canonical ledger + derived snapshot | candidate stack, not on main |
+| proposed strategy/HITL | future strategy plane | `SNAPSHOT → PROPOSE → INTERRUPT → SIGNED DECISION → RESUME` | LoopX snapshot | typed command/decision receipt | `NOT_IMPLEMENTED` |
+| proposed runtime fabric | future execution plane | `PROBE → LEASE → MATERIALIZE → EXECUTE → COLLECT → DISPOSE` | worker request + policy | attested execution receipt | `NOT_IMPLEMENTED` |
+| proposed observability/UI | projection plane | `EVENT → REDACT → PROJECT → INSPECT → SIGNED HUMAN REQUEST` | immutable refs | trace/dashboard/request | `NOT_IMPLEMENTED` |
 
-## Runtime topology
+Detailed map: [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md).
 
-```text
-Claude Code / Codex CLI
-        │
-        │ JSON-RPC / stdio, immutable release
-        ▼
-Stateless MCP Gateway
-        │ selected module closure + typed carrier
-        ▼
-Module Public Port
-        │ stable interface_version
-        ▼
-Bounded Micro Loop
-        │ typed result + named exits + artifacts
-        ▼
-Proof Kernel
-        └─ proof + independent control + mutation/hollow evidence
-```
-
-Arena 的 Macro／Composition loop 只負責 module selection、dependency/conflict resolution、projection、proof matrix、Human Admit、composition lock、promotion 與 rollback。Micro loop 只處理 bounded task execution，不能自我 admit、promote 或執行 production rollback。
-
-## End-to-end integration data flow
+## End-to-end data flow
 
 ```text
-skills-shared immutable Skill release
-        +
-runtime-env secret-free binding/profile/workload
-        ↓
-.skill-bindings + .arena module requirements
-        ↓
-Macro resolver
-        ↓
-composition lock + selected module closure
-        ↓
-Context Capsule / host projection
-        ↓
-loopctl public contract
-        ↓
-default-deny Stateless MCP
-        ↓
-typed Skill execution request
-        ↓
-execution provider
-(local disposable process / future admitted cloud sandbox)
-        ↓
-OS + artifact observations
-        ↓
-independent assertions
-        ↓
-proof + control + mutation/hollow receipts
-        ↓
-external Claude/Codex/provider canaries
-        ↓
-composition release receipt
-        ↓
-Human Admit
-        ↓
-promotion or rollback
+PDF / issue / source incident
+        ↓ classify as proposal, fact, observation or decision
+skills-shared immutable Skill release ──────┐
+                                            ├─→ .agents binding / repo profile
+runtime-env secret-free release ────────────┘
+                                                     ↓
+                                  module + Stack task requirements
+                                                     ↓
+                         composition graph + Git branch dependency graph
+                          ├─ module capability/dependency/conflict resolve
+                          └─ sibling/true-child/path-lease validation
+                                                     ↓
+                             immutable Context Capsule + task packet
+                                                     ↓
+                    loopctl / default-deny MCP / trusted local public port
+                                                     ↓
+                     leased disposable worktree + typed Worker request
+                                                     ↓
+          Codex / Claude / Grok Build / OpenCode / Pi / Ante candidate output
+                                                     ↓
+                  diff + stdout/stderr + content-addressed artifacts
+                                                     ↓
+                  host-owned hard Gates + independent control/mutation
+                                                     ↓
+                  subject-bound receipt / LoopX event proposal
+                          ├─ failure → Quota debit / handoff / memory proposal
+                          └─ pass    → next Todo / release candidate
+                                                     ↓
+                                  convergence leaf aggregates
+                                                     ↓
+                                      Human Admit
+                                  ├─ merge / promote
+                                  └─ reject / rollback
 ```
 
-## PDF architecture integration verdict
+No Worker, provider, graph checkpoint, UI, memory store, vector index or model prose can skip the Gate/reducer/Human boundaries.
 
-The PDF is treated as a **requirement/hypothesis source**, not factual authority. Bettor adopts the useful architecture while correcting unsafe assumptions. See [`PDF_SKILL_MCP_TRACEABILITY.md`](docs/architecture/PDF_SKILL_MCP_TRACEABILITY.md).
+## Git Town Stacked-PR governance
 
-| PDF concept | Bettor mapping | State |
-|---|---|---|
-| SKILL.md capability boundaries | `skills-shared` release + `.skill-bindings/` | contract implemented |
-| dynamic tool discovery | `loopctl` public surface + `.arena/mcp-policy.json` | implemented, default deny |
-| stateless MCP | Bun/TypeScript MCP runtime | implemented for admitted carriers |
-| isolated code execution | portable Skill execution stack | stack implemented, convergence to current `main` pending #53 |
-| E2B/Firecracker | execution-provider candidate | not an invariant; not exercised |
-| browser automation | Browser Contract v2 | deterministic contract present; live provider subject-specific |
-| Skill Arena evals | proof/control/mutation + Skill/provider evals | deterministic contract implemented |
-| Self-Healing | bounded Micro recovery + named exits | bounded only; retry-until-pass forbidden |
-| Promptfoo runtime governance | rejected as runtime authority | offline/CI adapter only if admitted |
-| Human-in-the-loop | Human Admit | explicit non-tool authority |
+Canonical shared method:
 
-No example success rate, latency, user count, market share or YC claim from the PDF is copied into repository truth without independent evidence.
+```text
+repository: ed3c/skills-shared
+commit:     c5750720d960a228a0d9419f28125c09d064e3e1
+blob:       eb2d915bca3e8a3938625f7d33a10fae95a15769
+path:       skills/git-town-stacked-pr-worker/SKILL.md
+```
+
+Bettor does **not** copy a local same-name `SKILL.md`. It owns only the repository profile, work packets, path leases, Stack index, wrappers/evals and Human policy described under [`docs/git/`](docs/git/README.md).
+
+Current admission:
+
+```text
+shared Skill exact reference            PINNED
+shared Skill selected in Bettor binding NOT_SELECTED
+.git-town.toml                           ABSENT
+Git Town executable/version/checksum     ABSENT
+license/SBOM/legal admission             NOT_REVIEWED
+live git town sync                       NOT_EXERCISED
+publication canary                       NOT_EXERCISED
+merge / ship / rollback                  HUMAN-OWNED
+```
+
+## Git Town / molecular Stack PR index
+
+<!-- Molecular Stack PR index -->
+
+```text
+main @ ea8c4a101bcf44ffe54c78ef53da583afa9efad2
+│
+├─ PR #60 feat/pdf-loopx-modular-verifier-v1        MERGED_TO_MAIN
+│    └─ PR #81 feat/git-town-stack-governance-v1
+│         issue #80; documentation/governance terminal; retargeted to main once #60 landed; OPEN
+│
+├─ PR #74 feat/loopx-contract-v1                    MERGED_TO_MAIN
+│    ├─ PR #75 feat/loopx-ledger-v1                 MERGED_TO_MAIN via #74
+│    ├─ PR #76 feat/loopx-worker-gateway-v1         MERGED_TO_MAIN via #74
+│    ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
+│    │    #76/#77 implemented issue #64 twice over the same paths.
+│    │    RESOLVED_BY_HUMAN: #76 (82 files) admitted, #77 (19 files) closed as
+│    │    SUPERSEDED_CANDIDATE; its 8 unique files are tracked in issue #82.
+│    ├─ PR #78 feat/loopx-decision-memory-v1        MERGED_TO_MAIN via #74
+│    └─ PR #79 feat/loopx-code-truth-graph-v2       MERGED_TO_MAIN via #74
+│
+├─ PR #56 provider admission evaluations            MERGED_TO_MAIN
+├─ PR #53 historical aggregate                      SUPERSEDED_CANDIDATE, closed by the owner
+└─ issue #68 final LoopX convergence
+     shared composition/index/live canary/release owner only
+```
+
+Full human index: [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md).  
+Machine snapshot: [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json).
+
+## Current module catalog
+
+The selected current-main module IDs are indexed explicitly for the PDF/control-plane gate:
+
+- `agent-runtime-integration`
+- `arena-core`
+- `code-truth-graph`
+- `environment-contracts`
+- `knowledge-providers`
+- `loop-runtime`
+- `mcp-adapters`
+- `module-catalog`
+- `notebooklm`
+- `openwiki`
+- `perfect-seed-factory`
+- `project-bootstrapper`
+- `proof-kernel`
+- `technical-equivalence`
 
 ## Stable public surfaces
 
@@ -132,88 +243,64 @@ sh loopctl/loopctl.sh contract
 sh loopctl/loopctl.sh --selftest
 ```
 
-`loopctl/contract.json` 是 canonical external surface；`loopctl.sh` 是 wiring。Private flags、driver、prompt、implementation directory 與 temporary files 不是外部 contract。
+`loopctl/contract.json` is the canonical external surface. Private module flags and temporary paths are not public contract.
 
 ### Stateless MCP
 
-MCP tools 由 canonical contract 與 `.arena/mcp-policy.json` 生成，採 **default deny**。每次 call pin immutable subject、只 materialize selected module closure，並使用 disposable workspace。Caller 不得傳 server-host absolute path、任意 `cwd`、secret、browser profile 或 generic shell command。
+MCP tools derive from the canonical CLI contract and `.arena/mcp-policy.json`, default deny. Callers cannot provide generic shell text, arbitrary host paths, secrets, browser profiles or Human Admit operations.
 
-### Project bootstrapper
+### Git Town governance verifier
 
 ```sh
-bun scripts/arena_project.ts --help
-bun scripts/gates/check_project_bootstrap.ts
+python3 scripts/gates/check_git_town_stack_docs.py
+python3 scripts/gates/check_git_town_stack_docs.py --selftest
+python3 -m unittest -q tests/test_git_town_stack_docs.py
 ```
 
-Project initialization 採 `plan → resolve → render temp tree → verify → apply → receipt`。Rollback 只允許在 target bytes 未被後續修改時執行。
+This checks documentation/profile/index consistency only. It does not run Git Town.
 
-## Module and evidence model
-
-- Module manifests： [`.arena/modules/`](.arena/modules/)
-- Composition requirements： [`.arena/compositions/`](.arena/compositions/)
-- Deterministic lock： [`.arena/locks/`](.arena/locks/)
-- Context Capsules： [`.arena/contexts/`](.arena/contexts/)
-- Module proof subjects： [`data/module-proof/`](data/module-proof/)
-- MCP exposure snapshot： [`data/mcp/`](data/mcp/)
-- Origin / browser status： [`data/origins/`](data/origins/) / [`data/browser/`](data/browser/)
-
-Evidence states are not aliases:
+## Evidence model
 
 ```text
 PASS ≠ FAIL ≠ ABSENT ≠ NOT_IMPLEMENTED ≠ NOT_EXERCISED
 ```
 
-A receipt is a claim. A control must execute the public port and observe behavior. A mutation or hollow control must prove that a load-bearing guard can turn red。
-
-## Git Town / molecular Stack PR index
-
-Git Town is optional local tooling; **GitHub base/head metadata is publication truth**. A child PR that says `merged=true` may have merged only into its parent branch. That does not mean its bytes are on `main`.
-
-### Portable Skill execution stack
+Additional Stack states:
 
 ```text
-main
-└─ #43 repo-agent-native Bettor binding                     MERGED TO MAIN
-   └─ #48 harness-wiki portable execution contracts         MERGED INTO STACK PARENT
-      └─ #50 host-owned executable Skill runner             MERGED INTO STACK PARENT
-         └─ #52 provider-neutral knowledge boundary         MERGED INTO STACK PARENT
-            └─ #53 portable-skill-execution convergence     OPEN / DIVERGED FROM MAIN
+MERGED_TO_MAIN
+MERGED_TO_PARENT
+OPEN
+BLOCKED_DUPLICATE_TERMINAL
+SUPERSEDED_CANDIDATE
+NOT_CREATED
 ```
 
-**Current integration authority:** #53 must be rebuilt or synchronized with current `main`, rerun exact-head gates, then merged before #48/#50/#52 are described as integrated into `main`.
-
-### Knowledge-provider admission leaf
+Conflict states, which belong to the conflict record rather than to a node:
 
 ```text
-main
-└─ #56 provider admission packets/evals   OPEN
+BLOCKED_HUMAN_DECISION
+RESOLVED_BY_HUMAN
 ```
 
-#56 currently has failing exact-head GitHub checks, so it is not merge-authorized. Its checked-in observations are fixture-only and cannot establish Serena/GrepAI/Code-Graph-RAG/Mem0 live health or superiority.
+A resolved conflict keeps its record. Dropping it would make an index where the
+duplicate was settled indistinguishable from one that never noticed it.
 
-When Git Town is installed locally, use it only to manage the same dependency graph; never let local stack metadata override GitHub parent/base identity or exact-head checks.
+A child marked `merged=true` may have merged only into its feature parent. Only reachability from current `main` proves `MERGED_TO_MAIN`.
 
-## Local verification
+## Human-owned boundaries
 
-```sh
-python3 scripts/gates/check_readme_coverage.py --selftest
-python3 scripts/gates/check_readme_coverage.py
-python3 scripts/gates/check_module_catalog.py
-python3 scripts/arena_proof.py check
-python3 scripts/arena_context.py check
-bun scripts/gates/check_mcp_policy.ts
-bun scripts/gates/check_project_bootstrap.ts
-bun scripts/gates/check_environment_contracts.ts
-```
+A model or background Worker must not:
 
-Run `sh bootstrap.sh` once to install repository-relative hooks and perform the core doctor checks. Host trust, MCP approval, network widening, browser sign-in and secret-bearing providers remain human-owned activation steps.
+- resolve semantic Git conflicts;
+- continue, skip or undo a blocked Git Town operation;
+- change remotes or credential helpers;
+- push, merge, ship, close or delete branches;
+- widen permissions;
+- select production providers;
+- Human Admit a release;
+- perform production rollback.
 
 ## Current boundary
 
-The deterministic module catalog, ownership model, module-scoped proof identities, Context Capsules, default-deny Bun/TypeScript MCP runtime, project bootstrapper, logical-origin contract and Browser Contract v2 are present in current `main`.
-
-The portable Skill execution + knowledge-provider stack is **not yet fully converged into current `main`**: #53 is the open convergence leaf. Provider admission #56 is also open and currently has failing exact-head checks. These states must not be hidden by the fact that intermediate stacked child PRs show as merged.
-
-Live Claude/Codex subscriptions, signed-in browser sessions, Forgejo/GitHub environment equivalence, cloud MicroVM providers and other external systems remain `NOT_EXERCISED` unless a current receipt says otherwise.
-
-E2B／Firecracker and similar cloud runtimes are provider candidates, not Arena invariants. They enter the architecture only after independent license/spec verification and a runtime canary.
+This branch adds repository-owned Git Town governance documents and a machine-readable Stack snapshot. It does not install Git Town, create `.git-town.toml`, execute `git town sync`, change runtime/provider implementation, select unmerged LoopX modules, expose new MCP tools, merge any PR or perform Human Admit.

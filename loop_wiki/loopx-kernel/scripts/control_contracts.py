@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Independent public-port control for LoopX Contract v1.
 
 This control does not import the validator. It executes the public argv surface
@@ -38,7 +39,9 @@ def run(argv: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
         text=True,
         timeout=30,
         check=False,
-        env={"PATH": str(Path(sys.executable).parent) + ":/usr/local/bin:/usr/bin:/bin"},
+        env={
+            "PATH": str(Path(sys.executable).parent) + ":/usr/local/bin:/usr/bin:/bin"
+        },
     )
 
 

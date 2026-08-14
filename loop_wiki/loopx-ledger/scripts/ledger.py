@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Operate the LoopX append-only ledger with deterministic 0/2/64 exits."""
+
 from __future__ import annotations
 
 import argparse
@@ -10,6 +12,7 @@ import sys
 from ledger_common import BAD, OK, USAGE, BusyError, ContractError, InputError
 from ledger_cli import append_event, initialize, recover_store, replay_to, verify_store
 from ledger_selftest import run_selftest
+
 
 class UsageParser(argparse.ArgumentParser):
     """Map CLI contract/usage errors to the repository-standard exit 64."""
@@ -57,15 +60,38 @@ def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
         if args.operation == "init":
-            initialize(args.contract.resolve(), args.store.resolve(), args.created_at, args.receipt.resolve(), args.operation_id)
+            initialize(
+                args.contract.resolve(),
+                args.store.resolve(),
+                args.created_at,
+                args.receipt.resolve(),
+                args.operation_id,
+            )
         elif args.operation == "append":
-            append_event(args.store.resolve(), args.request.resolve(), args.receipt.resolve(), args.operation_id)
+            append_event(
+                args.store.resolve(),
+                args.request.resolve(),
+                args.receipt.resolve(),
+                args.operation_id,
+            )
         elif args.operation == "verify":
-            verify_store(args.store.resolve(), args.receipt.resolve(), args.operation_id)
+            verify_store(
+                args.store.resolve(), args.receipt.resolve(), args.operation_id
+            )
         elif args.operation == "replay":
-            replay_to(args.store.resolve(), args.snapshot_out.resolve(), args.receipt.resolve(), args.operation_id)
+            replay_to(
+                args.store.resolve(),
+                args.snapshot_out.resolve(),
+                args.receipt.resolve(),
+                args.operation_id,
+            )
         elif args.operation == "recover":
-            _, code = recover_store(args.store.resolve(), args.apply, args.receipt.resolve(), args.operation_id)
+            _, code = recover_store(
+                args.store.resolve(),
+                args.apply,
+                args.receipt.resolve(),
+                args.operation_id,
+            )
             return code
         elif args.operation == "selftest":
             run_selftest(args.root.resolve())

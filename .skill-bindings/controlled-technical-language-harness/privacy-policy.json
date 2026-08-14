@@ -1,0 +1,55 @@
+{
+  "approval_receipt_schema": "controlled-language-external-processing-approval/v1",
+  "classifications": [
+    {
+      "allowed_lanes": [
+        "LOCAL_ONLY",
+        "PRIVATE_ENDPOINT",
+        "EXTERNAL_APPROVED"
+      ],
+      "classification": "PUBLIC",
+      "external_human_approval_required": false,
+      "network_default": false
+    },
+    {
+      "allowed_lanes": [
+        "LOCAL_ONLY",
+        "PRIVATE_ENDPOINT"
+      ],
+      "classification": "INTERNAL",
+      "external_human_approval_required": false,
+      "network_default": false
+    },
+    {
+      "allowed_lanes": [
+        "LOCAL_ONLY",
+        "PRIVATE_ENDPOINT",
+        "EXTERNAL_APPROVED"
+      ],
+      "classification": "CONFIDENTIAL",
+      "external_human_approval_required": true,
+      "network_default": false
+    },
+    {
+      "allowed_lanes": [
+        "LOCAL_ONLY"
+      ],
+      "classification": "RESTRICTED",
+      "external_human_approval_required": true,
+      "network_default": false
+    }
+  ],
+  "default_network_allowed": false,
+  "durable_receipt_forbidden_fields": [
+    "credential",
+    "secret",
+    "session_id",
+    "bearer_token",
+    "private_reasoning",
+    "chain_of_thought"
+  ],
+  "policy_id": "bettor-arena-controlled-language-privacy",
+  "policy_version": "1.0.0",
+  "provider_health_is_privacy_approval": false,
+  "schema_version": "controlled-language-privacy-policy/v1"
+}

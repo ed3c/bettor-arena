@@ -1,0 +1,99 @@
+{
+  "cases": [
+    {
+      "expected_error": "candidate commit",
+      "id": "CTL-BIND-001"
+    },
+    {
+      "expected_error": "candidate tree",
+      "id": "CTL-BIND-002"
+    },
+    {
+      "expected_error": "candidate Skill tree",
+      "id": "CTL-BIND-003"
+    },
+    {
+      "expected_error": "candidate evals blob",
+      "id": "CTL-BIND-004"
+    },
+    {
+      "expected_error": "authority scorer",
+      "id": "CTL-BIND-005"
+    },
+    {
+      "expected_error": "rollback bundle must differ",
+      "id": "CTL-BIND-006"
+    },
+    {
+      "expected_error": "mutable upstream ref",
+      "id": "CTL-BIND-007"
+    },
+    {
+      "expected_error": "SOURCE_PROPOSAL",
+      "id": "CTL-BIND-008"
+    },
+    {
+      "expected_error": "official compliance",
+      "id": "CTL-BIND-009"
+    },
+    {
+      "expected_error": "fixture termbase",
+      "id": "CTL-BIND-010"
+    },
+    {
+      "expected_error": "Technical Verb",
+      "id": "CTL-BIND-011"
+    },
+    {
+      "expected_error": "RESTRICTED permits LOCAL_ONLY",
+      "id": "CTL-BIND-012"
+    },
+    {
+      "expected_error": "RESTRICTED network",
+      "id": "CTL-BIND-013"
+    },
+    {
+      "expected_error": "CONFIDENTIAL external",
+      "id": "CTL-BIND-014"
+    },
+    {
+      "expected_error": "provider health",
+      "id": "CTL-BIND-015"
+    },
+    {
+      "expected_error": "physical PASS",
+      "id": "CTL-BIND-016"
+    },
+    {
+      "expected_error": "projection PASS",
+      "id": "CTL-BIND-017"
+    },
+    {
+      "expected_error": "writeback remain disabled",
+      "id": "CTL-BIND-018"
+    },
+    {
+      "expected_error": "machine-local",
+      "id": "CTL-BIND-019"
+    },
+    {
+      "expected_error": "secret-shaped",
+      "id": "CTL-BIND-020"
+    },
+    {
+      "expected_error": "private reasoning",
+      "id": "CTL-BIND-021"
+    },
+    {
+      "expected_error": "artifact digest",
+      "id": "CTL-BIND-022"
+    },
+    {
+      "expected_error": "duplicate control id",
+      "id": "CTL-BIND-023"
+    }
+  ],
+  "schema_version": "controlled-language-consumer-cases/v1",
+  "suite_id": "bettor-arena-controlled-language-binding",
+  "version": "1.0.0"
+}

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# ruff: noqa: F401,F403,F405  # this module family composes through star imports; the names ruff reads as unused are deliberate re-exports the downstream modules import through.
 """Operate the LoopX append-only ledger with deterministic 0/2/64 exits."""
+
 from __future__ import annotations
 
 import argparse
@@ -19,14 +21,18 @@ from ledger_common import *
 from ledger_engine import *
 
 
-def artifact_ref(path: Path, artifact_id: str, kind: str, producer: str) -> dict[str, Any]:
+def artifact_ref(
+    path: Path, artifact_id: str, kind: str, producer: str
+) -> dict[str, Any]:
     return {
         "artifact_id": artifact_id,
         "kind": kind,
         "path": path.name,
         "digest": file_digest(path),
         "bytes": path.stat().st_size,
-        "media_type": "application/json" if path.suffix == ".json" else "application/x-ndjson",
+        "media_type": "application/json"
+        if path.suffix == ".json"
+        else "application/x-ndjson",
         "producer": producer,
     }
 
@@ -78,7 +84,13 @@ def write_receipt(path: Path, receipt: dict[str, Any]) -> None:
     atomic_write_json(path, receipt)
 
 
-def initialize(contract_path: Path, store: Path, created_at: str, receipt_path: Path, operation_id: str) -> dict[str, Any]:
+def initialize(
+    contract_path: Path,
+    store: Path,
+    created_at: str,
+    receipt_path: Path,
+    operation_id: str,
+) -> dict[str, Any]:
     contract = validate_contract(load_json(contract_path))
     if store.exists() and any(store.iterdir()):
         raise ContractError(f"store is not empty: {store}")
@@ -107,17 +119,24 @@ def initialize(contract_path: Path, store: Path, created_at: str, receipt_path: 
             after,
             [
                 artifact_ref(contract_out, "ledger-contract", "FILE", "loopx-ledger"),
-                artifact_ref(manifest_out, "ledger-store-manifest", "FILE", "loopx-ledger"),
+                artifact_ref(
+                    manifest_out, "ledger-store-manifest", "FILE", "loopx-ledger"
+                ),
                 artifact_ref(events_out, "ledger-events", "TRACE", "loopx-ledger"),
                 artifact_ref(snapshot_out, "ledger-snapshot", "FILE", "loopx-ledger"),
             ],
-            {"writer_policy": "POSIX_FLOCK_SINGLE_WRITER", "runtime_state_checked_in": False},
+            {
+                "writer_policy": "POSIX_FLOCK_SINGLE_WRITER",
+                "runtime_state_checked_in": False,
+            },
         )
         write_receipt(receipt_path, receipt)
         return receipt
 
 
-def append_event(store: Path, request_path: Path, receipt_path: Path, operation_id: str) -> dict[str, Any]:
+def append_event(
+    store: Path, request_path: Path, receipt_path: Path, operation_id: str
+) -> dict[str, Any]:
     with writer_lease(store):
         snapshot, events, contract, torn = replay_store(store)
         if torn is not None:
@@ -129,10 +148,16 @@ def append_event(store: Path, request_path: Path, receipt_path: Path, operation_
             raise ContractError("checked snapshot drifted from full replay")
         request = validate_append_request(load_json(request_path), contract["subject"])
         event_value = request["event"]
-        same_id = [event for event in events if event["event_id"] == event_value.get("event_id")]
+        same_id = [
+            event
+            for event in events
+            if event["event_id"] == event_value.get("event_id")
+        ]
         before = snapshot_summary(snapshot, events_path)
         if same_id:
-            if len(same_id) == 1 and canonical_bytes(same_id[0]) == canonical_bytes(event_value):
+            if len(same_id) == 1 and canonical_bytes(same_id[0]) == canonical_bytes(
+                event_value
+            ):
                 receipt = operation_receipt(
                     operation_id,
                     "APPEND",
@@ -140,8 +165,15 @@ def append_event(store: Path, request_path: Path, receipt_path: Path, operation_
                     "NOOP",
                     before,
                     before,
-                    [artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger")],
-                    {"idempotency_key": event_value["event_id"], "reason": "identical event already committed"},
+                    [
+                        artifact_ref(
+                            events_path, "ledger-events", "TRACE", "loopx-ledger"
+                        )
+                    ],
+                    {
+                        "idempotency_key": event_value["event_id"],
+                        "reason": "identical event already committed",
+                    },
                 )
                 write_receipt(receipt_path, receipt)
                 return receipt
@@ -178,7 +210,11 @@ def append_event(store: Path, request_path: Path, receipt_path: Path, operation_
                 artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"),
                 artifact_ref(snapshot_path, "ledger-snapshot", "FILE", "loopx-ledger"),
             ],
-            {"event_id": event["event_id"], "sequence": event["sequence"], "event_digest": event["event_digest"]},
+            {
+                "event_id": event["event_id"],
+                "sequence": event["sequence"],
+                "event_digest": event["event_digest"],
+            },
         )
         write_receipt(receipt_path, receipt)
         return receipt
@@ -190,7 +226,11 @@ def verify_store(store: Path, receipt_path: Path, operation_id: str) -> dict[str
         raise ContractError("ledger has a torn tail")
     checked = existing_snapshot(store)
     events_path = store / "events.jsonl"
-    before = snapshot_summary(checked, events_path) if checked is not None else snapshot_summary(None, events_path)
+    before = (
+        snapshot_summary(checked, events_path)
+        if checked is not None
+        else snapshot_summary(None, events_path)
+    )
     if checked != snapshot:
         raise ContractError("snapshot differs from deterministic replay")
     after = snapshot_summary(snapshot, events_path)
@@ -201,14 +241,21 @@ def verify_store(store: Path, receipt_path: Path, operation_id: str) -> dict[str
         "PASS",
         before,
         after,
-        [artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"), artifact_ref(store / "snapshot.json", "ledger-snapshot", "FILE", "loopx-ledger")],
+        [
+            artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"),
+            artifact_ref(
+                store / "snapshot.json", "ledger-snapshot", "FILE", "loopx-ledger"
+            ),
+        ],
         {"full_replay": True, "snapshot_agrees": True},
     )
     write_receipt(receipt_path, receipt)
     return receipt
 
 
-def replay_to(store: Path, output: Path, receipt_path: Path, operation_id: str) -> dict[str, Any]:
+def replay_to(
+    store: Path, output: Path, receipt_path: Path, operation_id: str
+) -> dict[str, Any]:
     snapshot, _, contract, torn = replay_store(store)
     if torn is not None:
         raise ContractError("cannot replay a torn ledger")
@@ -224,19 +271,28 @@ def replay_to(store: Path, output: Path, receipt_path: Path, operation_id: str) 
         "PASS",
         summary,
         summary,
-        [artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"), artifact_ref(output, "replayed-snapshot", "FILE", "loopx-ledger")],
+        [
+            artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"),
+            artifact_ref(output, "replayed-snapshot", "FILE", "loopx-ledger"),
+        ],
         {"byte_identical_to_checked_snapshot": existing_snapshot(store) == snapshot},
     )
     write_receipt(receipt_path, receipt)
     return receipt
 
 
-def recover_store(store: Path, apply: bool, receipt_path: Path, operation_id: str) -> tuple[dict[str, Any], int]:
+def recover_store(
+    store: Path, apply: bool, receipt_path: Path, operation_id: str
+) -> tuple[dict[str, Any], int]:
     with writer_lease(store):
         snapshot, _, contract, torn = replay_store(store, allow_torn_tail=True)
         events_path = store / "events.jsonl"
         before_snapshot = existing_snapshot(store)
-        before = snapshot_summary(before_snapshot, events_path) if before_snapshot is not None else snapshot_summary(None, events_path)
+        before = (
+            snapshot_summary(before_snapshot, events_path)
+            if before_snapshot is not None
+            else snapshot_summary(None, events_path)
+        )
         if torn is None:
             receipt = operation_receipt(
                 operation_id,
@@ -279,9 +335,13 @@ def recover_store(store: Path, apply: bool, receipt_path: Path, operation_id: st
             "RECOVERED",
             before,
             after,
-            [artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"), artifact_ref(store / "snapshot.json", "ledger-snapshot", "FILE", "loopx-ledger")],
+            [
+                artifact_ref(events_path, "ledger-events", "TRACE", "loopx-ledger"),
+                artifact_ref(
+                    store / "snapshot.json", "ledger-snapshot", "FILE", "loopx-ledger"
+                ),
+            ],
             {"removed_tail": torn, "history_events_rewritten": False},
         )
         write_receipt(receipt_path, receipt)
         return receipt, OK
-
