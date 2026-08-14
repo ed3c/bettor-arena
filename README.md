@@ -229,7 +229,7 @@ Condensed sequence:
 → #101 → #68
 ```
 
-## Molecular Stack PR index
+## Git Town / molecular Stack PR index
 
 <!-- Molecular Stack PR index -->
 
