@@ -1,0 +1,44 @@
+{
+  "$id": "https://ed3c.example/loopx/worker-event.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "host_id": {
+      "enum": ["codex-cli", "claude-code", "grok-build", "opencode", "pi", "ante"]
+    },
+    "kind": {
+      "enum": [
+        "WORKER_STARTED",
+        "STDOUT_OBSERVED",
+        "STDERR_OBSERVED",
+        "ARTIFACT_OBSERVED",
+        "TOOL_EVENT_OBSERVED",
+        "LOOP_EVENT_OBSERVED",
+        "TIMEOUT_OBSERVED",
+        "CANCELLATION_OBSERVED",
+        "WORKER_EXITED",
+        "CLEANUP_OBSERVED"
+      ]
+    },
+    "observed_at": {"format": "date-time", "type": "string"},
+    "payload": {"maxProperties": 16, "type": "object"},
+    "request_id": {"pattern": "^[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "schema_version": {"const": "loopx/worker-event/v1"},
+    "sequence": {"minimum": 0, "type": "integer"},
+    "trace_completeness": {
+      "enum": ["PROCESS_ONLY", "TOOL_EVENTS", "STRUCTURED_LOOP_EVENTS"]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "host_id",
+    "sequence",
+    "observed_at",
+    "kind",
+    "trace_completeness",
+    "payload"
+  ],
+  "title": "LoopX Worker Event v1",
+  "type": "object"
+}
