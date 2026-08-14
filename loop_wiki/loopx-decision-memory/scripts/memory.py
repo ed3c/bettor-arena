@@ -7,6 +7,7 @@ updates repository documentation, advances LoopX state or performs Human Admit.
 
 Exit codes: 0 checked-clean, 2 checked refusal, 64 usage/infrastructure failure.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -37,7 +38,9 @@ class ContractError(ValueError):
 
 
 def canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
 
 
 def digest(value: Any) -> str:
@@ -98,7 +101,9 @@ def validate_subject(value: dict[str, Any]) -> None:
         raise ContractError("subject.task_id")
 
 
-def validate_retention(value: dict[str, Any], kind: str, created: datetime | None = None) -> None:
+def validate_retention(
+    value: dict[str, Any], kind: str, created: datetime | None = None
+) -> None:
     exact(value, {"max_age_seconds", "expires_at", "review_required_at"}, "retention")
     age = value["max_age_seconds"]
     if not isinstance(age, int) or not 60 <= age <= 31_536_000:
@@ -119,13 +124,34 @@ def validate_retention(value: dict[str, Any], kind: str, created: datetime | Non
 def validate_proposal(value: dict[str, Any]) -> None:
     exact(
         value,
-        {"schema_version", "proposal_id", "subject", "kind", "statement", "canonical_key", "epistemic", "evidence_refs", "scope", "retention", "privacy", "conflict", "producer"},
+        {
+            "schema_version",
+            "proposal_id",
+            "subject",
+            "kind",
+            "statement",
+            "canonical_key",
+            "epistemic",
+            "evidence_refs",
+            "scope",
+            "retention",
+            "privacy",
+            "conflict",
+            "producer",
+        },
         "proposal",
     )
     if value["schema_version"] != PROPOSAL:
         raise ContractError("proposal schema")
     validate_subject(value["subject"])
-    if value["kind"] not in {"DEAD_END", "CODEBASE_QUIRK", "HYPOTHESIS", "DECISION", "INCIDENT_POINTER", "PROJECT_PREFERENCE"}:
+    if value["kind"] not in {
+        "DEAD_END",
+        "CODEBASE_QUIRK",
+        "HYPOTHESIS",
+        "DECISION",
+        "INCIDENT_POINTER",
+        "PROJECT_PREFERENCE",
+    }:
         raise ContractError("proposal kind")
     statement = value["statement"]
     if not isinstance(statement, str) or not 8 <= len(statement) <= 4096:
@@ -135,16 +161,35 @@ def validate_proposal(value: dict[str, Any]) -> None:
     if not isinstance(value["canonical_key"], str) or len(value["canonical_key"]) < 8:
         raise ContractError("canonical_key")
     epistemic = value["epistemic"]
-    exact(epistemic, {"claim_kind", "verification", "confidence", "falsifier"}, "epistemic")
-    if epistemic["claim_kind"] not in {"OBSERVATION", "INFERENCE", "HYPOTHESIS", "NORMATIVE"}:
+    exact(
+        epistemic,
+        {"claim_kind", "verification", "confidence", "falsifier"},
+        "epistemic",
+    )
+    if epistemic["claim_kind"] not in {
+        "OBSERVATION",
+        "INFERENCE",
+        "HYPOTHESIS",
+        "NORMATIVE",
+    }:
         raise ContractError("claim_kind")
-    if epistemic["verification"] not in {"SUPPORTED", "TESTED", "CONTESTED", "UNCHECKED"}:
+    if epistemic["verification"] not in {
+        "SUPPORTED",
+        "TESTED",
+        "CONTESTED",
+        "UNCHECKED",
+    }:
         raise ContractError("verification")
     if epistemic["confidence"] not in {"LOW", "MEDIUM", "HIGH"}:
         raise ContractError("confidence")
-    if not isinstance(epistemic["falsifier"], str) or not epistemic["falsifier"].strip():
+    if (
+        not isinstance(epistemic["falsifier"], str)
+        or not epistemic["falsifier"].strip()
+    ):
         raise ContractError("falsifier")
-    if (value["kind"] == "HYPOTHESIS" or epistemic["claim_kind"] == "HYPOTHESIS") and epistemic["confidence"] == "HIGH":
+    if (
+        value["kind"] == "HYPOTHESIS" or epistemic["claim_kind"] == "HYPOTHESIS"
+    ) and epistemic["confidence"] == "HIGH":
         raise ContractError("hypothesis cannot be HIGH")
     evidence = value["evidence_refs"]
     if not isinstance(evidence, list) or not evidence:
@@ -154,11 +199,22 @@ def validate_proposal(value: dict[str, Any]) -> None:
     for index, item in enumerate(evidence):
         if not isinstance(item, dict):
             raise ContractError(f"evidence[{index}]")
-        exact(item, {"evidence_id", "kind", "digest", "locator", "subject_commit"}, f"evidence[{index}]")
+        exact(
+            item,
+            {"evidence_id", "kind", "digest", "locator", "subject_commit"},
+            f"evidence[{index}]",
+        )
         if item["evidence_id"] in ids:
             raise ContractError("duplicate evidence_id")
         ids.add(item["evidence_id"])
-        if item["kind"] not in {"SOURCE_SPAN", "TEST_RESULT", "RUNTIME_RECEIPT", "ADR", "INCIDENT", "COUNTEREXAMPLE"}:
+        if item["kind"] not in {
+            "SOURCE_SPAN",
+            "TEST_RESULT",
+            "RUNTIME_RECEIPT",
+            "ADR",
+            "INCIDENT",
+            "COUNTEREXAMPLE",
+        }:
             raise ContractError("evidence kind")
         if not isinstance(item["digest"], str) or not SHA.fullmatch(item["digest"]):
             raise ContractError("evidence digest")
@@ -181,10 +237,26 @@ def validate_proposal(value: dict[str, Any]) -> None:
         raise ContractError("scope invalidation criteria required")
     validate_retention(value["retention"], value["kind"])
     privacy = value["privacy"]
-    exact(privacy, {"classification", "contains_private_reasoning", "contains_secret_value", "redaction_state"}, "privacy")
-    if privacy["contains_private_reasoning"] is not False or privacy["contains_secret_value"] is not False:
+    exact(
+        privacy,
+        {
+            "classification",
+            "contains_private_reasoning",
+            "contains_secret_value",
+            "redaction_state",
+        },
+        "privacy",
+    )
+    if (
+        privacy["contains_private_reasoning"] is not False
+        or privacy["contains_secret_value"] is not False
+    ):
         raise ContractError("privacy boundary")
-    if privacy["classification"] not in {"PUBLIC", "INTERNAL", "SENSITIVE_POINTER_ONLY"}:
+    if privacy["classification"] not in {
+        "PUBLIC",
+        "INTERNAL",
+        "SENSITIVE_POINTER_ONLY",
+    }:
         raise ContractError("privacy classification")
     if privacy["redaction_state"] not in {"PASS", "NOT_REQUIRED"}:
         raise ContractError("redaction state")
@@ -200,26 +272,54 @@ def validate_proposal(value: dict[str, Any]) -> None:
     exact(producer, {"actor_class", "receipt_ref"}, "producer")
     if producer["actor_class"] not in {"WORKER", "GATE", "HUMAN", "SYSTEM"}:
         raise ContractError("producer actor")
-    if not isinstance(producer["receipt_ref"], str) or not SHA.fullmatch(producer["receipt_ref"]):
+    if not isinstance(producer["receipt_ref"], str) or not SHA.fullmatch(
+        producer["receipt_ref"]
+    ):
         raise ContractError("producer receipt")
 
 
 def validate_decision(value: dict[str, Any], proposal: dict[str, Any]) -> None:
-    exact(value, {"schema_version", "decision_id", "proposal_digest", "subject", "decision", "authority", "rationale_artifact_ref", "retention_override", "created_at"}, "decision")
+    exact(
+        value,
+        {
+            "schema_version",
+            "decision_id",
+            "proposal_digest",
+            "subject",
+            "decision",
+            "authority",
+            "rationale_artifact_ref",
+            "retention_override",
+            "created_at",
+        },
+        "decision",
+    )
     if value["schema_version"] != DECISION:
         raise ContractError("decision schema")
     validate_subject(value["subject"])
-    if value["subject"] != proposal["subject"] or value["proposal_digest"] != digest(proposal):
+    if value["subject"] != proposal["subject"] or value["proposal_digest"] != digest(
+        proposal
+    ):
         raise ContractError("decision subject/proposal mismatch")
     if value["decision"] not in {"ADMIT", "REJECT", "DEFER", "CONFLICT"}:
         raise ContractError("decision")
     authority = value["authority"]
-    exact(authority, {"kind", "signer_id", "authority_receipt_ref"}, "decision.authority")
-    if authority["kind"] != "HUMAN" or not isinstance(authority["signer_id"], str) or len(authority["signer_id"]) < 3:
+    exact(
+        authority, {"kind", "signer_id", "authority_receipt_ref"}, "decision.authority"
+    )
+    if (
+        authority["kind"] != "HUMAN"
+        or not isinstance(authority["signer_id"], str)
+        or len(authority["signer_id"]) < 3
+    ):
         raise ContractError("Human authority required")
-    if not isinstance(authority["authority_receipt_ref"], str) or not SHA.fullmatch(authority["authority_receipt_ref"]):
+    if not isinstance(authority["authority_receipt_ref"], str) or not SHA.fullmatch(
+        authority["authority_receipt_ref"]
+    ):
         raise ContractError("authority receipt")
-    if not isinstance(value["rationale_artifact_ref"], str) or not SHA.fullmatch(value["rationale_artifact_ref"]):
+    if not isinstance(value["rationale_artifact_ref"], str) or not SHA.fullmatch(
+        value["rationale_artifact_ref"]
+    ):
         raise ContractError("rationale artifact")
     created = timestamp(value["created_at"], "decision.created_at")
     if value["retention_override"] is not None:
@@ -232,7 +332,9 @@ def stable_id(canonical_key: str) -> str:
     return "memory-" + hashlib.sha256(canonical_key.encode("utf-8")).hexdigest()[:16]
 
 
-def compile_capsule(proposal: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
+def compile_capsule(
+    proposal: dict[str, Any], decision: dict[str, Any]
+) -> dict[str, Any]:
     validate_proposal(proposal)
     validate_decision(decision, proposal)
     if decision["decision"] not in {"ADMIT", "CONFLICT"}:
@@ -240,7 +342,11 @@ def compile_capsule(proposal: dict[str, Any], decision: dict[str, Any]) -> dict[
     retention = decision["retention_override"] or proposal["retention"]
     created = timestamp(decision["created_at"], "decision.created_at")
     validate_retention(retention, proposal["kind"], created)
-    contested = decision["decision"] == "CONFLICT" or proposal["conflict"]["state"] == "OPEN" or proposal["epistemic"]["verification"] == "CONTESTED"
+    contested = (
+        decision["decision"] == "CONFLICT"
+        or proposal["conflict"]["state"] == "OPEN"
+        or proposal["epistemic"]["verification"] == "CONTESTED"
+    )
     capsule = {
         "schema_version": CAPSULE,
         "stable_id": stable_id(proposal["canonical_key"]),
@@ -256,33 +362,101 @@ def compile_capsule(proposal: dict[str, Any], decision: dict[str, Any]) -> dict[
         "scope": proposal["scope"],
         "retention": retention,
         "privacy": proposal["privacy"],
-        "conflict": {"state": "OPEN" if contested else "NONE", "known_conflicts": proposal["conflict"]["known_conflicts"], "current_repository_wins": True},
-        "decision_ref": {"decision_id": decision["decision_id"], "decision_digest": digest(decision), "authority_receipt_ref": decision["authority"]["authority_receipt_ref"]},
+        "conflict": {
+            "state": "OPEN" if contested else "NONE",
+            "known_conflicts": proposal["conflict"]["known_conflicts"],
+            "current_repository_wins": True,
+        },
+        "decision_ref": {
+            "decision_id": decision["decision_id"],
+            "decision_digest": digest(decision),
+            "authority_receipt_ref": decision["authority"]["authority_receipt_ref"],
+        },
         "projections": [
-            {"provider": "mem0", "state": "NOT_CONFIGURED", "authority": "REBUILDABLE_CACHE"},
-            {"provider": "vector", "state": "NOT_CONFIGURED", "authority": "REBUILDABLE_CACHE"},
-            {"provider": "graph", "state": "NOT_CONFIGURED", "authority": "REBUILDABLE_CACHE"}
+            {
+                "provider": "mem0",
+                "state": "NOT_CONFIGURED",
+                "authority": "REBUILDABLE_CACHE",
+            },
+            {
+                "provider": "vector",
+                "state": "NOT_CONFIGURED",
+                "authority": "REBUILDABLE_CACHE",
+            },
+            {
+                "provider": "graph",
+                "state": "NOT_CONFIGURED",
+                "authority": "REBUILDABLE_CACHE",
+            },
         ],
-        "authority": {"canonical_store": "LOOPX_MEMORY_LEDGER", "state_writer": "TRUSTED_REDUCER", "model_write": False, "persisted": False},
-        "created_at": decision["created_at"]
+        "authority": {
+            "canonical_store": "LOOPX_MEMORY_LEDGER",
+            "state_writer": "TRUSTED_REDUCER",
+            "model_write": False,
+            "persisted": False,
+        },
+        "created_at": decision["created_at"],
     }
     validate_capsule(capsule, proposal, decision)
     return capsule
 
 
-def validate_capsule(value: dict[str, Any], proposal: dict[str, Any] | None = None, decision: dict[str, Any] | None = None) -> None:
-    exact(value, {"schema_version", "stable_id", "canonical_key", "revision", "status", "proposal_digest", "subject", "kind", "statement", "epistemic", "evidence_refs", "scope", "retention", "privacy", "conflict", "decision_ref", "projections", "authority", "created_at"}, "capsule")
-    if value["schema_version"] != CAPSULE or value["stable_id"] != stable_id(value["canonical_key"]):
+def validate_capsule(
+    value: dict[str, Any],
+    proposal: dict[str, Any] | None = None,
+    decision: dict[str, Any] | None = None,
+) -> None:
+    exact(
+        value,
+        {
+            "schema_version",
+            "stable_id",
+            "canonical_key",
+            "revision",
+            "status",
+            "proposal_digest",
+            "subject",
+            "kind",
+            "statement",
+            "epistemic",
+            "evidence_refs",
+            "scope",
+            "retention",
+            "privacy",
+            "conflict",
+            "decision_ref",
+            "projections",
+            "authority",
+            "created_at",
+        },
+        "capsule",
+    )
+    if value["schema_version"] != CAPSULE or value["stable_id"] != stable_id(
+        value["canonical_key"]
+    ):
         raise ContractError("capsule identity")
     validate_subject(value["subject"])
     if value["status"] not in {"CANDIDATE_ACTIVE", "CANDIDATE_CONTESTED"}:
         raise ContractError("capsule status")
     authority = value["authority"]
-    exact(authority, {"canonical_store", "state_writer", "model_write", "persisted"}, "capsule.authority")
-    if authority != {"canonical_store": "LOOPX_MEMORY_LEDGER", "state_writer": "TRUSTED_REDUCER", "model_write": False, "persisted": False}:
+    exact(
+        authority,
+        {"canonical_store", "state_writer", "model_write", "persisted"},
+        "capsule.authority",
+    )
+    if authority != {
+        "canonical_store": "LOOPX_MEMORY_LEDGER",
+        "state_writer": "TRUSTED_REDUCER",
+        "model_write": False,
+        "persisted": False,
+    }:
         raise ContractError("capsule authority escalation")
     conflict = value["conflict"]
-    exact(conflict, {"state", "known_conflicts", "current_repository_wins"}, "capsule.conflict")
+    exact(
+        conflict,
+        {"state", "known_conflicts", "current_repository_wins"},
+        "capsule.conflict",
+    )
     if conflict["current_repository_wins"] is not True:
         raise ContractError("memory cannot outrank repository")
     if value["status"] == "CANDIDATE_CONTESTED" and conflict["state"] != "OPEN":
@@ -295,27 +469,57 @@ def validate_capsule(value: dict[str, Any], proposal: dict[str, Any] | None = No
         exact(projection, {"provider", "state", "authority"}, "projection")
         if projection["authority"] != "REBUILDABLE_CACHE":
             raise ContractError("projection became canonical")
-    if proposal is not None and (value["proposal_digest"] != digest(proposal) or value["subject"] != proposal["subject"]):
+    if proposal is not None and (
+        value["proposal_digest"] != digest(proposal)
+        or value["subject"] != proposal["subject"]
+    ):
         raise ContractError("capsule proposal mismatch")
-    if decision is not None and value["decision_ref"]["decision_digest"] != digest(decision):
+    if decision is not None and value["decision_ref"]["decision_digest"] != digest(
+        decision
+    ):
         raise ContractError("capsule decision mismatch")
 
 
 def validate_deletion(value: dict[str, Any]) -> None:
-    exact(value, {"schema_version", "capsule_id", "subject", "deletion_event_ref", "authority", "projections", "deleted_at"}, "deletion")
-    if value["schema_version"] != DELETION or not re.fullmatch(r"memory-[0-9a-f]{16}", value["capsule_id"]):
+    exact(
+        value,
+        {
+            "schema_version",
+            "capsule_id",
+            "subject",
+            "deletion_event_ref",
+            "authority",
+            "projections",
+            "deleted_at",
+        },
+        "deletion",
+    )
+    if value["schema_version"] != DELETION or not re.fullmatch(
+        r"memory-[0-9a-f]{16}", value["capsule_id"]
+    ):
         raise ContractError("deletion identity")
     validate_subject(value["subject"])
-    if not isinstance(value["deletion_event_ref"], str) or not SHA.fullmatch(value["deletion_event_ref"]):
+    if not isinstance(value["deletion_event_ref"], str) or not SHA.fullmatch(
+        value["deletion_event_ref"]
+    ):
         raise ContractError("deletion event")
     authority = value["authority"]
-    exact(authority, {"kind", "signer_id", "authority_receipt_ref"}, "deletion.authority")
-    if authority["kind"] != "HUMAN" or not isinstance(authority["authority_receipt_ref"], str) or not SHA.fullmatch(authority["authority_receipt_ref"]):
+    exact(
+        authority, {"kind", "signer_id", "authority_receipt_ref"}, "deletion.authority"
+    )
+    if (
+        authority["kind"] != "HUMAN"
+        or not isinstance(authority["authority_receipt_ref"], str)
+        or not SHA.fullmatch(authority["authority_receipt_ref"])
+    ):
         raise ContractError("deletion Human authority")
     timestamp(value["deleted_at"], "deleted_at")
     for projection in value["projections"]:
         exact(projection, {"provider", "state", "residue_count"}, "deletion projection")
-        if projection["state"] in {"PASS", "NOT_CONFIGURED"} and projection["residue_count"] != 0:
+        if (
+            projection["state"] in {"PASS", "NOT_CONFIGURED"}
+            and projection["residue_count"] != 0
+        ):
             raise ContractError("projection deletion residue")
 
 
@@ -342,11 +546,24 @@ def check_contracts() -> list[str]:
             failures.append(str(exc))
     try:
         manifest = load(root() / "contracts/manifest.json")
-        exact(manifest, {"schema_version", "memory_proposal_schema", "memory_capsule_schema", "admission_decision_schema", "deletion_receipt_schema"}, "manifest")
+        exact(
+            manifest,
+            {
+                "schema_version",
+                "memory_proposal_schema",
+                "memory_capsule_schema",
+                "admission_decision_schema",
+                "deletion_receipt_schema",
+            },
+            "manifest",
+        )
         if manifest["schema_version"] != "loopx/decision-memory-contract-manifest/v1":
             failures.append("manifest schema")
         for key, relative_path in manifest.items():
-            if key.endswith("_schema") and not (root() / "contracts" / relative_path).is_file():
+            if (
+                key.endswith("_schema")
+                and not (root() / "contracts" / relative_path).is_file()
+            ):
                 failures.append(f"manifest missing: {relative_path}")
     except (ContractError, OSError) as exc:
         failures.append(str(exc))
@@ -356,8 +573,19 @@ def check_contracts() -> list[str]:
 def good_bundle() -> tuple[dict[str, Any], dict[str, Any]]:
     created = datetime(2026, 8, 14, 0, 0, tzinfo=timezone.utc)
     commit = "1" * 40
-    subject = {"repository": "ed3c/bettor-arena", "commit": commit, "tree": "2" * 40, "task_id": "decision-memory-fixture"}
-    retention = {"max_age_seconds": 604800, "expires_at": (created + timedelta(days=7)).isoformat().replace("+00:00", "Z"), "review_required_at": (created + timedelta(days=3)).isoformat().replace("+00:00", "Z")}
+    subject = {
+        "repository": "ed3c/bettor-arena",
+        "commit": commit,
+        "tree": "2" * 40,
+        "task_id": "decision-memory-fixture",
+    }
+    retention = {
+        "max_age_seconds": 604800,
+        "expires_at": (created + timedelta(days=7)).isoformat().replace("+00:00", "Z"),
+        "review_required_at": (created + timedelta(days=3))
+        .isoformat()
+        .replace("+00:00", "Z"),
+    }
     proposal = {
         "schema_version": PROPOSAL,
         "proposal_id": "proposal-dead-end-001",
@@ -365,16 +593,51 @@ def good_bundle() -> tuple[dict[str, Any], dict[str, Any]]:
         "kind": "DEAD_END",
         "statement": "The attempted direct import violates the public module boundary for this exact subject.",
         "canonical_key": "DEAD_END|public-module-boundary|src/example.py|" + commit,
-        "epistemic": {"claim_kind": "OBSERVATION", "verification": "TESTED", "confidence": "HIGH", "falsifier": "A current exact-subject control demonstrates the import through an admitted public port."},
+        "epistemic": {
+            "claim_kind": "OBSERVATION",
+            "verification": "TESTED",
+            "confidence": "HIGH",
+            "falsifier": "A current exact-subject control demonstrates the import through an admitted public port.",
+        },
         "evidence_refs": [
-            {"evidence_id": "EV-test-public-boundary", "kind": "TEST_RESULT", "digest": "sha256:" + "3" * 64, "locator": "tests/test_boundary.py::test_private_import_rejected", "subject_commit": commit},
-            {"evidence_id": "EV-source-public-port", "kind": "SOURCE_SPAN", "digest": "sha256:" + "4" * 64, "locator": "loopctl/contract.json#public-port", "subject_commit": commit}
+            {
+                "evidence_id": "EV-test-public-boundary",
+                "kind": "TEST_RESULT",
+                "digest": "sha256:" + "3" * 64,
+                "locator": "tests/test_boundary.py::test_private_import_rejected",
+                "subject_commit": commit,
+            },
+            {
+                "evidence_id": "EV-source-public-port",
+                "kind": "SOURCE_SPAN",
+                "digest": "sha256:" + "4" * 64,
+                "locator": "loopctl/contract.json#public-port",
+                "subject_commit": commit,
+            },
         ],
-        "scope": {"valid_from_commit": commit, "paths": ["src/example.py"], "symbols": ["example.private_import"], "invalidated_by": ["module interface change", "public port change", "test contract change"]},
+        "scope": {
+            "valid_from_commit": commit,
+            "paths": ["src/example.py"],
+            "symbols": ["example.private_import"],
+            "invalidated_by": [
+                "module interface change",
+                "public port change",
+                "test contract change",
+            ],
+        },
         "retention": retention,
-        "privacy": {"classification": "INTERNAL", "contains_private_reasoning": False, "contains_secret_value": False, "redaction_state": "PASS"},
-        "conflict": {"state": "NONE", "known_conflicts": [], "current_repository_wins": True},
-        "producer": {"actor_class": "GATE", "receipt_ref": "sha256:" + "5" * 64}
+        "privacy": {
+            "classification": "INTERNAL",
+            "contains_private_reasoning": False,
+            "contains_secret_value": False,
+            "redaction_state": "PASS",
+        },
+        "conflict": {
+            "state": "NONE",
+            "known_conflicts": [],
+            "current_repository_wins": True,
+        },
+        "producer": {"actor_class": "GATE", "receipt_ref": "sha256:" + "5" * 64},
     }
     decision = {
         "schema_version": DECISION,
@@ -382,10 +645,14 @@ def good_bundle() -> tuple[dict[str, Any], dict[str, Any]]:
         "proposal_digest": digest(proposal),
         "subject": subject,
         "decision": "ADMIT",
-        "authority": {"kind": "HUMAN", "signer_id": "reviewer-fixture", "authority_receipt_ref": "sha256:" + "6" * 64},
+        "authority": {
+            "kind": "HUMAN",
+            "signer_id": "reviewer-fixture",
+            "authority_receipt_ref": "sha256:" + "6" * 64,
+        },
         "rationale_artifact_ref": "sha256:" + "7" * 64,
         "retention_override": None,
-        "created_at": created.isoformat().replace("+00:00", "Z")
+        "created_at": created.isoformat().replace("+00:00", "Z"),
     }
     return proposal, decision
 
@@ -396,7 +663,10 @@ def selftest() -> None:
         raise ContractError(f"contract baseline failed: {failures}")
     proposal, decision = good_bundle()
     capsule = compile_capsule(proposal, decision)
-    if capsule["status"] != "CANDIDATE_ACTIVE" or capsule["authority"]["persisted"] is not False:
+    if (
+        capsule["status"] != "CANDIDATE_ACTIVE"
+        or capsule["authority"]["persisted"] is not False
+    ):
         raise ContractError("positive capsule failed")
     mutations = 0
 
@@ -409,18 +679,45 @@ def selftest() -> None:
             return
         raise ContractError("proposal mutation accepted")
 
-    value = copy.deepcopy(proposal); value["private_reasoning"] = "hidden"; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["statement"] = "chain-of-thought: hidden"; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["evidence_refs"] = []; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["conflict"]["current_repository_wins"] = False; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["scope"]["paths"] = ["../escape"]; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["epistemic"]["verification"] = "TESTED"; value["evidence_refs"] = [value["evidence_refs"][1]]; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["kind"] = "HYPOTHESIS"; value["epistemic"]["claim_kind"] = "HYPOTHESIS"; value["epistemic"]["confidence"] = "HIGH"; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["kind"] = "HYPOTHESIS"; value["epistemic"]["claim_kind"] = "HYPOTHESIS"; value["epistemic"]["confidence"] = "LOW"; value["retention"]["max_age_seconds"] = 31536000; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["evidence_refs"][0]["subject_commit"] = "9" * 40; reject_proposal(value)
-    value = copy.deepcopy(proposal); value["privacy"]["contains_secret_value"] = True; reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["private_reasoning"] = "hidden"
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["statement"] = "chain-of-thought: hidden"
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["evidence_refs"] = []
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["conflict"]["current_repository_wins"] = False
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["scope"]["paths"] = ["../escape"]
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["epistemic"]["verification"] = "TESTED"
+    value["evidence_refs"] = [value["evidence_refs"][1]]
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["kind"] = "HYPOTHESIS"
+    value["epistemic"]["claim_kind"] = "HYPOTHESIS"
+    value["epistemic"]["confidence"] = "HIGH"
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["kind"] = "HYPOTHESIS"
+    value["epistemic"]["claim_kind"] = "HYPOTHESIS"
+    value["epistemic"]["confidence"] = "LOW"
+    value["retention"]["max_age_seconds"] = 31536000
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["evidence_refs"][0]["subject_commit"] = "9" * 40
+    reject_proposal(value)
+    value = copy.deepcopy(proposal)
+    value["privacy"]["contains_secret_value"] = True
+    reject_proposal(value)
 
-    bad_decision = copy.deepcopy(decision); bad_decision["authority"]["kind"] = "MODEL"
+    bad_decision = copy.deepcopy(decision)
+    bad_decision["authority"]["kind"] = "MODEL"
     try:
         validate_decision(bad_decision, proposal)
     except ContractError:
@@ -428,7 +725,8 @@ def selftest() -> None:
     else:
         raise ContractError("model authority accepted")
 
-    bad_decision = copy.deepcopy(decision); bad_decision["proposal_digest"] = "sha256:" + "0" * 64
+    bad_decision = copy.deepcopy(decision)
+    bad_decision["proposal_digest"] = "sha256:" + "0" * 64
     try:
         validate_decision(bad_decision, proposal)
     except ContractError:
@@ -436,7 +734,8 @@ def selftest() -> None:
     else:
         raise ContractError("proposal digest drift accepted")
 
-    rejected = copy.deepcopy(decision); rejected["decision"] = "REJECT"
+    rejected = copy.deepcopy(decision)
+    rejected["decision"] = "REJECT"
     try:
         compile_capsule(proposal, rejected)
     except ContractError:
@@ -445,7 +744,11 @@ def selftest() -> None:
         raise ContractError("rejected proposal compiled")
 
     conflict_proposal = copy.deepcopy(proposal)
-    conflict_proposal["conflict"] = {"state": "OPEN", "known_conflicts": ["ADR-42"], "current_repository_wins": True}
+    conflict_proposal["conflict"] = {
+        "state": "OPEN",
+        "known_conflicts": ["ADR-42"],
+        "current_repository_wins": True,
+    }
     conflict_proposal["epistemic"]["verification"] = "CONTESTED"
     conflict_decision = copy.deepcopy(decision)
     conflict_decision["proposal_digest"] = digest(conflict_proposal)
@@ -482,9 +785,16 @@ def selftest() -> None:
         "capsule_id": capsule["stable_id"],
         "subject": proposal["subject"],
         "deletion_event_ref": "sha256:" + "8" * 64,
-        "authority": {"kind": "HUMAN", "signer_id": "reviewer-fixture", "authority_receipt_ref": "sha256:" + "9" * 64},
-        "projections": [{"provider": "mem0", "state": "NOT_CONFIGURED", "residue_count": 0}, {"provider": "vector", "state": "PASS", "residue_count": 0}],
-        "deleted_at": "2026-08-21T00:00:00Z"
+        "authority": {
+            "kind": "HUMAN",
+            "signer_id": "reviewer-fixture",
+            "authority_receipt_ref": "sha256:" + "9" * 64,
+        },
+        "projections": [
+            {"provider": "mem0", "state": "NOT_CONFIGURED", "residue_count": 0},
+            {"provider": "vector", "state": "PASS", "residue_count": 0},
+        ],
+        "deleted_at": "2026-08-21T00:00:00Z",
     }
     validate_deletion(deletion)
     deletion["projections"][1]["residue_count"] = 1
@@ -499,9 +809,13 @@ def selftest() -> None:
         raise ContractError(f"mutation count too low: {mutations}")
     with tempfile.TemporaryDirectory(prefix="loopx-decision-memory.") as temp:
         output = Path(temp) / "capsule.json"
-        output.write_text(json.dumps(capsule, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        output.write_text(
+            json.dumps(capsule, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         validate_capsule(load(output), proposal, decision)
-    print(f"loopx-decision-memory selftest PASS: 1 positive, {mutations} mutations/controls")
+    print(
+        f"loopx-decision-memory selftest PASS: 1 positive, {mutations} mutations/controls"
+    )
 
 
 def main() -> int:
@@ -538,7 +852,9 @@ def main() -> int:
         decision = load(args.decision)
         capsule = compile_capsule(proposal, decision)
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(capsule, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        args.output.write_text(
+            json.dumps(capsule, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         print(f"loopx-decision-memory candidate capsule WROTE {args.output}")
         return 0
     except ContractError as exc:
