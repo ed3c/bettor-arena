@@ -1,0 +1,64 @@
+{
+  "adapter_id": "codex-cli",
+  "content_digest": "sha256:e452abfd25d07bd8ff0cf1ac0ab44e6b825fb90a0984cf791af03c17d837f790",
+  "context": {
+    "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "entry_files": [
+      "AGENTS.md"
+    ]
+  },
+  "credential_refs": [],
+  "host_id": "codex-cli",
+  "policy": {
+    "env_allowlist": [
+      "CI"
+    ],
+    "max_output_bytes": 1048576,
+    "max_processes": 4,
+    "network": "HOST_POLICY",
+    "require_process_group": true,
+    "timeout_ms": 30000
+  },
+  "request_id": "fixture-codex-not-exercised",
+  "schema_version": "loopx/worker-request/v1",
+  "skill": {
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "name": "harness-wiki",
+    "source_ref": ".agents/skills/harness-wiki/SKILL.md"
+  },
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-worker-gateway",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "task": {
+    "expected_artifacts": [
+      "STDOUT",
+      "STDERR",
+      "GIT_DIFF",
+      "WORKER_EVENT",
+      "CLEANUP_REPORT"
+    ],
+    "mode": "EDIT",
+    "prompt_ref": {
+      "artifact_id": "fixture-prompt",
+      "bytes": 20,
+      "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "kind": "FILE",
+      "media_type": "text/markdown",
+      "path": "fixtures/prompt.md",
+      "producer": "fixture-builder"
+    }
+  },
+  "workspace": {
+    "cleanup": "REQUIRED",
+    "lease_id": "fixture-lease",
+    "read_only_paths": [
+      "AGENTS.md"
+    ],
+    "writable_paths": [
+      "artifacts/fixture.txt"
+    ]
+  }
+}

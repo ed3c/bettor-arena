@@ -1,0 +1,32 @@
+{
+  "adapter_entry": "adapters/unimplemented.py",
+  "adapter_id": "ante",
+  "binary": "ante",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": false,
+    "offline": true,
+    "session_resume": true,
+    "streaming": true,
+    "structured_output": true
+  },
+  "classification": "EXPERIMENTAL_GRAY_BOX",
+  "content_digest": "sha256:353b8c5ec5e6e29093f97b968932b023899d3e96a84b1bbb7ee1d21d40838125",
+  "host_id": "ante",
+  "implementation_state": "NOT_IMPLEMENTED",
+  "instruction_routes": [
+    "AGENTS.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    ".ante/skills",
+    ".agents/skills",
+    ".claude/skills"
+  ],
+  "source_identity": null,
+  "trace_ceiling": "PROCESS_ONLY",
+  "transport": "JSONL",
+  "version_argv": [
+    "--version"
+  ]
+}
