@@ -1,0 +1,283 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/knowledge/codeop-plan/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Operations with an exact target, a precondition, a validation and a rollback.",
+  "properties": {
+    "notes_subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_diff_shape": {
+            "additionalProperties": false,
+            "properties": {
+              "added_symbols": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "max_changed_files": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "removed_symbols": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "renamed_symbols": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "added_symbols",
+              "max_changed_files",
+              "removed_symbols",
+              "renamed_symbols"
+            ],
+            "type": "object"
+          },
+          "intent": {
+            "enum": [
+              "CREATE",
+              "UPDATE",
+              "DELETE",
+              "RENAME"
+            ]
+          },
+          "op_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "precondition": {
+            "additionalProperties": false,
+            "properties": {
+              "expression": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "PATH_ABSENT",
+                  "PATH_PRESENT",
+                  "DIGEST_EQUALS"
+                ]
+              }
+            },
+            "required": [
+              "expression",
+              "kind"
+            ],
+            "type": "object"
+          },
+          "provenance": {
+            "additionalProperties": false,
+            "properties": {
+              "assertion_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "locators": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "source_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "assertion_ids",
+              "locators",
+              "source_ids"
+            ],
+            "type": "object"
+          },
+          "public_interface_change": {
+            "type": "boolean"
+          },
+          "requirement_ids": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "rollback": {
+            "additionalProperties": false,
+            "properties": {
+              "detail": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "DELETE_CREATED",
+                  "RESTORE_DIGEST",
+                  "RENAME_BACK"
+                ]
+              }
+            },
+            "required": [
+              "detail",
+              "kind"
+            ],
+            "type": "object"
+          },
+          "target": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "selector": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "selector_kind": {
+                "enum": [
+                  "FILE",
+                  "SYMBOL",
+                  "REGION"
+                ]
+              }
+            },
+            "required": [
+              "path",
+              "selector",
+              "selector_kind"
+            ],
+            "type": "object"
+          },
+          "validation": {
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "expect_exit_code": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "command",
+              "expect_exit_code"
+            ],
+            "type": "object"
+          },
+          "version_decision": {
+            "enum": [
+              "NONE",
+              "PATCH",
+              "MINOR",
+              "MAJOR"
+            ]
+          }
+        },
+        "required": [
+          "expected_diff_shape",
+          "intent",
+          "op_id",
+          "precondition",
+          "provenance",
+          "public_interface_change",
+          "requirement_ids",
+          "rollback",
+          "target",
+          "validation",
+          "version_decision"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "output_lease": {
+      "additionalProperties": false,
+      "properties": {
+        "lease_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "output_root": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "writable_paths": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "lease_id",
+        "output_root",
+        "writable_paths"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/knowledge-codeop-plan/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "notes_subject",
+    "operations",
+    "output_lease"
+  ],
+  "title": "Knowledge compiler code-operation plan",
+  "type": "object"
+}
