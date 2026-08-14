@@ -1,0 +1,38 @@
+{
+  "schema_version": "knowledge-provider-eval-case/v1",
+  "id": "graph-provider-impact",
+  "family": "graph",
+  "capability": "graph.impact",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  },
+  "query": {
+    "text": "identify the module and public contracts affected by changing provider authority rules",
+    "path_scope": [".arena", "docs", "scripts"]
+  },
+  "query_digest": "sha256:50b2232e6fa9ee7db15f17daae9539c6066fdb9ffda0da7753f9b661d4f0409f",
+  "participants": ["exact-search-control", "code-graph-rag"],
+  "oracle": {
+    "relevant_ids": ["knowledge-provider-module"],
+    "must_remain_unknown": ["runtime-provider-health"]
+  },
+  "hard_gates": {
+    "source_readback_required": true,
+    "fresh_index_required": true,
+    "candidate_only": true,
+    "no_authority_escalation": true,
+    "cleanup_required": true,
+    "min_verified_precision": 1.0,
+    "min_verified_recall": 1.0
+  },
+  "budgets": {
+    "max_results": 20,
+    "max_context_bytes": 65536,
+    "max_latency_ms": 20000,
+    "max_tool_calls": 10
+  },
+  "eligible_recommendations": ["EXPERIMENTAL"],
+  "fixture_subject": true
+}

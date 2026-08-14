@@ -1,0 +1,8 @@
+{
+  "id": "mem0",
+  "kind": "provider",
+  "families": ["memory"],
+  "identity_digest": "sha256:2e7573d1891fb5687c4d8b119cfb5093645d36f332582590829d5fa94146bc50",
+  "manifest_digest": "sha256:7673717102bca52643fc0cc8ea3de6f5365cfd641801c1aa382ff6d329201289",
+  "human_admit_required": true
+}

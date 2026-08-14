@@ -1,0 +1,55 @@
+name: Knowledge provider admission evals
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'docs/knowledge-providers/**'
+      - 'scripts/check_knowledge_providers.py'
+      - 'scripts/evaluate_knowledge_providers.py'
+      - 'scripts/check_knowledge_provider_module.py'
+      - 'scripts/knowledge_provider_eval_*.py'
+      - 'tests/knowledge-provider-evals/**'
+      - 'tests/test_knowledge_provider_evals.py'
+      - '.arena/modules/knowledge-providers/**'
+      - '.arena/contexts/knowledge-providers.json'
+      - '.github/workflows/knowledge-provider-evals.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/knowledge-providers/**'
+      - 'scripts/check_knowledge_providers.py'
+      - 'scripts/evaluate_knowledge_providers.py'
+      - 'scripts/check_knowledge_provider_module.py'
+      - 'scripts/knowledge_provider_eval_*.py'
+      - 'tests/knowledge-provider-evals/**'
+      - 'tests/test_knowledge_provider_evals.py'
+      - '.arena/modules/knowledge-providers/**'
+      - '.arena/contexts/knowledge-providers.json'
+      - '.github/workflows/knowledge-provider-evals.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: knowledge-provider-evals-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evals:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate provider contracts and admission evals
+        run: sh tests/knowledge-provider-evals/run-all.sh
+      - name: Run Python test wrapper
+        run: python3 -m unittest -q tests/test_knowledge_provider_evals.py
