@@ -1,5 +1,5 @@
 {
-  "content_sha256": "aa8c1f6c0a72756cd52cfc429440acfea6f607994192b80139844de8337d45ba",
+  "content_sha256": "5c8b61ccd576528b79b2bebe95f0e546031fd5179a59ea8ae39afeb9d532ffa2",
   "contexts": [
     {
       "common": [
@@ -396,7 +396,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "bac373f2acd5ef1395630246bda401fecd9eec5dc7827c1c894a5e99ebcf577a",
+      "context_sha256": "925dcb1c09985abaaa57bdd4d668b79b26421f102ed547b1b817815ef6741655",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -450,7 +450,7 @@
           "path": "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md"
         },
         {
-          "blob": "0aa80724bebb7e7542a53981666a50875b5c738f",
+          "blob": "3b6be917feed3adf0bfbd5e65e8d067c414b768b",
           "mode": "100644",
           "path": "docs/architecture/STATE_MACHINES.md"
         },
