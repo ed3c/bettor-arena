@@ -2,273 +2,226 @@
 
 ## Authority
 
-GitHub base/head/state/check metadata is publication truth. This document is a snapshot and must be refreshed whenever a PR base, head, state, mergeability, check or reachability changes.
+GitHub base/head/state/check metadata is publication truth. This document is a reviewed topology guide. The strict completion order is machine-owned by [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json).
 
 ```text
-observed_at: 2026-08-14T09:33:48Z
-main: 10380005fa485d6035539589c01b9f740acff15d
+queue base: 844b7121789e57ebe00f1a07a67b27c1542cf05b
+program: #61
+index task: #102
+active: #82
+convergence: #68
 canonical shared method:
   ed3c/skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1
   skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-No Git Town executable or `.git-town.toml` is admitted. The graph below is derived from GitHub metadata, not `git town` output.
+No Git Town executable or `.git-town.toml` is admitted. The graph is derived from GitHub metadata and repository policy, not `git town` output.
 
 ## Relation vocabulary
 
 ```text
-sibling
-  independent, path-disjoint leaves based on the same settled subject
+ROOT
+  first active terminal from admitted main
 
-true child
+ROOT_AFTER_PREDECESSOR
+  path-disjoint work created from the updated main after the previous queue item lands
+
+TRUE_CHILD
   consumes unmerged parent bytes and targets the parent branch
 
-terminal
+TERMINAL
   one reviewable behavior plus positive/control/mutation evidence
 
-convergence
-  owns shared composition, generated indexes, live matrix and final acceptance
-
-merged-to-parent
-  child bytes entered a feature parent but are not reachable from main
-
-superseded candidate
-  historical or duplicate implementation that must not be merged as-is
+CONVERGENCE
+  owns shared composition, generated indexes, live matrix, release and rollback
 ```
 
-## Documentation and Git governance Stack
+Queue order serializes completion. It does not turn every future branch into a true child.
+
+## Current-main foundation
 
 ```text
-main @ 10380005fa485d6035539589c01b9f740acff15d
-└─ PR #60 feat/pdf-loopx-modular-verifier-v1
-   head ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-   OPEN / mergeable / exact-head checks PASS
-   └─ PR #81 feat/git-town-stack-governance-v1
-      issue #80; true-child terminal
-      observed head 857b6239b5faaff12910b37b73c32e5121b4f291
-      OPEN DRAFT / MERGEABLE
-      Modular contracts PASS; focused Git Town job skipped while Draft
+main
+└─ PR #74 LoopX Contract v1                       MERGED_TO_MAIN
+   ├─ PR #75 append-only Ledger/reducer           MERGED_TO_MAIN through #74
+   ├─ PR #76 host-neutral Worker Gateway          MERGED_TO_MAIN through #74
+   ├─ PR #78 Decision Memory contracts            MERGED_TO_MAIN through #74
+   └─ PR #79 Code Truth Graph v2                  MERGED_TO_MAIN through #74
 ```
 
-Issue #80 changes the same routed root documentation introduced by #60, so it is a true child rather than a path-overlapping sibling.
-
-## LoopX Contract and terminal candidate Stack
-
-```text
-main @ ea8c4a101bcf44ffe54c78ef53da583afa9efad2
-└─ PR #74 feat/loopx-contract-v1
-   issue #62
-   head 0731b667d0832c49b7844d7a2788c435518a654f
-   MERGED_TO_MAIN at d194df1ad7a9e114dab1952d2be57fdf86b7b44d
-   checks at that head:
-     Modular contracts                  PASS
-     PDF Harness integration audit      PASS
-     LoopX Contract v1                  PASS
-     LoopX Ledger v1                    PASS
-     knowledge-provider gates           PASS
-   │
-   ├─ PR #75 feat/loopx-ledger-v1
-   │  issue #63
-   │  head 8fa52730754c49da3128474423ddbc75007c5ae4
-   │  MERGED_TO_MAIN via #74
-   │
-   ├─ PR #76 feat/loopx-worker-gateway-v1
-   │  issue #64
-   │  head 4ebdfdfb0e20b9177b2e11834c49af41b3bbd228
-   │  MERGED_TO_MAIN via #74
-   │
-   ├─ PR #77 feat/loopx-worker-gateway-terminal-v1
-   │  issue #64
-   │  head fa2c120ee573c1991ef60e0b8ac3dee3c645f92e
-   │  SUPERSEDED_CANDIDATE — closed unmerged; see the duplicate record below
-   │
-   ├─ PR #78 feat/loopx-decision-memory-v1
-   │  issue #42
-   │  head 1f0eb3acef73b9b22bf71f886a28b5363a09cc9c
-   │  MERGED_TO_MAIN via #74
-   │
-   └─ PR #79 feat/loopx-code-truth-graph-v2
-      issue #69
-      head 966e74fa11fac99b4a0eeb5cf8c7d80aeaa8d10c
-      MERGED_TO_MAIN via #74
-```
-
-Every child here landed into `feat/loopx-contract-v1` first and reached `main`
-only when #74 itself merged. A child reporting `merged=true` against a feature
-parent stays `NOT_ON_MAIN` until that parent lands; the two states were
-genuinely different for several hours on 2026-08-14.
+`MERGED_TO_MAIN` proves byte reachability. It does not prove final composition selection or live runtime/provider acceptance.
 
 ## Resolved duplicate terminal
 
-PR #76 and PR #77 were not parallel-safe:
+```text
+PR #76 selected implementation
+PR #77 closed SUPERSEDED_CANDIDATE
+same issue #64 and overlapping paths
+state: RESOLVED_BY_HUMAN
+follow-up: issue #82 compares eight PR #77-only files
+```
+
+PR #77 history remains indexed; issue #82 may fold or explicitly reject each unique file after executable comparison.
+
+## Documentation governance lineage
 
 ```text
-same owner issue:
-  #64
+PR #60 PDF/LoopX traceability           MERGED_TO_MAIN
+└─ PR #81 Git Town governance           MERGED_TO_MAIN
+   issue #80 completed
 
-same parent:
-  feat/loopx-contract-v1
-
-overlapping paths:
-  .arena/modules/loopx-worker-gateway/**
-  loop_wiki/loopx-worker-gateway/**
-  generated modular projections
-  loopctl/workflow.lock
-
-state:
-  RESOLVED_BY_HUMAN on 2026-08-14
+issue #102 ordered queue docs
+└─ branch docs/pdf-terminal-stack-sequence-v1
+   documentation/governance terminal; unmerged
 ```
 
-Green focused checks did not resolve duplicate authority; the owner did. The
-options were:
+## Ordered completion topology
+
+Human view: [`PDF_TERMINAL_SEQUENCE.md`](PDF_TERMINAL_SEQUENCE.md)  
+Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 
 ```text
-select one leaf
-extract unique delta into a new path-disjoint leaf
-rebase one as an explicit child
-mark one superseded
-close one
+00 #82  Worker Gateway residue                     ACTIVE
+01 #90  current-main foundation validation
+02 #65  Strategy Graph + HITL
+03 #67  Observability + signed HITL
+04 #66  Runtime Fabric + local/cloud parity
+05 #94  Worker Fleet / Herdr-tmux boundary
+06 #97  Resource GC
+07 #96  LSP Pool
+08 #103 Decision Memory runtime
+09 #93  Mem0 projection
+10 #104 source ingest
+11 #105 Notes retrieval
+12 #92  Serena/GrepAI live canaries
+13 #41  Code-Graph-RAG read-only admission
+14 #70  Notes → Scaffold
+15 #71  Code → Knowledge fold-back
+16 #95  Context Assembly
+17 #72  Skill/Prompt evolution
+18 #98  CI parity
+19 #91  six-host live matrix
+20 #45  Codex/Claude A/B
+21 #46/#56 provider evaluation convergence
+22 #99  Harness Console
+23 #100 profile-scoped benchmarks
+24 #101 Git Town runtime admission
+25 #68  final convergence
 ```
 
-What was chosen: #76, the 82-file implementation, was admitted and reached
-`main`; #77, a separate 19-file implementation of the same module, was closed as
-`SUPERSEDED_CANDIDATE`. Merging both would have left the module with two
-`module.json` declarations (`aggregate` versus `provider`) and two selftest
-entrypoints. The 8 files that exist only on #77 — the host-descriptor schema and
-registry, `gateway_engine.py`, `gateway_selftest.py`, `check_contracts.py` and
-three fixtures — are tracked in issue #82 rather than discarded.
+Only order 00 is active. Future implementation branches are `NOT_CREATED` until activation or a Human waiver.
 
-The record stays after resolution on purpose: an index that simply dropped the
-conflict would be indistinguishable from one that never detected it.
+## Branch creation protocol
 
-No Agent may choose or execute the resolution.
-
-## Remaining LoopX program leaves
-
-Parent program: issue #61.
-
-| Order | Issue | Terminal behavior | Current publication state |
-|---:|---:|---|---|
-| 1 | #62 / PR #74 | LoopX task contracts | `MERGED_TO_MAIN` |
-| 2 | #63 / PR #75 | append-only ledger/reducer | `MERGED_TO_MAIN` via #74 |
-| 3 | #64 / PRs #76/#77 | six-host Worker Gateway | #76 `MERGED_TO_MAIN`; #77 `SUPERSEDED_CANDIDATE`, delta in #82 |
-| 4 | #65 | Strategy Graph + HITL | `PR ABSENT` |
-| 5 | #42 / PR #78 | decision-memory admission | `MERGED_TO_MAIN` via #74 |
-| 6 | #66 | runtime fabric/local-cloud parity | `PR ABSENT` |
-| 7 | #69 / PR #79 | Code Truth Graph v2 | `MERGED_TO_MAIN` via #74 |
-| 8 | #70 | Notes Repo → Scaffold | `PR ABSENT` |
-| 9 | #71 | Code → Knowledge fold-back | `PR ABSENT` |
-| 10 | #72 | Skill/prompt evolution | `PR ABSENT` |
-| 11 | #67 | observability/signed HITL projection | `PR ABSENT` |
-| 12 | #68 | final convergence | `BLOCKED_BY_TERMINALS` |
-
-Only #68 may select all settled terminal modules in the shared composition, regenerate final shared indexes, run the required live matrix and record Human promotion/rollback.
-
-## Separate provider and historical lanes
+For the active queue item:
 
 ```text
-PR #56
-  provider admission evaluation
-  separate from LoopX terminal Stack
-  fixture results cannot prove live provider health
-
-PR #53
-  historical portable-Skill aggregate
-  not current integration authority
-  unique delta must be extracted before any Human merge decision
-
-PR #58
-  runtime-env / Agent Shield documentation audit
-  separate documentation lane
+1. pin current main commit/tree
+2. read task packet and owner paths
+3. classify ROOT / TRUE_CHILD / ROOT_AFTER_PREDECESSOR / CONVERGENCE
+4. acquire one worktree, branch writer and path lease
+5. implement one behavior
+6. run positive, independent control and mutation
+7. publish exact head
+8. observe generated sync and final exact-head checks
+9. Human reviews merge or rejection
+10. advance queue snapshot
 ```
 
-These lanes must not be silently inserted into the LoopX parent chain.
+Never create future branches merely to display a complete graph.
 
-## Work packet for issue #80
-
-```yaml
-parent_issue: 61
-terminal_issue: 80
-base_branch: feat/pdf-loopx-modular-verifier-v1
-parent_branch: feat/pdf-loopx-modular-verifier-v1
-head_branch: feat/git-town-stack-governance-v1
-class: true-child terminal
-allowed_paths:
-  - README.md
-  - AGENTS.md
-  - CLAUDE.md
-  - docs/git/**
-  - docs/README.md
-  - docs/INDEX.md
-  - docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
-  - docs/architecture/STATE_MACHINES.md
-  - docs/architecture/agent-entrypoints.contract.json
-  - docs/traceability/STACK_PR_INDEX.md
-  - .arena/contexts/macro.json
-  - scripts/gates/check_git_town_stack_docs.py
-  - tests/test_git_town_stack_docs.py
-  - .github/workflows/git-town-stack-docs.yml
-  - workflow-generated modular projections
-non_goals:
-  - Git Town installation/configuration
-  - sync/push/merge/ship
-  - semantic conflict resolution
-  - LoopX/runtime/provider code changes
-rollback_subject: ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
-human_owned:
-  - conflict resolution
-  - PR retargeting
-  - merge/ship/close/delete
-  - executable/legal admission
-  - promotion and rollback
-```
-
-## Publication state machine
+## Expected branch names
 
 ```text
-ISSUE + TASK PACKET
-→ BRANCH GRAPH VALIDATION
-→ LINKED WORKTREE / BRANCH / PATH LEASE
-→ TERMINAL IMPLEMENTATION
-→ POSITIVE + CONTROL + MUTATION
-→ EXACT-HEAD GITHUB CHECKS
-→ OPTIONAL PARENT RESTACK
-→ CONVERGENCE LEAF
-→ HUMAN ADMIT
-→ MERGE / SHIP / ROLLBACK
+#82   feat/loopx-worker-gateway-residue-v1
+#90   feat/loopx-stage0-validation-v1
+#65   feat/loopx-strategy-hitl-v1
+#67   feat/loopx-observability-v1
+#66   feat/loopx-runtime-fabric-v1
+#94   feat/loopx-worker-fleet-v1
+#97   feat/loopx-resource-gc-v1
+#96   feat/loopx-lsp-pool-v1
+#103  feat/loopx-decision-memory-runtime-v1
+#93   feat/loopx-mem0-projection-v1
+#104  feat/loopx-notes-source-ingest-v1
+#105  feat/loopx-notes-retrieval-v1
+#92   feat/loopx-code-intelligence-canaries-v1
+#41   feat/code-graph-rag-readonly-admission-v1
+#70   feat/loopx-notes-scaffold-v1
+#71   feat/loopx-code-knowledge-foldback-v1
+#95   feat/loopx-context-assembly-v1
+#72   feat/loopx-skill-prompt-evolution-v1
+#98   feat/loopx-ci-parity-v1
+#91   feat/loopx-six-host-live-matrix-v1
+#45   feat/loopx-codex-claude-ab-v1
+#46   eval/loopx-provider-convergence-v1
+#99   feat/loopx-harness-console-v1
+#100  feat/loopx-benchmark-v1
+#101  feat/git-town-runtime-admission-v1
+#68   integration/loopx-harness-convergence-v1
 ```
 
-A future admitted Git Town executable may automate local hierarchy synchronization only. It cannot own GitHub publication or Human decisions.
+Branch names are plans until GitHub reports a real ref. `NOT_CREATED` is not progress or failure.
 
-## Required evidence chain
+## Path lease law
+
+- one Worker owns one worktree, branch writer and path lease;
+- siblings must be path-disjoint;
+- a true child must name unmerged parent bytes it consumes;
+- overlapping active terminals are blocked until a Human resolves ownership;
+- generated locks, root indexes, public surfaces and release receipts are owned only by #68;
+- cleanup and rollback subjects are part of every terminal receipt.
+
+## Git Town runtime boundary
+
+Current state:
 
 ```text
-source proposal or incident
-→ architecture decision
-→ parent issue
-→ terminal issue
-→ task packet and path lease
-→ branch / PR / exact head
-→ positive + control + mutation
-→ generated locks/indexes
-→ runtime/host receipt where applicable
-→ convergence index
-→ Human Admit
+shared Skill reference                  PINNED
+Skill consumer selection                NOT_SELECTED
+Git Town binary/config                  ABSENT
+local no-push sync                      NOT_EXERCISED
+remote publication                      NOT_EXERCISED
+merge/ship/rollback                     HUMAN-OWNED
 ```
 
-Missing links remain `ABSENT`.
+Issue #101 owns future executable/config/no-push admission. Until then, Agents must not run Git Town mutation commands.
 
-## Refresh protocol
+## Required evidence before queue advancement
 
-When a Stack fact changes:
+```text
+exact commit/tree and branch relation
+machine contract
+nearest README / State Machine / data flow
+positive execution or bounded fixture
+independent control
+hollow or mutation that turns red
+bounded artifact and cleanup receipt
+rollback subject
+final exact-head checks
+Human review for merge or activation
+```
 
-1. fetch current `main`;
-2. fetch every affected PR base/head/state/mergeability;
-3. check main reachability for merged children;
-4. fetch exact-head workflow conclusions;
-5. recompute active path overlap;
-6. update this document;
-7. update [`stack-prs.index.json`](stack-prs.index.json);
-8. update [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md);
-9. rerun the deterministic gate;
-10. do not merge or ship without Human Admit.
+## Human boundary
+
+Agents and background Workers must not:
+
+- resolve semantic conflict;
+- run continue, skip or undo;
+- create later branches before activation;
+- push, merge, ship, close or delete branches;
+- change remotes, credentials or permissions;
+- activate providers, runtimes or models;
+- admit scoped exceptions or destructive cleanup;
+- promote or roll back production.
+
+## Update contract
+
+When an issue, relation, branch, PR, exact head, path lease or queue state changes, update:
+
+- [`PDF_TERMINAL_SEQUENCE.md`](PDF_TERMINAL_SEQUENCE.md);
+- [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json);
+- this file;
+- [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md);
+- root `README.md` and `AGENTS.md` when active item changes;
+- deterministic sequence gate and exact-head checks.

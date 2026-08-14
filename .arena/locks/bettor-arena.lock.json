@@ -26,7 +26,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "ff61c470f24bc4fc78f5027fdcd59ccb8aad0a84869d1a9e676a959ee9bf05f6",
+  "content_sha256": "305ac879ca0b1e7b5197534e1d79320b1cc1a6a09adc9d00bcb4fbb8ed7397bd",
   "modules": [
     {
       "components": [
@@ -219,8 +219,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "2136403fc0281d6b122b6c59438c125d09c5da79b2c55cbaf0d5a32a63ced9c3",
+  "ownership_sha256": "17b6930219edd2e784bf7acb17bb17ecaf116789ce06dfd7c5f951876e49ea2a",
   "requirements_sha256": "f609832ef81c051449431a4edb34504d875304b01367762508163cb8d78e209b",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1617
+  "tracked_files": 1623
 }
