@@ -1,5 +1,5 @@
 {
-  "content_sha256": "258a4efcd7e85a494bedb29f63c0d1aa844757bfff84bbf74fab553d556b6554",
+  "content_sha256": "560fa6902db31d0f137f0d8a69ff55ee9d355e0d36a622b4690fe92691d60d62",
   "contexts": [
     {
       "common": [
@@ -398,7 +398,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "88040bac6f272e7719c3942dbd0852534af14e6140d531a1dfed86260d6e60f9",
+      "context_sha256": "f8f704d6c9335f7b526a626cdac7ee4b50e695728df01ea3d629900d03cbc7c6",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -467,7 +467,7 @@
           "path": "docs/architecture/modular-integration-status.md"
         },
         {
-          "blob": "f47aa75e26694fb86243f33c226635b9e0f04f74",
+          "blob": "e55f7c32d59603a79122a2f2066d85858e6ba8c1",
           "mode": "100644",
           "path": "docs/architecture/pdf-harness-integration.matrix.json"
         },

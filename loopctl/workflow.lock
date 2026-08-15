@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "368041e8a88c9dfaade475fc45897869183bb67d",
+  "workflow_commit": "437a71591c463c4a9d8939ae5ed9be0b091e72f1",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-368041e8a88c-dirty.json",
-    "container": "container-368041e8a88c-dirty.json",
-    "ctg": "ctg-368041e8a88c-dirty.json",
-    "equivalence": "equivalence-368041e8a88c-dirty.json",
-    "harness": "harness-368041e8a88c-dirty.json",
-    "macro": "macro-368041e8a88c-dirty.json",
-    "micro": "micro-368041e8a88c-dirty.json",
-    "notebooklm": "notebooklm-368041e8a88c-dirty.json",
-    "openwiki": "openwiki-368041e8a88c-dirty.json",
-    "policy": "policy-368041e8a88c-dirty.json",
-    "skill-execution": "skill-execution-368041e8a88c-dirty.json",
-    "workflow": "workflow-368041e8a88c-dirty.json"
+    "agent-runtime": "agent-runtime-437a71591c46-dirty.json",
+    "container": "container-437a71591c46-dirty.json",
+    "ctg": "ctg-437a71591c46-dirty.json",
+    "equivalence": "equivalence-437a71591c46-dirty.json",
+    "harness": "harness-437a71591c46-dirty.json",
+    "macro": "macro-437a71591c46-dirty.json",
+    "micro": "micro-437a71591c46-dirty.json",
+    "notebooklm": "notebooklm-437a71591c46-dirty.json",
+    "openwiki": "openwiki-437a71591c46-dirty.json",
+    "policy": "policy-437a71591c46-dirty.json",
+    "skill-execution": "skill-execution-437a71591c46-dirty.json",
+    "workflow": "workflow-437a71591c46-dirty.json"
   },
   "counts": {
-    "artifact": 33,
+    "artifact": 34,
     "context": 61,
     "harness": 143
   },
-  "workflow_digest": "3bab0254ee926a797446836fe0218539f76a4ddb57c494e0776eb7230a9e267e",
+  "workflow_digest": "2f10a40db9bb55d132d305a3e2ced3b8cdda57120aea52deafb9c10135475f52",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
@@ -233,6 +233,14 @@
       "sha256": "32b6b71a6a6fbd806fb0e5c6bccc0f5328e500362380cbc2aa5422d8a4e9630b",
       "hash_source": "index",
       "kind": "harness",
+      "loops": [
+        "macro"
+      ]
+    },
+    "data/receipts/post-commit-437a71591c463c4a9d8939ae5ed9be0b091e72f1.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_source": "index",
+      "kind": "artifact",
       "loops": [
         "macro"
       ]
