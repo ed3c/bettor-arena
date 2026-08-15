@@ -1,0 +1,123 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/resume-envelope/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What the reducer is asked to append after a Human decision. It proposes an event; it does not commit one. A scoped exception carries terminal_visibility COMPLETED_WITH_EXCEPTION, never a clean terminal.",
+  "properties": {
+    "canonical_writer": {
+      "const": "LOOPX_LEDGER_REDUCER"
+    },
+    "decision": {
+      "enum": [
+        "RETRY_AFTER_FIX",
+        "UPDATE_CONTRACT",
+        "CANCEL",
+        "SCOPED_EXCEPTION"
+      ]
+    },
+    "decision_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "decision_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "envelope_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "exception_expires_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expected_ledger_head": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "expected_state_revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "interrupt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "interrupt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "proposed_event": {
+      "enum": [
+        "REQUEST_RETRY",
+        "UPDATE_CONTRACT",
+        "CANCEL_TASK",
+        "ADMIT_EXCEPTION"
+      ]
+    },
+    "revalidated_gates": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/resume-envelope/v1"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "terminal_visibility": {
+      "enum": [
+        "ACTIVE",
+        "CANCELLED",
+        "COMPLETED_WITH_EXCEPTION"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "envelope_id",
+    "subject",
+    "interrupt_id",
+    "interrupt_digest",
+    "decision_id",
+    "decision",
+    "proposed_event",
+    "expected_state_revision",
+    "expected_ledger_head",
+    "terminal_visibility",
+    "revalidated_gates",
+    "exception_expires_at",
+    "decision_digest",
+    "canonical_writer"
+  ],
+  "title": "LoopX Resume Envelope v1",
+  "type": "object"
+}

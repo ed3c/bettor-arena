@@ -1,0 +1,95 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/context-assembly/prompt-ir/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One canonical Prompt IR. Six host projections are rendered from it; none of them is authored by hand, because six hand-maintained prompts diverge in the one paragraph that must not differ.",
+  "properties": {
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "max_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_items": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_bytes",
+        "max_items"
+      ],
+      "type": "object"
+    },
+    "dynamic": {
+      "additionalProperties": false,
+      "properties": {
+        "admitted_memory": {
+          "type": "array"
+        },
+        "evidence_anchors": {
+          "type": "array"
+        },
+        "todo": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "todo",
+        "evidence_anchors",
+        "admitted_memory"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/prompt-ir/v1"
+    },
+    "skill_identity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "system_law": {
+      "description": "The normative law. Delimited in every projection so the comparison across hosts is on a region rather than on whole documents that legitimately differ.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "tools": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "schema_digest": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "schema_digest"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "system_law",
+    "skill_identity",
+    "tools",
+    "dynamic",
+    "budget"
+  ],
+  "title": "LoopX Prompt IR",
+  "type": "object"
+}

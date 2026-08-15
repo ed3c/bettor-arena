@@ -1,0 +1,43 @@
+{
+  "authority_ladder": [
+    "SOURCE",
+    "TEST",
+    "ADR",
+    "RECEIPT",
+    "MEMORY",
+    "MEM0_PROJECTION",
+    "MODEL_SUMMARY"
+  ],
+  "cross_mode_evidence_allowed": false,
+  "interface_version": "1.0.0",
+  "live_canary_state": "NOT_EXERCISED",
+  "modes": [
+    "MANAGED_SERVICE",
+    "OSS_SELF_HOSTED"
+  ],
+  "projection_is_canonical": false,
+  "provider_states": [
+    "AVAILABLE",
+    "NOT_EXERCISED",
+    "UNAVAILABLE"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.decision-memory-runtime/v1",
+    "loopx.ledger/v1"
+  ],
+  "schema_version": "loopx/mem0-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/mem0/projection/v1",
+      "path": "mem0-projection.schema.json",
+      "sha256": "63a74f956d559d191c3297feb55183fa613a6e93298ece45c9cbed7b0c7bf5f3"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/mem0/identity/v1",
+      "path": "mem0-provider-identity.schema.json",
+      "sha256": "847b277353a6188d9dc9d734ffeb6916ca8d764a686a2a41738908d7d6151c4a"
+    }
+  ],
+  "writeback_is_automatic": false
+}

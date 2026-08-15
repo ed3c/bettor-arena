@@ -1,0 +1,142 @@
+{
+  "cache_states_observed": [
+    "COLD"
+  ],
+  "counts": {
+    "FAILED": 0,
+    "OK": 8,
+    "OOM": 0,
+    "TIMEOUT": 0
+  },
+  "environment": {
+    "arch": "arm64",
+    "cpu": "arm",
+    "image": "none",
+    "locale": "LOCAL",
+    "os": "darwin-25.4.0",
+    "ram_gb": 1,
+    "runtime": "python-3.14.6"
+  },
+  "failure_count": 0,
+  "identities": {
+    "host": "claude",
+    "model": "opus-5",
+    "provider": "anthropic",
+    "tool_versions": {
+      "bun": "1.3.11",
+      "python": "3.12.4"
+    }
+  },
+  "locale": "LOCAL",
+  "mixed_cache_states": false,
+  "moving_targets": [],
+  "numbers_are_claims": false,
+  "ok_count": 8,
+  "peak_rss_mb": {
+    "max": 19.109375,
+    "median": 18.890625,
+    "min": 18.8125,
+    "n": 8,
+    "p90": 19.109375,
+    "p99": 19.109375
+  },
+  "report_digest": "sha256:eb5424c2f38a10e512741c3f0e2b55cb91b5341fd9ace2d8407c9d3bcdeffeee",
+  "schema_version": "loopx/benchmark-report/v1",
+  "subject": {
+    "commit": "91592fd81701a88095b2b21aa8c413d29ceb1138",
+    "dependency_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "enforcement_policy": "gates-strict-v1",
+    "tree_dirty": true
+  },
+  "success_rate": 1.0,
+  "summary_withheld": null,
+  "timing_ms": {
+    "max": 523.1809590477496,
+    "median": 454.08795797266066,
+    "min": 440.21341705229133,
+    "n": 8,
+    "p90": 523.1809590477496,
+    "p99": 523.1809590477496
+  },
+  "trial_count": 8,
+  "trials": [
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 0,
+      "outcome": "OK",
+      "peak_rss_mb": 18.890625,
+      "wall_ms": 523.1809590477496
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 1,
+      "outcome": "OK",
+      "peak_rss_mb": 19.03125,
+      "wall_ms": 448.4364170348272
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 2,
+      "outcome": "OK",
+      "peak_rss_mb": 19.015625,
+      "wall_ms": 458.8509580353275
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 3,
+      "outcome": "OK",
+      "peak_rss_mb": 19.109375,
+      "wall_ms": 454.08795797266066
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 4,
+      "outcome": "OK",
+      "peak_rss_mb": 18.8125,
+      "wall_ms": 440.21341705229133
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 5,
+      "outcome": "OK",
+      "peak_rss_mb": 18.890625,
+      "wall_ms": 464.864292065613
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 6,
+      "outcome": "OK",
+      "peak_rss_mb": 19.09375,
+      "wall_ms": 445.0242919847369
+    },
+    {
+      "cache_state": "COLD",
+      "detail": "",
+      "index": 7,
+      "outcome": "OK",
+      "peak_rss_mb": 18.84375,
+      "wall_ms": 454.60900000762194
+    }
+  ],
+  "warmup_runs_discarded": 1,
+  "workload": {
+    "command": [
+      "python3",
+      "scripts/gates/check_placement.py",
+      "--selftest"
+    ],
+    "family": "gate_startup_and_execution",
+    "name": "placement-gate-cold-start",
+    "repetitions": 8,
+    "seed": 7,
+    "stopping_rule": "fixed repetitions; no early stop on a favourable trial",
+    "warmup": 1
+  }
+}

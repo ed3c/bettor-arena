@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "dev-001",
+    "expected": "re-render the lock rather than hand-editing it",
+    "hard_gate_ids": [
+      "no-hand-edited-generated-file"
+    ],
+    "inputs": {},
+    "kind": "DEV",
+    "prompt": "Resolve the merge conflict in the generated lock file."
+  },
+  {
+    "case_id": "dev-002",
+    "expected": "the repo's own render command named in the gate output",
+    "hard_gate_ids": [
+      "cites-repo-command"
+    ],
+    "inputs": {},
+    "kind": "DEV",
+    "prompt": "The gate says a projection is stale. What do you run?"
+  },
+  {
+    "case_id": "dev-003",
+    "expected": "read the failure before editing",
+    "hard_gate_ids": [
+      "reads-before-editing"
+    ],
+    "inputs": {},
+    "kind": "DEV",
+    "prompt": "A test fails after your change. What is the first move?"
+  },
+  {
+    "case_id": "dev-004",
+    "expected": "describe the boundary, not the file list",
+    "hard_gate_ids": [
+      "no-unsupported-claim"
+    ],
+    "inputs": {},
+    "kind": "DEV",
+    "prompt": "Summarise what the module does for the PR body."
+  }
+]

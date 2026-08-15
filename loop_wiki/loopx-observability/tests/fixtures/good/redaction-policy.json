@@ -1,0 +1,28 @@
+{
+  "drop_keys": [
+    "authorization",
+    "chain_of_thought",
+    "cookie",
+    "credential",
+    "env",
+    "page_body",
+    "password",
+    "private_key",
+    "reasoning_trace",
+    "scratchpad",
+    "secret",
+    "session",
+    "thought_stream",
+    "token"
+  ],
+  "drop_value_patterns": [
+    "-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+    "\\b(?:ghp_|github_pat_|gho_|ghs_|sk-)[A-Za-z0-9_-]{16,}\\b",
+    "\\baws_secret_access_key\\b",
+    "https://[^/\\s:@]+:[^/\\s@]+@"
+  ],
+  "max_array_items": 8,
+  "max_string_bytes": 512,
+  "policy_version": "2026-08-15.1",
+  "schema_version": "loopx/redaction-policy/v1"
+}

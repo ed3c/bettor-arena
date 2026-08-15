@@ -1,0 +1,89 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/ci-parity/receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One comparison of a local run against an exact-head GitHub run. PARITY is a claim about two observations; a local result with no exact-head remote result is NOT_EXERCISED, never PARITY.",
+  "properties": {
+    "compared_jobs": {
+      "type": "object"
+    },
+    "covered_jobs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "findings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "github_only_surfaces": {
+      "description": "Surfaces no local run can observe. Written into every receipt so a green workflow is not read as a statement about token permissions or billing.",
+      "items": {
+        "enum": [
+          "ARTIFACT_SERVICE",
+          "BILLING",
+          "CACHE_SERVICE",
+          "CONCURRENCY_CANCELLATION",
+          "HOSTED_RUNNER_IMAGE",
+          "SECRETS_STORE",
+          "TOKEN_PERMISSIONS"
+        ]
+      },
+      "type": "array"
+    },
+    "head": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "local": {
+      "type": "object"
+    },
+    "local_proxies_remote": {
+      "const": false,
+      "description": "Never true. A green local run and a green hosted run are two observations of two different machines."
+    },
+    "publication": {
+      "type": "object"
+    },
+    "receipt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "remote": {
+      "description": "null is the ordinary case before publication, and it forces NOT_EXERCISED.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "schema_version": {
+      "const": "loopx/ci-parity-receipt/v1"
+    },
+    "verdict": {
+      "enum": [
+        "DIVERGED",
+        "NOT_EXERCISED",
+        "PARITY",
+        "PARTIAL"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "verdict",
+    "head",
+    "local",
+    "remote",
+    "compared_jobs",
+    "covered_jobs",
+    "github_only_surfaces",
+    "findings",
+    "local_proxies_remote",
+    "receipt_digest"
+  ],
+  "title": "CI parity receipt",
+  "type": "object"
+}

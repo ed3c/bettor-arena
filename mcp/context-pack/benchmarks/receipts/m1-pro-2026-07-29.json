@@ -3,25 +3,25 @@
   "evidence_budget": {
     "cold_measurement": {
       "iterations": 500,
-      "p50_ns": 3556083,
-      "p95_ns": 3925542,
-      "tracemalloc_peak_bytes": 2190204
+      "p50_ns": 3664750,
+      "p95_ns": 3948583,
+      "tracemalloc_peak_bytes": 2303974
     },
     "context_bytes": 2161,
     "semantic_recall": 1.0,
     "source_sha256": "d13e2e7eaa520571fcd08c798d71f581e9c91b0c51b0e2ab23845ac4897a456b",
     "warm_measurement": {
       "iterations": 500,
-      "p50_ns": 249583,
-      "p95_ns": 278208,
-      "tracemalloc_peak_bytes": 2537197
+      "p50_ns": 198917,
+      "p95_ns": 283208,
+      "tracemalloc_peak_bytes": 2248077
     }
   },
   "machine": {
     "architecture": "arm64",
     "page_size_bytes": 16384,
-    "platform": "macOS-26.4-arm64-arm-64bit",
-    "python": "3.11.11"
+    "platform": "macOS-26.4-arm64-arm-64bit-Mach-O",
+    "python": "3.14.6"
   },
   "non_claims": [
     "Local page alignment does not control remote prompt caching.",
@@ -29,10 +29,10 @@
     "This benchmark does not claim TypeScript support."
   ],
   "replay_binding": {
-    "benchmark_script_sha256": "b35bcd01203623b42a585de833807bccbbd056c05e6bd3a003295a8490ba8fd1",
-    "engine_sha256": "8b9438953539a55ec32d5145f59f7d2fe9bc1764d92ef881ee898b7e5878f646",
+    "benchmark_script_sha256": "f92cc964145d644a4e82beba48e20dcd05cf9c015d874530daab8f0a78522be0",
+    "engine_sha256": "c65439178b651c0d02db7df7718e48d633542c82e1261d7d5bf0c6749e5fe394",
     "fixture_sha256": "d13e2e7eaa520571fcd08c798d71f581e9c91b0c51b0e2ab23845ac4897a456b",
-    "repository_head": "4d28de2fa0fabc143967d11591883448adbd054d",
+    "repository_head": "a34a157384c52412752ae140d1fc1959f3c7fd75",
     "uv_lock_sha256": "116db2c88a0167a497c7b3fd31741c9f7c0faf29e4ebe25b8e84012757c33359"
   },
   "schema_version": "context-pack-comparison/v1",
@@ -41,9 +41,9 @@
     "context_bytes": 109,
     "measurement": {
       "iterations": 500,
-      "p50_ns": 251896,
-      "p95_ns": 305333,
-      "tracemalloc_peak_bytes": 476424
+      "p50_ns": 269416,
+      "p95_ns": 346334,
+      "tracemalloc_peak_bytes": 95763
     },
     "semantic_recall": 0.0
   },

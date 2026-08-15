@@ -1,0 +1,87 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-observability/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-observability/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-observability/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-observability",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-observability",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-observability/scripts/observability.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-observability/scripts/control_observability.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-observability/scripts/observability.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-observability/scripts/observability.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-observability/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.observability-projection/v1",
+    "loopx.hitl-console/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.hitl/v1",
+    "loopx.ledger/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-observability"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Deterministic redacted projection of LoopX ledger evidence into OpenTelemetry-shaped envelopes, rebuildable from the ledger, plus a console surface that prepares signed Human requests without authority to decide."
+}

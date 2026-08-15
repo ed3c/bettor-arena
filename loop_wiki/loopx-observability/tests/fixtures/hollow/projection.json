@@ -1,0 +1,195 @@
+{
+  "authority": "PROJECTION_ONLY",
+  "canonical_writer": "LOOPX_LEDGER_REDUCER",
+  "envelope_count": 5,
+  "envelopes": [
+    {
+      "actor": {
+        "actor_id": "reducer-main",
+        "class": "REDUCER"
+      },
+      "attempt": 0,
+      "attributes": {
+        "objective": "something else entirely"
+      },
+      "authority": "PROJECTION_ONLY",
+      "correlation": {
+        "span_id": "738ff82f5539de75",
+        "trace_id": "61d77ee6bf93e017ee3c3d66ec08d482"
+      },
+      "envelope_id": "env-000000-evt-000",
+      "event_type": "TASK_INITIALIZED",
+      "ledger": {
+        "event_digest": "sha256:fca454779315e85f5b62e7ee953e13bb5e014c6f63feb3d4b598955bf5e2764c",
+        "sequence": 0
+      },
+      "lifecycle_state": "ACTIVE",
+      "observed_at": "2026-08-15T09:00:00Z",
+      "redaction": {
+        "policy_version": "2026-08-15.1",
+        "removed_paths": []
+      },
+      "schema_version": "loopx/observability-envelope/v1",
+      "subject": {
+        "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "loopx-observability-fixture",
+        "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+      },
+      "todo_id": null
+    },
+    {
+      "actor": {
+        "actor_id": "strategy-graph-main",
+        "class": "STRATEGY"
+      },
+      "attempt": 0,
+      "attributes": {
+        "adapter_id": "codex-cli",
+        "command": "DISPATCH"
+      },
+      "authority": "PROJECTION_ONLY",
+      "correlation": {
+        "span_id": "fe8a91b53c920bb4",
+        "trace_id": "61d77ee6bf93e017ee3c3d66ec08d482"
+      },
+      "envelope_id": "env-000001-evt-001",
+      "event_type": "COMMAND_ACCEPTED",
+      "ledger": {
+        "event_digest": "sha256:6f3a1bdd6ae42f0558574d005a4153f4fa616571ac5494ccb6c1f8ef078fc7fe",
+        "sequence": 1
+      },
+      "lifecycle_state": "DISPATCHED",
+      "observed_at": "2026-08-15T09:01:00Z",
+      "redaction": {
+        "policy_version": "2026-08-15.1",
+        "removed_paths": []
+      },
+      "schema_version": "loopx/observability-envelope/v1",
+      "subject": {
+        "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "loopx-observability-fixture",
+        "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+      },
+      "todo_id": "todo-verify-contracts"
+    },
+    {
+      "actor": {
+        "actor_id": "codex-cli",
+        "class": "WORKER"
+      },
+      "attempt": 0,
+      "attributes": {
+        "env": "[REDACTED]",
+        "exit_code": 0,
+        "stdout_ref": "sha256:1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
+      },
+      "authority": "PROJECTION_ONLY",
+      "correlation": {
+        "span_id": "32f2d916a33b69a2",
+        "trace_id": "61d77ee6bf93e017ee3c3d66ec08d482"
+      },
+      "envelope_id": "env-000002-evt-002",
+      "event_type": "WORKER_OBSERVED",
+      "ledger": {
+        "event_digest": "sha256:2eba4ff663702be243fa93df530a90da74ce9e3ee0d5198aaca2c865dbaf319f",
+        "sequence": 2
+      },
+      "lifecycle_state": "RUNNING",
+      "observed_at": "2026-08-15T09:02:00Z",
+      "redaction": {
+        "policy_version": "2026-08-15.1",
+        "removed_paths": [
+          "env"
+        ]
+      },
+      "schema_version": "loopx/observability-envelope/v1",
+      "subject": {
+        "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "loopx-observability-fixture",
+        "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+      },
+      "todo_id": "todo-verify-contracts"
+    },
+    {
+      "actor": {
+        "actor_id": "gate-flaky-timing",
+        "class": "GATE"
+      },
+      "attempt": 0,
+      "attributes": {
+        "p95_ms": 1400,
+        "verdict": "FAIL"
+      },
+      "authority": "PROJECTION_ONLY",
+      "correlation": {
+        "span_id": "13f1325a8e40de61",
+        "trace_id": "61d77ee6bf93e017ee3c3d66ec08d482"
+      },
+      "envelope_id": "env-000003-evt-003",
+      "event_type": "GATE_OBSERVED",
+      "ledger": {
+        "event_digest": "sha256:11abf77134b7e721f42f36c226eead8c151553b6621a98df1aef69db563feeb9",
+        "sequence": 3
+      },
+      "lifecycle_state": "GATE_FAIL",
+      "observed_at": "2026-08-15T09:03:00Z",
+      "redaction": {
+        "policy_version": "2026-08-15.1",
+        "removed_paths": []
+      },
+      "schema_version": "loopx/observability-envelope/v1",
+      "subject": {
+        "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "loopx-observability-fixture",
+        "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+      },
+      "todo_id": "todo-verify-contracts"
+    },
+    {
+      "actor": {
+        "actor_id": "reducer-main",
+        "class": "REDUCER"
+      },
+      "attempt": 0,
+      "attributes": {
+        "reason": "MANUAL_GATE"
+      },
+      "authority": "PROJECTION_ONLY",
+      "correlation": {
+        "span_id": "bb41ad93265cabac",
+        "trace_id": "61d77ee6bf93e017ee3c3d66ec08d482"
+      },
+      "envelope_id": "env-000004-evt-004",
+      "event_type": "HITL_RAISED",
+      "ledger": {
+        "event_digest": "sha256:a1f8beedbaca3eea8aba795c3bda387a8ae86c8f23000ca09e962953d26de6c8",
+        "sequence": 4
+      },
+      "lifecycle_state": "HITL_PENDING",
+      "observed_at": "2026-08-15T09:04:00Z",
+      "redaction": {
+        "policy_version": "2026-08-15.1",
+        "removed_paths": []
+      },
+      "schema_version": "loopx/observability-envelope/v1",
+      "subject": {
+        "commit": "5c92898bcb2ab6e0c9b2f0ba0c7c6f6bbf3d5aaa",
+        "repository": "ed3c/bettor-arena",
+        "task_id": "loopx-observability-fixture",
+        "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+      },
+      "todo_id": "todo-verify-contracts"
+    }
+  ],
+  "policy_version": "2026-08-15.1",
+  "projection_digest": "sha256:ee1b6b7715fa67c2730d55a5ae6ad4976f679c4b1f5c14951bd9d7fef31fe287",
+  "schema_version": "loopx/observability-projection/v1",
+  "source_head": {
+    "event_digest": "sha256:a1f8beedbaca3eea8aba795c3bda387a8ae86c8f23000ca09e962953d26de6c8",
+    "sequence": 4
+  }
+}

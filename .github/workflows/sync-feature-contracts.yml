@@ -1,13 +1,16 @@
 name: Sync feature modular contracts
 
 # This workflow keeps checked-in generated contracts aligned before the exact-head
-# verification workflow decides whether a feature branch is mergeable.
+# verification workflow decides whether a feature or governed documentation branch
+# is mergeable. Documentation can change Macro Context selections and therefore
+# requires the same deterministic projections as implementation branches.
 on:
   push:
     branches:
       - 'feat/**'
       - 'integration/**'
       - 'refactor/**'
+      - 'docs/**'
   workflow_dispatch:
 
 permissions:
@@ -23,12 +26,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.3.11
 

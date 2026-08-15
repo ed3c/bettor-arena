@@ -1,0 +1,88 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-resource-gc/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-resource-gc/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-resource-gc/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-resource-gc",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-resource-gc",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-resource-gc/scripts/resourcegc.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-resource-gc/scripts/control_resourcegc.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-resource-gc/scripts/resourcegc.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-resource-gc/scripts/resourcegc.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-resource-gc/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.resource-gc/v1",
+    "loopx.retention-policy/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.ledger/v1",
+    "loopx.runtime-fabric/v1",
+    "loopx.worker-fleet/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-resource-gc"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Retention and garbage collection across worktrees, processes, ports, mounts, artifacts, ledger segments, indexes, caches and WAL files, where a mutable projection is deletable only after being rebuilt beside the original and matched byte for byte, immutable and blocked evidence cannot be admitted at all, and every run is a dry run until a Human admits specific resources."
+}

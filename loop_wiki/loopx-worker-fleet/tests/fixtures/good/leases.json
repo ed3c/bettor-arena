@@ -1,0 +1,60 @@
+[
+  {
+    "branch": "feat/loopx-resource-gc",
+    "expires_at": "2026-08-15T12:00:00Z",
+    "granted_at": "2026-08-15T10:00:00Z",
+    "heartbeat_interval_s": 300,
+    "lease_id": "lease-gc",
+    "path_globs": [
+      ".arena/modules/loopx-resource-gc/**",
+      "loop_wiki/loopx-resource-gc/**"
+    ],
+    "state": "REQUESTED",
+    "task_id": "task-resource-gc",
+    "worker_id": "worker-a",
+    "worktree_path": "workspaces/resource-gc"
+  },
+  {
+    "branch": "feat/loopx-lsp-pool",
+    "expires_at": "2026-08-15T12:00:00Z",
+    "granted_at": "2026-08-15T10:00:00Z",
+    "heartbeat_interval_s": 300,
+    "lease_id": "lease-lsp",
+    "path_globs": [
+      ".arena/modules/loopx-lsp-pool/**",
+      "loop_wiki/loopx-lsp-pool/**"
+    ],
+    "state": "REQUESTED",
+    "task_id": "task-lsp-pool",
+    "worker_id": "worker-b",
+    "worktree_path": "workspaces/lsp-pool"
+  },
+  {
+    "branch": "feat/loopx-decision-memory",
+    "expires_at": "2026-08-15T12:00:00Z",
+    "granted_at": "2026-08-15T10:00:00Z",
+    "heartbeat_interval_s": 300,
+    "lease_id": "lease-memory",
+    "path_globs": [
+      "loop_wiki/loopx-decision-memory/**"
+    ],
+    "state": "REQUESTED",
+    "task_id": "task-decision-memory",
+    "worker_id": "worker-c",
+    "worktree_path": "workspaces/decision-memory"
+  },
+  {
+    "branch": "feat/loopx-mem0",
+    "expires_at": "2026-08-15T12:00:00Z",
+    "granted_at": "2026-08-15T10:00:00Z",
+    "heartbeat_interval_s": 300,
+    "lease_id": "lease-mem0",
+    "path_globs": [
+      "loop_wiki/loopx-mem0-projection/**"
+    ],
+    "state": "REQUESTED",
+    "task_id": "task-mem0",
+    "worker_id": "worker-d",
+    "worktree_path": "workspaces/mem0"
+  }
+]

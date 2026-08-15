@@ -1,0 +1,86 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-skill-evolution/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-skill-evolution/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-skill-evolution/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-skill-evolution",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-skill-evolution",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-skill-evolution/scripts/skillevo.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-skill-evolution/scripts/control_skillevo.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-skill-evolution/scripts/skillevo.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-skill-evolution/scripts/skillevo.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-skill-evolution/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.skill-evolution/v1",
+    "loopx.candidate-release-proposal/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.worker-gateway/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-skill-evolution"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Evaluates a candidate Skill or prompt patch against current and a no-skill baseline under one execution contract, with sealed holdouts the runner mechanically cannot read, non-compensatory hard gates, advisory-only judges, and per-host cross-replication, proposing a versioned release to skills-shared without mutating any canonical body."
+}

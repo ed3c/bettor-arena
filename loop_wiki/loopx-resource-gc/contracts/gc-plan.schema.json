@@ -1,0 +1,119 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/resource-gc/plan/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Selection is subtractive: everything starts protected and earns its way into the deletable set. The reverse arrangement selects whatever nobody wrote a rule for.",
+  "properties": {
+    "actions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "DELETE",
+              "KEEP"
+            ]
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "proposed": {
+            "type": "boolean"
+          },
+          "reason": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "resource_class": {
+            "enum": [
+              "ARTIFACT",
+              "BLOCKED_EVIDENCE",
+              "BRANCH",
+              "CI_SIMULATION_CACHE",
+              "DEPENDENCY_CACHE",
+              "GRAPH_INDEX",
+              "HUMAN_DECISION",
+              "LEDGER_SEGMENT",
+              "LOOPX_SNAPSHOT",
+              "LSP_INDEX",
+              "MEMORY_PROJECTION",
+              "MOUNT",
+              "PORT",
+              "PROCESS",
+              "RELEASE_RECEIPT",
+              "STDIO_LOG",
+              "VECTOR_INDEX",
+              "WAL",
+              "WORKTREE"
+            ]
+          },
+          "resource_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "retention": {
+            "enum": [
+              "CONTENT_ADDRESSED",
+              "EPHEMERAL",
+              "EXPIRING",
+              "IMMUTABLE_EVIDENCE",
+              "MUTABLE_RECREATABLE"
+            ]
+          }
+        },
+        "required": [
+          "action",
+          "path",
+          "proposed",
+          "reason",
+          "resource_class",
+          "resource_id",
+          "retention"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "authorized_by": {
+      "description": "An agent or provider cannot admit a destructive class.",
+      "enum": [
+        "HUMAN"
+      ]
+    },
+    "bytes_reclaimable": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "delete_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "keep_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "root_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/resource-gc-plan/v1"
+    },
+    "state": {
+      "const": "DRY_RUN"
+    }
+  },
+  "required": [
+    "schema_version",
+    "root_id",
+    "authorized_by",
+    "actions",
+    "delete_count",
+    "keep_count",
+    "bytes_reclaimable",
+    "state"
+  ],
+  "title": "Resource GC dry-run plan",
+  "type": "object"
+}

@@ -11,10 +11,10 @@
   },
   "repository_projection": {
     "AGENTS.md": {
-      "sha256": "1ec9b3bf2e59af4f63b4e904b7bd7d4c211b722a6b08666d79236a908716488c"
+      "sha256": "92c1565bc71b190a22c6959db6a34174c5788dee2aa9107c0093271fa5ff5c60"
     },
     "CLAUDE.md": {
-      "sha256": "1d57e245fe01a672ab2216ea3c529cfd7edcfcf1cfd5761d6142d4eb9d90bf47"
+      "sha256": "f253c5691037b84cae16678942c466910968583cf0c296fb06a052b882a58305"
     }
   },
   "schema_version": "instruction-projection-binding/v1"

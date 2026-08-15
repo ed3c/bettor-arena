@@ -1,0 +1,104 @@
+{
+  "assertions": [
+    {
+      "assertion_id": "a-001",
+      "execution_receipt": {
+        "command": "python3 loop_wiki/loopx-ledger/scripts/ledger.py selftest",
+        "exit_code": 0,
+        "output_digest": "sha256:abababababababababababababababababababababababababababababababab"
+      },
+      "kind": "SOURCE_STATEMENT",
+      "resolution": null,
+      "source_ids": [
+        "s-arch"
+      ],
+      "text": "the ledger append is compare-and-set on state_revision",
+      "verification_state": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "assertion_id": "a-002",
+      "execution_receipt": null,
+      "kind": "SOURCE_STATEMENT",
+      "resolution": null,
+      "source_ids": [
+        "s-arch",
+        "s-meeting"
+      ],
+      "text": "a rejected append leaves the ledger head unchanged",
+      "verification_state": "CORROBORATED"
+    },
+    {
+      "assertion_id": "a-003",
+      "execution_receipt": null,
+      "kind": "INFERENCE",
+      "resolution": null,
+      "source_ids": [
+        "s-meeting",
+        "s-quote-a"
+      ],
+      "text": "token expiry must be validated before signature verification",
+      "verification_state": "CORROBORATED"
+    },
+    {
+      "assertion_id": "a-004",
+      "execution_receipt": null,
+      "kind": "HYPOTHESIS",
+      "resolution": null,
+      "source_ids": [
+        "s-quote-b"
+      ],
+      "text": "warming the card cache would remove the first-request latency",
+      "verification_state": "UNVERIFIED"
+    },
+    {
+      "assertion_id": "a-005",
+      "execution_receipt": null,
+      "kind": "HYPOTHESIS",
+      "resolution": null,
+      "source_ids": [],
+      "text": "the retention window for compiled cards is not stated anywhere in the notes",
+      "verification_state": "UNKNOWN"
+    },
+    {
+      "assertion_id": "a-006",
+      "execution_receipt": null,
+      "kind": "SOURCE_STATEMENT",
+      "resolution": null,
+      "source_ids": [
+        "s-meeting"
+      ],
+      "text": "retries use a fixed 5s interval",
+      "verification_state": "CONTRADICTED"
+    },
+    {
+      "assertion_id": "a-007",
+      "execution_receipt": null,
+      "kind": "SOURCE_STATEMENT",
+      "resolution": null,
+      "source_ids": [
+        "s-arch"
+      ],
+      "text": "retries use exponential backoff from 1s",
+      "verification_state": "CONTRADICTED"
+    }
+  ],
+  "contradictions": [
+    {
+      "assertion_ids": [
+        "a-006",
+        "a-007"
+      ],
+      "contradiction_id": "c-001",
+      "note": "the meeting transcript and the architecture note disagree on retry timing; neither is weaker evidence than the other",
+      "state": "ESCALATED_TO_HUMAN"
+    }
+  ],
+  "notes_subject": {
+    "commit": "3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f",
+    "ref": "refs/heads/main",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-notes",
+    "tree": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+  },
+  "schema_version": "loopx/knowledge-assertion-graph/v1"
+}

@@ -1,0 +1,109 @@
+{
+  "components": [
+    {
+      "authority": "PROPOSES",
+      "boundary": "accepts an event and a expected state revision, returns the new head or refuses",
+      "component_id": "ledger-append",
+      "effects": [
+        "appends one event to the ledger"
+      ],
+      "failure_modes": [
+        "expected revision is stale",
+        "ledger file is absent"
+      ],
+      "inputs": [
+        "event",
+        "expected_state_revision"
+      ],
+      "invariants": [
+        "a refused append leaves the head unchanged",
+        "the revision an append was authorised at is recorded on it"
+      ],
+      "outputs": [
+        "head",
+        "refusal"
+      ],
+      "rollback": "truncate the appended event and restore the recorded head digest"
+    },
+    {
+      "authority": "OBSERVATION_ONLY",
+      "boundary": "decides whether a presented token may still be used",
+      "component_id": "token-expiry",
+      "effects": [],
+      "failure_modes": [
+        "expiry field absent",
+        "clock earlier than issuance"
+      ],
+      "inputs": [
+        "token",
+        "now"
+      ],
+      "invariants": [
+        "expiry is checked before signature verification"
+      ],
+      "outputs": [
+        "admitted",
+        "refusal_reason"
+      ],
+      "rollback": null
+    }
+  ],
+  "notes_subject": {
+    "commit": "3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f",
+    "ref": "refs/heads/main",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-notes",
+    "tree": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+  },
+  "open_unknowns": [
+    "a-005"
+  ],
+  "requirements": [
+    {
+      "acceptance_cases": [
+        {
+          "assertion_id": "a-001",
+          "case_id": "case-001",
+          "expect": "the head advances by exactly one event",
+          "given": "an append at the current revision"
+        },
+        {
+          "assertion_id": "a-002",
+          "case_id": "case-002",
+          "expect": "the call refuses and the head digest is unchanged",
+          "given": "an append at a stale revision"
+        }
+      ],
+      "component_id": "ledger-append",
+      "derived_from_assertions": [
+        "a-001",
+        "a-002"
+      ],
+      "derived_from_cards": [
+        "component:ledger-append-semantics"
+      ],
+      "requirement_id": "r-001",
+      "statement": "append is compare-and-set on state_revision and a refusal must not move the head"
+    },
+    {
+      "acceptance_cases": [
+        {
+          "assertion_id": "a-003",
+          "case_id": "case-003",
+          "expect": "refused for expiry, and the signature path is not reached",
+          "given": "an expired token with a valid signature"
+        }
+      ],
+      "component_id": "token-expiry",
+      "derived_from_assertions": [
+        "a-003"
+      ],
+      "derived_from_cards": [
+        "rule:token-expiry-ordering"
+      ],
+      "requirement_id": "r-002",
+      "statement": "expiry is evaluated before signature verification"
+    }
+  ],
+  "schema_version": "loopx/knowledge-system-spec/v1"
+}

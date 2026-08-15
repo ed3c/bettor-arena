@@ -1,0 +1,188 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/worker-fleet/receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What a Worker observed. Gate verdicts are copied through from the gates; this fleet adds none.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "bytes",
+          "digest",
+          "path"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "authority": {
+      "const": "OBSERVATION_ONLY"
+    },
+    "branch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "canonical_writer": {
+      "const": "LOOPX_LEDGER_REDUCER"
+    },
+    "cleanup": {
+      "additionalProperties": false,
+      "description": "process_group_empty is asked of the OS. A timeout that leaves descendants shows up later as a machine with no free CPU while the fleet says the task ended.",
+      "properties": {
+        "mounts_released": {
+          "type": "boolean"
+        },
+        "ports_released": {
+          "type": "boolean"
+        },
+        "process_group_empty": {
+          "type": "boolean"
+        },
+        "workspace_removed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mounts_released",
+        "ports_released",
+        "process_group_empty",
+        "workspace_removed"
+      ],
+      "type": "object"
+    },
+    "exit_code": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "gate_authority": {
+      "const": "GATES_ONLY_NOT_THIS_FLEET"
+    },
+    "gates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "gate_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "receipt_ref": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_EXERCISED",
+              "SKIPPED_BY_POLICY"
+            ]
+          }
+        },
+        "required": [
+          "gate_id",
+          "receipt_ref",
+          "state"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "lease_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "observations": {
+      "additionalProperties": false,
+      "properties": {
+        "herdr": {
+          "description": "Adapter admission. NOT_EXERCISED without an exact binary digest, config digest and canary receipt; even when admitted, gate_evidence stays NONE.",
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "tmux": {
+          "description": "An operator projection. Its state vocabulary contains no verdict word, because a session is a terminal that is still open and survives the process failing.",
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "herdr",
+        "tmux"
+      ],
+      "type": "object"
+    },
+    "receipt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recorded_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/worker-fleet-receipt/v1"
+    },
+    "task_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "worker_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "worker_state": {
+      "enum": [
+        "COMPLETED",
+        "FAILED",
+        "CANCELLED",
+        "TIMED_OUT",
+        "LOST_HEARTBEAT"
+      ]
+    },
+    "worktree_path": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "task_id",
+    "lease_id",
+    "worker_id",
+    "branch",
+    "worktree_path",
+    "worker_state",
+    "exit_code",
+    "gates",
+    "artifacts",
+    "cleanup",
+    "observations",
+    "recorded_at",
+    "gate_authority",
+    "canonical_writer",
+    "authority",
+    "receipt_digest"
+  ],
+  "title": "Worker fleet terminal receipt",
+  "type": "object"
+}

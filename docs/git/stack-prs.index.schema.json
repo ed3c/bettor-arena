@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/docs/git/stack-prs.index.schema.json",
+  "title": "Bettor Arena Stack PR index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "observed_at",
+    "authority",
+    "repository",
+    "shared_skill",
+    "git_town",
+    "program",
+    "stacks",
+    "conflicts",
+    "human_owned_operations"
+  ],
+  "properties": {
+    "schema": {"const": "bettor-arena/stack-pr-index/v1"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current", "snapshot_policy", "refresh_on"],
+      "properties": {
+        "current": {"const": "GITHUB_API_AND_REPOSITORY_BYTES"},
+        "snapshot_policy": {"const": "SNAPSHOT_ONLY"},
+        "refresh_on": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_name", "repository_id", "default_branch", "observed_main_sha"],
+      "properties": {
+        "full_name": {"const": "ed3c/bettor-arena"},
+        "repository_id": {"const": 1330387399},
+        "default_branch": {"const": "main"},
+        "observed_main_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "shared_skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "blob", "path", "reference_state", "selection_state"],
+      "properties": {
+        "repository": {"const": "ed3c/skills-shared"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "blob": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "path": {"const": "skills/git-town-stacked-pr-worker/SKILL.md"},
+        "reference_state": {"const": "PINNED"},
+        "selection_state": {"enum": ["NOT_SELECTED", "SELECTED"]}
+      }
+    },
+    "git_town": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binary_state", "configuration_state", "live_sync_state", "publication_state", "human_admit"],
+      "properties": {
+        "binary_state": {"enum": ["ABSENT", "CANDIDATE", "ADMITTED"]},
+        "configuration_state": {"enum": ["ABSENT", "CANDIDATE", "ADMITTED"]},
+        "live_sync_state": {"enum": ["NOT_EXERCISED", "FAIL", "PASS"]},
+        "publication_state": {"enum": ["NOT_EXERCISED", "FAIL", "PASS"]},
+        "human_admit": {"enum": ["NOT_PERFORMED", "ADMITTED", "REJECTED"]}
+      }
+    },
+    "program": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue", "title", "convergence_issue"],
+      "properties": {
+        "issue": {"const": 61},
+        "title": {"type": "string", "minLength": 1},
+        "convergence_issue": {"const": 68}
+      }
+    },
+    "stacks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stack"}},
+    "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
+    "human_owned_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "conclusion"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "conclusion": {"enum": ["SUCCESS", "FAILURE", "ACTION_REQUIRED", "NOT_OBSERVED"]}
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "issue", "pr", "branch", "base_branch", "observed_head_sha", "relation", "publication_state", "main_presence", "mergeability", "checks", "path_roots", "rollback_subject", "human_boundary"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "kind": {"enum": ["ISSUE_ONLY", "PULL_REQUEST"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "pr": {"type": ["integer", "null"], "minimum": 1},
+        "branch": {"type": "string", "minLength": 1},
+        "base_branch": {"type": "string", "minLength": 1},
+        "observed_head_sha": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "relation": {"enum": ["ROOT", "SIBLING", "TRUE_CHILD", "TERMINAL", "CONVERGENCE", "MERGED_TO_PARENT", "BLOCKED_DUPLICATE_TERMINAL", "HISTORICAL"]},
+        "publication_state": {"enum": ["OPEN", "MERGED_TO_MAIN", "MERGED_TO_PARENT", "NOT_CREATED", "BLOCKED", "SUPERSEDED_CANDIDATE"]},
+        "main_presence": {"enum": ["ON_MAIN", "NOT_ON_MAIN", "UNKNOWN"]},
+        "mergeability": {"enum": ["MERGEABLE", "NON_MERGEABLE", "UNKNOWN", "NOT_APPLICABLE"]},
+        "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+        "path_roots": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}},
+        "rollback_subject": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "human_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "class", "nodes"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "class": {"enum": ["DOCUMENTATION", "LOOPX", "PROVIDER", "HISTORICAL"]},
+        "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "issues", "prs", "overlap_roots", "state", "authority"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "type": {"enum": ["DUPLICATE_ACTIVE_TERMINAL", "PATH_LEASE_OVERLAP", "ANCESTRY_CONFLICT"]},
+        "issues": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}},
+        "prs": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}},
+        "overlap_roots": {"type": "array", "minItems": 1, "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}},
+        "state": {"const": "BLOCKED_HUMAN_DECISION"},
+        "authority": {"const": "HUMAN"}
+      }
+    }
+  }
+}

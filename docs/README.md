@@ -14,6 +14,7 @@ This directory is the human navigation layer. It does not replace machine-readab
 | Directory/state map | [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) | directory owner, inputs, outputs and transitions |
 | Normative target | [`architecture/modular-integration-requirements.md`](architecture/modular-integration-requirements.md) | complete modular-integration target contract |
 | Mutable status | [`architecture/modular-integration-status.md`](architecture/modular-integration-status.md) | what has actually landed and what remains unexercised |
+| Git/Stack profile | [`git/README.md`](git/README.md) | repository-owned Git Town adoption and Stack policy |
 | Stack traceability | [`traceability/STACK_PR_INDEX.md`](traceability/STACK_PR_INDEX.md) | molecular siblings, children, terminal and convergence leaves |
 | Machine control plane | [`.arena/`](../.arena/) | manifests, schemas, requirements, locks, policies and Context Capsules |
 | Public runtime | [`loopctl/`](../loopctl/) | stable CLI/MCP surface and wiring |

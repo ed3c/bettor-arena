@@ -1,0 +1,151 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/worker-fleet/queue/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Tasks, their dependencies and their resource budgets. Ordering is (priority desc, order, task_id) and nothing else, so the same queue yields the same plan every run.",
+  "properties": {
+    "cpu_slots_total": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "disk_mb_total": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "items": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "budgets": {
+            "additionalProperties": false,
+            "properties": {
+              "cpu_slots": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "disk_mb": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "max_output_bytes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "max_processes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "memory_mb": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "timeout_ms": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "cpu_slots",
+              "disk_mb",
+              "max_output_bytes",
+              "max_processes",
+              "memory_mb",
+              "timeout_ms"
+            ],
+            "type": "object"
+          },
+          "cache_scope": {
+            "description": "Dependency cache isolation key. Two subjects sharing a scope share a cache, and one can contaminate the other.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "depends_on": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "order": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "priority": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "requested_lease": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "subject": {
+            "additionalProperties": false,
+            "properties": {
+              "commit": {
+                "pattern": "^[0-9a-f]{40}$",
+                "type": "string"
+              },
+              "issue": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "repository": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "commit",
+              "issue",
+              "repository"
+            ],
+            "type": "object"
+          },
+          "task_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "budgets",
+          "cache_scope",
+          "depends_on",
+          "order",
+          "priority",
+          "requested_lease",
+          "subject",
+          "task_id"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "max_parallelism": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "memory_mb_total": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "owner_checkout": {
+      "description": "The developer's live checkout. No lease may place a worktree inside it.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/worker-fleet-queue/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "max_parallelism",
+    "cpu_slots_total",
+    "memory_mb_total",
+    "disk_mb_total",
+    "owner_checkout",
+    "items"
+  ],
+  "title": "Worker fleet queue",
+  "type": "object"
+}

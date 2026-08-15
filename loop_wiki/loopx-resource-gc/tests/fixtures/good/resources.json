@@ -1,0 +1,145 @@
+[
+  {
+    "blocked_evidence": false,
+    "bytes": 4096,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/vector-stale",
+    "resource_class": "VECTOR_INDEX",
+    "resource_id": "vector-stale",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 2048,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/cache-stale",
+    "resource_class": "DEPENDENCY_CACHE",
+    "resource_id": "cache-stale",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 1024,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/graph-divergent",
+    "resource_class": "GRAPH_INDEX",
+    "resource_id": "graph-divergent",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 512,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/lsp-unprovable",
+    "resource_class": "LSP_INDEX",
+    "resource_id": "lsp-unprovable",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 8192,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/ledger-0001",
+    "resource_class": "LEDGER_SEGMENT",
+    "resource_id": "ledger-seg-0001",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 256,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/decision-0007",
+    "resource_class": "HUMAN_DECISION",
+    "resource_id": "human-admit-0007",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 1024,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/wal-0003",
+    "resource_class": "WAL",
+    "resource_id": "wal-0003",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": true,
+    "bytes": 640,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/blocked-12",
+    "resource_class": "ARTIFACT",
+    "resource_id": "blocked-conflict-12",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 16384,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": "lease-live",
+    "path": "data/resource-gc/worktree-leased",
+    "resource_class": "WORKTREE",
+    "resource_id": "worktree-leased",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 8192,
+    "dirty": true,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/worktree-dirty",
+    "resource_class": "WORKTREE",
+    "resource_id": "worktree-dirty",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 2048,
+    "dirty": false,
+    "last_used_at": "2026-07-01T00:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/release-tree",
+    "resource_class": "LOOPX_SNAPSHOT",
+    "resource_id": "release-subject-tree",
+    "subject_commit": "5d67ca8"
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 1024,
+    "dirty": false,
+    "last_used_at": "2026-08-15T09:00:00Z",
+    "lease_id": null,
+    "path": "data/resource-gc/cache-fresh",
+    "resource_class": "DEPENDENCY_CACHE",
+    "resource_id": "cache-fresh",
+    "subject_commit": null
+  },
+  {
+    "blocked_evidence": false,
+    "bytes": 128,
+    "dirty": false,
+    "last_used_at": null,
+    "lease_id": null,
+    "path": "data/resource-gc/artifact-unknown",
+    "resource_class": "ARTIFACT",
+    "resource_id": "artifact-no-timestamp",
+    "subject_commit": null
+  }
+]

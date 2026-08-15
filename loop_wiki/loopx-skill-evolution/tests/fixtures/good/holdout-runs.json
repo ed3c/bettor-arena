@@ -1,0 +1,62 @@
+[
+  {
+    "arm": "candidate",
+    "case_id": "hold-001",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "cites-repo-command",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "h-001",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "hold-002",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-hand-edited-generated-file",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "h-002",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  },
+  {
+    "arm": "candidate",
+    "case_id": "hold-003",
+    "elapsed_ms": 2000,
+    "gate_results": [
+      {
+        "detail": "",
+        "gate_id": "no-unsupported-claim",
+        "state": "PASS"
+      }
+    ],
+    "host_id": "claude-code",
+    "judge_scores": [],
+    "model_id": "claude-opus-5",
+    "provider_id": "anthropic",
+    "repetition": 1,
+    "run_id": "h-003",
+    "tokens": 1000,
+    "unsupported_claims": 0
+  }
+]

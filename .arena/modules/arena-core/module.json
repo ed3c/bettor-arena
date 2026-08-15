@@ -1,31 +1,120 @@
 {
   "components": {
-    "bootstrap": {"paths": ["bootstrap.sh", ".githooks", ".claude/hooks"], "required": true},
+    "bootstrap": {
+      "paths": [
+        "bootstrap.sh",
+        ".githooks",
+        ".claude/hooks"
+      ],
+      "required": true
+    },
     "context": {
-      "paths": ["README.md", "AGENTS.md", "CLAUDE.md", "ARCHITECTURE.md", "docs/architecture/agent-entrypoints.contract.json", "docs/architecture/modular-integration-requirements.md", "docs/architecture/STATE_MACHINES.md", "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md", "docs/architecture/pdf-loopx-harness.integration.json", "docs/architecture/pdf-loopx-harness.integration.schema.json", "loop_wiki/README.md"],
+      "paths": [
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "ARCHITECTURE.md",
+        "docs/architecture/agent-entrypoints.contract.json",
+        "docs/architecture/modular-integration-requirements.md",
+        "docs/architecture/STATE_MACHINES.md",
+        "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+        "docs/architecture/pdf-loopx-harness.integration.json",
+        "docs/architecture/pdf-loopx-harness.integration.schema.json",
+        "loop_wiki/README.md"
+      ],
       "required": true
     },
     "proof": {
-      "paths": ["scripts/gates/check_agent_docs.py", "scripts/gates/check_arena_core.py", "scripts/gates/check_pdf_loopx_harness_integration.py", "scripts/gates/check_placement.py", ".github/workflows/modular-contracts.yml", ".github/workflows/pdf-loopx-harness-integration.yml"],
+      "paths": [
+        "scripts/gates/check_agent_docs.py",
+        "scripts/gates/check_arena_core.py",
+        "scripts/gates/check_pdf_loopx_harness_integration.py",
+        "scripts/gates/check_placement.py",
+        ".github/workflows/modular-contracts.yml",
+        ".github/workflows/pdf-loopx-harness-integration.yml",
+        ".github-delivery/ci-policy.json",
+        "scripts/gates/verify_modular_contracts.sh"
+      ],
       "required": true
     }
   },
   "conflicts": [],
-  "external_policy": {"exposed": false, "mutation": "none", "network": "none", "secrets": "none"},
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
   "id": "arena-core",
   "interface_version": "1.2.0",
-  "loops": [{"class": "macro", "external_policy": "denied", "id": "macro", "interface_version": "2.8.0", "public_port": "sh loopctl/loopctl.sh macro"}],
+  "loops": [
+    {
+      "class": "macro",
+      "external_policy": "denied",
+      "id": "macro",
+      "interface_version": "2.8.0",
+      "public_port": "sh loopctl/loopctl.sh macro"
+    }
+  ],
   "proof": {
-    "control": ["sh", "proof_workflow/control_macro_entry.sh", "--json"],
-    "mutation": ["python3", "scripts/gates/check_arena_core.py", "--selftest"],
-    "selftest": ["python3", "scripts/gates/check_arena_core.py", "--selftest"],
-    "verify": ["python3", "scripts/gates/check_arena_core.py"]
+    "control": [
+      "sh",
+      "proof_workflow/control_macro_entry.sh",
+      "--json"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/gates/check_arena_core.py",
+      "--selftest"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/gates/check_arena_core.py",
+      "--selftest"
+    ],
+    "verify": [
+      "python3",
+      "scripts/gates/check_arena_core.py"
+    ]
   },
-  "provides": ["arena.passive-context/v1", "arena.host-gates/v1", "arena.pdf-loopx-traceability/v1"],
-  "requires": ["arena.module-catalog/v1"],
-  "roots": ["AGENTS.md", "CLAUDE.md", "CONTEXT.md", "ARCHITECTURE.md", "bootstrap.sh", ".githooks", ".github", ".claude/hooks", "scripts/gates", "scripts/delivery_status.py", "scripts/delivery_sync.py", "scripts/migrate", "docs/architecture", "loop_wiki/README.md"],
-  "runtime": {"profiles": [], "tools": ["git", "python3", "sh"]},
+  "provides": [
+    "arena.passive-context/v1",
+    "arena.host-gates/v1",
+    "arena.pdf-loopx-traceability/v1"
+  ],
+  "requires": [
+    "arena.module-catalog/v1"
+  ],
+  "roots": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTEXT.md",
+    "ARCHITECTURE.md",
+    "bootstrap.sh",
+    ".githooks",
+    ".github",
+    ".github-delivery",
+    ".claude/hooks",
+    "scripts/gates",
+    "scripts/delivery_status.py",
+    "scripts/delivery_sync.py",
+    "scripts/migrate",
+    "docs/architecture",
+    "loop_wiki/README.md"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "git",
+      "python3",
+      "sh"
+    ]
+  },
   "schema": "bettor-arena/module/v1",
-  "skills": {"optional": [], "repo_owned": [], "required": []},
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
   "summary": "Root engineering SSOT, governed Agent entrypoints, LoopX PDF executable traceability, bootstrap, delivery/migration operators, and repository-level deterministic gates."
 }

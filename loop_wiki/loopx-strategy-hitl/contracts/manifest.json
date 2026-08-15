@@ -1,0 +1,62 @@
+{
+  "canonical_authority": "LOOPX_LEDGER_REDUCER",
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "forbidden_decision_fields": [
+    "bypass",
+    "force_skip",
+    "override",
+    "skip",
+    "waive_all"
+  ],
+  "interface_version": "1.0.0",
+  "non_waivable_gate_classes": [
+    "CLEANUP",
+    "DESTRUCTIVE",
+    "RELEASE_SIGNING",
+    "SECRET",
+    "SECURITY",
+    "SUBJECT_INTEGRITY"
+  ],
+  "planner_authority": "PROPOSE_ONLY",
+  "requires_capabilities": [
+    "loopx.contracts/v1",
+    "loopx.ledger/v1"
+  ],
+  "runtime_state_checked_in": false,
+  "runtime_state_path": ".loopx/",
+  "schema_version": "loopx/strategy-hitl-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/graph-checkpoint/v1",
+      "path": "graph-checkpoint.schema.json",
+      "sha256": "2efc08bad3272692e311af748100d758d32946982978c5df6c30475744d12203"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/hitl-interrupt/v1",
+      "path": "hitl-interrupt.schema.json",
+      "sha256": "315fd98b24ea6bb0f0882aa71a91607631e90a30d44caaaa3bb26d2561254b52"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/human-decision/v1",
+      "path": "human-decision.schema.json",
+      "sha256": "7f6eed62eb2596addf7a55b6096f752693560d3fc635786f1d1d1b28e0d9dfb5"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/resume-envelope/v1",
+      "path": "resume-envelope.schema.json",
+      "sha256": "5813e199b77336fdeb3f4bf15275295e9bbccbd3d6612a7497ebc8a8c8325edb"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/strategy-proposal/v1",
+      "path": "strategy-proposal.schema.json",
+      "sha256": "65aea7c2b88b6d6eb4ff46de8cc8de513eb1bf9dd5927ab68943a5b2c2eb7f35"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "arms": [
+    "baseline",
+    "candidate",
+    "current"
+  ],
+  "canonical_mutation_permitted": false,
+  "fixture_evidence_unlocks_capability": false,
+  "gate_authority": "DETERMINISTIC_AND_NON_COMPENSATORY",
+  "holdout_reveal_authority": "GRADER_ONLY",
+  "interface_version": "1.0.0",
+  "judge_authority": "ADVISORY_ONLY",
+  "minimum_repetitions": 3,
+  "minimum_replicating_hosts": 2,
+  "outcomes": [
+    "CANDIDATE",
+    "INCONCLUSIVE",
+    "REJECTED"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.worker-gateway/v1"
+  ],
+  "schema_version": "loopx/skill-evolution-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/skill-evolution/case-set/v1",
+      "path": "case-set.schema.json",
+      "sha256": "0d3514618646e2ccb1520c3d00cc82c13c3be0817d66a8d3c8fb08126bdfe0b3"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/skill-evolution/receipt/v1",
+      "path": "evolution-receipt.schema.json",
+      "sha256": "98e7dbda9b8ed4b2ce65b6bc1845e588367b4a7c24795d9ab4e64faa3c53e889"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/skill-evolution/experiment/v1",
+      "path": "experiment.schema.json",
+      "sha256": "a34ea35f7e0ff8e9e7a05e74652ec093f7b35593cad4e7a5a3d55edcc9206ed5"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/skill-evolution/run-record/v1",
+      "path": "run-record.schema.json",
+      "sha256": "457263616037f7cdeba41336235c1f9f56b2ee9bd1d744b8cf6b4637fda8186c"
+    }
+  ]
+}

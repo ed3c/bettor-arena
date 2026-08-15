@@ -1,0 +1,207 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/knowledge/system-spec/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Components and requirements, with one acceptance case per independent assertion.",
+  "properties": {
+    "components": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "enum": [
+              "OBSERVATION_ONLY",
+              "PROPOSES",
+              "DECIDES_WITH_HUMAN_ADMIT"
+            ]
+          },
+          "boundary": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "component_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "effects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "failure_modes": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "inputs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "invariants": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "outputs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rollback": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "authority",
+          "boundary",
+          "component_id",
+          "effects",
+          "failure_modes",
+          "inputs",
+          "invariants",
+          "outputs",
+          "rollback"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "notes_subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "open_unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "requirements": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "acceptance_cases": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "assertion_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "case_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "expect": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "given": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "assertion_id",
+                "case_id",
+                "expect",
+                "given"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "component_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "derived_from_assertions": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "derived_from_cards": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "requirement_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "statement": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "acceptance_cases",
+          "component_id",
+          "derived_from_assertions",
+          "derived_from_cards",
+          "requirement_id",
+          "statement"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/knowledge-system-spec/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "notes_subject",
+    "components",
+    "requirements",
+    "open_unknowns"
+  ],
+  "title": "Knowledge compiler system specification IR",
+  "type": "object"
+}

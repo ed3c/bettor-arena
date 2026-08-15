@@ -1,0 +1,59 @@
+{
+  "admit_authority": "HUMAN",
+  "claim_kinds": [
+    "HYPOTHESIS",
+    "INFERENCE",
+    "NORM",
+    "SOURCE_STATEMENT"
+  ],
+  "compiled_output_checked_in": false,
+  "external_knowledge_admitted": false,
+  "interface_version": "1.0.0",
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.code-truth-graph/v2",
+    "loopx.contracts/v1"
+  ],
+  "schema_version": "loopx/knowledge-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/assertion-graph/v1",
+      "path": "assertion-graph.schema.json",
+      "sha256": "766ddc176f4b693b9d4d26729a7ad930e0f6acd4465cfe7edf62704bd6187f81"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/codeop-plan/v1",
+      "path": "codeop-plan.schema.json",
+      "sha256": "e88c45f656b8bf9e25a8732cd7ba95e2aeba43dc32463bb7be033889307e0b7b"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/card-graph/v1",
+      "path": "knowledge-card-graph.schema.json",
+      "sha256": "8e8fc56b198addcd857fda8f5c263f1cb7dc7aba3757beec1ae778d9afb638b1"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/scaffold-receipt/v1",
+      "path": "scaffold-receipt.schema.json",
+      "sha256": "08c0308835830e436b23b56e9cbc1b6d6c1a78167aacce173428c6c46f936d5f"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/source-manifest/v1",
+      "path": "source-manifest.schema.json",
+      "sha256": "0c07cf8a65bd0ec77a0bd50f01503255e3aee4e7f436cb0ae151bdf928002319"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/knowledge/system-spec/v1",
+      "path": "system-spec.schema.json",
+      "sha256": "d1a25c60a60570ead87c2d5cdb3b83ecc15cdcc9f049e97d21a020fcc5688c90"
+    }
+  ],
+  "terminal_state": "CANDIDATE_RECEIPT",
+  "verification_states": [
+    "ADMITTED_BY_HUMAN",
+    "CONTRADICTED",
+    "CORROBORATED",
+    "UNKNOWN",
+    "UNVERIFIED",
+    "VERIFIED_BY_EXECUTION"
+  ]
+}

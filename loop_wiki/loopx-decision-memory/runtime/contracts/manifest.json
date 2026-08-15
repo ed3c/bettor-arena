@@ -1,0 +1,54 @@
+{
+  "authority_ladder": [
+    "SOURCE",
+    "TEST",
+    "ADR",
+    "RECEIPT",
+    "MEMORY"
+  ],
+  "canonical_writer": "LOOPX_LEDGER_REDUCER",
+  "delete_preserves_history": true,
+  "event_kinds": [
+    "MEMORY_ADMITTED",
+    "MEMORY_CONTESTED",
+    "MEMORY_EXPIRED",
+    "MEMORY_REJECTED",
+    "MEMORY_REVALIDATED",
+    "MEMORY_SUPERSEDED",
+    "MEMORY_TOMBSTONED"
+  ],
+  "interface_version": "1.0.0",
+  "mem0_required": false,
+  "memory_states": [
+    "ACTIVE",
+    "CONTESTED",
+    "EXPIRED",
+    "REJECTED",
+    "SUPERSEDED",
+    "TOMBSTONED"
+  ],
+  "projection_is_canonical": false,
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.decision-memory/v1",
+    "loopx.ledger/v1"
+  ],
+  "schema_version": "loopx/memory-runtime-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/memory-runtime/event/v1",
+      "path": "memory-event.schema.json",
+      "sha256": "be43bfd7af86d599fc6f39efc070abb5b23f5fc4c82f2e0d02c9b810d179b151"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/memory-runtime/projection/v1",
+      "path": "memory-projection.schema.json",
+      "sha256": "37d8333c225b15bce361dcc48b170cfc9146eb41562b5cca480205817498a147"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/memory-runtime/tombstone/v1",
+      "path": "memory-tombstone.schema.json",
+      "sha256": "ce8f72d7efafc5ba5ef7d4582040857c9af3c6a237a9afa254b09a530ec4236f"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/source-ingest/declaration/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What is being ingested, under what rights, to what destination. Rights are checked before bytes are read: a capture that reads first has already made the copy the check is deciding about.",
+  "properties": {
+    "declarations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "declared_by": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "dependency_key": {
+            "description": "Same-origin reposts share one key. Two copies of one upload are not corroboration.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "destination_authorized": {
+            "type": "boolean"
+          },
+          "rights_state": {
+            "enum": [
+              "AUTHORIZED",
+              "NOT_AUTHORIZED",
+              "UNKNOWN"
+            ]
+          },
+          "source_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_type": {
+            "enum": [
+              "ARTICLE",
+              "COMMAND_OUTPUT",
+              "KEYFRAME",
+              "LOG",
+              "MARKDOWN",
+              "PAPER",
+              "PDF_FIGURE",
+              "PDF_PAGE",
+              "RUNTIME_ARTIFACT",
+              "SCREENSHOT",
+              "SOURCE_CODE",
+              "SRT",
+              "TEST_ARTIFACT",
+              "VTT",
+              "YOUTUBE_TRANSCRIPT"
+            ]
+          },
+          "url": {
+            "description": "Credential-bearing query parameters are refused here: a URL becomes a locator, and a locator is copied into every note that cites the source.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "declared_by",
+          "dependency_key",
+          "destination_authorized",
+          "rights_state",
+          "source_id",
+          "source_type",
+          "url"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/source-declaration/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "declarations"
+  ],
+  "title": "Source declaration",
+  "type": "object"
+}

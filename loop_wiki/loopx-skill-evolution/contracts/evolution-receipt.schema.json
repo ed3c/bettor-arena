@@ -1,0 +1,237 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/skill-evolution/receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Content-addressed record of a decision. Proposes a versioned release to skills-shared; never mutates a canonical body and never rebinds the consumer.",
+  "properties": {
+    "admit_required": {
+      "const": true
+    },
+    "arm_digests": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "arm": {
+            "type": "string"
+          },
+          "content_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "arm",
+          "content_digest"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "authority": {
+      "const": "PROPOSES"
+    },
+    "canonical_mutation": {
+      "const": "NONE_PERFORMED"
+    },
+    "capability_state": {
+      "description": "FIXTURE_ONLY evidence always yields NOT_UNLOCKED; there is no code path that says otherwise.",
+      "enum": [
+        "NOT_UNLOCKED",
+        "UNLOCKED_PENDING_ADMIT"
+      ]
+    },
+    "consumer_binding_update": {
+      "const": "SEPARATE_LEAF_NOT_PERFORMED"
+    },
+    "decision": {
+      "type": "object"
+    },
+    "dev_case_set_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "evidence_kind": {
+      "enum": [
+        "FIXTURE_ONLY",
+        "LIVE_EXERCISED"
+      ]
+    },
+    "execution_contract": {
+      "additionalProperties": false,
+      "description": "Declared once and shared by every arm. Arms carry no execution fields of their own, so a model or tool differing between them is not expressible.",
+      "properties": {
+        "context_policy": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "host_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "max_context_tokens": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "model_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ordering": {
+          "enum": [
+            "INTERLEAVED",
+            "RANDOMIZED_FIXED_SEED"
+          ]
+        },
+        "provider_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "repetitions": {
+          "description": "One run of each arm cannot separate a better prompt from a luckier sample.",
+          "minimum": 3,
+          "type": "integer"
+        },
+        "stopping_rule": {
+          "description": "Stopping when the numbers look good turns a null result into a win.",
+          "enum": [
+            "FIXED_REPETITIONS"
+          ]
+        },
+        "tools_allowlist": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "context_policy",
+        "host_id",
+        "max_context_tokens",
+        "model_id",
+        "ordering",
+        "provider_id",
+        "repetitions",
+        "stopping_rule",
+        "tools_allowlist"
+      ],
+      "type": "object"
+    },
+    "experiment_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "host_projections": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "canonical_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "derivation": {
+            "enum": [
+              "GENERATED_FROM_CANONICAL",
+              "HAND_WRITTEN"
+            ]
+          },
+          "host_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "projection_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "canonical_digest",
+          "derivation",
+          "host_id",
+          "projection_digest"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "mutation_suite_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "proposed_release": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "receipt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recorded_at": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/skill-evolution-receipt/v1"
+    },
+    "sealed_holdout_seal": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_RELEASE"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "skill_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "skill_release": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "commit",
+        "ref_kind",
+        "repository",
+        "skill_id",
+        "skill_release"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "subject",
+    "execution_contract",
+    "arm_digests",
+    "dev_case_set_digest",
+    "sealed_holdout_seal",
+    "mutation_suite_digest",
+    "decision",
+    "evidence_kind",
+    "capability_state",
+    "host_projections",
+    "recorded_at",
+    "proposed_release",
+    "canonical_mutation",
+    "consumer_binding_update",
+    "admit_required",
+    "authority",
+    "receipt_digest"
+  ],
+  "title": "Skill evolution candidate release receipt",
+  "type": "object"
+}

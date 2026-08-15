@@ -1,0 +1,186 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/knowledge/scaffold-receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A candidate scaffold, its gates and the gaps it did not close.",
+  "properties": {
+    "admit_required": {
+      "const": true
+    },
+    "authority": {
+      "const": "PROPOSES"
+    },
+    "compiler_identity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "declared_entropy_sources": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "gates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_EXERCISED",
+              "ABSENT",
+              "SKIPPED_BY_POLICY"
+            ]
+          }
+        },
+        "required": [
+          "detail",
+          "name",
+          "state"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "non_passing_gates": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "notes_subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "output_lease": {
+      "type": "object"
+    },
+    "scaffold": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "bytes": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "digest": {
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "path": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "bytes",
+              "digest",
+              "path"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "tree_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "files",
+        "tree_digest"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/knowledge-scaffold-receipt/v1"
+    },
+    "state": {
+      "const": "CANDIDATE"
+    },
+    "unresolved": {
+      "additionalProperties": false,
+      "properties": {
+        "open_contradictions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "open_unknowns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "uncovered_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "open_contradictions",
+        "open_unknowns",
+        "uncovered_requirements"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "notes_subject",
+    "compiler_identity",
+    "output_lease",
+    "scaffold",
+    "gates",
+    "unresolved",
+    "declared_entropy_sources",
+    "state",
+    "admit_required",
+    "non_passing_gates",
+    "authority"
+  ],
+  "title": "Knowledge compiler scaffold receipt",
+  "type": "object"
+}

@@ -26,7 +26,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "7423797668a237ebabc1366874b4312de299a2cea6de638b6968c4724c474199",
+  "content_sha256": "43173d9ca410bd1b996a32be435c1a8358ac876ca9b54ec1665f5bb80b5b1123",
   "modules": [
     {
       "components": [
@@ -51,7 +51,7 @@
       ],
       "id": "arena-core",
       "interface_version": "1.2.0",
-      "manifest_sha256": "cdbd1ee804c6057ec3bec606db4e9ffe0ee182cfe8e5cfd33103c30835550edd",
+      "manifest_sha256": "a0b21264b242eeedb459e59b000adf92dd66e8165a5c7b6f6097c20a9b353613",
       "provides": [
         "arena.host-gates/v1",
         "arena.passive-context/v1",
@@ -219,8 +219,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "af8bd1d08023d6e24fcaea0f51eed6eaccdb45f5e912abafc59ffdf69e2f0d4f",
+  "ownership_sha256": "c0afdc81c7f52b9e5e0336d4aa28cb3f385b3d0d41be073a4f561f1f07d59996",
   "requirements_sha256": "f609832ef81c051449431a4edb34504d875304b01367762508163cb8d78e209b",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1557
+  "tracked_files": 1990
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "canonical_key": "component:ledger-append-semantics",
+    "card_id": "card-3b4ccf452fdf9f58",
+    "claim": "the append is compare-and-set and a refusal does not move the head",
+    "code_anchors": [
+      "an-append",
+      "an-append-test",
+      "an-append-trace"
+    ],
+    "declared_symbols": [
+      "append_event"
+    ],
+    "kind": "COMPONENT",
+    "revision": 1,
+    "source_dependency_keys": [
+      "notes/architecture.md"
+    ]
+  },
+  {
+    "canonical_key": "rule:retry-interval",
+    "card_id": "card-c8b57ff218977d8f",
+    "claim": "retries always use a fixed 5s interval",
+    "code_anchors": [
+      "an-retry"
+    ],
+    "declared_symbols": [
+      "retry_interval"
+    ],
+    "kind": "RULE",
+    "revision": 1,
+    "source_dependency_keys": [
+      "notes/meeting.md"
+    ]
+  },
+  {
+    "canonical_key": "adr:retry-policy-decision",
+    "card_id": "card-e6fca89d0e417906",
+    "claim": "retry policy is decided by the platform team and must not change without an ADR",
+    "code_anchors": [],
+    "declared_symbols": [
+      "retry_interval"
+    ],
+    "kind": "ADR",
+    "revision": 1,
+    "source_dependency_keys": [
+      "docs/adr/0007.md"
+    ]
+  },
+  {
+    "canonical_key": "rule:cache-warming",
+    "card_id": "card-91aaa9c6cde5bada",
+    "claim": "the card cache is warmed on boot",
+    "code_anchors": [],
+    "declared_symbols": [],
+    "kind": "RULE",
+    "revision": 1,
+    "source_dependency_keys": [
+      "notes/perf.md"
+    ]
+  }
+]
