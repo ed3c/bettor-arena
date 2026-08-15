@@ -1,0 +1,21 @@
+{
+  "canonical": {
+    "commit": "b3c722da1c40301b0a12e0ef99848d884bfc720b",
+    "module": "skills/dual-forge-repository-loop/references/instruction-projection.json",
+    "module_sha256": "bb0782b36eadaa10a6f4b546c87029e840c2187bd4256d5fe20f5329982f96b9",
+    "repository": "ed3c/skills-shared"
+  },
+  "global_claude": {
+    "receipt": "host-owned:global-claude-projection-receipt",
+    "state": "NOT_EXERCISED"
+  },
+  "repository_projection": {
+    "AGENTS.md": {
+      "sha256": "1ec9b3bf2e59af4f63b4e904b7bd7d4c211b722a6b08666d79236a908716488c"
+    },
+    "CLAUDE.md": {
+      "sha256": "1d57e245fe01a672ab2216ea3c529cfd7edcfcf1cfd5761d6142d4eb9d90bf47"
+    }
+  },
+  "schema_version": "instruction-projection-binding/v1"
+}
