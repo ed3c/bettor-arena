@@ -1,0 +1,277 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/foldback/change-delta/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Exact before/after subjects with the symbol, interface, test and runtime evidence a fold-back may draw on.",
+  "properties": {
+    "after": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "anchors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "commit": {
+            "pattern": "^[0-9a-f]{40}$",
+            "type": "string"
+          },
+          "content_digest": {
+            "description": "Digest of the anchored lines themselves. Line numbers alone stay well-formed after the code moves and quietly start meaning something else.",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "evidence_class": {
+            "description": "Separate kinds of evidence. None of them implies another: a diff shows what the source says, a passing test shows a path executed under the inputs it supplies, and only a runtime observation shows what happened on a real run.",
+            "enum": [
+              "STATIC",
+              "TEST",
+              "RUNTIME"
+            ]
+          },
+          "kind": {
+            "description": "MODEL_SUMMARY is absent on purpose: a summary is a claim about evidence, and citing it as evidence closes a loop that checking cannot open.",
+            "enum": [
+              "SOURCE_LINES",
+              "TEST_CASE",
+              "RUNTIME_TRACE",
+              "INTERFACE_SIGNATURE"
+            ]
+          },
+          "line_end": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "line_start": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "symbol": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "anchor_id",
+          "commit",
+          "content_digest",
+          "evidence_class",
+          "kind",
+          "line_end",
+          "line_start",
+          "path",
+          "symbol"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "before": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "ref_kind"
+      ],
+      "type": "object"
+    },
+    "changed_files": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "public_interface_delta": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "runtime_observations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter_attested": {
+            "const": true,
+            "description": "An unattested runtime report is a claim that something ran, which is what runtime evidence is supposed to establish."
+          },
+          "environment": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "observation_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "observed_at": {
+            "type": "string"
+          },
+          "observed_symbols": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "receipt_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "adapter_attested",
+          "environment",
+          "observation_id",
+          "observed_at",
+          "observed_symbols",
+          "receipt_digest"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/foldback-change-delta/v1"
+    },
+    "symbol_delta": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "change": {
+            "enum": [
+              "ADDED",
+              "REMOVED",
+              "MODIFIED",
+              "RENAMED"
+            ]
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "symbol": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "change",
+          "path",
+          "public",
+          "symbol"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "test_executions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "command": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "covered_symbols": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "execution_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "exit_code": {
+            "type": "integer"
+          },
+          "output_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "ran_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "command",
+          "covered_symbols",
+          "execution_id",
+          "exit_code",
+          "output_digest",
+          "ran_at"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "before",
+    "after",
+    "changed_files",
+    "symbol_delta",
+    "public_interface_delta",
+    "test_executions",
+    "runtime_observations",
+    "anchors"
+  ],
+  "title": "Fold-back change delta",
+  "type": "object"
+}

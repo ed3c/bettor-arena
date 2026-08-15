@@ -1,0 +1,32 @@
+[
+  {
+    "case_id": "hold-001",
+    "expected": "the projection was not re-rendered after the module set moved",
+    "hard_gate_ids": [
+      "cites-repo-command"
+    ],
+    "inputs": {},
+    "kind": "HOLDOUT",
+    "prompt": "A projection differs from the rendered one. Diagnose it."
+  },
+  {
+    "case_id": "hold-002",
+    "expected": "re-render from the merged inputs rather than picking a side",
+    "hard_gate_ids": [
+      "no-hand-edited-generated-file"
+    ],
+    "inputs": {},
+    "kind": "HOLDOUT",
+    "prompt": "Two sessions edited the same generated file. Now what?"
+  },
+  {
+    "case_id": "hold-003",
+    "expected": "no: a test shows execution under the inputs it supplies",
+    "hard_gate_ids": [
+      "no-unsupported-claim"
+    ],
+    "inputs": {},
+    "kind": "HOLDOUT",
+    "prompt": "Is a passing test evidence that the code runs in production?"
+  }
+]

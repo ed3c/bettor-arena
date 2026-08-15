@@ -1,0 +1,80 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/graph-checkpoint/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A planner's replayable projection, bound to one subject and one ledger head. Carries cursor and cache only; scripts/strategy_checkpoint.py refuses one holding canonical task state, because that is a second writer.",
+  "properties": {
+    "based_on": {
+      "additionalProperties": false,
+      "properties": {
+        "ledger_head": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state_revision",
+        "ledger_head"
+      ],
+      "type": "object"
+    },
+    "checkpoint_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$",
+      "type": "string"
+    },
+    "graph_cache": {
+      "type": "object"
+    },
+    "graph_cursor": {
+      "type": "object"
+    },
+    "resume_token": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/graph-checkpoint/v1"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "checkpoint_id",
+    "subject",
+    "based_on",
+    "graph_cursor",
+    "graph_cache",
+    "resume_token"
+  ],
+  "title": "LoopX Graph Checkpoint v1",
+  "type": "object"
+}

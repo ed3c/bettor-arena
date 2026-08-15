@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/docs/git/pdf-terminal-sequence.schema.json",
+  "title": "Bettor Arena ordered PDF terminal sequence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "observed_at",
+    "repository",
+    "source",
+    "shared_skill",
+    "foundation_subjects",
+    "queue_policy",
+    "current",
+    "items",
+    "convergence",
+    "human_owned_operations"
+  ],
+  "properties": {
+    "schema": {"const": "bettor-arena/pdf-terminal-sequence/v1"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_name", "repository_id", "default_branch", "base_sha"],
+      "properties": {
+        "full_name": {"const": "ed3c/bettor-arena"},
+        "repository_id": {"const": 1330387399},
+        "default_branch": {"const": "main"},
+        "base_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "pages", "kind", "authority", "repository_copy"],
+      "properties": {
+        "title": {"const": "LLM 泛化：模型權重與 Harness"},
+        "pages": {"const": 41},
+        "kind": {"const": "ATTACHED_PDF_SOURCE_PROPOSAL"},
+        "authority": {"const": "SOURCE_PROPOSAL_ONLY"},
+        "repository_copy": {"const": "ABSENT"}
+      }
+    },
+    "shared_skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "blob", "path", "selection_state"],
+      "properties": {
+        "repository": {"const": "ed3c/skills-shared"},
+        "commit": {"const": "c5750720d960a228a0d9419f28125c09d064e3e1"},
+        "blob": {"const": "eb2d915bca3e8a3938625f7d33a10fae95a15769"},
+        "path": {"const": "skills/git-town-stacked-pr-worker/SKILL.md"},
+        "selection_state": {"enum": ["NOT_SELECTED", "SELECTED"]}
+      }
+    },
+    "foundation_subjects": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue", "pr", "module", "state", "validation_item"],
+        "properties": {
+          "issue": {"type": "integer", "minimum": 1},
+          "pr": {"type": "integer", "minimum": 1},
+          "module": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "state": {"const": "MERGED_TO_MAIN"},
+          "validation_item": {"const": "stage-01-main-validation"}
+        }
+      }
+    },
+    "queue_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordering", "active_limit", "later_completion", "branch_topology", "future_branch_creation"],
+      "properties": {
+        "ordering": {"const": "STRICT_GLOBAL_COMPLETION"},
+        "active_limit": {"const": 1},
+        "later_completion": {"const": "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER"},
+        "branch_topology": {"const": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN"},
+        "future_branch_creation": {"const": "BLOCKED_UNTIL_QUEUE_ITEM_ACTIVE"}
+      }
+    },
+    "current": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["program_issue", "index_issue", "active_order", "active_issue", "convergence_issue"],
+      "properties": {
+        "program_issue": {"const": 61},
+        "index_issue": {"const": 102},
+        "active_order": {"const": 0},
+        "active_issue": {"const": 82},
+        "convergence_issue": {"const": 68}
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 26,
+      "maxItems": 26,
+      "items": {"$ref": "#/$defs/item"}
+    },
+    "convergence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue", "order", "branch", "shared_artifacts"],
+      "properties": {
+        "issue": {"const": 68},
+        "order": {"const": 25},
+        "branch": {"const": "integration/loopx-harness-convergence-v1"},
+        "shared_artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}
+        }
+      }
+    },
+    "human_owned_operations": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order",
+        "id",
+        "title",
+        "issues",
+        "prs",
+        "expected_branch",
+        "stack_relation",
+        "prerequisite_items",
+        "owner_paths",
+        "queue_state",
+        "acceptance",
+        "evidence_boundary",
+        "human_boundary"
+      ],
+      "properties": {
+        "order": {"type": "integer", "minimum": 0, "maximum": 25},
+        "id": {"type": "string", "pattern": "^stage-[0-9]{2}-[a-z0-9-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "issues": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "prs": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "expected_branch": {"type": "string", "pattern": "^[a-zA-Z0-9._/-]+$", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}},
+        "stack_relation": {"enum": ["ROOT", "TRUE_CHILD", "ROOT_AFTER_PREDECESSOR", "CONVERGENCE"]},
+        "prerequisite_items": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^stage-[0-9]{2}-[a-z0-9-]+$"}},
+        "owner_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}
+        },
+        "queue_state": {"enum": ["COMPLETE", "ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"]},
+        "acceptance": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "evidence_boundary": {"type": "string", "minLength": 1},
+        "human_boundary": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

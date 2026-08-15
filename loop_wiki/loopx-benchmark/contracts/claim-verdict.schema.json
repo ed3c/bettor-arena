@@ -1,0 +1,63 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/benchmark/claim-verdict/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Where a claim sits on the ladder. Everything starts at CLAIM_UNVERIFIED and nothing climbs on its own; CORROBORATED needs profiles that are genuinely independent, because running the same box again raises confidence in the mean without widening what the mean is about.",
+  "properties": {
+    "claim": {
+      "type": "object"
+    },
+    "evidence": {
+      "description": "Every usable report, including the ones that did not satisfy the claim. Reporting only the ones that did would be the same measurement with a different conclusion.",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "profiles": {
+      "description": "Inside the verdict, not beside it. Beside it they get dropped in the sentence that quotes the number.",
+      "type": "array"
+    },
+    "promotable_by_gate": {
+      "const": false
+    },
+    "promotion_owner": {
+      "const": "HUMAN_ADMIT"
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/benchmark-claim-verdict/v1"
+    },
+    "verdict": {
+      "enum": [
+        "CLAIM_UNVERIFIED",
+        "PROFILE_OBSERVED",
+        "CORROBORATED"
+      ]
+    },
+    "verdict_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "claim",
+    "verdict",
+    "evidence",
+    "profiles",
+    "reason",
+    "notes",
+    "promotable_by_gate",
+    "promotion_owner",
+    "verdict_digest"
+  ],
+  "title": "LoopX benchmark claim verdict",
+  "type": "object"
+}

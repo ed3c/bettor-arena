@@ -1,0 +1,54 @@
+{
+  "adapter": {
+    "adapter_id": "codex-cli",
+    "binary_identity": null,
+    "descriptor_digest": "sha256:15cf563da37807d448c120c6fcc4b781a5030bb96bcc8318a6fe7e7fa2990d65",
+    "host_id": "codex-cli",
+    "implementation_state": "NOT_EXERCISED"
+  },
+  "artifacts": [],
+  "authority": {
+    "performed_human_admit": false,
+    "promoted_release": false,
+    "submitted_gate_verdict": false,
+    "wrote_durable_memory": false,
+    "wrote_loopx_state": false
+  },
+  "cleanup": {
+    "residue_paths": [],
+    "state": "NOT_RUN"
+  },
+  "content_digest": "sha256:2ef72e29f467e6248283790a957a7877c26332a6218dcfd419ae7a13789f138e",
+  "context": {
+    "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "executed": false,
+  "process": {
+    "cancelled": false,
+    "exit_code": null,
+    "process_group_killed": false,
+    "timed_out": false
+  },
+  "receipt_id": "fixture-codex-not-exercised",
+  "request_id": "fixture-codex-not-exercised",
+  "schema_version": "loopx/worker-receipt/v1",
+  "skill": {
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "name": "harness-wiki"
+  },
+  "status": "NOT_EXERCISED",
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "fixture-worker-gateway",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "trace": {
+    "completeness": "PROCESS_ONLY",
+    "event_count": 0,
+    "events_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "opaque_segments": [
+      "documentation and descriptor support do not prove live execution"
+    ]
+  }
+}

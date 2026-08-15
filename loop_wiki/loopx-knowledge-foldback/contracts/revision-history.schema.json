@@ -1,0 +1,106 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/foldback/revision-history/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Append-only. Rejections and supersessions stay; rollback appends a reversal rather than deleting, because deleting the revision also deletes the evidence that justified it.",
+  "properties": {
+    "revisions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "admitted_at": {
+            "type": "string"
+          },
+          "admitted_by": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "canonical_key": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "claim": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "evidence_class": {
+            "description": "Separate kinds of evidence. None of them implies another: a diff shows what the source says, a passing test shows a path executed under the inputs it supplies, and only a runtime observation shows what happened on a real run.",
+            "enum": [
+              "STATIC",
+              "TEST",
+              "RUNTIME"
+            ]
+          },
+          "origin_digest": {
+            "description": "The bundle and decision set this revision came from. Revision numbers are positions in a history that has already moved by the time a rerun happens; the origin is what makes two revisions the same revision.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "patch_kind": {
+            "enum": [
+              "UPDATE",
+              "SUPERSEDE",
+              "DEPRECATE",
+              "CONFLICT",
+              "UNKNOWN",
+              "NOOP"
+            ]
+          },
+          "revision": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "revision_id": {
+            "pattern": "^rev-[0-9a-f]{16}$",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "ADMITTED",
+              "REJECTED",
+              "SUPERSEDED",
+              "ROLLED_BACK"
+            ]
+          },
+          "supersedes_revision_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supporting_anchor_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "admitted_at",
+          "admitted_by",
+          "canonical_key",
+          "claim",
+          "evidence_class",
+          "origin_digest",
+          "patch_kind",
+          "revision",
+          "revision_id",
+          "state",
+          "supersedes_revision_id",
+          "supporting_anchor_ids"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/foldback-revision-history/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "revisions"
+  ],
+  "title": "Fold-back revision history",
+  "type": "object"
+}

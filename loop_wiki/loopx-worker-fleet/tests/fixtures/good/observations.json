@@ -1,0 +1,14 @@
+{
+  "herdr": {
+    "binary_digest": null,
+    "canary_receipt": null,
+    "config_digest": null,
+    "exit_code": null
+  },
+  "tmux": {
+    "attached": false,
+    "pane_count": 2,
+    "session_name": "fleet-worker-a",
+    "state": "SESSION_PRESENT"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "binding": "bettor-arena",
-  "content_sha256": "4143b08221f6ee8de70ae5f1349d37708848e64921090e74ec023f9fff0541b1",
-  "registry_sha256": "2e517cc4e94c41286ef44f40fa3a6edfc0fa32e654fa8dcbab84cba81cd5de7c",
+  "content_sha256": "4f99db5296a35f4d917a0ada587c37d93a5a8510d3144bcd681b2d2af82dee20",
+  "registry_sha256": "d938691267b2b3097d3ab3815e104d892a1cbfe82255170a889e03a82cb915ae",
   "repo_owned": [
     "harness-wiki",
     "product-ops",
@@ -11,7 +11,7 @@
   "schema": "shared-skills/consumer-binding/v1",
   "skills": [
     {
-      "content_sha256": "d823f22c9b6c7ffde1fef5352e48b0daf19d575585780caae36083ef8d3c3e12",
+      "content_sha256": "92d2afd1017f25b4b6009e09e939f0c25148c126489d8895eb51a2f621e94fbe",
       "entrypoint": "skills/autoresearch-composer/SKILL.md",
       "name": "autoresearch-composer"
     },
@@ -36,7 +36,7 @@
       "name": "fold-in"
     },
     {
-      "content_sha256": "d539f361dfb3781fc0e45e84a7da0559dab6c287503954fa88d1d339665dfd43",
+      "content_sha256": "838e6f28e1c91af16422a65567cdb457a4ce2203d0c56257f63f6234c37553eb",
       "entrypoint": "skills/forgejo-delivery-loop/SKILL.md",
       "name": "forgejo-delivery-loop"
     },
@@ -46,17 +46,17 @@
       "name": "gemini-conversation-research"
     },
     {
-      "content_sha256": "b7bfcade981936a6b5498b65fd12491df5f4a18275278c7ec3818c75448f2605",
+      "content_sha256": "1e6fb21abe1624d246d060e6978ca77ddfb3190b958dbe28f61d2b569f5d02a2",
       "entrypoint": "skills/github-delivery-loop/SKILL.md",
       "name": "github-delivery-loop"
     },
     {
-      "content_sha256": "e19633a47d331e98bc6df8b62732508003d19daff77cadd26a15e7c3e8e9c288",
+      "content_sha256": "58b45dc4967a358cf9b51b270fee88761668e819fddb3a7c64545942b3c55b31",
       "entrypoint": "skills/gitlab-delivery-loop/SKILL.md",
       "name": "gitlab-delivery-loop"
     },
     {
-      "content_sha256": "48c6eb9bd8dc98b57143edd74f31373e1895616603f0fde3c662a0ba427e6239",
+      "content_sha256": "d16fd975a93af0573ffc1c6e62e6b2a09a9dab7a4f9efc54976283b984ffa8bb",
       "entrypoint": "skills/html-for-decisions/SKILL.md",
       "name": "html-for-decisions"
     },
@@ -66,7 +66,7 @@
       "name": "judge-loop-chooser"
     },
     {
-      "content_sha256": "aedf421ed8273982d689d17c6c8d6c07e24c4719d91473a9f582ea1263d6fed9",
+      "content_sha256": "41cbe05b6df25f57357ed223f6ffa5860f561d6f577077e58a270c15e932b632",
       "entrypoint": "skills/knowledge-continuity/SKILL.md",
       "name": "knowledge-continuity"
     },
@@ -86,7 +86,7 @@
       "name": "path-b-reduction"
     },
     {
-      "content_sha256": "3861c683671508610da7a81f7126b5e6c2baed9a8a8bd4a7a8f9b376b2cef36b",
+      "content_sha256": "f2c09185ac5e297c84915fd6543988fb279a821e48e1c3d4a29d8d346773e9cd",
       "entrypoint": "skills/repo-agent-native/SKILL.md",
       "name": "repo-agent-native"
     },
@@ -101,12 +101,12 @@
       "name": "repo-wiki-converge"
     },
     {
-      "content_sha256": "e148e7526fd5252fe2ce6eeb1ad348706c87ec70c3fada2cf8d41baa0a13d5a8",
+      "content_sha256": "b9bd577bb77ad3511b6d01dde180f36fd2cd9dba24766699e7b928ef4c775843",
       "entrypoint": "skills/sdlc-plan-composer/SKILL.md",
       "name": "sdlc-plan-composer"
     },
     {
-      "content_sha256": "381fa83b42579b1a3df3ee4c45da3903a5265f61a971f4a9ba187dae678f5729",
+      "content_sha256": "c78a8ba0acbccc897b7ceca7e37777e8a0c0f6a4ce496c05c46d21e85eb89231",
       "entrypoint": "skills/shared-skills-infra/SKILL.md",
       "name": "shared-skills-infra"
     },
@@ -116,15 +116,15 @@
       "name": "truth-verify-loop"
     },
     {
-      "content_sha256": "67cf502bb96c70c330ccecf7815288f60bce03a75908b852d930164a4d3849a2",
+      "content_sha256": "af7cfe9a50f5c90513c47082cd3bb8007661e3d90835c27c7225bae499892b47",
       "entrypoint": "skills/unknown-discovery-composer/SKILL.md",
       "name": "unknown-discovery-composer"
     }
   ],
   "source": {
-    "commit": "ad7acbf1a87d9a321ed6f6578681bfe25b6f5487",
+    "commit": "b3c722da1c40301b0a12e0ef99848d884bfc720b",
     "repository": "https://github.com/ed3c/skills-shared",
-    "tree": "c203020cad1ee588de4c95d0517e434adcf927db"
+    "tree": "df3cae849412625e70c2352f7e9a2cbbc770288a"
   },
   "surfaces": {
     "claude": ".claude/skills",

@@ -1,0 +1,268 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/runtime-request/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A provider-neutral execution request. Every enforcement dimension carries both what was requested and what the adapter attests, so a restriction nothing enforces is refused at admission rather than discovered in an incident.",
+  "properties": {
+    "artifacts": {
+      "additionalProperties": false,
+      "properties": {
+        "capture_root": {
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+          "type": "string"
+        },
+        "expected_paths": {
+          "items": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "expected_paths",
+        "capture_root"
+      ],
+      "type": "object"
+    },
+    "closure_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "dependencies": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cache_policy": {
+          "enum": [
+            "none",
+            "subject_scoped",
+            "shared_readonly"
+          ]
+        },
+        "contamination_check": {
+          "const": true
+        }
+      },
+      "required": [
+        "cache_policy",
+        "cache_key",
+        "contamination_check"
+      ],
+      "type": "object"
+    },
+    "environment": {
+      "additionalProperties": false,
+      "properties": {
+        "allowlist": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "secret_refs": {
+          "items": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "allowlist",
+        "secret_refs"
+      ],
+      "type": "object"
+    },
+    "network": {
+      "additionalProperties": false,
+      "properties": {
+        "allowlist": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "attested": {
+          "enum": [
+            "ENFORCED",
+            "UNENFORCED",
+            "NOT_OBSERVED"
+          ]
+        },
+        "requested": {
+          "enum": [
+            "deny",
+            "allowlisted",
+            "inherit"
+          ]
+        }
+      },
+      "required": [
+        "requested",
+        "attested",
+        "allowlist"
+      ],
+      "type": "object"
+    },
+    "process": {
+      "additionalProperties": false,
+      "properties": {
+        "argv": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "max_disk_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_memory_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_output_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "process_group": {
+          "const": true
+        },
+        "timeout_ms": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "argv",
+        "timeout_ms",
+        "process_group",
+        "max_output_bytes",
+        "max_memory_bytes",
+        "max_disk_bytes"
+      ],
+      "type": "object"
+    },
+    "provider": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "image_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "runtime_identity": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider_id",
+        "adapter_id",
+        "image_ref",
+        "runtime_identity"
+      ],
+      "type": "object"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/runtime-request/v1"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "workspace": {
+      "additionalProperties": false,
+      "properties": {
+        "cleanup": {
+          "const": "REQUIRED"
+        },
+        "lease_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "read_only_paths": {
+          "items": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "writable_paths": {
+          "items": {
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "lease_id",
+        "read_only_paths",
+        "writable_paths",
+        "cleanup"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "subject",
+    "closure_digest",
+    "provider",
+    "workspace",
+    "process",
+    "network",
+    "environment",
+    "dependencies",
+    "artifacts"
+  ],
+  "title": "LoopX Runtime Request v1",
+  "type": "object"
+}

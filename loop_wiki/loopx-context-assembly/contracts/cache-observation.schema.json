@@ -1,0 +1,73 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/context-assembly/cache-observation/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A cache hit/miss measurement, carrying the scope it was measured in. A hit rate is a fact about one host with one model on one provider; it is a property of a tokenizer, a serving stack and a billing policy, none of which transfer to the other five hosts.",
+  "properties": {
+    "applies_to": {
+      "const": "SINGLE_HOST_MODEL_PROVIDER"
+    },
+    "hit_rate": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "hits": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "host": {
+      "enum": [
+        "ante",
+        "claude",
+        "codex",
+        "grok-build",
+        "opencode",
+        "pi"
+      ]
+    },
+    "misses": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "model": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "observation_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "prefix_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "provider": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/cache-observation/v1"
+    },
+    "universal_claim": {
+      "const": false,
+      "description": "Never true. An observation here cannot become a performance claim about prompt assembly in general."
+    }
+  },
+  "required": [
+    "schema_version",
+    "host",
+    "model",
+    "provider",
+    "prefix_digest",
+    "hits",
+    "misses",
+    "hit_rate",
+    "applies_to",
+    "universal_claim",
+    "observation_digest"
+  ],
+  "title": "Cache observation",
+  "type": "object"
+}

@@ -1,0 +1,75 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/harness-console/decision-request/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A signed Human decision request. It is a question, not a change: it binds the exact ledger head and state revision it was drafted against, because a request drafted while looking at a screen and submitted after the ledger moved is a decision about something that is no longer there, and it looks identical to a fresh one.",
+  "properties": {
+    "action": {
+      "description": "Closed set. An action not here cannot be drafted; HIDE_COMPLETED_WITH_EXCEPTION, MARK_GATE_PASS, MERGE, MUTATE_TASK_STATE, PERSIST_RAW_PAGE_BODY_OR_PRIVATE_REASONING, PROMOTE_RELEASE, ROLLBACK_PRODUCTION, UNSCOPED_FORCE_SKIP, WIDEN_TOOLS_PERMISSIONS_OR_SECRETS, WRITE_LEDGER_EVENT are refused by name.",
+      "enum": [
+        "REQUEST_CANCEL",
+        "REQUEST_CONTRACT_UPDATE",
+        "REQUEST_RETRY",
+        "REQUEST_SCOPED_EXCEPTION"
+      ]
+    },
+    "ledger_head": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "request_id": {
+      "description": "Keyed on content. The same decision submitted twice is one request; a nonce would have made it two, and one Human clicking twice is not two decisions.",
+      "pattern": "^req-[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/console-decision-request/v1"
+    },
+    "scope": {
+      "description": "Only a scoped exception has one, and it carries subject, gate and expires_after_revisions. An exception without all three is an unscoped force-skip with a better name.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "signature": {
+      "pattern": "^hmac-sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "const": "HMAC-SHA256"
+    },
+    "signed": {
+      "type": "boolean"
+    },
+    "signer_key_id": {
+      "description": "Only the key id travels. The key itself is Human-held and never enters this repository, a flag, or a receipt.",
+      "type": "string"
+    },
+    "state_revision": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "task_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "action",
+    "task_id",
+    "reason",
+    "scope",
+    "ledger_head",
+    "state_revision",
+    "request_id",
+    "signed"
+  ],
+  "title": "Harness Console decision request",
+  "type": "object"
+}

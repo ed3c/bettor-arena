@@ -1,0 +1,59 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/memory-runtime/tombstone/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What was removed, recorded as a digest so the removal is auditable without the content being retrievable. The events stay; only their text goes.",
+  "properties": {
+    "authorized_by": {
+      "description": "A tombstone with no author is a removal nobody can be asked about.",
+      "minLength": 1,
+      "type": "string"
+    },
+    "canonical_key": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "history_preserved": {
+      "const": true
+    },
+    "memory_id": {
+      "pattern": "^memory-[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "removed_content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "removed_event_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/memory-tombstone/v1"
+    },
+    "tombstoned_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "memory_id",
+    "canonical_key",
+    "tombstoned_at",
+    "authorized_by",
+    "removed_content_digest",
+    "removed_event_ids",
+    "history_preserved",
+    "reason"
+  ],
+  "title": "Decision memory tombstone",
+  "type": "object"
+}

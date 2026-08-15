@@ -1,0 +1,139 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/benchmark/report/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One workload measured on one profile. Every trial is retained, including the ones that failed: a mean over the runs that finished is a different statistic wearing the same name, and a timeout is the most interesting trial in the set.",
+  "properties": {
+    "cache_states_observed": {
+      "items": {
+        "enum": [
+          "COLD",
+          "UNKNOWN",
+          "WARM"
+        ]
+      },
+      "type": "array"
+    },
+    "counts": {
+      "propertyNames": {
+        "enum": [
+          "FAILED",
+          "OK",
+          "OOM",
+          "TIMEOUT"
+        ]
+      },
+      "type": "object"
+    },
+    "environment": {
+      "type": "object"
+    },
+    "failure_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "identities": {
+      "type": "object"
+    },
+    "locale": {
+      "enum": [
+        "CLOUD_VPS",
+        "LOCAL",
+        "SHARED_RUNNER",
+        "SYNTHETIC"
+      ]
+    },
+    "mixed_cache_states": {
+      "type": "boolean"
+    },
+    "moving_targets": {
+      "description": "Identities naming something replaceable under a fixed string. A report pinned to one cannot corroborate.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "numbers_are_claims": {
+      "const": false
+    },
+    "ok_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "peak_rss_mb": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "report_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/benchmark-report/v1"
+    },
+    "subject": {
+      "type": "object"
+    },
+    "success_rate": {
+      "description": "The number a dropped trial actually moves. Timeouts carry no duration, so removing them leaves every percentile exactly where it was.",
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "summary_withheld": {
+      "description": "Why there is no number, when there is no number. Without it, a report with an absent summary and a report that was never run look the same.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timing_ms": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "trial_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "trials": {
+      "description": "The raw record. FAILED, TIMEOUT and OOM trials stay here and stay in the counts.",
+      "minItems": 1,
+      "type": "array"
+    },
+    "warmup_runs_discarded": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "workload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "subject",
+    "environment",
+    "identities",
+    "workload",
+    "trials",
+    "counts",
+    "trial_count",
+    "ok_count",
+    "failure_count",
+    "success_rate",
+    "cache_states_observed",
+    "mixed_cache_states",
+    "timing_ms",
+    "peak_rss_mb",
+    "summary_withheld",
+    "moving_targets",
+    "locale",
+    "numbers_are_claims",
+    "report_digest"
+  ],
+  "title": "LoopX benchmark report",
+  "type": "object"
+}

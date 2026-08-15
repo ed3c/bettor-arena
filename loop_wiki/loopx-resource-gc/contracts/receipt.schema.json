@@ -1,0 +1,190 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/resource-gc/receipt/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What was removed, what was kept and why, and what is still on the machine afterwards. CLEAN is asserted after looking, never announced before.",
+  "properties": {
+    "applied": {
+      "type": "boolean"
+    },
+    "authority": {
+      "const": "OBSERVATION_ONLY"
+    },
+    "authorized_by": {
+      "enum": [
+        "HUMAN"
+      ]
+    },
+    "canonical_writer": {
+      "const": "LOOPX_LEDGER_REDUCER"
+    },
+    "inventory_bytes_after": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "inventory_bytes_before": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "kept": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "receipt_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recorded_at": {
+      "type": "string"
+    },
+    "removed": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "residue": {
+      "description": "Four kinds because they fail independently: a path can be gone while the process holding it is not.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "PATH",
+              "PROCESS",
+              "PORT",
+              "MOUNT"
+            ]
+          }
+        },
+        "required": [
+          "detail",
+          "id",
+          "kind"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "root_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/resource-gc-receipt/v1"
+    },
+    "skipped": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "state": {
+      "enum": [
+        "DRY_RUN",
+        "CLEAN",
+        "RESIDUE_FOUND"
+      ]
+    },
+    "tombstones": {
+      "description": "Every removal leaves one. Without it the resource is gone and so is the record that it existed.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "deleted_at": {
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "receipt_ref": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "recoverable_from": {
+            "enum": [
+              "REBUILD_PROVEN",
+              "NONE"
+            ]
+          },
+          "resource_class": {
+            "enum": [
+              "ARTIFACT",
+              "BLOCKED_EVIDENCE",
+              "BRANCH",
+              "CI_SIMULATION_CACHE",
+              "DEPENDENCY_CACHE",
+              "GRAPH_INDEX",
+              "HUMAN_DECISION",
+              "LEDGER_SEGMENT",
+              "LOOPX_SNAPSHOT",
+              "LSP_INDEX",
+              "MEMORY_PROJECTION",
+              "MOUNT",
+              "PORT",
+              "PROCESS",
+              "RELEASE_RECEIPT",
+              "STDIO_LOG",
+              "VECTOR_INDEX",
+              "WAL",
+              "WORKTREE"
+            ]
+          },
+          "resource_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "retention": {
+            "enum": [
+              "CONTENT_ADDRESSED",
+              "EPHEMERAL",
+              "EXPIRING",
+              "IMMUTABLE_EVIDENCE",
+              "MUTABLE_RECREATABLE"
+            ]
+          }
+        },
+        "required": [
+          "deleted_at",
+          "path",
+          "receipt_ref",
+          "recoverable_from",
+          "resource_class",
+          "resource_id",
+          "retention"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "root_id",
+    "authorized_by",
+    "applied",
+    "removed",
+    "skipped",
+    "kept",
+    "tombstones",
+    "residue",
+    "inventory_bytes_before",
+    "inventory_bytes_after",
+    "state",
+    "recorded_at",
+    "authority",
+    "canonical_writer",
+    "receipt_digest"
+  ],
+  "title": "Resource GC receipt",
+  "type": "object"
+}

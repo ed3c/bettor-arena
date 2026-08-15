@@ -9,14 +9,35 @@
     "CLAUDE.md",
     "ARCHITECTURE.md",
     "CONTEXT.md",
+    "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+    "docs/architecture/pdf-harness-integration.matrix.json",
+    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
     "docs/architecture/modular-integration-requirements.md",
     "docs/architecture/modular-integration-status.md",
+    "docs/architecture/STATE_MACHINES.md",
     "docs/integration/CROSS_REPO_INTEGRATION.md",
+    "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+    "docs/architecture/pdf-loopx-harness.integration.json",
+    "docs/git/README.md",
+    "docs/git/REPO_PROFILE.md",
+    "docs/git/PDF_TERMINAL_SEQUENCE.md",
+    "docs/git/pdf-terminal-sequence.json",
+    "docs/git/STACKED_PRS.md",
+    "docs/git/WORKER_PROTOCOL.md",
+    "docs/git/GIT_TOWN_ADMISSION.md",
+    "docs/git/stack-prs.index.json",
+    "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
   ],
   "drivers": {
-    "claude-code": {"entry": "CLAUDE.md", "binary": "claude"},
-    "codex-cli": {"entry": "AGENTS.md", "binary": "codex"}
+    "claude-code": {
+      "entry": "CLAUDE.md",
+      "binary": "claude"
+    },
+    "codex-cli": {
+      "entry": "AGENTS.md",
+      "binary": "codex"
+    }
   },
   "policy": {
     "immutable_ref_required": true,

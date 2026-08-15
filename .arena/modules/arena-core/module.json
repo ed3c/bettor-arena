@@ -10,10 +10,16 @@
     },
     "context": {
       "paths": [
+        "README.md",
         "AGENTS.md",
         "CLAUDE.md",
         "ARCHITECTURE.md",
+        "docs/architecture/agent-entrypoints.contract.json",
         "docs/architecture/modular-integration-requirements.md",
+        "docs/architecture/STATE_MACHINES.md",
+        "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md",
+        "docs/architecture/pdf-loopx-harness.integration.json",
+        "docs/architecture/pdf-loopx-harness.integration.schema.json",
         "loop_wiki/README.md"
       ],
       "required": true
@@ -21,8 +27,13 @@
     "proof": {
       "paths": [
         "scripts/gates/check_agent_docs.py",
+        "scripts/gates/check_arena_core.py",
+        "scripts/gates/check_pdf_loopx_harness_integration.py",
         "scripts/gates/check_placement.py",
-        ".github/workflows/modular-contracts.yml"
+        ".github/workflows/modular-contracts.yml",
+        ".github/workflows/pdf-loopx-harness-integration.yml",
+        ".github-delivery/ci-policy.json",
+        "scripts/gates/verify_modular_contracts.sh"
       ],
       "required": true
     }
@@ -35,7 +46,7 @@
     "secrets": "none"
   },
   "id": "arena-core",
-  "interface_version": "1.1.0",
+  "interface_version": "1.2.0",
   "loops": [
     {
       "class": "macro",
@@ -53,22 +64,23 @@
     ],
     "mutation": [
       "python3",
-      "scripts/gates/check_agent_docs.py",
+      "scripts/gates/check_arena_core.py",
       "--selftest"
     ],
     "selftest": [
       "python3",
-      "scripts/gates/check_agent_docs.py",
+      "scripts/gates/check_arena_core.py",
       "--selftest"
     ],
     "verify": [
       "python3",
-      "scripts/gates/check_agent_docs.py"
+      "scripts/gates/check_arena_core.py"
     ]
   },
   "provides": [
     "arena.passive-context/v1",
-    "arena.host-gates/v1"
+    "arena.host-gates/v1",
+    "arena.pdf-loopx-traceability/v1"
   ],
   "requires": [
     "arena.module-catalog/v1"
@@ -81,6 +93,7 @@
     "bootstrap.sh",
     ".githooks",
     ".github",
+    ".github-delivery",
     ".claude/hooks",
     "scripts/gates",
     "scripts/delivery_status.py",
@@ -103,5 +116,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Root engineering SSOT, native Agent entrypoints and hooks, bootstrap, delivery/migration operators, and repository-level deterministic gates."
+  "summary": "Root engineering SSOT, governed Agent entrypoints, LoopX PDF executable traceability, bootstrap, delivery/migration operators, and repository-level deterministic gates."
 }

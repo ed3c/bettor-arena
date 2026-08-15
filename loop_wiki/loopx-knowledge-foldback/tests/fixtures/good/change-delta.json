@@ -1,0 +1,115 @@
+{
+  "after": {
+    "commit": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-arena",
+    "tree": "4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d"
+  },
+  "anchors": [
+    {
+      "anchor_id": "an-append",
+      "commit": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "content_digest": "sha256:d6a86258f9224c92614d437f667727eac384ece2951409569c9b4ce54ef7bb46",
+      "evidence_class": "STATIC",
+      "kind": "SOURCE_LINES",
+      "line_end": 52,
+      "line_start": 40,
+      "path": "src/ledger.py",
+      "symbol": "append_event"
+    },
+    {
+      "anchor_id": "an-append-test",
+      "commit": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "content_digest": "sha256:8fd57b9d432d1a48c9c007b7f22cdacdd83e311202b1e6829b7db5856d35bc76",
+      "evidence_class": "TEST",
+      "kind": "TEST_CASE",
+      "line_end": 24,
+      "line_start": 10,
+      "path": "tests/test_ledger.py",
+      "symbol": "test_append_refuses_stale"
+    },
+    {
+      "anchor_id": "an-append-trace",
+      "commit": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "content_digest": "sha256:73ca4602ba989c9ff4091dfddbf4e4c254206cc6dd5ea4cdc5d635785cff999a",
+      "evidence_class": "RUNTIME",
+      "kind": "RUNTIME_TRACE",
+      "line_end": 52,
+      "line_start": 40,
+      "path": "src/ledger.py",
+      "symbol": "append_event"
+    },
+    {
+      "anchor_id": "an-retry",
+      "commit": "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "content_digest": "sha256:89839d1e56558a286461c0adef5c77e407c5cd3d09c6938cf31b5f66e884662c",
+      "evidence_class": "STATIC",
+      "kind": "SOURCE_LINES",
+      "line_end": 9,
+      "line_start": 5,
+      "path": "src/retry.py",
+      "symbol": "retry_interval"
+    }
+  ],
+  "before": {
+    "commit": "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+    "ref_kind": "IMMUTABLE_COMMIT",
+    "repository": "ed3c/bettor-arena",
+    "tree": "3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c"
+  },
+  "changed_files": [
+    "src/ledger.py",
+    "src/retry.py",
+    "tests/test_ledger.py"
+  ],
+  "public_interface_delta": [
+    "append_event",
+    "retry_interval"
+  ],
+  "runtime_observations": [
+    {
+      "adapter_attested": true,
+      "environment": "staging",
+      "observation_id": "obs-001",
+      "observed_at": "2026-08-15T10:30:00Z",
+      "observed_symbols": [
+        "append_event"
+      ],
+      "receipt_digest": "sha256:8f4a991a5ce8e12543981745524115af35afb0f058b73eb6b5a29e48868d98ef"
+    }
+  ],
+  "schema_version": "loopx/foldback-change-delta/v1",
+  "symbol_delta": [
+    {
+      "change": "MODIFIED",
+      "path": "src/ledger.py",
+      "public": true,
+      "symbol": "append_event"
+    },
+    {
+      "change": "MODIFIED",
+      "path": "src/retry.py",
+      "public": true,
+      "symbol": "retry_interval"
+    },
+    {
+      "change": "ADDED",
+      "path": "tests/test_ledger.py",
+      "public": false,
+      "symbol": "test_append_refuses_stale"
+    }
+  ],
+  "test_executions": [
+    {
+      "command": "pytest tests/test_ledger.py -q",
+      "covered_symbols": [
+        "append_event",
+        "test_append_refuses_stale"
+      ],
+      "execution_id": "exec-001",
+      "exit_code": 0,
+      "output_digest": "sha256:bafef4de3f47de61084534ea202bd24e8f920b094631ebeeecf356f39ed88923",
+      "ran_at": "2026-08-15T10:00:00Z"
+    }
+  ]
+}

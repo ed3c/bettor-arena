@@ -1,0 +1,61 @@
+{
+  "adapter_admission_states": [
+    "ADAPTER_ADMITTED",
+    "ADAPTER_REFUSED",
+    "NOT_EXERCISED"
+  ],
+  "adapter_may_write_canonical_state": false,
+  "adapter_may_write_gate_verdict": false,
+  "gc_auto_disposition": "AUTO_REMOVABLE",
+  "gc_default_is_destructive": false,
+  "gc_dispositions": [
+    "AUTO_REMOVABLE",
+    "KEEP_ACTIVE_LEASE",
+    "KEEP_DIRTY",
+    "KEEP_UNREADABLE",
+    "PROPOSED_REQUIRES_HUMAN"
+  ],
+  "holding_states": [
+    "ACTIVE",
+    "GRANTED"
+  ],
+  "interface_version": "1.0.0",
+  "lease_states": [
+    "ACTIVE",
+    "EXPIRED",
+    "GRANTED",
+    "RELEASED",
+    "REQUESTED",
+    "REVOKED"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.ledger/v1",
+    "loopx.runtime-fabric/v1",
+    "loopx.worker-gateway/v1"
+  ],
+  "schema_version": "loopx/worker-fleet-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/worker-fleet/queue/v1",
+      "path": "fleet-queue.schema.json",
+      "sha256": "6bae23a39a4ce8aa14d9149d03173b1ccacaead08a5f46e0e428bd77d399a090"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/worker-fleet/lease/v1",
+      "path": "lease.schema.json",
+      "sha256": "9c6f82fddc35cfeaace68fa7d32eebc9749018da92463c3991a09412b8e7e13b"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/worker-fleet/receipt/v1",
+      "path": "receipt.schema.json",
+      "sha256": "b4e33722044238ed3c2b8fd6afc4ba5dd009b66ca0137c06e039e8cbd5dc2a4b"
+    }
+  ],
+  "tmux_states": [
+    "SESSION_ABSENT",
+    "SESSION_PRESENT",
+    "SESSION_UNKNOWN"
+  ]
+}

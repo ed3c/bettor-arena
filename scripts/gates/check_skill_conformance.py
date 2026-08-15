@@ -226,9 +226,32 @@ def validate_skill(path: Path) -> list[str]:
     ):
         failures.append(f"SPEC-METADATA-TYPE {relative}: metadata must be a string map")
 
+    entrypoint_budget: int | None = None
+    if isinstance(metadata, dict) and "entrypoint-line-budget" in metadata:
+        raw_budget = metadata["entrypoint-line-budget"]
+        try:
+            entrypoint_budget = int(raw_budget)
+        except (TypeError, ValueError):
+            failures.append(
+                f"BETTOR-ENTRYPOINT-BUDGET {relative}: metadata.entrypoint-line-budget must be an integer string"
+            )
+        else:
+            if not 1 <= entrypoint_budget <= 500:
+                failures.append(
+                    f"BETTOR-ENTRYPOINT-BUDGET {relative}: budget must be 1..500 lines"
+                )
+
     if len(body) > 500:
         failures.append(
             f"BETTOR-BODY-LIMIT {relative}: body has {len(body)} lines; house limit is 500"
+        )
+    if (
+        entrypoint_budget is not None
+        and 1 <= entrypoint_budget <= 500
+        and len(body) > entrypoint_budget
+    ):
+        failures.append(
+            f"BETTOR-ENTRYPOINT-BUDGET {relative}: body has {len(body)} lines; declared budget is {entrypoint_budget}"
         )
     return failures
 
@@ -341,6 +364,16 @@ def selftest() -> int:
         2,
     )
     exercise("body-house-limit-red", _skill() + ("line\n" * 501), 2)
+    exercise(
+        "declared-entrypoint-budget-red",
+        "---\nname: good-skill\ndescription: Use when validating.\nmetadata:\n  entrypoint-line-budget: '2'\n---\n# One\nline\nline\n",
+        2,
+    )
+    exercise(
+        "invalid-entrypoint-budget-red",
+        "---\nname: good-skill\ndescription: Use when validating.\nmetadata:\n  entrypoint-line-budget: many\n---\n# One\n",
+        2,
+    )
 
     bad = [
         (label, actual, expected)

@@ -1,0 +1,52 @@
+{
+  "artifacts": [
+    {
+      "bytes": 14,
+      "digest": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "path": "artifacts/result.json"
+    }
+  ],
+  "authority": "OBSERVATION_ONLY",
+  "canonical_writer": "LOOPX_LEDGER_REDUCER",
+  "cleanup": {
+    "residue_paths": [],
+    "status": "PASS",
+    "workspace_removed": true
+  },
+  "enforcement_ceiling": {
+    "disk_bytes": "NOT_OBSERVED",
+    "filesystem": "DECLARED_NOT_KERNEL_ENFORCED",
+    "memory_bytes": "NOT_OBSERVED",
+    "network": "UNENFORCED",
+    "output_bytes": "ENFORCED",
+    "process_group": "ENFORCED",
+    "timeout": "ENFORCED"
+  },
+  "execution": {
+    "elapsed_ms": 41,
+    "exit_code": 0,
+    "output_bytes": 5,
+    "timed_out": false
+  },
+  "lease_id": "l-0001",
+  "missing_artifacts": [],
+  "network": {
+    "attested": "UNENFORCED",
+    "requested": "inherit"
+  },
+  "outcome": "PASS",
+  "provider": {
+    "adapter_id": "local-disposable-workspace",
+    "provider_id": "local-process",
+    "runtime_identity": "python3-local"
+  },
+  "receipt_id": "rcpt-rt-0001",
+  "request_id": "rt-0001",
+  "schema_version": "loopx/runtime-receipt/v1",
+  "subject": {
+    "commit": "536449a000000000000000000000000000000000",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-runtime-fabric-fixture",
+    "tree": "472e59cbbb108f145d5d56d99f933e027b7c2aa8"
+  }
+}

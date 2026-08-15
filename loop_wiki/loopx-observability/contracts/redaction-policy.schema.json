@@ -1,0 +1,51 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/redaction-policy/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What never leaves the ledger, and the version under which that was decided. Sorted arrays are required so two equivalent policies cannot produce different digests, which would break rebuild equality.",
+  "properties": {
+    "drop_keys": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "drop_value_patterns": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "max_array_items": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "max_string_bytes": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "policy_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/redaction-policy/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "policy_version",
+    "drop_keys",
+    "drop_value_patterns",
+    "max_string_bytes",
+    "max_array_items"
+  ],
+  "title": "LoopX Redaction Policy v1",
+  "type": "object"
+}

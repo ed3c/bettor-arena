@@ -1,0 +1,95 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/contracts",
+        "loop_wiki/loopx-decision-memory/providers/mem0/contracts",
+        "loop_wiki/loopx-decision-memory/runtime/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/providers/mem0/tests",
+        "loop_wiki/loopx-decision-memory/runtime/tests",
+        "loop_wiki/loopx-decision-memory/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-decision-memory/providers/mem0",
+        "loop_wiki/loopx-decision-memory/runtime",
+        "loop_wiki/loopx-decision-memory/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-decision-memory",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-decision-memory",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-decision-memory/scripts/memory.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/runtime/control_memory_runtime.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/scripts/memory.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-decision-memory/scripts/memory.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-decision-memory/runtime/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.decision-memory-runtime/v1",
+    "loopx.decision-memory/v1",
+    "loopx.mem0-projection/v1",
+    "loopx.memory-projection/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "knowledge-provider.memory-proposal/v1",
+    "loopx.contracts/v1",
+    "loopx.ledger/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-decision-memory"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Evidence-bound decision-memory proposal, Human admission, conflict, retention, expiry and deletion contracts that emit non-persisted candidate capsules while provider indexes remain rebuildable projections. The runtime under runtime/ makes an admitted proposal a reducer-written ledger event, puts memory below source, test, ADR and receipt on the authority ladder, and deletes content without deleting history. providers/mem0 adds a rebuildable index over those events that is never canonical, never a writeback channel, and whose managed and self-hosted receipts cannot be read as evidence about each other."
+}

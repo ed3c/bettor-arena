@@ -1,0 +1,10 @@
+{
+  "gate-contract-shape": "CORRECTNESS",
+  "gate-credential-scan": "SECRET",
+  "gate-destructive-migration": "DESTRUCTIVE",
+  "gate-flaky-timing": "PERFORMANCE",
+  "gate-release-signature": "RELEASE_SIGNING",
+  "gate-subject-binding": "SUBJECT_INTEGRITY",
+  "gate-supply-chain": "SECURITY",
+  "gate-worktree-cleanup": "CLEANUP"
+}

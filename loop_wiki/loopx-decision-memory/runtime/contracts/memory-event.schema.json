@@ -1,0 +1,117 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/memory-runtime/event/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Canonical memory is a typed ledger event written by the reducer. Everything after admission is an append; revisions advance and never repeat.",
+  "properties": {
+    "admitted_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "admitted_by": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "canonical_key": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content": {
+      "description": "Emptied to [REMOVED] on tombstone. The event keeps its place; only the text goes.",
+      "type": "string"
+    },
+    "event_id": {
+      "description": "Derived from the decision that produced it, so replaying one admission appends nothing.",
+      "pattern": "^mev-[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "expires_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "falsifier": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "MEMORY_ADMITTED",
+        "MEMORY_CONTESTED",
+        "MEMORY_EXPIRED",
+        "MEMORY_REJECTED",
+        "MEMORY_REVALIDATED",
+        "MEMORY_SUPERSEDED",
+        "MEMORY_TOMBSTONED"
+      ]
+    },
+    "memory_id": {
+      "pattern": "^memory-[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "origin_digest": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "revision": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "loopx/memory-event/v1"
+    },
+    "state": {
+      "enum": [
+        "ACTIVE",
+        "CONTESTED",
+        "EXPIRED",
+        "REJECTED",
+        "SUPERSEDED",
+        "TOMBSTONED"
+      ]
+    },
+    "subject": {
+      "type": "object"
+    },
+    "supersedes_event_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "validity_scope": {
+      "type": "object"
+    },
+    "writer": {
+      "const": "LOOPX_LEDGER_REDUCER",
+      "description": "A memory event written by anything but the reducer is a durable fact nobody admitted."
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "kind",
+    "memory_id",
+    "canonical_key",
+    "revision",
+    "state",
+    "subject",
+    "content",
+    "evidence_refs",
+    "falsifier",
+    "validity_scope",
+    "expires_at",
+    "supersedes_event_id",
+    "admitted_by",
+    "admitted_at",
+    "origin_digest",
+    "writer"
+  ],
+  "title": "Decision memory ledger event",
+  "type": "object"
+}

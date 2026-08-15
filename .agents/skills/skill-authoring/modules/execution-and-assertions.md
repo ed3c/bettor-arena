@@ -18,6 +18,18 @@ Bettor 的 executable contract、request/assertion/receipt schemas 與 public ru
 
 Hard assertion 至少要包含 OS/test 可觀測結果，例如 `exit_code`、JSON schema、file hash/content、git diff allowlist、AST query、LSP diagnostics、test report、artifact digest 與 exact subject match。LLM review、自然語言 checklist 和 Human comment 是 advisory；它們可以要求重試或阻擋 promotion，但不能把 failed hard assertion 改成 PASS。
 
+對模型輸出的可判 claim，優先使用：
+
+```text
+stable predicate id
+operator
+scalar/typed expected value
+repository-relative source
+independent evaluator mechanism + digest
+```
+
+Evaluator 必須從 exact source/test/runtime subject 重觀測 value。答案文字是否碰巧包含 alias 只可產 `lexical_advisory`，且明示 `admission_effect: none`；它不證明 semantic entailment、程序執行或 fact precision。
+
 PASS 必須同時有：
 
 ```text
@@ -39,5 +51,44 @@ cleanup PASS
 3. hard assertion 紅時，根據具名 evidence 修正並重跑；同一問題最多三次。
 4. 三次仍紅，記錄每次錯誤、質疑抽象層級並停止；禁止隨機改 prompt 直到碰巧綠。
 5. 只有 exact-subject receipt 全綠才可報 PASS；promotion 仍等 Human Admit。
+
+## 行為量測與比較
+
+量測的共同面與 treatment 面必須分離：
+
+```text
+共同：carrier id/version、scenario、fixture commit、subject bundle digest、
+      output schema、ground truth、eval config、scorer、predicate evaluator
+變因：no/current/candidate 的 Skill package 與 instruction digest
+```
+
+Comparator 對共同面做 exact equality；「同 evaluator」是完整 schema/ground-truth/config/scorer/predicate-observer digest set，不是同一個 script 檔名。「同 subject」是 deterministic commit + replay bundle，不是相同 path/branch。正確 identity scope 是：subject/evaluator 對同一 case 固定；common task、environment 與 tool policy 對同一 case×harness×repetition 的各臂固定；treatment digest 對 condition 固定且 `no_skill` 為 null；runner/model 在同一 harness 內固定，但不同 harness 可有各自 digest。把跨 host 不同 runner 判成 drift，或容許同 host 各臂換 tools/environment，都會破壞因果比較。`no_skill` 只是不安裝 Skill，不會自動帶入 Skill 程序或啟動 semantic、symbol、graph、memory tools。
+
+共同 prompt 可提供每臂都需要的 output schema 與 closed typed predicate ontology：穩定 ID、型別、operator、合法 value domain，但不得給 observed answer 或 treatment procedure。這不是答案洩漏；沒有 public ontology 時，exact scalar evaluator 只是在測模型是否碰巧猜中 evaluator 私有 alias。文字 alias 命中仍只能是 advisory。
+
+控制臂不是固定四臂，也不以 `candidate_skill` 名稱硬編碼 treatment。profile 明示 `treatment_condition`、comparators 與 non-regression reference：新 Skill 可用 candidate/no-skill 兩臂；既有 Skill 升級可用 candidate/current/no-skill；automatic routing 或多 Skill 組合可把 `composed_skills` 當 treatment，並用 wrong/no-skill 作 comparator。顯式指定 treatment 的 runner 加 `wrong_skill` 並不會量到 routing。
+
+通用 profile 依 outcome/evidence surface 分五類：source-grounded analysis、artifact transformation、transactional effect、routing/composition、interactive judgment。這是 evidence contract，不是 domain template；每一類仍由 task-specific oracle 決定輸出是否正確。共同 aggregator 只看 normalized state、identity、evidence authority/class、capability vector、paired deltas 與 relation receipt，不得搜尋 Skill 名、family/case alias 或答案文字。
+
+單次 fixture PASS 只證 bounded task。程序泛化至少另需：
+
+```text
+>=3 repetitions / condition
+>=2 real harnesses
+multiple task families + metamorphic task/context/tool/state variants
+source mutation + provider degradation + memory conflict + cross-module impact
+no/current/candidate paired evidence with counterbalanced execution order
+paired conservative lower bound + worst-family + cross-host gap + metamorphic report
+```
+
+`skills-shared` 的 repository-level eval framework 擁有全 Skill catalog、五類 reusable profile、normalized observation、identity audit、task-blind aggregation、mutation admission 與 capability unlock；單支 Skill 只擁有 task-family suite、oracle/observer 和 local receipts。新增而未分類的 Skill 必須讓 catalog gate 變紅；alpha-renaming、row/order permutation 不得改變數值結論。這個 seam 才能泛化到不同 Skill：協定可重用，oracle 不可硬套。public protocol conformance 只證量測器可表示該類型且 planted defect 會紅，不能冒充 physical superiority；release 另需 candidate 選定後才解封的 physical holdout、完整 identity、rollback 與 Human Admit。`Skill.md-native` 類 runtime plane 擁有 digest-pinned compatibility cell、sandbox/security、reproducibility、confidence 與 cost。兩者分表：前者回答「Skill 是否造成可泛化能力提升」，後者回答「在哪個 agent/runtime/model 上可重現且安全」。禁止另造一個加權總分讓 runtime 品質補償 behavior/security hard failure。
+
+量測 evidence origin 也不得折疊：
+
+```text
+verifier_observed       deterministic mechanism 真正觀測
+artifact_asserted       輸出結構/必要 artifact 存在
+model_reported_advisory 模型聲稱 routing/tool/fallback；admission 無效
+```
 
 文件連續性 acceptance：每個外部指針前先寫本地一句摘要；直接證據最多一跳；未執行與未決策不得用完成式語氣。對三個以上的分支或階段，用 input → condition → branch → result 圖補足閱讀路徑。

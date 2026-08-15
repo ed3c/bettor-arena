@@ -1,0 +1,50 @@
+{
+  "admission": {
+    "license": "MIT",
+    "provenance": "https://github.com/git-town/git-town/releases/tag/v21.1.0",
+    "sbom_ref": "data/git-town/sbom-21.1.0.json",
+    "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "tool": "git-town",
+    "version": "21.1.0"
+  },
+  "admission_digest": "sha256:e6a6b8f908468ed1825a631afcb1c03f196f9b32f0b284741196f5672a27a340",
+  "authority": {
+    "GITHUB_GATE": [
+      "exact-head publication decision"
+    ],
+    "GIT_TOWN": [
+      "local branch hierarchy",
+      "bounded local synchronization"
+    ],
+    "HUMAN": [
+      "semantic conflicts",
+      "remote publication",
+      "merge or ship",
+      "release promotion",
+      "production rollback",
+      "config activation"
+    ],
+    "LOOPX": [
+      "canonical task state"
+    ]
+  },
+  "human_admit_required": true,
+  "modes_available": [],
+  "probe": {
+    "path": null,
+    "reason": "git-town is not on PATH. Nothing was run, so nothing about Git Town's behaviour follows -- this is absence, not a disagreement",
+    "reported_version": null,
+    "state": "EXECUTABLE_ABSENT"
+  },
+  "profile": {
+    "main_branch": "main",
+    "perennial_branches": [],
+    "push_hook": false,
+    "ship_strategy": "api",
+    "sync_strategy": "rebase"
+  },
+  "publication_is_separate_gate": true,
+  "reason": "git-town is not on PATH. Nothing was run, so nothing about Git Town's behaviour follows -- this is absence, not a disagreement",
+  "schema_version": "loopx/git-town-admission/v1",
+  "state": "EXECUTABLE_ABSENT"
+}

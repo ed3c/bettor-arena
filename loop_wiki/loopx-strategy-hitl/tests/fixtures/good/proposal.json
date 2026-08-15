@@ -1,0 +1,43 @@
+{
+  "authority": {
+    "gate_verdict": false,
+    "human_decision": false,
+    "state_write": false
+  },
+  "based_on": {
+    "ledger_head": "sha256:a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "state_revision": 7
+  },
+  "command": {
+    "adapter_id": "codex-cli",
+    "expected_state_revision": 7,
+    "rationale_artifact_ref": "sha256:f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6",
+    "target_todo": "todo-verify-contracts",
+    "type": "RETRY"
+  },
+  "planner": {
+    "checkpoint_authority": "PROJECTION_ONLY",
+    "checkpoint_ref": "sha256:e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5",
+    "identity_digest": "sha256:d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4",
+    "kind": "langgraph"
+  },
+  "preconditions": {
+    "critical_gates": [
+      "gate-contract-shape"
+    ],
+    "interrupt_reason": null,
+    "quota": {
+      "attempts_max": 3,
+      "attempts_used": 2
+    },
+    "todo_state": "GATE_FAILED"
+  },
+  "proposal_id": "prop-0007",
+  "schema_version": "loopx/strategy-proposal/v1",
+  "subject": {
+    "commit": "0731b667d0832c49b7844d7a2788c435518a654f",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "loopx-strategy-hitl-fixture",
+    "tree": "7f508545279eee4fbca6ae0b60df4e324028f487"
+  }
+}

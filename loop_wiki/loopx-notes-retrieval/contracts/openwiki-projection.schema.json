@@ -1,0 +1,85 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/notes-retrieval/openwiki/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Generated navigation over cards and evidence. Never admissible as evidence for what generated it: a summary cited back closes a circle nothing outside can break.",
+  "properties": {
+    "admissible_as_evidence": {
+      "const": false
+    },
+    "authority": {
+      "const": "NAVIGATION_ONLY"
+    },
+    "is_derived": {
+      "const": true
+    },
+    "navigation": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "page_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "pages": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "body": {
+            "description": "Carries a derived marker in its content, so a page copied into a notes file keeps it even though the filename is gone.",
+            "type": "string"
+          },
+          "body_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "derived_from": {
+            "type": "object"
+          },
+          "is_derived": {
+            "const": true
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "body",
+          "body_digest",
+          "derived_from",
+          "is_derived",
+          "path",
+          "title"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "projection_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/openwiki-projection/v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "pages",
+    "page_count",
+    "navigation",
+    "is_derived",
+    "admissible_as_evidence",
+    "authority",
+    "projection_digest"
+  ],
+  "title": "OpenWiki static projection",
+  "type": "object"
+}

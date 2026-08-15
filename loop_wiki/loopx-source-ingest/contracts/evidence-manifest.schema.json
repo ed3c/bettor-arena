@@ -1,0 +1,196 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/source-ingest/manifest/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An inventory of what was captured and where. It decides nothing about what any of it means. Pinned to an immutable Notes Repo commit, because everything downstream cites it.",
+  "properties": {
+    "authority": {
+      "const": "EVIDENCE_INVENTORY_ONLY"
+    },
+    "compiled_at": {
+      "type": "string"
+    },
+    "duplicates": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "dependency_key": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "evidence_id": {
+            "description": "Derived from the artifact digest and the position inside it, not from the URL. A repost with a new address is the same evidence.",
+            "pattern": "^ev-[0-9a-f]{16}$",
+            "type": "string"
+          },
+          "locator": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "locator_origin": {
+            "const": "READ_FROM_ARTIFACT",
+            "description": "Only this origin is admissible. The vocabulary is ['ASSUMED', 'ESTIMATED', 'READ_FROM_ARTIFACT']; an estimated timestamp looks exactly like a read one."
+          },
+          "quote_digest": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "source_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_type": {
+            "enum": [
+              "ARTICLE",
+              "COMMAND_OUTPUT",
+              "KEYFRAME",
+              "LOG",
+              "MARKDOWN",
+              "PAPER",
+              "PDF_FIGURE",
+              "PDF_PAGE",
+              "RUNTIME_ARTIFACT",
+              "SCREENSHOT",
+              "SOURCE_CODE",
+              "SRT",
+              "TEST_ARTIFACT",
+              "VTT",
+              "YOUTUBE_TRANSCRIPT"
+            ]
+          }
+        },
+        "required": [
+          "artifact_digest",
+          "dependency_key",
+          "evidence_id",
+          "locator",
+          "locator_origin",
+          "quote_digest",
+          "source_id",
+          "source_type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "evidence_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "gaps": {
+      "description": "Every declared source that produced no bytes appears here. Omitting one is indistinguishable from having looked and found nothing.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "schedulable": {
+            "const": true
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "ABSENT",
+              "BLOCKED_BY_ACCESS",
+              "BLOCKED_BY_RIGHTS",
+              "GAP"
+            ]
+          }
+        },
+        "required": [
+          "reason",
+          "schedulable",
+          "source_id",
+          "state"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "independent_dependency_keys": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "independent_source_count": {
+      "description": "Counted by dependency key, never by record count.",
+      "minimum": 0,
+      "type": "integer"
+    },
+    "injection_findings": {
+      "description": "Findings about the source, not errors. A security note quoting an attack is a legitimate document.",
+      "type": "object"
+    },
+    "manifest_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "notes_subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "ref_kind": {
+          "const": "IMMUTABLE_COMMIT"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "commit",
+        "ref_kind",
+        "repository",
+        "tree"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "loopx/source-evidence-manifest/v1"
+    },
+    "state": {
+      "enum": [
+        "READY_FOR_KNOWLEDGE_COMPILATION",
+        "NO_EVIDENCE"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "notes_subject",
+    "evidence",
+    "evidence_count",
+    "duplicates",
+    "independent_dependency_keys",
+    "independent_source_count",
+    "gaps",
+    "injection_findings",
+    "compiled_at",
+    "state",
+    "authority",
+    "manifest_digest"
+  ],
+  "title": "Source evidence manifest",
+  "type": "object"
+}

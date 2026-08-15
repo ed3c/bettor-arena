@@ -1,0 +1,599 @@
+{
+  "schema": "bettor-arena/stack-pr-index/v1",
+  "observed_at": "2026-08-14T13:47:40Z",
+  "authority": {
+    "current": "GITHUB_API_AND_REPOSITORY_BYTES",
+    "snapshot_policy": "SNAPSHOT_ONLY",
+    "refresh_on": [
+      "main changes",
+      "PR base changes",
+      "PR head changes",
+      "PR state or mergeability changes",
+      "required check changes",
+      "path lease changes"
+    ]
+  },
+  "repository": {
+    "full_name": "ed3c/bettor-arena",
+    "repository_id": 1330387399,
+    "default_branch": "main",
+    "observed_main_sha": "ea8c4a101bcf44ffe54c78ef53da583afa9efad2"
+  },
+  "shared_skill": {
+    "repository": "ed3c/skills-shared",
+    "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
+    "blob": "eb2d915bca3e8a3938625f7d33a10fae95a15769",
+    "path": "skills/git-town-stacked-pr-worker/SKILL.md",
+    "reference_state": "PINNED",
+    "selection_state": "NOT_SELECTED"
+  },
+  "git_town": {
+    "binary_state": "ABSENT",
+    "configuration_state": "ABSENT",
+    "live_sync_state": "NOT_EXERCISED",
+    "publication_state": "NOT_EXERCISED",
+    "human_admit": "NOT_PERFORMED"
+  },
+  "program": {
+    "issue": 61,
+    "title": "LoopX Harness completion program",
+    "convergence_issue": 68
+  },
+  "stacks": [
+    {
+      "id": "documentation-git-governance",
+      "class": "DOCUMENTATION",
+      "nodes": [
+        {
+          "id": "pr-60",
+          "kind": "PULL_REQUEST",
+          "issue": null,
+          "pr": 60,
+          "branch": "feat/pdf-loopx-modular-verifier-v1",
+          "base_branch": "main",
+          "observed_head_sha": "f1463bf5184fafcbb2f207d7862ec5616eb4caa4",
+          "relation": "ROOT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "LoopX PDF modular integration",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "repo-agent-native Bettor Binding",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "README.md",
+            "AGENTS.md",
+            "CLAUDE.md",
+            "docs/architecture",
+            "docs/traceability"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns merge, retarget, close and rollback"
+        },
+        {
+          "id": "pr-81",
+          "kind": "PULL_REQUEST",
+          "issue": 80,
+          "pr": 81,
+          "branch": "feat/git-town-stack-governance-v1",
+          "base_branch": "main",
+          "observed_head_sha": "9dd94a1c6960b585e33e151dd03895abb884d956",
+          "relation": "TRUE_CHILD",
+          "publication_state": "OPEN",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "MERGEABLE",
+          "checks": [
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Git Town Stack governance docs",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "README.md",
+            "AGENTS.md",
+            "CLAUDE.md",
+            "docs/git",
+            "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+            "docs/architecture/STATE_MACHINES.md",
+            "docs/traceability/STACK_PR_INDEX.md",
+            "scripts/gates/check_git_town_stack_docs.py",
+            "tests/test_git_town_stack_docs.py"
+          ],
+          "rollback_subject": "ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90",
+          "human_boundary": "Human owns PR publication, merge and Git Town activation"
+        }
+      ]
+    },
+    {
+      "id": "loopx-terminal-stack",
+      "class": "LOOPX",
+      "nodes": [
+        {
+          "id": "pr-74",
+          "kind": "PULL_REQUEST",
+          "issue": 62,
+          "pr": 74,
+          "branch": "feat/loopx-contract-v1",
+          "base_branch": "main",
+          "observed_head_sha": "0731b667d0832c49b7844d7a2788c435518a654f",
+          "relation": "ROOT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "LoopX Contract v1",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "LoopX Ledger v1",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-kernel",
+            ".arena/modules/loopx-kernel"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns parent merge and composition admission"
+        },
+        {
+          "id": "pr-75",
+          "kind": "PULL_REQUEST",
+          "issue": 63,
+          "pr": 75,
+          "branch": "feat/loopx-ledger-v1",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": "8fa52730754c49da3128474423ddbc75007c5ae4",
+          "relation": "MERGED_TO_PARENT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "LoopX Ledger v1",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-ledger",
+            ".arena/modules/loopx-ledger"
+          ],
+          "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
+          "human_boundary": "Human must merge parent #74 before claiming main integration"
+        },
+        {
+          "id": "pr-76",
+          "kind": "PULL_REQUEST",
+          "issue": 64,
+          "pr": 76,
+          "branch": "feat/loopx-worker-gateway-v1",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": "4ebdfdfb0e20b9177b2e11834c49af41b3bbd228",
+          "relation": "MERGED_TO_PARENT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "LoopX Worker Gateway v1",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-worker-gateway",
+            ".arena/modules/loopx-worker-gateway",
+            "loopctl/workflow.lock"
+          ],
+          "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
+          "human_boundary": "Human must resolve duplicate issue/path authority with PR #77"
+        },
+        {
+          "id": "pr-77",
+          "kind": "PULL_REQUEST",
+          "issue": 64,
+          "pr": 77,
+          "branch": "feat/loopx-worker-gateway-terminal-v1",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": "fa2c120ee573c1991ef60e0b8ac3dee3c645f92e",
+          "relation": "HISTORICAL",
+          "publication_state": "SUPERSEDED_CANDIDATE",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-worker-gateway",
+            ".arena/modules/loopx-worker-gateway",
+            "loopctl/workflow.lock"
+          ],
+          "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
+          "human_boundary": "Human must resolve duplicate issue/path authority with PR #76"
+        },
+        {
+          "id": "pr-78",
+          "kind": "PULL_REQUEST",
+          "issue": 42,
+          "pr": 78,
+          "branch": "feat/loopx-decision-memory-v1",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": "1f0eb3acef73b9b22bf71f886a28b5363a09cc9c",
+          "relation": "MERGED_TO_PARENT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "LoopX Decision Memory v1",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-decision-memory",
+            ".arena/modules/loopx-decision-memory"
+          ],
+          "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
+          "human_boundary": "Human owns memory admission, merge and provider activation"
+        },
+        {
+          "id": "pr-79",
+          "kind": "PULL_REQUEST",
+          "issue": 69,
+          "pr": 79,
+          "branch": "feat/loopx-code-truth-graph-v2",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": "966e74fa11fac99b4a0eeb5cf8c7d80aeaa8d10c",
+          "relation": "MERGED_TO_PARENT",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "Code Truth Graph v2",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Modular contracts",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "PDF Harness integration audit",
+              "conclusion": "SUCCESS"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/code-truth-graph-v2",
+            ".arena/modules/code-truth-graph-v2"
+          ],
+          "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
+          "human_boundary": "Human owns graph admission, merge and provider activation"
+        },
+        {
+          "id": "issue-65",
+          "kind": "ISSUE_ONLY",
+          "issue": 65,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "feat/loopx-contract-v1",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-strategy-hitl"
+          ],
+          "rollback_subject": "2fd05408f585f6b8999a7922d4995d8379795eb2",
+          "human_boundary": "Human owns HITL exception/admission"
+        },
+        {
+          "id": "issue-66",
+          "kind": "ISSUE_ONLY",
+          "issue": 66,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_DEPENDENCIES",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-runtime-fabric"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns runtime/provider admission"
+        },
+        {
+          "id": "issue-67",
+          "kind": "ISSUE_ONLY",
+          "issue": 67,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_DEPENDENCIES",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/loopx-observability"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns signed HITL actions"
+        },
+        {
+          "id": "issue-68",
+          "kind": "ISSUE_ONLY",
+          "issue": 68,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_TERMINALS",
+          "observed_head_sha": null,
+          "relation": "CONVERGENCE",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "docs/traceability"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns final merge/promotion/rollback"
+        },
+        {
+          "id": "issue-70",
+          "kind": "ISSUE_ONLY",
+          "issue": 70,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_DEPENDENCIES",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/notes-to-scaffold"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns generated scaffold admission"
+        },
+        {
+          "id": "issue-71",
+          "kind": "ISSUE_ONLY",
+          "issue": 71,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_DEPENDENCIES",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/code-knowledge-foldback"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns knowledge writeback"
+        },
+        {
+          "id": "issue-72",
+          "kind": "ISSUE_ONLY",
+          "issue": 72,
+          "pr": null,
+          "branch": "NOT_CREATED",
+          "base_branch": "UNRESOLVED_DEPENDENCIES",
+          "observed_head_sha": null,
+          "relation": "TERMINAL",
+          "publication_state": "NOT_CREATED",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "terminal implementation",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            "loop_wiki/skill-prompt-evolution"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human owns Skill promotion"
+        }
+      ]
+    },
+    {
+      "id": "provider-separate-lane",
+      "class": "PROVIDER",
+      "nodes": [
+        {
+          "id": "pr-56",
+          "kind": "PULL_REQUEST",
+          "issue": 46,
+          "pr": 56,
+          "branch": "integration/provider-admission-packets-v1",
+          "base_branch": "main",
+          "observed_head_sha": "770b0c8990843e958f7c1a345c3359a2d71eeb82",
+          "relation": "TERMINAL",
+          "publication_state": "MERGED_TO_MAIN",
+          "main_presence": "ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "Knowledge provider admission evals",
+              "conclusion": "SUCCESS"
+            },
+            {
+              "name": "Knowledge provider contracts",
+              "conclusion": "FAILURE"
+            },
+            {
+              "name": "Modular contracts",
+              "conclusion": "FAILURE"
+            }
+          ],
+          "path_roots": [
+            "docs/knowledge-providers/evals",
+            "scripts/evaluate_knowledge_providers.py"
+          ],
+          "rollback_subject": "d291523856988cfa54316dba967fea8470194b72",
+          "human_boundary": "Human owns provider admission and conflict repair"
+        }
+      ]
+    },
+    {
+      "id": "historical-non-authoritative",
+      "class": "HISTORICAL",
+      "nodes": [
+        {
+          "id": "pr-53",
+          "kind": "PULL_REQUEST",
+          "issue": null,
+          "pr": 53,
+          "branch": "integration/portable-skill-execution-runner-v1",
+          "base_branch": "main",
+          "observed_head_sha": "6149e3b0102f7950790fa24602bec0cc3234470e",
+          "relation": "HISTORICAL",
+          "publication_state": "SUPERSEDED_CANDIDATE",
+          "main_presence": "NOT_ON_MAIN",
+          "mergeability": "NOT_APPLICABLE",
+          "checks": [
+            {
+              "name": "unique-delta extraction",
+              "conclusion": "NOT_OBSERVED"
+            }
+          ],
+          "path_roots": [
+            ".agents/skills/harness-wiki",
+            "loopctl",
+            "docs/knowledge-providers"
+          ],
+          "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
+          "human_boundary": "Human must extract unique delta before close or supersession"
+        }
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "worker-gateway-duplicate-active-terminal",
+      "type": "DUPLICATE_ACTIVE_TERMINAL",
+      "issues": [
+        64
+      ],
+      "prs": [
+        76,
+        77
+      ],
+      "overlap_roots": [
+        ".arena/modules/loopx-worker-gateway",
+        "loop_wiki/loopx-worker-gateway",
+        "loopctl/workflow.lock"
+      ],
+      "state": "RESOLVED_BY_HUMAN",
+      "authority": "HUMAN",
+      "resolution": "Owner admitted #76 (the 82-file implementation) and closed #77, a separate 19-file implementation of the same module, as superseded. #77's 8 unique files are tracked in issue #82."
+    }
+  ],
+  "human_owned_operations": [
+    "semantic conflict resolution",
+    "Git Town executable and legal admission",
+    "continue skip or undo",
+    "remote publication",
+    "PR retargeting",
+    "merge ship close or delete",
+    "permission widening",
+    "promotion",
+    "rollback"
+  ]
+}

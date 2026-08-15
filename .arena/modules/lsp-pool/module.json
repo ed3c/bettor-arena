@@ -1,0 +1,87 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/lsp-pool/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/lsp-pool/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/lsp-pool/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "lsp-pool",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "lsp-pool",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/lsp-pool/scripts/lsppool.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/lsp-pool/scripts/control_lsppool.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/lsp-pool/scripts/lsppool.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/lsp-pool/scripts/lsppool.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/lsp-pool/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.lsp-pool/v1",
+    "loopx.code-intelligence-evidence/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.code-truth-graph/v2",
+    "loopx.runtime-fabric/v1",
+    "loopx.worker-fleet/v1"
+  ],
+  "roots": [
+    "loop_wiki/lsp-pool"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "A bounded worktree-aware language-server pool that keeps CLEAN, UNKNOWN and SERVER_FAILED apart where they all produce an empty findings list, keys slots on the workspace subject so a symbol cannot cross worktrees, refuses to evict a slot serving an active request, and hands the Code Truth Graph provenance rather than bare diagnostics."
+}

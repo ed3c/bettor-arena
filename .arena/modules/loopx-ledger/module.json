@@ -1,0 +1,85 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-ledger/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-ledger/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-ledger/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-ledger",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-ledger",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-ledger/scripts/ledger.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-ledger/scripts/control_ledger.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-ledger/scripts/ledger.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-ledger/scripts/ledger.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-ledger/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.ledger/v1",
+    "loopx.reducer/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-ledger"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Append-only POSIX task ledger, compare-and-swap writer and deterministic reducer for LoopX Contract v1."
+}

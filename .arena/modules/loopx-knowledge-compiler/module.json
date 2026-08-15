@@ -1,0 +1,86 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-knowledge-compiler/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-knowledge-compiler/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-knowledge-compiler/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-knowledge-compiler",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-knowledge-compiler",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-knowledge-compiler/scripts/knowledge.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-knowledge-compiler/scripts/control_knowledge.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-knowledge-compiler/scripts/knowledge.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-knowledge-compiler/scripts/knowledge.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-knowledge-compiler/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.knowledge-compiler/v1",
+    "loopx.scaffold-candidate/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.code-truth-graph/v2",
+    "loopx.contracts/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-knowledge-compiler"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Compiles a pinned Notes Repo subject into typed knowledge cards, a system specification IR, a code-operation plan and a candidate scaffold rendered inside a leased disposable tree, keeping unknowns and contradictions explicit and stopping at Human Admit."
+}

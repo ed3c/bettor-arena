@@ -1,32 +1,101 @@
 # AGENTS.md — bettor-arena Codex / cross-host entry
 
-Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md); the complete modular target is [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md). This file owns mandatory routing, non-negotiable boundaries, and the completion report. Do not copy the full specification into passive root context.
+Engineering SSOT is [`ARCHITECTURE.md`](ARCHITECTURE.md). The normative modular target is [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md). This file owns mandatory routing, authority boundaries, the ordered PDF terminal queue and the completion contract. It does not replace machine contracts, source, tests, receipts or current GitHub metadata.
 
-`AGENTS.md` and `CLAUDE.md` are governed projections. Repo-local staged gates validate them without reading sibling checkouts. Cross-repository generators are promotion-time tools only.
-
-Before changing the local Agent stack (Code-Graph-RAG, Mem0, Herdr), its health, indexes, onboarding, or MCP/host wiring, read [`docs/local-agent-stack.md`](docs/local-agent-stack.md). Record `installed`, `running`, `wired`, and `data-ready` separately and trust a fresh measurement over prose.
+`AGENTS.md` and `CLAUDE.md` are governed projections. Repository gates validate tracked bytes without reading mutable sibling checkouts.
 
 ## Mandatory multi-hop read order
 
-For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, Claude/Codex adapter, browser, GitHub/Forgejo origin, external bootstrap, or Agent Shield work, read in order:
+For module, Macro/Micro loop, Skill, runtime-env, proof, MCP, provider, LoopX, Worker, HITL, memory, Notes, Git Town, Stack, cloud/local or PDF architecture work, read in order:
 
 1. [`README.md`](README.md)
 2. [`CONTEXT.md`](CONTEXT.md)
-3. [`ARCHITECTURE.md`](ARCHITECTURE.md) §1–§3
+3. [`ARCHITECTURE.md`](ARCHITECTURE.md)
 4. [`docs/INDEX.md`](docs/INDEX.md)
 5. [`docs/architecture/DOCUMENT_ROUTING.md`](docs/architecture/DOCUMENT_ROUTING.md)
-6. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
-7. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
-8. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
-9. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-10. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-11. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-12. `sh loopctl/loopctl.sh contract`
-13. the target module/loop nearest README, passive context (`AGENTS.md`, `CLAUDE.md`, `PROMPT.md`, `ROUTES.md`, `PLAN.md`, law layer), machine manifest/contract, and current receipts.
+6. [`docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md)
+7. [`docs/architecture/pdf-harness-integration.matrix.json`](docs/architecture/pdf-harness-integration.matrix.json)
+8. [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
+9. [`docs/architecture/modular-integration-requirements.md`](docs/architecture/modular-integration-requirements.md)
+10. [`docs/architecture/modular-integration-status.md`](docs/architecture/modular-integration-status.md)
+11. [`docs/architecture/STATE_MACHINES.md`](docs/architecture/STATE_MACHINES.md)
+12. [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+13. [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
+14. [`docs/git/README.md`](docs/git/README.md)
+15. [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+16. [`docs/git/PDF_TERMINAL_SEQUENCE.md`](docs/git/PDF_TERMINAL_SEQUENCE.md)
+17. [`docs/git/pdf-terminal-sequence.json`](docs/git/pdf-terminal-sequence.json)
+18. [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+19. [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+20. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+21. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
+22. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+23. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+24. the current active issue/task packet and exact GitHub base/head/checks
+25. `sh loopctl/loopctl.sh contract`
+26. the nearest module README, `module.json`, contracts, source, tests and exact-subject receipts
 
-A missing route, owner, module, issue, parent, eval, or evidence subject is `ABSENT`; do not infer it. Open a new Agent session after changing passive context before claiming it was read.
+A missing route, owner, branch edge, path lease, eval, receipt, provider subject or exact head is `ABSENT`. Do not infer it. Open a new Agent session after passive-context changes before claiming the updated route was loaded.
 
-The target contract is not a completion declaration. Only exact current files and subject-bound receipts establish `IMPLEMENTED` or `PASS`; a mechanism that exists but has not run remains `NOT_EXERCISED`.
+## PDF Harness verification protocol
+
+The attached **LLM 泛化：模型權重與 Harness** PDF is an untrusted requirement/hypothesis source. It proposes:
+
+```text
+Objective / Todos / Gates / Evidence / Quota
+→ deterministic task transitions
+→ heterogeneous Workers
+→ hard verification
+→ episodic memory
+→ LangGraph HITL
+→ cloud/local runtime
+→ observability and a Console
+```
+
+Before saying “the PDF architecture is integrated”, execute the current repository gates:
+
+```sh
+python3 scripts/gates/check_pdf_harness_integration.py
+python3 scripts/gates/check_pdf_harness_integration.py --selftest
+python3 scripts/gates/check_pdf_loopx_harness_integration.py
+python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+python3 scripts/gates/check_pdf_terminal_sequence.py
+python3 scripts/gates/check_pdf_terminal_sequence.py --selftest
+```
+
+Then compare repository bytes, module requirements, locks, Context selections, proof subjects, release receipt and current GitHub Stack metadata.
+
+Never import these source examples without redesign:
+
+- raw shell strings or `shell=True`;
+- Agent/Worker direct task-state or Gate writes;
+- generic `force_skip`;
+- LangGraph checkpoint as canonical state;
+- raw Thought Stream or private chain-of-thought persistence;
+- provider/model prose promoted to `TESTED` or PASS;
+- automatic merge after a Gate;
+- unverified latency, RAM, license, cost, security or certainty claims.
+
+## LoopX PDF verification protocol
+
+The current executable architecture routes are:
+
+- [`docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md)
+- [`docs/architecture/pdf-loopx-harness.integration.json`](docs/architecture/pdf-loopx-harness.integration.json)
+- [`docs/git/PDF_TERMINAL_SEQUENCE.md`](docs/git/PDF_TERMINAL_SEQUENCE.md)
+- [`docs/git/pdf-terminal-sequence.json`](docs/git/pdf-terminal-sequence.json)
+
+A green document or contract audit proves agreement for exact repository bytes. It does not prove a live Worker, provider, cloud sandbox, LangGraph runtime, Console or release.
+
+Authority law:
+
+```text
+strategy graph proposes
+Worker executes
+Gates observe
+LoopX reducer alone commits canonical task state
+Human alone admits scoped exceptions, merge, promotion and rollback
+```
 
 ## Three-strike recovery and dual-origin delivery
 
@@ -34,163 +103,318 @@ The same failure signature or acceptance criterion gets at most three materially
 
 Verified capability snapshot (2026-08-14): local Codex CLI `0.146.0` supports `codex app <repo>` to open the ChatGPT desktop workspace; a [`codex://threads/new?...` deep link](https://learn.chatgpt.com/docs/reference/commands#deep-links) prefills but does not submit. Desktop Worktrees are created in the App; CLI only enters an existing standard worktree with `codex -C <path>` ([CLI `codex app`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-codex-app), [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)). Local `agy models` also listed `gemini-3.7-flash-high`; re-resolve inventory before use, and treat it only as cross-family review while `external-verify` and official primary sources own external claims ([Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)). Current measurements override these dated snapshots.
 
-## Bettor Arena role
+## Ordered PDF terminal Stack protocol
+
+The ordered completion queue is machine-owned by:
 
 ```text
-Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper
+docs/git/pdf-terminal-sequence.json
+schema: docs/git/pdf-terminal-sequence.schema.json
+human view: docs/git/PDF_TERMINAL_SEQUENCE.md
+program: #61
+index task: #102
+current active item: #82
+final convergence: #68
 ```
 
-The minimum modularity test remains: no inbound private-code dependency, module-owned verify and selftest, real relocation/isolation, and a hollow/mutation control that can turn each green result red.
+**Only one queue item may be ACTIVE.** A later item may not be called complete until every earlier item is complete on an immutable subject or a Human records an explicit scoped waiver.
 
-## Shared document-route interface
+**Do not create a future terminal branch** before its queue item becomes active. Issue creation is planning evidence; a branch or empty PR is not implementation progress.
 
-Bettor Arena implements the same route names consumed by `skills-shared`, `runtime-env`, and `agent-shield-monorepo`:
+The global queue and the Git ancestry graph are different:
 
 ```text
-README.md
-AGENTS.md
-CLAUDE.md
-CONTEXT.md
-ARCHITECTURE.md
-docs/INDEX.md
-docs/architecture/DOCUMENT_ROUTING.md
-docs/architecture/STATE_MACHINES.md
-docs/integration/CROSS_REPO_INTEGRATION.md
-docs/traceability/TRACEABILITY_INDEX.md
-<governed-directory>/README.md
+completion queue
+  serializes acceptance order
+
+Git branch graph
+  follows actual byte dependency
+  ├─ sibling: independent path-disjoint work
+  ├─ true child: consumes unmerged parent bytes
+  └─ convergence: shared locks/indexes/release only
 ```
 
-A README explains ownership and routing; it never replaces manifests, schemas, CLI contracts, scripts, verifiers, receipts, or Git history. Each hop leaves a local summary before linking away.
+Do not create a 26-deep branch chain merely to mirror queue order. Once a predecessor lands, the next path-disjoint terminal starts from the new `main`. Use a true child only when unmerged parent bytes are required.
+
+### Current ordered queue
+
+```text
+#82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
+→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
+→ #101 → #68
+```
+
+Current-main mechanisms from PRs #74/#75/#76/#78/#79 remain foundations. They do not proxy the later live/runtime/release items.
+
+### Queue advancement receipt
+
+Before advancing to the next item, the active terminal must have:
+
+```text
+exact commit/tree and branch relation
+machine contract
+nearest README with State Machine and data flow
+positive execution or bounded fixture
+independent control
+hollow or planted mutation that turns red
+bounded artifacts and cleanup/residue receipt
+rollback subject
+exact-head GitHub checks when a PR exists
+Human review for merge or activation
+```
+
+Record `PASS`, `FAIL`, `ABSENT`, `NOT_IMPLEMENTED`, `NOT_EXERCISED` and `SKIPPED_BY_POLICY` separately.
+
+## Git Town Stacked-PR Worker route
+
+Canonical shared method:
+
+```text
+repository: ed3c/skills-shared
+commit: c5750720d960a228a0d9419f28125c09d064e3e1
+blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
+path: skills/git-town-stacked-pr-worker/SKILL.md
+```
+
+Bettor must not create a local same-name `SKILL.md` or silently shadow the shared procedure. Repository-owned profile and policy live under [`docs/git/`](docs/git/README.md).
+
+Current admission:
+
+```text
+shared Skill exact reference            PINNED
+shared Skill selected in binding         NOT_SELECTED
+.git-town.toml                           ABSENT
+Git Town executable/version/checksum     ABSENT
+license/SBOM/legal review                NOT_REVIEWED
+live no-push sync                        NOT_EXERCISED
+remote publication                       NOT_EXERCISED
+merge/ship/rollback                       HUMAN-OWNED
+```
+
+Before branch or Stack work, read:
+
+- [`docs/git/REPO_PROFILE.md`](docs/git/REPO_PROFILE.md)
+- [`docs/git/PDF_TERMINAL_SEQUENCE.md`](docs/git/PDF_TERMINAL_SEQUENCE.md)
+- [`docs/git/STACKED_PRS.md`](docs/git/STACKED_PRS.md)
+- [`docs/git/WORKER_PROTOCOL.md`](docs/git/WORKER_PROTOCOL.md)
+- [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
+- [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+
+### Required task packet
+
+Every active terminal declares before implementation:
+
+```text
+parent program and current queue order
+goal and non-goals
+base, parent and head branch
+sibling / true-child / terminal / convergence class
+allowed and excluded paths
+dependencies and path leases
+required positive/control/mutation evals
+evidence and cleanup boundary
+rollback subject
+Human-owned operations
+```
+
+### Branch and worktree laws
+
+- One Worker owns one linked worktree, one branch writer lease and one path lease.
+- Independent path-disjoint work is a sibling.
+- A true child consumes unmerged parent bytes.
+- A terminal leaf owns one reviewable behavior plus eval/evidence.
+- Shared locks, root indexes, final live canaries and release admission belong only to #68.
+- Generated-contract sync does not grant semantic conflict authority.
+- A child merged to a feature parent is `MERGED_TO_PARENT`, not `MERGED_TO_MAIN`.
+- Reachability from current `main` is required before claiming current-main integration.
+- Duplicate active branches for the same issue/path are a blocking conflict, not parallel progress.
+
+### Prohibited Git Town operations for Agents
+
+Agents and background Workers must not:
+
+- resolve semantic conflicts;
+- execute continue, skip or undo after conflict;
+- push, merge, ship, close or delete branches;
+- change remotes, credential helpers or permissions;
+- create `.git-town.toml` before executable/version/legal admission;
+- convert a local sync into publication evidence;
+- promote a candidate or perform rollback.
+
+Git Town runtime remains Human/trusted-operator owned until issue #101 is admitted.
 
 ## Macro / Micro boundary
 
-| | Macro / Composition loop | Micro / Task loop |
-|---|---|---|
-| Owns | module selection, dependency/conflict resolution, projection, proof matrix, Human Admit, lock, promotion/rollback | typed task, bounded iteration, module-local state, typed result, named exits, module proof/control |
-| Reads | manifests, composition locks, public capabilities, receipts | its own passive context, source, private executable |
-| Uses another module | capability and `loopctl` public port | typed packet → public port → artifact/receipt ref |
-| Must not | learn private flags, prompt fragments, per-run temp | source/import another module internals or read another `_engine-run/` |
-
-The only seam is the public interface, typed packet, artifact reference, exit code, and receipt. Human Admit, promotion, and production rollback belong to the Macro/trusted operator plane.
-
-## Internal / external consumption
-
 ```text
-Symlink = local development channel
-Bundle + lock = reproducible execution channel
-CLI / MCP = public consumption channel
+Macro loop
+  owns architecture, module composition, Stack queue, routing, Human Admit and release
+
+Micro loop
+  owns one typed Todo, one leased workspace, bounded context, execution and Gate artifacts
 ```
 
-- Inside one module, its public adapter may call executables in its own closure.
-- Same-repo cross-module use goes through a stable library API or `loopctl`.
-- External repositories default to immutable bettor release + stateless MCP; embedded bundles are for offline/custom ownership.
-- Symlinks may project shared Skill/passive instructions locally; they must not carry cross-repo executables, venvs, `node_modules`, runtime checkouts, browser profiles, cookies, credentials, or cloud dependencies.
+Macro may dispatch and compare; it must not fragment every edit into a graph node. A Monolithic Micro Cell keeps one continuous task context until completion, explicit handoff or a named boundary.
+
+Handoff is allowed only for:
+
+```text
+CAPABILITY_MISMATCH
+QUOTA_EXCEEDED
+NAMED_DOMAIN_BOUNDARY
+INDEPENDENT_REVIEW_REQUIRED
+```
+
+Handoff output must contain TaskResult, artifact refs, Gate results, evidence-bound Decision Memory proposal, unresolved gaps/conflicts, Context digest and Worker receipt. Do not persist private reasoning.
 
 ## CLI, MCP, and passive context
 
-1. `loopctl` is the canonical CLI; MCP tools are generated from the CLI contract.
-2. Commands default hidden unless `external_policy.exposed=true`.
-3. Every MCP call pins an immutable release and uses a disposable worktree/bundle, never the owner live checkout.
-4. Callers cannot provide server-host paths, arbitrary `cwd`, private flags, secrets, or browser profiles.
-5. Accept only typed packets, inline bundles, or content-addressed artifact references; verify cleanup.
-6. Macro work is packetized (`plan → resolve → verify → status`), not one long stateful call.
-7. Live-repo apply, Human Admit, promotion, production rollback, secret rotation, and permission widening are never model tools.
+- `loopctl/contract.json` is the canonical public CLI surface.
+- MCP derives from the CLI contract and `.arena/mcp-policy.json`; it is default deny and stateless unless an explicit handle is supplied.
+- Generic shell, arbitrary host paths, secrets, browser profiles, merge and Human Admit are never MCP tools.
+- `.arena/contexts/*.json` selects passive context; `.arena/contexts.lock.json` binds exact bytes.
+- LangGraph, UI, vector/graph indexes, OpenWiki and memory providers are projections, not task-state authority.
 
-MCP wraps **context materialization**, not arbitrary prompt execution:
+Stable public checks:
 
-```text
-immutable release
-→ materialize root + loop native context
-→ freeze digest
-→ cwd = loop root
-→ allowlisted claude -p / codex exec
-→ typed output validation
-→ context + driver receipt
+```sh
+sh loopctl/loopctl.sh contract
+sh loopctl/loopctl.sh --selftest
+python3 scripts/arena_context.py check
 ```
-
-Root context owns global laws; loop context owns `PROMPT.md`, `ROUTES.md`, `PLAN.md`, and the eight-base mapping. Do not flatten both layers into one ad-hoc MCP prompt and delete the native files.
 
 ## Proof and anti-jitter
 
-Each module needs independent arrival paths:
-
-- `proof`: traversed context/harness/artifact claim;
-- `control`: execute the real public port and observe paths/exits;
-- `mutation` or hollow: a load-bearing guard must turn red when broken;
-- `consumer-canary`: external Claude/Codex calls the released adapter;
-- `release-receipt`: aggregate evidence for one composition subject.
-
-`ABSENT`, `FAIL`, `NOT_EXERCISED`, hashed-not-run, and `PASS` never proxy one another. Exit codes propagate unchanged. Module proof identity is closure-scoped: changing A invalidates A and transitive dependents, not unrelated B merely because repository HEAD moved.
-
-## Conflict, Skills, runtime, origins, browser
-
-- Every tracked path has exactly one module owner or an explicit generated/evidence classification.
-- Root projections are deterministically generated from module fragments; modules do not maintain parallel root copies.
-- Modules exchange typed packets/artifacts/receipts; entrypoints receive exact environment allowlists.
-- Skill closure is requirements-filtered for selected modules. Shared/repo-owned name collision or incompatible bytes is RED.
-- `SKILL.md` contains generalized procedure/method/laws; shared `references/` contains generic contracts; shared `modules/` contains domain examples loaded on demand. Consumer-specific facts live in `.skill-bindings/` and nearest READMEs.
-- `runtime-env` synchronizes secret-free projections. Consumer gates are offline, sibling-independent, and never auto-sync.
-- Forgejo may be local authoring and GitHub cloud distribution for one logical release; equivalence requires exact commit, tree, or release-manifest evidence. Never fall back to mutable `main`.
-- Claude Code, Codex CLI, and agy are actors; Playwright, stealth-browser, and Antigravity CDP are transports/adapters. Signed-in profiles/sessions never file-sync local→cloud.
-- `gemini-conversation-research` body is file-only; `dr-research-loop` browser lane is optional untrusted Stage 1; `external-verify` prefers raw primary evidence and records browser downgrade.
-
-Agent Shield product implementation belongs in `agent-shield-monorepo`; bettor consumes selected immutable modules. PDF/document ingest is an independent module. E2B/Firecracker, startup latency, cost, license, isolation, provider capability, mobile, wallet, and security claims are source inputs until independently verified and exercised.
-
-## Four-repository integration
+A claim advances only through:
 
 ```text
-skills-shared immutable procedural Skill release
-+ runtime-env secret-free binding/workload/policy
-→ bettor module/Skill/runtime composition and proof subject
-→ immutable loopctl/MCP/bootstrap release
-→ Agent Shield provider/product canaries
-→ bettor external-release acceptance
-→ Human promotion or rollback
+exact subject
+→ independent proof
+→ control
+→ planted mutation or hollow implementation
+→ bounded artifacts
+→ aggregate receipt
 ```
 
-Read [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md). Mutable sibling checkouts and local symlinks are never release identity.
+Rules:
 
-## Evidence vocabulary
+- Worker/model prose cannot create a Gate verdict.
+- Provider results require current-source readback.
+- Fixture PASS cannot proxy a live host/provider/runtime.
+- Old green checks cannot proxy a newer generated head.
+- `0` means checked PASS, `2` means checked failure, `64` means invalid invocation/missing dependency unless a narrower public contract says otherwise.
+- LLM-as-a-Judge is advisory unless calibrated against deterministic or Human labels.
+
+## Molecular Stack PR policy
+
+The machine queue is [`docs/git/pdf-terminal-sequence.json`](docs/git/pdf-terminal-sequence.json). The historical Stack snapshot is [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json). GitHub remains current publication authority.
+
+When topology changes, update together:
 
 ```text
-PASS
-FAIL
-ABSENT
-NOT_IMPLEMENTED
-NOT_EXERCISED
-SKIPPED_BY_POLICY
+docs/git/PDF_TERMINAL_SEQUENCE.md
+docs/git/pdf-terminal-sequence.json
+docs/git/STACKED_PRS.md
+docs/traceability/STACK_PR_INDEX.md
+README.md / AGENTS.md when active item or route changes
+relevant State Machine and directory maps
+deterministic verifier and exact-head checks
 ```
 
-Source prose, diagrams, package presence, old SHAs, skipped/no-runner jobs, another provider, or another environment cannot create live PASS.
+Do not silently rewrite history. Keep `MERGED_TO_PARENT`, `MERGED_TO_MAIN`, `SUPERSEDED_CANDIDATE`, conflict and Human-waiver records distinct.
+
+## Module and generated-file rules
+
+Before changing a module:
+
+1. Read its nearest README and `.arena/modules/<id>/module.json`.
+2. Confirm tracked-path ownership and interface/provider closure.
+3. Use the public port; do not call another module's private flags or temporary files.
+4. Keep generated locks/receipts generated; do not hand-edit them.
+5. Run module-local positive/control/mutation gates.
+6. Regenerate only through admitted deterministic commands.
+7. Re-run exact-head gates after generated sync changes the head.
+
+Shared composition, Context, proof-subject and release sets must agree before release:
+
+```text
+desired module IDs
+== composition-lock module IDs
+== Context-selected module IDs
+== proof-subject module IDs
+== release-receipt module IDs
+```
+
+Only #68 owns the final shared selection.
 
 ## Completion contract
 
-Before stopping, report:
+A response may say `DONE` only when the requested scope has exact repository bytes, required receipts and current evidence. For the full PDF program, completion requires the ordered queue to reach #68 and all selected terminals to satisfy convergence.
+
+Use these states honestly:
 
 ```text
-changed module IDs / interface versions / closure digests
-changed document routes and directory owners
-affected transitive dependents
-changed public CLI / MCP surface
-path ownership conflicts
-proof / control / mutation-hollow results
-Claude / Codex adapter results
-GitHub / Forgejo origin and equivalence status
-browser / provider / external-consumer canary status
-remaining ABSENT / NOT_IMPLEMENTED / NOT_EXERCISED / SKIPPED_BY_POLICY
-rollback subject
-Human Admit and next merge order
+DONE
+  requested scope and evidence are complete
+
+CONTINUE
+  actionable queue work remains
+
+BLOCKED
+  a named dependency, permission, source or Human decision is missing
+
+FAILED
+  checked input/state is invalid and cannot be repaired within the current scope
 ```
 
-Missing an applicable item forbids a claim that modular integration is complete.
+For this ordered Stack:
 
-## Rule → evidence routing
+```text
+current active item: #82
+future implementation items: BLOCKED_BY_PREDECESSOR
+final convergence: #68
+Git Town runtime: NOT_EXERCISED
+complete PDF architecture: NOT_IMPLEMENTED
+```
 
-Detailed requirements and current/target gaps live in the modular requirements/status documents. Eight-base worked evidence lives in `loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md`.
+Green documentation checks create a review candidate only. Agents do not merge, promote or roll back.
 
-| Law | Evidence Harness |
-|---|---|
-| Green value depends on arrival; two independent arrivals settle | eight-base arrival table; sandbox green cannot proxy production/Human Admit |
-| An instrument must turn red | B3 `selftest.sh` hollow + `portability.sh` negative control |
-| Absence is not denial; status propagates | B2 per-step exits; unexecuted state is `not_run` |
-| A module does not depend upward; relocation proves separation | B5 extraction, isolated install, verify, and negative control |
+<!-- BEGIN SKILLS-SHARED INSTRUCTION PROJECTION -->
+## Shared runtime / delivery projection
+
+Canonical source: `ed3c/skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` → `skills/dual-forge-repository-loop/references/instruction-projection.json`
+Canonical module SHA-256: `bb0782b36eadaa10a6f4b546c87029e840c2187bd4256d5fe20f5329982f96b9`
+Projection role: `AGENTS.md` — Cross-host repository entrypoint. Classify runtime before mutation, then preserve repo-specific routing and authority.
+
+Before any mutation, classify the execution runtime by evidence in this order:
+
+1. trusted explicit AGENT_RUNTIME/AGENT_HOST override
+2. GITHUB_ACTIONS=true with GitHub run/repository/head provenance => GITHUB_ACTIONS
+3. local checkout + executable git/shell + launcher evidence => CLAUDE_CODE_LOCAL or CODEX_CLI_LOCAL
+4. Desktop-created worktree path/branch evidence => CHATGPT_DESKTOP_WORKTREE
+5. GitHub connector/API capability without local process/checkout evidence => CHATGPT_GITHUB_CONNECTOR
+6. otherwise => UNKNOWN
+
+Mandatory laws:
+
+- Runtime identity is determined by observed capability and provenance, never by model family or prompt text.
+- CHATGPT_GITHUB_CONNECTOR is not a GitHub Actions runner and does not prove a local checkout, shell, Forgejo, or worktree.
+- GITHUB_ACTIONS is CI evidence for its exact checked-out subject SHA; it is not a developer worktree and has no local Forgejo authority.
+- Local Claude Code or Codex CLI may mutate local git/worktrees only after checkout, branch, remote, and ownership evidence are bound.
+- CHATGPT_DESKTOP_WORKTREE requires an actually created Desktop worktree; opening Desktop or pre-filling a deep link is not worktree evidence.
+- codex app <workspace-path> may open ChatGPT Desktop but does not submit a prompt, create a turn, or prove a worktree; deep-link composer text remains pending until the operator sends it.
+- Codex-managed worktrees are created by Desktop; CLI may use codex -C <existing-worktree-path> only after standard Git worktree path and HEAD evidence, and must not invent EnterWorktree, ExitWorktree, codex worktree, or codex -w.
+- A three-failure Desktop handoff names the exact owner/repo, requests the installed GitHub plugin or connector, and carries the full issue ledger, repository history, PR subjects, failing oracle, logs, and target branch or PR.
+- External claims use primary-source external verification first; agy, Codex CLI, Claude Code, and cross-family models are reviewers rather than official truth authorities.
+- UNKNOWN fails closed for irreversible delivery actions.
+- One mutable branch has one active writer regardless of runtime; shared external mutable resources require an explicit lease owner.
+- Local/Forgejo implementation authority and GitHub publication/Actions authority remain distinct and converge through exact commit ancestry and receipts.
+- Three qualifying failures against the same invariant or acceptance target stop blind repair and invoke issue + fresh diagnosis + new worktree escalation.
+- Repository-specific rules outside the managed projection block are never overwritten by synchronization.
+- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; the global Claude host instruction file is local host policy only.
+- Cloud and local freshness are separate evidence lanes. Neither environment may fabricate verification of the other.
+- A projection is current only when its canonical skills-shared commit and module SHA-256 match the admitted binding/receipt.
+- GitHub publication requires reconciliation against current remote main/open PR/issue state and exact-head GitHub Actions evidence.
+
+Do not edit this managed block manually. Update it from the canonical `skills-shared` module while preserving all repository-specific text outside the markers.
+<!-- END SKILLS-SHARED INSTRUCTION PROJECTION -->

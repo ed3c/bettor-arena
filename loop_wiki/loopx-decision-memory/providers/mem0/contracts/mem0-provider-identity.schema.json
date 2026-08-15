@@ -1,0 +1,59 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/mem0/identity/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Which deployment produced a receipt. Managed and self-hosted numbers do not describe each other: the model, the hardware and the index are all different, and none of them are ones this repository selected.",
+  "properties": {
+    "embedding_identity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "llm_identity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "MANAGED_SERVICE",
+        "OSS_SELF_HOSTED"
+      ]
+    },
+    "namespace": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "package_version": {
+      "description": "Required when self-hosted; forbidden when managed, since recording a local version implies a control nobody has.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema_version": {
+      "const": "loopx/mem0-provider-identity/v1"
+    },
+    "server_endpoint": {
+      "description": "Required when managed; forbidden when self-hosted, since a hosted endpoint answering the query means the numbers describe that service.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "storage_identity": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "mode",
+    "package_version",
+    "server_endpoint",
+    "storage_identity",
+    "embedding_identity",
+    "llm_identity",
+    "namespace"
+  ],
+  "title": "Mem0 provider identity",
+  "type": "object"
+}

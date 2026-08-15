@@ -1,0 +1,86 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/loopx-notes-retrieval/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/loopx-notes-retrieval/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/loopx-notes-retrieval/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "loopx-notes-retrieval",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "loopx-notes-retrieval",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/loopx-notes-retrieval/scripts/notesretrieval.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/loopx-notes-retrieval/scripts/control_notesretrieval.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/loopx-notes-retrieval/scripts/notesretrieval.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/loopx-notes-retrieval/scripts/notesretrieval.py",
+      "selftest"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/loopx-notes-retrieval/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.notes-retrieval/v1",
+    "loopx.openwiki-projection/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.source-ingest/v1"
+  ],
+  "roots": [
+    "loop_wiki/loopx-notes-retrieval"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Static OpenWiki navigation plus an optional vector projection over an immutable Notes Repo, where a semantic miss never proves absence, generated wiki pages cannot be evidence for what generated them, an index stale in subject or in embedding policy refuses to answer, and every hit is read back against the source it cites."
+}

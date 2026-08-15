@@ -1,0 +1,264 @@
+{
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/loopx-kernel/contracts/event.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "type": "string"
+        },
+        "authority": {
+          "enum": [
+            "PROPOSAL",
+            "OBSERVATION",
+            "DECISION",
+            "STATE_COMMIT"
+          ]
+        },
+        "class": {
+          "enum": [
+            "LOOPX",
+            "STRATEGY",
+            "AGENT",
+            "WORKER",
+            "GATE_ENGINE",
+            "HUMAN",
+            "SYSTEM"
+          ]
+        }
+      },
+      "required": [
+        "actor_id",
+        "class",
+        "authority"
+      ],
+      "type": "object"
+    },
+    "event_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gate_observation": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "human_decision": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "quota_delta": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "request_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string"
+                },
+                "bytes": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "media_type": {
+                  "type": "string"
+                },
+                "path": {
+                  "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+                  "type": "string"
+                },
+                "producer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "kind",
+                "path",
+                "digest",
+                "bytes",
+                "media_type",
+                "producer"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "todo_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "transition": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "worker_result_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string"
+                },
+                "bytes": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "media_type": {
+                  "type": "string"
+                },
+                "path": {
+                  "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+                  "type": "string"
+                },
+                "producer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "kind",
+                "path",
+                "digest",
+                "bytes",
+                "media_type",
+                "producer"
+              ],
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "required": [
+        "todo_id",
+        "command_id",
+        "request_ref",
+        "worker_result_ref",
+        "gate_observation",
+        "quota_delta",
+        "human_decision",
+        "transition"
+      ],
+      "type": "object"
+    },
+    "previous_event_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema_version": {
+      "const": "loopx/event/v1"
+    },
+    "sequence": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "repository": {
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "tree": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "tree",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    "type": {
+      "enum": [
+        "TASK_INITIALIZED",
+        "COMMAND_ACCEPTED",
+        "COMMAND_REJECTED",
+        "WORKER_OBSERVED",
+        "GATE_OBSERVED",
+        "QUOTA_DEBITED",
+        "HITL_REQUESTED",
+        "HUMAN_DECISION_RECORDED",
+        "STATE_TRANSITION_COMMITTED"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "subject",
+    "sequence",
+    "previous_event_digest",
+    "event_digest",
+    "occurred_at",
+    "type",
+    "actor",
+    "payload"
+  ],
+  "title": "loopx/event/v1",
+  "type": "object"
+}

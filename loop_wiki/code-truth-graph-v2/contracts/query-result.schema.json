@@ -1,0 +1,19 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/code-truth-graph-v2/query-result/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {"const": "PROJECTION_ONLY"},
+    "coverage_basis": {"items": {"type": "string"}, "type": "array"},
+    "graph_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "paths": {"items": {"items": {"type": "string"}, "type": "array"}, "type": "array"},
+    "query_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "reasons": {"items": {"type": "string"}, "type": "array"},
+    "schema_version": {"const": "code-truth-graph-v2/query-result/v1"},
+    "status": {"enum": ["FOUND", "CONTESTED", "NO_FLOW", "UNKNOWN"]},
+    "subject": {"type": "object"}
+  },
+  "required": ["schema_version", "subject", "graph_digest", "query_digest", "status", "paths", "coverage_basis", "reasons", "authority"],
+  "title": "Code Truth Graph v2 Query Result",
+  "type": "object"
+}

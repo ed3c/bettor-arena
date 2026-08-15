@@ -186,6 +186,312 @@ def validate(root: Path) -> list[str]:
     if skill.get("candidate_state") not in EVIDENCE_STATES:
         errors.append("binding.json: skill.candidate_state is unsupported")
 
+    measurement = binding.get("measurement")
+    if not isinstance(measurement, dict):
+        errors.append("binding.json: measurement must be an object")
+        measurement = {}
+    if measurement.get("authority_repository") != "ed3c/skills-shared":
+        errors.append("binding.json: measurement authority must be ed3c/skills-shared")
+    if measurement.get("authority_commit") != skill.get("candidate_commit"):
+        errors.append(
+            "binding.json: measurement authority_commit must equal candidate_commit"
+        )
+    expected_measurement_paths = {
+        "case": "evals/cases/repo-agent-native/retry-source-contract.json",
+        "verifier": "evals/verifiers/verify_repo_agent_native_output.py",
+        "normalizer": "evals/adapters/normalize_repo_agent_native.py",
+        "matrix_aggregator": "evals/adapters/summarize_repo_agent_native_matrix.py",
+        "canonical_run_schema": "evals/schema/run-trace.schema.json",
+        "canonical_evidence_schema": "evals/schema/evidence-bundle.schema.json",
+    }
+    for key, expected in expected_measurement_paths.items():
+        if measurement.get(key) != expected:
+            errors.append(
+                f"binding.json: measurement.{key} must point to canonical skills-shared authority"
+            )
+    if measurement.get("conditions") != [
+        "no_skill",
+        "current_skill",
+        "candidate_skill",
+        "wrong_skill",
+    ]:
+        errors.append(
+            "binding.json: measurement conditions must preserve the four-arm order"
+        )
+    if measurement.get("minimum_repetitions_per_condition") != 3:
+        errors.append(
+            "binding.json: measurement requires three repetitions per condition"
+        )
+    if measurement.get("harnesses") != ["codex", "claude"]:
+        errors.append("binding.json: measurement requires Codex and Claude harnesses")
+    matrix_state = measurement.get("physical_matrix_state")
+    if matrix_state not in EVIDENCE_STATES:
+        errors.append("binding.json: physical_matrix_state is unsupported")
+    if matrix_state in {"PASS", "FAIL"}:
+        receipt = measurement.get("consumer_receipt")
+        if not nonempty(receipt):
+            errors.append(
+                f"binding.json: physical matrix {matrix_state} requires consumer_receipt"
+            )
+        else:
+            try:
+                receipt_path = inside(
+                    root, receipt, label="measurement.consumer_receipt"
+                )
+                if not receipt_path.is_file():
+                    errors.append(
+                        f"binding.json: physical matrix {matrix_state} receipt is ABSENT"
+                    )
+                else:
+                    matrix_receipt = load_json(receipt_path)
+                    if (
+                        matrix_receipt.get("schema_version")
+                        != "repo-agent-native-consumer-measurement/v1"
+                    ):
+                        errors.append(
+                            "binding.json: unsupported physical matrix receipt schema"
+                        )
+                    if matrix_receipt.get("state") != matrix_state:
+                        errors.append(
+                            "binding.json: physical matrix receipt state mismatch"
+                        )
+                    if matrix_receipt.get(
+                        "measurement_authority_commit"
+                    ) != measurement.get("authority_commit"):
+                        errors.append(
+                            "binding.json: physical matrix receipt authority mismatch"
+                        )
+                    matrix = matrix_receipt.get("matrix")
+                    if (
+                        not isinstance(matrix, dict)
+                        or matrix.get("observed_cells") != 24
+                        or matrix.get("expected_cells") != 24
+                    ):
+                        errors.append(
+                            "binding.json: physical matrix receipt is incomplete"
+                        )
+            except BindingError as exc:
+                errors.append(str(exc))
+    elif measurement.get("consumer_receipt") is not None:
+        errors.append(
+            "binding.json: unexecuted physical matrix must not cite a receipt"
+        )
+
+    generalization = binding.get("generalization_measurement")
+    if not isinstance(generalization, dict):
+        errors.append("binding.json: generalization_measurement must be an object")
+        generalization = {}
+    if generalization.get("authority_repository") != "ed3c/skills-shared":
+        errors.append(
+            "binding.json: generalization authority must be ed3c/skills-shared"
+        )
+    if not SHA40.fullmatch(str(generalization.get("candidate_commit", ""))):
+        errors.append(
+            "binding.json: generalization candidate_commit must be a lowercase 40-hex SHA"
+        )
+    if generalization.get("candidate_publication_state") not in {
+        "LOCAL_ONLY",
+        "PR_HEAD",
+        "CANONICAL",
+    }:
+        errors.append(
+            "binding.json: unsupported generalization candidate_publication_state"
+        )
+    expected_generalization = {
+        "profile": "evals/profiles/source-grounded-analysis-v1.json",
+        "suite": "evals/suites/repo-agent-native-generalization-v2.json",
+        "split": "dev",
+        "conditions": ["no_skill", "current_skill", "candidate_skill"],
+        "task_families": 4,
+        "variants_per_family": 2,
+        "repetitions_per_cell": 3,
+        "harnesses": ["codex", "claude"],
+        "expected_cells": 144,
+        "observed_cells": 144,
+        "behavior_state": "FAIL",
+        "identity_state": "NOT_EXERCISED",
+    }
+    for key, expected in expected_generalization.items():
+        if generalization.get(key) != expected:
+            errors.append(
+                f"binding.json: generalization_measurement.{key} must equal {expected!r}"
+            )
+    receipt = generalization.get("consumer_receipt")
+    if not nonempty(receipt):
+        errors.append(
+            "binding.json: generalization measurement requires consumer_receipt"
+        )
+    else:
+        try:
+            receipt_path = inside(
+                root, receipt, label="generalization_measurement.consumer_receipt"
+            )
+            if not receipt_path.is_file():
+                errors.append("binding.json: generalization receipt is ABSENT")
+            else:
+                generalization_receipt = load_json(receipt_path)
+                if (
+                    generalization_receipt.get("schema_version")
+                    != "repo-agent-native-generalization-consumer-measurement/v1"
+                ):
+                    errors.append(
+                        "binding.json: unsupported generalization receipt schema"
+                    )
+                authority = generalization_receipt.get("measurement_authority", {})
+                matrix = generalization_receipt.get("matrix", {})
+                identity = generalization_receipt.get("identity_audit", {})
+                if authority.get("candidate_commit") != generalization.get(
+                    "candidate_commit"
+                ):
+                    errors.append(
+                        "binding.json: generalization receipt candidate mismatch"
+                    )
+                if authority.get("candidate_publication_state") != generalization.get(
+                    "candidate_publication_state"
+                ):
+                    errors.append(
+                        "binding.json: generalization publication state mismatch"
+                    )
+                if generalization_receipt.get("behavior_state") != "FAIL":
+                    errors.append(
+                        "binding.json: generalized candidate must preserve observed FAIL"
+                    )
+                if generalization_receipt.get("identity_state") != "NOT_EXERCISED":
+                    errors.append(
+                        "binding.json: generalized identity must preserve NOT_EXERCISED"
+                    )
+                if (
+                    matrix.get("expected_cells") != 144
+                    or matrix.get("observed_cells") != 144
+                ):
+                    errors.append(
+                        "binding.json: generalized physical matrix is incomplete"
+                    )
+                if identity.get("state") != "NOT_EXERCISED" or identity.get(
+                    "missing_fields"
+                ) != ["common_task_sha256", "runner_sha256"]:
+                    errors.append(
+                        "binding.json: generalized identity limitation is not preserved"
+                    )
+                if generalization_receipt.get("admission_failures") != [
+                    "candidate-hard-capability-failure",
+                    "candidate-delta-lcb-below-threshold",
+                    "no-skill-lift-lcb-below-threshold",
+                    "metamorphic-pass-rate",
+                ]:
+                    errors.append(
+                        "binding.json: generalized admission failures drifted"
+                    )
+        except BindingError as exc:
+            errors.append(str(exc))
+
+    universal = binding.get("universal_measurement_protocol")
+    if not isinstance(universal, dict):
+        errors.append("binding.json: universal_measurement_protocol must be an object")
+        universal = {}
+    expected_universal = {
+        "authority_repository": "ed3c/skills-shared",
+        "authority_commit": "3d3c179d773e251ad1ae49c9453e428784219f00",
+        "authority_publication_state": "FORGEJO_FEATURE_BRANCH",
+        "catalog": "evals/universal/catalog.json",
+        "profile": "evals/universal/profiles/source-grounded-analysis-v2.json",
+        "engine": "scripts/measure_skill_generalization.py",
+        "conformance_receipt": "evals/universal/receipts/protocol-conformance-v2.json",
+        "measurement_closure_sha256": "306e01a0b5741a18579956917359233484b7b1410d039133cf8ce51425b9cbc6",
+        "catalog_skills": 23,
+        "profiles": 5,
+        "conformance_suites": 5,
+        "protocol_state": "PASS",
+        "repo_agent_native_physical_v2_state": "NOT_EXERCISED",
+    }
+    for key, expected in expected_universal.items():
+        if universal.get(key) != expected:
+            errors.append(
+                f"binding.json: universal_measurement_protocol.{key} must equal {expected!r}"
+            )
+    universal_receipt = universal.get("consumer_receipt")
+    if not nonempty(universal_receipt):
+        errors.append("binding.json: universal protocol requires consumer_receipt")
+    else:
+        try:
+            receipt_path = inside(
+                root,
+                universal_receipt,
+                label="universal_measurement_protocol.consumer_receipt",
+            )
+            if not receipt_path.is_file():
+                errors.append("binding.json: universal protocol receipt is ABSENT")
+            else:
+                protocol_receipt = load_json(receipt_path)
+                source = protocol_receipt.get("source", {})
+                conformance = protocol_receipt.get("protocol_conformance", {})
+                repo_result = protocol_receipt.get("repo_agent_native", {})
+                if (
+                    protocol_receipt.get("schema_version")
+                    != "bettor-skill-measurement-acceptance/v1"
+                ):
+                    errors.append(
+                        "binding.json: unsupported universal protocol receipt"
+                    )
+                if source.get("commit") != universal.get("authority_commit"):
+                    errors.append(
+                        "binding.json: universal protocol source commit mismatch"
+                    )
+                if (
+                    source.get("publication_state")
+                    != universal.get("authority_publication_state")
+                    or source.get("publication_ref")
+                    != "forgejo/feat/repo-agent-native-v2-ab"
+                ):
+                    errors.append(
+                        "binding.json: universal protocol publication mismatch"
+                    )
+                if source.get("measurement_closure_sha256") != universal.get(
+                    "measurement_closure_sha256"
+                ):
+                    errors.append("binding.json: universal protocol closure mismatch")
+                if conformance.get("state") != "PASS" or any(
+                    conformance.get(key) != universal.get(key)
+                    for key in ("catalog_skills", "profiles", "conformance_suites")
+                ):
+                    errors.append(
+                        "binding.json: universal protocol conformance mismatch"
+                    )
+                if conformance.get("positive_admission_state") != "NOT_EXERCISED":
+                    errors.append("binding.json: synthetic conformance cannot admit")
+                if (
+                    conformance.get("mutations_planted") != 20
+                    or conformance.get("mutations_killed") != 20
+                ):
+                    errors.append(
+                        "binding.json: universal mutation controls incomplete"
+                    )
+                if (
+                    conformance.get("tests_run") != 16
+                    or conformance.get("planted_contract_tests") != 9
+                ):
+                    errors.append(
+                        "binding.json: universal conformance test count drifted"
+                    )
+                required_gaps = {
+                    "common_task_sha256",
+                    "runner_sha256",
+                    "environment_sha256",
+                    "tool_policy_sha256",
+                    "evidence_authority_and_classes",
+                    "explicit_relation_evidence",
+                }
+                if (
+                    repo_result.get("legacy_behavior_state") != "FAIL"
+                    or repo_result.get("v2_physical_state") != "NOT_EXERCISED"
+                    or set(repo_result.get("v2_missing_evidence", [])) != required_gaps
+                ):
+                    errors.append(
+                        "binding.json: repo-agent-native v2 physical limitation drifted"
+                    )
+        except BindingError as exc:
+            errors.append(str(exc))
+
     projection_paths = skill.get("projection_paths")
     if not isinstance(projection_paths, list) or not projection_paths:
         errors.append("binding.json: skill.projection_paths must be a non-empty array")
@@ -382,6 +688,26 @@ def make_fixture(source_root: Path, destination: Path) -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_root / relative, target)
 
+    consumer_receipt = binding.get("measurement", {}).get("consumer_receipt")
+    if nonempty(consumer_receipt):
+        receipt_target = destination / consumer_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / consumer_receipt, receipt_target)
+    generalization_receipt = binding.get("generalization_measurement", {}).get(
+        "consumer_receipt"
+    )
+    if nonempty(generalization_receipt):
+        receipt_target = destination / generalization_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / generalization_receipt, receipt_target)
+    universal_receipt = binding.get("universal_measurement_protocol", {}).get(
+        "consumer_receipt"
+    )
+    if nonempty(universal_receipt):
+        receipt_target = destination / universal_receipt
+        receipt_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / universal_receipt, receipt_target)
+
     for route in binding["routes"]:
         path = destination / route["path"]
         if path.exists():
@@ -468,6 +794,57 @@ def selftest(source_root: Path) -> int:
             encoding="utf-8",
         )
 
+    def measurement_subject_drift(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["measurement"]["authority_commit"] = "0" * 40
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def incomplete_measurement_matrix(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["measurement"]["conditions"].remove("wrong_skill")
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def incomplete_generalization_matrix(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["generalization_measurement"]["observed_cells"] = 143
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def generalized_fail_overpromoted(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["generalization_measurement"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["behavior_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def generalized_identity_overpromoted(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["generalization_measurement"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["identity_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def universal_catalog_drift(root: Path) -> None:
+        path = root / BINDING_REL
+        value = load_json(path)
+        value["universal_measurement_protocol"]["catalog_skills"] = 22
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+    def conformance_overpromotes_physical(root: Path) -> None:
+        raw = load_json(root / BINDING_REL)["universal_measurement_protocol"][
+            "consumer_receipt"
+        ]
+        path = root / raw
+        value = load_json(path)
+        value["repo_agent_native"]["v2_physical_state"] = "PASS"
+        path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
     for label, mutation in (
         ("copied-projection", copied_projection),
         ("missing-route", missing_route),
@@ -475,11 +852,18 @@ def selftest(source_root: Path) -> int:
         ("missing-fallback", missing_fallback),
         ("secret-injection", secret_injection),
         ("home-path-injection", home_path_injection),
+        ("measurement-subject-drift", measurement_subject_drift),
+        ("incomplete-measurement-matrix", incomplete_measurement_matrix),
+        ("incomplete-generalization-matrix", incomplete_generalization_matrix),
+        ("generalized-fail-overpromoted", generalized_fail_overpromoted),
+        ("generalized-identity-overpromoted", generalized_identity_overpromoted),
+        ("universal-catalog-drift", universal_catalog_drift),
+        ("conformance-overpromotes-physical", conformance_overpromotes_physical),
     ):
         assert_mutation_fails(source_root, label, mutation)
 
     print(
-        "PASS repo-agent-native Bettor binding selftest: 1 positive + 6 planted negatives"
+        "PASS repo-agent-native Bettor binding selftest: 1 positive + 13 planted negatives"
     )
     return 0
 

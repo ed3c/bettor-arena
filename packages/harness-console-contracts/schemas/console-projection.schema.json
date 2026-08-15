@@ -1,0 +1,94 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/harness-console/projection/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Read-only projection folded from canonical LoopX events. Everything here is derived; delete it and it comes back. A UI database that has drifted from the ledger renders confidently and wrongly, and the screen looks the same either way.",
+  "properties": {
+    "authority": {
+      "const": "READ_ONLY_PROJECTION"
+    },
+    "completeness": {
+      "enum": [
+        "COMPLETE",
+        "INCOMPLETE"
+      ]
+    },
+    "diagnostics": {
+      "type": "array"
+    },
+    "diffs": {
+      "type": "array"
+    },
+    "event_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "exceptions": {
+      "type": "array"
+    },
+    "first_sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "gates": {
+      "type": "array"
+    },
+    "last_sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "ledger_head": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "missing_sequences": {
+      "description": "Named, not counted. A graph drawn from 1,2,4 and a graph drawn from 1,2,3,4 are the same picture.",
+      "items": {
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "provenance": {
+      "type": "array"
+    },
+    "quota": {
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "loopx/console-projection/v1"
+    },
+    "source_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "state_revision": {
+      "description": "Derived from the ledger head and the event sequences, so it moves whenever anything the console showed has moved. A decision request binds it.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "tasks": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ledger_head",
+    "state_revision",
+    "tasks",
+    "gates",
+    "diagnostics",
+    "diffs",
+    "quota",
+    "provenance",
+    "exceptions",
+    "event_count",
+    "first_sequence",
+    "last_sequence",
+    "missing_sequences",
+    "completeness",
+    "source_digest",
+    "authority"
+  ],
+  "title": "Harness Console projection",
+  "type": "object"
+}

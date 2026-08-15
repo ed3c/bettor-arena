@@ -1,0 +1,284 @@
+{
+  "schema": "bettor-arena/pdf-harness-integration-matrix/v1",
+  "source": {
+    "title": "LLM \u6cdb\u5316\uff1a\u6a21\u578b\u6b0a\u91cd\u8207 Harness",
+    "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
+    "pages": 41,
+    "repository_copy": "ABSENT",
+    "authority": "SOURCE_PROPOSAL_ONLY"
+  },
+  "assessment": {
+    "full_pdf_target": "NOT_IMPLEMENTED",
+    "modular_foundation": "IMPLEMENTED",
+    "claim": "Bettor has a substantial modular control, execution, evidence, Skill, and knowledge-compilation foundation, but it does not yet contain the PDF's complete LoopX state kernel, event ledger, quota reducer, LangGraph HITL, episodic-memory admission, worker fleet, cloud/local runtime fabric, observability plane, or Harness console."
+  },
+  "components": [
+    {
+      "id": "module-control-plane",
+      "pdf_pages": "31-41",
+      "state": "IMPLEMENTED",
+      "owner": "module-catalog",
+      "evidence_paths": [
+        ".arena/modules",
+        ".arena/compositions/bettor-arena.requirements.json",
+        ".arena/locks/bettor-arena.lock.json",
+        "scripts/arena_modules.py",
+        "scripts/arena_lock.py"
+      ]
+    },
+    {
+      "id": "hard-gates-and-evidence",
+      "pdf_pages": "2-7",
+      "state": "IMPLEMENTED",
+      "owner": "proof-kernel",
+      "evidence_paths": [
+        "loopctl/contract.json",
+        "proof_workflow",
+        "data/module-proof",
+        "scripts/arena_proof.py"
+      ]
+    },
+    {
+      "id": "host-owned-skill-execution",
+      "pdf_pages": "2-5,20-22,37-39",
+      "state": "IMPLEMENTED",
+      "owner": "agent-runtime-integration",
+      "evidence_paths": [
+        ".agents/skills/harness-wiki/contracts",
+        ".agents/skills/harness-wiki/scripts/run_portable_skill.py",
+        ".skill-bindings/repo-agent-native",
+        "loopctl/contract.json"
+      ]
+    },
+    {
+      "id": "context-capsules-and-driver-projections",
+      "pdf_pages": "11-16,31-41",
+      "state": "IMPLEMENTED",
+      "owner": "loop-runtime",
+      "evidence_paths": [
+        ".arena/contexts",
+        ".arena/contexts.lock.json",
+        "data/context-capsules"
+      ]
+    },
+    {
+      "id": "openwiki-static-knowledge-compilation",
+      "pdf_pages": "31-41",
+      "state": "IMPLEMENTED",
+      "owner": "openwiki",
+      "evidence_paths": [
+        ".arena/modules/openwiki/module.json",
+        "kb-ingest",
+        "openwiki"
+      ]
+    },
+    {
+      "id": "code-truth-graph",
+      "pdf_pages": "18-20,31-41",
+      "state": "IMPLEMENTED",
+      "owner": "code-truth-graph",
+      "evidence_paths": [
+        ".arena/modules/code-truth-graph/module.json",
+        "loop_wiki/code-truth-graph"
+      ]
+    },
+    {
+      "id": "knowledge-provider-contracts",
+      "pdf_pages": "31-41",
+      "state": "IMPLEMENTED",
+      "owner": "knowledge-providers",
+      "evidence_paths": [
+        ".arena/modules/knowledge-providers/module.json",
+        "docs/knowledge-providers",
+        "scripts/check_knowledge_providers.py"
+      ]
+    },
+    {
+      "id": "runtime-contract-projection",
+      "pdf_pages": "22-24,31-41",
+      "state": "IMPLEMENTED",
+      "owner": "environment-contracts",
+      "evidence_paths": [
+        ".runtime-env",
+        "docs/runtime-env-integration.md",
+        ".arena/modules/environment-contracts/module.json"
+      ]
+    },
+    {
+      "id": "loopx-objective-todos-gates-evidence-quota-kernel",
+      "pdf_pages": "1-7",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "UNASSIGNED",
+      "expected_absent_paths": [
+        ".loopx",
+        "loopx"
+      ],
+      "missing_contracts": [
+        "objective/todo/quota state schema",
+        "single-writer reducer",
+        "append-only event ledger",
+        "named retry/quota terminal states",
+        "task-state snapshots derived from the ledger"
+      ]
+    },
+    {
+      "id": "langgraph-strategy-and-hitl",
+      "pdf_pages": "5-10,31-32",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "UNASSIGNED",
+      "expected_absent_paths": [
+        "src/orchestrator/graph.py",
+        "src/orchestrator/langgraph_adapter.py"
+      ],
+      "missing_contracts": [
+        "strategy-command port",
+        "interrupt receipt",
+        "resume receipt",
+        "exception-admit receipt",
+        "checkpoint projection that is not a second state authority"
+      ]
+    },
+    {
+      "id": "externalized-episodic-memory",
+      "pdf_pages": "11-18",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "UNASSIGNED",
+      "expected_absent_paths": [
+        ".loopx/episodic-memory.jsonl",
+        "loopx/memory"
+      ],
+      "missing_contracts": [
+        "evidence-bound memory capsule",
+        "dead-end and quirk validity scope",
+        "expiry and supersession",
+        "privacy and deletion receipt",
+        "Human Admit for durable writeback"
+      ]
+    },
+    {
+      "id": "heterogeneous-worker-live-matrix",
+      "pdf_pages": "10-11,20-26,35-39",
+      "state": "NOT_EXERCISED",
+      "owner": "agent-runtime-integration",
+      "evidence_paths": [
+        ".agents/skills/harness-wiki",
+        "docs/agent-runtime-integration.md"
+      ],
+      "missing_live_receipts": [
+        "Codex CLI",
+        "Claude Code",
+        "Grok Build",
+        "OpenCode",
+        "Pi",
+        "Ante"
+      ]
+    },
+    {
+      "id": "serena-grepai-live-provider-canaries",
+      "pdf_pages": "39-41",
+      "state": "NOT_EXERCISED",
+      "owner": "knowledge-providers",
+      "evidence_paths": [
+        "docs/knowledge-providers/providers/serena.json",
+        "docs/knowledge-providers/providers/grepai.json"
+      ]
+    },
+    {
+      "id": "code-graph-rag-and-mem0-runtime",
+      "pdf_pages": "31-41",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "knowledge-providers",
+      "expected_absent_paths": [
+        ".arena/runtime/code-graph-rag",
+        ".arena/runtime/mem0"
+      ]
+    },
+    {
+      "id": "herdr-tmux-worker-fleet",
+      "pdf_pages": "24-27,31-33",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "UNASSIGNED",
+      "expected_absent_paths": [
+        ".herdr/herdr.toml",
+        "src/workers/herdr_adapter.py"
+      ]
+    },
+    {
+      "id": "cloud-local-execution-fabric",
+      "pdf_pages": "22-24,31-41",
+      "state": "NOT_EXERCISED",
+      "owner": "environment-contracts",
+      "evidence_paths": [
+        ".runtime-env",
+        ".arena/origins",
+        ".arena/browser"
+      ],
+      "missing_live_receipts": [
+        "local/cloud equivalent workload",
+        "sandbox provider isolation",
+        "secret broker delivery",
+        "cleanup and rollback"
+      ]
+    },
+    {
+      "id": "langfuse-opentelemetry-observability",
+      "pdf_pages": "7-10,17-18,31-33",
+      "state": "NOT_IMPLEMENTED",
+      "owner": "UNASSIGNED",
+      "expected_absent_paths": [
+        "src/telemetry/langfuse_tracer.py",
+        "src/telemetry/otel_exporter.py"
+      ]
+    },
+    {
+      "id": "harness-console",
+      "pdf_pages": "7-10",
+      "state": "NOT_EXERCISED",
+      "owner": "harness-console",
+      "evidence_paths": [
+        "apps/harness-console",
+        "packages/harness-console-contracts",
+        "services/hitl-api",
+        "tests/harness-console"
+      ],
+      "missing_live_receipts": [
+        "rendered UI (render_state: NOT_IMPLEMENTED \u2014 no HTML, websocket or browser)",
+        "production console activation (Human Admit)"
+      ]
+    }
+  ],
+  "git_town": {
+    "repository_config": "ABSENT",
+    "selected_shared_skill": "ABSENT",
+    "molecular_delivery_policy": "IMPLEMENTED",
+    "configuration_paths": [
+      ".git-town.toml",
+      ".git-town"
+    ],
+    "requirements_path": ".agents/shared-skills.requirements.json",
+    "index": "docs/traceability/STACK_PR_INDEX.md"
+  },
+  "required_document_routes": [
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTEXT.md",
+    "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md",
+    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md",
+    "docs/traceability/STACK_PR_INDEX.md"
+  ],
+  "required_stack_tokens": [
+    "bettor-arena#37",
+    "skills-shared#85",
+    "runtime-env#30",
+    "agent-shield-monorepo#78",
+    "bettor-arena#38",
+    "bettor-arena#43",
+    "bettor-arena#48",
+    "bettor-arena#50",
+    "bettor-arena#51",
+    "bettor-arena#53",
+    "bettor-arena#56",
+    "bettor-arena#24"
+  ]
+}

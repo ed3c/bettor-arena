@@ -1,0 +1,54 @@
+{
+  "$id": "https://ed3c.dev/bettor-arena/loopx/human-decision/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_receipt_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "kind": {"const": "HUMAN"},
+        "signer_id": {"minLength": 3, "type": "string"}
+      },
+      "required": ["kind", "signer_id", "authority_receipt_ref"],
+      "type": "object"
+    },
+    "created_at": {"format": "date-time", "type": "string"},
+    "decision": {"enum": ["RETRY_AFTER_FIX", "UPDATE_CONTRACT", "CANCEL", "SCOPED_EXCEPTION"]},
+    "decision_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$", "type": "string"},
+    "exception": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expires_at": {"format": "date-time", "type": "string"},
+            "gate_ids": {"items": {"type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+            "terminal_visibility": {"const": "COMPLETED_WITH_EXCEPTION"},
+            "todo_id": {"type": "string"}
+          },
+          "required": ["todo_id", "gate_ids", "expires_at", "terminal_visibility"],
+          "type": "object"
+        }
+      ]
+    },
+    "interrupt_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "rationale_artifact_ref": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "revalidation_required": {"const": true},
+    "schema_version": {"const": "loopx/human-decision/v1"},
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "repository": {"type": "string"},
+        "task_id": {"type": "string"},
+        "tree": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["repository", "commit", "tree", "task_id"],
+      "type": "object"
+    }
+  },
+  "required": ["schema_version", "decision_id", "interrupt_digest", "subject", "decision", "authority", "rationale_artifact_ref", "revalidation_required", "exception", "created_at"],
+  "title": "LoopX Human Decision v1",
+  "type": "object"
+}

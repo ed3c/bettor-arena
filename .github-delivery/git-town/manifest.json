@@ -1,0 +1,89 @@
+{
+  "admission_states": [
+    "EXECUTABLE_ABSENT",
+    "EXECUTABLE_PRESENT_NOT_ADMITTED",
+    "ADMITTED_DRY_RUN_ONLY",
+    "ADMITTED_LOCAL_NO_PUSH"
+  ],
+  "agent_may_continue_skip_undo_ship_push": false,
+  "authority": {
+    "GITHUB_GATE": [
+      "exact-head publication decision"
+    ],
+    "GIT_TOWN": [
+      "bounded local synchronization",
+      "local branch hierarchy"
+    ],
+    "HUMAN": [
+      "config activation",
+      "merge or ship",
+      "production rollback",
+      "release promotion",
+      "remote publication",
+      "semantic conflicts"
+    ],
+    "LOOPX": [
+      "canonical task state"
+    ]
+  },
+  "executable_state": "EXECUTABLE_ABSENT",
+  "forbidden_flags": [
+    "--abort",
+    "--auto-resolve",
+    "--continue",
+    "--force",
+    "--force-with-lease",
+    "--merge",
+    "--no-verify",
+    "--push",
+    "--ship",
+    "--skip",
+    "--undo"
+  ],
+  "human_admit_required": true,
+  "interface_version": "1.0.0",
+  "live_sync_state": "NOT_EXERCISED",
+  "modes": [
+    "config",
+    "sync_dry_run",
+    "sync_local_no_push",
+    "version"
+  ],
+  "publication_is_separate_operation": true,
+  "schema_version": "loopx/git-town-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/git-town/admission/v1",
+      "path": "admission.schema.json",
+      "sha256": "204a451b6395f3d09eb232a4944b1dc19ab8558484c29437ea5e3c38dd93bf32"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/git-town/publication-decision/v1",
+      "path": "publication-decision.schema.json",
+      "sha256": "dd10473b3e32fc59db175c368ded2494f48ba4e6345c75d495bad3692b5c7211"
+    }
+  ],
+  "states": [
+    "SHARED_SKILL_AND_PUBLICATION_POLICY_PINNED",
+    "EXECUTABLE_VERSION_CHECKSUM_PROVENANCE_PINNED",
+    "LICENSE_SBOM_DEPENDENCY_REVIEW",
+    "REPOSITORY_PROFILE_AND_CONFIG_CANDIDATE",
+    "ISOLATED_STACK_FIXTURE",
+    "DRY_RUN_NO_PUSH_SYNC",
+    "LIVE_LOCAL_NO_PUSH_SYNC",
+    "CONFLICT_PROMPT_TIMEOUT_RESIDUE_CANARIES",
+    "LOCAL_RECEIPT_AND_ROLLBACK_SUBJECT",
+    "GITHUB_PUBLICATION_GATE",
+    "HUMAN_ADMIT"
+  ],
+  "sync_argv": [
+    "git",
+    "town",
+    "sync",
+    "--stack",
+    "--non-interactive",
+    "--no-auto-resolve",
+    "--no-push"
+  ],
+  "tool_exit_zero_is_repository_pass": false
+}

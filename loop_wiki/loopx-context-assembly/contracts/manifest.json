@@ -1,0 +1,53 @@
+{
+  "assembly_states": [
+    "PROMPT_IR_SUBJECT_PINNED",
+    "STATIC_PREFIX_FRAGMENTS_RESOLVED",
+    "TOOL_SCHEMA_ORDER_CANONICALIZED",
+    "TASK_RELEVANT_KNOWLEDGE_SELECTED",
+    "HOT_WARM_MEMORY_BUDGETED",
+    "DYNAMIC_SUFFIX_RENDERED",
+    "HOST_PROJECTION_EMITTED",
+    "PREFIX_SUFFIX_DIGESTS_RECORDED",
+    "CACHE_CONTEXT_RECEIPT",
+    "REGRESSION_EVAL"
+  ],
+  "cache_observation_is_universal": false,
+  "cache_observation_scope": "SINGLE_HOST_MODEL_PROVIDER",
+  "evidence_anchor_droppable": false,
+  "hosts": [
+    "ante",
+    "claude",
+    "codex",
+    "grok-build",
+    "opencode",
+    "pi"
+  ],
+  "interface_version": "1.0.0",
+  "law_may_differ_across_hosts": false,
+  "live_host_state": "NOT_EXERCISED",
+  "prefix_may_contain_volatile": false,
+  "projection_authority": "PRESENTATION_ONLY",
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.contracts/v1",
+    "loopx.notes-retrieval/v1"
+  ],
+  "schema_version": "loopx/context-assembly-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/context-assembly/prompt-ir/v1",
+      "path": "prompt-ir.schema.json",
+      "sha256": "1e9c77035703a02ab0c10c53066a2bc07d3925795e22583f51622a28751cacc2"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/context-assembly/host-projection/v1",
+      "path": "host-projection.schema.json",
+      "sha256": "abfa83b753ef656223319b1409ddcc2ad9f4c6e67144fb27c2092961b84ce806"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/context-assembly/cache-observation/v1",
+      "path": "cache-observation.schema.json",
+      "sha256": "16de1b6fdf10bf786414465c29a8123b74593aa635f71d3c383f4599b328405f"
+    }
+  ]
+}

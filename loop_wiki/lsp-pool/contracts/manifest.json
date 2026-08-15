@@ -1,0 +1,64 @@
+{
+  "canary_state": "NOT_EXERCISED",
+  "evidence_bearing_states": [
+    "CLEAN",
+    "FINDINGS"
+  ],
+  "fallback_ceiling": {
+    "DEFINITION": "REFUSED_PROJECT_WIDE",
+    "DIAGNOSTICS": "SINGLE_FILE_SYNTAX_ONLY",
+    "REFERENCES": "REFUSED_PROJECT_WIDE",
+    "SYMBOLS": "SINGLE_FILE_ONLY"
+  },
+  "index_freshness": [
+    "CURRENT",
+    "NOT_INDEXED",
+    "STALE"
+  ],
+  "interface_version": "1.0.0",
+  "lsp_output_authority": "EVIDENCE_INPUT_NOT_GATE_VERDICT",
+  "query_kinds": [
+    "DEFINITION",
+    "DIAGNOSTICS",
+    "REFERENCES",
+    "SYMBOLS"
+  ],
+  "query_states": [
+    "CLEAN",
+    "FINDINGS",
+    "NOT_EXERCISED",
+    "SERVER_FAILED",
+    "UNKNOWN"
+  ],
+  "requires_capabilities": [
+    "arena.proof-kernel/v1",
+    "loopx.code-truth-graph/v2",
+    "loopx.runtime-fabric/v1",
+    "loopx.worker-fleet/v1"
+  ],
+  "schema_version": "loopx/lsp-pool-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://bettor-arena.invalid/loopx/lsp-pool/slot/v1",
+      "path": "pool-slot.schema.json",
+      "sha256": "7fd74983d85443cd2bce904359024a39e60adc38cfc4df319f839ddbb36fe8e9"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/lsp-pool/query-request/v1",
+      "path": "query-request.schema.json",
+      "sha256": "b800766838b2abe6fd03321ab3f467a9143c00a3d3ee31dd886acdf42824fcd5"
+    },
+    {
+      "id": "https://bettor-arena.invalid/loopx/lsp-pool/query-result/v1",
+      "path": "query-result.schema.json",
+      "sha256": "507742c491cf7be0c3d742c7574e1ff56337dfb42c95fce4dab996cf022a4f59"
+    }
+  ],
+  "slot_states": [
+    "EVICTING",
+    "INDEXING",
+    "SHUT_DOWN",
+    "STALE",
+    "WARM"
+  ]
+}

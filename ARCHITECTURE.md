@@ -25,6 +25,9 @@ bettor-arena/
 ├── .mcp.json          # Claude Code 專案 MCP 宣告(啟用=人 admit;S10 落地)
 ├── .githooks/         # 大迴圈 git hooks(唯一跨 host 閘層;S7/S8 落 pre-commit/commit-msg)
 ├── .github/           # GitHub cloud verification；只跑零網路、可由 fresh clone 重現的契約閘
+├── .github-delivery/  # private repo 的 Actions 帳務閘：ci-policy.json 宣告唯一 required workflow、
+│                      #   required jobs 與其本地等價驗證 argv;讓一次 commit 先在本機證明樹是連貫的,
+│                      #   而不是每個微小 commit 都燒一個 job-minute(check → scripts/gates/verify_modular_contracts.sh)
 ├── .claude/           # Claude Code host 配置(版控 settings;skills 全 symlink,指向 .agents/skills 或模組自有 skill,如 kb-ingest/skill;
 │                      #   commands/=slash 轉發層,零邏輯,程序 SSOT 在對應 skill)
 ├── .codex/            # Codex host 配置(僅可攜 MCP 宣告;host 段人補)
@@ -84,6 +87,21 @@ bettor-arena/
 │                      #   因 gate 輸出含本機絕對 repo root;收據帶每個 stream 的 sha256 把它釘回 commit)。
 │                      #   路徑是必要還是可選由**實驗**判定——丟棄式 worktree 拿掉該路徑再跑,看 exit 變不變,
 │                      #   不讀 fatal/warn 字面;未分類即 FATAL。比對面是三支證明收據的聯集,不只 macro
+├── apps/              # 使用者面向的 view model 層(#99 Harness Console):八個有界視圖的**資料**,
+│                      #   無 HTML/websocket/browser。render_state=NOT_IMPLEMENTED 寫在 vocabulary 裡隨每張
+│                      #   receipt 走——目錄叫 apps/ 會讓人假設裡面有東西在跑,而 Markdown 描述過的機制仍
+│                      #   可能是 NOT_IMPLEMENTED。每個列表視圖恆帶 shown/total/truncated/limit,包括沒截斷時:
+│                      #   只在有趣時才出現的欄位沒人會找
+├── services/          # 長時服務的請求路徑(#99 hitl-api):projection reducer(canonical events 的純函數,
+│                      #   刪掉可逐位元重建)、decision request 的 draft/sign/submit。簽章 HMAC-SHA256,金鑰讀
+│                      #   HITL_SIGNER_KEY 而非 flag(flag 會留在 shell history、process list 與 CI log,
+│                      #   三者都比請求活得久);金鑰永不落 repo/請求/receipt,只有 key id 會走。
+│                      #   無任何 merge/promote/rollback 路由——問 exit 64,不是被拒絕,是不存在
+├── packages/          # 跨 apps//services/ 的共用契約與 vocabulary(#99 harness-console-contracts):
+│                      #   UI 狀態機、視圖名、task states、授權邊界(CONSOLE_MAY 封閉集 / CONSOLE_MAY_NOT
+│                      #   逐項列舉——列表要在 reviewer 面前改,原則會被一次一個形容詞磨掉)、redaction pattern;
+│                      #   schemas/ 收 digest manifest。判準:被兩個以上 root 槽位共用才進這裡,只有一個消費者
+│                      #   的契約留在該消費者自己的槽位內
 ├── scripts/
 │   ├── arena_modules.py # Phase 0 module catalog CLI：catalog/check/resolve，產 deterministic composition lock
 │   ├── agent_runtime.py # module-set 深介面：offline/adapter/strict 三層判決與雙 carrier live receipt

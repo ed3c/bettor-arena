@@ -1,0 +1,106 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/notes-retrieval/result/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An empty result list is the same shape for a miss, an unbuilt index and an absent provider. The state field is the only thing that tells them apart, and none of them prove absence.",
+  "properties": {
+    "absence_proof": {
+      "const": "NONE",
+      "description": "No retrieval state proves absence. A retrieval says something about an index and nothing about the world."
+    },
+    "authority": {
+      "const": "CURRENT_SOURCE_AND_EVIDENCE"
+    },
+    "hits": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "chunk_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "provenance": {
+            "additionalProperties": false,
+            "description": "A chunk that lost its locator is a paragraph with a similarity score, and the paragraph is not what anyone needs.",
+            "properties": {
+              "card_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence_id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "locator": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "ordinal": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "card_key",
+              "evidence_id",
+              "locator",
+              "ordinal",
+              "source_id"
+            ],
+            "type": "object"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chunk_id",
+          "provenance",
+          "text"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "index_freshness": {
+      "enum": [
+        "CURRENT",
+        "NOT_BUILT",
+        "STALE_POLICY",
+        "STALE_SUBJECT"
+      ]
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "loopx/notes-retrieval-result/v1"
+    },
+    "state": {
+      "enum": [
+        "HIT",
+        "MISS",
+        "NOT_INDEXED",
+        "PROVIDER_ABSENT"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "state",
+    "hits",
+    "reason",
+    "absence_proof",
+    "authority",
+    "index_freshness"
+  ],
+  "title": "Notes retrieval result",
+  "type": "object"
+}

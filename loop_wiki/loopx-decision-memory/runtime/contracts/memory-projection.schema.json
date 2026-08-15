@@ -1,0 +1,50 @@
+{
+  "$id": "https://bettor-arena.invalid/loopx/memory-runtime/projection/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A cache derived from events alone. Deleting one costs a rebuild; treating one as canonical costs the ability to say what was admitted. Mem0 is not required, referenced or imported.",
+  "properties": {
+    "canonical": {
+      "const": false
+    },
+    "canonical_source": {
+      "const": "LOOPX_LEDGER_EVENTS"
+    },
+    "entries": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "entry_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "projection_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "rebuildable": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "loopx/memory-projection/v1"
+    },
+    "source_event_count": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version",
+    "entries",
+    "entry_count",
+    "source_event_count",
+    "canonical",
+    "canonical_source",
+    "rebuildable",
+    "projection_digest"
+  ],
+  "title": "Decision memory projection",
+  "type": "object"
+}

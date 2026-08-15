@@ -1,0 +1,59 @@
+{
+  "adapter_admission_states": {
+    "e2b-sandbox": "NOT_EXERCISED",
+    "firecracker-vm": "NOT_EXERCISED",
+    "local-disposable-workspace": "EXERCISED_FIXTURE_ONLY"
+  },
+  "admitted_adapters": [
+    "local-disposable-workspace"
+  ],
+  "canonical_authority": "LOOPX_LEDGER_REDUCER",
+  "declared_adapters": [
+    "e2b-sandbox",
+    "firecracker-vm",
+    "local-disposable-workspace"
+  ],
+  "evidence_states": [
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY"
+  ],
+  "interface_version": "1.0.0",
+  "local_enforcement_ceiling": {
+    "disk_bytes": "NOT_OBSERVED",
+    "filesystem": "DECLARED_NOT_KERNEL_ENFORCED",
+    "memory_bytes": "NOT_OBSERVED",
+    "network": "UNENFORCED",
+    "output_bytes": "ENFORCED",
+    "process_group": "ENFORCED",
+    "timeout": "ENFORCED"
+  },
+  "requires_capabilities": [
+    "loopx.contracts/v1",
+    "loopx.ledger/v1",
+    "loopx.worker-gateway/v1"
+  ],
+  "runtime_authority": "OBSERVATION_ONLY",
+  "runtime_state_checked_in": false,
+  "schema_version": "loopx/runtime-fabric-contract-manifest/v1",
+  "schemas": [
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/runtime-lease/v1",
+      "path": "runtime-lease.schema.json",
+      "sha256": "f632ef98e939fa53992e449b4d29b1b19dd53a848d939c86fd16d6a889a4e982"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/runtime-receipt/v1",
+      "path": "runtime-receipt.schema.json",
+      "sha256": "094458589c219801d0ea7a7786eb2b312ed7b9f674081573e8f7ce95ba38edc9"
+    },
+    {
+      "id": "https://ed3c.dev/bettor-arena/loopx/runtime-request/v1",
+      "path": "runtime-request.schema.json",
+      "sha256": "e75a3f310fcd3c6bca601391b1008cb611c9a86cb05ae9e4a7eefaea34456d94"
+    }
+  ]
+}

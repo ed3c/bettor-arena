@@ -1,0 +1,65 @@
+name: Ordered PDF terminal Stack
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'docs/git/**'
+      - 'docs/traceability/STACK_PR_INDEX.md'
+      - 'docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md'
+      - 'docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md'
+      - 'docs/architecture/agent-entrypoints.contract.json'
+      - '.arena/contexts/macro.json'
+      - 'scripts/gates/check_pdf_terminal_sequence.py'
+      - 'tests/test_pdf_terminal_sequence.py'
+      - '.github/workflows/pdf-terminal-sequence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'docs/git/**'
+      - 'docs/traceability/STACK_PR_INDEX.md'
+      - 'docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md'
+      - 'docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md'
+      - 'docs/architecture/agent-entrypoints.contract.json'
+      - '.arena/contexts/macro.json'
+      - 'scripts/gates/check_pdf_terminal_sequence.py'
+      - 'tests/test_pdf_terminal_sequence.py'
+      - '.github/workflows/pdf-terminal-sequence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdf-terminal-sequence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sequence:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate ordered terminal queue
+        run: python3 scripts/gates/check_pdf_terminal_sequence.py
+      - name: Prove the sequence gate turns red
+        run: python3 scripts/gates/check_pdf_terminal_sequence.py --selftest
+      - name: Run focused tests
+        run: python3 -m unittest -q tests/test_pdf_terminal_sequence.py
+      - name: Validate existing Agent and Git Town routes
+        run: |
+          python3 scripts/gates/check_agent_docs.py
+          python3 scripts/gates/check_git_town_stack_docs.py
