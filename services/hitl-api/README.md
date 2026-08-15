@@ -1,13 +1,13 @@
-# `loop_wiki/harness-console/service`
+# `services/hitl-api`
 
 The request path for the Harness Console. Answers #99 together with
-[`../../loop_wiki/harness-console/app/`](../../loop_wiki/harness-console/app/) and
-[`../../loop_wiki/harness-console/contracts/`](../../loop_wiki/harness-console/contracts/).
+[`../../apps/harness-console/`](../../apps/harness-console/) and
+[`../../packages/harness-console-contracts/`](../../packages/harness-console-contracts/).
 
 ## Public control port
 
 ```sh
-python3 loop_wiki/harness-console/service/hitlapi.py \
+python3 services/hitl-api/hitlapi.py \
   <check|selftest|project|views|draft|sign|submit>
 ```
 

@@ -3,7 +3,7 @@ set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 PYTHON=${PYTHON:-python3}
-API="$ROOT/loop_wiki/harness-console/service"
+API="$ROOT/services/hitl-api"
 
 "$PYTHON" "$API/hitlapi.py" check --root "$ROOT"
 "$PYTHON" "$API/hitlapi.py" selftest --root "$ROOT"
@@ -83,9 +83,9 @@ print(
 PY
 
 "$PYTHON" -m py_compile \
-  "$ROOT/loop_wiki/harness-console/contracts/hc_vocab.py" \
-  "$ROOT/loop_wiki/harness-console/contracts/hc_contract.py" \
-  "$ROOT/loop_wiki/harness-console/app/hc_views.py" \
+  "$ROOT/packages/harness-console-contracts/hc_vocab.py" \
+  "$ROOT/packages/harness-console-contracts/hc_contract.py" \
+  "$ROOT/apps/harness-console/hc_views.py" \
   "$API/hitl_reducer.py" \
   "$API/hitl_request.py" \
   "$API/hitl_selftest.py" \
@@ -96,7 +96,7 @@ PY
 import json, sys
 from pathlib import Path
 root = Path(sys.argv[1])
-paths = sorted((root / "loop_wiki/harness-console/contracts/contracts").glob("*.json"))
+paths = sorted((root / "packages/harness-console-contracts/schemas").glob("*.json"))
 if not paths:
     raise SystemExit("no harness-console JSON contracts found")
 for path in paths:

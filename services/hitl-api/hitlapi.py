@@ -26,8 +26,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parents[0] / "contracts"))
-sys.path.insert(0, str(HERE.parents[0] / "app"))
+sys.path.insert(0, str(HERE.parents[1] / "packages/harness-console-contracts"))
+sys.path.insert(0, str(HERE.parents[1] / "apps/harness-console"))
 
 from hc_contract import check_contracts, run_contract_selftest  # noqa: E402
 from hc_vocab import BAD, OK, USAGE, ContractError, InputError, load_json  # noqa: E402
@@ -36,7 +36,7 @@ from hitl_reducer import reduce  # noqa: E402
 from hitl_request import accept, draft, sign_request  # noqa: E402
 from hitl_selftest import run_selftest  # noqa: E402
 
-DEFAULT_ROOT = HERE.parents[2]
+DEFAULT_ROOT = HERE.parents[1]
 KEY_ENV = "HITL_SIGNER_KEY"
 
 

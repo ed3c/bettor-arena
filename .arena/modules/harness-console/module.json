@@ -2,14 +2,14 @@
   "components": {
     "contracts": {
       "paths": [
-        "loop_wiki/harness-console/contracts"
+        "packages/harness-console-contracts"
       ],
       "required": true
     },
     "runtime": {
       "paths": [
-        "loop_wiki/harness-console/service",
-        "loop_wiki/harness-console/app"
+        "services/hitl-api",
+        "apps/harness-console"
       ],
       "required": true
     }
@@ -29,22 +29,22 @@
       "external_policy": "control-only",
       "id": "harness-console",
       "interface_version": "1.0.0",
-      "public_port": "python3 loop_wiki/harness-console/service/hitlapi.py"
+      "public_port": "python3 services/hitl-api/hitlapi.py"
     }
   ],
   "proof": {
     "control": [
       "python3",
-      "loop_wiki/harness-console/service/control_hitl.py"
+      "services/hitl-api/control_hitl.py"
     ],
     "mutation": [
       "python3",
-      "loop_wiki/harness-console/service/hitlapi.py",
+      "services/hitl-api/hitlapi.py",
       "selftest"
     ],
     "selftest": [
       "python3",
-      "loop_wiki/harness-console/service/hitlapi.py",
+      "services/hitl-api/hitlapi.py",
       "selftest"
     ],
     "verify": [
@@ -61,7 +61,9 @@
     "loopx.contracts/v1"
   ],
   "roots": [
-    "loop_wiki/harness-console"
+    "apps/harness-console",
+    "packages/harness-console-contracts",
+    "services/hitl-api"
   ],
   "runtime": {
     "profiles": [],

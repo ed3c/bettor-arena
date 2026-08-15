@@ -1,7 +1,7 @@
 {
   "schema": "bettor-arena/pdf-harness-integration-matrix/v1",
   "source": {
-    "title": "LLM 泛化：模型權重與 Harness",
+    "title": "LLM \u6cdb\u5316\uff1a\u6a21\u578b\u6b0a\u91cd\u8207 Harness",
     "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
     "pages": 41,
     "repository_copy": "ABSENT",
@@ -233,11 +233,17 @@
     {
       "id": "harness-console",
       "pdf_pages": "7-10",
-      "state": "NOT_IMPLEMENTED",
-      "owner": "UNASSIGNED",
-      "expected_absent_paths": [
+      "state": "NOT_EXERCISED",
+      "owner": "harness-console",
+      "evidence_paths": [
         "apps/harness-console",
-        "src/web/hitl_api.py"
+        "packages/harness-console-contracts",
+        "services/hitl-api",
+        "tests/harness-console"
+      ],
+      "missing_live_receipts": [
+        "rendered UI (render_state: NOT_IMPLEMENTED \u2014 no HTML, websocket or browser)",
+        "production console activation (Human Admit)"
       ]
     }
   ],

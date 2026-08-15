@@ -1,7 +1,7 @@
-# `loop_wiki/harness-console/contracts`
+# `packages/harness-console-contracts`
 
-Vocabulary and schemas shared by [`../../loop_wiki/harness-console/app/`](../../loop_wiki/harness-console/app/)
-and [`../../loop_wiki/harness-console/service/`](../../loop_wiki/harness-console/service/). Answers #99.
+Vocabulary and schemas shared by [`../../apps/harness-console/`](../../apps/harness-console/)
+and [`../../services/hitl-api/`](../../services/hitl-api/). Answers #99.
 
 ## What is here
 

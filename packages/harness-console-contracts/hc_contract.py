@@ -28,7 +28,7 @@ from hc_vocab import (
     load_json,
 )
 
-CONTRACTS_REL = "loop_wiki/harness-console/contracts/contracts"
+CONTRACTS_REL = "packages/harness-console-contracts/schemas"
 
 MANIFEST_KEYS = {
     "schema_version",

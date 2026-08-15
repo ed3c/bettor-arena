@@ -1,6 +1,6 @@
 # `harness-console` module
 
-`harness-console` owns [`../../../loop_wiki/harness-console/app/`](../../../loop_wiki/harness-console/app/), [`../../../loop_wiki/harness-console/service/`](../../../loop_wiki/harness-console/service/) and [`../../../loop_wiki/harness-console/contracts/`](../../../loop_wiki/harness-console/contracts/).
+`harness-console` owns [`../../../apps/harness-console/`](../../../apps/harness-console/), [`../../../services/hitl-api/`](../../../services/hitl-api/) and [`../../../packages/harness-console-contracts/`](../../../packages/harness-console-contracts/).
 
 ## Capabilities
 
@@ -23,7 +23,7 @@ Stage 18 of the PDF terminal queue, answering issue #99. Intentionally not selec
 ## Public control port
 
 ```sh
-python3 loop_wiki/harness-console/service/hitlapi.py \
+python3 services/hitl-api/hitlapi.py \
   <check|selftest|project|views|draft|sign|submit>
 ```
 
@@ -71,24 +71,19 @@ signer key produced the request, and nothing more.
 sh tests/harness-console/run-all.sh
 ```
 
-## A deliberate departure from #99's path lease
+## Path lease
 
-#99 leases `apps/harness-console/**`, `services/hitl-api/**` and
-`packages/harness-console-contracts/**`. Those are three new root-level slots, and
-`ARCHITECTURE.md` §2 is the placement authority for this repository: a new slot has to
-be declared there first. Editing that file trips the lineage gate, which requires the
-proof workflow to be re-stamped -- and the openwiki lane's re-stamp needs a real model
-run, which is a Human-owned operation.
-
-The queue records the PDF as `SOURCE_PROPOSAL_ONLY`. So the trees live under the
-existing `loop_wiki/` slot with the same three-way split preserved:
+The three trees live where #99 leased them:
 
 ```text
-apps/harness-console            ->  loop_wiki/harness-console/app
-services/hitl-api               ->  loop_wiki/harness-console/service
-packages/harness-console-contracts -> loop_wiki/harness-console/contracts
-tests/harness-console           ->  unchanged (tests/ already has a slot)
+apps/harness-console                  the view model layer
+services/hitl-api                     the request path
+packages/harness-console-contracts    the shared vocabulary and schemas
+tests/harness-console                 the suite
 ```
 
-Nothing about the split is lost; only the root changed. Declaring the three slots is a
-separate change with a Human-admitted re-stamp attached to it.
+`apps/`, `services/` and `packages/` are declared in [`ARCHITECTURE.md`](../../../ARCHITECTURE.md) §2,
+which is this repository's placement authority. They landed under `loop_wiki/` first, because
+declaring a root slot requires editing that file and editing it trips the lineage gate — the
+proof workflow has to be re-stamped and re-locked across all twelve loops before the bytes may
+change. That was done rather than worked around.

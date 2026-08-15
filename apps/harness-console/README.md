@@ -1,8 +1,8 @@
-# `loop_wiki/harness-console/app`
+# `apps/harness-console`
 
 The Harness Console's **view model** layer. Answers #99 together with
-[`../../loop_wiki/harness-console/service/`](../../loop_wiki/harness-console/service/) and
-[`../../loop_wiki/harness-console/contracts/`](../../loop_wiki/harness-console/contracts/).
+[`../../services/hitl-api/`](../../services/hitl-api/) and
+[`../../packages/harness-console-contracts/`](../../packages/harness-console-contracts/).
 
 ## `render_state: NOT_IMPLEMENTED`
 

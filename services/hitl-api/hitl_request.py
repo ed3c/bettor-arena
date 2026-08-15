@@ -23,7 +23,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "contracts"))
+sys.path.insert(
+    0, str(Path(__file__).resolve().parents[2] / "packages/harness-console-contracts")
+)
 
 from hc_vocab import (  # noqa: E402
     CONSOLE_MAY,

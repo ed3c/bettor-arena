@@ -15,8 +15,8 @@ from typing import Any, Callable
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parents[0] / "contracts"))
-sys.path.insert(0, str(HERE.parents[0] / "app"))
+sys.path.insert(0, str(HERE.parents[1] / "packages/harness-console-contracts"))
+sys.path.insert(0, str(HERE.parents[1] / "apps/harness-console"))
 
 from hc_vocab import (  # noqa: E402
     CONSOLE_MAY,
