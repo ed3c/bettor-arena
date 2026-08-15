@@ -2,7 +2,7 @@
 
 ## Scope
 
-This is the Bettor repository-owned execution contract derived from the shared `git-town-stacked-pr-worker` procedure. It does not implement Git Town or authorize publication.
+This is the Bettor repository-owned execution contract derived from the shared `git-town-stacked-pr-worker` procedure. The repository now implements a typed fail-closed controller and physical controls; it does not bundle/admit the Git Town executable or authorize publication.
 
 ## Authority model
 
@@ -46,9 +46,10 @@ PACKET_RECEIVED
 Current implementation state:
 
 ```text
-packet/document contract     IMPLEMENTED in issue #80 candidate
-Git Town wrapper             NOT_IMPLEMENTED
-linked-worktree receipt      NOT_IMPLEMENTED
+packet/document contract     IMPLEMENTED
+typed Git Town controller    IMPLEMENTED by PR #133
+linked-worktree controls     PASS in 13 real-repository canaries
+Git Town executable/config   ABSENT
 local sync                   NOT_EXERCISED
 publication                  NOT_EXERCISED
 ```
@@ -284,12 +285,15 @@ receipt
 
 No Agent may reset, rebase, force-push or delete to simulate rollback.
 
-## Current blocking conflict
+## Historical duplicate conflict
 
-PR #76 and PR #77 violate the single active issue/path writer rule. Until Human resolution:
+PR #76 and PR #77 violated the single active issue/path writer rule. The resolution is retained as evidence:
 
 ```text
-issue #64 dispatch: BLOCKED
-new Worker lease over loop_wiki/loopx-worker-gateway/**: DENIED
-either PR merge/close/supersession: HUMAN-OWNED
+PR #76: admitted and reachable from main
+PR #77: SUPERSEDED_CANDIDATE
+issue #82 residual disposition: COMPLETE
+conflict state: RESOLVED_BY_HUMAN
 ```
+
+The next active queue owner is #92; no duplicate live provider lease may be inferred from this historical resolution.

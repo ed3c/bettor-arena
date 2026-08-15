@@ -6,7 +6,9 @@ Git Town is **not currently admitted** as a Bettor runtime dependency.
 
 ```text
 shared procedure reference     PINNED
-repository adoption docs       CANDIDATE
+repository adoption docs       IMPLEMENTED
+typed controller               IMPLEMENTED by PR #133
+physical fail-closed controls  PASS (13 real-repository controls)
 binary                         ABSENT
 version/checksum               ABSENT
 license/SBOM/legal             NOT_REVIEWED
@@ -15,7 +17,7 @@ local sync                     NOT_EXERCISED
 remote publication             NOT_EXERCISED
 ```
 
-The repository uses molecular Stack semantics and GitHub metadata without claiming a live Git Town installation.
+The repository uses molecular Stack semantics, a typed controller and GitHub metadata without claiming a live Git Town installation. Controller PASS proves policy enforcement around the absent-executable lane; it does not prove `git town` behavior.
 
 ## Why admission is separate
 
@@ -84,7 +86,7 @@ cleanup:
   state: PASS
 ```
 
-No such receipt exists today.
+No executable-admission receipt exists today.
 
 ## Configuration admission
 
@@ -129,6 +131,14 @@ rollback subject
 | cleanup | no orphan worktree/process | `NOT_EXERCISED` |
 | rollback | exact subject restoration | `NOT_EXERCISED` |
 
+Repository-controller verification is separate:
+
+```sh
+sh tests/git-town/run-all.sh
+```
+
+It passes contract/selftest checks and 13 physical controls while the public port returns the stable executable-absent result.
+
 ## Publication separation
 
 Even after local admission:
@@ -156,7 +166,7 @@ merge/ship: HUMAN-OWNED
 
 ## Unblock criteria
 
-A future terminal issue may mark Git Town `CANDIDATE` only after:
+Git Town may move from executable `ABSENT` to runtime candidate only after:
 
 1. exact executable source/release/digests are named;
 2. license/SBOM/legal review is attached;
@@ -169,7 +179,7 @@ A future terminal issue may mark Git Town `CANDIDATE` only after:
 9. exact-head GitHub checks pass;
 10. Human Admit records the activation decision.
 
-## Explicit non-goals of issue #80
+## Remaining non-goals of the current mechanism
 
 - install Git Town;
 - select a package manager;
@@ -181,4 +191,6 @@ A future terminal issue may mark Git Town `CANDIDATE` only after:
 - resolve conflicts;
 - promote or rollback.
 
-Observed: `2026-08-14T08:44:56Z`.
+Issue #101 / PR #133 implemented the admission controller, not the admitted third-party executable.
+
+Observed: `2026-08-15T16:50:16Z`.

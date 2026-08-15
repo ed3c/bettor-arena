@@ -38,6 +38,8 @@ path:       skills/git-town-stacked-pr-worker/SKILL.md
 
 Current consumer selection: `NOT_SELECTED`.
 
+The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` resolves this path to the same blob. That proves byte-equivalent source availability, not selection into Bettor's runtime closure.
+
 ## Directory map
 
 | File | Owner | Purpose | Authority |
@@ -78,9 +80,9 @@ Current stopping point:
 ```text
 program                        #61
 queue index task               #102
-active order                   0
-active issue                   #82
-future implementation branches NOT_CREATED until activation
+completed prefix               orders 0–11
+active order                   12
+active issue                   #92
 final convergence              #68
 ```
 
@@ -106,13 +108,15 @@ Current runtime state:
 ```text
 SHARED_METHOD_PINNED       PASS
 REPO_PROFILE_VALIDATED     IMPLEMENTED
-ORDERED_QUEUE_INDEXED      candidate in issue #102
+ORDERED_QUEUE_INDEXED      IMPLEMENTED; active order derived from machine queue
+CONTROLLER_MECHANISM       IMPLEMENTED by PR #133
+PHYSICAL_CONTROLS          PASS: 13 real-repository controls
 GIT_TOWN_EXECUTABLE        ABSENT
 GIT_TOWN_CONFIG            ABSENT
 LOCAL_NO_PUSH_SYNC         NOT_EXERCISED
 PUBLICATION                NOT_EXERCISED
 HUMAN_ADMIT                NOT_PERFORMED
-runtime admission owner    issue #101
+admission mechanism owner  issue #101 / PR #133; executable activation unresolved
 ```
 
 ## Inputs and outputs
@@ -177,11 +181,11 @@ SUPERSEDED_CANDIDATE
 NOT_CREATED
 ```
 
-## Resolved duplicate and active residue
+## Resolved duplicate and current head
 
 PR #76 and PR #77 both implemented issue #64 over overlapping Worker Gateway paths. The owner admitted #76 and closed #77 as `SUPERSEDED_CANDIDATE`.
 
-The conflict remains recorded as `RESOLVED_BY_HUMAN`. Issue #82 is now active and must compare the eight PR #77-only files by execution, then fold or reject each with a reason.
+The conflict remains recorded as `RESOLVED_BY_HUMAN`. Issue #82 and queue order 0 are `COMPLETE`; the active head is issue #92 at order 12. Keeping the #76/#77 record prevents later success from erasing evidence that duplicate writers once existed.
 
 ## Public call surfaces
 
@@ -203,6 +207,14 @@ python3 -m unittest -q tests/test_git_town_stack_docs.py
 
 Neither gate executes Git Town.
 
+The repository-owned runtime controller has a separate executable gate:
+
+```sh
+sh tests/git-town/run-all.sh
+```
+
+It verifies the typed controller, fail-closed absence lane and 13 physical controls without claiming a Git Town execution.
+
 ## Evidence and receipts
 
 Current evidence:
@@ -213,12 +225,13 @@ repository bytes
 ordered queue and historical Stack snapshots
 zero-network verifiers
 planted mutations
+typed Git Town controller contracts and 13 physical controls
 ```
 
 Not yet available:
 
 ```text
-Git Town version/checksum/license/SBOM receipt
+Git Town executable version/checksum/license/SBOM receipt
 admitted .git-town.toml
 dry-run/live local no-push receipt
 publication canary
