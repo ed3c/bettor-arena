@@ -33,7 +33,10 @@ class StrategyHitlCurrentTest(unittest.TestCase):
             self.assertIn("PASS Stage 2 Strategy/HITL validation", result.stdout)
             self.assertTrue(receipt.is_file())
             self.assertIn('"result": "PASS"', receipt.read_text(encoding="utf-8"))
-            self.assertIn('"langgraph_checkpoint_backend": "NOT_EXERCISED"', receipt.read_text(encoding="utf-8"))
+            self.assertIn(
+                '"langgraph_checkpoint_backend": "NOT_EXERCISED"',
+                receipt.read_text(encoding="utf-8"),
+            )
 
     def test_mutation_matrix_passes(self) -> None:
         result = self.run_checker("--selftest")

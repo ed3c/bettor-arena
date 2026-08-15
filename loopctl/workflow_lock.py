@@ -29,6 +29,7 @@ import hashlib
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -137,16 +138,22 @@ def commit_bytes(repo: Path, path: str, worktree_sha: str) -> tuple[str, str]:
         (["rev-parse", f":{path}"], "index"),
         (["rev-parse", f"HEAD:{path}"], "head"),
     ):
-        blob = subprocess.run(
+        resolved = subprocess.run(
             ["git", "-C", str(repo), *args], capture_output=True, text=True, check=False
-        ).stdout.strip()
-        if blob:
-            content = subprocess.run(
+        )
+        if resolved.returncode == 0:
+            blob = resolved.stdout.strip()
+            content_result = subprocess.run(
                 ["git", "-C", str(repo), "cat-file", "blob", blob],
                 capture_output=True,
                 check=False,
-            ).stdout
-            return hashlib.sha256(content).hexdigest(), origin
+            )
+            if content_result.returncode != 0:
+                raise SystemExit(
+                    f"workflow-lock FATAL: {origin} resolved {path} to {blob}, but "
+                    "git cat-file could not read that blob"
+                )
+            return hashlib.sha256(content_result.stdout).hexdigest(), origin
     # Untracked runtime evidence: only the working tree has it, and the receipt
     # already hashed exactly those bytes.
     return worktree_sha, "worktree"
@@ -345,6 +352,23 @@ def _selftest() -> int:
         touched(lock, ["b/prompt.md"]),
         [("b/prompt.md", "context", "openwiki")],
     )
+    # A runtime artifact may be named by a receipt without being staged or
+    # committed. `git rev-parse :path` echoes the unresolved token on stdout
+    # while returning non-zero; accepting stdout alone hashes empty cat-file
+    # output and falsely labels the result as index evidence.
+    with tempfile.TemporaryDirectory() as raw_tmp:
+        repo = Path(raw_tmp)
+        subprocess.run(["git", "-C", str(repo), "init", "-q"], check=True)
+        runtime = repo / "runtime" / "evidence.json"
+        runtime.parent.mkdir(parents=True)
+        payload = b'{"verdict":"red"}\n'
+        runtime.write_bytes(payload)
+        receipt_sha = hashlib.sha256(payload).hexdigest()
+        case(
+            "untracked-runtime-artifact-uses-receipt-bytes",
+            commit_bytes(repo, "runtime/evidence.json", receipt_sha),
+            (receipt_sha, "worktree"),
+        )
     print("SELFTEST " + ("GREEN" if not red else "RED"))
     return red
 

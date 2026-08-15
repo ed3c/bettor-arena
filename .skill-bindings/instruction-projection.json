@@ -1,8 +1,8 @@
 {
   "canonical": {
-    "commit": "abd53f016b428e7d922eecfa6d400cdccb928773",
+    "commit": "b3c722da1c40301b0a12e0ef99848d884bfc720b",
     "module": "skills/dual-forge-repository-loop/references/instruction-projection.json",
-    "module_sha256": "41f2d33c493ecc409c66e09e1f4976b7acb109ec9f8e972cf4073b06616e3d29",
+    "module_sha256": "bb0782b36eadaa10a6f4b546c87029e840c2187bd4256d5fe20f5329982f96b9",
     "repository": "ed3c/skills-shared"
   },
   "global_claude": {
@@ -11,10 +11,10 @@
   },
   "repository_projection": {
     "AGENTS.md": {
-      "sha256": "c43131bf6390a0778af673af3cd7a3019c2a37b36c31045a3160133e0a1f4ddf"
+      "sha256": "92c1565bc71b190a22c6959db6a34174c5788dee2aa9107c0093271fa5ff5c60"
     },
     "CLAUDE.md": {
-      "sha256": "be7f3bb8745082c24c492a5f7eb66e64770b8634bb8f6cc025ed9b777ee1b6ff"
+      "sha256": "f253c5691037b84cae16678942c466910968583cf0c296fb06a052b882a58305"
     }
   },
   "schema_version": "instruction-projection-binding/v1"

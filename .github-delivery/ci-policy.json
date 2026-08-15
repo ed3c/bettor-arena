@@ -1,12 +1,10 @@
 {
-  "schema": "github-ci-policy/v1",
+  "schema": "github-ci-policy/v2",
   "repository": "ed3c/bettor-arena",
   "private": true,
   "default_branch": "main",
   "workflow": ".github/workflows/modular-contracts.yml",
+  "pull_request_mode": "draft-first",
   "required_jobs": ["contracts"],
-  "local_verification": [
-    "sh",
-    "scripts/gates/verify_modular_contracts.sh"
-  ]
+  "local_verification_contract": ".github-delivery/local-verification-contract.json"
 }

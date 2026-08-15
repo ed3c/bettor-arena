@@ -97,6 +97,12 @@ LoopX reducer alone commits canonical task state
 Human alone admits scoped exceptions, merge, promotion and rollback
 ```
 
+## Three-strike recovery and dual-origin delivery
+
+The same failure signature or acceptance criterion gets at most three materially different attempts. Record each attempt; after the third, stop editing and follow the canonical issue-first state machine in [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md#private-github-local-forgejo-delivery-loop). Its repo-contained packet, exact `owner/repo`, GitHub connector route, host-specific issue ownership, WIP=1 delivery order, stop conditions, and standing non-destructive merge authorization are normative; an issue/PR URL plus a short instruction is not sufficient context. Required receipts must be complete and commit gates green, while a contract-declared checked-red proof stays red and is reported rather than being recolored or mistaken for an absent receipt.
+
+Verified capability snapshot (2026-08-14): local Codex CLI `0.146.0` supports `codex app <repo>` to open the ChatGPT desktop workspace; a [`codex://threads/new?...` deep link](https://learn.chatgpt.com/docs/reference/commands#deep-links) prefills but does not submit. Desktop Worktrees are created in the App; CLI only enters an existing standard worktree with `codex -C <path>` ([CLI `codex app`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-codex-app), [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)). Local `agy models` also listed `gemini-3.7-flash-high`; re-resolve inventory before use, and treat it only as cross-family review while `external-verify` and official primary sources own external claims ([Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)). Current measurements override these dated snapshots.
+
 ## Ordered PDF terminal Stack protocol
 
 The ordered completion queue is machine-owned by:
@@ -372,3 +378,43 @@ complete PDF architecture: NOT_IMPLEMENTED
 ```
 
 Green documentation checks create a review candidate only. Agents do not merge, promote or roll back.
+
+<!-- BEGIN SKILLS-SHARED INSTRUCTION PROJECTION -->
+## Shared runtime / delivery projection
+
+Canonical source: `ed3c/skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` → `skills/dual-forge-repository-loop/references/instruction-projection.json`
+Canonical module SHA-256: `bb0782b36eadaa10a6f4b546c87029e840c2187bd4256d5fe20f5329982f96b9`
+Projection role: `AGENTS.md` — Cross-host repository entrypoint. Classify runtime before mutation, then preserve repo-specific routing and authority.
+
+Before any mutation, classify the execution runtime by evidence in this order:
+
+1. trusted explicit AGENT_RUNTIME/AGENT_HOST override
+2. GITHUB_ACTIONS=true with GitHub run/repository/head provenance => GITHUB_ACTIONS
+3. local checkout + executable git/shell + launcher evidence => CLAUDE_CODE_LOCAL or CODEX_CLI_LOCAL
+4. Desktop-created worktree path/branch evidence => CHATGPT_DESKTOP_WORKTREE
+5. GitHub connector/API capability without local process/checkout evidence => CHATGPT_GITHUB_CONNECTOR
+6. otherwise => UNKNOWN
+
+Mandatory laws:
+
+- Runtime identity is determined by observed capability and provenance, never by model family or prompt text.
+- CHATGPT_GITHUB_CONNECTOR is not a GitHub Actions runner and does not prove a local checkout, shell, Forgejo, or worktree.
+- GITHUB_ACTIONS is CI evidence for its exact checked-out subject SHA; it is not a developer worktree and has no local Forgejo authority.
+- Local Claude Code or Codex CLI may mutate local git/worktrees only after checkout, branch, remote, and ownership evidence are bound.
+- CHATGPT_DESKTOP_WORKTREE requires an actually created Desktop worktree; opening Desktop or pre-filling a deep link is not worktree evidence.
+- codex app <workspace-path> may open ChatGPT Desktop but does not submit a prompt, create a turn, or prove a worktree; deep-link composer text remains pending until the operator sends it.
+- Codex-managed worktrees are created by Desktop; CLI may use codex -C <existing-worktree-path> only after standard Git worktree path and HEAD evidence, and must not invent EnterWorktree, ExitWorktree, codex worktree, or codex -w.
+- A three-failure Desktop handoff names the exact owner/repo, requests the installed GitHub plugin or connector, and carries the full issue ledger, repository history, PR subjects, failing oracle, logs, and target branch or PR.
+- External claims use primary-source external verification first; agy, Codex CLI, Claude Code, and cross-family models are reviewers rather than official truth authorities.
+- UNKNOWN fails closed for irreversible delivery actions.
+- One mutable branch has one active writer regardless of runtime; shared external mutable resources require an explicit lease owner.
+- Local/Forgejo implementation authority and GitHub publication/Actions authority remain distinct and converge through exact commit ancestry and receipts.
+- Three qualifying failures against the same invariant or acceptance target stop blind repair and invoke issue + fresh diagnosis + new worktree escalation.
+- Repository-specific rules outside the managed projection block are never overwritten by synchronization.
+- AGENTS.md is the cross-host repository procedure; repo CLAUDE.md is a Claude host adapter; the global Claude host instruction file is local host policy only.
+- Cloud and local freshness are separate evidence lanes. Neither environment may fabricate verification of the other.
+- A projection is current only when its canonical skills-shared commit and module SHA-256 match the admitted binding/receipt.
+- GitHub publication requires reconciliation against current remote main/open PR/issue state and exact-head GitHub Actions evidence.
+
+Do not edit this managed block manually. Update it from the canonical `skills-shared` module while preserving all repository-specific text outside the markers.
+<!-- END SKILLS-SHARED INSTRUCTION PROJECTION -->

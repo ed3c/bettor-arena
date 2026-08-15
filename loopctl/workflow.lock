@@ -1,30 +1,30 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "a34a157384c52412752ae140d1fc1959f3c7fd75",
+  "workflow_commit": "d764f7280dc3108eea278d4bd1d9f4edd21a20c5",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-a34a157384c5-dirty.json",
-    "container": "container-a34a157384c5-dirty.json",
-    "ctg": "ctg-a34a157384c5-dirty.json",
-    "equivalence": "equivalence-a34a157384c5-dirty.json",
-    "harness": "harness-a34a157384c5-dirty.json",
-    "macro": "macro-a34a157384c5-dirty.json",
-    "micro": "micro-a34a157384c5-dirty.json",
-    "notebooklm": "notebooklm-a34a157384c5-dirty.json",
-    "openwiki": "openwiki-a34a157384c5-dirty.json",
-    "policy": "policy-a34a157384c5-dirty.json",
-    "skill-execution": "skill-execution-a34a157384c5-dirty.json",
-    "workflow": "workflow-a34a157384c5-dirty.json"
+    "agent-runtime": "agent-runtime-d764f7280dc3-dirty.json",
+    "container": "container-d764f7280dc3-dirty.json",
+    "ctg": "ctg-d764f7280dc3-dirty.json",
+    "equivalence": "equivalence-d764f7280dc3-dirty.json",
+    "harness": "harness-d764f7280dc3-dirty.json",
+    "macro": "macro-d764f7280dc3-dirty.json",
+    "micro": "micro-d764f7280dc3-dirty.json",
+    "notebooklm": "notebooklm-d764f7280dc3-dirty.json",
+    "openwiki": "openwiki-d764f7280dc3-dirty.json",
+    "policy": "policy-d764f7280dc3-dirty.json",
+    "skill-execution": "skill-execution-d764f7280dc3-dirty.json",
+    "workflow": "workflow-d764f7280dc3-dirty.json"
   },
   "counts": {
-    "artifact": 33,
-    "context": 61,
+    "artifact": 31,
+    "context": 62,
     "harness": 143
   },
-  "workflow_digest": "36026298c65d91ed887002115d9339d8d5363bf1434fb5f9a319f7cbce8ec944",
+  "workflow_digest": "bb65c24bc76f3a09c4874eda630bf3e49740637114eaa2956fdbc90a3d7338b8",
   "files": {
     ".agents/bindings/bettor-arena.json": {
-      "sha256": "de428b98047d4411b0a46c8cd7504beeafdacbba441361d29efdff9625d5d98d",
+      "sha256": "10460887f296928e06fbf1a72eb5e4a3234508a5228609b2736c3946f3d5ff59",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -196,7 +196,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "c18d651c02305916a0ce915d301ea59d65769b78a132e68f291fb61cba527e66",
+      "sha256": "92c1565bc71b190a22c6959db6a34174c5788dee2aa9107c0093271fa5ff5c60",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -213,7 +213,7 @@
       ]
     },
     "CLAUDE.md": {
-      "sha256": "2225ff0b0e365b0282b48534e0bf2774fd1da208b9feb58bc7bf14fbb59657cd",
+      "sha256": "f253c5691037b84cae16678942c466910968583cf0c296fb06a052b882a58305",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -237,15 +237,6 @@
         "macro"
       ]
     },
-    "data/wiki-update/request-poweron-2026-08-06.json": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "hash_source": "index",
-      "kind": "artifact",
-      "loops": [
-        "micro",
-        "openwiki"
-      ]
-    },
     "delivery.json": {
       "sha256": "50c62f5fd059566a50252b439f2d244240c05cbfd950598452e71394288837b6",
       "hash_source": "index",
@@ -260,6 +251,14 @@
       "kind": "context",
       "loops": [
         "agent-runtime"
+      ]
+    },
+    "docs/integration/CROSS_REPO_INTEGRATION.md": {
+      "sha256": "0cbe8405496a496486629b9c1c857d941fdb54fbba06ae5f5457ea72801642eb",
+      "hash_source": "index",
+      "kind": "context",
+      "loops": [
+        "macro"
       ]
     },
     "kb-ingest/README.md": {
@@ -746,14 +745,6 @@
       "sha256": "f89c8fbb4950dcd70489d2ff0967f2e32c57e415ab3fb8ccea2e82b54d568f8d",
       "hash_source": "index",
       "kind": "context",
-      "loops": [
-        "micro"
-      ]
-    },
-    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "hash_source": "index",
-      "kind": "artifact",
       "loops": [
         "micro"
       ]
@@ -1246,7 +1237,7 @@
       ]
     },
     "loopctl/workflow_lock.py": {
-      "sha256": "8b2ef6d6439a7b658e96271db6f52d5685982e03f5815979837e417fa16220d0",
+      "sha256": "8fb90b86ae775ab0ac5af162f7105d0896ca317dcdb8719fc00df9e4aa778d8e",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1775,7 +1766,7 @@
       ]
     },
     "proof_workflow/prove_macro_loop.sh": {
-      "sha256": "84df90f8ec359f1de08fb5bf11b6f1bfc335dbc5b2499e3d063a9cec07881c66",
+      "sha256": "1ffaf7822d21799c1a89a253e6145ebbff78b26cdb5393296f70a46cf3c97f49",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

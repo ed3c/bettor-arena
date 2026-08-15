@@ -119,7 +119,12 @@ def git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProce
 
 
 def is_ancestor(root: Path, ancestor: str, descendant: str = "HEAD") -> bool:
-    return git(root, "merge-base", "--is-ancestor", ancestor, descendant, check=False).returncode == 0
+    return (
+        git(
+            root, "merge-base", "--is-ancestor", ancestor, descendant, check=False
+        ).returncode
+        == 0
+    )
 
 
 def tree_at(root: Path, rev: str, path: Path) -> str | None:
@@ -129,19 +134,48 @@ def tree_at(root: Path, rev: str, path: Path) -> str | None:
 
 def validate_stage1(receipt: Any) -> dict[str, Any]:
     require(isinstance(receipt, dict), "Stage-1 receipt must be an object")
-    require(receipt.get("schema_version") == "bettor-arena/loopx-stage1-receipt/v1", "Stage-1 receipt schema drift")
+    require(
+        receipt.get("schema_version") == "bettor-arena/loopx-stage1-receipt/v1",
+        "Stage-1 receipt schema drift",
+    )
     require(receipt.get("result") == "PASS", "Stage-1 receipt is not PASS")
     subject = receipt.get("subject")
     require(isinstance(subject, dict), "Stage-1 subject missing")
     commit = subject.get("commit")
     tree = subject.get("tree")
-    require(isinstance(commit, str) and re.fullmatch(r"[0-9a-f]{40}", commit), "Stage-1 commit invalid")
-    require(isinstance(tree, str) and re.fullmatch(r"[0-9a-f]{40}", tree), "Stage-1 tree invalid")
-    require(subject.get("worktree_clean") is True, "Stage-1 receipt was not emitted from a clean worktree")
+    require(
+        isinstance(commit, str) and re.fullmatch(r"[0-9a-f]{40}", commit),
+        "Stage-1 commit invalid",
+    )
+    require(
+        isinstance(tree, str) and re.fullmatch(r"[0-9a-f]{40}", tree),
+        "Stage-1 tree invalid",
+    )
+    require(
+        subject.get("worktree_clean") is True,
+        "Stage-1 receipt was not emitted from a clean worktree",
+    )
     deliveries = receipt.get("deliveries")
-    require(isinstance(deliveries, list) and len(deliveries) == 5, "Stage-1 delivery set drift")
-    require(all(item.get("suite", {}).get("state") == "PASS" for item in deliveries if isinstance(item, dict)), "Stage-1 suite evidence is incomplete")
-    require(all(item.get("closure", {}).get("state") == "COMPLETE" for item in deliveries if isinstance(item, dict)), "Stage-1 closure evidence is incomplete")
+    require(
+        isinstance(deliveries, list) and len(deliveries) == 5,
+        "Stage-1 delivery set drift",
+    )
+    require(
+        all(
+            item.get("suite", {}).get("state") == "PASS"
+            for item in deliveries
+            if isinstance(item, dict)
+        ),
+        "Stage-1 suite evidence is incomplete",
+    )
+    require(
+        all(
+            item.get("closure", {}).get("state") == "COMPLETE"
+            for item in deliveries
+            if isinstance(item, dict)
+        ),
+        "Stage-1 closure evidence is incomplete",
+    )
     return {"commit": commit, "tree": tree, "digest": canonical_sha256(receipt)}
 
 
@@ -156,68 +190,133 @@ def validate_module(module: Any) -> dict[str, Any]:
 
     policy = module.get("external_policy")
     require(isinstance(policy, dict), "external_policy missing")
-    require(policy == {"exposed": False, "mutation": "none", "network": "none", "secrets": "none"}, "module external policy widened")
+    require(
+        policy
+        == {"exposed": False, "mutation": "none", "network": "none", "secrets": "none"},
+        "module external policy widened",
+    )
 
     loops = module.get("loops")
     require(isinstance(loops, list) and len(loops) == 1, "module loop surface drift")
-    require(loops[0].get("external_policy") == "control-only", "module loop policy drift")
-    require(loops[0].get("public_port") == "python3 loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "module public port drift")
+    require(
+        loops[0].get("external_policy") == "control-only", "module loop policy drift"
+    )
+    require(
+        loops[0].get("public_port")
+        == "python3 loop_wiki/loopx-strategy-hitl/scripts/hitl.py",
+        "module public port drift",
+    )
 
     components = module.get("components")
     require(isinstance(components, dict), "module components missing")
     for name in ("contracts", "proof", "runtime"):
         component = components.get(name)
-        require(isinstance(component, dict) and component.get("required") is True, f"module component missing: {name}")
+        require(
+            isinstance(component, dict) and component.get("required") is True,
+            f"module component missing: {name}",
+        )
         paths = component.get("paths")
-        require(isinstance(paths, list) and paths, f"module component paths missing: {name}")
+        require(
+            isinstance(paths, list) and paths, f"module component paths missing: {name}"
+        )
 
     proof = module.get("proof")
     require(isinstance(proof, dict), "module proof missing")
     required_proof = {
         "verify": ["sh", "loop_wiki/loopx-strategy-hitl/tests/run-all.sh"],
-        "control": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/control_strategy.py"],
-        "selftest": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"],
-        "mutation": ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"],
+        "control": [
+            "python3",
+            "loop_wiki/loopx-strategy-hitl/scripts/control_strategy.py",
+        ],
+        "selftest": [
+            "python3",
+            "loop_wiki/loopx-strategy-hitl/scripts/hitl.py",
+            "selftest",
+        ],
+        "mutation": [
+            "python3",
+            "loop_wiki/loopx-strategy-hitl/scripts/hitl.py",
+            "selftest",
+        ],
     }
     require(proof == required_proof, "module proof command drift")
     for name, argv in proof.items():
-        require(isinstance(argv, list) and all(isinstance(arg, str) for arg in argv), f"{name}: argv list required")
-        require(all(not SHELL_META.search(arg) for arg in argv), f"{name}: shell metacharacter forbidden")
+        require(
+            isinstance(argv, list) and all(isinstance(arg, str) for arg in argv),
+            f"{name}: argv list required",
+        )
+        require(
+            all(not SHELL_META.search(arg) for arg in argv),
+            f"{name}: shell metacharacter forbidden",
+        )
 
     return {"digest": canonical_sha256(module), "proof": proof}
 
 
 def validate_contract_manifest(root: Path, manifest: Any) -> dict[str, Any]:
     require(isinstance(manifest, dict), "contract manifest must be an object")
-    require(manifest.get("schema_version") == "loopx/strategy-hitl-contract-manifest/v1", "contract manifest schema drift")
+    require(
+        manifest.get("schema_version") == "loopx/strategy-hitl-contract-manifest/v1",
+        "contract manifest schema drift",
+    )
     require(manifest.get("interface_version") == "1.0.0", "contract interface drift")
-    require(manifest.get("canonical_authority") == "LOOPX_LEDGER_REDUCER", "canonical authority drift")
-    require(manifest.get("planner_authority") == "PROPOSE_ONLY", "planner authority drift")
-    require(manifest.get("runtime_state_checked_in") is False, "checked-in runtime state forbidden")
+    require(
+        manifest.get("canonical_authority") == "LOOPX_LEDGER_REDUCER",
+        "canonical authority drift",
+    )
+    require(
+        manifest.get("planner_authority") == "PROPOSE_ONLY", "planner authority drift"
+    )
+    require(
+        manifest.get("runtime_state_checked_in") is False,
+        "checked-in runtime state forbidden",
+    )
     require(manifest.get("runtime_state_path") == ".loopx/", "runtime state path drift")
-    require(manifest.get("requires_capabilities") == ["loopx.contracts/v1", "loopx.ledger/v1"], "required capabilities drift")
-    require(manifest.get("forbidden_decision_fields") == EXPECTED_FORBIDDEN, "forbidden decision fields drift")
-    require(manifest.get("non_waivable_gate_classes") == EXPECTED_NON_WAIVABLE, "non-waivable gate classes drift")
+    require(
+        manifest.get("requires_capabilities")
+        == ["loopx.contracts/v1", "loopx.ledger/v1"],
+        "required capabilities drift",
+    )
+    require(
+        manifest.get("forbidden_decision_fields") == EXPECTED_FORBIDDEN,
+        "forbidden decision fields drift",
+    )
+    require(
+        manifest.get("non_waivable_gate_classes") == EXPECTED_NON_WAIVABLE,
+        "non-waivable gate classes drift",
+    )
 
     schemas = manifest.get("schemas")
-    require(isinstance(schemas, list) and len(schemas) == 5, "exactly five Strategy/HITL schemas required")
+    require(
+        isinstance(schemas, list) and len(schemas) == 5,
+        "exactly five Strategy/HITL schemas required",
+    )
     observed: set[str] = set()
     schema_receipts: list[dict[str, str]] = []
     for entry in schemas:
         require(isinstance(entry, dict), "schema manifest entry must be object")
         rel = entry.get("path")
         expected = entry.get("sha256")
-        require(isinstance(rel, str) and rel in EXPECTED_SCHEMAS, f"unexpected schema path: {rel!r}")
+        require(
+            isinstance(rel, str) and rel in EXPECTED_SCHEMAS,
+            f"unexpected schema path: {rel!r}",
+        )
         require(rel not in observed, f"duplicate schema path: {rel}")
         observed.add(rel)
-        require(isinstance(expected, str) and re.fullmatch(r"[0-9a-f]{64}", expected), f"invalid schema digest: {rel}")
+        require(
+            isinstance(expected, str) and re.fullmatch(r"[0-9a-f]{64}", expected),
+            f"invalid schema digest: {rel}",
+        )
         path = root / ROOT_PATH / "contracts" / rel
         require(path.is_file(), f"schema absent: {path.relative_to(root)}")
         actual = sha256_file(path)
         require(actual == expected, f"schema digest mismatch: {rel}")
         schema_receipts.append({"path": rel, "sha256": actual})
     require(observed == EXPECTED_SCHEMAS, f"schema set drift: {sorted(observed)}")
-    require(not (root / ".loopx").exists(), "repository runtime .loopx state must not be checked in")
+    require(
+        not (root / ".loopx").exists(),
+        "repository runtime .loopx state must not be checked in",
+    )
     return {"digest": canonical_sha256(manifest), "schemas": schema_receipts}
 
 
@@ -234,14 +333,28 @@ def collect_module_ids(value: Any) -> set[str]:
     return result
 
 
-def validate_non_admission(composition: Any, loopctl_text: str, mcp_text: str) -> dict[str, Any]:
+def validate_non_admission(
+    composition: Any, loopctl_text: str, mcp_text: str
+) -> dict[str, Any]:
     selected = collect_module_ids(composition)
-    require(MODULE_ID not in selected, "Strategy/HITL module selected before final convergence")
+    require(
+        MODULE_ID not in selected,
+        "Strategy/HITL module selected before final convergence",
+    )
     for label, text in (("loopctl", loopctl_text), ("MCP policy", mcp_text)):
         lowered = text.lower()
-        require("loopx-strategy-hitl" not in lowered, f"{label}: module exposed prematurely")
-        require("strategy-hitl" not in lowered, f"{label}: Strategy/HITL public surface exposed prematurely")
-    return {"composition_selected": False, "loopctl_exposed": False, "mcp_exposed": False}
+        require(
+            "loopx-strategy-hitl" not in lowered, f"{label}: module exposed prematurely"
+        )
+        require(
+            "strategy-hitl" not in lowered,
+            f"{label}: Strategy/HITL public surface exposed prematurely",
+        )
+    return {
+        "composition_selected": False,
+        "loopctl_exposed": False,
+        "mcp_exposed": False,
+    }
 
 
 def run_command(root: Path, name: str, argv: list[str]) -> dict[str, Any]:
@@ -260,15 +373,26 @@ def run_command(root: Path, name: str, argv: list[str]) -> dict[str, Any]:
 
 def validate_commands(results: list[dict[str, Any]]) -> None:
     for result in results:
-        require(result.get("exit_code") == 0, f"command failed: {result.get('name')} exit={result.get('exit_code')}")
+        require(
+            result.get("exit_code") == 0,
+            f"command failed: {result.get('name')} exit={result.get('exit_code')}",
+        )
 
 
-def validate_repository(root: Path, output: Path | None, observed_at: str) -> dict[str, Any]:
+def validate_repository(
+    root: Path, output: Path | None, observed_at: str
+) -> dict[str, Any]:
     commit = git(root, "rev-parse", "HEAD").stdout.strip()
     tree = git(root, "rev-parse", "HEAD^{tree}").stdout.strip()
     dirty = git(root, "status", "--porcelain").stdout.strip()
-    require(is_ancestor(root, STAGE1_MERGE), "Stage-1 merge commit is not an ancestor of the checked subject")
-    require(is_ancestor(root, IMPLEMENTATION_MERGE), "Strategy/HITL merge commit is not an ancestor of the checked subject")
+    require(
+        is_ancestor(root, STAGE1_MERGE),
+        "Stage-1 merge commit is not an ancestor of the checked subject",
+    )
+    require(
+        is_ancestor(root, IMPLEMENTATION_MERGE),
+        "Strategy/HITL merge commit is not an ancestor of the checked subject",
+    )
 
     stage1_value = read_json(root, STAGE1_RECEIPT)
     stage1 = validate_stage1(stage1_value)
@@ -286,20 +410,46 @@ def validate_repository(root: Path, output: Path | None, observed_at: str) -> di
     current_tree = tree_at(root, "HEAD", ROOT_PATH)
     require(pr_head_tree is not None, "Strategy/HITL tree absent at PR #106 head")
     require(current_tree is not None, "Strategy/HITL tree absent on checked subject")
-    content_state = "IDENTICAL" if pr_head_tree == current_tree else "PRESENT_WITH_CURRENT_MAIN_CHANGES"
+    content_state = (
+        "IDENTICAL"
+        if pr_head_tree == current_tree
+        else "PRESENT_WITH_CURRENT_MAIN_CHANGES"
+    )
     changed_paths = []
     if content_state != "IDENTICAL":
         changed_paths = [
             line
-            for line in git(root, "diff", "--name-only", IMPLEMENTATION_HEAD, "HEAD", "--", ROOT_PATH.as_posix()).stdout.splitlines()
+            for line in git(
+                root,
+                "diff",
+                "--name-only",
+                IMPLEMENTATION_HEAD,
+                "HEAD",
+                "--",
+                ROOT_PATH.as_posix(),
+            ).stdout.splitlines()
             if line
         ]
 
     commands = [
-        run_command(root, "verify", ["sh", "loop_wiki/loopx-strategy-hitl/tests/run-all.sh"]),
-        run_command(root, "control", ["python3", "loop_wiki/loopx-strategy-hitl/scripts/control_strategy.py"]),
-        run_command(root, "selftest", ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"]),
-        run_command(root, "probe-controls", ["python3", "loop_wiki/loopx-strategy-hitl/scripts/probe_controls.py"]),
+        run_command(
+            root, "verify", ["sh", "loop_wiki/loopx-strategy-hitl/tests/run-all.sh"]
+        ),
+        run_command(
+            root,
+            "control",
+            ["python3", "loop_wiki/loopx-strategy-hitl/scripts/control_strategy.py"],
+        ),
+        run_command(
+            root,
+            "selftest",
+            ["python3", "loop_wiki/loopx-strategy-hitl/scripts/hitl.py", "selftest"],
+        ),
+        run_command(
+            root,
+            "probe-controls",
+            ["python3", "loop_wiki/loopx-strategy-hitl/scripts/probe_controls.py"],
+        ),
     ]
     validate_commands(commands)
 
@@ -361,7 +511,9 @@ def validate_repository(root: Path, output: Path | None, observed_at: str) -> di
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(text, encoding="utf-8")
         print(f"WROTE {output}")
-    print(f"PASS Stage 2 Strategy/HITL validation: {commit[:8]}, 5 schemas, {len(commands)} commands")
+    print(
+        f"PASS Stage 2 Strategy/HITL validation: {commit[:8]}, 5 schemas, {len(commands)} commands"
+    )
     return receipt
 
 
@@ -383,43 +535,113 @@ def run_selftest(root: Path) -> dict[str, Any]:
     mcp_text = read_text(root, MCP_POLICY)
     outcomes: list[str] = []
 
-    def mutate_manifest(name: str, mutator: Callable[[dict[str, Any]], None], expected: str) -> None:
+    def mutate_manifest(
+        name: str, mutator: Callable[[dict[str, Any]], None], expected: str
+    ) -> None:
         value = copy.deepcopy(manifest)
         mutator(value)
-        outcomes.append(expect_failure(name, lambda: validate_contract_manifest(root, value), expected))
+        outcomes.append(
+            expect_failure(
+                name, lambda: validate_contract_manifest(root, value), expected
+            )
+        )
 
-    mutate_manifest("planner-authority", lambda value: value.update(planner_authority="STATE_WRITER"), "planner authority drift")
-    mutate_manifest("canonical-authority", lambda value: value.update(canonical_authority="LANGGRAPH"), "canonical authority drift")
-    mutate_manifest("runtime-state", lambda value: value.update(runtime_state_checked_in=True), "checked-in runtime state forbidden")
-    mutate_manifest("force-skip-loss", lambda value: value["forbidden_decision_fields"].remove("force_skip"), "forbidden decision fields drift")
-    mutate_manifest("security-waiver", lambda value: value["non_waivable_gate_classes"].remove("SECURITY"), "non-waivable gate classes drift")
-    mutate_manifest("schema-digest", lambda value: value["schemas"][0].update(sha256="0" * 64), "schema digest mismatch")
+    mutate_manifest(
+        "planner-authority",
+        lambda value: value.update(planner_authority="STATE_WRITER"),
+        "planner authority drift",
+    )
+    mutate_manifest(
+        "canonical-authority",
+        lambda value: value.update(canonical_authority="LANGGRAPH"),
+        "canonical authority drift",
+    )
+    mutate_manifest(
+        "runtime-state",
+        lambda value: value.update(runtime_state_checked_in=True),
+        "checked-in runtime state forbidden",
+    )
+    mutate_manifest(
+        "force-skip-loss",
+        lambda value: value["forbidden_decision_fields"].remove("force_skip"),
+        "forbidden decision fields drift",
+    )
+    mutate_manifest(
+        "security-waiver",
+        lambda value: value["non_waivable_gate_classes"].remove("SECURITY"),
+        "non-waivable gate classes drift",
+    )
+    mutate_manifest(
+        "schema-digest",
+        lambda value: value["schemas"][0].update(sha256="0" * 64),
+        "schema digest mismatch",
+    )
 
     bad_module = copy.deepcopy(module)
     bad_module["external_policy"]["exposed"] = True
-    outcomes.append(expect_failure("public-exposure", lambda: validate_module(bad_module), "external policy widened"))
+    outcomes.append(
+        expect_failure(
+            "public-exposure",
+            lambda: validate_module(bad_module),
+            "external policy widened",
+        )
+    )
 
     bad_module = copy.deepcopy(module)
     bad_module["provides"] = ["loopx.strategy-writer/v1"]
-    outcomes.append(expect_failure("capability-drift", lambda: validate_module(bad_module), "provides drift"))
+    outcomes.append(
+        expect_failure(
+            "capability-drift", lambda: validate_module(bad_module), "provides drift"
+        )
+    )
 
     bad_module = copy.deepcopy(module)
     bad_module["proof"]["verify"] = "sh -c 'true'"
-    outcomes.append(expect_failure("raw-shell-proof", lambda: validate_module(bad_module), "proof command drift"))
+    outcomes.append(
+        expect_failure(
+            "raw-shell-proof",
+            lambda: validate_module(bad_module),
+            "proof command drift",
+        )
+    )
 
     bad_stage1 = copy.deepcopy(stage1)
     bad_stage1["result"] = "FAIL"
-    outcomes.append(expect_failure("stage1-fail", lambda: validate_stage1(bad_stage1), "not PASS"))
+    outcomes.append(
+        expect_failure("stage1-fail", lambda: validate_stage1(bad_stage1), "not PASS")
+    )
 
     bad_composition = copy.deepcopy(composition)
     if isinstance(bad_composition.get("modules"), list):
         bad_composition["modules"].append({"id": MODULE_ID})
     else:
         bad_composition["modules"] = [{"id": MODULE_ID}]
-    outcomes.append(expect_failure("premature-selection", lambda: validate_non_admission(bad_composition, loopctl_text, mcp_text), "selected before final convergence"))
+    outcomes.append(
+        expect_failure(
+            "premature-selection",
+            lambda: validate_non_admission(bad_composition, loopctl_text, mcp_text),
+            "selected before final convergence",
+        )
+    )
 
-    outcomes.append(expect_failure("loopctl-exposure", lambda: validate_non_admission(composition, loopctl_text + "\nloopx-strategy-hitl", mcp_text), "loopctl: module exposed"))
-    outcomes.append(expect_failure("mcp-exposure", lambda: validate_non_admission(composition, loopctl_text, mcp_text + "\nstrategy-hitl"), "MCP policy: Strategy/HITL public surface"))
+    outcomes.append(
+        expect_failure(
+            "loopctl-exposure",
+            lambda: validate_non_admission(
+                composition, loopctl_text + "\nloopx-strategy-hitl", mcp_text
+            ),
+            "loopctl: module exposed",
+        )
+    )
+    outcomes.append(
+        expect_failure(
+            "mcp-exposure",
+            lambda: validate_non_admission(
+                composition, loopctl_text, mcp_text + "\nstrategy-hitl"
+            ),
+            "MCP policy: Strategy/HITL public surface",
+        )
+    )
 
     require(len(outcomes) == 13, "selftest mutation count drift")
     return {"status": "PASS", "mutations": outcomes}
@@ -465,7 +687,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.json:
             print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         else:
-            print(f"strategy-hitl-current selftest PASS: {len(result['mutations'])} mutations")
+            print(
+                f"strategy-hitl-current selftest PASS: {len(result['mutations'])} mutations"
+            )
     return OK
 
 
