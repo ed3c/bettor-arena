@@ -5,9 +5,9 @@ on:
     branches:
       - 'feat/loopx-harness-console'
     paths:
-      - 'loop_wiki/harness-console/app/**'
-      - 'loop_wiki/harness-console/service/**'
-      - 'loop_wiki/harness-console/contracts/**'
+      - 'apps/harness-console/**'
+      - 'services/hitl-api/**'
+      - 'packages/harness-console-contracts/**'
       - 'tests/harness-console/**'
       - '.github/workflows/harness-console.yml'
   pull_request:
@@ -16,9 +16,9 @@ on:
     # a draft would skip this job and never re-run when it is marked ready.
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
-      - 'loop_wiki/harness-console/app/**'
-      - 'loop_wiki/harness-console/service/**'
-      - 'loop_wiki/harness-console/contracts/**'
+      - 'apps/harness-console/**'
+      - 'services/hitl-api/**'
+      - 'packages/harness-console-contracts/**'
       - 'tests/harness-console/**'
       - '.github/workflows/harness-console.yml'
   workflow_dispatch:

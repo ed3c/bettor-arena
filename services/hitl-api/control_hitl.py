@@ -33,13 +33,13 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parents[0] / "contracts"))
+sys.path.insert(0, str(HERE.parents[1] / "packages/harness-console-contracts"))
 
 from hc_vocab import BAD, OK, ContractError  # noqa: E402
 from hitl_selftest import DRAFT, EVENTS, HEAD, KEY, KEY_ID  # noqa: E402
 
 PORT = HERE / "hitlapi.py"
-ROOT = HERE.parents[2]
+ROOT = HERE.parents[1]
 
 
 def run_port(*argv: str, key: str | None = None) -> subprocess.CompletedProcess[str]:
