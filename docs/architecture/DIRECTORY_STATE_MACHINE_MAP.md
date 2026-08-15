@@ -43,7 +43,7 @@ convergence leaf
 Human Admit / merge / release / rollback
 ```
 
-Git Town may later automate local branch synchronization between Stack validation and terminal evaluation. It is not currently admitted.
+The repository now has a typed Git Town admission/controller mechanism, but no admitted executable or configuration. Local synchronization remains `NOT_EXERCISED`.
 
 ## Directory ownership and State Machines
 
@@ -51,9 +51,9 @@ Git Town may later automate local branch synchronization between Stack validatio
 |---|---|---|---|---|---|
 | root `README.md`, `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md`, `ARCHITECTURE.md` | `arena-core` | `ENTRY → ROUTE → OWNER → CONTRACT → EVIDENCE` | task + repo subject | bounded Agent route | `IMPLEMENTED` |
 | `docs/architecture/` | architecture/status owner | `SOURCE_PROPOSAL → TARGET → CURRENT → GAP → ACCEPTANCE` | PDF/design/incident | target and mutable status | `IMPLEMENTED` |
-| `docs/git/` | repository Git governance | `METHOD PIN → PROFILE → PACKET → STACK GRAPH → LEASE → DRY RUN → EVAL → HUMAN ADMIT` | shared Skill pin + GitHub metadata | profile, Stack snapshot, diagnostics | docs candidate `IMPLEMENTED`; runtime `ABSENT` |
+| `docs/git/` | repository Git governance | `METHOD PIN → PROFILE → QUEUE → STACK/LEASE → EVAL → PUBLICATION BOUNDARY` | shared Skill pin + GitHub metadata | profile, queue, Stack snapshot | `IMPLEMENTED`; active #92 |
 | `docs/traceability/` | traceability owner | `SOURCE → ISSUE → TERMINAL → PR → EXACT HEAD → CHECKS → ADMIT` | issue/PR/check metadata | human index | `IMPLEMENTED`, snapshot-bound |
-| `.agents/skills/` | `agent-runtime-integration` | `REQUIRE → RESOLVE → PROJECT → DISCOVER` | shared/repo-owned Skill requirements | host-neutral projections | `IMPLEMENTED`; Git Town Skill `NOT_SELECTED` |
+| `.agents/skills/` | `agent-runtime-integration` | `REQUIRE → RESOLVE → PROJECT → DISCOVER` | shared/repo-owned Skill requirements | host-neutral projections | `IMPLEMENTED`; Git Town method same-blob but `NOT_SELECTED` |
 | `.skill-bindings/` | consumer bindings | `UPSTREAM SKILL → RETARGET → ASSERT → RECEIPT` | immutable Skill identity | repo-specific facts | selected bindings `IMPLEMENTED` |
 | `.runtime-env/` | runtime projection | `DECLARE → RESOLVE → MATERIALIZE → OFFLINE VERIFY → LIVE CANARY` | secret-free release | policies/workload/binding | mechanism `IMPLEMENTED`; live varies |
 | `.arena/modules/` | `module-catalog` | `PROPOSED → CONTRACTED → COMPOSED → PROVED → RELEASED` | manifests | capabilities/owners/proof | `IMPLEMENTED` |
@@ -64,7 +64,7 @@ Git Town may later automate local branch synchronization between Stack validatio
 | `loopctl/` | `loop-runtime` | `PARSE → VALIDATE → DISPATCH → PROPAGATE 0/2/64` | typed CLI request | artifacts/receipts | `IMPLEMENTED` |
 | `mcp/` | `mcp-adapters` | `DEFAULT DENY → TOOL PROJECT → IMMUTABLE CALL → CLEANUP` | CLI contract + policy | JSON-RPC result | admitted tools `IMPLEMENTED` |
 | `proof_workflow/` | `proof-kernel` | `CLAIM → TRAVERSAL → CONTROL → MUTATION → RECEIPT` | public port + context | evidence | `IMPLEMENTED` |
-| `data/module-proof/` | generated evidence | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks + proof specs | subject lock/receipt | mechanism `IMPLEMENTED` |
+| `data/module-proof/` | generated evidence | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks + proof specs | subject lock/receipt | 14 selected modules; aggregate `NOT_EXERCISED` |
 | `loop_wiki/evolve-perfect-seed-repo-factory/` | `perfect-seed-factory` | `PACKET → BUILD → QUALITY → OPERATOR → VALIDATOR → HUMAN EDGE` | typed task/source | seed repo/wiki request | `IMPLEMENTED` |
 | `kb-ingest/`, `openwiki/` | `openwiki` | `REQUEST → DRY/FULL OPT-IN → VERIFY → RECEIPT` | wiki request | projection | mechanism `IMPLEMENTED` |
 | `loop_wiki/code-truth-graph/` | `code-truth-graph` | `PACKET → PIN → PARSE/BUILD → VERIFY → GRAPH` | source packet | graph/result | `IMPLEMENTED` |
@@ -73,12 +73,20 @@ Git Town may later automate local branch synchronization between Stack validatio
 | `scripts/gates/`, `tests/` | `arena-core` / `proof-kernel` | `POSITIVE → CONTROL → HOLLOW/MUTATION → EXACT SUBJECT` | tracked tree | deterministic exit | `IMPLEMENTED` |
 | `data/` | evidence projection | `EXECUTE → NORMALIZE → HASH → STORE → REPLAY/COMPARE` | OS/tool output | receipts/status | exact receipt dependent |
 | `.github/workflows/` | cloud verifier | `EVENT → EXACT CHECKOUT → GATE → STATUS` | PR/push subject | check | `IMPLEMENTED` |
+| `loop_wiki/loopx-kernel/`, `loop_wiki/loopx-ledger/` | LoopX state plane | `TASK/EVENT → VALIDATE → APPEND → REDUCE → SNAPSHOT` | Objective/Todos/Gates/Evidence/Quota | canonical ledger/snapshot | mechanisms `IMPLEMENTED`; not selected |
+| `loop_wiki/loopx-strategy-hitl/` | strategy/HITL plane | `SNAPSHOT → PROPOSE → INTERRUPT → SIGN → REVALIDATE` | Ledger snapshot | command/decision proposal | PR #106 merged; not selected |
+| `loop_wiki/loopx-worker-gateway/` | execution adapter | `REQUEST → ADAPTER → OBSERVE → RECEIPT → CLEANUP` | host request/context | Worker observation | mechanism `IMPLEMENTED`; six-host live pending |
+| `loop_wiki/loopx-runtime-fabric/`, `loop_wiki/loopx-worker-fleet/` | execution/scheduling plane | `POLICY/QUEUE → LEASE → MATERIALIZE → EXECUTE → COLLECT → RECOVER` | tasks/resources | runtime/lease receipts | PR #117/#122 merged; live parity pending |
+| `loop_wiki/loopx-resource-gc/`, `loop_wiki/lsp-pool/` | resource/intelligence plane | `INVENTORY/PIN → QUERY/PLAN → FRESHNESS → EVICT/CLEAN` | leases/workspace | cleanup/diagnostic receipts | PR #123/#124 merged; live provider #92 active |
+| `loop_wiki/loopx-decision-memory/` | memory plane | `PROPOSE → HUMAN ADMIT → EVENT → PROJECT → EXPIRE/DELETE` | evidence proposal | memory events/projection | PR #125/#126 merged; not selected |
+| `loop_wiki/loopx-source-ingest/`, `loop_wiki/loopx-notes-retrieval/` | Notes input/projection | `DECLARE → CAPTURE/HASH → MANIFEST → BUILD/QUERY/READBACK` | authorized sources | evidence manifest + retrieval projection | PR #127/#128 merged; not selected |
+| `loop_wiki/loopx-knowledge-compiler/`, `loop_wiki/loopx-knowledge-foldback/` | knowledge/code bridge | `EVIDENCE → SPEC/CODEOP → CANDIDATE → VERIFIED DIFF → PATCH` | Notes/code/runtime evidence | scaffold + knowledge patch | PR #118/#119 merged; ordered acceptance pending |
+| `loop_wiki/loopx-context-assembly/`, `loop_wiki/loopx-skill-evolution/` | context/evolution plane | `PROMPT IR → HOST RENDER → BASELINE/CANDIDATE → HOLDOUT` | Skills/cards/memory/task | prompts/recommendation | PR #129/#120 merged; ordered acceptance pending |
+| `loop_wiki/loopx-observability/`, `apps/harness-console/`, `services/hitl-api/` | projection/HITL surface | `EVENT → REDACT → PROJECT → INSPECT → REQUEST` | ledger/evidence refs | UI + decision request | PR #116/#131/#134 merged; not selected |
+| `loop_wiki/loopx-benchmark/` | measurement plane | `PIN → TRIALS → COMPARABILITY → SCOPED CLAIM` | exact profile/workload | raw trials/report | PR #132/#135 merged; ordered acceptance pending |
+| `scripts/git-town/`, `tests/git-town/`, `docs/git/runtime/` | `git-town-runtime` | `CONTRACT → PREFLIGHT → CONTROL → DECISION → RECEIPT` | profile/task/executable evidence | local sync/publication lanes | controller + 13 controls PASS; executable `ABSENT` |
 | `.git-town.toml` | future admitted Git Town config | `PROFILE → CONFIG CANDIDATE → CANARIES → HUMAN ADMIT` | admitted executable + profile | deterministic local config | `ABSENT` |
-| `data/git-town/` | future Stack runtime evidence | `LEASE → SYNC PLAN → EXECUTION → CLEANUP → RECEIPT` | task packet + branch graph | local sync receipt | `NOT_IMPLEMENTED` |
-| LoopX candidate directories on PR #74 | future `loopx-kernel` | `TASK → EVENT → REDUCE → SNAPSHOT` | Objective/Todos/Gates/Evidence/Quota | ledger/snapshot | open Stack candidate, not main |
-| LangGraph/HITL package | strategy plane | `SNAPSHOT → PROPOSE → INTERRUPT → SIGNED DECISION → RESUME` | LoopX snapshot | command/decision receipt | `NOT_IMPLEMENTED` |
-| worker fleet | execution plane | `PROBE → LEASE → MATERIALIZE → EXECUTE → COLLECT → DISPOSE` | Context + task | Worker receipt | candidates; live matrix `NOT_EXERCISED` |
-| observability/UI | projection plane | `EVENT → REDACT → PROJECT → INSPECT → SIGNED REQUEST` | immutable refs | trace/UI request | `NOT_IMPLEMENTED` |
+| final composition/locks/receipts | issue #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE → RELEASE` | admitted terminal subjects | release/rollback | blocked at active #92 |
 
 ## Git Town Stack State Machine
 
@@ -101,7 +109,8 @@ Current state:
 
 ```text
 method pin                  PINNED
-profile/index docs          candidate in issue #80
+profile/index docs          IMPLEMENTED
+controller mechanism       IMPLEMENTED; 13 physical controls PASS
 binary/config               ABSENT
 local sync                  NOT_EXERCISED
 publication                 NOT_EXERCISED
@@ -123,7 +132,7 @@ LoopX task graph
 
 They are separate graphs. A branch relation cannot create module admission, and a module dependency cannot grant Git conflict authority.
 
-## Current molecular conflict
+## Historical molecular conflict
 
 ```text
 PR #76 issue #64
@@ -133,10 +142,11 @@ overlap:
   .arena/modules/loopx-worker-gateway/**
   loop_wiki/loopx-worker-gateway/**
   loopctl/workflow.lock
-state: BLOCKED_DUPLICATE_TERMINAL
+state: RESOLVED_BY_HUMAN
+resolution: PR #76 admitted, PR #77 superseded, issue #82 complete
 ```
 
-The verifier requires the conflict to remain explicit until Human resolution.
+The verifier keeps the conflict explicit after resolution so later success cannot erase the duplicate-writer observation.
 
 ## Macro State Machine
 
@@ -171,7 +181,7 @@ typed packet
 
 Micro cannot merge, promote, widen permissions or Human Admit.
 
-## Missing LoopX state machine
+## Missing LoopX state machine: remaining integration state
 
 ```text
 INIT
@@ -198,7 +208,7 @@ LoopX reducer alone commits
 Human alone admits
 ```
 
-The current repository does not yet provide this reducer or ledger.
+The reducer, ledger and surrounding mechanisms now exist. The missing edge is their selection into one release subject plus live provider/host/runtime evidence and final #68 admission.
 
 ## Proposed LoopX authority
 

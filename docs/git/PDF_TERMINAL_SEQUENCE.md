@@ -27,7 +27,8 @@ Program and final convergence:
 ```text
 program issue:     #61
 index issue:       #102
-current item:      order 0 / issue #82
+completed prefix: orders 0–11
+current item:      order 12 / issue #92
 final convergence: order 25 / issue #68
 ```
 
@@ -78,7 +79,9 @@ The following bytes have landed through PR #74 and its children:
 | #42 / #78 | Decision Memory contracts | `MERGED_TO_MAIN` through #74 | durable memory event lifecycle or Mem0 |
 | #69 / #79 | Code Truth Graph v2 | `MERGED_TO_MAIN` through #74 | live LSP, provider or production telemetry coverage |
 
-PR #77 is a closed superseded Worker Gateway candidate. Issue #82 owns executable comparison and disposition of its eight unique files.
+PR #77 is a closed superseded Worker Gateway candidate. Issue #82 completed executable comparison and disposition of its eight unique files.
+
+Several later implementation PRs are already reachable from `main`; their rows remain `BLOCKED_BY_PREDECESSOR` because strict ordered acceptance is not the same state as code delivery. The root [`README.md`](../../README.md) records both columns.
 
 ## Ordered terminal queue
 

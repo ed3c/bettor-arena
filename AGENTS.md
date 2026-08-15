@@ -113,7 +113,7 @@ schema: docs/git/pdf-terminal-sequence.schema.json
 human view: docs/git/PDF_TERMINAL_SEQUENCE.md
 program: #61
 index task: #102
-current active item: #82
+current active item: #92 (order 12)
 final convergence: #68
 ```
 
@@ -145,7 +145,7 @@ Do not create a 26-deep branch chain merely to mirror queue order. Once a predec
 → #101 → #68
 ```
 
-Current-main mechanisms from PRs #74/#75/#76/#78/#79 remain foundations. They do not proxy the later live/runtime/release items.
+Orders 0–11 are complete in the machine queue. Later implementation bytes may already be reachable from `main`, but they do not proxy the active #92 live-provider acceptance or any later queue item.
 
 ### Queue advancement receipt
 
@@ -177,13 +177,15 @@ blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
 path: skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-Bettor must not create a local same-name `SKILL.md` or silently shadow the shared procedure. Repository-owned profile and policy live under [`docs/git/`](docs/git/README.md).
+Bettor must not create a local same-name `SKILL.md` or silently shadow the shared procedure. The current shared-Skills binding source `b3c722da1c40301b0a12e0ef99848d884bfc720b` carries the same blob, so the method reference and the admitted shared tree are byte-equivalent even though this Skill is not selected into Bettor's requirements-filtered runtime closure. Repository-owned profile and policy live under [`docs/git/`](docs/git/README.md).
 
 Current admission:
 
 ```text
 shared Skill exact reference            PINNED
 shared Skill selected in binding         NOT_SELECTED
+.arena git-town-runtime module           IMPLEMENTED
+typed controller + 13 physical controls  PASS (without Git Town execution)
 .git-town.toml                           ABSENT
 Git Town executable/version/checksum     ABSENT
 license/SBOM/legal review                NOT_REVIEWED
@@ -242,7 +244,7 @@ Agents and background Workers must not:
 - convert a local sync into publication evidence;
 - promote a candidate or perform rollback.
 
-Git Town runtime remains Human/trusted-operator owned until issue #101 is admitted.
+Issue #101 and PR #133 landed the fail-closed admission mechanism. Actual Git Town activation remains blocked until an exact executable, configuration, supply-chain evidence and live no-push canary are admitted.
 
 ## Macro / Micro boundary
 
@@ -370,11 +372,11 @@ FAILED
 For this ordered Stack:
 
 ```text
-current active item: #82
+current active item: #92 (order 12)
 future implementation items: BLOCKED_BY_PREDECESSOR
 final convergence: #68
 Git Town runtime: NOT_EXERCISED
-complete PDF architecture: NOT_IMPLEMENTED
+complete PDF architecture: NOT_EXERCISED as one admitted release subject
 ```
 
 Green documentation checks create a review candidate only. Agents do not merge, promote or roll back.

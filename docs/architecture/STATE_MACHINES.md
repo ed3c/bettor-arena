@@ -220,7 +220,9 @@ Current state:
 
 ```text
 shared method pin        PINNED
-repo-owned profile       candidate in issue #80 / PR #81
+repo-owned profile       IMPLEMENTED by PR #81
+typed controller         IMPLEMENTED by PR #133
+physical controls        PASS: 13 real-repository controls
 executable/config        ABSENT
 canaries                 NOT_EXERCISED
 Human Admit              NOT_PERFORMED
@@ -261,14 +263,15 @@ Hard rules:
 - `MERGED_TO_PARENT` is not `MERGED_TO_MAIN`;
 - duplicate issue/path writers are blocking.
 
-Current blocking state:
+Historical duplicate state:
 
 ```text
 PR #76 + PR #77
 same issue #64
 overlapping Worker Gateway paths
-→ BLOCKED_DUPLICATE_TERMINAL
-→ Human resolution
+→ PR #76 admitted / PR #77 superseded
+→ issue #82 residual disposition COMPLETE
+→ RESOLVED_BY_HUMAN
 ```
 
 ## 16. Molecular delivery and publication
@@ -328,21 +331,21 @@ LoopX reducer commits
 Human admits
 ```
 
-The current `main` does not contain the unmerged LoopX contract/ledger candidates.
+Current `main` contains the Contract, Ledger and the later terminal mechanisms. They remain outside the 14-module selected release composition, and live end-to-end evidence remains incomplete.
 
-## 18. LoopX candidate Stack
+## 18. Historical LoopX foundation Stack
 
 ```text
 main
-└─ PR #74 LoopX Contract
-   ├─ PR #75 Ledger — MERGED_TO_PARENT
-   ├─ PR #76 Worker Gateway — BLOCKED duplicate
-   ├─ PR #77 Worker Gateway — BLOCKED duplicate
-   ├─ PR #78 Decision Memory
-   └─ PR #79 Code Truth Graph v2
+└─ PR #74 LoopX Contract — MERGED_TO_MAIN
+   ├─ PR #75 Ledger — MERGED_TO_MAIN through #74
+   ├─ PR #76 Worker Gateway — MERGED_TO_MAIN through #74
+   ├─ PR #77 Worker Gateway — SUPERSEDED_CANDIDATE
+   ├─ PR #78 Decision Memory — MERGED_TO_MAIN through #74
+   └─ PR #79 Code Truth Graph v2 — MERGED_TO_MAIN through #74
 ```
 
-Issue #68 owns final shared convergence only after terminal settlement.
+The ordered queue has completed orders 0–11 and is active at issue #92/order 12. Issue #68 owns final shared convergence only after terminal settlement.
 
 ## 19. Strategy Graph and HITL target
 

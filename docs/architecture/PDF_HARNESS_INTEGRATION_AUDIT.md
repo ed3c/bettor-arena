@@ -8,7 +8,19 @@ This document answers one narrow question:
 
 The PDF is a **source proposal**, not repository truth. It proposes an Agent-agnostic LoopX kernel with Objective, Todos, Gates, Evidence and Quota; a deterministic state-transition engine; LangGraph HITL; white-box and gray-box workers; hot/cold memory; OpenWiki and vector/graph retrieval; worktree fleets; cloud/local separation; and observability. Its examples also include direct `.loopx/state.json` writes, `shell=True`, `force_skip`, raw Thought Stream transfer, and performance claims. Those examples are not treated as admitted Bettor mechanisms.
 
-Audit baseline:
+Current correction measured on 2026-08-16:
+
+```text
+LoopX terminal mechanisms       IMPLEMENTED across current-main directories
+ordered acceptance              COMPLETE through order 11; issue #92 active
+selected release composition    14 base modules; LoopX terminals excluded
+aggregate module evidence       NOT_EXERCISED
+full PDF release                not admitted; issue #68 pending
+```
+
+The detailed mapping below records the original audit baseline and source-to-target gap decomposition. Where it calls a mechanism `NOT_IMPLEMENTED`, use the current correction plus [`modular-integration-status.md`](modular-integration-status.md), [`DIRECTORY_STATE_MACHINE_MAP.md`](DIRECTORY_STATE_MACHINE_MAP.md) and the machine queue for present state. It remains useful for requirements; it is no longer a live implementation inventory.
+
+Historical audit baseline:
 
 ```text
 repository: ed3c/bettor-arena
@@ -36,27 +48,24 @@ Context Capsules and immutable projections       IMPLEMENTED
 OpenWiki and Code Truth Graph mechanisms         IMPLEMENTED
 Provider-neutral knowledge contracts             IMPLEMENTED
 
-Complete LoopX state kernel                       NOT_IMPLEMENTED
-Single-writer event ledger and reducer            NOT_IMPLEMENTED
-Objective/Todos/Quota canonical task state        NOT_IMPLEMENTED
-LangGraph strategy/HITL interrupt-resume          NOT_IMPLEMENTED
-Evidence-bound episodic memory admission          NOT_IMPLEMENTED
+LoopX kernel/Ledger/Strategy/HITL mechanisms      IMPLEMENTED
+Runtime/Fleet/Memory/Notes/Console mechanisms     IMPLEMENTED
+LoopX modules selected into release composition   ABSENT
 Six-host live worker matrix                       NOT_EXERCISED
 Serena/GrepAI live provider canaries              NOT_EXERCISED
-Code-Graph-RAG/Mem0 runtime admission             NOT_IMPLEMENTED
+Code-Graph-RAG live admission                     NOT_EXERCISED
 Cloud/local equivalent execution                  NOT_EXERCISED
-Langfuse/OpenTelemetry plane                      NOT_IMPLEMENTED
-Harness Web console                               NOT_IMPLEMENTED
+External observability backend/live Console       NOT_EXERCISED
 Git Town repository configuration                 ABSENT
 ```
 
 Therefore the truthful repository-level conclusion is:
 
-> **Bettor has modularly integrated a large part of the PDF's supporting Harness foundation, but it has not integrated the PDF's complete LoopX architecture.**
+> **Bettor has modularly integrated a large part of the supporting Harness and has now landed most component mechanisms, but it has not selected, live-verified or released them as the PDF's complete LoopX architecture.**
 
 `loopctl` is a stable public command surface; it is **not** proof that a LoopX state kernel exists. `.arena` is a module/composition/context control plane; it is **not** the PDF's Objective/Todos/Gates/Evidence/Quota task ledger.
 
-## Source proposal → current repository mapping
+## Source proposal → historical audit mapping
 
 | PDF concept | Current Bettor mapping | State | What is still missing |
 |---|---|---|---|
@@ -157,15 +166,15 @@ At the baseline `main` subject:
 - the checked `.arena/locks/bettor-arena.lock.json` omits that module;
 - `data/module-proof/release-receipt.json` also omits it.
 
-That is a **stale generated-projection failure**, not a documentation preference. A convergence branch must regenerate the composition lock, Context Capsule lock, proof subjects and release receipt. Until the exact branch head passes the modular gates, the repository must not claim a coherent current composition.
+That was a **stale generated-projection failure**, not a documentation preference. The current requirements, lock and release receipt now agree on 14 base modules; their aggregate evidence is still `NOT_EXERCISED`, and LoopX terminal modules remain unselected.
 
-The active provider-evaluation PR is indexed in
+The current active provider terminal is issue #92 and is indexed in
 [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md).
 Its fixture evaluator check can pass while modular integration remains red. Those outcomes are different subjects and must not proxy one another.
 
-## Required state-machine leaves
+## Required state-machine leaves (historical decomposition)
 
-The next implementation leaves should remain separate:
+The audit decomposed the following leaves. Most mechanism leaves have since landed; their current acceptance state is the ordered queue:
 
 1. **LoopX contract leaf**
    - Objective/Todo/Gate/Evidence/Quota schemas;
