@@ -1,0 +1,14 @@
+{
+  "schema": "github-delivery-local-verification-contract/v1",
+  "repository_id": 1330387399,
+  "inherit_env": ["PATH"],
+  "commands": [
+    {
+      "id": "modular-contracts",
+      "argv": ["sh", "scripts/gates/verify_modular_contracts.sh"],
+      "cwd": ".",
+      "timeout_seconds": 1500,
+      "max_output_bytes": 1048576
+    }
+  ]
+}
