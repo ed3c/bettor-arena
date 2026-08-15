@@ -32,13 +32,15 @@ A missing edge remains explicit. This index routes to machine authority; it is n
 | state machines | [`../architecture/STATE_MACHINES.md`](../architecture/STATE_MACHINES.md) |
 | molecular delivery | [`STACK_PR_INDEX.md`](STACK_PR_INDEX.md) |
 | executable audit | [`../../scripts/gates/check_pdf_harness_integration.py`](../../scripts/gates/check_pdf_harness_integration.py) |
-| convergence owner | [`bettor-arena#38`](https://github.com/ed3c/bettor-arena/issues/38) |
+| current queue owner | [`bettor-arena#92`](https://github.com/ed3c/bettor-arena/issues/92) |
+| final convergence owner | [`bettor-arena#68`](https://github.com/ed3c/bettor-arena/issues/68) |
 
 Current conclusion:
 
 ```text
-supporting modular Harness foundation   IMPLEMENTED
-complete PDF/LoopX architecture         NOT_IMPLEMENTED
+terminal mechanism bytes                IMPLEMENTED across most leaves
+ordered acceptance                      COMPLETE through order 11; #92 active
+selected/live/released PDF architecture NOT_EXERCISED / pending #68
 ```
 
 ## Four-repository documentation subjects
@@ -49,9 +51,9 @@ complete PDF/LoopX architecture         NOT_IMPLEMENTED
 | `skills-shared` | [`#85`](https://github.com/ed3c/skills-shared/pull/85) | `e3b327ad49c088f1962c33167ecd5ac9d28125fb` | independent sibling |
 | `runtime-env` | [`#30`](https://github.com/ed3c/runtime-env/pull/30) | `4a333ccf106ef60bc6942b922b7f5efffb3876f5` | independent sibling |
 | `agent-shield-monorepo` | [`#78`](https://github.com/ed3c/agent-shield-monorepo/pull/78) | `1af04c1ef5cb68eab198987feba008c93d3ec22f` | independent sibling |
-| `bettor-arena` | [`#38`](https://github.com/ed3c/bettor-arena/issues/38) | branch `integration/pdf-harness-convergence-v1` | convergence owner |
+| `bettor-arena` | [`#38`](https://github.com/ed3c/bettor-arena/issues/38) | branch `integration/pdf-harness-convergence-v1` | historical documentation convergence |
 
-The four blockers for #38 are merged. Fresh Claude/Codex cold-start and cross-environment checks remain separate from the documentation bytes.
+The historical #38 documentation convergence is merged. It is retained as lineage, not the current owner; #92 owns the active live-provider terminal and #68 owns final convergence.
 
 ## Machine authority routes
 
@@ -100,7 +102,7 @@ Current provider state:
 Serena live                  NOT_EXERCISED
 GrepAI live                  NOT_EXERCISED
 Code-Graph-RAG runtime       NOT_IMPLEMENTED
-Mem0 runtime/writeback       NOT_IMPLEMENTED
+Mem0 projection mechanism   IMPLEMENTED; final selection/live use pending
 provider winner              NOT_EXERCISED
 ```
 
@@ -117,21 +119,21 @@ skills-shared@3d3c179d773e251ad1ae49c9453e428784219f00
 → Human Admit remains required
 ```
 
-PR #56 has a focused evaluator PASS but observed modular-contract failures. It cannot be promoted until exact lock/context/proof projections are current.
+PR #56 evaluator bytes are on main. Provider convergence remains a later ordered acceptance lane; fixture PASS cannot proxy the active #92 live canaries.
 
 ## Stale and absent subjects
 
 | Subject | State | Trace rule |
 |---|---|---|
-| PR #53 | open, diverged, non-mergeable | extract unique delta; do not merge aggregate |
+| PR #53 | closed historical aggregate | extract unique delta before reuse |
 | PR #52 | merged to non-main feature base | not `main` release identity |
 | PR #55 | closed unmerged | not implementation evidence |
 | issue #24 | open | Agent Shield acceptance remains pending |
 | `feat/agent-shield-reference` | behind main, zero unique commits | not issue #24 implementation |
-| `.loopx/` | `ABSENT` | complete LoopX kernel not implemented |
-| LangGraph/HITL package | `ABSENT` | strategy/interrupt state machine not implemented |
+| selected LoopX release composition | `ABSENT` | terminal modules exist but are not selected into the 14-module lock |
+| live end-to-end LoopX subject | `NOT_EXERCISED` | mechanisms and merged PRs do not proxy one run |
 | Git Town config | `ABSENT` | molecular terms do not prove CLI configuration |
-| observability/UI package | `ABSENT` | no Langfuse/OTel/HITL console authority |
+| external observability backend/live Console subject | `NOT_EXERCISED` | local mechanisms do not proxy deployed telemetry |
 
 ## Git Town and molecular topology
 
@@ -140,7 +142,9 @@ Observed repository configuration:
 ```text
 .git-town.toml                         ABSENT
 .git-town                              ABSENT
-git-town-stacked-pr-worker selected    ABSENT
+git-town-stacked-pr-worker selected    NOT_SELECTED
+typed Git Town controller              IMPLEMENTED
+13 physical controls                   PASS with executable-absent lane
 ```
 
 Use [`../agents/issue-tracker.md`](../agents/issue-tracker.md) for sibling/true-child/terminal/convergence semantics. Current exact branch/PR graph lives in [`STACK_PR_INDEX.md`](STACK_PR_INDEX.md).

@@ -431,6 +431,8 @@ def validate_docs(root: Path, items: list[dict[str, Any]]) -> None:
     readme = read_text(root, README)
     agents = read_text(root, AGENTS)
     stack = read_text(root, STACK)
+    active = next(item for item in items if item["queue_state"] == "ACTIVE")
+    active_issue = active["issues"][0]
 
     require_markers(
         doc,
@@ -448,6 +450,9 @@ def validate_docs(root: Path, items: list[dict[str, Any]]) -> None:
     for item in items:
         for issue in item["issues"]:
             require(f"#{issue}" in doc, f"{DOC}: missing issue #{issue}")
+            require(f"#{issue}" in readme, f"README.md: missing issue #{issue}")
+        for pr in item["prs"]:
+            require(f"#{pr}" in readme, f"README.md: missing implementation PR #{pr}")
 
     require_markers(
         readme,
@@ -456,7 +461,7 @@ def validate_docs(root: Path, items: list[dict[str, Any]]) -> None:
             "Ordered PDF terminal Stack",
             str(DOC),
             str(SEQUENCE),
-            "current active item: #82",
+            f"current active item: #{active_issue}",
             "final convergence: #68",
         ],
     )

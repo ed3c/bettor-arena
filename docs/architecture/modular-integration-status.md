@@ -19,10 +19,11 @@ SKIPPED_BY_POLICY
 
 ```text
 repository: ed3c/bettor-arena
-main commit at audit start: d291523856988cfa54316dba967fea8470194b72
-main tree at audit start:   71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43
-convergence issue:          #38
-convergence branch:         integration/pdf-harness-convergence-v1
+local/Forgejo main: 8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+GitHub main:        c72109e145193fdaf059944403477f01064a1c3d
+shared tree:        0c51ea279bd2036dce281898c2e980e8378ba1cb
+queue head:         order 12 / issue #92
+convergence issue:  #68
 ```
 
 ## Current implementation ledger
@@ -47,91 +48,52 @@ convergence branch:         integration/pdf-harness-convergence-v1
 | Serena provider contract | `IMPLEMENTED` | live canary `NOT_EXERCISED` | `knowledge-providers` |
 | GrepAI provider contract | `IMPLEMENTED` | live canary `NOT_EXERCISED` | `knowledge-providers` |
 | Code-Graph-RAG provider contract | `IMPLEMENTED` | runtime `NOT_IMPLEMENTED` | `knowledge-providers` |
-| Mem0 proposal-only contract | `IMPLEMENTED` | runtime/writeback `NOT_IMPLEMENTED` | `knowledge-providers` |
-| fixture-only provider evaluator | active PR #56 | focused eval PASS; modular gates FAIL at observed head | PR #56 exact metadata/checks |
+| Mem0 projection contract/runtime | `IMPLEMENTED` | final selection/live use subject-specific | `loopx-decision-memory` |
+| fixture-only provider evaluator | `IMPLEMENTED` | live provider convergence remains behind #92 | PR #56 + current machine queue |
 | immutable Agent Shield acceptance | contract target exists | issue #24 open; implementation `ABSENT` | issue #24 |
+| LoopX Contract/Ledger/Strategy/Gateway mechanisms | `IMPLEMENTED` | not selected into release composition | module manifests + terminal PRs |
+| Runtime Fabric/Fleet/GC/LSP mechanisms | `IMPLEMENTED` | physical/live subjects remain scoped or `NOT_EXERCISED` | module manifests + queue |
+| Notes/knowledge/context/evolution mechanisms | `IMPLEMENTED` | later ordered acceptance blocked behind #92 | module manifests + queue |
+| Observability/Console/benchmark mechanisms | `IMPLEMENTED` | final live/release admission pending | module manifests + queue |
+| Git Town typed controller | `IMPLEMENTED` | 13 physical controls PASS; executable `ABSENT` | `scripts/git-town`, `tests/git-town` |
 
 ## PDF architecture status
 
 | PDF area | State |
 |---|---|
 | modular control/evidence foundation | `IMPLEMENTED` |
-| Objective/Todos/Gates/Evidence/Quota task kernel | `NOT_IMPLEMENTED` |
-| append-only single-writer ledger and reducer | `NOT_IMPLEMENTED` |
-| canonical quota/retry accounting | `NOT_IMPLEMENTED` |
-| LangGraph strategy/HITL interrupt-resume | `NOT_IMPLEMENTED` |
-| evidence-bound episodic-memory capsule | `NOT_IMPLEMENTED` |
+| Objective/Todos/Gates/Evidence/Quota task kernel | mechanism `IMPLEMENTED`; release not selected |
+| append-only single-writer ledger and reducer | mechanism `IMPLEMENTED`; release not selected |
+| canonical quota/retry accounting | mechanism `IMPLEMENTED`; live end-to-end not exercised |
+| Strategy/HITL interrupt-resume | mechanism `IMPLEMENTED`; live end-to-end not exercised |
+| evidence-bound decision-memory lifecycle | mechanism `IMPLEMENTED`; final composition pending |
 | Grok/OpenCode/Pi/Codex/Claude/Ante live matrix | `NOT_EXERCISED` |
 | Serena/GrepAI live canaries | `NOT_EXERCISED` |
-| Code-Graph-RAG/Mem0 runtime | `NOT_IMPLEMENTED` |
+| Code-Graph-RAG runtime | `NOT_EXERCISED`; issue #41 open |
+| Mem0 projection mechanism | `IMPLEMENTED`; live/runtime admission subject-specific |
 | cloud/local same-workload canary | `NOT_EXERCISED` |
-| Langfuse/OpenTelemetry plane | `NOT_IMPLEMENTED` |
-| Harness evidence/HITL console | `NOT_IMPLEMENTED` |
+| observability projection | mechanism `IMPLEMENTED`; external backend/live subject-specific |
+| Harness evidence/HITL console | mechanism `IMPLEMENTED`; release/live subject-specific |
 | repo-level Git Town configuration | `ABSENT` |
 
 Full matrix: [`pdf-harness-integration.matrix.json`](pdf-harness-integration.matrix.json).
 
-## Integration drift observed at audit start
+## Selected-composition boundary
 
-The baseline `main` tree selected `knowledge-providers` in
-`.arena/compositions/bettor-arena.requirements.json`, but the checked
-`.arena/locks/bettor-arena.lock.json` and
-`data/module-proof/release-receipt.json` omitted it.
-
-State:
-
-```text
-focused provider contract tests     PASS
-coherent selected/locked/released   FAIL
-```
-
-This convergence branch must regenerate:
-
-```text
-.arena/locks/bettor-arena.lock.json
-.arena/contexts.lock.json
-data/context-capsules/driver-parity.json
-data/module-proof/subjects.lock.json
-data/module-proof/release-receipt.json
-data/mcp/exposure.json
-data/origins/status.json
-data/browser/status.json
-```
-
-The branch is not mergeable by project policy until the desired, lock and release module sets agree and exact-head checks pass.
+The desired lock and aggregate release receipt currently contain the same 14 base modules. That coherence is narrower than the PDF target: catalogued LoopX terminal modules are deliberately not selected, and every aggregate module proof/control/mutation lane is `NOT_EXERCISED`. Issue #68 owns any final selection and receipt regeneration.
 
 ## Active molecular leaves
 
-### Documentation/PDF convergence
+### Ordered terminal head
 
 ```text
-bettor-arena#37               MERGED
-skills-shared#85              MERGED
-runtime-env#30                MERGED
-agent-shield-monorepo#78      MERGED
-        ↓
-bettor-arena#38               ACTIVE convergence owner
-integration/pdf-harness-convergence-v1
+orders 0–11       COMPLETE
+order 12 / #92    ACTIVE — live Serena/GrepAI canaries
+order 13 / #41    BLOCKED_BY_PREDECESSOR
+order 25 / #68    FINAL_CONVERGENCE
 ```
 
-### Provider evaluation
-
-PR [`#56`](https://github.com/ed3c/bettor-arena/pull/56), observed head:
-
-```text
-770b0c8990843e958f7c1a345c3359a2d71eeb82
-
-provider admission evaluator     PASS
-portable execution contract      PASS
-provider module integration      FAIL
-modular contracts                FAIL
-```
-
-The observed sync failure names a Context Capsule directory entry rather than exact tracked files. The PR must fix that path model, regenerate projections and rerun exact-head checks. Fixture PASS is not provider admission.
-
-### Historical aggregate
-
-PR #53 remains open, diverged and non-mergeable. It is not a merge instruction. Any unique delta must be extracted into a clean terminal leaf.
+Later implementation PRs may already be merged. The queue state remains blocked until predecessor acceptance settles; issue/PR closure is not a substitute.
 
 ### Agent Shield acceptance
 
@@ -144,8 +106,10 @@ Full topology: [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_IN
 ```text
 .git-town.toml                         ABSENT
 .git-town                              ABSENT
-git-town-stacked-pr-worker selected    ABSENT
-molecular delivery semantics           IMPLEMENTED
+git-town-stacked-pr-worker selected    NOT_SELECTED
+typed admission/controller mechanism  IMPLEMENTED
+13 physical controls                  PASS with executable-absent lane
+actual Git Town execution             NOT_EXERCISED
 ```
 
 Do not claim Git Town configuration. The issue/PR policy still distinguishes sibling, true child, terminal and convergence roles.
@@ -179,4 +143,4 @@ remaining live/non-live states are named
 Human Admit is explicit
 ```
 
-The complete PDF architecture remains `NOT_IMPLEMENTED` until the missing LoopX, strategy/HITL, decision-memory, worker-fleet, runtime-fabric and observability leaves have executable evidence.
+The complete PDF architecture is not yet admitted. Its principal mechanism leaves now exist; the remaining blockers are strict queue acceptance from #92 onward, final module selection, exact-subject proof/control/mutation aggregation, live host/provider/runtime canaries, origin receipt refresh and #68 release/rollback admission.

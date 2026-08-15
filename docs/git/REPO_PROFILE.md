@@ -23,13 +23,17 @@ visibility: private
 default_branch: main
 perennial_branches:
   - main
-allowed_remote_name: origin
-allowed_remote_url_pattern: '^https://github\.com/ed3c/bettor-arena(?:\.git)?$'
-current_main_observed: 10380005fa485d6035539589c01b9f740acff15d
-current_main_authority: GitHub API
+authoring_remote_name: forgejo
+authoring_remote_url_pattern: '^http://localhost:3000/neon/bettor-arena(?:\.git)?$'
+distribution_remote_name: github
+distribution_remote_url_pattern: '^(?:git@github\.com:|https://github\.com/)ed3c/bettor-arena(?:\.git)?$'
+current_github_main_observed: c72109e145193fdaf059944403477f01064a1c3d
+current_local_forgejo_main_observed: 8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+current_tree_observed: 0c51ea279bd2036dce281898c2e980e8378ba1cb
+current_relation: same-tree observation; tracked equivalence receipt remains NOT_EXERCISED
 ```
 
-A different remote, credential-bearing URL, mutable mirror alias or unreviewed perennial branch is `PROFILE_INVALID`.
+An operation using a remote outside its declared authoring/distribution role, a credential-bearing URL, mutable mirror alias or unreviewed perennial branch is `PROFILE_INVALID`.
 
 ## Canonical shared Skill
 
@@ -45,6 +49,8 @@ local_same_name_skill: ABSENT
 ```
 
 The exact reference is usable for design review. Runtime use through the Bettor shared-Skill binding remains `NOT_SELECTED` until an explicit binding update and closure check land in a separate leaf.
+
+The current Bettor binding pins `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b`; its same path resolves to the same blob above. This proves source-byte compatibility, not runtime selection.
 
 ## Git Town executable admission
 
@@ -94,8 +100,8 @@ branch_root: host-owned
 worktree_root: host-owned
 state_root: data/git-town
 receipt_root: data/git-town/receipts
-runtime_state: NOT_IMPLEMENTED
-receipt_state: NOT_IMPLEMENTED
+runtime_state: IMPLEMENTED_FAIL_CLOSED
+receipt_state: IMPLEMENTED; live Git Town receipt NOT_EXERCISED
 ```
 
 The roots above are logical contract names. No absolute host path is stored in Git.
@@ -146,13 +152,13 @@ issue #64
 PR #76 feat/loopx-worker-gateway-v1
 PR #77 feat/loopx-worker-gateway-terminal-v1
 overlap: loop_wiki/loopx-worker-gateway/** and module/generated paths
-state: BLOCKED_DUPLICATE_TERMINAL
-authority: Human resolution
+state: RESOLVED_BY_HUMAN
+resolution: PR #76 admitted; PR #77 superseded; issue #82 completed residual disposition
 ```
 
 ## Evaluation policy
 
-Required zero-network checks for issue #80:
+Required zero-network governance checks:
 
 ```sh
 python3 scripts/gates/check_git_town_stack_docs.py
@@ -208,11 +214,12 @@ generated_prose_is_receipt: false
 ## Current adoption state
 
 ```text
-repository profile              IMPLEMENTED in issue #80 candidate
-Stack Markdown                  IMPLEMENTED in issue #80 candidate
-machine Stack index             IMPLEMENTED in issue #80 candidate
-Agent routing                   IMPLEMENTED in issue #80 candidate
-deterministic doc gate          IMPLEMENTED in issue #80 candidate
+repository profile              IMPLEMENTED
+Stack Markdown and machine queue IMPLEMENTED; active #92
+Agent routing                   IMPLEMENTED
+deterministic doc gate          IMPLEMENTED
+typed runtime controller        IMPLEMENTED by PR #133
+13 physical controls            PASS with executable-absent lane
 
 shared Skill binding            NOT_SELECTED
 Git Town binary                 ABSENT
@@ -224,14 +231,14 @@ Human Admit                     NOT_PERFORMED
 
 ## Rollback boundary
 
-Issue #80 starts from:
+Current documentation repair starts from:
 
 ```text
-parent PR: #60
-parent branch: feat/pdf-loopx-modular-verifier-v1
-parent head: ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90
+local/Forgejo subject: 8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+GitHub subject: c72109e145193fdaf059944403477f01064a1c3d
+tree: 0c51ea279bd2036dce281898c2e980e8378ba1cb
 ```
 
 Rollback is a Human-owned Git decision. This profile never authorizes an Agent to reset, force-push, delete or rewrite history.
 
-Observed: `2026-08-14T08:44:56Z`.
+Observed: `2026-08-15T16:50:16Z`.

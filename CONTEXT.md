@@ -28,18 +28,20 @@ The common route names and assertions are in [`docs/architecture/DOCUMENT_ROUTIN
 
 ## Current PDF Harness handoff
 
-The attached 41-page PDF is a source proposal. The current audit concludes:
+The attached 41-page PDF is a source proposal. Current checked-tree state is:
 
 ```text
-modular Harness foundation       IMPLEMENTED
-complete LoopX state kernel      NOT_IMPLEMENTED
-six-host live matrix             NOT_EXERCISED
-provider live matrix             NOT_EXERCISED / NOT_IMPLEMENTED
-cloud/local equivalent run       NOT_EXERCISED
-observability and HITL console   NOT_IMPLEMENTED
+LoopX mechanism bytes                IMPLEMENTED across the terminal directories
+ordered acceptance prefix            COMPLETE for orders 0–11
+active terminal                      order 12 / issue #92
+selected release composition         14 base modules; LoopX terminals excluded
+aggregate module evidence            NOT_EXERCISED
+six-host and provider live matrices  NOT_EXERCISED
+Git Town executable/config           ABSENT
+final convergence                    issue #68 pending
 ```
 
-Do not infer a LoopX kernel from the names `loopctl` or `loop-runtime`. The missing canonical pieces are Objective/Todos/Quota task state, a single-writer event ledger, reducer, LangGraph command/HITL port, evidence-bound episodic memory, worker canaries and runtime/observability receipts.
+The previous statement that the kernel, Strategy/HITL, runtime fabric, fleet, memory and Console were not implemented is stale: their mechanisms have landed. The opposite claim—“the full PDF architecture is integrated”—is still false because merged bytes do not create ordered acceptance, composition selection, live receipts or release admission.
 
 Read:
 
@@ -47,37 +49,25 @@ Read:
 - [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md)
 - [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
 
-## Current documentation convergence
+## Current publication and Stack convergence
 
-Parent issue: `bettor-arena#35`.
-
-Merged independent siblings:
+Measured on 2026-08-16:
 
 ```text
-bettor-arena#37              1f94d3d77992a1396959a15b2ada7836c07bf300
-skills-shared#85             e3b327ad49c088f1962c33167ecd5ac9d28125fb
-runtime-env#30               4a333ccf106ef60bc6942b922b7f5efffb3876f5
-agent-shield-monorepo#78     1af04c1ef5cb68eab198987feba008c93d3ec22f
+local main / forgejo main  8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+GitHub main                 c72109e145193fdaf059944403477f01064a1c3d
+shared Git tree             0c51ea279bd2036dce281898c2e980e8378ba1cb
+observed relation           same-tree
+tracked origin receipt      NOT_EXERCISED
+active ordered terminal     #92
+final convergence           #68
 ```
 
-`bettor-arena#38` now owns the convergence leaf. Branch:
-`integration/pdf-harness-convergence-v1`.
+The Git-object observation cannot overwrite [`data/origins/status.json`](data/origins/status.json), whose live origin/equivalence lanes remain `NOT_EXERCISED`.
 
-Git Town repository configuration is `ABSENT`; molecular sibling/child/terminal/convergence semantics are policy vocabulary, not proof that Git Town CLI is active.
+The exact `git-town-stacked-pr-worker` method pin remains `skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1`, blob `eb2d915bca3e8a3938625f7d33a10fae95a15769`. Bettor's current shared binding source `b3c722da1c40301b0a12e0ef99848d884bfc720b` contains the same blob, but the Skill is `NOT_SELECTED`. PR #133 landed the typed fail-closed controller and its controls; the actual Git Town executable, `.git-town.toml`, supply-chain/legal admission and live no-push run remain absent or unexercised.
 
-## Current implementation leaves
-
-```text
-#43  repo-agent-native consumer binding          MERGED
-#48  portable Skill + six-host contract          MERGED
-#50  host-owned typed-argv Skill runner          MERGED
-#51  provider-neutral query/memory contracts     MERGED
-#56  paired fixture-only provider evaluator      OPEN; mixed checks
-#53  historical diverged aggregate               OPEN; non-authoritative
-#24  immutable Agent Shield reference consumer   OPEN
-```
-
-Current issue/PR metadata remains authoritative. Read the Stack index before changing a branch or generated lock.
+Current open GitHub issue snapshot is `#5 #24 #41 #44 #45 #61 #68 #83 #88 #91 #92 #108`. Issue closure alone is not queue completion; the complete implementation-PR/queue-state split is in the root [`README.md`](README.md).
 
 ## Glossary
 
@@ -89,7 +79,7 @@ Current issue/PR metadata remains authoritative. Read the Stack index before cha
 - **evidence allowlist**: named historical evidence exceptions; each is standing debt.
 - **candidate**: mechanically green, waiting for Human Admit; not a merge instruction.
 - **wiki-update request / receipt**: typed request and consuming receipt between the seed factory and OpenWiki; emergent content stays backlog, not normative law.
-- **LoopX kernel**: proposed single-writer task-state authority over Objective, Todos, Gates, Evidence and Quota. It is currently `NOT_IMPLEMENTED`.
+- **LoopX kernel**: single-writer task-state authority over Objective, Todos, Gates, Evidence and Quota. Its mechanism is implemented; final composition and live end-to-end acceptance are not.
 - **strategy graph**: proposes typed commands; it never commits canonical state.
 - **Worker**: executes in a leased workspace and submits artifacts/events; it cannot decide gate or state.
 - **decision-memory capsule**: externalized, evidence-bound observation/dead-end/decision package. It is not private chain-of-thought.
