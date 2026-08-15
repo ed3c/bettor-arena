@@ -5,10 +5,10 @@
 GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This Markdown, [`../git/stack-prs.index.json`](../git/stack-prs.index.json) and [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json) are reviewed snapshots.
 
 ```text
-observed queue base: 844b7121789e57ebe00f1a07a67b27c1542cf05b
+observed GitHub main: c72109e145193fdaf059944403477f01064a1c3d
 program: #61
 queue index task: #102
-current active item: #82
+current active item: #92 (order 12)
 final convergence: #68
 repository profile: ../git/REPO_PROFILE.md
 ```
@@ -20,11 +20,12 @@ Refresh the ordered queue whenever an affected issue, branch, PR, exact head, pa
 ```text
 .git-town.toml                         ABSENT
 .git-town                              ABSENT
-git-town-stacked-pr-worker selected    ABSENT / NOT_SELECTED
+git-town-stacked-pr-worker selected    NOT_SELECTED
 repository molecular-delivery policy   IMPLEMENTED
 Git Town binary/version/checksum       ABSENT
 license/SBOM/legal                     NOT_REVIEWED
 local no-push sync/publication         NOT_EXERCISED
+typed controller/13 physical controls  IMPLEMENTED / PASS
 ```
 
 The repository uses the shared Skill's molecular-delivery semantics without claiming an admitted Git Town executable.
@@ -40,6 +41,8 @@ path: skills/git-town-stacked-pr-worker/SKILL.md
 
 Bettor owns repository profile, queue, task packet, path lease, Stack index, evals, receipts and Human policy. It does not copy or shadow the shared Skill.
 
+The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` contains the same blob at the same path. This is exact byte-equivalence evidence; the Skill remains `NOT_SELECTED`.
+
 ## Ordered PDF terminal completion queue
 
 Human view: [`../git/PDF_TERMINAL_SEQUENCE.md`](../git/PDF_TERMINAL_SEQUENCE.md)  
@@ -47,19 +50,19 @@ Machine queue: [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequenc
 Canonical repository paths: `docs/git/PDF_TERMINAL_SEQUENCE.md` and `docs/git/pdf-terminal-sequence.json`.
 
 ```text
-order 00  #82       Worker Gateway residual-file disposition       ACTIVE
-order 01  #90       current-main LoopX foundation validation       BLOCKED_BY_PREDECESSOR
-order 02  #65       Strategy Graph + HITL                          BLOCKED_BY_PREDECESSOR
-order 03  #67       Observability + signed HITL projection         BLOCKED_BY_PREDECESSOR
-order 04  #66       Runtime Fabric + local/cloud parity            BLOCKED_BY_PREDECESSOR
-order 05  #94       Herdr/tmux-compatible Worker Fleet             BLOCKED_BY_PREDECESSOR
-order 06  #97       resource retention and GC                      BLOCKED_BY_PREDECESSOR
-order 07  #96       worktree-aware LSP Pool                        BLOCKED_BY_PREDECESSOR
-order 08  #103      canonical Decision Memory runtime              BLOCKED_BY_PREDECESSOR
-order 09  #93       Mem0 rebuildable projection                    BLOCKED_BY_PREDECESSOR
-order 10  #104      YT/PDF/Notes source ingest                     BLOCKED_BY_PREDECESSOR
-order 11  #105      OpenWiki + vector/graph Notes retrieval        BLOCKED_BY_PREDECESSOR
-order 12  #92       Serena/GrepAI live canaries                    BLOCKED_BY_PREDECESSOR
+order 00  #82       Worker Gateway residual-file disposition       COMPLETE
+order 01  #90       current-main LoopX foundation validation       COMPLETE
+order 02  #65       Strategy Graph + HITL                          COMPLETE
+order 03  #67       Observability + signed HITL projection         COMPLETE
+order 04  #66       Runtime Fabric + local/cloud parity            COMPLETE
+order 05  #94       Herdr/tmux-compatible Worker Fleet             COMPLETE
+order 06  #97       resource retention and GC                      COMPLETE
+order 07  #96       worktree-aware LSP Pool                        COMPLETE
+order 08  #103      canonical Decision Memory runtime              COMPLETE
+order 09  #93       Mem0 rebuildable projection                    COMPLETE
+order 10  #104      YT/PDF/Notes source ingest                     COMPLETE
+order 11  #105      OpenWiki + vector/graph Notes retrieval        COMPLETE
+order 12  #92       Serena/GrepAI live canaries                    ACTIVE
 order 13  #41       Code-Graph-RAG read-only admission             BLOCKED_BY_PREDECESSOR
 order 14  #70       Notes Repo → Scaffold                          BLOCKED_BY_PREDECESSOR
 order 15  #71       Code → Knowledge fold-back                     BLOCKED_BY_PREDECESSOR
@@ -76,6 +79,21 @@ order 25  #68       final convergence/release/rollback             FINAL_CONVERG
 ```
 
 Only one item may be `ACTIVE`. Queue order serializes completion, while branch ancestry follows actual byte dependency. A future implementation branch is not created before activation unless a Human records a scoped exception.
+
+## Terminal implementation PR reachability
+
+This mapping is independent of ordered acceptance. A later merged PR remains blocked in the queue until its predecessors settle.
+
+| Orders | Issues | Implementation PRs on main | Queue interpretation |
+|---|---|---|---|
+| foundation | #62/#63/#64/#42/#69 | #74/#75/#76/#78/#79 | consumed by order 1 |
+| 0–4 | #82/#90/#65/#67/#66 | #76/#77, #109, #106, #116, #117 | orders 0–4 complete; #77 superseded |
+| 5–11 | #94/#97/#96/#103/#93/#104/#105 | #122/#123/#124/#125/#126/#127/#128 | orders 5–11 complete |
+| 12–13 | #92/#41 | none | active then blocked |
+| 14–18 | #70/#71/#95/#72/#98 | #118/#119/#129/#120/#130 | bytes merged; acceptance blocked |
+| 19–21 | #91/#45/#46/#56 | #56 evaluator only | live/A-B/convergence blocked |
+| 22–24 | #99/#100/#101 | #131/#134, #132/#135, #133 | bytes/mechanisms merged; acceptance blocked |
+| 25 | #68 | none | final convergence |
 
 ## Current-main LoopX foundation
 
@@ -96,7 +114,7 @@ PR #76  admitted Worker Gateway implementation
 PR #77  closed SUPERSEDED_CANDIDATE
 issue #64 implemented twice over overlapping paths
 state: RESOLVED_BY_HUMAN
-residual action: issue #82 compares eight PR #77-only files
+residual action: issue #82 completed the eight-file disposition
 ```
 
 Do not delete the record. A resolved duplicate must remain distinguishable from a Stack that never noticed the conflict.
@@ -107,7 +125,8 @@ Do not delete the record. A resolved duplicate must remain distinguishable from 
 PR #60  PDF/LoopX executable traceability       MERGED_TO_MAIN
 PR #81  Git Town governance                     MERGED_TO_MAIN
 issue #80 governance terminal                   COMPLETED
-issue #102 ordered queue documentation leaf     OPEN / UNMERGED
+PR #107/#121 ordered queue and derived-head gate MERGED_TO_MAIN
+issue #102 ordered queue documentation leaf      CLOSED
 ```
 
 ## Four-repository documentation convergence
@@ -155,7 +174,7 @@ A focused fixture PASS cannot establish live-provider health, current-main reach
 ```text
 bettor-arena#24 immutable Agent Shield reference-consumer acceptance
 LoopX program issue #61
-ordered queue issues #82, #90–#105 and existing #41/#45/#46/#56/#65–#72
+active ordered issue #92; remaining #41/#45/#68/#91 and later acceptance states
 final convergence #68
 ```
 
@@ -165,7 +184,7 @@ These compatibility tokens preserve earlier audit routes. The current order is d
 
 ```text
 PR #56  provider evaluation bytes on main; live convergence still issue #46/#56
-PR #53  SUPERSEDED_CANDIDATE historical aggregate
+PR #53  CLOSED historical aggregate
 PR #58  runtime-env / Agent Shield documentation audit, separate lane
 PR #73  Skill measurement lane, separate evidence subject
 ```

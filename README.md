@@ -7,16 +7,18 @@
 ## Current publication subject
 
 ```text
-GitHub repository:     ed3c/bettor-arena
-observed main at start: 844b7121789e57ebe00f1a07a67b27c1542cf05b
-program issue:          #61
-index issue:            #102
-branch:                 docs/pdf-terminal-stack-sequence-v1
-current active item:    #82
+logical repository:     ed3c/bettor-arena
+observed:               2026-08-16 (GitHub REST + local Git objects)
+local main:             8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+forgejo/main:           8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
+github/main:            c72109e145193fdaf059944403477f01064a1c3d
+observed relation:      same-tree 0c51ea279bd2036dce281898c2e980e8378ba1cb
+program / index:        #61 / #102 (both planning/index history)
+current active item:    #92 (order 12)
 final convergence:      #68
 ```
 
-GitHub base/head metadata, reachability and exact-head checks are publication truth. Markdown and machine indexes are reviewed snapshots, not substitutes for GitHub.
+The three refs above are an observed Git-object relation, not a regenerated origin receipt. Tracked [`data/origins/status.json`](data/origins/status.json) still says both live probes and equivalence are `NOT_EXERCISED`; do not relabel that receipt as PASS. GitHub base/head metadata, reachability and exact-head checks remain publication truth. Markdown and machine indexes are reviewed snapshots, not substitutes for GitHub.
 
 ## LoopX Harness PDF integration verdict
 
@@ -34,25 +36,25 @@ Context Capsules / OpenWiki / provider-neutral contracts IMPLEMENTED
 LoopX Contract / Ledger / Gateway mechanisms on main     IMPLEMENTED FOUNDATION
 Decision Memory contracts / Code Truth Graph v2 on main  IMPLEMENTED FOUNDATION
 
-complete integrated LoopX runtime                        PARTIAL
-Strategy Graph + signed HITL                             NOT_IMPLEMENTED
-physical Runtime Fabric + local/cloud parity             NOT_IMPLEMENTED / NOT_EXERCISED
-Worker Fleet / resource GC / LSP pool                    NOT_IMPLEMENTED
-canonical Decision Memory lifecycle + Mem0 projection    NOT_IMPLEMENTED
-YT/PDF Notes source ingest and retrieval release         NOT_IMPLEMENTED
-Notes → Scaffold → Code → Knowledge fold-back            NOT_IMPLEMENTED
-prompt-cache-stable Context Assembly                     NOT_IMPLEMENTED
-Skill/Prompt evolution sealed holdout                     NOT_IMPLEMENTED
+LoopX Contract / Ledger / Strategy / HITL mechanisms     IMPLEMENTED
+Runtime Fabric / Worker Fleet / GC / LSP mechanisms      IMPLEMENTED
+Decision Memory / Mem0 projection mechanisms             IMPLEMENTED
+YT/PDF Notes ingest and retrieval mechanisms             IMPLEMENTED
+Notes compiler / fold-back / Context Assembly            IMPLEMENTED
+Skill evolution / CI parity / Console / benchmark        IMPLEMENTED
+ordered acceptance through order 11                      COMPLETE
+current order 12 Serena/GrepAI live canaries             NOT_EXERCISED
 six-host live execution matrix                           NOT_EXERCISED
-Serena/GrepAI/Code-Graph-RAG live admission               NOT_EXERCISED / NOT_IMPLEMENTED
-observability / Harness Console                          NOT_IMPLEMENTED
+Code-Graph-RAG read-only live admission                   NOT_EXERCISED
+final LoopX modules selected into release composition    ABSENT
+Git Town controller/controls                              IMPLEMENTED / PASS
 Git Town executable/config/live no-push sync             ABSENT / NOT_EXERCISED
 final content-addressed release and rollback              NOT_PERFORMED
 ```
 
 The correct conclusion is:
 
-> Bettor has a substantial modular Harness foundation and several current-main LoopX mechanisms. It has not completed or Human-admitted the full PDF architecture.
+> Bettor now has most terminal mechanism bytes on `main`, but the selected release composition still contains only 14 base modules, its aggregate release receipt is `NOT_EXERCISED`, and the ordered live-acceptance queue is stopped at #92. "已合併"不能改寫成「已整合／已發布」。
 
 Read:
 
@@ -63,9 +65,9 @@ Read:
 - [`docs/git/pdf-terminal-sequence.json`](docs/git/pdf-terminal-sequence.json)
 - [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
 
-### Missing LoopX control flow
+### Missing LoopX control flow: final admitted subject
 
-The repository still lacks the complete admitted end-to-end runtime:
+The repository has the component mechanisms but still lacks one admitted end-to-end subject:
 
 ```text
 Objective + Todos + Gates + Evidence + Quota
@@ -79,7 +81,7 @@ Objective + Todos + Gates + Evidence + Quota
 → final composition and Human release
 ```
 
-Contract or current-main reachability is not equivalent to composition selection, live execution, cloud isolation or production promotion.
+The blocking gap is composition selection plus exact-subject live evidence, not another round of architecture prose. Contract or current-main reachability is not equivalent to composition selection, live execution, cloud isolation or production promotion.
 
 ## Read order
 
@@ -106,7 +108,7 @@ Contract or current-main reachability is not equivalent to composition selection
 | Directory / route | Owner | State Machine | Inputs | Outputs / evidence | Current state |
 |---|---|---|---|---|---|
 | root `*.md` | `arena-core` | `ENTRY → ROUTE → OWNER → CONTRACT → EVIDENCE` | task + exact repo subject | bounded Agent read route | `IMPLEMENTED` |
-| `docs/git/` | Git governance | `PROFILE → ORDERED QUEUE → TASK PACKET → STACK GRAPH → LEASE → EVAL → HUMAN ADMIT` | shared Skill pin + GitHub metadata | Stack snapshots and queue | governance `IMPLEMENTED`; runtime `ABSENT` |
+| `docs/git/` | Git governance | `METHOD PIN → PROFILE → QUEUE → STACK/LEASE → EVAL → PUBLICATION BOUNDARY` | shared Skill pin + GitHub metadata | Stack snapshots and queue | governance `IMPLEMENTED`; active #92 |
 | `docs/traceability/` | delivery traceability | `SOURCE → ISSUE → TERMINAL → PR → EXACT HEAD → CHECKS → ADMIT` | issue/PR metadata | human Stack index | `IMPLEMENTED`, snapshot-bound |
 | `.agents/` | `agent-runtime-integration` | `REQUIRE → RESOLVE → BIND → PROJECT → DISCOVER` | shared/repo-owned Skill requirements | immutable binding and host projections | `IMPLEMENTED` |
 | `.skill-bindings/` | consumer bindings | `UPSTREAM PROCEDURE → RETARGET → ASSERT → RECEIPT` | immutable shared Skill | repo-specific facts/assertions | `IMPLEMENTED` |
@@ -118,20 +120,31 @@ Contract or current-main reachability is not equivalent to composition selection
 | `loopctl/` | `loop-runtime` | `PARSE → VALIDATE → DISPATCH PUBLIC PORT → PROPAGATE 0/2/64` | typed request | typed artifact/receipt | `IMPLEMENTED` |
 | `mcp/` | `mcp-adapters` | `DEFAULT DENY → TOOL PROJECT → DISPOSABLE CALL → CLEANUP` | CLI contract + policy | JSON-RPC result | admitted tools only |
 | `proof_workflow/` | `proof-kernel` | `CLAIM → TRAVERSAL → CONTROL → MUTATION → RECEIPT` | public port/context | proof/control/mutation evidence | `IMPLEMENTED` |
-| `data/module-proof/` | `proof-kernel` projection | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks/proof specs | subject lock/release receipt | mechanism `IMPLEMENTED` |
-| `loop_wiki/loopx-kernel/` | catalogued LoopX mechanism | `TASK DECLARE → TODO → GATES → QUOTA → TERMINAL` | task/command/event | contract and snapshot law | `MERGED_TO_MAIN`; Stage #90 validation pending |
-| `loop_wiki/loopx-ledger/` | catalogued LoopX mechanism | `APPEND → HASH/LEASE → REDUCE → SNAPSHOT → REPLAY` | accepted events | canonical Ledger/snapshot | `MERGED_TO_MAIN`; Stage #90 validation pending |
-| `loop_wiki/loopx-worker-gateway/` | catalogued LoopX mechanism | `REQUEST → ADAPTER → EVENT → RECEIPT → CLEANUP` | exact subject/Skill/context | Worker receipt | `MERGED_TO_MAIN`; live matrix pending |
-| `loop_wiki/loopx-decision-memory/` | catalogued memory contract | `PROPOSE → VALIDATE → CANDIDATE` | evidence-bound proposal | non-persisted candidate | `MERGED_TO_MAIN`; runtime #103 pending |
-| `loop_wiki/code-truth-graph-v2/` | catalogued evidence projection | `OBSERVE → COMPILE → QUERY → READBACK` | T0–T6 observations | evidence graph/query result | `MERGED_TO_MAIN`; live providers pending |
+| `data/module-proof/` | `proof-kernel` projection | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks/proof specs | subject lock/release receipt | 14 selected modules; aggregate `NOT_EXERCISED` |
+| `loop_wiki/loopx-kernel/` | `loopx-kernel` | `DECLARE → VALIDATE → TODO/GATE/QUOTA → TERMINAL` | task/command/event | contract and snapshot law | mechanism `IMPLEMENTED`; not selected |
+| `loop_wiki/loopx-ledger/` | `loopx-ledger` | `APPEND → HASH/LEASE → REDUCE → SNAPSHOT → REPLAY` | accepted events | canonical Ledger/snapshot | mechanism `IMPLEMENTED`; not selected |
+| `loop_wiki/loopx-strategy-hitl/` | `loopx-strategy-hitl` | `SNAPSHOT → PROPOSE → INTERRUPT → SIGN → REVALIDATE` | Ledger snapshot + Human decision | command/decision proposal | PR #106 merged; not selected |
+| `loop_wiki/loopx-worker-gateway/` | `loopx-worker-gateway` | `REQUEST → ADAPTER → OBSERVE → RECEIPT → CLEANUP` | exact subject/Skill/context | Worker observation | mechanism `IMPLEMENTED`; six-host live pending |
+| `loop_wiki/loopx-runtime-fabric/` | `loopx-runtime-fabric` | `POLICY → LEASE → MATERIALIZE → EXECUTE → COLLECT → CLEANUP` | Worker request + runtime policy | workspace/runtime receipt | PR #117 merged; live parity pending |
+| `loop_wiki/loopx-worker-fleet/` | `loopx-worker-fleet` | `QUEUE → WORKTREE/PATH LEASE → DISPATCH → RECOVER` | task/dependency/resource facts | lease/Worker receipt | PR #122 merged; live fleet pending |
+| `loop_wiki/loopx-resource-gc/` | `loopx-resource-gc` | `INVENTORY → DRY PLAN → ADMIT → CLEAN → REBUILD/CHECK` | leases + retention | cleanup/tombstone receipt | PR #123 merged; production cleanup not exercised |
+| `loop_wiki/lsp-pool/` | `lsp-pool` | `PIN SERVER/WORKSPACE → QUERY → FRESHNESS → EVICT` | exact workspace | diagnostics/reference receipt | PR #124 merged; live provider #92 active |
+| `loop_wiki/code-truth-graph-v2/` | `code-truth-graph-v2` | `OBSERVE → COMPILE → QUERY → SOURCE READBACK` | T0–T6 observations | evidence graph/query result | mechanism `IMPLEMENTED`; not selected |
+| `loop_wiki/loopx-decision-memory/` | `loopx-decision-memory` | `PROPOSE → HUMAN ADMIT → LEDGER EVENT → PROJECT → EXPIRE/DELETE` | evidence-bound proposal | memory event/projection | PR #125/#126 merged; not selected |
+| `loop_wiki/loopx-source-ingest/` | `loopx-source-ingest` | `DECLARE → AUTHORIZE → CAPTURE → HASH → MANIFEST` | media/text/code source refs | immutable evidence manifest | PR #127 merged; not selected |
+| `loop_wiki/loopx-notes-retrieval/` | `loopx-notes-retrieval` | `PIN NOTES → BUILD → QUERY → READBACK → REBUILD` | Notes release | static/vector/graph projection | PR #128 merged; not selected |
+| `loop_wiki/loopx-knowledge-compiler/` | `loopx-knowledge-compiler` | `EVIDENCE → CARDS → SPEC IR → CODEOP → CANDIDATE` | knowledge release | scaffold/code-operation candidate | PR #118 merged; queue admission pending |
+| `loop_wiki/loopx-knowledge-foldback/` | `loopx-knowledge-foldback` | `DIFF/RUNTIME → AFFECTED KNOWLEDGE → PATCH → ADMIT` | verified code/runtime evidence | knowledge revision proposal | PR #119 merged; queue admission pending |
+| `loop_wiki/loopx-context-assembly/` | `loopx-context-assembly` | `PROMPT IR → STABLE PREFIX → BOUNDED SUFFIX → HOST RENDER` | Skills/cards/memory/task | content-addressed host prompts | PR #129 merged; queue admission pending |
+| `loop_wiki/loopx-skill-evolution/` | `loopx-skill-evolution` | `BASELINE/CANDIDATE → MUTATION → HOLDOUT → RECOMMEND` | identical execution contract | candidate release proposal | PR #120 merged; queue admission pending |
+| `loop_wiki/loopx-observability/` | `loopx-observability` | `EVENT → REDACT → PROJECT → INSPECT → HITL REQUEST` | immutable Ledger/artifact refs | trace/UI projection | PR #116 merged; not selected |
+| `apps/harness-console/`, `packages/harness-console-contracts/`, `services/hitl-api/` | `harness-console` | `PROJECT → INSPECT → DRAFT REQUEST → LOOPX VALIDATE` | redacted ledger/evidence | console + signed request | PR #131/#134 merged; not selected |
+| `loop_wiki/loopx-benchmark/` | `loopx-benchmark` | `PIN → TRIALS → COMPARABILITY → SCOPED CLAIM` | exact workload/environment | raw trials/report | PR #132/#135 merged; not selected |
+| `scripts/git-town/`, `tests/git-town/`, `docs/git/runtime/` | `git-town-runtime` | `CONTRACT → PREFLIGHT → CONTROL → DECISION → RECEIPT` | profile/task packet/executable evidence | local sync/publication decision lanes | mechanism + 13 controls PASS; executable `ABSENT` |
 | `kb-ingest/`, `openwiki/` | `openwiki` | `REQUEST → DRY/FULL OPT-IN → VERIFY → RECEIPT` | wiki request | tracked projection | mechanism `IMPLEMENTED` |
 | `docs/knowledge-providers/` | `knowledge-providers` | `MANIFEST → QUERY/PROPOSAL → SOURCE READBACK → ADMIT` | exact subject/capability | candidate result | contracts `IMPLEMENTED`; live varies |
 | `.github/workflows/` | cloud verifier | `EVENT → EXACT CHECKOUT → DETERMINISTIC GATE → STATUS` | push/PR subject | GitHub check | `IMPLEMENTED`; skipped/stale is not PASS |
-| planned Strategy/HITL | #65 | `SNAPSHOT → PROPOSE → INTERRUPT → SIGNED DECISION → RESUME` | Ledger-bound snapshot | command/decision proposal | `NOT_IMPLEMENTED` |
-| planned Runtime/Fleet/GC/LSP | #66/#94/#97/#96 | `PROBE → LEASE → EXECUTE → COLLECT → CLEANUP/REUSE` | Worker/policy/task | attested runtime receipts | `NOT_IMPLEMENTED` |
-| planned Notes pipeline | #104/#105/#70/#71 | `SOURCE → MANIFEST → RETRIEVAL → SPEC/CODEOP → SCAFFOLD → FOLD-BACK` | YT/PDF/Notes/code evidence | traceable knowledge/code patches | `NOT_IMPLEMENTED` |
-| planned observability/Console | #67/#99 | `EVENT → REDACT → PROJECT → INSPECT → SIGNED REQUEST` | Ledger/artifact refs | trace/UI/request | `NOT_IMPLEMENTED` |
-| final convergence | #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE CANARIES → HUMAN RELEASE` | admitted terminal subjects | immutable release/rollback | `BLOCKED_BY_PREDECESSORS` |
+| final convergence artifacts (`.arena/compositions/`, locks, `data/module-proof/`) | #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE CANARIES → HUMAN RELEASE` | admitted terminal subjects | immutable release/rollback | `BLOCKED_BY_PREDECESSORS` |
 
 Detailed map: [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md).
 
@@ -188,11 +201,15 @@ path:       skills/git-town-stacked-pr-worker/SKILL.md
 
 Bettor does **not** copy a local same-name `SKILL.md`. It owns the repository profile, task packets, path leases, queue/index, wrappers/evals and Human policy under [`docs/git/`](docs/git/README.md).
 
+The repository's current shared-Skills binding pins `b3c722da1c40301b0a12e0ef99848d884bfc720b`; that tree contains the same Git blob `eb2d915bca3e8a3938625f7d33a10fae95a15769` at the path above. This is byte-equivalence evidence for the method reference, not runtime selection.
+
 Current admission:
 
 ```text
 shared Skill exact reference            PINNED
 shared Skill selected in Bettor binding NOT_SELECTED
+.arena git-town-runtime module           IMPLEMENTED
+typed controller/selftest/physical controls PASS
 .git-town.toml                           ABSENT
 Git Town executable/version/checksum     ABSENT
 license/SBOM/legal admission             NOT_REVIEWED
@@ -210,8 +227,8 @@ Canonical ordered queue:
 - [`docs/git/pdf-terminal-sequence.schema.json`](docs/git/pdf-terminal-sequence.schema.json)
 
 ```text
-current active item: #82
-current validation follower: #90
+completed prefix: orders 0–11
+current active item: #92 (order 12)
 queue length: 26 terminal stages, orders 0–25
 final convergence: #68
 active limit: 1
@@ -233,23 +250,39 @@ Condensed sequence:
 
 <!-- Molecular Stack PR index -->
 
-Historical and current foundation:
+The table intentionally separates byte delivery from ordered acceptance. `MERGED_TO_MAIN` in the fourth column never promotes a later blocked row to `COMPLETE`.
 
-```text
-PR #60 PDF/LoopX documentation verifier            MERGED_TO_MAIN
-PR #81 Git Town governance                         MERGED_TO_MAIN
-PR #74 LoopX Contract root                         MERGED_TO_MAIN
-├─ PR #75 Ledger                                   MERGED_TO_MAIN through #74
-├─ PR #76 Worker Gateway                           MERGED_TO_MAIN through #74
-├─ PR #78 Decision Memory contracts                MERGED_TO_MAIN through #74
-└─ PR #79 Code Truth Graph v2                      MERGED_TO_MAIN through #74
+| Order | Issue | Directory/module terminal | Implementation PR(s) | Main-byte state | Ordered acceptance |
+|---:|---:|---|---:|---|---|
+| foundation | #62/#63/#64/#42/#69 | Contract/Ledger/Gateway/Memory/CTG v2 | #74/#75/#76/#78/#79 | `MERGED_TO_MAIN` | consumed by order 1 |
+| 0 | #82 | Worker Gateway duplicate disposition | #76/#77 | #76 merged; #77 `SUPERSEDED_CANDIDATE` | `COMPLETE` |
+| 1 | #90 | current-main foundation validation | #109 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 2 | #65 | `loopx-strategy-hitl` | #106 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 3 | #67 | `loopx-observability` | #116 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 4 | #66 | `loopx-runtime-fabric` | #117 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 5 | #94 | `loopx-worker-fleet` | #122 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 6 | #97 | `loopx-resource-gc` | #123 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 7 | #96 | `lsp-pool` | #124 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 8 | #103 | Decision Memory runtime | #125 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 9 | #93 | Mem0 projection | #126 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 10 | #104 | Notes source ingest | #127 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 11 | #105 | Notes retrieval | #128 | `MERGED_TO_MAIN` | `COMPLETE` |
+| 12 | #92 | Serena/GrepAI live canaries | — | no terminal PR | `ACTIVE` |
+| 13 | #41 | Code-Graph-RAG read-only admission | — | no terminal PR | `BLOCKED_BY_PREDECESSOR` |
+| 14 | #70 | Knowledge compiler | #118 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 15 | #71 | Knowledge fold-back | #119 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 16 | #95 | Context Assembly | #129 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 17 | #72 | Skill/Prompt evolution | #120 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 18 | #98 | CI parity | #130 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 19 | #91 | six-host live matrix | — | no terminal PR | `BLOCKED_BY_PREDECESSOR` |
+| 20 | #45 | Codex/Claude paired A/B | — | no terminal PR | `BLOCKED_BY_PREDECESSOR` |
+| 21 | #46/#56 | provider evaluation convergence | #56 | `MERGED_TO_MAIN` evaluator bytes | `BLOCKED_BY_PREDECESSOR` |
+| 22 | #99 | Harness Console | #131/#134 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 23 | #100 | Harness benchmark | #132/#135 | `MERGED_TO_MAIN` | `BLOCKED_BY_PREDECESSOR` |
+| 24 | #101 | Git Town admission mechanism | #133 | mechanism `MERGED_TO_MAIN`; executable `ABSENT` | `BLOCKED_BY_PREDECESSOR` |
+| 25 | #68 | final composition/live/release | — | no convergence PR | `FINAL_CONVERGENCE` |
 
-PR #77 duplicate Worker Gateway                    SUPERSEDED_CANDIDATE
-#76/#77 conflict                                   RESOLVED_BY_HUMAN
-issue #82                                          ACTIVE residual-file disposition
-issue #102                                         OPEN ordered-queue documentation leaf
-issue #68                                          FINAL_CONVERGENCE owner
-```
+Governance history: PR #60, PR #81 and PR #107/#121 established the verifier, Git Town policy and ordered queue. PR #136 closed the dual-origin publication repair. The #76/#77 duplicate remains indexed as `RESOLVED_BY_HUMAN` so conflict detection cannot be erased by later success.
 
 Full human history: [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md).  
 Historical machine snapshot: [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json).  
@@ -274,7 +307,7 @@ The selected control-plane module IDs remain explicit for repository gates:
 - `proof-kernel`
 - `technical-equivalence`
 
-LoopX modules may be catalogued or reachable without being selected in the final shared composition. Selection and aggregate release remain #68.
+The lock and release receipt contain exactly these 14 IDs. LoopX modules are catalogued and many are reachable from `main`, but none is selected in the final shared composition; every module evidence lane in the aggregate receipt remains `NOT_EXERCISED`. Selection and aggregate release remain #68.
 
 ## Stable public surfaces
 

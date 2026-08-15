@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "d764f7280dc3108eea278d4bd1d9f4edd21a20c5",
+  "workflow_commit": "8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-d764f7280dc3-dirty.json",
-    "container": "container-d764f7280dc3-dirty.json",
-    "ctg": "ctg-d764f7280dc3-dirty.json",
-    "equivalence": "equivalence-d764f7280dc3-dirty.json",
-    "harness": "harness-d764f7280dc3-dirty.json",
-    "macro": "macro-d764f7280dc3-dirty.json",
-    "micro": "micro-d764f7280dc3-dirty.json",
-    "notebooklm": "notebooklm-d764f7280dc3-dirty.json",
-    "openwiki": "openwiki-d764f7280dc3-dirty.json",
-    "policy": "policy-d764f7280dc3-dirty.json",
-    "skill-execution": "skill-execution-d764f7280dc3-dirty.json",
-    "workflow": "workflow-d764f7280dc3-dirty.json"
+    "agent-runtime": "agent-runtime-8d47fc1c9dfd-dirty.json",
+    "container": "container-8d47fc1c9dfd-dirty.json",
+    "ctg": "ctg-8d47fc1c9dfd-dirty.json",
+    "equivalence": "equivalence-8d47fc1c9dfd-dirty.json",
+    "harness": "harness-8d47fc1c9dfd-dirty.json",
+    "macro": "macro-8d47fc1c9dfd-dirty.json",
+    "micro": "micro-8d47fc1c9dfd-dirty.json",
+    "notebooklm": "notebooklm-8d47fc1c9dfd-dirty.json",
+    "openwiki": "openwiki-8d47fc1c9dfd-dirty.json",
+    "policy": "policy-8d47fc1c9dfd-dirty.json",
+    "skill-execution": "skill-execution-8d47fc1c9dfd-dirty.json",
+    "workflow": "workflow-8d47fc1c9dfd-dirty.json"
   },
   "counts": {
     "artifact": 31,
     "context": 62,
     "harness": 143
   },
-  "workflow_digest": "bb65c24bc76f3a09c4874eda630bf3e49740637114eaa2956fdbc90a3d7338b8",
+  "workflow_digest": "e2c3a1c910ba88299950fafc2a17264c502ab279c81cf8a0696d5474516287e3",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "10460887f296928e06fbf1a72eb5e4a3234508a5228609b2736c3946f3d5ff59",
@@ -196,7 +196,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "92c1565bc71b190a22c6959db6a34174c5788dee2aa9107c0093271fa5ff5c60",
+      "sha256": "a6389686ff71ef3e02f1c2d57e645b2cd9665ee2e62b8607aba61602ba8fdd3e",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -221,7 +221,7 @@
       ]
     },
     "CONTEXT.md": {
-      "sha256": "d1897e753bceef8d07d8a514d64ec2b56f2f7fff1b14b3d850d07b70a1498b61",
+      "sha256": "b75a3b50873dd0d2d2b05bd65968d0015299f53f158f4bbde2ab55b5bd16325a",
       "hash_source": "index",
       "kind": "context",
       "loops": [

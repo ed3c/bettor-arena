@@ -4,7 +4,7 @@
 >
 > Source class: `REQUIREMENT_HYPOTHESIS`. The PDF is an architecture proposal and example collection. It is not evidence that a provider, model, sandbox, memory layer, UI, latency target, resource figure, or workflow is present or healthy in this repository.
 >
-> Audited semantic baseline: `ed3c/bettor-arena@77267aba27ad94dde85a4dbda7dacc70a3057fb0`, tree `2083db19a1bd9e50e5e9015861190cf98a041a8a`. Current PR publication base: `main@9a5549e9994a7915201862a3e76be9906a4be13c`. The five intervening commits add only probe/NOOP files and do not alter the module/runtime evidence used by this audit.
+> Historical semantic baseline: `ed3c/bettor-arena@77267aba27ad94dde85a4dbda7dacc70a3057fb0`, tree `2083db19a1bd9e50e5e9015861190cf98a041a8a`. Current measured GitHub main is `c72109e145193fdaf059944403477f01064a1c3d`; local/Forgejo main is `8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b`; both resolve to tree `0c51ea279bd2036dce281898c2e980e8378ba1cb`.
 
 Machine-readable contract:
 
@@ -22,18 +22,18 @@ Host-owned portable Skill execution           IMPLEMENTED
 Default-deny stateless MCP                     IMPLEMENTED
 Independent proof/control/mutation             IMPLEMENTED
 Provider-neutral query/memory boundaries       IMPLEMENTED
-LoopX Objective/Todos/Gates/Evidence/Quota     PARTIAL
-Unified fail-fast Linter/LSP/UnitTest contract PARTIAL
-Single-writer append-only state ledger         NOT_IMPLEMENTED
-LangGraph interrupt/resume runtime             NOT_IMPLEMENTED
-HITL evidence Web UI                           NOT_IMPLEMENTED
-Evidence-bound episodic-memory distiller       PARTIAL
+LoopX component mechanisms                     IMPLEMENTED
+ordered acceptance                             COMPLETE through order 11; #92 active
+selected LoopX release composition             ABSENT
+aggregate module proof/control/mutation        NOT_EXERCISED
 Grok/Pi/OpenCode/Ante current canaries          NOT_EXERCISED or ABSENT
 Physical local/cloud parity                    NOT_EXERCISED
 Full PDF architecture integration              NOT_EXERCISED
 ```
 
-The correct conclusion is **modularly integrated in part, not physically complete**.
+The correct conclusion is **mechanisms largely implemented, ordered/live/release integration incomplete**.
+
+The requirement matrix below preserves the earlier gap audit and unsafe-source corrections. Its per-row implementation phrases are a historical baseline; current directory ownership and queue state come from [`DIRECTORY_STATE_MACHINE_MAP.md`](DIRECTORY_STATE_MACHINE_MAP.md) and [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json).
 
 Current `main` is already stronger than the PDF in several governance areas:
 
@@ -188,21 +188,21 @@ E2B, Firecracker, OpenShell, Daytona, containers, WASM or another runtime may im
 Git Town is optional local tooling. GitHub base/head metadata and exact-head checks are publication truth.
 
 ```text
-current publication base main @ 9a5549e9994a7915201862a3e76be9906a4be13c
-├─ #43 repo-agent-native binding                              MERGED TO MAIN
-├─ #51 knowledge-provider contracts + current runner bytes    MERGED TO MAIN
-├─ #57 first PDF modular traceability                         MERGED TO MAIN
-├─ #53 historical portable-Skill convergence                  OPEN / DIVERGED / SUPERSEDED CANDIDATE
-├─ #56 provider admission evaluations                         OPEN / RED EXACT HEAD
-├─ #58 runtime-env + Agent Shield second-PDF audit             OPEN DRAFT / BASE MAIN
-└─ #60 LoopX PDF executable traceability                      OPEN / MERGEABLE / HUMAN REVIEW
+GitHub main @ c72109e145193fdaf059944403477f01064a1c3d
+├─ #43/#51/#57/#60 foundation and traceability                MERGED_TO_MAIN
+├─ #53 historical aggregate                                  CLOSED
+├─ #56 provider evaluator bytes                               MERGED_TO_MAIN; live acceptance pending
+├─ #74–#79 LoopX foundation Stack                             MERGED_TO_MAIN / #77 superseded
+├─ #106/#109/#116–#135 terminal mechanisms and repairs        MERGED_TO_MAIN
+├─ order 12 / issue #92                                       ACTIVE
+└─ order 25 / issue #68                                       FINAL_CONVERGENCE
 ```
 
-The portable Skill mechanism is present on current `main`: the module manifest selects `portable_skill_execution`, provides `skill-execution.runner/v1`, and the public contract contains `skill-execution` run/prove/test commands. PR #53 is therefore not the current integration authority. It is a stale/diverged historical convergence branch whose remaining unique delta must be compared before a Human closes or supersedes it.
+The portable Skill mechanism is present on current `main`: the module manifest selects `portable_skill_execution`, provides `skill-execution.runner/v1`, and the public contract contains `skill-execution` run/prove/test commands. PR #53 is therefore historical rather than current integration authority.
 
-PR #56’s dedicated fixture evaluator is green, but its current exact head has stale generated modular projections. It is not merge-authorized, and fixture PASS does not prove live Serena, GrepAI, Code-Graph-RAG or Mem0 capability.
+PR #56’s evaluator bytes are on main, but fixture PASS does not prove live Serena, GrepAI, Code-Graph-RAG or Mem0 capability. Issue #92 owns the active live-provider lane.
 
-PR #58 remains a Draft documentation audit. PR #60 is the current executable LoopX traceability leaf; exact-head checks must be rerun after every metadata or Context Capsule update. Human Admit owns merge, promotion and rollback.
+The complete terminal-to-PR mapping is indexed in the root README and [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md). Exact-head checks must be rerun after every metadata or Context Capsule update. Human Admit owns merge, promotion and rollback.
 
 Whenever a base/head or check state changes, update:
 

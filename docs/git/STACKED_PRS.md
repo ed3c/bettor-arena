@@ -5,10 +5,10 @@
 GitHub base/head/state/check metadata is publication truth. This document is a reviewed topology guide. The strict completion order is machine-owned by [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json).
 
 ```text
-queue base: 844b7121789e57ebe00f1a07a67b27c1542cf05b
+queue base: c72109e145193fdaf059944403477f01064a1c3d
 program: #61
 index task: #102
-active: #82
+active: #92 (order 12)
 convergence: #68
 canonical shared method:
   ed3c/skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1
@@ -16,6 +16,8 @@ canonical shared method:
 ```
 
 No Git Town executable or `.git-town.toml` is admitted. The graph is derived from GitHub metadata and repository policy, not `git town` output.
+
+The current Bettor binding pins `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b`; the canonical path in that tree resolves to the same pinned blob. The shared Skill remains `NOT_SELECTED`.
 
 ## Relation vocabulary
 
@@ -58,10 +60,10 @@ PR #76 selected implementation
 PR #77 closed SUPERSEDED_CANDIDATE
 same issue #64 and overlapping paths
 state: RESOLVED_BY_HUMAN
-follow-up: issue #82 compares eight PR #77-only files
+follow-up: issue #82 completed the eight-file disposition
 ```
 
-PR #77 history remains indexed; issue #82 may fold or explicitly reject each unique file after executable comparison.
+PR #77 history remains indexed; issue #82 completed the explicit residual disposition. The queue head has advanced to #92.
 
 ## Documentation governance lineage
 
@@ -70,9 +72,8 @@ PR #60 PDF/LoopX traceability           MERGED_TO_MAIN
 └─ PR #81 Git Town governance           MERGED_TO_MAIN
    issue #80 completed
 
-issue #102 ordered queue docs
-└─ branch docs/pdf-terminal-stack-sequence-v1
-   documentation/governance terminal; unmerged
+PR #107/#121 ordered queue and derived-head repair  MERGED_TO_MAIN
+issue #102 ordered queue docs                       CLOSED
 ```
 
 ## Ordered completion topology
@@ -81,7 +82,7 @@ Human view: [`PDF_TERMINAL_SEQUENCE.md`](PDF_TERMINAL_SEQUENCE.md)
 Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 
 ```text
-00 #82  Worker Gateway residue                     ACTIVE
+00 #82  Worker Gateway residue                     COMPLETE
 01 #90  current-main foundation validation
 02 #65  Strategy Graph + HITL
 03 #67  Observability + signed HITL
@@ -92,8 +93,8 @@ Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 08 #103 Decision Memory runtime
 09 #93  Mem0 projection
 10 #104 source ingest
-11 #105 Notes retrieval
-12 #92  Serena/GrepAI live canaries
+11 #105 Notes retrieval                            COMPLETE
+12 #92  Serena/GrepAI live canaries                ACTIVE
 13 #41  Code-Graph-RAG read-only admission
 14 #70  Notes → Scaffold
 15 #71  Code → Knowledge fold-back
@@ -109,7 +110,7 @@ Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 25 #68  final convergence
 ```
 
-Only order 00 is active. Future implementation branches are `NOT_CREATED` until activation or a Human waiver.
+Orders 0–11 are complete and order 12 is active. Later mechanism branches may already have merged under separately admitted work; this does not advance their ordered acceptance state.
 
 ## Branch creation protocol
 
@@ -179,13 +180,14 @@ Current state:
 ```text
 shared Skill reference                  PINNED
 Skill consumer selection                NOT_SELECTED
+typed controller + physical controls    IMPLEMENTED / PASS
 Git Town binary/config                  ABSENT
 local no-push sync                      NOT_EXERCISED
 remote publication                      NOT_EXERCISED
 merge/ship/rollback                     HUMAN-OWNED
 ```
 
-Issue #101 owns future executable/config/no-push admission. Until then, Agents must not run Git Town mutation commands.
+Issue #101 and PR #133 landed the admission mechanism. The executable/config/no-push runtime is still not admitted, so Agents must not treat controller PASS as Git Town execution evidence.
 
 ## Required evidence before queue advancement
 

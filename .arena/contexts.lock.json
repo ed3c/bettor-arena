@@ -1,5 +1,5 @@
 {
-  "content_sha256": "87928728be6d0dcf22e0d7f71c51ed063a76f053dc49622832a4d5d299921154",
+  "content_sha256": "b2465b052061a2221c73876cec8e873d777d885d9a00d3cab22895e5cc3176ee",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "ad605e6a66ab7651f150ec31e8729efd6a5e86417e209974e22802af35213d82",
+      "context_sha256": "64083aeab812198a249da9470e241cd4881907e3b44b63f77a1156f078041134",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -41,7 +41,7 @@
           "path": ".runtime-env/requirements.json"
         },
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -90,7 +90,7 @@
         "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
         "loop_wiki/code-truth-graph/modules/exchange-formats.md"
       ],
-      "context_sha256": "24750d630d42d7e58acea2fe66376d679e079cebfa51f1d9456450897747656d",
+      "context_sha256": "ffb6cac823bc680ccccb8eab99c7b719f0ab033b0423e21abc98a3f4002418b6",
       "cwd": "loop_wiki/code-truth-graph",
       "drivers": {
         "claude-code": {
@@ -104,7 +104,7 @@
       },
       "files": [
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -198,7 +198,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "d873c0b5098e493f016c850b063907b4eb4694a853300633ff1ba06aafe91228",
+      "context_sha256": "b76d7fa12b7dc651df318d78c2773bde14a8f3e7078b2808b37b178ac2f59f98",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -217,7 +217,7 @@
           "path": ".arena/modules/knowledge-providers/module.json"
         },
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -232,7 +232,7 @@
           "path": "CLAUDE.md"
         },
         {
-          "blob": "512a49b36a8e79a95e608c049964eb55ecbfe0e5",
+          "blob": "3cded7f10ae07ce8edd3d820076823aa03874a2e",
           "mode": "100644",
           "path": "CONTEXT.md"
         },
@@ -399,7 +399,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "2027f3f64f7b2f433dc775395215d99129cde5c0d1b85962cc119ec16235ff48",
+      "context_sha256": "3559fe28b648465cd39fd62805595fc5cfff1e11a81036d29f459b77b4fcfba0",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -413,7 +413,7 @@
       },
       "files": [
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -428,7 +428,7 @@
           "path": "CLAUDE.md"
         },
         {
-          "blob": "512a49b36a8e79a95e608c049964eb55ecbfe0e5",
+          "blob": "3cded7f10ae07ce8edd3d820076823aa03874a2e",
           "mode": "100644",
           "path": "CONTEXT.md"
         },
@@ -438,22 +438,22 @@
           "path": "docs/agent-runtime-integration.md"
         },
         {
-          "blob": "bc1c8d4942b3961d45da532a15e2070dbc0896df",
+          "blob": "034231d3e89d890055c64c7e3357ba85a36620cc",
           "mode": "100644",
           "path": "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md"
         },
         {
-          "blob": "bbd44e3321aa1faf0e54e2faaa027c5ee154007c",
+          "blob": "f37f6101957df182c52b5e66278bc543a50ef34a",
           "mode": "100644",
           "path": "docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md"
         },
         {
-          "blob": "928373750d859930b58d8eeceeac80bb675c5153",
+          "blob": "9a911b6dae1880d3a5495a3e354bacc0ac064feb",
           "mode": "100644",
           "path": "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md"
         },
         {
-          "blob": "3b6be917feed3adf0bfbd5e65e8d067c414b768b",
+          "blob": "691571d902dcb22f0701e6360e22cf655af4d0c4",
           "mode": "100644",
           "path": "docs/architecture/STATE_MACHINES.md"
         },
@@ -463,7 +463,7 @@
           "path": "docs/architecture/modular-integration-requirements.md"
         },
         {
-          "blob": "f3137fd0db7cd041b3b65f0d15206d40b1d19764",
+          "blob": "c875decd00c34f3d4a75c6817616028b450ad48c",
           "mode": "100644",
           "path": "docs/architecture/modular-integration-status.md"
         },
@@ -478,37 +478,37 @@
           "path": "docs/architecture/pdf-loopx-harness.integration.json"
         },
         {
-          "blob": "319d85273688e2bdaf91b1bfa93c855c07353071",
+          "blob": "747e313f83af583090d63a9b621542e397ff280e",
           "mode": "100644",
           "path": "docs/git/GIT_TOWN_ADMISSION.md"
         },
         {
-          "blob": "d67861003d44f2fd58a36dbaac331c86fadf1ca8",
+          "blob": "c7db407f2dcd08d72b2121ed9977af5d391a0a38",
           "mode": "100644",
           "path": "docs/git/PDF_TERMINAL_SEQUENCE.md"
         },
         {
-          "blob": "046fc7b8234da9498b54b2cc1795f88f0d6fafe3",
+          "blob": "20d10104a127f6be2fed9ab684e9e27180415a6f",
           "mode": "100644",
           "path": "docs/git/README.md"
         },
         {
-          "blob": "8a918c85f48e82b292c428b04a75bcce8147d355",
+          "blob": "41e910e6d8b24e18befc4f49f10660214a0158a9",
           "mode": "100644",
           "path": "docs/git/REPO_PROFILE.md"
         },
         {
-          "blob": "e85a2ff6f74eeca328c5ce52c904599bcaef341e",
+          "blob": "e7387583657091c47b213b407b8a76ad81a8f0e1",
           "mode": "100644",
           "path": "docs/git/STACKED_PRS.md"
         },
         {
-          "blob": "109dc30977b33e46688397e9bd50f0953e4b330a",
+          "blob": "c5e3145632ff8bad966bed2f53a3e1669c409583",
           "mode": "100644",
           "path": "docs/git/WORKER_PROTOCOL.md"
         },
         {
-          "blob": "9b97cb3c56589b314ce13b5e7ca2584a7876db84",
+          "blob": "235502714b397fdc851a21901d343d31e0174f71",
           "mode": "100644",
           "path": "docs/git/pdf-terminal-sequence.json"
         },
@@ -523,7 +523,7 @@
           "path": "docs/integration/CROSS_REPO_INTEGRATION.md"
         },
         {
-          "blob": "bff20d98425bef3928eb873fd50803d4fb9bbb42",
+          "blob": "d7bd4e34a4ee70cc69e74dae1db978c489cad3ac",
           "mode": "100644",
           "path": "docs/traceability/STACK_PR_INDEX.md"
         }
@@ -549,7 +549,7 @@
         ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "4ea245b0012b2798c1b133c8673bec2b24ba00358b58323a2de22f086a55e1fe",
+      "context_sha256": "7c155c76515eb17b888b19848495d1fa8ecff573df51cdbd4fda478ae12184e4",
       "cwd": "notebooklm",
       "drivers": {
         "claude-code": {
@@ -573,7 +573,7 @@
           "path": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"
         },
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -619,7 +619,7 @@
         "kb-ingest/port/README.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "ec69d42993fc74fc9eb86108737e309b1cf701cf37729b8c7abece3fc91694b6",
+      "context_sha256": "9b238255d9c66d09ab172343963ac8e302d2f2521d5652e0c52eca281e976894",
       "cwd": "kb-ingest",
       "drivers": {
         "claude-code": {
@@ -633,7 +633,7 @@
       },
       "files": [
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -692,7 +692,7 @@
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
       ],
-      "context_sha256": "84bff4c9e0e35851ec40043300ec0ae92aa66967cce2378b95930f09ac9b7979",
+      "context_sha256": "b370b7356e512fb3f56bc3b9a05632ee0182864a64b81546241f7d8b7973b482",
       "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
       "drivers": {
         "claude-code": {
@@ -706,7 +706,7 @@
       },
       "files": [
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -780,7 +780,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "e27be2eb75723a8bf813f06fcbb18ffc31a52485cc3f4655a6a76bfed6f7e745",
+      "context_sha256": "7ad1db743ed4dde27a0fea7d9cce9852c6a13e874450af55e91e79fbd5592f72",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -794,7 +794,7 @@
       },
       "files": [
         {
-          "blob": "44403acc0b9f896b00aa4971fe36292f17d714de",
+          "blob": "fee3a104a1041d00d2e4457f6fdfafbdb32726af",
           "mode": "100644",
           "path": "AGENTS.md"
         },
