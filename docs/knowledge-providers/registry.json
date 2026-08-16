@@ -18,11 +18,6 @@
   },
   "providers": [
     {
-      "digest": "sha256:c15fcb159436e8ab9643eb651895bc8da871eee00a81f8218e142f2e14750fb5",
-      "id": "code-graph-rag",
-      "path": "providers/code-graph-rag.json"
-    },
-    {
       "digest": "sha256:b1c63b03ce5d1a813817771226a255c5c4a393e84880455a0438c36dac22cb23",
       "id": "grepai",
       "path": "providers/grepai.json"
