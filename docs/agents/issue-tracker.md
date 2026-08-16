@@ -13,7 +13,7 @@ PR number, base, head and current head SHA
 parent/sibling/child/terminal/convergence relation
 acceptance criteria and non-goals
 allowed and forbidden paths
-evals, receipts, rollback and Human Admit
+evals, receipts, rollback and automated admission
 ```
 
 ## Mandatory trace route
@@ -47,7 +47,7 @@ If Git Town configuration or the selected Skill appears later, add exact config/
 
 Read current issue/PR bodies, comments, reviews, labels, base/head relations and check executions before claiming state. A branch name, local commit, old comment, skipped workflow or no-runner event does not prove the current PR.
 
-Write operations require an explicit task or admitted delivery loop. Agents may create or update issues/PRs for requested work, but they do not merge, close as completed, delete branches, widen permissions, promote releases or rewrite historical evidence without Human Admit.
+Write operations require an explicit task or admitted delivery loop. Agents may create or update issues/PRs and may merge, promote or roll back through the exact-subject automated-admission controller. Close or delete is permitted only when a named controller route exists for that exact subject; otherwise it is `NOT_IMPLEMENTED`. Permission widening and historical-evidence rewrites remain controller-denied.
 
 Batch related updates. Do not publish every local checkpoint merely to expose progress. Preserve the repository's publication/billing circuit and exact-head evidence rules.
 
@@ -97,7 +97,7 @@ source / incident / PDF proposal
 → immutable implementation subject
 → execution receipts
 → convergence index
-→ Human Admit
+→ automated admission
 ```
 
 A missing link remains explicit. Memory, prose similarity, mutable `main`, package presence or another environment's receipt cannot fill it.
@@ -110,7 +110,7 @@ When an old aggregate branch diverges:
 2. identify unique load-bearing deltas;
 3. extract each into a clean terminal leaf;
 4. index the old PR as stale/non-authoritative;
-5. preserve history until Human Admit closes or deletes it.
+5. preserve history until the automated-admission controller closes or deletes it.
 
 Do not merge a historical aggregate merely because it contains useful files. Current PR #53 is such a subject.
 
@@ -129,4 +129,4 @@ SKIPPED_BY_POLICY
 
 ## Change contract
 
-A tracker-policy change requires current origin model, publication/permission impact, issue/PR graph impact, negative controls for stale or cross-origin confusion, rollback, exact issue/PR, Stack index update and Human Admit.
+A tracker-policy change requires current origin model, publication/permission impact, issue/PR graph impact, negative controls for stale or cross-origin confusion, rollback, exact issue/PR, Stack index update and an automated-admission receipt.

@@ -125,7 +125,7 @@ For the active queue item:
 6. run positive, independent control and mutation
 7. publish exact head
 8. observe generated sync and final exact-head checks
-9. Human reviews merge or rejection
+9. Automated admission controller merges or rejects the exact head
 10. advance queue snapshot
 ```
 
@@ -169,7 +169,7 @@ Branch names are plans until GitHub reports a real ref. `NOT_CREATED` is not pro
 - one Worker owns one worktree, branch writer and path lease;
 - siblings must be path-disjoint;
 - a true child must name unmerged parent bytes it consumes;
-- overlapping active terminals are blocked until a Human resolves ownership;
+- overlapping active terminals are blocked until machine policy declares one owner;
 - generated locks, root indexes, public surfaces and release receipts are owned only by #68;
 - cleanup and rollback subjects are part of every terminal receipt.
 
@@ -184,7 +184,7 @@ typed controller + physical controls    IMPLEMENTED / PASS
 Git Town binary/config                  ABSENT
 local no-push sync                      NOT_EXERCISED
 remote publication                      NOT_EXERCISED
-merge/ship/rollback                     HUMAN-OWNED
+merge/ship/rollback                     AUTOMATION-POLICY-OWNED
 ```
 
 Issue #101 and PR #133 landed the admission mechanism. The executable/config/no-push runtime is still not admitted, so Agents must not treat controller PASS as Git Town execution evidence.
@@ -201,21 +201,21 @@ hollow or mutation that turns red
 bounded artifact and cleanup receipt
 rollback subject
 final exact-head checks
-Human review for merge or activation
+automated-admission receipt for merge or activation
 ```
 
-## Human boundary
+## Automated admission boundary
 
-Agents and background Workers must not:
+Agents and background Workers may invoke these operations only through the named
+exact-subject controller. They must not:
 
-- resolve semantic conflict;
-- run continue, skip or undo;
-- create later branches before activation;
-- push, merge, ship, close or delete branches;
+- guess semantic conflict intent or run continue, skip or undo outside policy;
+- create later branches before activation or a scoped waiver;
+- use raw push, merge, ship, close or delete paths;
 - change remotes, credentials or permissions;
-- activate providers, runtimes or models;
-- admit scoped exceptions or destructive cleanup;
-- promote or roll back production.
+- activate providers, runtimes or models without the required manifest and receipt;
+- admit unscoped exceptions or destructive cleanup;
+- promote or roll back production outside the release controller.
 
 ## Update contract
 

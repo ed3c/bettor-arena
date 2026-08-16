@@ -71,13 +71,13 @@ Current open GitHub issue snapshot is `#5 #24 #41 #44 #45 #61 #68 #83 #88 #91 #9
 
 ## Glossary
 
-- **admit**: Human decision on a state transition. Activation admit, ratification and irreversible removal admit are distinct; green gates only create a candidate.
+- **admit**: a state transition applied by the automated-admission controller to an exact subject after policy and all required external decision inputs are present. Activation admit, ratification and irreversible removal admit are distinct; green gates only create a candidate.
 - **Intent-Slice**: Micro-loop commit anchor `ISSUE-<n>`; Macro infrastructure work does not invent a slice.
 - **protected surface**: gate/hook closure. Molecular commit requirements depend on the triggering role and staged paths.
 - **commit role**: Micro loop versus Macro/infrastructure determines commit-message contract.
 - **receipt**: machine-verifiable execution claim. Historical receipts are immutable except through an explicit migration/re-run mechanism.
 - **evidence allowlist**: named historical evidence exceptions; each is standing debt.
-- **candidate**: mechanically green, waiting for Human Admit; not a merge instruction.
+- **candidate**: mechanically green, waiting for an exact-subject automated-admission receipt; not a merge instruction by itself.
 - **wiki-update request / receipt**: typed request and consuming receipt between the seed factory and OpenWiki; emergent content stays backlog, not normative law.
 - **LoopX kernel**: single-writer task-state authority over Objective, Todos, Gates, Evidence and Quota. Its mechanism is implemented; final composition and live end-to-end acceptance are not.
 - **strategy graph**: proposes typed commands; it never commits canonical state.

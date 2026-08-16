@@ -94,7 +94,7 @@ which the rollback restores something nobody chose.
 Git Town      local branch hierarchy, bounded local synchronization
 GitHub gate   exact-head publication decision
 LoopX         canonical task state
-Human         semantic conflicts, remote publication, merge or ship,
+Automation    policy-declared conflicts, remote publication, merge or ship,
               release promotion, production rollback, config activation
 ```
 
@@ -103,16 +103,17 @@ this", and a paragraph answers it differently depending on who is reading.
 
 ## Publication
 
-One operation, and a human performs it. `publication_decision` returns whether a
+One publication operation is performed by the admitted `github-delivery-loop`
+controller. This Git Town runtime's `publication_decision` returns only whether a
 request **may be made**, never whether one was made — `performed` is always false
-coming out of it, because there is no code there that publishes.
+coming out of it, because there is no publication code in this module.
 
 The local receipt head and the GitHub check head must be the **same commit**. Two
 different heads are two facts about a different commit each, and the sentence that
 combines them ("local is green and CI is green") is true of neither.
 
 Four receipt kinds stay separate: `LOCAL_SYNC`, `LOCAL_VERIFICATION`, `PUBLICATION`,
-`HUMAN_ADMIT`. Folded into one, "the sync ran" and "a human admitted it" become the
+`AUTOMATED_ADMIT`. Folded into one, "the sync ran" and "the controller admitted it" become the
 same record, and only one of them is a decision.
 
 **Tool exit zero is not repository PASS.** A tool exiting zero says the tool finished;
@@ -132,5 +133,5 @@ rebase stopped mid-flight, and a reset that puts the rollback target out of reac
 Every dirty case is followed by the clean one again, so a red is attributable to what
 was planted rather than to the checker having broken.
 
-There is no `.git-town.toml` in this repository. Config activation is Human Admit, and
+There is no `.git-town.toml` in this repository. Config activation requires automated admission, and
 writing the file is the activation.

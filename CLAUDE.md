@@ -26,12 +26,13 @@ For module, Macro/Micro loop, Skills, runtime-env, proof, MCP, provider, browser
 16. [`docs/git/GIT_TOWN_ADMISSION.md`](docs/git/GIT_TOWN_ADMISSION.md)
 17. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
 18. [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md)
-19. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
-20. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
-21. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-22. the current active issue/task packet and exact GitHub base/head/checks
-23. `sh loopctl/loopctl.sh contract`
-24. the target module passive context, nearest README, machine contract, source and current proof/control/mutation receipts.
+19. [`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md)
+20. [`docs/traceability/TRACEABILITY_INDEX.md`](docs/traceability/TRACEABILITY_INDEX.md)
+21. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
+22. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
+23. the current active issue/task packet and exact GitHub base/head/checks
+24. `sh loopctl/loopctl.sh contract`
+25. the target module passive context, nearest README, machine contract, source and current proof/control/mutation receipts.
 
 ## Ordered PDF terminal Stack protocol
 
@@ -56,7 +57,7 @@ Current sequence:
 → #101 → #68
 ```
 
-A later issue, branch, fixture or focused PASS is not completion evidence. Queue advancement requires one immutable subject, positive/control/mutation evidence, cleanup, rollback identity, exact-head checks and Human review where applicable.
+A later issue, branch, fixture or focused PASS is not completion evidence. Queue advancement requires one immutable subject, positive/control/mutation evidence, cleanup, rollback identity, exact-head checks and an automated-admission receipt.
 
 Canonical Git Town procedure reference:
 
@@ -91,13 +92,18 @@ Claude Code 不得：
 - flatten root/loop native context into an arbitrary MCP prompt;
 - place credentials, browser/device sessions or host-specific secret paths in Git, bundles, MCP payloads or receipts;
 - submit raw shell strings or write its own assertion/Gate verdict;
-- write canonical task state, waive a Gate, promote a release or Human Admit;
+- write canonical task state or waive a Gate outside the LoopX reducer and automated-admission controller;
 - persist raw Thought Stream or private chain-of-thought as Decision Memory;
 - promote `ABSENT`, `FAIL`, `NOT_IMPLEMENTED`, `NOT_EXERCISED` or `SKIPPED_BY_POLICY` to PASS;
 - infer Git Town configuration when `.git-town.toml` and `.git-town` are absent;
 - create a future terminal branch before queue activation;
-- run Git Town continue/skip/undo or resolve semantic conflicts;
-- invent Human Admit, or merge without the issue-bound standing owner authorization and exact-head gates defined by [`docs/integration/CROSS_REPO_INTEGRATION.md`](docs/integration/CROSS_REPO_INTEGRATION.md); close or delete branches, release-promote, production-rollback, rotate secrets, and widen permissions remain human-only.
+- run Git Town continue/skip/undo or resolve semantic conflicts outside the typed controller and declared deterministic winner;
+- bypass [`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md), use a raw push/merge/queue/provider/promotion/rollback path, or invent a verdict for an unresolved semantic conflict.
+
+Claude Code 必須在自動 admission contract 全綠後完成被授權的 push、merge、
+queue advancement、allowlisted provider activation、promotion 或 rollback，不再要求
+逐次人工確認。Secrets 只可由既有 secret reference 解析；缺少 credential、budget、
+data-scope、cleanup 或 rollback 證據時以 `BLOCKED_POLICY` 停止。
 
 A target mechanism described in Markdown or the attached PDF may still be `NOT_IMPLEMENTED`. A mechanism present in code but not run for the exact subject remains `NOT_EXERCISED`. Open a new Claude session after changing passive context before claiming it was read.
 

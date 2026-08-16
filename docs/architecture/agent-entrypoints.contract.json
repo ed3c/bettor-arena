@@ -14,6 +14,7 @@
     "docs/git/STACKED_PRS.md",
     "docs/git/WORKER_PROTOCOL.md",
     "docs/git/GIT_TOWN_ADMISSION.md",
+    "docs/git/AUTOMATED_ADMISSION.md",
     "docs/git/stack-prs.index.json",
     "docs/traceability/STACK_PR_INDEX.md",
     "docs/agent-runtime-integration.md"
@@ -35,6 +36,7 @@
         "## LoopX PDF verification protocol",
         "## Ordered PDF terminal Stack protocol",
         "## Git Town Stacked-PR Worker route",
+        "## Automated admission contract",
         "## Macro / Micro boundary",
         "## CLI, MCP, and passive context",
         "## Proof and anti-jitter",
@@ -58,6 +60,7 @@
         "skills/git-town-stacked-pr-worker/SKILL.md",
         "## Mandatory modular-integration read order",
         "## Ordered PDF terminal Stack protocol",
+        "docs/git/AUTOMATED_ADMISSION.md",
         "Claude Code 不得",
         "NOT_IMPLEMENTED",
         "NOT_EXERCISED"

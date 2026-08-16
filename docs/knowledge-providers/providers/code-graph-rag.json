@@ -7,8 +7,8 @@
     "license": "MIT"
   },
   "admission": {
-    "state": "CANDIDATE",
-    "runtime_state": "NOT_CONFIGURED",
+    "state": "REJECTED",
+    "runtime_state": "ABSENT",
     "live_claim": false
   },
   "capabilities": [

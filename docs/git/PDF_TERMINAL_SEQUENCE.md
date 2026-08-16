@@ -49,11 +49,11 @@ Git Town branch graph
 
 A global order does not justify a 26-deep branch chain. Future branches remain uncreated until their queue item becomes active. When a predecessor has merged, the next path-disjoint terminal starts from the new `main`; when it needs unmerged predecessor bytes, it becomes a true child.
 
-Only one queue item may be `ACTIVE`. A later item cannot be reported complete unless every predecessor is complete on an immutable subject or a Human has recorded an explicit scoped waiver.
+Only one queue item may be `ACTIVE`. A later item cannot be reported complete unless every predecessor is complete on an immutable subject or an automated-admission controller has recorded an explicit scoped waiver.
 
 A landed stage is marked `COMPLETE`, and the `ACTIVE` item is **derived**: it is the lowest-ordered item that is not `COMPLETE`. The gate checks that relation rather than naming a stage, so advancing the queue is a data change and not a gate change — the earlier rule pinned the head to *order 0 / issue 82*, which made finishing a stage require editing the assertion, and the snapshot went stale instead of advancing.
 
-`COMPLETE` items must form a prefix. A stage finished ahead of its predecessor leaves a hole that reads correctly item by item and is wrong only in sequence, so `STRICT_GLOBAL_COMPLETION` requires the Human waiver named above to be recorded rather than left as a gap.
+`COMPLETE` items must form a prefix. A stage finished ahead of its predecessor leaves a hole that reads correctly item by item and is wrong only in sequence, so `STRICT_GLOBAL_COMPLETION` requires the policy waiver named above to be recorded rather than left as a gap.
 
 ## Authority law
 
@@ -62,10 +62,10 @@ Strategy proposes
 Worker executes
 Gates observe
 LoopX reducer alone commits canonical task state
-Human alone admits semantic conflict, scoped exceptions, merge, promotion and rollback
+Automated admission controller alone applies a policy-declared conflict winner and admits scoped exceptions, merge, promotion and rollback
 ```
 
-Git Town may eventually synchronize an admitted local branch hierarchy. It cannot decide semantic conflicts, publish remotely, merge, ship, promote or roll back.
+Git Town may eventually synchronize an admitted local branch hierarchy. It cannot decide semantic conflicts, publish remotely, merge, ship, promote or roll back. A missing semantic winner, HITL decision, source-rights decision or credential/permission change remains an external input; automation never invents it.
 
 ## Current foundation already reachable from `main`
 
@@ -95,7 +95,7 @@ Several later implementation PRs are already reachable from `main`; their rows r
 | 5 | #94 | `feat/loopx-worker-fleet-v1` | Herdr/tmux-compatible queue, worktree and resource leases | `COMPLETE` |
 | 6 | #97 | `feat/loopx-resource-gc-v1` | worktree/artifact/cache/vector/graph/WAL retention and GC | `COMPLETE` |
 | 7 | #96 | `feat/loopx-lsp-pool-v1` | worktree-aware LSP pool and bounded CLI fallback | `COMPLETE` |
-| 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Human-admitted canonical memory events and lifecycle | `COMPLETE` |
+| 8 | #103 | `feat/loopx-decision-memory-runtime-v1` | Policy-admitted canonical memory events and lifecycle | `COMPLETE` |
 | 9 | #93 | `feat/loopx-mem0-projection-v1` | Mem0 as an optional rebuildable projection | `COMPLETE` |
 | 10 | #104 | `feat/loopx-notes-source-ingest-v1` | authorized YT/PDF/transcript/keyframe source manifest | `COMPLETE` |
 | 11 | #105 | `feat/loopx-notes-retrieval-v1` | OpenWiki static plus optional vector/graph Notes projections | `COMPLETE` |
@@ -114,7 +114,7 @@ Several later implementation PRs are already reachable from `main`; their rows r
 | 24 | #101 | `feat/git-town-runtime-admission-v1` | pinned Git Town executable/config and no-push canaries | `BLOCKED_BY_PREDECESSOR` |
 | 25 | #68 | `integration/loopx-harness-convergence-v1` | shared composition, cold-start/live acceptance, release and rollback | `FINAL_CONVERGENCE` |
 
-The machine queue contains prerequisites, path owners, acceptance evidence and Human boundaries for every row.
+The machine queue contains prerequisites, path owners, acceptance evidence and automation boundaries for every row.
 
 ## Directory → State Machine responsibility
 
@@ -127,11 +127,11 @@ The machine queue contains prerequisites, path owners, acceptance evidence and H
 | `loop_wiki/loopx-worker-fleet/` | `QUEUE → BRANCH/WORKTREE/PATH LEASE → DISPATCH → GC` | task packet/dependencies | Worker and lease receipts | scheduling only |
 | `loop_wiki/loopx-resource-gc/` | `INVENTORY → DRY PLAN → ADMIT → CLEAN → RESIDUE/REBUILD` | leases and retention | cleanup/tombstone receipt | no silent history deletion |
 | `loop_wiki/lsp-pool/` | `SERVER/WORKSPACE PIN → QUERY → FRESHNESS → EVICT` | exact workspace subject | diagnostics/reference receipt | candidate evidence only |
-| `loop_wiki/loopx-decision-memory/runtime/` | `PROPOSE → VALIDATE → HUMAN ADMIT → LEDGER EVENT → EXPIRE/DELETE` | evidence-bound proposal | canonical memory event | reducer/Human only |
+| `loop_wiki/loopx-decision-memory/runtime/` | `PROPOSE → VALIDATE → AUTOMATED ADMIT → LEDGER EVENT → EXPIRE/DELETE` | evidence-bound proposal | canonical memory event | reducer/automation controller only |
 | `notes-ingest/` | `DECLARE → AUTHORIZE → CAPTURE → HASH → LOCATE → MANIFEST` | YT/PDF/transcript/frame/code/log | immutable source/evidence manifest | no fabricated media/locator |
 | `notes-retrieval/` | `PIN NOTES → BUILD STATIC/VECTOR/GRAPH → QUERY → READBACK → REBUILD` | Notes Repo release | retrieval projection | never source truth |
 | `loop_wiki/notes-scaffold/` | `EVIDENCE → CARDS → SPEC IR → CODEOP → SCAFFOLD → GATES` | knowledge release | candidate scaffold and mapping | no automatic code/knowledge admit |
-| `loop_wiki/code-knowledge-foldback/` | `DIFF/RUNTIME → AFFECTED KNOWLEDGE → PATCH → HUMAN ADMIT` | verified code evidence | update/supersede/conflict/noop patch | no automatic rewrite |
+| `loop_wiki/code-knowledge-foldback/` | `DIFF/RUNTIME → AFFECTED KNOWLEDGE → PATCH → AUTOMATED ADMIT` | verified code evidence | update/supersede/conflict/noop patch | no automatic rewrite |
 | `loop_wiki/loopx-context-assembly/` | `PROMPT IR → STABLE PREFIX → BOUNDED SUFFIX → HOST PROJECTION` | Skills/cards/memory/task | content-addressed host prompts | rendering only |
 | `evals/loopx-skill-prompt/` | `BASELINE/CANDIDATE → DEV/MUTATION → HOLDOUT → CROSS-HOST` | identical execution contract | candidate recommendation | no automatic promotion |
 | `data/host-canaries/` | `IDENTITY → EXECUTE → GATES → CLEANUP → RECEIPT` | six host adapters | independent host states | no cross-host proxy |
@@ -173,10 +173,10 @@ host-owned Gates + Ledger reducer
                    ↓
                   #68 final composition/cold-start/release
                    ↓
-                  Human Admit → promote | rollback
+                  Automated admission → promote | rollback
 ```
 
-No provider, graph, memory cache, OpenWiki page, UI state, local CI simulator, Git Town exit code or model prose can skip the Gate, reducer and Human boundaries.
+No provider, graph, memory cache, OpenWiki page, UI state, local CI simulator, Git Town exit code or model prose can skip the Gate, reducer and automation boundaries.
 
 ## Terminal completion contract
 
@@ -193,7 +193,7 @@ bounded artifacts and cleanup/residue receipt
 rollback subject
 honest PASS / FAIL / ABSENT / NOT_IMPLEMENTED / NOT_EXERCISED / SKIPPED_BY_POLICY state
 exact-head GitHub checks when a PR exists
-Human review for merge or activation
+Automated admission for merge or activation
 ```
 
 A fixture PASS cannot proxy live host/provider/runtime health. `MERGED_TO_PARENT` cannot proxy `MERGED_TO_MAIN`. Current-main reachability cannot proxy composition selection or production promotion.
@@ -222,4 +222,4 @@ Whenever a queue item, issue, branch, PR, exact head, path lease or state change
 5. root `README.md` and `AGENTS.md` when active item or route changes
 6. deterministic sequence verifier and exact-head checks
 
-Do not create future implementation branches merely to make the tree look complete. Create the next branch only after the queue advances or a Human records a scoped exception.
+Do not create future implementation branches merely to make the tree look complete. Create the next branch only after the queue advances or an automated-admission controller records a scoped exception.

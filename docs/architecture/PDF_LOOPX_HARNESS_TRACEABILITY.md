@@ -41,7 +41,7 @@ Current `main` is already stronger than the PDF in several governance areas:
 - the external surface is generated from `loopctl/contract.json` and defaults deny;
 - portable Skill execution is host-owned, takes typed argv, runs in a disposable worktree, evaluates independent assertions, emits a subject-bound receipt, and does not write LoopX state;
 - proof, independent control, mutation/hollow evidence, provider state, origin state, browser state, and release state remain separate;
-- Human Admit, promotion, exception authority, and production rollback are not model tools.
+- Automated admission, promotion, exception authority and production rollback are typed controller operations, not free-form model actions.
 
 The repository does **not** claim that one `.loopx/state.json`, LangGraph checkpoint, vector store, graph database, or model transcript is the single source of truth.
 
@@ -52,7 +52,7 @@ The repository does **not** claim that one `.loopx/state.json`, LangGraph checkp
 | `LX-01` | 1–2 | Agent-agnostic kernel: Objective, Todos, Gates, Evidence, Quota | `arena-core` + `loop-runtime` + `proof-kernel`; Macro/Micro/proof | `PARTIAL` | These concerns exist across typed contracts, locks, bounded loops and receipts; one append-only LoopX kernel contract is absent. |
 | `LX-02` | 2–5 | Hard constraints replace model self-reporting | `agent-runtime-integration`; Skill execution | `IMPLEMENTED` | `run_portable_skill.py` accepts no raw shell and never writes state; Worker prose is evidence input, never verdict. |
 | `LX-03` | 3–5 | Fail-fast Linter → LSP/type → Unit Test gates | `proof-kernel` + `arena-core`; Micro/proof | `PARTIAL` | Multiple deterministic gates exist, but no universal task-scoped multi-gate observation schema or LSP resource-pool contract exists. |
-| `LX-04` | 5–7 | Quota exhaustion triggers HITL interrupt/resume | trusted Human Admit plane | `NOT_IMPLEMENTED` | No LangGraph checkpointer/`interrupt()`/resume receipt is present. A plain `force_skip` string is rejected as authority. |
+| `LX-04` | 5–7 | Quota exhaustion triggers HITL interrupt/resume | trusted Human decision input + automated-admission plane | `NOT_IMPLEMENTED` | No LangGraph checkpointer/`interrupt()`/resume receipt is present. A plain `force_skip` string is rejected as authority. |
 | `LX-05` | 7–10 | Web UI for graph state, evidence, diff and HITL | observability projection | `NOT_IMPLEMENTED` | Evidence files exist; a LoopX/LangGraph evidence console does not. |
 | `LX-06` | 10–11, 20–23, 35–39 | White-box and gray-box workers share one adapter | `agent-runtime-integration` + Context Capsule | `PARTIAL` | Claude/Codex surfaces exist; Grok Build, Pi, OpenCode and Ante require current-subject adapter/canary evidence. |
 | `LX-07` | 11–16 | Monolithic micro-cell limits handoff loss | Macro/Micro + Context Capsule | `PARTIAL` | Bounded Micro loops and immutable capsules exist; a continuous-context cell and handoff-loss benchmark do not. |
@@ -99,7 +99,7 @@ OBJECTIVE_ACCEPTED
   → HOST_EXECUTION_OBSERVED                 # Worker output is untrusted
   → HARD_GATES_EVALUATED                    # Gates
       ├─ PASS → EVIDENCE_SUBJECT_BOUND      # Evidence
-      │          → READY_FOR_HUMAN_ADMIT
+      │          → READY_FOR_AUTOMATED_ADMIT
       │          → RELEASED | ROLLED_BACK
       └─ FAIL → RETRY_BUDGET_DECREMENTED    # Quota
                  ├─ RETRY_ALLOWED
@@ -109,9 +109,9 @@ OBJECTIVE_ACCEPTED
 Current implementation boundary:
 
 - `OBJECTIVE_ACCEPTED` through deterministic evidence binding is distributed across Macro/Micro, `loopctl`, the Skill runner and proof kernel.
-- `HUMAN_REVIEW_REQUIRED` exists as a governance boundary, not a LangGraph runtime.
-- `RELEASED` and `ROLLED_BACK` require a subject-bound receipt and Human Admit.
-- No Worker can write `READY_FOR_HUMAN_ADMIT`, `RELEASED`, or `ROLLED_BACK`.
+- `HUMAN_REVIEW_REQUIRED` remains the HITL decision boundary; the automated controller verifies and applies its signed result rather than inventing one.
+- `RELEASED` and `ROLLED_BACK` require a subject-bound automated-admission receipt.
+- No Worker can write `READY_FOR_AUTOMATED_ADMIT`, `RELEASED`, or `ROLLED_BACK`; only the controller can.
 
 ## End-to-end data flow
 
@@ -140,7 +140,7 @@ host-owned assertions + proof + independent control + mutation
         ├─ failure/handoff → evidence-bound memory proposal
         └─ verified subject → composition release receipt
                                   ↓
-                              Human Admit
+                          Automated admission
                                   ↓
                          promotion or rollback
 ```
@@ -159,7 +159,7 @@ The PDF correctly argues that the Agent must not control completion, but several
 
 ### No plain `force_skip`
 
-The PDF’s HITL example accepts `force_skip` as a string. Bettor requires an exception/Human Admit receipt with exact subject, scope, reason, signer/authority, expiry, follow-up and rollback impact. A UI button cannot create authority by itself.
+The PDF’s HITL example accepts `force_skip` as a string. Bettor requires an automated exception receipt with exact subject, scope, reason, signer/authority, expiry, follow-up and rollback impact. A UI button cannot create authority by itself.
 
 ### No raw chain-of-thought persistence
 
@@ -177,7 +177,7 @@ scope and expiry
 
 ### LangGraph is a projection, not a second state authority
 
-A future LangGraph checkpoint may pause/resume orchestration, but it cannot compete with the trusted reducer, evidence ledger, release receipt or Human Admit.
+A future LangGraph checkpoint may pause/resume orchestration, but it cannot compete with the trusted reducer, evidence ledger, release receipt or automated-admission controller.
 
 ### A cloud sandbox is a provider
 
@@ -202,7 +202,7 @@ The portable Skill mechanism is present on current `main`: the module manifest s
 
 PR #56’s evaluator bytes are on main, but fixture PASS does not prove live Serena, GrepAI, Code-Graph-RAG or Mem0 capability. Issue #92 owns the active live-provider lane.
 
-The complete terminal-to-PR mapping is indexed in the root README and [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md). Exact-head checks must be rerun after every metadata or Context Capsule update. Human Admit owns merge, promotion and rollback.
+The complete terminal-to-PR mapping is indexed in the root README and [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md). Exact-head checks must be rerun after every metadata or Context Capsule update. The automated-admission controller owns merge, promotion and rollback.
 
 Whenever a base/head or check state changes, update:
 
@@ -244,10 +244,10 @@ It does not turn documentation consistency into a live-provider or production PA
 1. Define a canonical single-writer append-only LoopX event/reducer contract.
 2. Define task-scoped Objective/Todos/Gates/Evidence/Quota schemas and named transitions.
 3. Add a physical execution-provider canary for filesystem, process, network, secret and cleanup isolation.
-4. Add subject-bound LangGraph interrupt/resume and Human decision receipts without creating a second authority.
+4. Add subject-bound LangGraph interrupt/resume and signed Human-decision receipts, then route their application through automated admission without creating a second task-state authority.
 5. Add evidence-bound episodic-memory distillation, expiry, conflict and writeback controls.
 6. Exercise Claude/Codex and each admitted white/gray worker on the same immutable cases.
 7. Implement an evidence/HITL UI as a read projection.
 8. Complete Notes Repo → OpenWiki/CTG/retrieval → scaffold → fold-back traceability.
 9. Repair or supersede #53 and refresh #56’s generated projections.
-10. Require Human Admit before any full-integration or production-ready claim.
+10. Require an exact-subject automated-admission receipt before any full-integration or production-ready claim.

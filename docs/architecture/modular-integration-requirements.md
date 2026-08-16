@@ -40,7 +40,7 @@ bettor-arena 的 MVP 是下列五個角色的組合，不是把多個 scripts �
 - 不讓外部 caller 直接操作 module private executable 或任意 `cwd`。
 - 不把 host credential、browser profile、cookie、OAuth session、Keychain value 或 `.env` 放進 Git、bundle、MCP payload 或 proof receipt。
 - 不用 symlink 冒充 reproducible release。
-- 不讓小迴圈自我 Human Admit、promotion 或 production rollback。
+- 不讓小迴圈直接 admission、promotion 或 production rollback；只能提交給 exact-subject automated controller。
 
 ---
 
@@ -87,7 +87,7 @@ immutable projection 或 generated adapter 其中之一，禁止兩個可獨立�
   → conflict detection
   → Skills/runtime/host projection generation
   → module proof matrix
-  → Human Admit
+  → automated admission
   → composition lock
   → release promotion / rollback
 ```
@@ -138,7 +138,7 @@ Read ../../other-module/_engine-run/*
 - 大小迴圈共用同一套 Module Contract。
 - 大迴圈看 manifests 與 evidence；小迴圈看自己的 implementation。
 - 兩者的縫合面只能是 public interface、typed packet、artifact reference、exit code 與 receipt。
-- Human Admit、promotion、production rollback 只屬於大迴圈或 host operator。
+- automated admission、promotion、production rollback 只屬於大迴圈的 typed controller。
 
 ---
 
@@ -309,7 +309,7 @@ composition requirements / lock
 loopctl/contract.json
 ```
 
-只承載全域 engineering invariants、module ownership、composition、release、Human Admit 與 public surface。
+只承載全域 engineering invariants、module ownership、composition、release、automated admission 與 public surface。
 
 ### 8.2 小迴圈被動上下文
 
@@ -409,10 +409,10 @@ compose.plan
   → compose.status
 ```
 
-下列操作預設 host/operator-only，不可讓模型自行完成：
+下列操作預設只能由 host/operator 提供不可推斷的輸入，或由具名 typed controller 依 exact-subject policy 執行；不可讓模型自行決定：
 
 - apply 到外部 live repo；
-- Human Admit；
+- automated admission 中的執行邊；
 - GitHub/Forgejo promotion；
 - production rollback；
 - secret rotation；
@@ -748,7 +748,7 @@ Forgejo local origin、local/cloud parity 與 rollback。
 12. `NOT_EXERCISED`、ABSENT、FAIL 與 PASS 不可互相代理。
 13. GitHub cloud 與 Forgejo local origins 有 reachability 與 equivalence receipt。
 14. Signed-in browser local route 不會把 profile/session 傳入 cloud。
-15. 只有 composition promotion 才要求全域 release receipt與 Human Admit。
+15. 只有 composition promotion 才要求全域 release receipt 與 automated-admission receipt。
 
 ---
 
