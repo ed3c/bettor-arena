@@ -331,8 +331,12 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
                 {"relative_path": workload["provider"]["unsupported_path"], "depth": 0},
             )
             unsupported_text = tool_text(unsupported, allow_error=True)
+            unsupported_rejected = unsupported.get("isError") is True or (
+                workload["provider"]["unsupported_path"] in unsupported_text
+                and "does not exist in the project" in unsupported_text
+            )
             require(
-                unsupported.get("isError") is True or not unsupported_text.strip(),
+                unsupported_rejected,
                 "unsupported path was promoted to a result",
             )
             observations = {
@@ -344,6 +348,9 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
                 ),
                 "references": bounded_observation(
                     references_text, workload["limits"]["max_bytes"]
+                ),
+                "unsupported_path": bounded_observation(
+                    unsupported_text, workload["limits"]["max_bytes"]
                 ),
             }
             process_receipt = client.stderr_receipt()
@@ -396,6 +403,7 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
             "wrong_workspace": "PASS" if wrong_workspace_rejected else "FAIL",
             "stale_subject": "PASS" if stale_rejected else "FAIL",
             "unsupported_language": "UNKNOWN",
+            "unsupported_path": "PASS" if unsupported_rejected else "FAIL",
             "provider_outage": "NOT_EXERCISED",
             "result_secret_scan": "PASS",
             "candidate_only": "PASS",
