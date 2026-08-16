@@ -4,6 +4,18 @@ Machine authority: [`module.json`](module.json)
 
 This module is the Bettor-owned consumer of the canonical fan-out procedure in `ed3c/skills-shared`. It owns repository-specific plan instances and executable assertions; it does **not** copy or fork the shared SKILL body or generic fan-out checker.
 
+## Pinned subjects
+
+The current consumer contract is pinned to:
+
+```text
+skills-shared main subject: 82a59bc9d253d9d77ea8bbdc493dd3689b423f52
+fan-out schema blob:        e00bbb99fdb1a8888ff6fd03ce792254319e2697
+context-funnel parent:      9ec507f685c9f3d0fcf97238d036a22be92fddf5
+```
+
+These are readback identities, not claims that Git Town, Forgejo, or physical Workers executed.
+
 ## State Machine
 
 ```text
