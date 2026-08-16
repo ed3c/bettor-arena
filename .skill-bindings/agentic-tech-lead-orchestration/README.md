@@ -84,15 +84,18 @@ behind a generic “integrated” claim.
 | Parallel Worktree fleet | `.arena/modules/loopx-worker-fleet` | `NOT_EXERCISED` |
 | Stacked delivery (`Git Town`) | `.arena/modules/git-town-runtime` | `ABSENT` |
 
-`code-graph-rag` remains only as a historical provider manifest with
-`REJECTED` admission and `ABSENT` runtime. It is forbidden in active task
-packets and cannot participate in context assembly or impact decisions.
+`code-graph-rag` is `RETIRED_FROM_CANONICAL_ROUTE`. Its provider manifest,
+provider-registry entry, evaluator participant, and evaluator provider class
+must remain absent. Historical rationale lives only in explicit decision
+records such as `docs/knowledge-providers/alternatives.md`; the name may also
+appear in negative controls that prevent route resurrection. It cannot
+participate in context assembly or impact decisions.
 
 ## Evidence boundary
 
 The binding checker can prove exact binding bytes, module identities,
-historical provider retirement, path routes, automation refusals, and planted
-negative controls for the branch under test.
+retired-provider artifact absence, path routes, automation refusals, and
+planted negative controls for the branch under test.
 
 It cannot prove:
 
