@@ -176,7 +176,7 @@ def update_docs(root: Path) -> None:
     readme_path = root / README
     readme = readme_path.read_text(encoding="utf-8")
     replacements = [
-        ("current active item:    #92 (order 12)", "current active item:    #140 (order 13)"),
+        ("current active item:    #92 (order 12)", "current active item: #140 (order 13)"),
         ("ordered acceptance through order 11                      COMPLETE", "ordered acceptance through order 12                      COMPLETE"),
         ("current order 12 Serena/GrepAI live canaries             NOT_EXERCISED", "order 12 Serena/GrepAI live canaries                     ADMITTED / COMPLETE"),
         ("Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / BLOCKED_BY_PREDECESSOR", "Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / ACTIVE"),
