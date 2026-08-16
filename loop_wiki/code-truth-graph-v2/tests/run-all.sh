@@ -3,7 +3,10 @@ set -eu
 ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 python3 "$ROOT/loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py" check
 python3 "$ROOT/loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py" selftest
-python3 -m py_compile "$ROOT/loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py"
+python3 "$ROOT/loop_wiki/code-truth-graph-v2/scripts/blindspots.py" selftest
+python3 -m py_compile \
+  "$ROOT/loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py" \
+  "$ROOT/loop_wiki/code-truth-graph-v2/scripts/blindspots.py"
 python3 - "$ROOT" <<'PY'
 import json
 import sys
