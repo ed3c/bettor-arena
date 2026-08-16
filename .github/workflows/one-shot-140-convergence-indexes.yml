@@ -1,0 +1,76 @@
+name: Converge issue 140 shared indexes
+
+on:
+  push:
+    branches: [integration/140-blindspots-tech-lead-convergence]
+    paths: ['.github/workflows/one-shot-140-convergence-indexes.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: integration/140-blindspots-tech-lead-convergence
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Patch shared read paths to current #140 state
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def patch(path, replacements):
+              p = Path(path)
+              s = p.read_text(encoding='utf-8')
+              for old, new in replacements:
+                  count = s.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected one marker for {old!r}, got {count}')
+                  s = s.replace(old, new)
+              p.write_text(s, encoding='utf-8')
+
+          patch('docs/traceability/STACK_PR_INDEX.md', [
+              ('observed GitHub main: c72109e145193fdaf059944403477f01064a1c3d', 'observed GitHub main: ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3'),
+              ('current active item: #92 (order 12)', 'current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)'),
+              ('order 12  #92       Serena/GrepAI live canaries                    ACTIVE\norder 13  #41       Code-Graph-RAG read-only admission             BLOCKED_BY_PREDECESSOR', 'order 12  #92       Serena/GrepAI live canaries                    COMPLETE\norder 13  #140      Blindspots + Tech Lead + Code-Graph-RAG retirement ACTIVE / HUMAN_ADMIT_REQUIRED'),
+              ('| 12–13 | #92/#41 | none | active then blocked |', '| 12–13 | #92/#140 | #153/#155/#156/#157 | #92 complete; #140 deterministic leaves merged, Human Admit pending |'),
+              ('active ordered issue #92; remaining #41/#45/#68/#91 and later acceptance states', 'active ordered issue #140; remaining #45/#68/#91 and later acceptance states'),
+          ])
+
+          patch('docs/git/STACKED_PRS.md', [
+              ('queue base: c72109e145193fdaf059944403477f01064a1c3d', 'queue base: ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3'),
+              ('active: #92 (order 12)', 'active: #140 (order 13; HUMAN_ADMIT_REQUIRED)'),
+              ('The queue head has advanced to #92.', 'The queue head has advanced through #92 and is now #140.'),
+              ('12 #92  Serena/GrepAI live canaries                ACTIVE\n13 #41  Code-Graph-RAG read-only admission', '12 #92  Serena/GrepAI live canaries                COMPLETE\n13 #140 Blindspots + Tech Lead + Code-Graph-RAG retirement ACTIVE / HUMAN_ADMIT_REQUIRED'),
+              ('Orders 0–11 are complete and order 12 is active.', 'Orders 0–12 are complete and order 13 / #140 is active; deterministic convergence is implemented but Human Admit still blocks queue advancement.'),
+              ('#41   feat/code-graph-rag-readonly-admission-v1', '#140  integration/140-blindspots-tech-lead-convergence'),
+          ])
+
+          patch('AGENTS.md', [
+              ('current active item: #92 (order 12)', 'current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)'),
+              ('→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71', '→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71'),
+              ('Orders 0–11 are complete in the machine queue. Later implementation bytes may already be reachable from `main`, but they do not proxy the active #92 live-provider acceptance or any later queue item.', 'Orders 0–12 are complete in the machine queue. Order 13 / #140 is ACTIVE with deterministic Blindspots, context-funnel, Tech Lead and retirement leaves merged; Human Admit and any independently required live evidence remain separate and fixture/static evidence cannot advance the queue.'),
+          ])
+
+          patch('README.md', [
+              ('github/main:            c72109e145193fdaf059944403477f01064a1c3d', 'github/main:            ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3'),
+              ('observed relation:      same-tree 0c51ea279bd2036dce281898c2e980e8378ba1cb', 'observed relation:      local/Forgejo relation NOT_REOBSERVED for this convergence subject'),
+              ('Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / ACTIVE', 'Code-Graph-RAG canonical route / order-13 #140             RETIRED_FROM_CANONICAL_ROUTE / ACTIVE / HUMAN_ADMIT_REQUIRED'),
+          ])
+          PY
+          rm .github/workflows/one-shot-140-convergence-indexes.yml
+          git diff --check
+          git add -A
+          git -c user.name='bettor-arena convergence owner' -c user.email='noreply@github.com' commit -m 'conv(140): align shared indexes [skip ci]'
+          for attempt in 1 2 3; do
+            git fetch origin integration/140-blindspots-tech-lead-convergence
+            git rebase origin/integration/140-blindspots-tech-lead-convergence
+            if git push origin HEAD:integration/140-blindspots-tech-lead-convergence; then exit 0; fi
+            sleep 2
+          done
+          exit 1
