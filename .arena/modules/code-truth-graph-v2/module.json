@@ -40,13 +40,11 @@
   "proof": {
     "control": [
       "python3",
-      "loop_wiki/code-truth-graph-v2/scripts/blindspots.py",
-      "selftest"
+      "loop_wiki/code-truth-graph-v2/tests/test_context_funnel.py"
     ],
     "mutation": [
       "python3",
-      "loop_wiki/code-truth-graph-v2/scripts/blindspots.py",
-      "selftest"
+      "loop_wiki/code-truth-graph-v2/tests/test_context_funnel.py"
     ],
     "selftest": [
       "python3",
@@ -60,7 +58,8 @@
   },
   "provides": [
     "code-truth-graph.evidence/v2",
-    "code-truth-graph.blindspots/v1"
+    "code-truth-graph.blindspots/v1",
+    "code-truth-graph.context-funnel/v1"
   ],
   "requires": [
     "arena.proof-kernel/v1",
@@ -84,5 +83,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Exact-subject evidence planes plus a disposable SQLite Blindspots ledger, analyzer identity and coverage contracts, provenance-preserving FOUND/CONTESTED/NO_FLOW/UNKNOWN reduction, and hard source-readback/coverage controls."
+  "summary": "Exact-subject evidence planes, a disposable SQLite Blindspots ledger, and a bounded context compiler that enforces repository subject identity, source readback, coverage/freshness, traversal/output budgets, and candidate-only analyzer authority."
 }
