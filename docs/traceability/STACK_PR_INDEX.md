@@ -5,10 +5,10 @@
 GitHub issue/PR base, head, state, mergeability, checks and main reachability are current authority. This Markdown, [`../git/stack-prs.index.json`](../git/stack-prs.index.json) and [`../git/pdf-terminal-sequence.json`](../git/pdf-terminal-sequence.json) are reviewed snapshots.
 
 ```text
-observed GitHub main: c72109e145193fdaf059944403477f01064a1c3d
+observed GitHub main: ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3
 program: #61
 queue index task: #102
-current active item: #92 (order 12)
+current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 final convergence: #68
 repository profile: ../git/REPO_PROFILE.md
 ```
@@ -62,8 +62,8 @@ order 08  #103      canonical Decision Memory runtime              COMPLETE
 order 09  #93       Mem0 rebuildable projection                    COMPLETE
 order 10  #104      YT/PDF/Notes source ingest                     COMPLETE
 order 11  #105      OpenWiki + vector/graph Notes retrieval        COMPLETE
-order 12  #92       Serena/GrepAI live canaries                    ACTIVE
-order 13  #41       Code-Graph-RAG read-only admission             BLOCKED_BY_PREDECESSOR
+order 12  #92       Serena/GrepAI live canaries                    COMPLETE
+order 13  #140      Blindspots + Tech Lead + Code-Graph-RAG retirement ACTIVE / HUMAN_ADMIT_REQUIRED
 order 14  #70       Notes Repo → Scaffold                          BLOCKED_BY_PREDECESSOR
 order 15  #71       Code → Knowledge fold-back                     BLOCKED_BY_PREDECESSOR
 order 16  #95       prompt-cache-stable Context Assembly          BLOCKED_BY_PREDECESSOR
@@ -89,7 +89,7 @@ This mapping is independent of ordered acceptance. A later merged PR remains blo
 | foundation | #62/#63/#64/#42/#69 | #74/#75/#76/#78/#79 | consumed by order 1 |
 | 0–4 | #82/#90/#65/#67/#66 | #76/#77, #109, #106, #116, #117 | orders 0–4 complete; #77 superseded |
 | 5–11 | #94/#97/#96/#103/#93/#104/#105 | #122/#123/#124/#125/#126/#127/#128 | orders 5–11 complete |
-| 12–13 | #92/#41 | none | active then blocked |
+| 12–13 | #92/#140 | #153/#155/#156/#157 | #92 complete; #140 deterministic leaves merged, Human Admit pending |
 | 14–18 | #70/#71/#95/#72/#98 | #118/#119/#129/#120/#130 | bytes merged; acceptance blocked |
 | 19–21 | #91/#45/#46/#56 | #56 evaluator only | live/A-B/convergence blocked |
 | 22–24 | #99/#100/#101 | #131/#134, #132/#135, #133 | bytes/mechanisms merged; acceptance blocked |
@@ -174,7 +174,7 @@ A focused fixture PASS cannot establish live-provider health, current-main reach
 ```text
 bettor-arena#24 immutable Agent Shield reference-consumer acceptance
 LoopX program issue #61
-active ordered issue #92; remaining #41/#45/#68/#91 and later acceptance states
+active ordered issue #140; remaining #45/#68/#91 and later acceptance states
 final convergence #68
 ```
 

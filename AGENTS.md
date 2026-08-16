@@ -136,7 +136,7 @@ schema: docs/git/pdf-terminal-sequence.schema.json
 human view: docs/git/PDF_TERMINAL_SEQUENCE.md
 program: #61
 index task: #102
-current active item: #92 (order 12)
+current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 final convergence: #68
 ```
 
@@ -163,12 +163,12 @@ Do not create a 26-deep branch chain merely to mirror queue order. Once a predec
 
 ```text
 #82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
-→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71
 → #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
 → #101 → #68
 ```
 
-Orders 0–11 are complete in the machine queue. Later implementation bytes may already be reachable from `main`, but they do not proxy the active #92 live-provider acceptance or any later queue item.
+Orders 0–12 are complete in the machine queue. Order 13 / #140 is ACTIVE with deterministic Blindspots, context-funnel, Tech Lead and retirement leaves merged; Human Admit and any independently required live evidence remain separate and fixture/static evidence cannot advance the queue.
 
 ### Queue advancement receipt
 
@@ -396,7 +396,7 @@ FAILED
 For this ordered Stack:
 
 ```text
-current active item: #92 (order 12)
+current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 future implementation items: BLOCKED_BY_PREDECESSOR
 final convergence: #68
 Git Town runtime: NOT_EXERCISED
