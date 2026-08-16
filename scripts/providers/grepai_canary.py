@@ -232,35 +232,28 @@ def ollama_identity(
 
 
 def wait_for_index(
-    executable: str,
     project: Path,
-    environment: dict[str, str],
     timeout: int,
+    watcher: ManagedProcess,
 ) -> dict[str, Any]:
     deadline = time.monotonic() + timeout
     index = project / ".grepai" / "index.gob"
-    last_size = -1
+    symbols = project / ".grepai" / "symbols.gob"
+    last_sizes = (-1, -1)
     stable = 0
-    last_status = ""
     while time.monotonic() < deadline:
-        status = run_fixed(
-            [executable, "status"],
-            cwd=project,
-            timeout=15,
-            environment=environment,
+        require(watcher.alive(), "GrepAI watcher exited during indexing")
+        sizes = (
+            index.stat().st_size if index.is_file() else 0,
+            symbols.stat().st_size if symbols.is_file() else 0,
         )
-        last_status = status.stdout + status.stderr
-        size = index.stat().st_size if index.is_file() else 0
-        if status.exit == 0 and size > 0 and size == last_size:
+        if all(size > 0 for size in sizes) and sizes == last_sizes:
             stable += 1
             if stable >= 2:
-                return {
-                    "bytes": size,
-                    "status": bounded_observation(last_status, 65536),
-                }
+                return {"bytes": sum(sizes)}
         else:
             stable = 0
-        last_size = size
+        last_sizes = sizes
         time.sleep(1)
     raise CanaryError("GrepAI index did not stabilize")
 
@@ -310,12 +303,10 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
         )
         try:
             index = wait_for_index(
-                executable["command"],
                 project,
-                environment,
                 workload["limits"]["timeout_seconds"],
+                watcher,
             )
-            require(watcher.alive(), "GrepAI watcher exited during indexing")
             require(
                 index["bytes"] <= workload["limits"]["max_index_bytes"],
                 "GrepAI index exceeded bound",
