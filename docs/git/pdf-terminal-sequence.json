@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 92,
-    "active_order": 12,
+    "active_issue": 140,
+    "active_order": 13,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -460,7 +460,7 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Run live Serena and GrepAI canaries"
     },
@@ -487,7 +487,7 @@
         "stage-12-code-intelligence-live"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Retire Code-Graph-RAG and converge the Blindspots replacement route"
     },
@@ -888,7 +888,7 @@
       "title": "Converge modules, live acceptance, release and rollback"
     }
   ],
-  "observed_at": "2026-08-17T00:00:00Z",
+  "observed_at": "2026-08-16T17:26:03Z",
   "queue_policy": {
     "active_limit": 1,
     "branch_topology": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN",

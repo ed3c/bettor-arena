@@ -14,7 +14,7 @@ forgejo/main:           8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
 github/main:            c72109e145193fdaf059944403477f01064a1c3d
 observed relation:      same-tree 0c51ea279bd2036dce281898c2e980e8378ba1cb
 program / index:        #61 / #102 (both planning/index history)
-current active item:    #92 (order 12)
+current active item: #140 (order 13)
 final convergence:      #68
 ```
 
@@ -42,10 +42,10 @@ Decision Memory / Mem0 projection mechanisms             IMPLEMENTED
 YT/PDF Notes ingest and retrieval mechanisms             IMPLEMENTED
 Notes compiler / fold-back / Context Assembly            IMPLEMENTED
 Skill evolution / CI parity / Console / benchmark        IMPLEMENTED
-ordered acceptance through order 11                      COMPLETE
-current order 12 Serena/GrepAI live canaries             NOT_EXERCISED
+ordered acceptance through order 12                      COMPLETE
+order 12 Serena/GrepAI live canaries                     ADMITTED / COMPLETE
 six-host live execution matrix                           NOT_EXERCISED
-Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / BLOCKED_BY_PREDECESSOR
+Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / ACTIVE
 final LoopX modules selected into release composition    ABSENT
 Git Town controller/controls                              IMPLEMENTED / PASS
 Git Town executable/config/live no-push sync             ABSENT / NOT_EXERCISED
@@ -54,7 +54,7 @@ final content-addressed release and rollback              NOT_PERFORMED
 
 The correct conclusion is:
 
-> Bettor now has most terminal mechanism bytes on `main`, but the selected release composition still contains only 14 base modules, its aggregate release receipt is `NOT_EXERCISED`, and the ordered live-acceptance queue is stopped at #92. "已合併"不能改寫成「已整合／已發布」。
+> Bettor now has most terminal mechanism bytes on `main`, but the selected release composition still contains only 14 base modules, its aggregate release receipt is `NOT_EXERCISED`, and the ordered live-acceptance queue is now active at #140. "已合併"不能改寫成「已整合／已發布」。
 
 Read:
 
@@ -108,7 +108,7 @@ The blocking gap is composition selection plus exact-subject live evidence, not 
 | Directory / route | Owner | State Machine | Inputs | Outputs / evidence | Current state |
 |---|---|---|---|---|---|
 | root `*.md` | `arena-core` | `ENTRY → ROUTE → OWNER → CONTRACT → EVIDENCE` | task + exact repo subject | bounded Agent read route | `IMPLEMENTED` |
-| `docs/git/` | Git governance | `METHOD PIN → PROFILE → QUEUE → STACK/LEASE → EVAL → PUBLICATION BOUNDARY` | shared Skill pin + GitHub metadata | Stack snapshots and queue | governance `IMPLEMENTED`; active #92 |
+| `docs/git/` | Git governance | `METHOD PIN → PROFILE → QUEUE → STACK/LEASE → EVAL → PUBLICATION BOUNDARY` | shared Skill pin + GitHub metadata | Stack snapshots and queue | governance `IMPLEMENTED`; active #140 |
 | `docs/traceability/` | delivery traceability | `SOURCE → ISSUE → TERMINAL → PR → EXACT HEAD → CHECKS → ADMIT` | issue/PR metadata | human Stack index | `IMPLEMENTED`, snapshot-bound |
 | `.agents/` | `agent-runtime-integration` | `REQUIRE → RESOLVE → BIND → PROJECT → DISCOVER` | shared/repo-owned Skill requirements | immutable binding and host projections | `IMPLEMENTED` |
 | `.skill-bindings/` | consumer bindings | `UPSTREAM PROCEDURE → RETARGET → ASSERT → RECEIPT` | immutable shared Skill | repo-specific facts/assertions | `IMPLEMENTED` |
@@ -128,7 +128,7 @@ The blocking gap is composition selection plus exact-subject live evidence, not 
 | `loop_wiki/loopx-runtime-fabric/` | `loopx-runtime-fabric` | `POLICY → LEASE → MATERIALIZE → EXECUTE → COLLECT → CLEANUP` | Worker request + runtime policy | workspace/runtime receipt | PR #117 merged; live parity pending |
 | `loop_wiki/loopx-worker-fleet/` | `loopx-worker-fleet` | `QUEUE → WORKTREE/PATH LEASE → DISPATCH → RECOVER` | task/dependency/resource facts | lease/Worker receipt | PR #122 merged; live fleet pending |
 | `loop_wiki/loopx-resource-gc/` | `loopx-resource-gc` | `INVENTORY → DRY PLAN → ADMIT → CLEAN → REBUILD/CHECK` | leases + retention | cleanup/tombstone receipt | PR #123 merged; production cleanup not exercised |
-| `loop_wiki/lsp-pool/` | `lsp-pool` | `PIN SERVER/WORKSPACE → QUERY → FRESHNESS → EVICT` | exact workspace | diagnostics/reference receipt | PR #124 merged; live provider #92 active |
+| `loop_wiki/lsp-pool/` | `lsp-pool` | `PIN SERVER/WORKSPACE → QUERY → FRESHNESS → EVICT` | exact workspace | diagnostics/reference receipt | PR #124 merged; live provider #92 complete; #140 active |
 | `loop_wiki/code-truth-graph-v2/` | `code-truth-graph-v2` | `OBSERVE → COMPILE → QUERY → SOURCE READBACK` | T0–T6 observations | evidence graph/query result | mechanism `IMPLEMENTED`; not selected |
 | `loop_wiki/loopx-decision-memory/` | `loopx-decision-memory` | `PROPOSE → AUTOMATED ADMIT → LEDGER EVENT → PROJECT → EXPIRE/DELETE` | evidence-bound proposal | memory event/projection | PR #125/#126 merged; not selected |
 | `loop_wiki/loopx-source-ingest/` | `loopx-source-ingest` | `DECLARE → AUTHORIZE → CAPTURE → HASH → MANIFEST` | media/text/code source refs | immutable evidence manifest | PR #127 merged; not selected |
