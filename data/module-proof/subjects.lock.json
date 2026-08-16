@@ -1,14 +1,14 @@
 {
   "composition": "bettor-arena",
-  "composition_lock_sha256": "311a1fc244593db5aad4178918fa94ba4d1159b983c127b9b188479e56d33546",
-  "content_sha256": "24629c828cd3be9cb5fdafb135a990955e98fffbe889979d2cdbe15da38470cc",
+  "composition_lock_sha256": "6ade0609cafd83c803f435ee1f3680934a927b2b63bbce729c1bea85243cc705",
+  "content_sha256": "87a2bb8ebb81d02b9260d7932dd38b528e134644ebc0b1edfdf8eb011a1a7b68",
   "modules": [
     {
-      "closure_sha256": "46a38e2a37bb91d0483f6d759a5d10c7f0e95a55034e70950b30077960ca0d01",
+      "closure_sha256": "0653945c8d174bdf5e75be1fb7f077f14badd128b0e05aba0b8adcddc12eb992",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
@@ -18,7 +18,7 @@
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "closure_sha256": "375e6dcc7e98c4b38e384feafaf58b09b47c31bb47d94b1f4e51ea89cb10ad66",
+      "closure_sha256": "66601cec99ccb925c22d370b97f3049413712487c68164dd44d64eb0ab5ad8d8",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -60,12 +60,12 @@
           "provider": "module-catalog"
         }
       ],
-      "files_sha256": "40e19e0dd47ed57fefb04c4fd7efc20d930b203ca06e6d712ff0755172941e2f",
+      "files_sha256": "1e9ecde7a52bebd12c201700fe80b9732e6b3ce6972a87934aa836f1c814e110",
       "id": "arena-core",
       "interface_version": "1.2.0",
-      "local_sha256": "5bb1a3c1793a2354c84c3d6cfb36648944a26bd984a82311adc4324069324af4",
+      "local_sha256": "9ec80ef20bc11fad84a59ef790b93274e76cdb3af9ed1f6cdc18b87b1e6de681",
       "manifest_sha256": "a0b21264b242eeedb459e59b000adf92dd66e8165a5c7b6f6097c20a9b353613",
-      "owned_files": 120,
+      "owned_files": 121,
       "proof_spec_sha256": "b72f6d73e2f989a518f428b21a95eaeaff72648bbcdc2438d8984eb783a4adee",
       "runtime": {
         "profiles": [],
@@ -75,16 +75,16 @@
       "skills": []
     },
     {
-      "closure_sha256": "7304f61cd992245d06c98241f4fdae8a9a40d0b37ad2b110881c833dc67d25a7",
+      "closure_sha256": "767e8677b40c2fd39de648d3032718c50de38811f4ae3c63886da9297b39068f",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "closure_sha256": "ea6b31249299b730615bfc8fcaeed33a6b7fa2ff3e2fdb977785a0e6353dfc34",
+      "closure_sha256": "a29d056e19537de0bea86dc347ec6370ff2b26cfabf260b65adf598b76d47b45",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -165,7 +165,7 @@
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
@@ -191,7 +191,7 @@
       ]
     },
     {
-      "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+      "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -200,7 +200,7 @@
         },
         {
           "capability": "arena.passive-context/v1",
-          "closure_sha256": "375e6dcc7e98c4b38e384feafaf58b09b47c31bb47d94b1f4e51ea89cb10ad66",
+          "closure_sha256": "66601cec99ccb925c22d370b97f3049413712487c68164dd44d64eb0ab5ad8d8",
           "provider": "arena-core"
         }
       ],
@@ -228,11 +228,11 @@
       ]
     },
     {
-      "closure_sha256": "4c0eeca0251c4c8da515082f5e9f45289fe1b46001870f17bfb1a8ca4e8dd43a",
+      "closure_sha256": "baa94a83f2d5138be7269352fb572f5b1b1071af641b84daed2fe0cb8f20db65",
       "dependencies": [
         {
           "capability": "arena.stateless-mcp/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         }
       ],
@@ -268,16 +268,16 @@
       "skills": []
     },
     {
-      "closure_sha256": "5bc7a86f09ad5bac11ad4bc76d5e1477f0e8e25e11ee20f3dc36db2fba892936",
+      "closure_sha256": "6eb11bd705eb3d3ef267b594ea084704110bbf78ad007d974762c676f8d8ca33",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
@@ -305,21 +305,21 @@
       ]
     },
     {
-      "closure_sha256": "5fbdc9fb80c36ea364eda67a00b0913f10de166155501bbfdbf0c8db3732157a",
+      "closure_sha256": "b42e0d5e8ed435bcab1b16c33da268a554c5f3d17d04fa321e3e850bfdc14745",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         },
         {
           "capability": "wiki-update-request.produce/v1",
-          "closure_sha256": "9091582a320e0a9c723e51cbca596afe0991c2baaee75de2f1d250be36ce6585",
+          "closure_sha256": "651cf06c18a9f8bee9a2fd3f09dd9f532ad9a4ce07247bb3fedec07227be0c06",
           "provider": "perfect-seed-factory"
         }
       ],
@@ -353,16 +353,16 @@
       ]
     },
     {
-      "closure_sha256": "9091582a320e0a9c723e51cbca596afe0991c2baaee75de2f1d250be36ce6585",
+      "closure_sha256": "651cf06c18a9f8bee9a2fd3f09dd9f532ad9a4ce07247bb3fedec07227be0c06",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
@@ -390,7 +390,7 @@
       ]
     },
     {
-      "closure_sha256": "335c7fd8035e8590076132764faad5bff30b93646540239fd6c23230d54d471d",
+      "closure_sha256": "d9783be2c155bbd195388c78f65f697e9b7a3fee45284c4a5a4662a6e729604b",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -399,7 +399,7 @@
         },
         {
           "capability": "arena.stateless-mcp/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         }
       ],
@@ -418,11 +418,11 @@
       "skills": []
     },
     {
-      "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+      "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
@@ -446,16 +446,16 @@
       "skills": []
     },
     {
-      "closure_sha256": "1aceec361a439274fb061cc242338109538f690d13a7cb70a719b4e8e7951f75",
+      "closure_sha256": "bbdffdf365d45a00dfccf100217d0d74217384999c62efcad2eafc98f2518252",
       "dependencies": [
         {
           "capability": "arena.loopctl/v1",
-          "closure_sha256": "b3e9ccf762a31e90cbbf355f732f8d4680e9d4d9fd4f2cde037595f44dbd7e62",
+          "closure_sha256": "9160674025318c553c2fe4f9062282cc98e7884080ceb54990e765f5471b4f60",
           "provider": "loop-runtime"
         },
         {
           "capability": "arena.proof-kernel/v1",
-          "closure_sha256": "222e9798e21c144723109ce766704e55dab9487804eabac0135042917b394dbc",
+          "closure_sha256": "b98715cad27540741197df8ff6ee3cdcbfdae3bb07287e75bdd5bf021f64b163",
           "provider": "proof-kernel"
         }
       ],
