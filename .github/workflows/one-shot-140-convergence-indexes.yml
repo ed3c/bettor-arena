@@ -27,10 +27,12 @@ jobs:
           def patch(path, replacements):
               p = Path(path)
               s = p.read_text(encoding='utf-8')
-              for old, new in replacements:
+              for item in replacements:
+                  old, new = item[:2]
+                  expected = item[2] if len(item) == 3 else 1
                   count = s.count(old)
-                  if count != 1:
-                      raise SystemExit(f'{path}: expected one marker for {old!r}, got {count}')
+                  if count != expected:
+                      raise SystemExit(f'{path}: expected {expected} marker(s) for {old!r}, got {count}')
                   s = s.replace(old, new)
               p.write_text(s, encoding='utf-8')
 
@@ -52,7 +54,7 @@ jobs:
           ])
 
           patch('AGENTS.md', [
-              ('current active item: #92 (order 12)', 'current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)'),
+              ('current active item: #92 (order 12)', 'current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)', 2),
               ('→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71', '→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71'),
               ('Orders 0–11 are complete in the machine queue. Later implementation bytes may already be reachable from `main`, but they do not proxy the active #92 live-provider acceptance or any later queue item.', 'Orders 0–12 are complete in the machine queue. Order 13 / #140 is ACTIVE with deterministic Blindspots, context-funnel, Tech Lead and retirement leaves merged; Human Admit and any independently required live evidence remain separate and fixture/static evidence cannot advance the queue.'),
           ])
