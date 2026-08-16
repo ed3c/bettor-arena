@@ -2,12 +2,19 @@ name: Parallel Tech Lead Contract
 
 on:
   pull_request:
-    # ready_for_review has to be listed explicitly: the default type set is
-    # opened/synchronize/reopened, so with the draft guard below a PR that opens
-    # as a draft skips this job and never re-runs when it is marked ready --
-    # leaving the layer verified only by a branch push, against whatever commit
-    # that was rather than the head under review.
-    types: [opened, synchronize, reopened, ready_for_review]
+    # ready_for_review is the ONLY type, matching modular-contracts.yml. That
+    # file states the repository's billing rule where it is enforced: a draft PR
+    # does not bill a run, `synchronize` is deliberately absent so pushing a
+    # commit does not re-bill one, and re-verification after a fix is an explicit
+    # workflow_dispatch. A second workflow that keeps the default
+    # opened/synchronize/reopened set would quietly undo that rule for every PR
+    # touching these paths -- the required workflow would bill once and this one
+    # would bill on every push beside it.
+    #
+    # The draft->ready transition is the moment this repository pays for, and it
+    # fires against the head being asked to merge, which is the subject the
+    # checker should be binding anyway.
+    types: [ready_for_review]
     paths:
       - '.agentic/parallel-tech-lead/**'
       - 'scripts/agentic/assert_parallel_tech_lead_contract.py'
