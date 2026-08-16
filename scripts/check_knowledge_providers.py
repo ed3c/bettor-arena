@@ -92,6 +92,8 @@ FORBIDDEN_PROVIDER_OPERATIONS = {
 
 SCHEMA_FILES = (
     "provider-manifest.schema.json",
+    "provider-activation-receipt.schema.json",
+    "provider-configuration-receipt.schema.json",
     "query-request.schema.json",
     "query-receipt.schema.json",
     "memory-proposal.schema.json",
@@ -151,6 +153,12 @@ def walk(value: Any, path: str = "$"):
 def reject_secret_fields(value: Any) -> None:
     for location, key, item in walk(value):
         normalized = key.lower().replace("-", "_")
+        if normalized == "secret_references":
+            require(
+                item == [],
+                f"SECRET_REFERENCE_MUST_BE_EMPTY: {location}",
+            )
+            continue
         require(
             all(part not in normalized for part in SECRET_KEY_PARTS),
             f"SECRET_FIELD_FORBIDDEN: {location}",
@@ -361,6 +369,79 @@ def validate_provider_manifest(manifest: Any) -> None:
         and 1 <= limits["max_bytes"] <= 1_048_576,
         f"{provider_id}: max_bytes",
     )
+
+    activation = manifest.get("activation")
+    if activation is not None:
+        expected_keys = {
+            "mode",
+            "version",
+            "artifact_digest",
+            "sbom_disposition",
+            "secret_references",
+            "data_scope",
+            "network_scope",
+            "spend_usd_ceiling",
+            "request_ceiling",
+            "rollback",
+        }
+        require(isinstance(activation, dict), f"{provider_id}: activation object")
+        require(
+            set(activation) == expected_keys,
+            f"{provider_id}: activation fields drift",
+        )
+        require(
+            provider_id in {"serena", "grepai"},
+            f"{provider_id}: activation is not allowlisted",
+        )
+        require(
+            activation.get("mode") == "ON_DEMAND_READ_ONLY",
+            f"{provider_id}: activation mode",
+        )
+        require(
+            isinstance(activation.get("version"), str) and bool(activation["version"]),
+            f"{provider_id}: activation version",
+        )
+        require(
+            activation.get("artifact_digest") == adapter_digest,
+            f"{provider_id}: activation artifact digest",
+        )
+        require(
+            isinstance(activation.get("sbom_disposition"), str)
+            and bool(activation["sbom_disposition"]),
+            f"{provider_id}: activation SBOM disposition",
+        )
+        require(
+            activation.get("secret_references") == [],
+            f"{provider_id}: activation secrets forbidden",
+        )
+        require(
+            activation.get("data_scope") == "EXACT_SUBJECT_COVERAGE_ONLY",
+            f"{provider_id}: activation data scope",
+        )
+        expected_network = "LOOPBACK_ONLY" if provider_id == "grepai" else "DENIED"
+        require(
+            activation.get("network_scope") == expected_network,
+            f"{provider_id}: activation network scope",
+        )
+        require(
+            activation.get("spend_usd_ceiling") == 0,
+            f"{provider_id}: activation spend ceiling",
+        )
+        require(
+            isinstance(activation.get("request_ceiling"), int)
+            and 1 <= activation["request_ceiling"] <= 20,
+            f"{provider_id}: activation request ceiling",
+        )
+        require(
+            activation.get("rollback") == "RESTORE_ROLLBACK_SUBJECT",
+            f"{provider_id}: activation rollback",
+        )
+        require(
+            adapter.get("identity_state") == "PINNED",
+            f"{provider_id}: configured activation must be pinned",
+        )
+    if admission.get("state") in {"CONFIGURED", "ADMITTED"}:
+        require(activation is not None, f"{provider_id}: activation policy absent")
 
     reject_secret_fields(manifest)
     validate_paths(manifest)

@@ -7,4 +7,6 @@ python3 scripts/providers/serena_canary.py check
 python3 scripts/providers/serena_canary.py --selftest
 python3 scripts/providers/grepai_canary.py check
 python3 scripts/providers/grepai_canary.py --selftest
+python3 scripts/providers/provider_activation.py check
+python3 scripts/providers/provider_activation.py selftest
 echo "provider-canaries run-all PASS"

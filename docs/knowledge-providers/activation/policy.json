@@ -1,0 +1,37 @@
+{
+  "schema": "bettor-arena/provider-activation-policy/v1",
+  "providers": [
+    {
+      "provider_id": "grepai",
+      "source_repository": "yoanbernabeu/grepai",
+      "source_commit": "176ff9dbd091345b6e8b2afd4d79664b4aa17194",
+      "license": "MIT",
+      "version": "0.30.0",
+      "artifact_digest": "sha256:e2d5ad30710eba500cb5d783a914ea16ba4e5c66ac23abe8691165b4aa5732bc",
+      "sbom_disposition": "HOMEBREW_SPDX",
+      "mode": "ON_DEMAND_READ_ONLY",
+      "secret_references": [],
+      "data_scope": "EXACT_SUBJECT_COVERAGE_ONLY",
+      "network_scope": "LOOPBACK_ONLY",
+      "spend_usd_ceiling": 0,
+      "request_ceiling": 5,
+      "rollback": "RESTORE_ROLLBACK_SUBJECT"
+    },
+    {
+      "provider_id": "serena",
+      "source_repository": "oraios/serena",
+      "source_commit": "414f591d58967e2fd29c5c6a5f8e58cb03b77eee",
+      "license": "MIT",
+      "version": "0.1.4",
+      "artifact_digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
+      "sbom_disposition": "PACKAGE_METADATA_AND_RECORD_ONLY",
+      "mode": "ON_DEMAND_READ_ONLY",
+      "secret_references": [],
+      "data_scope": "EXACT_SUBJECT_COVERAGE_ONLY",
+      "network_scope": "DENIED",
+      "spend_usd_ceiling": 0,
+      "request_ceiling": 20,
+      "rollback": "RESTORE_ROLLBACK_SUBJECT"
+    }
+  ]
+}
