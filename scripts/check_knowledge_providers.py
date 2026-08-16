@@ -491,7 +491,7 @@ def load_registry(root: Path) -> tuple[dict[str, dict], dict]:
         manifests[provider_id] = manifest
 
     require(
-        set(manifests) == {"serena", "grepai", "code-graph-rag", "mem0"},
+        set(manifests) == {"serena", "grepai", "mem0"},
         "registry provider set drift",
     )
 
@@ -963,7 +963,7 @@ def run_selftest(root: Path) -> dict[str, Any]:
         )
     )
 
-    graph_write = copy.deepcopy(manifests["code-graph-rag"])
+    graph_write = copy.deepcopy(manifests["mem0"])
     graph_write["adapter"]["allowed_operations"].append("write_file")
     outcomes.append(
         expect_failure(

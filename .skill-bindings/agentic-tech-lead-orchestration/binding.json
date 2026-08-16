@@ -37,7 +37,7 @@
     "metadata_store": "sqlite",
     "structural_slicer": "tree-sitter",
     "vector_candidate_store": "lancedb",
-    "historical_code_graph_rag_state": "REJECTED",
+    "historical_code_graph_rag_state": "RETIRED_FROM_CANONICAL_ROUTE",
     "no_double_graph": true,
     "source_readback_required": true,
     "existing_reference_adapter": "python-ast",

@@ -30,6 +30,12 @@ without a same-subject benchmark and negative controls.
 | SCIP + deterministic edges | transparent symbol graph with rebuildable provenance | fewer high-level graph features | canonical-core candidate |
 | CodeQL | deep static analysis for supported languages | query authoring and licensing/CI constraints | optional verification lane |
 
+`Code-Graph-RAG` being listed in this matrix is historical evidence, not a
+provider-registry identity. Its provider manifest, registry entry, evaluator
+participant, and evaluator execution class are intentionally absent. Tests and
+policy may retain the name only as a negative control proving that the retired
+route cannot be resurrected silently.
+
 ## Memory layer
 
 | Candidate | Strength | Main uncertainty | Bettor role |

@@ -8,22 +8,28 @@ def req(v,m):
 def load(p): return json.loads(p.read_text(encoding="utf-8"))
 def snapshot(root=Path(".")):
     seq=load(root/"docs/git/pdf-terminal-sequence.json")
-    manifest=load(root/"docs/knowledge-providers/providers/code-graph-rag.json")
-    registry=(root/"scripts/knowledge_provider_eval_registry.py").read_text(encoding="utf-8")
-    return seq,manifest,(root/"docs/knowledge-providers/evals/participants/code-graph-rag.json").exists(),registry,(root/"docs/git/PDF_TERMINAL_SEQUENCE.md").read_text(encoding="utf-8"),(root/"README.md").read_text(encoding="utf-8")
-def validate_values(seq,manifest,participant,registry,doc,readme):
+    manifest=(root/"docs/knowledge-providers/providers/code-graph-rag.json").exists()
+    provider_registry=load(root/"docs/knowledge-providers/registry.json")
+    participant=(root/"docs/knowledge-providers/evals/participants/code-graph-rag.json").exists()
+    evaluator=(root/"scripts/knowledge_provider_eval_registry.py").read_text(encoding="utf-8")
+    history=(root/"docs/knowledge-providers/alternatives.md").read_text(encoding="utf-8")
+    doc=(root/"docs/git/PDF_TERMINAL_SEQUENCE.md").read_text(encoding="utf-8")
+    readme=(root/"README.md").read_text(encoding="utf-8")
+    return seq,manifest,provider_registry,participant,evaluator,history,doc,readme
+def validate_values(seq,manifest,provider_registry,participant,evaluator,history,doc,readme):
     stage=next(x for x in seq["items"] if x["order"]==13)
     req(stage["id"]=="stage-13-code-graph-retirement","legacy stage id active")
     req(stage["issues"]==[140],"legacy issue #41 active")
     req(all(41 not in x["issues"] for x in seq["items"]),"#41 remains queue issue")
     req(all("stage-13-code-graph-rag" not in x["prerequisite_items"] for x in seq["items"]),"legacy prerequisite active")
-    adm=manifest.get("admission",{}); adapter=manifest.get("adapter",{})
-    req(adm.get("state")=="REJECTED" and adm.get("runtime_state")=="ABSENT" and adm.get("live_claim") is False,"historical manifest active")
-    req(adapter.get("transport")=="none","historical transport active")
+    req(not manifest,"retired provider manifest remains in active provider directory")
+    entries=provider_registry.get("providers",[])
+    req(all(x.get("id")!="code-graph-rag" for x in entries),"retired provider remains in provider registry")
     req(not participant,"retired evaluator participant present")
-    providers=next(x for x in registry.splitlines() if x.startswith("PROVIDERS ="))
+    providers=next(x for x in evaluator.splitlines() if x.startswith("PROVIDERS ="))
     req("code-graph-rag" not in providers,"retired provider active in evaluator")
-    req("HISTORICAL_PROVIDERS" in registry,"historical classification missing")
+    req("HISTORICAL_PROVIDERS" not in evaluator,"retired provider retains evaluator registry class")
+    req("Code-Graph-RAG" in history and "RETIRED" in history,"decision history missing")
     req("| 13 | #140 |" in doc,"human queue stale")
     req("#140" in readme and "RETIRED" in readme,"README retirement missing")
     return {"status":"PASS","stage":stage["id"],"issue":140}
@@ -31,9 +37,12 @@ def validate(root=Path(".")): return validate_values(*snapshot(root))
 def selftest(root=Path(".")):
     vals=list(snapshot(root)); validate_values(*vals); names=[]; tests=[]
     a=copy.deepcopy(vals); next(x for x in a[0]["items"] if x["order"]==13)["issues"]=[41]; tests.append(("queue-41",a))
-    a=copy.deepcopy(vals); a[1]["admission"]["state"]="CANDIDATE"; tests.append(("manifest-active",a))
-    a=copy.deepcopy(vals); a[2]=True; tests.append(("participant-active",a))
-    a=copy.deepcopy(vals); a[3]=a[3].replace('PROVIDERS = {"serena", "grepai", "mem0"}','PROVIDERS = {"serena", "grepai", "code-graph-rag", "mem0"}'); tests.append(("provider-set",a))
+    a=copy.deepcopy(vals); a[1]=True; tests.append(("manifest-present",a))
+    a=copy.deepcopy(vals); a[2]["providers"].append({"id":"code-graph-rag","path":"providers/code-graph-rag.json","digest":"sha256:"+"0"*64}); tests.append(("provider-registry",a))
+    a=copy.deepcopy(vals); a[3]=True; tests.append(("participant-active",a))
+    a=copy.deepcopy(vals); a[4]=a[4].replace('PROVIDERS = {"serena", "grepai", "mem0"}','PROVIDERS = {"serena", "grepai", "code-graph-rag", "mem0"}'); tests.append(("provider-set",a))
+    a=copy.deepcopy(vals); a[4]+='\nHISTORICAL_PROVIDERS = {"code-graph-rag"}\n'; tests.append(("historical-evaluator-class",a))
+    a=copy.deepcopy(vals); a[5]=a[5].replace("**RETIRED**","historical"); tests.append(("history-marker",a))
     for name,a in tests:
         try: validate_values(*a)
         except E: names.append(name); continue
