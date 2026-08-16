@@ -1,0 +1,52 @@
+name: Prune retired provider eval fixture
+
+on:
+  push:
+    branches: [feat/140-retire-code-graph-rag-final]
+    paths: ['.github/workflows/one-shot-prune-retired-eval-fixture.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: feat/140-retire-code-graph-rag-final
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Remove retired participant observations from canonical fixture
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import gzip, json
+          from pathlib import Path
+          path = Path('docs/knowledge-providers/evals/fixtures/good/observations.json.gz')
+          with gzip.open(path, 'rt', encoding='utf-8') as f:
+              values = json.load(f)
+          retired = [v for v in values if isinstance(v, dict) and v.get('participant_id') == 'code-graph-rag']
+          if len(retired) != 1:
+              raise SystemExit(f'expected exactly one retired observation, got {len(retired)}')
+          kept = [v for v in values if not (isinstance(v, dict) and v.get('participant_id') == 'code-graph-rag')]
+          if len(kept) != len(values) - 1:
+              raise SystemExit('unexpected fixture pruning result')
+          # Deterministic gzip: stable JSON separators/order and mtime=0.
+          payload = json.dumps(kept, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+          with path.open('wb') as raw:
+              with gzip.GzipFile(filename='', mode='wb', fileobj=raw, mtime=0) as gz:
+                  gz.write(payload)
+          PY
+          rm .github/workflows/one-shot-prune-retired-eval-fixture.yml
+          git diff --check
+          git add -A
+          git -c user.name='bettor-arena retirement patcher' -c user.email='noreply@github.com' commit -m 'retire(code-graph-rag): prune evaluator fixture [skip ci]'
+          for attempt in 1 2 3; do
+            git fetch origin feat/140-retire-code-graph-rag-final
+            git rebase origin/feat/140-retire-code-graph-rag-final
+            if git push origin HEAD:feat/140-retire-code-graph-rag-final; then exit 0; fi
+            sleep 2
+          done
+          exit 1
