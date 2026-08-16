@@ -27,13 +27,13 @@
     "secrets": "none"
   },
   "id": "code-truth-graph-v2",
-  "interface_version": "1.1.0",
+  "interface_version": "1.0.0",
   "loops": [
     {
       "class": "core",
       "external_policy": "control-only",
       "id": "code-truth-graph-v2",
-      "interface_version": "1.1.0",
+      "interface_version": "1.0.0",
       "public_port": "python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py"
     }
   ],
