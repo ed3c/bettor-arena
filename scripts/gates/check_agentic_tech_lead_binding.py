@@ -199,7 +199,7 @@ def validate_value(value: dict[str, Any]) -> list[str]:
         "metadata_store": "sqlite",
         "structural_slicer": "tree-sitter",
         "vector_candidate_store": "lancedb",
-        "historical_code_graph_rag_state": "REJECTED",
+        "historical_code_graph_rag_state": "RETIRED_FROM_CANONICAL_ROUTE",
         "no_double_graph": True,
         "source_readback_required": True,
         "existing_reference_adapter": "python-ast",
@@ -305,28 +305,20 @@ def validate_repo(root: Path) -> list[str]:
         if manifest.get("interface_version") != item["interface_version"]:
             errors.append(f"{manifest_path.relative_to(root)} version mismatch")
 
+    if (root / MANIFEST).exists():
+        errors.append("retired Code-Graph-RAG manifest must remain ABSENT")
     try:
-        manifest = load(root / MANIFEST)
         registry = load(root / REGISTRY)
     except Exception as exc:
         errors.append(str(exc))
     else:
-        admission = manifest.get("admission", {})
-        if manifest.get("provider_id") != "code-graph-rag":
-            errors.append("historical provider identity drifted")
-        if admission != {
-            "state": "REJECTED",
-            "runtime_state": "ABSENT",
-            "live_claim": False,
-        }:
-            errors.append("historical Code-Graph-RAG must be REJECTED/ABSENT")
         entries = [
             item
             for item in registry.get("providers", [])
             if isinstance(item, dict) and item.get("id") == "code-graph-rag"
         ]
-        if len(entries) != 1 or entries[0].get("digest") != digest(manifest):
-            errors.append("historical Code-Graph-RAG registry digest mismatch")
+        if entries:
+            errors.append("retired Code-Graph-RAG registry entry must remain ABSENT")
 
     for relative in (README, ASSERTIONS, INDEX, CHECKER, SUITE, WORKFLOW):
         if not (root / relative).is_file():
