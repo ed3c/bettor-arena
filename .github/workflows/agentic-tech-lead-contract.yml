@@ -1,0 +1,22 @@
+name: agentic-tech-lead-contract
+on:
+  pull_request:
+    paths:
+      - ".agents/bindings/agentic-tech-lead.example.json"
+      - "scripts/agentic_tech_lead.py"
+      - "tests/agentic-tech-lead/**"
+      - "docs/architecture/AGENTIC_TECH_LEAD.md"
+      - "docs/git/ADE_STACK_PLAN.md"
+      - ".github/workflows/agentic-tech-lead-contract.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: bash tests/agentic-tech-lead/verify.sh
