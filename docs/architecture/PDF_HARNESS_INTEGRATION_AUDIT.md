@@ -77,7 +77,7 @@ Therefore the truthful repository-level conclusion is:
 | `.loopx/state.json` | no equivalent path | `NOT_IMPLEMENTED` | event ledger, derived snapshot, reducer and lease |
 | deterministic transition engine | `loopctl` dispatch and independent gates | `PARTIAL` | one reducer that alone commits task state |
 | LangGraph DAG/Mesh | no admitted module | `NOT_IMPLEMENTED` | strategy-command port, checkpoint projection, cycle/termination policy |
-| HITL interrupt/resume | Human Admit is documented | `PARTIAL` | machine interrupt, resume and exception receipts |
+| HITL interrupt/resume | signed Human decision input and automated application are documented | `PARTIAL` | machine interrupt, resume and exception receipts |
 | white-box monolithic worker | Grok Build is documented as a source-visible reference | `NOT_EXERCISED` | pinned executable/adapter/index and live canary receipt |
 | gray-box workers | Codex/Claude Skill/context projections | `IMPLEMENTED` contract | current live Codex/Claude receipts |
 | OpenCode, Pi and Ante | compatibility documentation in `harness-wiki` | `IMPLEMENTED` contract | live adapter canaries and trace-completeness evidence |
@@ -102,7 +102,7 @@ The following PDF examples must not be copied as production contracts:
 |---|---|
 | `subprocess.run(command, shell=True)` | use typed executable + `argv[]`; raw shell is rejected |
 | Agent or Worker edits `.loopx/state.json` | only a host-owned reducer may commit canonical state |
-| `force_skip` string | require a scoped, reasoned, expiring Human exception receipt |
+| `force_skip` string | require a scoped, reasoned, expiring exception receipt backed by a signed Human or predeclared policy decision |
 | LangGraph checkpoint as canonical state | checkpoint is a projection of the canonical ledger, not a second authority |
 | raw Thought Stream handoff | store externalized observations, dead ends, decisions and evidence refs; never private chain of thought |
 | Provider output marks `TESTED` or PASS | provider output remains candidate-only until independent readback and hard gates |
@@ -134,7 +134,7 @@ runtime-env release ───────────────┐
                   │            mutation receipts    │
                   └────────────────┬─────────────────┘
                                    ▼
-                         Human Admit / release
+                     Automated admission / release
 ```
 
 This graph is implemented as modular infrastructure. The following proposed control loop is not:
@@ -201,7 +201,7 @@ The audit decomposed the following leaves. Most mechanism leaves have since land
 5. **Memory leaf**
    - evidence-bound decision-memory capsule;
    - validity scope, expiry, supersession and conflict;
-   - privacy, delete/export and Human Admit.
+   - privacy, delete/export and automated admission.
 
 6. **Runtime fabric leaf**
    - disposable worktree/container adapters;
@@ -218,7 +218,7 @@ The audit decomposed the following leaves. Most mechanism leaves have since land
    - generated locks and receipts agree;
    - all module/interface/path owners agree;
    - fresh host canaries are separate;
-   - Human Admit decides merge/promotion.
+   - the automated controller decides merge/promotion from exact receipts.
 
 ## Completion criteria
 
@@ -239,7 +239,7 @@ provider indexes have exact subject/freshness/coverage
 local/cloud same-workload canary exists
 observability is redacted and rebuildable
 every terminal PR is indexed and one convergence owner remains
-Human Admit is explicit
+automated admission is explicit
 ```
 
 ## Related routes

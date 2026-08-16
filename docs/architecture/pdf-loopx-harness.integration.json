@@ -64,7 +64,7 @@
       "deterministic_gates": [["python3", "scripts/gates/check_agent_docs.py"]],
       "status": "NOT_IMPLEMENTED",
       "blockers": ["No LangGraph checkpointer/interrupt/resume adapter or subject-bound resume receipt exists on current main."],
-      "corrections": ["A force_skip string is not authority; exceptions need an explicit Human Admit receipt, scope, reason, expiry, and follow-up."]
+      "corrections": ["A force_skip string is not authority; exceptions need an explicit automated-admission receipt, scope, reason, expiry, and follow-up."]
     },
     {
       "id": "LX-05",
@@ -112,7 +112,7 @@
       "deterministic_gates": [["python3", "scripts/check_knowledge_providers.py"]],
       "status": "PARTIAL",
       "blockers": ["A proposal-only memory contract exists; no admitted distiller, retention/writeback runtime, or cross-agent live canary exists."],
-      "corrections": ["Memory cannot override current source, ADRs, tests, receipts, or Human Admit; raw chain-of-thought is forbidden."]
+      "corrections": ["Memory cannot override current source, ADRs, tests, receipts, or automated admission; raw chain-of-thought is forbidden."]
     },
     {
       "id": "LX-09",
@@ -177,7 +177,7 @@
     {
       "id": "LX-14",
       "pdf_pages": [17, 18, 33],
-      "requirement": "Prompt/Skill evolution uses paired evaluations, mutation controls, and Human Admit",
+      "requirement": "Prompt/Skill evolution uses paired evaluations, mutation controls, and automated admission",
       "owner_modules": ["proof-kernel", "knowledge-providers"],
       "state_machines": ["proof-kernel", "provider-eval"],
       "paths": ["proof_workflow", "tests", "docs/knowledge-providers"],
@@ -228,7 +228,8 @@
       {"id":"GATES","kind":"repository","owner":"proof-kernel","artifact":"hard assertions + proof/control/mutation"},
       {"id":"MEMORY","kind":"repository","owner":"knowledge-providers","artifact":"evidence-bound memory proposal"},
       {"id":"RELEASE","kind":"repository","owner":"proof-kernel","artifact":"composition release receipt"},
-      {"id":"HUMAN","kind":"external-authority","owner":"human","artifact":"admit/exception/rollback decision"}
+      {"id":"HUMAN","kind":"external-authority","owner":"human/source","artifact":"signed HITL, rights, or semantic-policy input"},
+      {"id":"AUTOMATION","kind":"admission-authority","owner":"automated-admission-controller","artifact":"admit/exception/rollback receipt"}
     ],
     "edges": [
       {"from":"SOURCE","to":"SKILL","type":"informs","feedback":false},
@@ -242,7 +243,8 @@
       {"from":"GATES","to":"MEMORY","type":"failure_or_handoff_evidence","feedback":false},
       {"from":"GATES","to":"RELEASE","type":"verified_evidence","feedback":false},
       {"from":"MEMORY","to":"CONTEXT","type":"advisory_projection","feedback":true},
-      {"from":"RELEASE","to":"HUMAN","type":"admission_packet","feedback":false}
+      {"from":"HUMAN","to":"AUTOMATION","type":"signed_external_input","feedback":false},
+      {"from":"RELEASE","to":"AUTOMATION","type":"admission_packet","feedback":false}
     ]
   },
   "stack_snapshot": {
@@ -266,12 +268,12 @@
     "merged child PR -> bytes present on main without convergence",
     "LangGraph checkpoint -> canonical LoopX authority",
     "raw chain-of-thought -> durable episodic memory",
-    "force_skip string -> Human Admit or exception authority"
+    "force_skip string -> automated admission or exception authority"
   ],
   "required_document_markers": {
     "README.md": ["## LoopX Harness PDF integration verdict", "## Directory → State Machine → input/output/evidence", "## Git Town / molecular Stack PR index"],
     "AGENTS.md": ["## LoopX PDF verification protocol", "PDF_LOOPX_HARNESS_TRACEABILITY.md", "check_pdf_loopx_harness_integration.py"],
     "docs/architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md": ["# LoopX Harness PDF → bettor-arena modular integration", "## Requirement matrix", "## Corrections to unsafe examples", "## Exact current verdict"],
-    "docs/architecture/STATE_MACHINES.md": ["## LoopX compatibility state machine", "OBJECTIVE_ACCEPTED", "READY_FOR_HUMAN_ADMIT"]
+    "docs/architecture/STATE_MACHINES.md": ["## LoopX compatibility state machine", "OBJECTIVE_ACCEPTED", "READY_FOR_AUTOMATED_ADMIT"]
   }
 }

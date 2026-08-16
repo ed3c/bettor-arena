@@ -40,7 +40,7 @@ subject-bound receipt / LoopX event proposal
         ↓
 convergence leaf
         ↓
-Human Admit / merge / release / rollback
+Automated admission / merge / release / rollback
 ```
 
 The repository now has a typed Git Town admission/controller mechanism, but no admitted executable or configuration. Local synchronization remains `NOT_EXERCISED`.
@@ -65,7 +65,7 @@ The repository now has a typed Git Town admission/controller mechanism, but no a
 | `mcp/` | `mcp-adapters` | `DEFAULT DENY → TOOL PROJECT → IMMUTABLE CALL → CLEANUP` | CLI contract + policy | JSON-RPC result | admitted tools `IMPLEMENTED` |
 | `proof_workflow/` | `proof-kernel` | `CLAIM → TRAVERSAL → CONTROL → MUTATION → RECEIPT` | public port + context | evidence | `IMPLEMENTED` |
 | `data/module-proof/` | generated evidence | `SUBJECTS → CLOSURE → RELEASE AGGREGATION` | locks + proof specs | subject lock/receipt | 14 selected modules; aggregate `NOT_EXERCISED` |
-| `loop_wiki/evolve-perfect-seed-repo-factory/` | `perfect-seed-factory` | `PACKET → BUILD → QUALITY → OPERATOR → VALIDATOR → HUMAN EDGE` | typed task/source | seed repo/wiki request | `IMPLEMENTED` |
+| `loop_wiki/evolve-perfect-seed-repo-factory/` | `perfect-seed-factory` | `PACKET → BUILD → QUALITY → OPERATOR → VALIDATOR → AUTOMATION EDGE` | typed task/source | seed repo/wiki request | `IMPLEMENTED` |
 | `kb-ingest/`, `openwiki/` | `openwiki` | `REQUEST → DRY/FULL OPT-IN → VERIFY → RECEIPT` | wiki request | projection | mechanism `IMPLEMENTED` |
 | `loop_wiki/code-truth-graph/` | `code-truth-graph` | `PACKET → PIN → PARSE/BUILD → VERIFY → GRAPH` | source packet | graph/result | `IMPLEMENTED` |
 | `notebooklm/` | `notebooklm` | `TARGET → AUTH/RESOLVE → READ/FOLLOW → CLEANUP → RECEIPT` | registry/target | bounded harvest | subject-specific |
@@ -78,14 +78,14 @@ The repository now has a typed Git Town admission/controller mechanism, but no a
 | `loop_wiki/loopx-worker-gateway/` | execution adapter | `REQUEST → ADAPTER → OBSERVE → RECEIPT → CLEANUP` | host request/context | Worker observation | mechanism `IMPLEMENTED`; six-host live pending |
 | `loop_wiki/loopx-runtime-fabric/`, `loop_wiki/loopx-worker-fleet/` | execution/scheduling plane | `POLICY/QUEUE → LEASE → MATERIALIZE → EXECUTE → COLLECT → RECOVER` | tasks/resources | runtime/lease receipts | PR #117/#122 merged; live parity pending |
 | `loop_wiki/loopx-resource-gc/`, `loop_wiki/lsp-pool/` | resource/intelligence plane | `INVENTORY/PIN → QUERY/PLAN → FRESHNESS → EVICT/CLEAN` | leases/workspace | cleanup/diagnostic receipts | PR #123/#124 merged; live provider #92 active |
-| `loop_wiki/loopx-decision-memory/` | memory plane | `PROPOSE → HUMAN ADMIT → EVENT → PROJECT → EXPIRE/DELETE` | evidence proposal | memory events/projection | PR #125/#126 merged; not selected |
+| `loop_wiki/loopx-decision-memory/` | memory plane | `PROPOSE → AUTOMATED ADMIT → EVENT → PROJECT → EXPIRE/DELETE` | evidence proposal | memory events/projection | PR #125/#126 merged; not selected |
 | `loop_wiki/loopx-source-ingest/`, `loop_wiki/loopx-notes-retrieval/` | Notes input/projection | `DECLARE → CAPTURE/HASH → MANIFEST → BUILD/QUERY/READBACK` | authorized sources | evidence manifest + retrieval projection | PR #127/#128 merged; not selected |
 | `loop_wiki/loopx-knowledge-compiler/`, `loop_wiki/loopx-knowledge-foldback/` | knowledge/code bridge | `EVIDENCE → SPEC/CODEOP → CANDIDATE → VERIFIED DIFF → PATCH` | Notes/code/runtime evidence | scaffold + knowledge patch | PR #118/#119 merged; ordered acceptance pending |
 | `loop_wiki/loopx-context-assembly/`, `loop_wiki/loopx-skill-evolution/` | context/evolution plane | `PROMPT IR → HOST RENDER → BASELINE/CANDIDATE → HOLDOUT` | Skills/cards/memory/task | prompts/recommendation | PR #129/#120 merged; ordered acceptance pending |
 | `loop_wiki/loopx-observability/`, `apps/harness-console/`, `services/hitl-api/` | projection/HITL surface | `EVENT → REDACT → PROJECT → INSPECT → REQUEST` | ledger/evidence refs | UI + decision request | PR #116/#131/#134 merged; not selected |
 | `loop_wiki/loopx-benchmark/` | measurement plane | `PIN → TRIALS → COMPARABILITY → SCOPED CLAIM` | exact profile/workload | raw trials/report | PR #132/#135 merged; ordered acceptance pending |
 | `scripts/git-town/`, `tests/git-town/`, `docs/git/runtime/` | `git-town-runtime` | `CONTRACT → PREFLIGHT → CONTROL → DECISION → RECEIPT` | profile/task/executable evidence | local sync/publication lanes | controller + 13 controls PASS; executable `ABSENT` |
-| `.git-town.toml` | future admitted Git Town config | `PROFILE → CONFIG CANDIDATE → CANARIES → HUMAN ADMIT` | admitted executable + profile | deterministic local config | `ABSENT` |
+| `.git-town.toml` | future admitted Git Town config | `PROFILE → CONFIG CANDIDATE → CANARIES → AUTOMATED ADMIT` | admitted executable + profile | deterministic local config | `ABSENT` |
 | final composition/locks/receipts | issue #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE → RELEASE` | admitted terminal subjects | release/rollback | blocked at active #92 |
 
 ## Git Town Stack State Machine
@@ -101,7 +101,7 @@ SHARED METHOD PINNED
 → EVALS
 → EXACT-HEAD PUBLICATION CHECKS
 → CONVERGENCE
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 → MERGE / SHIP / ROLLBACK
 ```
 
@@ -114,7 +114,7 @@ controller mechanism       IMPLEMENTED; 13 physical controls PASS
 binary/config               ABSENT
 local sync                  NOT_EXERCISED
 publication                 NOT_EXERCISED
-Human Admit                 NOT_PERFORMED
+automated admission         NOT_EXERCISED
 ```
 
 ## Stack graph versus module graph
@@ -161,7 +161,7 @@ MODULE PROPOSED
 → proof subjects
 → proof/control/mutation
 → release receipt
-→ Human Admit
+→ automated admission
 ```
 
 Macro does not execute another module through private flags.
@@ -179,7 +179,7 @@ typed packet
 → caller selects next edge
 ```
 
-Micro cannot merge, promote, widen permissions or Human Admit.
+Micro cannot directly merge, promote, widen permissions or admit; it submits evidence to the automated controller.
 
 ## Missing LoopX state machine: remaining integration state
 
@@ -205,7 +205,7 @@ strategy graph proposes
 worker executes
 gates observe
 LoopX reducer alone commits
-Human alone admits
+Automated controller alone admits
 ```
 
 The reducer, ledger and surrounding mechanisms now exist. The missing edge is their selection into one release subject plus live provider/host/runtime evidence and final #68 admission.
@@ -217,7 +217,7 @@ strategy proposes
 Worker executes
 Gates observe
 LoopX reducer alone commits
-Human alone admits
+Automated controller alone admits
 ```
 
 Git Town, LangGraph, GitHub Actions, providers and UI remain outside canonical task-state authority.
@@ -251,16 +251,16 @@ GitHub issue/PR metadata ─────────┘          │
                                     convergence leaf
                                              │
                                              ▼
-                                      Human Admit
+                                  Automated admission
 ```
 
 ## Change rules
 
 1. New root placement updates `ARCHITECTURE.md` first.
 2. New module gets manifest, README, ownership and proof/control/mutation.
-3. New Stack leaf gets issue task packet, branch relation, path lease, evals, rollback and Human boundary.
+3. New Stack leaf gets issue task packet, branch relation, path lease, evals, rollback and automation boundary.
 4. Generated locks/receipts are regenerated.
 5. Cross-module calls use typed public boundaries.
 6. New provider separates declaration, install, health, data, execution and admission.
 7. New Stack fact updates `README.md`, `docs/git/STACKED_PRS.md`, `docs/git/stack-prs.index.json` and [`../traceability/STACK_PR_INDEX.md`](../traceability/STACK_PR_INDEX.md).
-8. Merge, ship, conflict resolution and rollback remain Human-owned.
+8. Merge, ship, policy-declared conflict resolution and rollback are automation-policy-owned.

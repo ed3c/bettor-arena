@@ -2,7 +2,7 @@
 
 > **Module Host + Loop Runtime + Proof Kernel + Stateless MCP Gateway + Project Bootstrapper**
 
-`bettor-arena` 將 bounded loops、portable Skills、runtime projections、proof controls、knowledge projections 與 release evidence 組合成可追溯的 Agent Harness。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 透過 module、typed packet、subject-bound receipt、ordered terminal queue 與 Human Admit 演進。
+`bettor-arena` 將 bounded loops、portable Skills、runtime projections、proof controls、knowledge projections 與 release evidence 組合成可追溯的 Agent Harness。外部 consumer 只依賴穩定的 `loopctl`／MCP contract；內部 implementation 透過 module、typed packet、subject-bound receipt、ordered terminal queue 與 automated admission 演進。
 
 ## Current publication subject
 
@@ -78,7 +78,7 @@ Objective + Todos + Gates + Evidence + Quota
 → LoopX reducer commit
 → Decision Memory / retry / HITL / complete
 → observability and Console projections
-→ final composition and Human release
+→ final composition and automated release
 ```
 
 The blocking gap is composition selection plus exact-subject live evidence, not another round of architecture prose. Contract or current-main reachability is not equivalent to composition selection, live execution, cloud isolation or production promotion.
@@ -130,7 +130,7 @@ The blocking gap is composition selection plus exact-subject live evidence, not 
 | `loop_wiki/loopx-resource-gc/` | `loopx-resource-gc` | `INVENTORY → DRY PLAN → ADMIT → CLEAN → REBUILD/CHECK` | leases + retention | cleanup/tombstone receipt | PR #123 merged; production cleanup not exercised |
 | `loop_wiki/lsp-pool/` | `lsp-pool` | `PIN SERVER/WORKSPACE → QUERY → FRESHNESS → EVICT` | exact workspace | diagnostics/reference receipt | PR #124 merged; live provider #92 active |
 | `loop_wiki/code-truth-graph-v2/` | `code-truth-graph-v2` | `OBSERVE → COMPILE → QUERY → SOURCE READBACK` | T0–T6 observations | evidence graph/query result | mechanism `IMPLEMENTED`; not selected |
-| `loop_wiki/loopx-decision-memory/` | `loopx-decision-memory` | `PROPOSE → HUMAN ADMIT → LEDGER EVENT → PROJECT → EXPIRE/DELETE` | evidence-bound proposal | memory event/projection | PR #125/#126 merged; not selected |
+| `loop_wiki/loopx-decision-memory/` | `loopx-decision-memory` | `PROPOSE → AUTOMATED ADMIT → LEDGER EVENT → PROJECT → EXPIRE/DELETE` | evidence-bound proposal | memory event/projection | PR #125/#126 merged; not selected |
 | `loop_wiki/loopx-source-ingest/` | `loopx-source-ingest` | `DECLARE → AUTHORIZE → CAPTURE → HASH → MANIFEST` | media/text/code source refs | immutable evidence manifest | PR #127 merged; not selected |
 | `loop_wiki/loopx-notes-retrieval/` | `loopx-notes-retrieval` | `PIN NOTES → BUILD → QUERY → READBACK → REBUILD` | Notes release | static/vector/graph projection | PR #128 merged; not selected |
 | `loop_wiki/loopx-knowledge-compiler/` | `loopx-knowledge-compiler` | `EVIDENCE → CARDS → SPEC IR → CODEOP → CANDIDATE` | knowledge release | scaffold/code-operation candidate | PR #118 merged; queue admission pending |
@@ -144,7 +144,7 @@ The blocking gap is composition selection plus exact-subject live evidence, not 
 | `kb-ingest/`, `openwiki/` | `openwiki` | `REQUEST → DRY/FULL OPT-IN → VERIFY → RECEIPT` | wiki request | tracked projection | mechanism `IMPLEMENTED` |
 | `docs/knowledge-providers/` | `knowledge-providers` | `MANIFEST → QUERY/PROPOSAL → SOURCE READBACK → ADMIT` | exact subject/capability | candidate result | contracts `IMPLEMENTED`; live varies |
 | `.github/workflows/` | cloud verifier | `EVENT → EXACT CHECKOUT → DETERMINISTIC GATE → STATUS` | push/PR subject | GitHub check | `IMPLEMENTED`; skipped/stale is not PASS |
-| final convergence artifacts (`.arena/compositions/`, locks, `data/module-proof/`) | #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE CANARIES → HUMAN RELEASE` | admitted terminal subjects | immutable release/rollback | `BLOCKED_BY_PREDECESSORS` |
+| final convergence artifacts (`.arena/compositions/`, locks, `data/module-proof/`) | #68 | `PIN TERMINALS → SELECT → LOCK → PROVE → LIVE CANARIES → AUTOMATED RELEASE` | admitted terminal subjects | immutable release/rollback | `BLOCKED_BY_PREDECESSORS` |
 
 Detailed map: [`docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md`](docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md).
 
@@ -181,12 +181,12 @@ runtime-env secret-free release ───────────┘
                                                      ↓
                   convergence composes exact terminal subjects
                                                      ↓
-                                      Human Admit
+                                  Automated admission
                                   ├─ promote
                                   └─ reject / rollback
 ```
 
-No Worker, provider, graph checkpoint, UI, memory store, vector index, local CI simulator, Git Town exit code or model prose can skip the Gate, reducer and Human boundaries.
+No Worker, provider, graph checkpoint, UI, memory store, vector index, local CI simulator, Git Town exit code or model prose can skip the Gate, reducer and automated-admission boundaries.
 
 ## Git Town Stacked-PR governance
 
@@ -199,7 +199,7 @@ blob:       eb2d915bca3e8a3938625f7d33a10fae95a15769
 path:       skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-Bettor does **not** copy a local same-name `SKILL.md`. It owns the repository profile, task packets, path leases, queue/index, wrappers/evals and Human policy under [`docs/git/`](docs/git/README.md).
+Bettor does **not** copy a local same-name `SKILL.md`. It owns the repository profile, task packets, path leases, queue/index, wrappers/evals and automated-admission policy under [`docs/git/`](docs/git/README.md).
 
 The repository's current shared-Skills binding pins `b3c722da1c40301b0a12e0ef99848d884bfc720b`; that tree contains the same Git blob `eb2d915bca3e8a3938625f7d33a10fae95a15769` at the path above. This is byte-equivalence evidence for the method reference, not runtime selection.
 
@@ -215,7 +215,7 @@ Git Town executable/version/checksum     ABSENT
 license/SBOM/legal admission             NOT_REVIEWED
 live no-push sync                        NOT_EXERCISED
 publication canary                       NOT_EXERCISED
-merge / ship / rollback                  HUMAN-OWNED
+merge / ship / rollback                  AUTOMATION-POLICY-OWNED
 ```
 
 ## Ordered PDF terminal Stack
@@ -322,7 +322,7 @@ sh loopctl/loopctl.sh --selftest
 
 ### Stateless MCP
 
-MCP tools derive from the canonical CLI contract and `.arena/mcp-policy.json`, default deny. Callers cannot supply generic shell text, arbitrary host paths, secrets, browser profiles or Human Admit operations.
+MCP tools derive from the canonical CLI contract and `.arena/mcp-policy.json`, default deny. Callers cannot supply generic shell text, arbitrary host paths, secrets or browser profiles; irreversible operations require named automated-admission tools.
 
 ### Ordered sequence verifier
 
@@ -366,25 +366,25 @@ SKIPPED_BY_POLICY
 Conflict states remain recorded:
 
 ```text
-BLOCKED_HUMAN_DECISION
+BLOCKED_POLICY
 RESOLVED_BY_HUMAN
 ```
 
 A merged child is `MERGED_TO_MAIN` only when current-main reachability proves it. A later queue item is not complete merely because its issue, branch or fixture exists.
 
-## Human-owned boundaries
+## Automated-admission boundaries
 
-A model or background Worker must not:
+A model or background Worker may invoke push, merge, queue, provider, promotion
+and rollback operations only through the named exact-subject typed controllers in
+[`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md). It must not:
 
-- resolve semantic Git conflicts;
-- continue, skip or undo a blocked Git Town operation;
-- create a future terminal branch before queue activation;
+- guess a semantic Git conflict winner or continue, skip or undo outside policy;
+- create a future terminal branch before queue activation or a scoped waiver;
 - change remotes, credential helpers or permissions;
-- push, merge, ship, close or delete branches;
-- select production providers, models, runtimes or credentials;
+- use raw push, merge, ship, close or delete paths;
+- select production providers, models, runtimes or credentials without the required manifest, bounds and receipt;
 - issue an unscoped exception;
-- Human Admit a release;
-- perform production rollback.
+- admit a release or perform rollback outside the exact-subject automated controller.
 
 ## Current boundary
 

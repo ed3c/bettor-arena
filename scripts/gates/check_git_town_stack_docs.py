@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 MAIN = "ea8c4a101bcf44ffe54c78ef53da583afa9efad2"
-SCHEMA = "bettor-arena/stack-pr-index/v1"
+SCHEMA = "bettor-arena/stack-pr-index/v2"
 SKILL = {
     "repository": "ed3c/skills-shared",
     "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
@@ -23,7 +23,7 @@ GIT_TOWN = {
     "configuration_state": "ABSENT",
     "live_sync_state": "NOT_EXERCISED",
     "publication_state": "NOT_EXERCISED",
-    "human_admit": "NOT_PERFORMED",
+    "automation_policy": "POLICY_ADMITTED",
 }
 FILES = """README.md AGENTS.md CLAUDE.md docs/README.md docs/INDEX.md docs/git/README.md docs/git/REPO_PROFILE.md docs/git/STACKED_PRS.md docs/git/WORKER_PROTOCOL.md docs/git/GIT_TOWN_ADMISSION.md docs/git/stack-prs.index.schema.json docs/git/stack-prs.index.json docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md docs/architecture/STATE_MACHINES.md docs/architecture/agent-entrypoints.contract.json docs/traceability/STACK_PR_INDEX.md .arena/contexts/macro.json""".split()
 MARK = {
@@ -38,7 +38,11 @@ MARK = {
         "## Completion contract",
     ],
     "CLAUDE.md": ["docs/git/REPO_PROFILE.md", SKILL["path"], "Claude Code 不得"],
-    "docs/git/README.md": ["## State Machine", "## Data flow", "Human Admit boundary"],
+    "docs/git/README.md": [
+        "## State Machine",
+        "## Data flow",
+        "Automated admission boundary",
+    ],
     "docs/git/REPO_PROFILE.md": [
         "binary_state: ABSENT",
         "configuration_state: ABSENT",
@@ -244,16 +248,16 @@ def validate(v):
         e.append("CONFLICT")
     if c and not c.get("resolution"):
         e.append("CONFLICT RESOLUTION")
-    human = set(d.get("human_owned_operations", []))
+    automation = set(d.get("automation_owned_operations", []))
     for x in (
-        "semantic conflict resolution",
+        "semantic conflict resolution with a deterministic winner declared by policy",
         "remote publication",
         "merge ship close or delete",
         "promotion",
         "rollback",
     ):
-        if x not in human:
-            e.append("HUMAN")
+        if x not in automation:
+            e.append("AUTOMATION")
     for z in (v["entry"].get("canonical_documents", []), v["macro"].get("common", [])):
         for x in (
             "docs/git/README.md",
@@ -336,7 +340,7 @@ def main():
             print("GIT-TOWN-STACK-RED", x, file=sys.stderr)
         return 2
     print(
-        "PASS Git Town Stack governance: profile, routes, DAG, conflict and Human boundaries"
+        "PASS Git Town Stack governance: profile, routes, DAG, conflict and automation boundaries"
     )
     return 0
 

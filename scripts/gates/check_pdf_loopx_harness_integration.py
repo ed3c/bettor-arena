@@ -59,10 +59,11 @@ REQUIRED_PROMOTIONS = {
     "merged child PR -> bytes present on main without convergence",
     "LangGraph checkpoint -> canonical LoopX authority",
     "raw chain-of-thought -> durable episodic memory",
-    "force_skip string -> Human Admit or exception authority",
+    "force_skip string -> automated admission or exception authority",
 }
 EXTERNAL_OWNERS = {
     "human/source",
+    "automated-admission-controller",
     "skills-shared",
     "runtime-env",
     "host/provider",
@@ -625,7 +626,12 @@ def selftest(root: Path, value: dict[str, Any]) -> dict[str, Any]:
             "unlabelled-cycle",
             "unlabelled cycle",
             lambda x: x["data_flow"]["edges"].append(
-                {"from": "HUMAN", "to": "SOURCE", "type": "cycle", "feedback": False}
+                {
+                    "from": "AUTOMATION",
+                    "to": "SOURCE",
+                    "type": "cycle",
+                    "feedback": False,
+                }
             ),
         ),
         (

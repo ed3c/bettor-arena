@@ -41,7 +41,7 @@ bettor-arena/
 │   ├── bindings/      # skills-shared resolver 產的 commit/tree/requirements/registry/per-skill digest closure
 │   └── module-set.json # skills-shared + runtime-env + Claude/Codex adapter 的唯一聚合介面
 ├── .arena/            # machine-readable 模組控制面：schemas/manifests/compositions/locks/contexts/presets/origins/browser/MCP policy；
-│                      #   每個 module.json 必有相鄰 README；deterministic contract 綠不代理 live provider/Human Admit
+│                      #   每個 module.json 必有相鄰 README；deterministic contract 綠不代理 live provider/automated admission
 ├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:
 │                      #   skill/upstream/retargeted_at/body_commit)。判準:原封搬到別的 repo 還為真嗎?
 │                      #   不為真就落此槽——registry、worked instance 指針、環境路徑、移植帳本。
@@ -64,7 +64,7 @@ bettor-arena/
 ├── loop_wiki/
 │   ├── evolve-perfect-seed-repo-factory/   # 工廠沙盒(自足 TS;trigger.sh 入口;S3 落地)
 │   ├── evolve-technical-equivalence-research/ # 技術觀點→落地等價物小迴圈(profile+五類 packet+Gemini adapter;
-│   │                  #   只產 candidate sync bundle，skill-bettor target-side Human admit 才可套用)
+│   │                  #   只產 candidate sync bundle，skill-bettor target-side automated admission 才可套用)
 │   └── code-truth-graph/ # 通用 CTG runtime 沙盒；closed packet、content-addressed snapshot、
 │                         # pinned tool profile、0/2/64 與 graph/result artifacts；不持有 ix domain/raw evidence
 ├── mcp/               # MCP adapter 層(context-pack+production 引擎;S10 落地)
@@ -150,4 +150,4 @@ bettor-arena/
    先有對應的紅)。
 7. 重複組件禁字面推論等價:判等價=讀碼+真跑;load-bearing 且判錯有代價=重建並列量測。
 8. `.arena/` 是 manifest-first 控制面；每一個綠只證它具名的 catalog/ownership/proof/context/MCP/project/environment contract，
-   不得代理 live Claude/Codex、signed-in browser、Forgejo/GitHub 等價、cloud runtime、Human Admit 或 production promotion。
+   不得代理 live Claude/Codex、signed-in browser、Forgejo/GitHub 等價、cloud runtime、automated-admission receipt 或 production promotion。

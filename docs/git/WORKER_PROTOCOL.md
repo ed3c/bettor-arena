@@ -19,8 +19,8 @@ Git Town
 GitHub
   owns publication metadata and exact-head checks
 
-Human
-  resolves semantic conflicts and owns merge/ship/promotion/rollback
+Automated admission controller
+  owns exact-subject merge/ship/queue/provider/promotion/rollback operations
 ```
 
 ## Worker State Machine
@@ -40,7 +40,7 @@ PACKET_RECEIVED
    └─ BLOCKED → STOP
 → CLEANUP_VERIFIED
 → RECEIPT_EMITTED
-→ HUMAN_REVIEW
+→ AUTOMATED_ADMISSION
 ```
 
 Current implementation state:
@@ -80,7 +80,7 @@ negative_or_mutation_controls:
 evidence_boundary: string
 cleanup_contract: string
 rollback_subject: exact commit or release subject
-human_owned_operations:
+automation_owned_operations:
   - operation
 ```
 
@@ -202,7 +202,8 @@ capture conflicted files and repository status
 stop the Worker
 preserve worktree and branch
 emit CONFLICT receipt
-return control to Human
+return control to the automated-admission controller, which either applies an
+already-declared deterministic winner or records `CONFLICT` and stops
 ```
 
 A Worker must not:
@@ -255,7 +256,7 @@ local Git Town sync
   ≠ release promotion
 ```
 
-Only the `github-delivery-loop` publication owner or a trusted operator may perform the later GitHub edge after all local evidence settles.
+Only the `github-delivery-loop` typed publication/admission controller may perform the later GitHub edge after all local evidence settles.
 
 ## Cleanup contract
 
@@ -278,7 +279,7 @@ Rollback requires:
 ```text
 exact pre-operation subject
 content-bound after state
-Human authorization
+automated-admission authorization bound to the rollback subject
 verification after rollback
 receipt
 ```

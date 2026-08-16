@@ -13,7 +13,7 @@ final convergence: #68
 repository profile: ../git/REPO_PROFILE.md
 ```
 
-Refresh the ordered queue whenever an affected issue, branch, PR, exact head, path lease, check, main reachability or Human waiver changes.
+Refresh the ordered queue whenever an affected issue, branch, PR, exact head, path lease, check, main reachability or policy-waiver receipt changes.
 
 ## Git Town status
 
@@ -39,7 +39,7 @@ blob: eb2d915bca3e8a3938625f7d33a10fae95a15769
 path: skills/git-town-stacked-pr-worker/SKILL.md
 ```
 
-Bettor owns repository profile, queue, task packet, path lease, Stack index, evals, receipts and Human policy. It does not copy or shadow the shared Skill.
+Bettor owns repository profile, queue, task packet, path lease, Stack index, evals, receipts and automated-admission policy. It does not copy or shadow the shared Skill.
 
 The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` contains the same blob at the same path. This is exact byte-equivalence evidence; the Skill remains `NOT_SELECTED`.
 
@@ -78,7 +78,7 @@ order 24  #101      Git Town runtime admission                     BLOCKED_BY_PR
 order 25  #68       final convergence/release/rollback             FINAL_CONVERGENCE
 ```
 
-Only one item may be `ACTIVE`. Queue order serializes completion, while branch ancestry follows actual byte dependency. A future implementation branch is not created before activation unless a Human records a scoped exception.
+Only one item may be `ACTIVE`. Queue order serializes completion, while branch ancestry follows actual byte dependency. A future implementation branch is not created before activation unless the automated-admission controller records a scoped policy waiver.
 
 ## Terminal implementation PR reachability
 
@@ -149,7 +149,7 @@ skills-shared procedure
 + runtime-env secret-free runtime contract
 → bettor-arena integration/acceptance
 → agent-shield-monorepo reference product/canaries
-→ Human promotion or rollback
+→ automated promotion or rollback
 ```
 
 ## Modular platform implementation spine
@@ -229,21 +229,21 @@ source proposal or incident
 → runtime/host/provider receipt where applicable
 → queue advancement receipt
 → issue #68 convergence
-→ Human Admit
+→ automated admission
 ```
 
-## Human-owned operations
+## Automation-owned operations
 
-Agents and background Workers must not:
+Agents and background Workers may invoke these operations only through the named
+exact-subject controller. They must not:
 
-- resolve semantic conflicts;
-- run Git Town continue, skip or undo;
-- create future terminal branches before activation;
-- push, merge, ship, close or delete branches;
+- guess semantic conflicts or run Git Town continue, skip or undo outside policy;
+- create future terminal branches before activation or a scoped waiver;
+- use raw push, merge, ship, close or delete paths;
 - change remotes, credentials or permissions;
-- activate providers, models, runtimes or secrets;
-- admit scoped exceptions or destructive cleanup;
-- promote or roll back production.
+- activate providers, models, runtimes or secrets without the required manifest and receipt;
+- admit unscoped exceptions or destructive cleanup;
+- promote or roll back production outside the release controller.
 
 ## Update protocol
 
@@ -258,4 +258,4 @@ When queue or Stack topology changes, update together:
 - relevant directory/State-Machine maps;
 - deterministic verifier fixtures and exact-head checks.
 
-Do not merge, ship, close, delete, promote or roll back without Human Admit.
+Merge, ship, close, delete, promote and roll back only through the exact-subject automated-admission controller.

@@ -32,7 +32,7 @@ remote publication risk
 rollback surface
 ```
 
-That requires its own terminal leaf, controls and Human review.
+That requires its own terminal leaf, controls and automated-admission receipt.
 
 ## Admission State Machine
 
@@ -50,7 +50,7 @@ SOURCE SELECTED
 → CONFLICT STOP CANARY
 → NO-PUSH CANARY
 → CONFIG CANDIDATE
-→ HUMAN ADMIT
+→ AUTOMATED ADMISSION
 → ENABLED
 ```
 
@@ -77,7 +77,7 @@ sbom:
   format: SPDX or CycloneDX
   sha256: 64-hex digest
 legal_decision:
-  authority: Human
+  authority: automated-admission-controller
   state: accepted | rejected
 execution:
   environment: disposable
@@ -151,7 +151,7 @@ GitHub publication PASS
 merge / release promotion
 ```
 
-GitHub exact-head checks and Human Admit remain separate.
+GitHub exact-head checks and automated admission remain separate evidence stages.
 
 ## Current repository profile
 
@@ -161,7 +161,7 @@ Read [`REPO_PROFILE.md`](REPO_PROFILE.md). The profile intentionally declares:
 binary_state: ABSENT
 configuration_state: ABSENT
 push_default: false
-merge/ship: HUMAN-OWNED
+merge/ship: AUTOMATION-POLICY-OWNED
 ```
 
 ## Unblock criteria
@@ -177,7 +177,7 @@ Git Town may move from executable `ABSENT` to runtime candidate only after:
 7. cleanup and rollback receipts exist;
 8. repository profile and Stack index are updated;
 9. exact-head GitHub checks pass;
-10. Human Admit records the activation decision.
+10. The automated-admission controller records the activation decision and readback.
 
 ## Remaining non-goals of the current mechanism
 

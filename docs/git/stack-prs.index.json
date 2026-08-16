@@ -1,5 +1,5 @@
 {
-  "schema": "bettor-arena/stack-pr-index/v1",
+  "schema": "bettor-arena/stack-pr-index/v2",
   "observed_at": "2026-08-14T13:47:40Z",
   "authority": {
     "current": "GITHUB_API_AND_REPOSITORY_BYTES",
@@ -32,7 +32,7 @@
     "configuration_state": "ABSENT",
     "live_sync_state": "NOT_EXERCISED",
     "publication_state": "NOT_EXERCISED",
-    "human_admit": "NOT_PERFORMED"
+    "automation_policy": "POLICY_ADMITTED"
   },
   "program": {
     "issue": 61,
@@ -82,7 +82,7 @@
             "docs/traceability"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns merge, retarget, close and rollback"
+          "automation_boundary": "Automated admission controller owns merge, retarget, close and rollback"
         },
         {
           "id": "pr-81",
@@ -118,7 +118,7 @@
             "tests/test_git_town_stack_docs.py"
           ],
           "rollback_subject": "ffbcd91a9eae1f6171fc7c42f0300bb83fac1b90",
-          "human_boundary": "Human owns PR publication, merge and Git Town activation"
+          "automation_boundary": "Automated admission controller owns PR publication, merge and Git Town activation"
         }
       ]
     },
@@ -161,7 +161,7 @@
             ".arena/modules/loopx-kernel"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns parent merge and composition admission"
+          "automation_boundary": "Automated admission controller owns parent merge and composition admission"
         },
         {
           "id": "pr-75",
@@ -190,7 +190,7 @@
             ".arena/modules/loopx-ledger"
           ],
           "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
-          "human_boundary": "Human must merge parent #74 before claiming main integration"
+          "automation_boundary": "Automated admission controller must merge parent #74 before claiming main integration"
         },
         {
           "id": "pr-76",
@@ -224,7 +224,7 @@
             "loopctl/workflow.lock"
           ],
           "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
-          "human_boundary": "Human must resolve duplicate issue/path authority with PR #77"
+          "automation_boundary": "Automated admission controller must resolve duplicate issue/path authority with PR #77"
         },
         {
           "id": "pr-77",
@@ -254,7 +254,7 @@
             "loopctl/workflow.lock"
           ],
           "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
-          "human_boundary": "Human must resolve duplicate issue/path authority with PR #76"
+          "automation_boundary": "Automated admission controller must resolve duplicate issue/path authority with PR #76"
         },
         {
           "id": "pr-78",
@@ -287,7 +287,7 @@
             ".arena/modules/loopx-decision-memory"
           ],
           "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
-          "human_boundary": "Human owns memory admission, merge and provider activation"
+          "automation_boundary": "Automated admission controller owns memory admission, merge and provider activation"
         },
         {
           "id": "pr-79",
@@ -320,7 +320,7 @@
             ".arena/modules/code-truth-graph-v2"
           ],
           "rollback_subject": "410f2631e80e51e9c10f862b76a6a5d27eee5ac2",
-          "human_boundary": "Human owns graph admission, merge and provider activation"
+          "automation_boundary": "Automated admission controller owns graph admission, merge and provider activation"
         },
         {
           "id": "issue-65",
@@ -344,7 +344,7 @@
             "loop_wiki/loopx-strategy-hitl"
           ],
           "rollback_subject": "2fd05408f585f6b8999a7922d4995d8379795eb2",
-          "human_boundary": "Human owns HITL exception/admission"
+          "automation_boundary": "Automated admission controller owns HITL exception/admission"
         },
         {
           "id": "issue-66",
@@ -368,7 +368,7 @@
             "loop_wiki/loopx-runtime-fabric"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns runtime/provider admission"
+          "automation_boundary": "Automated admission controller owns runtime/provider admission"
         },
         {
           "id": "issue-67",
@@ -392,7 +392,7 @@
             "loop_wiki/loopx-observability"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns signed HITL actions"
+          "automation_boundary": "Automated admission controller owns signed HITL actions"
         },
         {
           "id": "issue-68",
@@ -416,7 +416,7 @@
             "docs/traceability"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns final merge/promotion/rollback"
+          "automation_boundary": "Automated admission controller owns final merge/promotion/rollback"
         },
         {
           "id": "issue-70",
@@ -440,7 +440,7 @@
             "loop_wiki/notes-to-scaffold"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns generated scaffold admission"
+          "automation_boundary": "Automated admission controller owns generated scaffold admission"
         },
         {
           "id": "issue-71",
@@ -464,7 +464,7 @@
             "loop_wiki/code-knowledge-foldback"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns knowledge writeback"
+          "automation_boundary": "Automated admission controller owns knowledge writeback"
         },
         {
           "id": "issue-72",
@@ -488,7 +488,7 @@
             "loop_wiki/skill-prompt-evolution"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human owns Skill promotion"
+          "automation_boundary": "Automated admission controller owns Skill promotion"
         }
       ]
     },
@@ -527,7 +527,7 @@
             "scripts/evaluate_knowledge_providers.py"
           ],
           "rollback_subject": "d291523856988cfa54316dba967fea8470194b72",
-          "human_boundary": "Human owns provider admission and conflict repair"
+          "automation_boundary": "Automated admission controller owns provider admission and conflict repair"
         }
       ]
     },
@@ -559,7 +559,7 @@
             "docs/knowledge-providers"
           ],
           "rollback_subject": "10380005fa485d6035539589c01b9f740acff15d",
-          "human_boundary": "Human must extract unique delta before close or supersession"
+          "automation_boundary": "Automated admission controller must extract unique delta before close or supersession"
         }
       ]
     }
@@ -585,8 +585,8 @@
       "resolution": "Owner admitted #76 (the 82-file implementation) and closed #77, a separate 19-file implementation of the same module, as superseded. #77's 8 unique files are tracked in issue #82."
     }
   ],
-  "human_owned_operations": [
-    "semantic conflict resolution",
+  "automation_owned_operations": [
+    "semantic conflict resolution with a deterministic winner declared by policy",
     "Git Town executable and legal admission",
     "continue skip or undo",
     "remote publication",
