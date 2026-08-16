@@ -1,0 +1,93 @@
+{
+  "schema": "bettor-arena/blindspot-hybrid-binding/v1",
+  "binding_state": "CANDIDATE",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "base_commit": "d233da14ceb5ffcddc330169ab146c31d56e6191",
+    "base_tree": "dfb47f7dfc21875a01f6476597e30c3e98e2e1f8"
+  },
+  "replacement": {
+    "code_graph_rag": "RETIRED_FROM_ACTIVE_COMPOSITION",
+    "legacy_eval_registry": "COMPATIBILITY_ONLY_PENDING_MIGRATION"
+  },
+  "authority": {
+    "observation_ledger": "sqlite",
+    "source_claim_admission": ["source-readback"],
+    "behavior_claim_admission": ["source-readback", "test"],
+    "vector_projection": "lancedb",
+    "provider_self_admission": false
+  },
+  "active_lanes": {
+    "grepai": {
+      "role": "intent-anchor-and-runtime-mcp-exploration",
+      "evidence_ceiling": "B+_CANDIDATE",
+      "provider_manifest": "docs/knowledge-providers/providers/grepai.json",
+      "runtime_state": "NOT_CONFIGURED"
+    },
+    "scip": {
+      "role": "compiler-indexed-symbol-relation-candidate",
+      "evidence_ceiling": "A-_PINNED_INDEX_CANDIDATE",
+      "source_repository": "scip-code/scip",
+      "source_commit": "5890b2ac1c0970c5606b71c833b733cffd091c90",
+      "license": "Apache-2.0",
+      "runtime_state": "NOT_CONFIGURED"
+    },
+    "tree-sitter": {
+      "role": "ast-structure-and-coverage",
+      "evidence_ceiling": "A-_PINNED_GRAMMAR_CANDIDATE",
+      "source_repository": "tree-sitter/tree-sitter",
+      "source_commit": "dff1fd868c750dbbae179fcd5c43ce987e4e0528",
+      "license": "MIT",
+      "runtime_state": "NOT_CONFIGURED"
+    },
+    "serena": {
+      "role": "symbol-aware-agent-executor",
+      "evidence_ceiling": "A-_READBACK_GATED_CANDIDATE",
+      "provider_manifest": "docs/knowledge-providers/providers/serena.json",
+      "runtime_state": "NOT_CONFIGURED"
+    },
+    "source-readback": {
+      "role": "current-source-admission",
+      "evidence_ceiling": "A_SOURCE_OBSERVATION",
+      "runtime_state": "NOT_EXERCISED"
+    },
+    "test": {
+      "role": "targeted-behavior-observation",
+      "evidence_ceiling": "A+_EXERCISED_ONLY",
+      "runtime_state": "NOT_EXERCISED"
+    },
+    "sqlite": {
+      "role": "authoritative-event-link-admission-ledger",
+      "implementation": "python-standard-library-sqlite3",
+      "runtime_state": "NOT_EXERCISED"
+    },
+    "lancedb": {
+      "role": "rebuildable-similarity-projection",
+      "authority": false,
+      "rebuildable": true,
+      "source_lane": "sqlite",
+      "source_repository": "lancedb/lancedb",
+      "source_commit": "928c3dde2dd94173931632bde06062e786e495be",
+      "license": "Apache-2.0",
+      "runtime_state": "NOT_CONFIGURED"
+    }
+  },
+  "architecture_constraints": [
+    "grepai never replaces SCIP or Tree-sitter",
+    "SCIP exactness is limited to emitted relations for the pinned indexed subject and language indexer",
+    "Tree-sitter covers AST structure and exposes parse/error regions, not runtime semantics",
+    "Serena consumes bounded exploration and exact/structural candidates but remains source-readback gated",
+    "SQLite is the only durable admission authority",
+    "LanceDB rows point to existing non-vector SQLite observations and can be deleted without changing admission",
+    "provider output cannot self-admit",
+    "behavioral claims require targeted execution evidence"
+  ],
+  "effects": {
+    "provider_installation": false,
+    "provider_invocation": false,
+    "mcp_start": false,
+    "database_creation": false,
+    "branch_or_pr_creation": false,
+    "forgejo_contact": false
+  }
+}
