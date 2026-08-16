@@ -9,8 +9,8 @@ import sys
 import time
 from pathlib import Path
 
+from drift import assess_mirror_state, assess_profile_integrity
 from equivalence import digest
-from drift import assess_hard_drift
 
 ROOT = Path(__file__).resolve().parent
 
@@ -137,10 +137,17 @@ def carrier_state_from_run(live_root: Path) -> str:
 
 
 def main() -> int:
+    # Both peers are now reported, never required. Each used to be resolved from
+    # this file's own path depth, so each was green only in the one checkout that
+    # sat beside its sibling repository and red in every worktree — and one of
+    # them could hold this proof red over a stale copy inside a repository this
+    # checkout cannot write to. A gate whose only exit is another repository's
+    # human admit is not a gate on this loop.
     target_peer = Path(
         os.environ.get("SKILL_BETTOR_PEER", ROOT.parents[2] / "skill-bettor")
     ).resolve()
-    hard = assess_hard_drift(target_peer)
+    integrity = assess_profile_integrity()
+    mirror = assess_mirror_state(target_peer)
     checks = [
         run("public-cli", [sys.executable, str(ROOT / "tests" / "test_cli.py")]),
         run("drift-gates", [sys.executable, str(ROOT / "tests" / "test_drift.py")]),
@@ -153,9 +160,22 @@ def main() -> int:
             [sys.executable, str(ROOT / "legacy_compare.py"), "--selftest"],
         ),
         {
-            "name": "hard-drift",
-            "exit": 0 if hard["state"] in {"not_admitted", "no_drift"} else 2,
-            "state": hard["state"],
+            "name": "profile-integrity",
+            "exit": 0 if integrity["state"] == "intact" else 2,
+            "state": integrity["state"],
+            "failures": integrity["failures"],
+        },
+        {
+            "name": "peer-mirror",
+            "exit": 0,
+            "state": mirror["state"],
+            "failures": mirror["failures"],
+            "gating": False,
+            "note": (
+                "reported only: this state describes "
+                f"{mirror.get('peer', target_peer)}, and its repair is a re-sync "
+                "plus admission inside that peer"
+            ),
         },
     ]
     offline_red = any(check["exit"] != 0 for check in checks)
@@ -231,7 +251,8 @@ def main() -> int:
             }
             drift_receipt = {
                 "schema_version": "technical-equivalence-drift-receipt@1.0.0",
-                "hard": hard,
+                "profile_integrity": integrity,
+                "peer_mirror": mirror,
                 "soft": soft,
                 "observation": observation,
             }
@@ -259,7 +280,8 @@ def main() -> int:
         "status": "failed" if red else "passed",
         "live_gemini": live,
         "assurance": assurance_states(red=offline_red, live=live),
-        "hard_drift": hard,
+        "profile_integrity": integrity,
+        "peer_mirror": mirror,
         "profile_sha256": f"sha256:{profile_sha}",
         "checks": checks,
     }
@@ -284,6 +306,14 @@ def main() -> int:
     path.write_text(encoded, encoding="utf-8")
     print(f"receipt={path}")
     print("SELFTEST " + ("RED" if red else "GREEN") + f" live={live}")
+    if mirror["state"] == "mirror_drift":
+        # Non-gating, so it has to be said out loud. A drift that only lands in
+        # a JSON field nobody opens is indistinguishable from no drift.
+        print(
+            f"PEER-MIRROR {mirror['state']} at {mirror['peer']}: "
+            f"{'; '.join(mirror['failures'])} — re-sync and admit inside that "
+            "repository; it does not gate this loop"
+        )
     if red:
         # A red that cannot say what clears it becomes a red nobody reads, and
         # this one has an answer: the checks know which of them failed, and the
@@ -292,13 +322,11 @@ def main() -> int:
         # mechanism that computes it rather than being restated beside the proof,
         # where it would drift.
         failing = [c["name"] for c in checks if c["exit"] != 0]
-        if hard["state"] == "hard_drift":
+        if integrity["state"] != "intact":
             route = (
-                "the admitted mirror predates the current profile — "
-                "`equivalence.py run --execute-gemini` to candidate_ready, then audit-probe the "
-                "load-bearing candidates into technical_equivalent (a judge packet is only built "
-                "once at least one reaches it), then the fresh judge, then human admit. "
-                f"drift failures: {'; '.join(hard['failures'])}"
+                "the canonical profile in this repository is damaged, and every "
+                "downstream digest is computed from it — repair it here first: "
+                f"{'; '.join(integrity['failures'])}"
             )
         else:
             route = f"repair the failing check(s) and re-run: {', '.join(failing)}"

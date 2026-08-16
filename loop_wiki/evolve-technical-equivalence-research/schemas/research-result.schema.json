@@ -70,6 +70,19 @@
               "spdx": {"type": "string", "minLength": 1},
               "source_urls": {"type": "array", "minItems": 1},
               "code_anchors": {"type": "array"},
+              "adopters": {
+                "description": "Named production adopters backing the commercially_adoptable tier. Optional: absent means the candidate does not claim that tier, not that adoption was checked and denied.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["org", "source_url"],
+                  "properties": {
+                    "org": {"type": "string", "minLength": 1},
+                    "source_url": {"type": "string", "pattern": "^https://"}
+                  }
+                }
+              },
               "inference": {"const": false}
             }
           }

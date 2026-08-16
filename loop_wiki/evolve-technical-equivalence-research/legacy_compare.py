@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
-"""Run the legacy topic extractor and compare load-bearing prompt fragments."""
+"""Compare the rebuilt extractor against frozen legacy evidence held in-repo.
+
+The peer used to be a gate input: this check read `antigravity/data.js` and
+`automate.js` directly and returned 64 when they were absent. That made the
+control resolve a sibling repository by its own path depth
+(`ROOT.parents[2] / "antigravity"`), so it was green in the checkout that
+happened to sit beside that peer and red in every worktree — an upward
+resolution that can only ever pass in one place on one machine.
+
+The evidence itself does not need the peer. The four load-bearing prompt bodies
+were already frozen byte-for-byte in `profile/legacy-baseline.md`, and the one
+thing that still required executing the legacy JavaScript — its topic-extractor
+behaviour — is now frozen there too, as an input/output pair captured by running
+that JavaScript rather than by recording what the rebuild returns. A baseline
+written from the rebuild would compare the rebuild against itself.
+
+The peer remains an *upgrade*, never a requirement: with `ANTIGRAVITY_PEER` set
+and present, the frozen bytes are re-verified against it and a drift is a hard
+failure. Absent, the frozen copy answers alone and the receipt line says so, so
+a reader never has to guess which of the two evidence levels produced the green.
+"""
 
 from __future__ import annotations
 
@@ -14,76 +34,107 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from equivalence import parse_gap_topics  # noqa: E402
 
+BASELINE = ROOT / "profile" / "legacy-baseline.md"
+PROFILE = ROOT / "profile" / "technical-equivalence.md"
 
-def main() -> int:
-    peer = Path(os.environ.get("ANTIGRAVITY_PEER", ROOT.parents[2] / "antigravity"))
-    data = peer / "data.js"
-    automate = peer / "automate.js"
+FROZEN_BODIES = (
+    "COMPLETENESS_RUBRIC",
+    "PATH_B_REFINE_TEMPLATE",
+    "SINGLE_GAP_QUERY",
+    "BATCH_GAP_QUERY",
+)
+PROFILE_FRAGMENTS = (
+    "P1 部署拓撲",
+    "P9 可觀測性",
+    "V1 核心主張與底層機制",
+    "V5 實證／數據佐證",
+    "技術實現等價物（必做）",
+    "每一缺口都要給技術實現等價物",
+)
+
+
+class BaselineError(RuntimeError):
+    pass
+
+
+def frozen(baseline: str, name: str) -> str:
+    start, end = f"<!-- {name}:START -->\n", f"\n<!-- {name}:END -->"
+    if start not in baseline or end not in baseline:
+        raise BaselineError(f"baseline markers absent: {name}")
+    body = baseline.split(start, 1)[1].split(end, 1)[0]
+    if not body.strip():
+        raise BaselineError(f"baseline block empty: {name}")
+    return body
+
+
+def check(baseline: str, profile: str) -> list[str]:
+    """Everything decidable from this repository alone."""
+    failures = []
+    missing = [x for x in PROFILE_FRAGMENTS if x not in profile]
+    if missing:
+        failures.append(f"profile fragment drift: {missing}")
+    for name in FROZEN_BODIES:
+        frozen(baseline, name)
+
+    # The captured input carried a trailing newline that the marker convention
+    # strips, and the extractor's last-line handling is exactly what this pair
+    # pins — so it is restored explicitly rather than left to the reader.
+    gap = frozen(baseline, "GAP_TOPICS_INPUT") + "\n"
+    expected = json.loads(frozen(baseline, "GAP_TOPICS_OUTPUT"))
+    observed, truncated = parse_gap_topics(gap)
+    if observed != expected:
+        failures.append(f"extractor drift: frozen={expected!r} rebuilt={observed!r}")
+    if truncated:
+        failures.append(f"frozen input unexpectedly truncated: {truncated!r}")
+    return failures
+
+
+def reverify_against_peer(peer: Path, baseline: str) -> tuple[str, list[str]]:
+    """Optional stronger lane: the frozen bytes still match the live legacy.
+
+    Returns (state, failures). A peer that is absent is `not_bound`, never a
+    failure — absence of the upgrade is not evidence of drift, and conflating
+    the two is what made this an unrunnable check outside one directory.
+    """
+    data, automate = peer / "data.js", peer / "automate.js"
     if not data.is_file() or not automate.is_file():
-        print(f"NOT_EXERCISED: legacy peer absent: {peer}", file=sys.stderr)
-        return 64
-    profile = (ROOT / "profile" / "technical-equivalence.md").read_text(
-        encoding="utf-8"
-    )
-    baseline = (ROOT / "profile" / "legacy-baseline.md").read_text(encoding="utf-8")
+        return "not_bound", []
+
+    failures = []
     data_source = data.read_text(encoding="utf-8")
     automate_source = automate.read_text(encoding="utf-8")
     source = data_source + automate_source
-    fragments = [
-        "P1 部署拓撲",
-        "P9 可觀測性",
-        "V1 核心主張與底層機制",
-        "V5 實證／數據佐證",
-        "技術實現等價物（必做）",
-        "每一缺口都要給技術實現等價物",
-    ]
-    missing_source = [x for x in fragments if x not in source]
-    missing_profile = [x for x in fragments if x not in profile]
-    if missing_source or missing_profile:
-        print(
-            f"FAIL: fragment drift source={missing_source} profile={missing_profile}",
-            file=sys.stderr,
-        )
-        return 2
+    missing = [x for x in PROFILE_FRAGMENTS if x not in source]
+    if missing:
+        failures.append(f"peer fragment drift: {missing}")
 
-    def legacy_const(name: str) -> str:
+    def legacy_const(name: str) -> str | None:
         match = re.search(rf"export const {name} = `(.*?)`;", data_source, re.S)
-        if not match:
-            raise ValueError(f"legacy const absent: {name}")
-        return match.group(1)
-
-    def frozen(name: str) -> str:
-        start, end = f"<!-- {name}:START -->\n", f"\n<!-- {name}:END -->"
-        if start not in baseline or end not in baseline:
-            raise ValueError(f"baseline markers absent: {name}")
-        return baseline.split(start, 1)[1].split(end, 1)[0]
+        return match.group(1) if match else None
 
     queries = re.findall(
         r"const q = `(基於以下「已知相關資訊」.*?\$\{reportMd\})`;",
         automate_source,
         re.S,
     )
-    if len(queries) != 2:
-        print(
-            f"FAIL: expected two legacy gap queries, found {len(queries)}",
-            file=sys.stderr,
-        )
-        return 2
-    exact = {
+    live = {
         "COMPLETENESS_RUBRIC": legacy_const("COMPLETENESS_RUBRIC"),
         "PATH_B_REFINE_TEMPLATE": legacy_const("PATH_B_REFINE_TEMPLATE"),
-        "SINGLE_GAP_QUERY": queries[0],
-        "BATCH_GAP_QUERY": queries[1],
+        "SINGLE_GAP_QUERY": queries[0] if len(queries) == 2 else None,
+        "BATCH_GAP_QUERY": queries[1] if len(queries) == 2 else None,
     }
-    drift = [name for name, body in exact.items() if body != frozen(name)]
-    if drift:
-        print(f"FAIL: byte-exact legacy baseline drift: {drift}", file=sys.stderr)
-        return 2
-    gap = "前言\n研究題目清單\n1. Durable packet state implementation\n2）Retry and rollback production mechanism\n題目三：Observability evidence and eval pipeline\n"
-    env = dict(os.environ)
-    env["GAP_TEXT"] = gap
-    module_url = data.resolve().as_uri()
-    script = f'import {{parseGapTopics}} from "{module_url}"; console.log(JSON.stringify(parseGapTopics(process.env.GAP_TEXT)));'
+    for name, body in live.items():
+        if body is None:
+            failures.append(f"peer no longer exposes {name}")
+        elif body != frozen(baseline, name):
+            failures.append(f"frozen body no longer matches peer: {name}")
+
+    gap = frozen(baseline, "GAP_TOPICS_INPUT") + "\n"
+    env = dict(os.environ, GAP_TEXT=gap)
+    script = (
+        f'import {{parseGapTopics}} from "{data.resolve().as_uri()}"; '
+        "console.log(JSON.stringify(parseGapTopics(process.env.GAP_TEXT)));"
+    )
     legacy = subprocess.run(
         ["node", "--input-type=module", "-e", script],
         env=env,
@@ -92,23 +143,89 @@ def main() -> int:
         check=False,
     )
     if legacy.returncode != 0:
-        print(
-            f"FAIL: legacy parseGapTopics did not run: {legacy.stderr}", file=sys.stderr
-        )
+        # node absent or the module stopped loading: the peer is bound but this
+        # lane could not run, which is neither a pass nor a drift.
+        return "bound_extractor_not_run", failures
+    if json.loads(legacy.stdout) != json.loads(frozen(baseline, "GAP_TOPICS_OUTPUT")):
+        failures.append("frozen extractor output no longer matches peer")
+    return "bound_reverified", failures
+
+
+def controls() -> list[str]:
+    """A green that cannot be shown to go red is not evidence of anything."""
+    baseline = BASELINE.read_text(encoding="utf-8")
+    profile = PROFILE.read_text(encoding="utf-8")
+    red = []
+
+    planted = (
+        ("profile-fragment", baseline, profile.replace("P9 可觀測性", "P9 X", 1)),
+        (
+            "extractor-output",
+            baseline.replace(
+                'Observability evidence and eval pipeline"]',
+                'something else"]',
+                1,
+            ),
+            profile,
+        ),
+        (
+            "extractor-input",
+            baseline.replace("1. Durable packet state", "1. Renamed packet state", 1),
+            profile,
+        ),
+    )
+    for name, mutated_baseline, mutated_profile in planted:
+        if mutated_baseline == baseline and mutated_profile == profile:
+            red.append(f"{name} control could not be planted")
+        elif not check(mutated_baseline, mutated_profile):
+            red.append(f"{name} control stayed green")
+
+    for name in FROZEN_BODIES + ("GAP_TOPICS_INPUT", "GAP_TOPICS_OUTPUT"):
+        removed = baseline.replace(f"<!-- {name}:START -->", "<!-- X:START -->", 1)
+        if removed == baseline:
+            red.append(f"missing-block control could not be planted: {name}")
+            continue
+        try:
+            check(removed, profile)
+        except BaselineError:
+            continue
+        red.append(f"missing-block control stayed green: {name}")
+    return red
+
+
+def main(argv: list[str]) -> int:
+    baseline = BASELINE.read_text(encoding="utf-8")
+    profile = PROFILE.read_text(encoding="utf-8")
+    try:
+        failures = check(baseline, profile)
+    except BaselineError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
         return 2
-    old = json.loads(legacy.stdout)
-    new, truncated = parse_gap_topics(gap)
-    if old != new or truncated:
-        print(
-            f"FAIL: topic extractor drift old={old!r} new={new!r} truncated={truncated!r}",
-            file=sys.stderr,
+
+    peer_state, peer_failures = "not_requested", []
+    configured = os.environ.get("ANTIGRAVITY_PEER")
+    if configured:
+        peer_state, peer_failures = reverify_against_peer(
+            Path(configured).resolve(), baseline
         )
+        failures.extend(peer_failures)
+
+    if "--selftest" in argv:
+        broken = controls()
+        if broken:
+            print(f"FAIL: red controls did not fire: {broken}", file=sys.stderr)
+            return 2
+
+    if failures:
+        for line in failures:
+            print(f"FAIL: {line}", file=sys.stderr)
         return 2
     print(
-        "PASS: four legacy prompt bodies are byte-exact and legacy/new topic extractors agree"
+        f"PASS: four legacy prompt bodies frozen in-repo and the rebuilt topic "
+        f"extractor matches the captured legacy output (peer={peer_state})"
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))
