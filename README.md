@@ -11,8 +11,8 @@ logical repository:     ed3c/bettor-arena
 observed:               2026-08-16 (GitHub REST + local Git objects)
 local main:             8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
 forgejo/main:           8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b
-github/main:            c72109e145193fdaf059944403477f01064a1c3d
-observed relation:      same-tree 0c51ea279bd2036dce281898c2e980e8378ba1cb
+github/main:            ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3
+observed relation:      local/Forgejo relation NOT_REOBSERVED for this convergence subject
 program / index:        #61 / #102 (both planning/index history)
 current active item: #140 (order 13)
 final convergence:      #68
@@ -45,7 +45,7 @@ Skill evolution / CI parity / Console / benchmark        IMPLEMENTED
 ordered acceptance through order 12                      COMPLETE
 order 12 Serena/GrepAI live canaries                     ADMITTED / COMPLETE
 six-host live execution matrix                           NOT_EXERCISED
-Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / ACTIVE
+Code-Graph-RAG canonical route / order-13 #140             RETIRED_FROM_CANONICAL_ROUTE / ACTIVE / HUMAN_ADMIT_REQUIRED
 final LoopX modules selected into release composition    ABSENT
 Git Town controller/controls                              IMPLEMENTED / PASS
 Git Town executable/config/live no-push sync             ABSENT / NOT_EXERCISED

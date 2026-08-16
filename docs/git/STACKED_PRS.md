@@ -5,10 +5,10 @@
 GitHub base/head/state/check metadata is publication truth. This document is a reviewed topology guide. The strict completion order is machine-owned by [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json).
 
 ```text
-queue base: c72109e145193fdaf059944403477f01064a1c3d
+queue base: ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3
 program: #61
 index task: #102
-active: #92 (order 12)
+active: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 convergence: #68
 canonical shared method:
   ed3c/skills-shared@c5750720d960a228a0d9419f28125c09d064e3e1
@@ -63,7 +63,7 @@ state: RESOLVED_BY_HUMAN
 follow-up: issue #82 completed the eight-file disposition
 ```
 
-PR #77 history remains indexed; issue #82 completed the explicit residual disposition. The queue head has advanced to #92.
+PR #77 history remains indexed; issue #82 completed the explicit residual disposition. The queue head has advanced through #92 and is now #140.
 
 ## Documentation governance lineage
 
@@ -94,8 +94,8 @@ Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 09 #93  Mem0 projection
 10 #104 source ingest
 11 #105 Notes retrieval                            COMPLETE
-12 #92  Serena/GrepAI live canaries                ACTIVE
-13 #41  Code-Graph-RAG read-only admission
+12 #92  Serena/GrepAI live canaries                COMPLETE
+13 #140 Blindspots + Tech Lead + Code-Graph-RAG retirement ACTIVE / HUMAN_ADMIT_REQUIRED
 14 #70  Notes → Scaffold
 15 #71  Code → Knowledge fold-back
 16 #95  Context Assembly
@@ -110,7 +110,7 @@ Machine queue: [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json)
 25 #68  final convergence
 ```
 
-Orders 0–11 are complete and order 12 is active. Later mechanism branches may already have merged under separately admitted work; this does not advance their ordered acceptance state.
+Orders 0–12 are complete and order 13 / #140 is active; deterministic convergence is implemented but Human Admit still blocks queue advancement. Later mechanism branches may already have merged under separately admitted work; this does not advance their ordered acceptance state.
 
 ## Branch creation protocol
 
@@ -147,7 +147,7 @@ Never create future branches merely to display a complete graph.
 #104  feat/loopx-notes-source-ingest-v1
 #105  feat/loopx-notes-retrieval-v1
 #92   feat/loopx-code-intelligence-canaries-v1
-#41   feat/code-graph-rag-readonly-admission-v1
+#140  integration/140-blindspots-tech-lead-convergence
 #70   feat/loopx-notes-scaffold-v1
 #71   feat/loopx-code-knowledge-foldback-v1
 #95   feat/loopx-context-assembly-v1
