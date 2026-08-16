@@ -104,7 +104,7 @@ def manifest_observation(root: Path, workload: dict[str, Any]) -> dict[str, Any]
         source.get("repository") == workload["source"]["repository"]
         and source.get("commit") == workload["source"]["commit"]
         and source.get("license") == workload["source"]["license"]
-        and adapter.get("digest") == workload["executable"]["sha256"]
+        and adapter.get("digest") == "sha256:" + workload["executable"]["sha256"]
         and adapter.get("identity_state") == "PINNED"
     )
     return {

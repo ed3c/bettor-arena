@@ -1,8 +1,10 @@
 {
+  "families": [
+    "semantic"
+  ],
+  "human_admit_required": true,
   "id": "grepai",
-  "kind": "provider",
-  "families": ["semantic"],
   "identity_digest": "sha256:5375c8658567c6f03561b7e5818d08dfc01754ccd62c8c73fd0965d4ccde28c1",
-  "manifest_digest": "sha256:c7bb5e9f4731331d9667f4f189a22a40ef507605bd99a9a94a593a42d23ce3ba",
-  "human_admit_required": true
+  "kind": "provider",
+  "manifest_digest": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004"
 }

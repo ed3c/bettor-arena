@@ -1,5 +1,5 @@
 {
-  "content_sha256": "968c938eb12a509ac8090646adc8959ded19a0115e8f4f1f78677159309ff13c",
+  "content_sha256": "2aa678bed7f42fb4e29067c823a29527204a005938d750f09bc8c0976a7b5d37",
   "contexts": [
     {
       "common": [
@@ -198,7 +198,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "2686bf3106ca6e59242927576b6f0812d6e55cdb4beb1774a342adc1723ddb7f",
+      "context_sha256": "953ef7802204dc7dc4d312e301a52583f6d644e7e61883e84144d7574a995610",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -332,7 +332,7 @@
           "path": "docs/knowledge-providers/evals/participants/exact-search-control.json"
         },
         {
-          "blob": "b29d870e645233b56d71bd400a22d33cbbef23fb",
+          "blob": "68cf019ee128b633902bf0f8e878b2ff91eec96b",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/participants/grepai.json"
         },
@@ -347,7 +347,7 @@
           "path": "docs/knowledge-providers/evals/participants/repository-authority-control.json"
         },
         {
-          "blob": "574a3e2618c0c2c31fc5018b0561d99cc184246c",
+          "blob": "c3c5a405dda2d73b95a4579e0eb3a4ad5dcb9f54",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/participants/serena.json"
         },
@@ -357,7 +357,7 @@
           "path": "docs/knowledge-providers/evals/subject.json"
         },
         {
-          "blob": "e09a4c5068fcb194001f93810574244812aeb314",
+          "blob": "6412a6441d5334943ecf2b95303347bec011b947",
           "mode": "100644",
           "path": "docs/knowledge-providers/registry.json"
         }

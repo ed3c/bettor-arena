@@ -1,27 +1,17 @@
 {
-  "schema_version": "knowledge-provider-manifest/v1",
-  "provider_id": "serena",
-  "source": {
-    "repository": "oraios/serena",
-    "commit": "32308a871c13f8fa5936c7d44a8bca710001277e",
-    "license": "MIT"
+  "activation": {
+    "artifact_digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
+    "data_scope": "EXACT_SUBJECT_COVERAGE_ONLY",
+    "mode": "ON_DEMAND_READ_ONLY",
+    "network_scope": "DENIED",
+    "request_ceiling": 20,
+    "rollback": "RESTORE_ROLLBACK_SUBJECT",
+    "sbom_disposition": "PACKAGE_METADATA_AND_RECORD_ONLY",
+    "secret_references": [],
+    "spend_usd_ceiling": 0,
+    "version": "0.1.4"
   },
-  "admission": {
-    "state": "CANDIDATE",
-    "runtime_state": "NOT_EXERCISED",
-    "live_claim": false
-  },
-  "capabilities": [
-    "symbol.lookup",
-    "symbol.references",
-    "symbol.rename-plan",
-    "diagnostics.read"
-  ],
   "adapter": {
-    "transport": "mcp",
-    "identity_state": "UNPINNED",
-    "digest": null,
-    "read_only": true,
     "allowed_operations": [
       "find_symbol",
       "find_referencing_symbols",
@@ -33,25 +23,47 @@
       "rename_symbol",
       "execute_shell_command",
       "write_memory"
-    ]
+    ],
+    "digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
+    "identity_state": "PINNED",
+    "read_only": true,
+    "transport": "mcp"
   },
-  "index": {
-    "required": true,
-    "subject_bound": true,
-    "rebuildable": true,
-    "freshness_required": true
+  "admission": {
+    "live_claim": false,
+    "runtime_state": "NOT_EXERCISED",
+    "state": "CONFIGURED"
   },
   "authority": {
-    "result_class": "CANDIDATE_ONLY",
-    "may_write_repository": false,
-    "may_write_memory": false,
     "may_advance_state": false,
-    "may_waive_gate": false,
+    "may_human_admit": false,
     "may_mark_tested": false,
-    "may_human_admit": false
+    "may_waive_gate": false,
+    "may_write_memory": false,
+    "may_write_repository": false,
+    "result_class": "CANDIDATE_ONLY"
+  },
+  "capabilities": [
+    "symbol.lookup",
+    "symbol.references",
+    "symbol.rename-plan",
+    "diagnostics.read"
+  ],
+  "index": {
+    "freshness_required": true,
+    "rebuildable": true,
+    "required": true,
+    "subject_bound": true
   },
   "limits": {
-    "max_results": 100,
-    "max_bytes": 262144
+    "max_bytes": 262144,
+    "max_results": 100
+  },
+  "provider_id": "serena",
+  "schema_version": "knowledge-provider-manifest/v1",
+  "source": {
+    "commit": "414f591d58967e2fd29c5c6a5f8e58cb03b77eee",
+    "license": "MIT",
+    "repository": "oraios/serena"
   }
 }

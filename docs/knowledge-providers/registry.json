@@ -1,1 +1,42 @@
-{"schema_version":"knowledge-provider-registry/v1","authority_order":["current-source","current-manifest","current-test","runtime-receipt","current-adr","provider-candidate"],"providers":[{"id":"code-graph-rag","path":"providers/code-graph-rag.json","digest":"sha256:c15fcb159436e8ab9643eb651895bc8da871eee00a81f8218e142f2e14750fb5"},{"id":"grepai","path":"providers/grepai.json","digest":"sha256:c7bb5e9f4731331d9667f4f189a22a40ef507605bd99a9a94a593a42d23ce3ba"},{"id":"mem0","path":"providers/mem0.json","digest":"sha256:7673717102bca52643fc0cc8ea3de6f5365cfd641801c1aa382ff6d329201289"},{"id":"serena","path":"providers/serena.json","digest":"sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9"}],"invariants":{"stores_are_rebuildable_projections":true,"source_readback_required":true,"provider_cannot_advance_state":true,"provider_cannot_waive_gate":true,"provider_cannot_mark_tested":true,"provider_cannot_human_admit":true,"memory_is_proposal_only":true}}
+{
+  "authority_order": [
+    "current-source",
+    "current-manifest",
+    "current-test",
+    "runtime-receipt",
+    "current-adr",
+    "provider-candidate"
+  ],
+  "invariants": {
+    "memory_is_proposal_only": true,
+    "provider_cannot_advance_state": true,
+    "provider_cannot_human_admit": true,
+    "provider_cannot_mark_tested": true,
+    "provider_cannot_waive_gate": true,
+    "source_readback_required": true,
+    "stores_are_rebuildable_projections": true
+  },
+  "providers": [
+    {
+      "digest": "sha256:c15fcb159436e8ab9643eb651895bc8da871eee00a81f8218e142f2e14750fb5",
+      "id": "code-graph-rag",
+      "path": "providers/code-graph-rag.json"
+    },
+    {
+      "digest": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004",
+      "id": "grepai",
+      "path": "providers/grepai.json"
+    },
+    {
+      "digest": "sha256:7673717102bca52643fc0cc8ea3de6f5365cfd641801c1aa382ff6d329201289",
+      "id": "mem0",
+      "path": "providers/mem0.json"
+    },
+    {
+      "digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8",
+      "id": "serena",
+      "path": "providers/serena.json"
+    }
+  ],
+  "schema_version": "knowledge-provider-registry/v1"
+}

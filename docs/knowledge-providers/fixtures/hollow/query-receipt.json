@@ -1,51 +1,51 @@
 {
-  "schema_version": "knowledge-provider-query-receipt/v1",
-  "request_id": "fixture-serena-query",
-  "subject": {
-    "repository": "ed3c/bettor-arena",
+  "authority": {
+    "advanced_state": false,
+    "candidate_only": true,
+    "human_admit": false,
+    "marked_tested": false,
+    "waived_gate": false
+  },
+  "capability": "symbol.lookup",
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "execution": {
+    "executed": false,
+    "fixture": true,
+    "state": "PASS"
+  },
+  "index": {
     "commit": "1111111111111111111111111111111111111111",
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "repository": "ed3c/bettor-arena",
+    "required": true,
+    "state": "FRESH",
     "tree": "2222222222222222222222222222222222222222"
   },
   "provider": {
+    "adapter_digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
     "id": "serena",
-    "manifest_digest": "sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9",
-    "adapter_digest": null
+    "manifest_digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8"
   },
-  "capability": "symbol.lookup",
   "query_digest": "sha256:b087b8dd2cb7feaccba34aeb7f7afdfcf9c5b2bc43d95c54bb19c36af6b0cac0",
-  "execution": {
-    "executed": false,
-    "state": "PASS",
-    "fixture": true
-  },
-  "index": {
-    "required": true,
-    "state": "FRESH",
-    "repository": "ed3c/bettor-arena",
-    "commit": "1111111111111111111111111111111111111111",
-    "tree": "2222222222222222222222222222222222222222",
-    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-  },
+  "request_id": "fixture-serena-query",
   "results": [
     {
+      "claim": "A public Skill execution port exists.",
       "id": "candidate-1",
       "kind": "symbol",
-      "claim": "A public Skill execution port exists.",
-      "verification": "SOURCE_READBACK_REQUIRED",
       "source_refs": [
         "loopctl/contract.json"
-      ]
+      ],
+      "verification": "SOURCE_READBACK_REQUIRED"
     }
   ],
-  "authority": {
-    "candidate_only": true,
-    "advanced_state": false,
-    "waived_gate": false,
-    "marked_tested": false,
-    "human_admit": false
-  },
-  "cleanup": {
-    "status": "PASS",
-    "residue": []
+  "schema_version": "knowledge-provider-query-receipt/v1",
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "tree": "2222222222222222222222222222222222222222"
   }
 }

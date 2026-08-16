@@ -1,32 +1,32 @@
 {
-  "schema_version": "knowledge-provider-query-request/v1",
-  "request_id": "fixture-serena-query",
-  "subject": {
-    "repository": "ed3c/bettor-arena",
-    "commit": "1111111111111111111111111111111111111111",
-    "tree": "2222222222222222222222222222222222222222"
+  "capability": "symbol.lookup",
+  "constraints": {
+    "max_bytes": 65536,
+    "max_results": 20,
+    "path_scope": [
+      "loopctl",
+      "scripts"
+    ],
+    "read_only": true,
+    "require_fresh_index": true
   },
   "provider": {
     "id": "serena",
-    "manifest_digest": "sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9"
+    "manifest_digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8"
   },
-  "capability": "symbol.lookup",
   "query": {
-    "text": "find the public port that executes Skill assertions",
     "path_scope": [
       "loopctl",
       "scripts"
-    ]
+    ],
+    "text": "find the public port that executes Skill assertions"
   },
   "query_digest": "sha256:b087b8dd2cb7feaccba34aeb7f7afdfcf9c5b2bc43d95c54bb19c36af6b0cac0",
-  "constraints": {
-    "read_only": true,
-    "require_fresh_index": true,
-    "max_results": 20,
-    "max_bytes": 65536,
-    "path_scope": [
-      "loopctl",
-      "scripts"
-    ]
+  "request_id": "fixture-serena-query",
+  "schema_version": "knowledge-provider-query-request/v1",
+  "subject": {
+    "commit": "1111111111111111111111111111111111111111",
+    "repository": "ed3c/bettor-arena",
+    "tree": "2222222222222222222222222222222222222222"
   }
 }
