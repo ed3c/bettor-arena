@@ -1,0 +1,53 @@
+{
+  "schema": "bettor-arena/provider-canary-workload/v1",
+  "provider_id": "serena",
+  "source": {
+    "repository": "oraios/serena",
+    "commit": "414f591d58967e2fd29c5c6a5f8e58cb03b77eee",
+    "version": "0.1.4",
+    "license": "MIT"
+  },
+  "executable": {
+    "command": "serena",
+    "sha256": "d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b"
+  },
+  "subject": {
+    "repository": "ed3c/bettor-arena"
+  },
+  "coverage": [
+    "scripts/arena_context.py",
+    "scripts/knowledge_provider_eval_packet.py",
+    "scripts/knowledge_provider_eval_registry.py"
+  ],
+  "limits": {
+    "timeout_seconds": 180,
+    "max_results": 20,
+    "max_bytes": 131072,
+    "max_index_bytes": 33554432
+  },
+  "policy": {
+    "candidate_only": true,
+    "source_readback_required": true,
+    "external_network": "DENIED",
+    "external_spend_usd": 0,
+    "secrets": "DENIED",
+    "cleanup_required": true
+  },
+  "provider": {
+    "transport": "mcp-stdio",
+    "backend": "LSP",
+    "languages": ["python"],
+    "read_only": true,
+    "tools": [
+      "find_referencing_symbols",
+      "find_symbol",
+      "get_symbols_overview"
+    ],
+    "query": {
+      "relative_path": "scripts/knowledge_provider_eval_registry.py",
+      "symbol": "provider_digests",
+      "source_token": "def provider_digests"
+    },
+    "unsupported_path": "docs/knowledge-providers/README.md"
+  }
+}
