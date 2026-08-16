@@ -1,0 +1,87 @@
+{
+  "components": {
+    "contracts": {
+      "paths": [
+        "loop_wiki/parallel-agent-tech-lead/contracts"
+      ],
+      "required": true
+    },
+    "proof": {
+      "paths": [
+        "loop_wiki/parallel-agent-tech-lead/tests"
+      ],
+      "required": true
+    },
+    "runtime": {
+      "paths": [
+        "loop_wiki/parallel-agent-tech-lead/scripts"
+      ],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "parallel-agent-tech-lead",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "parallel-agent-tech-lead",
+      "interface_version": "1.0.0",
+      "public_port": "python3 loop_wiki/parallel-agent-tech-lead/scripts/plan.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "loop_wiki/parallel-agent-tech-lead/tests/test_plan.py"
+    ],
+    "mutation": [
+      "python3",
+      "loop_wiki/parallel-agent-tech-lead/tests/test_plan.py"
+    ],
+    "selftest": [
+      "python3",
+      "loop_wiki/parallel-agent-tech-lead/tests/test_plan.py"
+    ],
+    "verify": [
+      "sh",
+      "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh"
+    ]
+  },
+  "provides": [
+    "loopx.parallel-tech-lead-plan/v1"
+  ],
+  "requires": [
+    "arena.proof-kernel/v1",
+    "code-truth-graph.context-funnel/v1",
+    "loopx.worker-fleet/v1",
+    "loopx.git-town-runtime/v1"
+  ],
+  "roots": [
+    "loop_wiki/parallel-agent-tech-lead"
+  ],
+  "runtime": {
+    "profiles": [],
+    "tools": [
+      "python3",
+      "sh"
+    ]
+  },
+  "schema": "bettor-arena/module/v1",
+  "skills": {
+    "optional": [
+      "agentic-tech-lead-orchestration",
+      "git-town-stacked-pr-worker"
+    ],
+    "repo_owned": [],
+    "required": []
+  },
+  "summary": "Repository-owned Tech Lead fan-out plan compiler that pins the shared fan-out contract, binds exact context-funnel evidence, derives topology from real dependencies, enforces path/budget/oracle/authority invariants, and emits Worker packets without executing Agents or Git Town."
+}
