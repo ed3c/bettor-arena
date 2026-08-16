@@ -135,9 +135,9 @@ provider registry digest checks       IMPLEMENTED
 admission evaluation schemas          IMPLEMENTED on feature branch
 paired fixture evaluator              IMPLEMENTED on feature branch
 exact-head evaluation CI              NOT_EXERCISED
-live Serena                           PASS for recorded 8c30e3c subject
-live GrepAI                           PASS for recorded 8c30e3c subject
-typed provider activation             IMPLEMENTED, NOT_EXERCISED
+live Serena                           PASS for exact 755f743 subject
+live GrepAI                           PASS for exact 755f743 subject
+typed provider activation             ADMITTED for exact 755f743 subject
 SCIP + SQLite exact-subject runtime    NOT_EXERCISED
 Tree-sitter slicing runtime           NOT_EXERCISED
 LanceDB subject-bound retrieval       NOT_EXERCISED

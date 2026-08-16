@@ -23,7 +23,7 @@
       "path": "providers/code-graph-rag.json"
     },
     {
-      "digest": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004",
+      "digest": "sha256:b1c63b03ce5d1a813817771226a255c5c4a393e84880455a0438c36dac22cb23",
       "id": "grepai",
       "path": "providers/grepai.json"
     },
@@ -33,7 +33,7 @@
       "path": "providers/mem0.json"
     },
     {
-      "digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8",
+      "digest": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654",
       "id": "serena",
       "path": "providers/serena.json"
     }

@@ -27,7 +27,7 @@
   "observation_id": "obs-symbol-serena",
   "participant_id": "serena",
   "participant_identity_digest": "sha256:74e1651d738232fccdbd301e53863f4646fba1af24981008c6aef39653d5c59a",
-  "provider_manifest_digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8",
+  "provider_manifest_digest": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654",
   "query_digest": "sha256:981e11d298c85f721d88042fbf647b88c1c9ac5092a65cfb5916042d577382af",
   "resources": {
     "context_bytes": 1536,

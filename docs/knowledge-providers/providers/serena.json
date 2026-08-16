@@ -30,9 +30,9 @@
     "transport": "mcp"
   },
   "admission": {
-    "live_claim": false,
-    "runtime_state": "NOT_EXERCISED",
-    "state": "CONFIGURED"
+    "live_claim": true,
+    "runtime_state": "PASS",
+    "state": "ADMITTED"
   },
   "authority": {
     "may_advance_state": false,

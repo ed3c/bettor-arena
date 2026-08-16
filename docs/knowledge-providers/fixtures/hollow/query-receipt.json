@@ -27,7 +27,7 @@
   "provider": {
     "adapter_digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
     "id": "serena",
-    "manifest_digest": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8"
+    "manifest_digest": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654"
   },
   "query_digest": "sha256:b087b8dd2cb7feaccba34aeb7f7afdfcf9c5b2bc43d95c54bb19c36af6b0cac0",
   "request_id": "fixture-serena-query",

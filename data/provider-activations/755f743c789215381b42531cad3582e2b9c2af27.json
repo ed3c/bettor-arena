@@ -1,0 +1,63 @@
+{
+  "authority": {
+    "activated_provider": true,
+    "advanced_state": false,
+    "marked_tested": false,
+    "promoted_release": false,
+    "waived_gate": false
+  },
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "operation": "ACTIVATE_ON_DEMAND_READ_ONLY",
+  "outcome": "ADMITTED",
+  "policy": {
+    "cleanup": "PASS",
+    "data_scope": "EXACT_SUBJECT_COVERAGE_ONLY",
+    "exact_subject": "PASS",
+    "external_network": "DENIED_OR_LOOPBACK_ONLY",
+    "external_spend_usd": 0,
+    "secrets": "DENIED",
+    "source_readback": "PASS"
+  },
+  "providers": [
+    {
+      "canary_receipt_path": "data/provider-canaries/grepai/755f743c789215381b42531cad3582e2b9c2af27.json",
+      "executable_digest": "sha256:e2d5ad30710eba500cb5d783a914ea16ba4e5c66ac23abe8691165b4aa5732bc",
+      "manifest_digest_after": "sha256:b1c63b03ce5d1a813817771226a255c5c4a393e84880455a0438c36dac22cb23",
+      "manifest_digest_before": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004",
+      "manifest_path": "docs/knowledge-providers/providers/grepai.json",
+      "provider_id": "grepai",
+      "sbom_disposition": "HOMEBREW_SPDX",
+      "source_commit": "176ff9dbd091345b6e8b2afd4d79664b4aa17194",
+      "state_after": "ADMITTED",
+      "state_before": "CONFIGURED",
+      "version": "0.30.0"
+    },
+    {
+      "canary_receipt_path": "data/provider-canaries/serena/755f743c789215381b42531cad3582e2b9c2af27.json",
+      "executable_digest": "sha256:d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b",
+      "manifest_digest_after": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654",
+      "manifest_digest_before": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8",
+      "manifest_path": "docs/knowledge-providers/providers/serena.json",
+      "provider_id": "serena",
+      "sbom_disposition": "PACKAGE_METADATA_AND_RECORD_ONLY",
+      "source_commit": "414f591d58967e2fd29c5c6a5f8e58cb03b77eee",
+      "state_after": "ADMITTED",
+      "state_before": "CONFIGURED",
+      "version": "0.1.4"
+    }
+  ],
+  "rollback_subject": {
+    "commit": "755f743c789215381b42531cad3582e2b9c2af27",
+    "repository": "ed3c/bettor-arena",
+    "tree": "d50f577f069a8f79a497cb77258b25b1f593f190"
+  },
+  "schema": "bettor-arena/provider-activation-receipt/v1",
+  "subject": {
+    "commit": "755f743c789215381b42531cad3582e2b9c2af27",
+    "repository": "ed3c/bettor-arena",
+    "tree": "d50f577f069a8f79a497cb77258b25b1f593f190"
+  }
+}

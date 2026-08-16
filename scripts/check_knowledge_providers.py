@@ -883,7 +883,11 @@ def run_selftest(root: Path) -> dict[str, Any]:
     )
 
     false_live = copy.deepcopy(manifests["grepai"])
-    false_live["admission"]["runtime_state"] = "PASS"
+    false_live["admission"] = {
+        "state": "CANDIDATE",
+        "runtime_state": "PASS",
+        "live_claim": False,
+    }
     outcomes.append(
         expect_failure(
             "false-live-claim", lambda: validate_provider_manifest(false_live)

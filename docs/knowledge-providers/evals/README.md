@@ -149,8 +149,8 @@ being relabeled as production evidence.
 ## Current live state
 
 ```text
-Serena live observation          NOT_EXERCISED
-GrepAI live observation          NOT_EXERCISED
+Serena live observation          PASS at exact 755f743 canary subject
+GrepAI live observation          PASS at exact 755f743 canary subject
 Code-Graph-RAG adapter/index     NOT_CONFIGURED
 Mem0 adapter/storage/writeback   NOT_CONFIGURED
 cross-provider winner            NOT_EXERCISED
