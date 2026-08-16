@@ -1,0 +1,8 @@
+{
+  "schema": "bettor-arena/blindspots-contract-manifest/v1",
+  "bundle_schema": "bundle.schema.json",
+  "query_result_schema": "query-result.schema.json",
+  "runtime": "../../scripts/blindspots.py",
+  "authority": "SUBJECT_BOUND_REBUILDABLE_EVIDENCE_LEDGER",
+  "code_graph_rag": "RETIRED_FROM_ACTIVE_ROUTE"
+}
