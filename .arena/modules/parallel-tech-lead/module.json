@@ -1,0 +1,59 @@
+{
+  "components": {
+    "contract": {
+      "paths": [".agentic/parallel-tech-lead"],
+      "required": true
+    },
+    "gate": {
+      "paths": ["scripts/agentic"],
+      "required": true
+    }
+  },
+  "conflicts": [],
+  "external_policy": {
+    "exposed": false,
+    "mutation": "none",
+    "network": "none",
+    "secrets": "none"
+  },
+  "id": "parallel-tech-lead",
+  "interface_version": "1.0.0",
+  "loops": [
+    {
+      "class": "core",
+      "external_policy": "control-only",
+      "id": "parallel-tech-lead",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/agentic/assert_parallel_tech_lead_contract.py"
+    }
+  ],
+  "proof": {
+    "control": [
+      "python3",
+      "scripts/agentic/assert_parallel_tech_lead_contract.py",
+      "check"
+    ],
+    "mutation": [
+      "python3",
+      "scripts/agentic/assert_parallel_tech_lead_contract.py",
+      "selftest"
+    ],
+    "selftest": [
+      "python3",
+      "scripts/agentic/assert_parallel_tech_lead_contract.py",
+      "selftest"
+    ],
+    "verify": [
+      "python3",
+      "scripts/agentic/assert_parallel_tech_lead_contract.py",
+      "selftest"
+    ]
+  },
+  "provides": ["loopx.parallel-tech-lead-adoption/v1"],
+  "requires": ["arena.proof-kernel/v1"],
+  "roots": [".agentic/parallel-tech-lead", "scripts/agentic"],
+  "runtime": {"profiles": [], "tools": ["git", "python3"]},
+  "schema": "bettor-arena/module/v1",
+  "skills": {"optional": [], "repo_owned": [], "required": []},
+  "summary": "Consumer adoption layer for the shared Tech Lead contracts: this repository's real paths, acceptance command and budgets, plus a zero-network gate that refuses a placeholder oracle, an acceptance command naming a file that does not exist, a binding claimed against an undeclared skill, a plan base that is not a commit here, overlapping concurrent leases, a Worker leasing the gate it is scored against, a convergence owner that does not depend on what it converges, and an automatic winner or semantic merge. The gate does not execute the shared checker: the shared skills are reached through symlinks to a developer-host checkout that no Actions runner has, so calling it would be green locally and red in CI for an environment reason."
+}

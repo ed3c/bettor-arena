@@ -40,6 +40,14 @@ bettor-arena/
 │   ├── shared-skills.requirements.json # consumer desired shared/repo-owned names與雙 carrier surface
 │   ├── bindings/      # skills-shared resolver 產的 commit/tree/requirements/registry/per-skill digest closure
 │   └── module-set.json # skills-shared + runtime-env + Claude/Codex adapter 的唯一聚合介面
+├── .agentic/          # 共用 Tech Lead 契約的 consumer 採用層(parallel-tech-lead/=config+plan example)。
+│                      #   與 .agents/ 只差一字,是已知的可讀性風險:路徑由 ed3c/skills-shared#255 的
+│                      #   route_to_consumer 決策與 #146 共同指名,此處照其落地而非自行改名;要改名是
+│                      #   人 admit 的決定,改則兩張 issue 都要一起改。
+│                      #   邊界:只放本 repo 自有的路徑/命令/預算,契約本體在 skills-shared;
+│                      #   實作與證明面在 .arena/modules/parallel-tech-lead/,閘=scripts/agentic/
+│                      #   assert_parallel_tech_lead_contract.py(零網路,不呼叫共用 checker,因為
+│                      #   .agents/skills symlink 指向開發機 checkout,Actions runner 上不存在)
 ├── .arena/            # machine-readable 模組控制面：schemas/manifests/compositions/locks/contexts/presets/origins/browser/MCP policy；
 │                      #   每個 module.json 必有相鄰 README；deterministic contract 綠不代理 live provider/Human Admit
 ├── .skill-bindings/   # 共用 skill 的本 repo 綁定層(一 skill 一目錄,必有 binding.md 四欄:

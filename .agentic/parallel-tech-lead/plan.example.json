@@ -1,0 +1,94 @@
+{
+  "schema_version": "git-town-tech-lead-fanout/v1",
+  "repository": "ed3c/bettor-arena",
+  "mode": "COOPERATIVE",
+  "_meta": {
+    "why_this_slice": "Two gates that do not read each other's files, plus the index that lists them. It is the smallest shape in this repository that is genuinely path-disjoint and still needs a convergence owner, which is what makes it a fan-out rather than three unrelated tasks.",
+    "why_not_a_tournament": "There is one right answer to 'does this gate hold', so several differentiated implementations would measure nothing. TOURNAMENT is for questions with more than one defensible shape."
+  },
+  "base": {
+    "branch": "main",
+    "commit_sha": "254f2dedad82eca66ed825833827db3f7e33606d",
+    "tree_sha": "dfb47f7dfc21875a01f6476597e30c3e98e2e1f8",
+    "immutable": true
+  },
+  "context_bundle": {
+    "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "digest_note": "Placeholder until a real context bundle is produced. The shared checker requires 64 hex characters and does not verify what they hash, so this example is shaped correctly and carries no context claim.",
+    "providers": [
+      {"name": "source-readback", "role": "source-readback", "required_provider": true, "state": "PASS"},
+      {"name": "grepai", "role": "intent-discovery", "required_provider": false, "state": "NOT_EXERCISED"}
+    ],
+    "compiler_truth_funnel": {"state": "NOT_EXERCISED"}
+  },
+  "budgets": {
+    "max_workers": 3,
+    "max_tokens_per_worker": 200000,
+    "max_wall_clock_seconds": 3600,
+    "max_retries_per_worker": 1,
+    "circuit_breakers": [
+      "stop the fan-out after two consecutive Workers fail sh scripts/gates/verify_modular_contracts.sh",
+      "stop a Worker that writes outside its declared lease instead of widening the lease"
+    ]
+  },
+  "acceptance": {
+    "immutable_paths": ["scripts/gates/", ".agentic/parallel-tech-lead/"],
+    "oracles": ["sh scripts/gates/verify_modular_contracts.sh"]
+  },
+  "ranking": {
+    "hard_gates": [
+      "sh scripts/gates/verify_modular_contracts.sh exits 0",
+      "no file under scripts/gates changed by a Worker",
+      "the diff touches only the declared writable lease"
+    ],
+    "qualitative_review_after_hard_gates": true,
+    "winner_admission": "human",
+    "cross_competitor_cherry_pick": false
+  },
+  "semantic_conflict_resolution": "human",
+  "human_owned_operations": [
+    "semantic_conflict_resolution",
+    "winner_admission",
+    "merge_or_ship",
+    "release_promotion"
+  ],
+  "convergence": {
+    "owner_worker_id": "W-index",
+    "inputs": ["W-agent-docs", "W-credential-hygiene"]
+  },
+  "workers": [
+    {
+      "id": "W-agent-docs",
+      "branch": "agent/gate-agent-docs",
+      "role": "sibling",
+      "parent": "main",
+      "depends_on": [],
+      "writable_paths": ["tests/test_agent_docs_gate.py"],
+      "read_only_paths": ["scripts/gates/", "docs/"],
+      "provides_contracts": ["agent-docs-gate-covered-v1"],
+      "token_budget": 120000
+    },
+    {
+      "id": "W-credential-hygiene",
+      "branch": "agent/gate-credential-hygiene",
+      "role": "sibling",
+      "parent": "main",
+      "depends_on": [],
+      "writable_paths": ["tests/test_credential_hygiene_gate.py"],
+      "read_only_paths": ["scripts/gates/", "docs/"],
+      "provides_contracts": ["credential-hygiene-gate-covered-v1"],
+      "token_budget": 120000
+    },
+    {
+      "id": "W-index",
+      "branch": "agent/gate-coverage-index",
+      "role": "convergence",
+      "parent": "main",
+      "depends_on": ["W-agent-docs", "W-credential-hygiene"],
+      "writable_paths": ["docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md"],
+      "read_only_paths": ["tests/", "scripts/gates/"],
+      "consumes_contracts": ["agent-docs-gate-covered-v1", "credential-hygiene-gate-covered-v1"],
+      "token_budget": 60000
+    }
+  ]
+}
