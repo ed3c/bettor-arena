@@ -1,7 +1,7 @@
 {
   "composition": "bettor-arena",
-  "composition_lock_sha256": "1c3679601466255f01da2ecc12227ad075be0050dd6494aac81b9517f2f1c39c",
-  "content_sha256": "0dc29a22c972d4f3f0f02e25ecdb090c8c68c40759fa076bb5665e484f94aed3",
+  "composition_lock_sha256": "5e8cbad019df52809b2ed7f2e4a245970058277d2a2ca9bf1731dd56820868dc",
+  "content_sha256": "7284537d3588c4fce98760b20b77e6d42dfdc52b30519445141c459c4e09404d",
   "modules": [
     {
       "closure_sha256": "bf960831a7f5096ffe36d6b7f97edcc2b49843f9f7f4cffbfbb5577bbb54eee9",
@@ -146,5 +146,5 @@
   ],
   "schema": "bettor-arena/module-release-receipt/v1",
   "status": "NOT_EXERCISED",
-  "subject_lock_sha256": "d402649bc018f6ede97a62012275515bf9339aadc21bb005f6e5d125137e071b"
+  "subject_lock_sha256": "e1025926495ae6d6b926ab1112c13655ca729326a487ecda1c6c27f77b380322"
 }
