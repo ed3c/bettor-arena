@@ -1,5 +1,6 @@
 name: Blindspots 140 one-shot verification v2
 
+# The workflow removes itself before generating and verifying the candidate tree.
 on:
   push:
     branches:
