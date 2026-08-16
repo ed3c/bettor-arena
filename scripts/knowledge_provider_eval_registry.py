@@ -17,7 +17,6 @@ from knowledge_provider_eval_common import (
 )
 
 PROVIDERS = {"serena", "grepai", "mem0"}
-HISTORICAL_PROVIDERS = {"code-graph-rag"}
 PARTICIPANTS = PROVIDERS | {"exact-search-control", "repository-authority-control"}
 
 
@@ -41,17 +40,9 @@ def provider_digests(root: Path) -> dict[str, str]:
         require(digest(m) == want, f"{pid}: manifest digest drift")
         require(pid not in out, f"duplicate provider: {pid}")
         out[pid] = want
-    require(set(out) == PROVIDERS | HISTORICAL_PROVIDERS, "provider registry set")
-    for pid in HISTORICAL_PROVIDERS:
-        manifest = load(root / BASE / next(e["path"] for e in reg["providers"] if e["id"] == pid))
-        admission = manifest.get("admission", {})
-        adapter = manifest.get("adapter", {})
-        require(admission.get("state") == "REJECTED", f"{pid}: historical provider must be REJECTED")
-        require(admission.get("runtime_state") == "ABSENT", f"{pid}: historical runtime must be ABSENT")
-        require(admission.get("live_claim") is False, f"{pid}: historical live claim forbidden")
-        require(adapter.get("transport") == "none", f"{pid}: historical transport must be none")
+    require(set(out) == PROVIDERS, "provider registry set")
     common_safety(reg)
-    return {pid: value for pid, value in out.items() if pid in PROVIDERS}
+    return out
 
 
 def load_participants(root: Path, manifests: dict[str, str]) -> dict[str, dict]:
