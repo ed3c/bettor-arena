@@ -1,0 +1,53 @@
+name: Final Code-Graph-RAG retirement patch
+
+on:
+  push:
+    branches: [feat/140-retire-code-graph-rag-final]
+    paths: ['.github/workflows/one-shot-retire-code-graph-rag-final.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: feat/140-retire-code-graph-rag-final
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Patch canonical provider expectations without rewriting the checker
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/check_knowledge_providers.py')
+          s = p.read_text()
+          old = 'set(manifests) == {"serena", "grepai", "code-graph-rag", "mem0"}'
+          new = 'set(manifests) == {"serena", "grepai", "mem0"}'
+          if s.count(old) != 1:
+              raise SystemExit(f'expected one provider-set marker, got {s.count(old)}')
+          s = s.replace(old, new)
+          old_block = '''    graph_write = copy.deepcopy(manifests["code-graph-rag"])
+              graph_write["adapter"]["allowed_operations"].append("write_file")
+              outcomes.append(
+                  expect_failure(
+                      "graph-write-surface", lambda: validate_provider_manifest(graph_write)
+                  )
+              )'''
+          # Match indentation exactly as source renders; use a direct smaller replacement if needed.
+          if old_block not in s:
+              old_block = '''    graph_write = copy.deepcopy(manifests["code-graph-rag"])
+              graph_write["adapter"]["allowed_operations"].append("write_file")'''
+          if 'manifests["code-graph-rag"]' not in s:
+              raise SystemExit('graph-write selftest marker missing')
+          s = s.replace('graph_write = copy.deepcopy(manifests["code-graph-rag"])', 'graph_write = copy.deepcopy(manifests["mem0"])', 1)
+          p.write_text(s)
+          PY
+          rm .github/workflows/one-shot-retire-code-graph-rag-final.yml
+          git diff --check
+          git add -A
+          git -c user.name='bettor-arena retirement patcher' -c user.email='noreply@github.com' commit -m 'retire(code-graph-rag): align provider checker [skip ci]'
+          git push origin HEAD:feat/140-retire-code-graph-rag-final
