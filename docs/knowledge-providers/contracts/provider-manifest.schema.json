@@ -218,6 +218,37 @@
           "maximum": 1048576
         }
       }
+    },
+    "activation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "version",
+        "artifact_digest",
+        "sbom_disposition",
+        "secret_references",
+        "data_scope",
+        "network_scope",
+        "spend_usd_ceiling",
+        "request_ceiling",
+        "rollback"
+      ],
+      "properties": {
+        "mode": {"const": "ON_DEMAND_READ_ONLY"},
+        "version": {"type": "string", "minLength": 1},
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "sbom_disposition": {"type": "string", "minLength": 1},
+        "secret_references": {"type": "array", "maxItems": 0},
+        "data_scope": {"const": "EXACT_SUBJECT_COVERAGE_ONLY"},
+        "network_scope": {"enum": ["DENIED", "LOOPBACK_ONLY"]},
+        "spend_usd_ceiling": {"const": 0},
+        "request_ceiling": {"type": "integer", "minimum": 1, "maximum": 20},
+        "rollback": {"const": "RESTORE_ROLLBACK_SUBJECT"}
+      }
     }
   }
 }

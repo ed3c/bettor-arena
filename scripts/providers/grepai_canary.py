@@ -104,7 +104,7 @@ def manifest_observation(root: Path, workload: dict[str, Any]) -> dict[str, Any]
         source.get("repository") == workload["source"]["repository"]
         and source.get("commit") == workload["source"]["commit"]
         and source.get("license") == workload["source"]["license"]
-        and adapter.get("digest") == workload["executable"]["sha256"]
+        and adapter.get("digest") == "sha256:" + workload["executable"]["sha256"]
         and adapter.get("identity_state") == "PINNED"
     )
     return {
@@ -466,9 +466,19 @@ def selftest(root: Path, workload: dict[str, Any]) -> int:
         target.write_bytes(target.read_bytes() + b"\n# mutation\n")
         require(not coverage_is_current(project, coverage), "GrepAI stale mutation")
         checks += 2
+    observation = manifest_observation(root, workload)
+    manifest = load_json(root / MANIFEST, "GrepAI manifest")
+    expected_match = manifest.get("adapter", {}).get("identity_state") == "PINNED"
     require(
-        manifest_observation(root, workload)["identity_match"] is False,
-        "expected manifest drift absent",
+        observation["identity_match"] is expected_match,
+        "GrepAI manifest identity state drift",
+    )
+    checks += 1
+    planted = copy.deepcopy(workload)
+    planted["source"]["commit"] = "0" * 40
+    require(
+        manifest_observation(root, planted)["identity_match"] is False,
+        "GrepAI manifest identity mutation stayed green",
     )
     checks += 1
     return checks

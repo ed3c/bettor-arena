@@ -1,0 +1,50 @@
+{
+  "authority": {
+    "activated_provider": false,
+    "advanced_state": false,
+    "configured_provider": true,
+    "marked_tested": false,
+    "promoted_release": false,
+    "waived_gate": false
+  },
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "evidence_subject": {
+    "commit": "8c30e3c32e9169985d87a1055decb1b800211ad2",
+    "repository": "ed3c/bettor-arena",
+    "tree": "f10a5b388c98772d4cb59dc25481ef29f12b4049"
+  },
+  "operation": "CONFIGURE_ON_DEMAND_READ_ONLY",
+  "outcome": "CONFIGURED",
+  "providers": [
+    {
+      "evidence_receipt_path": "data/provider-canaries/grepai/8c30e3c32e9169985d87a1055decb1b800211ad2.json",
+      "manifest_digest_after": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004",
+      "manifest_digest_before": "sha256:c7bb5e9f4731331d9667f4f189a22a40ef507605bd99a9a94a593a42d23ce3ba",
+      "provider_id": "grepai",
+      "state_after": "CONFIGURED",
+      "state_before": "CANDIDATE"
+    },
+    {
+      "evidence_receipt_path": "data/provider-canaries/serena/8c30e3c32e9169985d87a1055decb1b800211ad2.json",
+      "manifest_digest_after": "sha256:ebddbecc3e531be04546f4cf66a57bbe2ea73c22756bfb4c3eb08c50afac31c8",
+      "manifest_digest_before": "sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9",
+      "provider_id": "serena",
+      "state_after": "CONFIGURED",
+      "state_before": "CANDIDATE"
+    }
+  ],
+  "rollback_subject": {
+    "commit": "2380bc2d263f25fbecd96ed48ba630b38a8ded58",
+    "repository": "ed3c/bettor-arena",
+    "tree": "8fa2a9cf4accb4a572f6a0e013b136a58987d9c2"
+  },
+  "schema": "bettor-arena/provider-configuration-receipt/v1",
+  "subject": {
+    "commit": "dbe71a9d1ccfcbc087ec49755b86e7930b6b9570",
+    "repository": "ed3c/bettor-arena",
+    "tree": "cb474d058ec6589e13bb8adf6c6d3e5608032b72"
+  }
+}

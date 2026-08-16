@@ -65,6 +65,11 @@ def main(argv: list[str] | None = None) -> int:
             "scripts/providers/grepai_canary.py",
             *(["--selftest"] if args.selftest else ["check"]),
         ],
+        [
+            sys.executable,
+            "scripts/providers/provider_activation.py",
+            "selftest" if args.selftest else "check",
+        ],
     ]
     for command in commands:
         status = run(command, root)

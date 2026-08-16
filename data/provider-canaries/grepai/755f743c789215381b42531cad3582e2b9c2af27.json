@@ -1,0 +1,131 @@
+{
+  "admission": {
+    "reason": "identity-bound",
+    "state": "CANDIDATE"
+  },
+  "authority": {
+    "activated_provider": false,
+    "advanced_state": false,
+    "marked_tested": false,
+    "promoted_release": false,
+    "result_class": "CANDIDATE_ONLY",
+    "waived_gate": false
+  },
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "configuration": {
+    "chunking": {
+      "overlap": 50,
+      "size": 512
+    },
+    "external_network": "DENIED",
+    "external_spend_usd": 0,
+    "network_scope": "LOOPBACK_ONLY",
+    "secrets": "DENIED",
+    "store": {
+      "backend": "gob"
+    },
+    "transport": "mcp-stdio"
+  },
+  "controls": {
+    "candidate_only": "PASS",
+    "provider_outage": "NOT_EXERCISED",
+    "result_secret_scan": "PASS",
+    "stale_subject": "PASS",
+    "unsupported_language": "UNKNOWN",
+    "wrong_workspace": "PASS"
+  },
+  "coverage": {
+    "complete": false,
+    "digest": "d7dd4da790c82263cbbdfb0f95a877b8bb1ee2fb065b2dadd3c1c685b9036f76",
+    "files": [
+      {
+        "bytes": 5823,
+        "path": "docs/knowledge-providers/README.md",
+        "sha256": "f7b6fed285972293fac0e86059161befa7f1eadabe3705a406a3279976b01266"
+      },
+      {
+        "bytes": 24353,
+        "path": "scripts/arena_context.py",
+        "sha256": "b2b6f755dc9454dbf3613f0d194384eca19719217f3742eaf6ffc6ebd79e1582"
+      },
+      {
+        "bytes": 4902,
+        "path": "scripts/knowledge_provider_eval_packet.py",
+        "sha256": "a54b1af67cf67fb652823754328ba434b822e6de54e9664cdb71b368e88a35cd"
+      },
+      {
+        "bytes": 3088,
+        "path": "scripts/knowledge_provider_eval_registry.py",
+        "sha256": "617350459c686211029c83b78abf53eb7995cd5bd8b126400152d81e8b467b75"
+      }
+    ]
+  },
+  "execution": {
+    "elapsed_ms": 5175,
+    "executed": true,
+    "index_bytes": 277093,
+    "mcp_stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "observations": {
+      "search": {
+        "bytes": 7892,
+        "sha256": "e4d1252d19dfa03f266c50d8b0c85ba194d256cd95d9255929182f023e9e2716"
+      },
+      "status": {
+        "bytes": 193,
+        "sha256": "17a1f18198573c22cc1ab105b84185f52c0f78cc9a4b189f8000a9762ebebd5a"
+      }
+    },
+    "state": "PASS",
+    "watcher_logs": {
+      "stderr_bytes": 421,
+      "stderr_sha256": "0c2c638850518253d3194b74597e6aaa678ade735737b635a43419eac89e98ce",
+      "stdout_bytes": 217,
+      "stdout_sha256": "ad2e6114fdb2a7e975666ce329a07d7d0fbf4444c3212e71d457f2d23d0dedbd"
+    }
+  },
+  "manifest": {
+    "digest": "sha256:5983b0119c618fe08dd158817acd708f4101fd0896a8e26f3e9954ecd806b004",
+    "identity_match": true,
+    "identity_state": "PINNED",
+    "path": "docs/knowledge-providers/providers/grepai.json",
+    "source_commit": "176ff9dbd091345b6e8b2afd4d79664b4aa17194"
+  },
+  "provider_id": "grepai",
+  "provider_identity": {
+    "embedder": {
+      "endpoint": "http://localhost:11434",
+      "model": "nomic-embed-text",
+      "model_id": "0a109f422b47"
+    },
+    "executable": {
+      "command": "grepai",
+      "real_name": "grepai",
+      "sha256": "e2d5ad30710eba500cb5d783a914ea16ba4e5c66ac23abe8691165b4aa5732bc"
+    },
+    "license": "MIT",
+    "release_asset_sha256": "d3c579a57e45b6155a43956f8a8ab93405d4af3fe13f17141886b8107375b944",
+    "sbom": "HOMEBREW_SPDX",
+    "source_commit": "176ff9dbd091345b6e8b2afd4d79664b4aa17194",
+    "source_repository": "yoanbernabeu/grepai",
+    "version": "0.30.0"
+  },
+  "schema": "bettor-arena/provider-live-canary/v1",
+  "source_readback": {
+    "path": "scripts/knowledge_provider_eval_registry.py",
+    "sha256": "617350459c686211029c83b78abf53eb7995cd5bd8b126400152d81e8b467b75",
+    "token_observed": true
+  },
+  "status": "PASS",
+  "subject": {
+    "commit": "755f743c789215381b42531cad3582e2b9c2af27",
+    "repository": "ed3c/bettor-arena",
+    "tree": "d50f577f069a8f79a497cb77258b25b1f593f190"
+  },
+  "workload_sha256": "1f1867d6ac7a5c8dc6951fae9fed6612396e7d77dce83bc3cdcf64db1b054384"
+}

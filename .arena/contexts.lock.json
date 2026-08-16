@@ -1,5 +1,5 @@
 {
-  "content_sha256": "bb2c718f9c4da4f3c44d26b14787908b63e42f6755f86ce01c2bd601ec2959e7",
+  "content_sha256": "5745b2eac79dee025a3fc0af3701fc2728f5c9abdcda4751c6a553647a2e9964",
   "contexts": [
     {
       "common": [
@@ -198,7 +198,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "59237a02b7b47cbbb281a833fdc4cadeef5a2d29988a234682baf4afbcca72f3",
+      "context_sha256": "70b6d1f048aa22640ade3f8f17dfb00628b81e3a467e326f9af6296625545e6e",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -212,7 +212,7 @@
       },
       "files": [
         {
-          "blob": "369078a2a34c9a6353bd577e482092a664789039",
+          "blob": "fd76197cafad25850f7297ad99f31b385303e68d",
           "mode": "100644",
           "path": ".arena/modules/knowledge-providers/module.json"
         },
@@ -247,7 +247,7 @@
           "path": "docs/knowledge-providers/CONTEXT.md"
         },
         {
-          "blob": "882463910fa3496060585b1ccaee61e9bf8bf24a",
+          "blob": "8622045fea59e69c857ba9dff12e5514959ddb27",
           "mode": "100644",
           "path": "docs/knowledge-providers/README.md"
         },
@@ -257,12 +257,12 @@
           "path": "docs/knowledge-providers/alternatives.md"
         },
         {
-          "blob": "1ecd6161dbaca9865c1409d351c93dbd43fddc7e",
+          "blob": "618781da34076342ccdfbca85da478bd86f985b0",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/README.md"
         },
         {
-          "blob": "7eca241c636482724f1f9da6e80a1b4e16b40d70",
+          "blob": "565bcd3e20777e293aa00ea40faa63eaf7d03bab",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/STATUS.md"
         },
@@ -332,7 +332,7 @@
           "path": "docs/knowledge-providers/evals/participants/exact-search-control.json"
         },
         {
-          "blob": "b29d870e645233b56d71bd400a22d33cbbef23fb",
+          "blob": "72cf926acc751579cf82a0cf6c3b785fbdeaee3a",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/participants/grepai.json"
         },
@@ -347,7 +347,7 @@
           "path": "docs/knowledge-providers/evals/participants/repository-authority-control.json"
         },
         {
-          "blob": "574a3e2618c0c2c31fc5018b0561d99cc184246c",
+          "blob": "42b815a69bcebb5489b9c29ae6735901e848fab9",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/participants/serena.json"
         },
@@ -357,7 +357,7 @@
           "path": "docs/knowledge-providers/evals/subject.json"
         },
         {
-          "blob": "e09a4c5068fcb194001f93810574244812aeb314",
+          "blob": "7ee481e9bcb21e094bb91b5ed09155a2da1b0ec6",
           "mode": "100644",
           "path": "docs/knowledge-providers/registry.json"
         }

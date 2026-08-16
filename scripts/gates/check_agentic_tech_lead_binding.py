@@ -22,53 +22,86 @@ CHECKER = Path("scripts/gates/check_agentic_tech_lead_binding.py")
 MANIFEST = Path("docs/knowledge-providers/providers/code-graph-rag.json")
 REGISTRY = Path("docs/knowledge-providers/registry.json")
 STATES = {
-    "PASS", "FAIL", "ABSENT", "NOT_IMPLEMENTED",
-    "NOT_EXERCISED", "SKIPPED_BY_POLICY",
+    "PASS",
+    "FAIL",
+    "ABSENT",
+    "NOT_IMPLEMENTED",
+    "NOT_EXERCISED",
+    "SKIPPED_BY_POLICY",
 }
 ROLES = {
     "INTENT_ANCHOR": (
-        "grepai", ".arena/modules/knowledge-providers",
-        "knowledge-providers", "1.2.0", "NOT_EXERCISED",
+        "grepai",
+        ".arena/modules/knowledge-providers",
+        "knowledge-providers",
+        "1.4.0",
+        "NOT_EXERCISED",
         "CANDIDATE_ONLY",
     ),
     "DETERMINISTIC_GRAPH": (
-        "scip-sqlite", ".arena/modules/code-truth-graph-v2",
-        "code-truth-graph-v2", "1.0.0", "NOT_IMPLEMENTED",
+        "scip-sqlite",
+        ".arena/modules/code-truth-graph-v2",
+        "code-truth-graph-v2",
+        "1.0.0",
+        "NOT_IMPLEMENTED",
         "EXACT_ONLY_WITH_SUBJECT_COVERAGE_READBACK",
     ),
     "STRUCTURAL_SLICER": (
-        "tree-sitter", ".arena/modules/code-truth-graph-v2",
-        "code-truth-graph-v2", "1.0.0", "NOT_IMPLEMENTED",
+        "tree-sitter",
+        ".arena/modules/code-truth-graph-v2",
+        "code-truth-graph-v2",
+        "1.0.0",
+        "NOT_IMPLEMENTED",
         "STRUCTURE_ONLY",
     ),
     "CONTEXT_ASSEMBLY": (
-        "loopx-context-assembly", ".arena/modules/loopx-context-assembly",
-        "loopx-context-assembly", "1.0.0", "NOT_EXERCISED",
+        "loopx-context-assembly",
+        ".arena/modules/loopx-context-assembly",
+        "loopx-context-assembly",
+        "1.0.0",
+        "NOT_EXERCISED",
         "PROMPT_IR_ONLY",
     ),
     "AGENT_EXECUTOR": (
-        "serena", ".arena/modules/knowledge-providers",
-        "knowledge-providers", "1.2.0", "NOT_EXERCISED",
+        "serena",
+        ".arena/modules/knowledge-providers",
+        "knowledge-providers",
+        "1.4.0",
+        "NOT_EXERCISED",
         "BOUNDED_WORKER_ONLY",
     ),
     "VECTOR_CANDIDATE_STORE": (
-        "lancedb", ".arena/modules/loopx-notes-retrieval",
-        "loopx-notes-retrieval", "1.0.0", "NOT_IMPLEMENTED",
+        "lancedb",
+        ".arena/modules/loopx-notes-retrieval",
+        "loopx-notes-retrieval",
+        "1.0.0",
+        "NOT_IMPLEMENTED",
         "CANDIDATE_ONLY",
     ),
     "WORKER_FANOUT": (
-        "loopx-worker-fleet", ".arena/modules/loopx-worker-fleet",
-        "loopx-worker-fleet", "1.0.0", "NOT_EXERCISED",
+        "loopx-worker-fleet",
+        ".arena/modules/loopx-worker-fleet",
+        "loopx-worker-fleet",
+        "1.0.0",
+        "NOT_EXERCISED",
         "LEASED_EXECUTION_ONLY",
     ),
     "STACK_DELIVERY": (
-        "git-town", ".arena/modules/git-town-runtime",
-        "git-town-runtime", "1.0.0", "ABSENT", "NO_EXECUTION",
+        "git-town",
+        ".arena/modules/git-town-runtime",
+        "git-town-runtime",
+        "1.0.0",
+        "ABSENT",
+        "NO_EXECUTION",
     ),
 }
 HUMAN = {
-    "provider activation", "semantic conflict admission",
-    "remote publication", "merge", "promotion", "rollback",
+    "provider activation",
+    "semantic conflict admission",
+    "remote publication",
+    "merge",
+    "promotion",
+    "rollback",
 }
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SECRET = re.compile(
@@ -101,7 +134,8 @@ def validate_value(value: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     exact(value, "schema_version", "agentic-tech-lead-bettor-binding/v1", errors)
     exact(
-        value, "source_proposal",
+        value,
+        "source_proposal",
         {"title": "AI 编程新范式：并行 Agent 体验", "trust": "SOURCE_PROPOSAL"},
         errors,
     )
@@ -146,9 +180,12 @@ def validate_value(value: dict[str, Any]) -> list[str]:
 
     orchestration = value.get("orchestration", {})
     expected_orchestration = {
-        "default_mode": "STACK", "tournament_mode": "CONTRACT_ONLY",
-        "max_workers": 3, "max_repairs_per_signature": 3,
-        "one_writer_per_path": True, "path_disjoint_parallelism": True,
+        "default_mode": "STACK",
+        "tournament_mode": "CONTRACT_ONLY",
+        "max_workers": 3,
+        "max_repairs_per_signature": 3,
+        "one_writer_per_path": True,
+        "path_disjoint_parallelism": True,
         "true_child_requires_parent_bytes": True,
         "immutable_acceptance_oracles": True,
     }
@@ -157,11 +194,14 @@ def validate_value(value: dict[str, Any]) -> list[str]:
 
     intelligence = value.get("code_intelligence", {})
     expected_intelligence = {
-        "intent_anchor": "grepai", "deterministic_graph": "scip-sqlite",
-        "metadata_store": "sqlite", "structural_slicer": "tree-sitter",
+        "intent_anchor": "grepai",
+        "deterministic_graph": "scip-sqlite",
+        "metadata_store": "sqlite",
+        "structural_slicer": "tree-sitter",
         "vector_candidate_store": "lancedb",
         "historical_code_graph_rag_state": "REJECTED",
-        "no_double_graph": True, "source_readback_required": True,
+        "no_double_graph": True,
+        "source_readback_required": True,
         "existing_reference_adapter": "python-ast",
         "existing_reference_adapter_is_scip": False,
     }
@@ -189,8 +229,12 @@ def validate_value(value: dict[str, Any]) -> list[str]:
     if set(by_role) != set(ROLES):
         errors.append("module role set drifted")
     keys = (
-        "provider", "owner", "module_id", "interface_version",
-        "runtime_state", "authority",
+        "provider",
+        "owner",
+        "module_id",
+        "interface_version",
+        "runtime_state",
+        "authority",
     )
     for role, expected in ROLES.items():
         item = by_role.get(role, {})
@@ -205,8 +249,12 @@ def validate_value(value: dict[str, Any]) -> list[str]:
 
     automation = value.get("automation", {})
     for key in (
-        "auto_restack", "auto_publish", "auto_resolve_conflicts",
-        "auto_merge", "provider_state_write", "worker_state_write",
+        "auto_restack",
+        "auto_publish",
+        "auto_resolve_conflicts",
+        "auto_merge",
+        "provider_state_write",
+        "worker_state_write",
     ):
         if automation.get(key) is not False:
             errors.append(f"automation.{key} must be false")
@@ -215,9 +263,14 @@ def validate_value(value: dict[str, Any]) -> list[str]:
     if forbidden.get("active_providers") != ["code-graph-rag"]:
         errors.append("forbidden.active_providers drifted")
     for key in (
-        "double_graph", "test_assertion_mutation",
-        "semantic_conflict_resolution", "force_push",
-        "remote_publication", "merge", "promotion", "rollback",
+        "double_graph",
+        "test_assertion_mutation",
+        "semantic_conflict_resolution",
+        "force_push",
+        "remote_publication",
+        "merge",
+        "promotion",
+        "rollback",
     ):
         if forbidden.get(key) is not True:
             errors.append(f"forbidden.{key} must be true")
@@ -262,11 +315,14 @@ def validate_repo(root: Path) -> list[str]:
         if manifest.get("provider_id") != "code-graph-rag":
             errors.append("historical provider identity drifted")
         if admission != {
-            "state": "REJECTED", "runtime_state": "ABSENT", "live_claim": False
+            "state": "REJECTED",
+            "runtime_state": "ABSENT",
+            "live_claim": False,
         }:
             errors.append("historical Code-Graph-RAG must be REJECTED/ABSENT")
         entries = [
-            item for item in registry.get("providers", [])
+            item
+            for item in registry.get("providers", [])
             if isinstance(item, dict) and item.get("id") == "code-graph-rag"
         ]
         if len(entries) != 1 or entries[0].get("digest") != digest(manifest):
@@ -278,9 +334,12 @@ def validate_repo(root: Path) -> list[str]:
     if (root / README).is_file():
         text = (root / README).read_text(encoding="utf-8")
         for heading in (
-            "## Authority and source identity", "## State machine",
-            "## Data flow", "## Domain module map",
-            "## Evidence boundary", "## Verification",
+            "## Authority and source identity",
+            "## State machine",
+            "## Data flow",
+            "## Domain module map",
+            "## Evidence boundary",
+            "## Verification",
         ):
             if heading not in text:
                 errors.append(f"{README}: missing {heading}")
@@ -331,24 +390,50 @@ def selftest(root: Path) -> list[str]:
     base = load(root / BINDING)
     failures: list[str] = []
     cases = [
-        ("copied body", lambda x: x["skill"].__setitem__("copied_body", True),
-         "copied_body"),
-        ("candidate promoted", lambda x: x["skill"].__setitem__(
-            "candidate_state", "PASS"), "candidate_state"),
-        ("active old graph", lambda x: x["modules"][0].__setitem__(
-            "provider", "code-graph-rag"), "Code-Graph-RAG"),
-        ("AST mislabeled SCIP", lambda x: x["code_intelligence"].__setitem__(
-            "existing_reference_adapter_is_scip", True),
-         "existing_reference_adapter_is_scip"),
-        ("SCIP invented", lambda x: x["modules"][1].__setitem__(
-            "runtime_state", "PASS"), "DETERMINISTIC_GRAPH.runtime_state"),
-        ("Git Town invented", lambda x: x["modules"][-1].__setitem__(
-            "runtime_state", "NOT_EXERCISED"), "STACK_DELIVERY.runtime_state"),
-        ("auto merge", lambda x: x["automation"].__setitem__(
-            "auto_merge", True), "automation.auto_merge"),
-        ("Human boundary", lambda x: x.__setitem__(
-            "human_owned", [v for v in x["human_owned"] if v != "rollback"]),
-         "human_owned"),
+        (
+            "copied body",
+            lambda x: x["skill"].__setitem__("copied_body", True),
+            "copied_body",
+        ),
+        (
+            "candidate promoted",
+            lambda x: x["skill"].__setitem__("candidate_state", "PASS"),
+            "candidate_state",
+        ),
+        (
+            "active old graph",
+            lambda x: x["modules"][0].__setitem__("provider", "code-graph-rag"),
+            "Code-Graph-RAG",
+        ),
+        (
+            "AST mislabeled SCIP",
+            lambda x: x["code_intelligence"].__setitem__(
+                "existing_reference_adapter_is_scip", True
+            ),
+            "existing_reference_adapter_is_scip",
+        ),
+        (
+            "SCIP invented",
+            lambda x: x["modules"][1].__setitem__("runtime_state", "PASS"),
+            "DETERMINISTIC_GRAPH.runtime_state",
+        ),
+        (
+            "Git Town invented",
+            lambda x: x["modules"][-1].__setitem__("runtime_state", "NOT_EXERCISED"),
+            "STACK_DELIVERY.runtime_state",
+        ),
+        (
+            "auto merge",
+            lambda x: x["automation"].__setitem__("auto_merge", True),
+            "automation.auto_merge",
+        ),
+        (
+            "Human boundary",
+            lambda x: x.__setitem__(
+                "human_owned", [v for v in x["human_owned"] if v != "rollback"]
+            ),
+            "human_owned",
+        ),
     ]
     if validate_value(base):
         failures.append(f"positive binding failed: {validate_value(base)}")
@@ -373,7 +458,8 @@ def main() -> int:
         return 1
     print(
         "agentic-tech-lead binding selftest: PASS"
-        if args.selftest else "agentic-tech-lead binding: PASS"
+        if args.selftest
+        else "agentic-tech-lead binding: PASS"
     )
     return 0
 

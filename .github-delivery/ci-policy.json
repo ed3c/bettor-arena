@@ -6,5 +6,11 @@
   "workflow": ".github/workflows/modular-contracts.yml",
   "pull_request_mode": "draft-first",
   "required_jobs": ["contracts"],
+  "repair_feedback_checks": [
+    {
+      "workflow": ".github/workflows/agentic-tech-lead-binding.yml",
+      "job": "binding"
+    }
+  ],
   "local_verification_contract": ".github-delivery/local-verification-contract.json"
 }

@@ -66,7 +66,7 @@ optional rebuildable memory projection
 | query receipt | what the adapter observed for the exact request | current source truth, `TESTED`, hard-gate PASS |
 | memory proposal | a bounded add/supersede/delete proposal | canonical memory mutation or repository law |
 | eval report | paired metrics and hard-gate outcome for exact observations | automatic admission or a universal winner |
-| source/test/runtime receipt | current mechanism or executed result for its exact subject | Human Admit or future availability |
+| source/test/runtime receipt | current mechanism or executed result for its exact subject | typed activation or future availability |
 
 ## Public capability vocabulary
 
@@ -82,8 +82,9 @@ optional rebuildable memory projection
   manifest, but admission is `REJECTED`, runtime is `ABSENT`, and it cannot be
   selected by a task or Worker.
 
-Serena, GrepAI, and Mem0 remain subject-bound candidates until separate live
-receipts exist. Code-Graph-RAG is not a candidate.
+Serena and GrepAI remain subject-bound candidates until their exact-subject live
+receipts pass the typed activation controller. Mem0 remains a candidate.
+Code-Graph-RAG is not a candidate.
 
 ## Read order
 
@@ -134,8 +135,9 @@ provider registry digest checks       IMPLEMENTED
 admission evaluation schemas          IMPLEMENTED on feature branch
 paired fixture evaluator              IMPLEMENTED on feature branch
 exact-head evaluation CI              NOT_EXERCISED
-live Serena                           NOT_EXERCISED
-live GrepAI                           NOT_EXERCISED
+live Serena                           PASS for exact 755f743 subject
+live GrepAI                           PASS for exact 755f743 subject
+typed provider activation             ADMITTED for exact 755f743 subject
 SCIP + SQLite exact-subject runtime    NOT_EXERCISED
 Tree-sitter slicing runtime           NOT_EXERCISED
 LanceDB subject-bound retrieval       NOT_EXERCISED
@@ -145,6 +147,7 @@ Mem0 runtime/writeback                NOT_CONFIGURED
 cross-provider winner                 NOT_EXERCISED
 ```
 
-Provider installation, MCP trust, persistent-store retention, graph rebuild,
-memory writeback, merge, promotion, and production rollback remain Human
-Admit.
+Provider installation, credential changes, persistent-store retention, graph
+rebuild, memory writeback, merge, promotion, and production rollback remain
+outside provider authority. Serena/GrepAI on-demand activation is allowed only
+through the exact-subject controller in `activation/README.md`.
