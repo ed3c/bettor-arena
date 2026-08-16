@@ -1,0 +1,47 @@
+{
+  "schema": "bettor-arena/agentic-tech-lead-binding/v1",
+  "binding_state": "CANDIDATE",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "base_branch": "main",
+    "base_commit": "d233da14ceb5ffcddc330169ab146c31d56e6191",
+    "base_tree": "dfb47f7dfc21875a01f6476597e30c3e98e2e1f8"
+  },
+  "provider_binding": ".skill-bindings/repo-agent-native/blindspot-hybrid.json",
+  "shared_contracts": {
+    "root_environment": "SKILLS_SHARED_ROOT",
+    "tech_lead_compiler": "skills/git-town-stacked-pr-worker/scripts/plan_tech_lead_stack.py",
+    "blindspot_checker": "skills/repo-agent-native/scripts/blindspot_contract.py"
+  },
+  "orchestration": {
+    "mode": "PLAN_AND_VERIFY_ONLY",
+    "max_parallel_workers": 3,
+    "require_path_disjoint_siblings": true,
+    "require_explicit_child_contract": true,
+    "require_convergence_after_dependencies": true,
+    "require_negative_control_per_task": true,
+    "require_source_readback_per_blindspot_query": true
+  },
+  "branch_policy": {
+    "tool": "git-town",
+    "foundation_branch": "agent/ade-provider-routing-v1",
+    "child_branch": "agent/ade-tech-lead-adoption-v1",
+    "publication": "DRAFT_PR_ONLY",
+    "merge": "HUMAN_OWNED",
+    "semantic_conflict_resolution": "HUMAN_OWNED"
+  },
+  "forgejo": {
+    "role": "consumer-owned-private-execution-forge",
+    "runtime_state": "NOT_CONFIGURED",
+    "remote_name": null,
+    "url": null
+  },
+  "effects": {
+    "spawn_agents": false,
+    "create_branches": false,
+    "create_worktrees": false,
+    "invoke_providers": false,
+    "contact_forgejo": false,
+    "merge_or_publish": false
+  }
+}
