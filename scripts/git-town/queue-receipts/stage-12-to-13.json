@@ -1,0 +1,36 @@
+{
+  "schema": "bettor-arena/pdf-terminal-advancement/v1",
+  "outcome": "ADMITTED",
+  "repository": "ed3c/bettor-arena",
+  "observed_at": "2026-08-16T17:26:03Z",
+  "queue_blob_before_git_sha": "95b64fc8eb64f2741435f927373c40476f03cd3d",
+  "predecessor": {
+    "id": "stage-12-code-intelligence-live",
+    "order": 12,
+    "issue": 92,
+    "issue_state": "closed",
+    "issue_state_reason": "completed"
+  },
+  "successor": {
+    "id": "stage-13-code-graph-retirement",
+    "order": 13,
+    "issue": 140
+  },
+  "remote_delivery": {
+    "pull_request": 150,
+    "head_sha": "76eca27c8a4eda7623d498d8a9bdc3365b26e901",
+    "merge_commit_sha": "3357dadcde509a7e92515be52d9b301e4ff130e0",
+    "checks": "six exact-head checks PASS according to merged post-delivery readback"
+  },
+  "activation_receipt": {
+    "path": "data/provider-activations/755f743c789215381b42531cad3582e2b9c2af27.json",
+    "git_blob_sha": "77b29821233b407dade2f7763f3c174b9e7a9ef1",
+    "subject_commit": "755f743c789215381b42531cad3582e2b9c2af27"
+  },
+  "live_mechanism_subject": "8c30e3c32e9169985d87a1055decb1b800211ad2",
+  "evidence_boundary": "This receipt admits completion of the order-12 Serena/GrepAI terminal only. It does not complete order 13, prove live SCIP/Tree-sitter, execute Git Town/Forgejo, or admit final convergence.",
+  "rollback_subject": {
+    "commit": "8b8a8aa9aad7a79f5914be7e4b8b38909501802f",
+    "queue_blob_git_sha": "95b64fc8eb64f2741435f927373c40476f03cd3d"
+  }
+}
