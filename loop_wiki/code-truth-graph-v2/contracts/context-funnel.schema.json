@@ -3,7 +3,7 @@
   "$id": "bettor-arena/code-truth-graph-v2/context-funnel.schema.json",
   "title": "Exact-subject compiler truth context funnel request",
   "type": "object",
-  "required": ["schema", "subject", "language", "targets", "required_lenses", "limits"],
+  "required": ["schema", "subject", "language", "targets", "providers", "required_lenses", "limits"],
   "additionalProperties": false,
   "properties": {
     "schema": {"const": "bettor-arena/context-funnel-request/v1"},
@@ -19,6 +19,21 @@
     },
     "language": {"type": "string", "minLength": 1},
     "targets": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "required", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "role": {"enum": ["intent-discovery", "semantic-fact", "syntax-slice", "source-readback", "projection"]},
+          "required": {"type": "boolean"},
+          "state": {"enum": ["PASS", "FAIL", "ABSENT", "NOT_IMPLEMENTED", "NOT_EXERCISED", "SKIPPED_BY_POLICY", "REJECTED"]}
+        }
+      }
+    },
     "required_lenses": {
       "type": "array",
       "minItems": 1,
