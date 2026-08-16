@@ -1,5 +1,5 @@
 {
-  "content_sha256": "0029ef6e775f8745ed9fa995ecf5e9560dc1871db600db0b3382bf77b114fa35",
+  "content_sha256": "123deb08c8ca5387cda6c0fc006d8525a175b84f7a2377939d7820ba13571827",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "190e95e202ae592f85aefe10c29b97e41bd2dfe94033d042533b86b484e0baaa",
+      "context_sha256": "80bbb9f5600d3ae53cdf2339a521061f7de773deb5f99dd8e9cba23308d83bde",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -41,7 +41,7 @@
           "path": ".runtime-env/requirements.json"
         },
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -90,7 +90,7 @@
         "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
         "loop_wiki/code-truth-graph/modules/exchange-formats.md"
       ],
-      "context_sha256": "d26bbad059fe53b9eae26a1bc830b07cbda57fff3e811f34dac800765abf5358",
+      "context_sha256": "3aacb2a1832d0485dec02ea1bf1e3faaf92e4bb9f30933b2e0e1d862cef1d233",
       "cwd": "loop_wiki/code-truth-graph",
       "drivers": {
         "claude-code": {
@@ -104,7 +104,7 @@
       },
       "files": [
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -197,7 +197,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "52fd1ae450fcb64e6eb9d0e82fd1566686de50ccb78a8e26f7915f44519e7cb0",
+      "context_sha256": "cdb84713dadaf60227cd27644e7ce42ed3984f1b2b48deb70e2d82b379a8d501",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -216,7 +216,7 @@
           "path": ".arena/modules/knowledge-providers/module.json"
         },
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -393,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "101a91059c29d0b775de73736d7a89912942694adfe9debbc9259296fe11d841",
+      "context_sha256": "87fbc9c8210df5b46957fa38b0f8884b9b100174a07dae257c0478928e93e6a0",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -407,7 +407,7 @@
       },
       "files": [
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -492,7 +492,7 @@
           "path": "docs/git/REPO_PROFILE.md"
         },
         {
-          "blob": "f630f4218c99483940409a336df896c27744ba1d",
+          "blob": "621e6bc456719d2a974635690063265bae42678e",
           "mode": "100644",
           "path": "docs/git/STACKED_PRS.md"
         },
@@ -517,7 +517,7 @@
           "path": "docs/integration/CROSS_REPO_INTEGRATION.md"
         },
         {
-          "blob": "ae7059d3623271374f5d9fcdfcf4d90926c91144",
+          "blob": "16b3e36965a420118bbe26e8f3e794cf5ff5a8dd",
           "mode": "100644",
           "path": "docs/traceability/STACK_PR_INDEX.md"
         }
@@ -543,7 +543,7 @@
         ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "f9e96e418406ba49e478dfb5ac07e8c8a85be04e249c6ec8342cf01421329017",
+      "context_sha256": "0b76f2eda27ea4fccedcebd79bafa0c34f79bd0bd23bf9da0f406d1255555639",
       "cwd": "notebooklm",
       "drivers": {
         "claude-code": {
@@ -567,7 +567,7 @@
           "path": ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md"
         },
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -613,7 +613,7 @@
         "kb-ingest/port/README.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "f6f1b5f97dcbdc4f451e0b62f09cfa2b13f9bf08a1d95486c4bb9906773d41fd",
+      "context_sha256": "09a8196b4fc8f98253bd725d3d06dc7be7ca5f1656ad7864d797c26d90fac959",
       "cwd": "kb-ingest",
       "drivers": {
         "claude-code": {
@@ -627,7 +627,7 @@
       },
       "files": [
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -686,7 +686,7 @@
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
       ],
-      "context_sha256": "59d9545f95745b8e9e3118b40197006b1fd72fc17487a104cba9c7cb2f65505c",
+      "context_sha256": "292170b4445302760a2ab431b0e3ef8b52a4425d38ceedc06998a8feb9df6642",
       "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
       "drivers": {
         "claude-code": {
@@ -700,7 +700,7 @@
       },
       "files": [
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
@@ -774,7 +774,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "7bc066cca894af382673575495a8c2f4bfa3bf32c296641436c83a2c4674cb47",
+      "context_sha256": "997c4ff33520016ee83974c824f302811059f96f829546d9ca4de61f58aeff85",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -788,7 +788,7 @@
       },
       "files": [
         {
-          "blob": "707d9d93c20f8febe6ef58ced5edab5443c99fd1",
+          "blob": "20ed5b90fa5a4eb166d1e2c1aa4d8a67bfc94f6f",
           "mode": "100644",
           "path": "AGENTS.md"
         },
