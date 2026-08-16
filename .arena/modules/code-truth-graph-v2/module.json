@@ -27,30 +27,30 @@
     "secrets": "none"
   },
   "id": "code-truth-graph-v2",
-  "interface_version": "1.0.0",
+  "interface_version": "1.1.0",
   "loops": [
     {
       "class": "core",
       "external_policy": "control-only",
       "id": "code-truth-graph-v2",
-      "interface_version": "1.0.0",
+      "interface_version": "1.1.0",
       "public_port": "python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py"
     }
   ],
   "proof": {
     "control": [
       "python3",
-      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "loop_wiki/code-truth-graph-v2/scripts/blindspots.py",
       "selftest"
     ],
     "mutation": [
       "python3",
-      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "loop_wiki/code-truth-graph-v2/scripts/blindspots.py",
       "selftest"
     ],
     "selftest": [
       "python3",
-      "loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py",
+      "loop_wiki/code-truth-graph-v2/scripts/blindspots.py",
       "selftest"
     ],
     "verify": [
@@ -59,7 +59,8 @@
     ]
   },
   "provides": [
-    "code-truth-graph.evidence/v2"
+    "code-truth-graph.evidence/v2",
+    "code-truth-graph.blindspots/v1"
   ],
   "requires": [
     "arena.proof-kernel/v1",
@@ -83,5 +84,5 @@
     "repo_owned": [],
     "required": []
   },
-  "summary": "Exact-subject evidence-plane graph, analyzer identity and coverage contracts, Python AST reference adapter, provenance-preserving queries, and hard UNKNOWN-versus-NO_FLOW controls."
+  "summary": "Exact-subject evidence planes plus a disposable SQLite Blindspots ledger, analyzer identity and coverage contracts, provenance-preserving FOUND/CONTESTED/NO_FLOW/UNKNOWN reduction, and hard source-readback/coverage controls."
 }
