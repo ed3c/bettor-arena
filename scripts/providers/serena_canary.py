@@ -149,28 +149,38 @@ def installed_source_identity(command: str, workload: dict[str, Any]) -> dict[st
     }
 
 
-def project_config(workload: dict[str, Any]) -> str:
-    tools = "\n".join(f"  - {name}" for name in workload["provider"]["tools"])
-    return f"""project_name: bettor-serena-canary
-language_servers:
+def project_config() -> str:
+    return """project_name: bettor-serena-canary
+languages:
   - python
 encoding: utf-8
-language_backend: LSP
 ignore_all_files_in_gitignore: true
-ls_workspace_folders:
-  - .
-ls_additional_workspace_folders: []
 ignored_paths: []
 read_only: true
 excluded_tools: []
 included_optional_tools: []
+initial_prompt: ""
+"""
+
+
+def serena_config(workload: dict[str, Any]) -> str:
+    tools = "\n".join(f"  - {name}" for name in workload["provider"]["tools"])
+    timeout = workload["limits"]["timeout_seconds"]
+    return f"""language_backend: LSP
+gui_log_window: false
+web_dashboard: false
+web_dashboard_open_on_launch: false
+log_level: 40
+trace_lsp_communication: false
+ls_specific_settings: {{}}
+tool_timeout: {timeout}
+excluded_tools: []
+included_optional_tools: []
 fixed_tools:
 {tools}
-default_modes: []
-added_modes: []
-initial_prompt: ""
-read_only_memory_patterns: []
-ignored_memory_patterns: []
+default_max_tool_answer_chars: {workload["limits"]["max_bytes"]}
+token_count_estimator: CHAR_COUNT
+projects: []
 """
 
 
@@ -212,11 +222,12 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
         materialize_coverage(root, project, coverage)
         serena_root = project / ".serena"
         serena_root.mkdir()
-        (serena_root / "project.yml").write_text(
-            project_config(workload), encoding="utf-8"
-        )
+        (serena_root / "project.yml").write_text(project_config(), encoding="utf-8")
         isolated_home = temp_root / "serena-home"
         isolated_home.mkdir(mode=0o700)
+        (isolated_home / "serena_config.yml").write_text(
+            serena_config(workload), encoding="utf-8"
+        )
         logs = temp_root / "logs"
         environment = safe_environment({"SERENA_HOME": str(isolated_home)})
         index = run_fixed(
@@ -234,7 +245,10 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
             timeout=workload["limits"]["timeout_seconds"],
             environment=environment,
         )
-        require(index.exit == 0, "Serena indexing failed")
+        require(
+            index.exit == 0,
+            "Serena indexing failed: " + (index.stderr or index.stdout)[-2048:].strip(),
+        )
         index_bytes = sum(
             path.stat().st_size for path in serena_root.rglob("*") if path.is_file()
         )
