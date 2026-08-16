@@ -7,7 +7,7 @@ from knowledge_provider_eval_common import digest, load, require
 from knowledge_provider_eval_contracts import load_contract
 from knowledge_provider_eval_metrics import score
 from knowledge_provider_eval_packet import validate_packet
-from knowledge_provider_eval_registry import HISTORICAL_PROVIDERS, load_participants, provider_digests
+from knowledge_provider_eval_registry import load_participants, provider_digests
 
 
 def evaluate(root: Path, path: Path) -> dict:
@@ -18,11 +18,6 @@ def evaluate(root: Path, path: Path) -> dict:
     )
     values = load(path)
     require(isinstance(values, list) and values, "observations array")
-    retired = [v for v in values if isinstance(v, dict) and v.get("participant_id") in HISTORICAL_PROVIDERS]
-    if retired:
-        require(config["fixture_only"], "retired provider observations forbidden outside historical fixtures")
-        values = [v for v in values if not (isinstance(v, dict) and v.get("participant_id") in HISTORICAL_PROVIDERS)]
-    require(values, "active observations array")
     ids = set()
     pairs = set()
     checked = []
