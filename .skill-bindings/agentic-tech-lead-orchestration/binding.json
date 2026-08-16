@@ -1,0 +1,163 @@
+{
+  "schema_version": "agentic-tech-lead-bettor-binding/v1",
+  "source_proposal": {
+    "title": "AI 编程新范式：并行 Agent 体验",
+    "trust": "SOURCE_PROPOSAL"
+  },
+  "consumer": {
+    "repository": "ed3c/bettor-arena",
+    "base_commit": "bfabd45d4732e66961d4ba5f958d240feb15b32d",
+    "base_tree": "ae5ee587b46a98bffc8571156dbedc55fbaa44f1",
+    "active_issue": 92
+  },
+  "skill": {
+    "name": "agentic-tech-lead-orchestration",
+    "canonical_repository": "ed3c/skills-shared",
+    "candidate_branch": "agent/agentic-tech-lead-controls-v1",
+    "candidate_commit": "ee7aaa55ab5b779a813f78a266569d6b53ddc7b8",
+    "candidate_tree": "674de1eafe1def98849b316c3df7664955d38caf",
+    "candidate_state": "NOT_EXERCISED",
+    "registry_classification": "ABSENT",
+    "projection_state": "ABSENT",
+    "copied_body": false
+  },
+  "orchestration": {
+    "default_mode": "STACK",
+    "tournament_mode": "CONTRACT_ONLY",
+    "max_workers": 3,
+    "max_repairs_per_signature": 3,
+    "one_writer_per_path": true,
+    "path_disjoint_parallelism": true,
+    "true_child_requires_parent_bytes": true,
+    "immutable_acceptance_oracles": true
+  },
+  "code_intelligence": {
+    "intent_anchor": "grepai",
+    "deterministic_graph": "scip-sqlite",
+    "metadata_store": "sqlite",
+    "structural_slicer": "tree-sitter",
+    "vector_candidate_store": "lancedb",
+    "historical_code_graph_rag_state": "REJECTED",
+    "no_double_graph": true,
+    "source_readback_required": true,
+    "existing_reference_adapter": "python-ast",
+    "existing_reference_adapter_is_scip": false
+  },
+  "modules": [
+    {
+      "role": "INTENT_ANCHOR",
+      "provider": "grepai",
+      "owner": ".arena/modules/knowledge-providers",
+      "module_id": "knowledge-providers",
+      "interface_version": "1.2.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_EXERCISED",
+      "authority": "CANDIDATE_ONLY"
+    },
+    {
+      "role": "DETERMINISTIC_GRAPH",
+      "provider": "scip-sqlite",
+      "owner": ".arena/modules/code-truth-graph-v2",
+      "module_id": "code-truth-graph-v2",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_IMPLEMENTED",
+      "authority": "EXACT_ONLY_WITH_SUBJECT_COVERAGE_READBACK",
+      "limitation": "The existing Python AST reference adapter is not SCIP."
+    },
+    {
+      "role": "STRUCTURAL_SLICER",
+      "provider": "tree-sitter",
+      "owner": ".arena/modules/code-truth-graph-v2",
+      "module_id": "code-truth-graph-v2",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_IMPLEMENTED",
+      "authority": "STRUCTURE_ONLY"
+    },
+    {
+      "role": "CONTEXT_ASSEMBLY",
+      "provider": "loopx-context-assembly",
+      "owner": ".arena/modules/loopx-context-assembly",
+      "module_id": "loopx-context-assembly",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_EXERCISED",
+      "authority": "PROMPT_IR_ONLY"
+    },
+    {
+      "role": "AGENT_EXECUTOR",
+      "provider": "serena",
+      "owner": ".arena/modules/knowledge-providers",
+      "module_id": "knowledge-providers",
+      "interface_version": "1.2.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_EXERCISED",
+      "authority": "BOUNDED_WORKER_ONLY"
+    },
+    {
+      "role": "VECTOR_CANDIDATE_STORE",
+      "provider": "lancedb",
+      "owner": ".arena/modules/loopx-notes-retrieval",
+      "module_id": "loopx-notes-retrieval",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_IMPLEMENTED",
+      "authority": "CANDIDATE_ONLY"
+    },
+    {
+      "role": "WORKER_FANOUT",
+      "provider": "loopx-worker-fleet",
+      "owner": ".arena/modules/loopx-worker-fleet",
+      "module_id": "loopx-worker-fleet",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "NOT_EXERCISED",
+      "authority": "LEASED_EXECUTION_ONLY"
+    },
+    {
+      "role": "STACK_DELIVERY",
+      "provider": "git-town",
+      "owner": ".arena/modules/git-town-runtime",
+      "module_id": "git-town-runtime",
+      "interface_version": "1.0.0",
+      "binding_state": "PASS",
+      "runtime_state": "ABSENT",
+      "authority": "NO_EXECUTION"
+    }
+  ],
+  "automation": {
+    "auto_restack": false,
+    "auto_publish": false,
+    "auto_resolve_conflicts": false,
+    "auto_merge": false,
+    "provider_state_write": false,
+    "worker_state_write": false
+  },
+  "forbidden": {
+    "active_providers": [
+      "code-graph-rag"
+    ],
+    "double_graph": true,
+    "test_assertion_mutation": true,
+    "semantic_conflict_resolution": true,
+    "force_push": true,
+    "remote_publication": true,
+    "merge": true,
+    "promotion": true,
+    "rollback": true
+  },
+  "human_owned": [
+    "provider activation",
+    "semantic conflict admission",
+    "remote publication",
+    "merge",
+    "promotion",
+    "rollback"
+  ],
+  "verification": {
+    "checker": "scripts/gates/check_agentic_tech_lead_binding.py",
+    "suite": "tests/agentic-tech-lead-binding/run-all.sh",
+    "workflow": ".github/workflows/agentic-tech-lead-binding.yml"
+  }
+}
