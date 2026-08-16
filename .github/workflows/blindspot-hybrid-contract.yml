@@ -1,0 +1,21 @@
+name: blindspot-hybrid-contract
+on:
+  pull_request:
+    paths:
+      - ".skill-bindings/repo-agent-native/blindspot-hybrid.json"
+      - "scripts/check_blindspot_hybrid.py"
+      - "tests/blindspot-hybrid/**"
+      - "docs/knowledge-providers/BLINDSPOT_HYBRID.md"
+      - ".github/workflows/blindspot-hybrid-contract.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: bash tests/blindspot-hybrid/verify.sh
