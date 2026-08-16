@@ -1,0 +1,128 @@
+{
+  "admission": {
+    "reason": "manifest-identity-drift",
+    "state": "BLOCKED_POLICY"
+  },
+  "authority": {
+    "activated_provider": false,
+    "advanced_state": false,
+    "marked_tested": false,
+    "promoted_release": false,
+    "result_class": "CANDIDATE_ONLY",
+    "waived_gate": false
+  },
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "configuration": {
+    "backend": "LSP",
+    "external_network": "DENIED",
+    "external_spend_usd": 0,
+    "languages": [
+      "python"
+    ],
+    "read_only": true,
+    "secrets": "DENIED",
+    "tools": [
+      "find_referencing_symbols",
+      "find_symbol",
+      "get_symbols_overview"
+    ],
+    "transport": "mcp-stdio"
+  },
+  "controls": {
+    "candidate_only": "PASS",
+    "provider_outage": "NOT_EXERCISED",
+    "result_secret_scan": "PASS",
+    "stale_subject": "PASS",
+    "unsupported_language": "UNKNOWN",
+    "unsupported_path": "PASS",
+    "wrong_workspace": "PASS"
+  },
+  "coverage": {
+    "complete": false,
+    "digest": "9ebebcdecda632386bfbbd05f08912aad2c6e9092a2c4c6b290d5e8d0f15e97a",
+    "files": [
+      {
+        "bytes": 24353,
+        "path": "scripts/arena_context.py",
+        "sha256": "b2b6f755dc9454dbf3613f0d194384eca19719217f3742eaf6ffc6ebd79e1582"
+      },
+      {
+        "bytes": 4902,
+        "path": "scripts/knowledge_provider_eval_packet.py",
+        "sha256": "a54b1af67cf67fb652823754328ba434b822e6de54e9664cdb71b368e88a35cd"
+      },
+      {
+        "bytes": 3088,
+        "path": "scripts/knowledge_provider_eval_registry.py",
+        "sha256": "617350459c686211029c83b78abf53eb7995cd5bd8b126400152d81e8b467b75"
+      }
+    ]
+  },
+  "execution": {
+    "elapsed_ms": 5253,
+    "executed": true,
+    "index_bytes": 149029,
+    "mcp_stderr": {
+      "bytes": 1722,
+      "sha256": "fda25be844e36d27042bc7a4a854ebbd8f813ed0b2a400430f84c7ddb1a9d0cf"
+    },
+    "observations": {
+      "overview": {
+        "bytes": 98,
+        "expected_token_observed": true,
+        "sha256": "2483f2b16e369ef247742b65b5228a198dbdea3fbc81d277ff199f62571a11c3"
+      },
+      "references": {
+        "bytes": 2,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "symbol": {
+        "bytes": 172,
+        "expected_token_observed": true,
+        "sha256": "aee40a2914a76724e9d606d212763fecf168653088ebd1c55d9527d88368e207"
+      },
+      "unsupported_path": {
+        "bytes": 125,
+        "sha256": "93c02c09d4f103cb3e82757ad3382630e51b9ff4afd47abd48510580efebfb6c"
+      }
+    },
+    "state": "PASS"
+  },
+  "manifest": {
+    "digest": "sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9",
+    "identity_match": false,
+    "identity_state": "UNPINNED",
+    "path": "docs/knowledge-providers/providers/serena.json",
+    "source_commit": "32308a871c13f8fa5936c7d44a8bca710001277e"
+  },
+  "provider_id": "serena",
+  "provider_identity": {
+    "executable": {
+      "command": "serena",
+      "real_name": "serena",
+      "sha256": "d777582f3b832329d04388bee222d905b3e110a6b4fdcd1df2aeec4007d9454b"
+    },
+    "license": "MIT",
+    "package": "serena-agent",
+    "sbom": "PACKAGE_METADATA_AND_RECORD_ONLY",
+    "source_commit": "414f591d58967e2fd29c5c6a5f8e58cb03b77eee",
+    "source_repository": "oraios/serena",
+    "version": "0.1.4"
+  },
+  "schema": "bettor-arena/provider-live-canary/v1",
+  "source_readback": {
+    "path": "scripts/knowledge_provider_eval_registry.py",
+    "sha256": "617350459c686211029c83b78abf53eb7995cd5bd8b126400152d81e8b467b75",
+    "token_observed": true
+  },
+  "status": "PASS",
+  "subject": {
+    "commit": "8c30e3c32e9169985d87a1055decb1b800211ad2",
+    "repository": "ed3c/bettor-arena",
+    "tree": "f10a5b388c98772d4cb59dc25481ef29f12b4049"
+  },
+  "workload_sha256": "471f917ca4af81467fb1d8d50272476157926aceae7f7eb824c097e8a1cee578"
+}
