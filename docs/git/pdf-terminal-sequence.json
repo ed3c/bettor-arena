@@ -466,22 +466,22 @@
     },
     {
       "acceptance": [
-        "Read-only query surface and exact graph/index identity are enforced",
-        "Coverage, freshness, source provenance and delete/rebuild receipts exist",
-        "Write, delete and autonomous-edit tools stay outside normal Agent sessions"
+        "Active provider, runtime, evaluator and queue routes contain no Code-Graph-RAG participant",
+        "Historical Code-Graph-RAG evidence remains discoverable only as REJECTED/ABSENT",
+        "Blindspots/source/SCIP/Tree-sitter contracts preserve UNKNOWN when coverage or readback is incomplete"
       ],
-      "evidence_boundary": "A graph edge is a candidate until current source or runtime evidence confirms it.",
-      "expected_branch": "feat/code-graph-rag-readonly-admission-v1",
-      "automation_boundary": "Automated admission controller owns provider deployment, storage, privileged tools and merge.",
-      "id": "stage-13-code-graph-rag",
+      "evidence_boundary": "Retirement does not prove GrepAI, SCIP/LSP, Tree-sitter, Serena, Git Town or Forgejo live health.",
+      "expected_branch": "feat/92-context-funnel-retirement",
+      "automation_boundary": "Provider activation, semantic-conflict admission, merge, release, promotion and rollback remain separately admitted operations.",
+      "id": "stage-13-code-graph-retirement",
       "issues": [
-        41
+        140
       ],
       "order": 13,
       "owner_paths": [
-        "loop_wiki/code-truth-graph/providers/code-graph-rag",
-        "data/provider-canaries/code-graph-rag",
-        ".runtime-env/modules"
+        "docs/knowledge-providers",
+        ".skill-bindings/repo-agent-native",
+        "loop_wiki/code-truth-graph-v2"
       ],
       "prerequisite_items": [
         "stage-12-code-intelligence-live"
@@ -489,7 +489,7 @@
       "prs": [],
       "queue_state": "BLOCKED_BY_PREDECESSOR",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "title": "Admit a read-only Code-Graph-RAG adapter"
+      "title": "Retire Code-Graph-RAG and converge the Blindspots replacement route"
     },
     {
       "acceptance": [
@@ -720,7 +720,7 @@
       "prerequisite_items": [
         "stage-09-mem0-projection",
         "stage-12-code-intelligence-live",
-        "stage-13-code-graph-rag",
+        "stage-13-code-graph-retirement",
         "stage-20-codex-claude-ab"
       ],
       "prs": [
@@ -869,7 +869,7 @@
         "stage-10-source-ingest",
         "stage-11-notes-retrieval",
         "stage-12-code-intelligence-live",
-        "stage-13-code-graph-rag",
+        "stage-13-code-graph-retirement",
         "stage-14-notes-scaffold",
         "stage-15-knowledge-foldback",
         "stage-16-context-assembly",
@@ -888,7 +888,7 @@
       "title": "Converge modules, live acceptance, release and rollback"
     }
   ],
-  "observed_at": "2026-08-15T16:50:16Z",
+  "observed_at": "2026-08-17T00:00:00Z",
   "queue_policy": {
     "active_limit": 1,
     "branch_topology": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN",
@@ -915,6 +915,6 @@
     "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
     "pages": 41,
     "repository_copy": "ABSENT",
-    "title": "LLM \u6cdb\u5316\uff1a\u6a21\u578b\u6b0a\u91cd\u8207 Harness"
+    "title": "LLM 泛化：模型權重與 Harness"
   }
 }

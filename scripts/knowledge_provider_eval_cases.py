@@ -53,11 +53,14 @@ def validate_case(
     )
     pids = v["participants"]
     require(
-        isinstance(pids, list) and len(pids) == 2 and len(set(pids)) == 2,
+        isinstance(pids, list) and pids and len(pids) <= 2 and len(set(pids)) == len(pids),
         f"{cid}: participants",
     )
     kinds = [people.get(x, {}).get("kind") for x in pids]
-    require(sorted(kinds) == ["control", "provider"], f"{cid}: provider/control pair")
+    if fam == "graph":
+        require(pids == ["exact-search-control"] and kinds == ["control"], f"{cid}: retired graph baseline")
+    else:
+        require(len(pids) == 2 and sorted(kinds) == ["control", "provider"], f"{cid}: provider/control pair")
     require(
         all(x in people and fam in people[x]["families"] for x in pids),
         f"{cid}: participant family",

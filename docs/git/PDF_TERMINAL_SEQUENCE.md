@@ -100,7 +100,7 @@ Several later implementation PRs are already reachable from `main`; their rows r
 | 10 | #104 | `feat/loopx-notes-source-ingest-v1` | authorized YT/PDF/transcript/keyframe source manifest | `COMPLETE` |
 | 11 | #105 | `feat/loopx-notes-retrieval-v1` | OpenWiki static plus optional vector/graph Notes projections | `COMPLETE` |
 | 12 | #92 | `feat/loopx-code-intelligence-canaries-v1` | live Serena/GrepAI freshness and source-readback canaries | `ACTIVE` |
-| 13 | #41 | `feat/code-graph-rag-readonly-admission-v1` | read-only Code-Graph-RAG runtime admission | `BLOCKED_BY_PREDECESSOR` |
+| 13 | #140 | `feat/92-context-funnel-retirement` | retire Code-Graph-RAG; converge Blindspots/source/SCIP/Tree-sitter replacement route | `BLOCKED_BY_PREDECESSOR` |
 | 14 | #70 | `feat/loopx-notes-scaffold-v1` | evidence/cards/spec/CodeOp to disposable scaffold | `BLOCKED_BY_PREDECESSOR` |
 | 15 | #71 | `feat/loopx-code-knowledge-foldback-v1` | verified code/runtime delta to knowledge patch | `BLOCKED_BY_PREDECESSOR` |
 | 16 | #95 | `feat/loopx-context-assembly-v1` | prompt-cache-stable prefix and bounded dynamic suffix | `BLOCKED_BY_PREDECESSOR` |
@@ -165,7 +165,7 @@ host-owned Gates + Ledger reducer
                    ↓
                   #72 Skill/Prompt evolution
                    ↓
-                  #91 six-host matrix + #92/#41/#93 providers
+                  #91 six-host matrix + #92/#140/#93 code-intelligence/provider evidence
                    ↓
                   #98 CI parity + #67/#99 observability/HITL
                    ↓

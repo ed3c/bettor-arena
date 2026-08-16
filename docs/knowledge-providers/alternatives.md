@@ -25,7 +25,7 @@ without a same-subject benchmark and negative controls.
 
 | Candidate | Strength | Main uncertainty | Bettor role |
 |---|---|---|---|
-| Code-Graph-RAG | cross-language graph, structural and semantic query, data-flow candidates | heavier stores, parser coverage, mutable MCP surface | read-only admission candidate |
+| Code-Graph-RAG | historical evaluated graph route | heavier stores, parser coverage, mutable MCP surface | **RETIRED**; preserved only for decision history, never active selection |
 | Joern / CPG | mature code property graph and security/data-flow analysis | operational weight and language variance | security/data-flow benchmark alternative |
 | SCIP + deterministic edges | transparent symbol graph with rebuildable provenance | fewer high-level graph features | canonical-core candidate |
 | CodeQL | deep static analysis for supported languages | query authoring and licensing/CI constraints | optional verification lane |

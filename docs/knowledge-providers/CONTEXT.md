@@ -42,8 +42,10 @@ Select by capability and evidence contract, not by brand or benchmark prose.
    is known.
 2. Use Serena for symbol/reference/diagnostic candidates.
 3. Use GrepAI for semantic or callgraph candidates after index health is known.
-4. Use Code-Graph-RAG only through an admitted read-only adapter with exact
-   graph coverage and freshness.
+4. For cross-module impact, combine exact source readback with admitted
+   SCIP/LSP semantic facts and Tree-sitter structural coverage in the
+   subject-bound Blindspots/SQLite evidence loop. Missing or stale coverage is
+   `UNKNOWN`. Code-Graph-RAG is historical `RETIRED` evidence only.
 5. Use Mem0 only for bounded recall or mutation proposals with provenance,
    retention, redaction, and scope.
 6. Read back every promoted result against current authority.

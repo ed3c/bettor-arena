@@ -1,5 +1,5 @@
 {
-  "content_sha256": "0cd906001f6717b6062c8db98d984ba60417f776d590822235c8896b489d3b3c",
+  "content_sha256": "dad9b2719fdb5c4bd3c4aa1aa02649feaad0138d963880257d1dc5f59e28f77d",
   "contexts": [
     {
       "common": [
@@ -186,7 +186,6 @@
         "docs/knowledge-providers/evals/contracts/eval-report.schema.json",
         "docs/knowledge-providers/evals/contracts/participant.schema.json",
         "docs/knowledge-providers/evals/contracts/subject.schema.json",
-        "docs/knowledge-providers/evals/participants/code-graph-rag.json",
         "docs/knowledge-providers/evals/participants/exact-search-control.json",
         "docs/knowledge-providers/evals/participants/grepai.json",
         "docs/knowledge-providers/evals/participants/mem0.json",
@@ -198,7 +197,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "445b0e5af096b03c68b5721f172dc79336c7eba0f1ebeb43c104d3d552a42933",
+      "context_sha256": "a2aba9803deaa271d79346386f89a1ba5f4eed3ecced0342106d7f60024ba13d",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -242,7 +241,7 @@
           "path": "docs/agents/domain.md"
         },
         {
-          "blob": "8b69e842165ca7ea836d7a12a6ce903fa0559335",
+          "blob": "7e5d8b54a17e770cbc2f959f7a5a62483c77b751",
           "mode": "100644",
           "path": "docs/knowledge-providers/CONTEXT.md"
         },
@@ -252,22 +251,22 @@
           "path": "docs/knowledge-providers/README.md"
         },
         {
-          "blob": "7d9c61398df460807b5afd512d466229c78ae025",
+          "blob": "7432f8bcf04d41e84f73caeaa788039d393d9c21",
           "mode": "100644",
           "path": "docs/knowledge-providers/alternatives.md"
         },
         {
-          "blob": "618781da34076342ccdfbca85da478bd86f985b0",
+          "blob": "d94b007ecba167c9f6da567835010b0bef2ac493",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/README.md"
         },
         {
-          "blob": "565bcd3e20777e293aa00ea40faa63eaf7d03bab",
+          "blob": "a2945093836dc47213fd8689b68e65ae3972534c",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/STATUS.md"
         },
         {
-          "blob": "d38ae85df2bf050eaea89a8af3550f5b5d38d44f",
+          "blob": "a9db63b839b65544bbe68731f359cc7fff0cb453",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/cases/graph.json"
         },
@@ -292,7 +291,7 @@
           "path": "docs/knowledge-providers/evals/config.json"
         },
         {
-          "blob": "45d52a3a6e382ee8a1968f5422b740062fdc8c9e",
+          "blob": "b1e5a81fa310de840c3b4a9888f651011cf21de1",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/contracts/eval-case.schema.json"
         },
@@ -320,11 +319,6 @@
           "blob": "45b63cb2543b0fa00ec76cd064a2748feaedaf97",
           "mode": "100644",
           "path": "docs/knowledge-providers/evals/contracts/subject.schema.json"
-        },
-        {
-          "blob": "2ca8603396162c9079db162b09668d20caea47ee",
-          "mode": "100644",
-          "path": "docs/knowledge-providers/evals/participants/code-graph-rag.json"
         },
         {
           "blob": "4f6a1d8571de1c00558585b7789ebb7bf6fffece",
@@ -399,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "7645f9d3ba6b0a680027c175bdf640f4385fb69456b171de4ad76440ac50d29f",
+      "context_sha256": "d3cbde083284801258d79658243ce660b594f4a21f593c8ed0cc3f1689d73c6a",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -483,7 +477,7 @@
           "path": "docs/git/GIT_TOWN_ADMISSION.md"
         },
         {
-          "blob": "e17e6222d21db69c700e988022b2a00684382937",
+          "blob": "d8061023a89639d115faed51bb33c43b9a554483",
           "mode": "100644",
           "path": "docs/git/PDF_TERMINAL_SEQUENCE.md"
         },
@@ -508,7 +502,7 @@
           "path": "docs/git/WORKER_PROTOCOL.md"
         },
         {
-          "blob": "c20dcc4179b33d47352e9ae71264d76c128a2d8f",
+          "blob": "95b64fc8eb64f2741435f927373c40476f03cd3d",
           "mode": "100644",
           "path": "docs/git/pdf-terminal-sequence.json"
         },

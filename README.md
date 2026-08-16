@@ -45,7 +45,7 @@ Skill evolution / CI parity / Console / benchmark        IMPLEMENTED
 ordered acceptance through order 11                      COMPLETE
 current order 12 Serena/GrepAI live canaries             NOT_EXERCISED
 six-host live execution matrix                           NOT_EXERCISED
-Code-Graph-RAG read-only live admission                   NOT_EXERCISED
+Code-Graph-RAG active route / order-13 #140 retirement    RETIRED / BLOCKED_BY_PREDECESSOR
 final LoopX modules selected into release composition    ABSENT
 Git Town controller/controls                              IMPLEMENTED / PASS
 Git Town executable/config/live no-push sync             ABSENT / NOT_EXERCISED
