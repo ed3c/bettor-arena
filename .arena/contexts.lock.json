@@ -1,5 +1,5 @@
 {
-  "content_sha256": "b2465b052061a2221c73876cec8e873d777d885d9a00d3cab22895e5cc3176ee",
+  "content_sha256": "ce4d8d71f167f5837fc0c82ddd61f5f1ea64571ee5920b7ba6d04f2a308b9e68",
   "contexts": [
     {
       "common": [
@@ -198,7 +198,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "b76d7fa12b7dc651df318d78c2773bde14a8f3e7078b2808b37b178ac2f59f98",
+      "context_sha256": "6f6e470114c0f2a32835d335404ab108f7e9e34baf2a1db62f974c8c4888c879",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -247,7 +247,7 @@
           "path": "docs/knowledge-providers/CONTEXT.md"
         },
         {
-          "blob": "b41f548465b1d4d0e50e71b405fc05f655b06073",
+          "blob": "882463910fa3496060585b1ccaee61e9bf8bf24a",
           "mode": "100644",
           "path": "docs/knowledge-providers/README.md"
         },
@@ -357,7 +357,7 @@
           "path": "docs/knowledge-providers/evals/subject.json"
         },
         {
-          "blob": "e180510b65443818bf58260643c6c64639868501",
+          "blob": "e09a4c5068fcb194001f93810574244812aeb314",
           "mode": "100644",
           "path": "docs/knowledge-providers/registry.json"
         }

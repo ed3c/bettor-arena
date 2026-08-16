@@ -1,7 +1,7 @@
 {
   "composition": "bettor-arena",
   "composition_lock_sha256": "c541049b61852d5d71c8bf73bdbc243898239a0cdcb55f42b6aad1d2dea73bbf",
-  "content_sha256": "a6f43aa4bf5255b5a039729d76c9677214927c505aa90b718ba8a5676772bf41",
+  "content_sha256": "39c5fe4f41d9027e572eaf22756562c392eed85439df9bec70b8d0839c378163",
   "modules": [
     {
       "closure_sha256": "5d31ae15a3d2775dec648dc3c4da7092521ffc3beb56bbbbd96b5a194eb49071",
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "closure_sha256": "fc5a39a33f6fb993c5ed6ae8b07969b3ae64be3937a1477b5117793a834d1668",
+      "closure_sha256": "558fb34a438f184fbb7f1b70932d1140981ef807321d87093403a6723da523af",
       "dependencies": [
         {
           "capability": "arena.module-catalog/v1",
@@ -169,10 +169,10 @@
           "provider": "proof-kernel"
         }
       ],
-      "files_sha256": "c512a8338d46d6c11a9e2e471e1012291070c6930d5f27462a2e5851966d2283",
+      "files_sha256": "3c7593b95939286fc9d59a2b1519ccdd5af5375c63e859dbdbdf89dd087f98b8",
       "id": "knowledge-providers",
       "interface_version": "1.2.0",
-      "local_sha256": "888339ffd72789ea8be66732b3dc495de9f6c87a85824711814b5a178e6a4b68",
+      "local_sha256": "1272874eafd0beaaf7440d3dc49198b2472e078877ecf46c306ea3e22bded134",
       "manifest_sha256": "8447deb2aff4ecb6a13731c3540bb3258877af0264f557fce0542a14cada91d2",
       "owned_files": 52,
       "proof_spec_sha256": "d30e12c74e6c901ea32daafc3c4797e5659a626d3652708c3bb79f1af68a9d8f",
