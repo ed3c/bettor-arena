@@ -1,5 +1,5 @@
 {
-  "content_sha256": "5745b2eac79dee025a3fc0af3701fc2728f5c9abdcda4751c6a553647a2e9964",
+  "content_sha256": "0cd906001f6717b6062c8db98d984ba60417f776d590822235c8896b489d3b3c",
   "contexts": [
     {
       "common": [
@@ -198,7 +198,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "70b6d1f048aa22640ade3f8f17dfb00628b81e3a467e326f9af6296625545e6e",
+      "context_sha256": "445b0e5af096b03c68b5721f172dc79336c7eba0f1ebeb43c104d3d552a42933",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -212,7 +212,7 @@
       },
       "files": [
         {
-          "blob": "fd76197cafad25850f7297ad99f31b385303e68d",
+          "blob": "3c8c173325307dc7582da2db1afc0104bf3361de",
           "mode": "100644",
           "path": ".arena/modules/knowledge-providers/module.json"
         },

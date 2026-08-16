@@ -22,7 +22,8 @@
     "scripts/providers/provider_activation.py",
     "data/provider-canaries",
     "data/provider-configurations",
-    "data/provider-activations"
+    "data/provider-activations",
+    "scripts/check_blindspot_hybrid.py"
   ],
   "components": {
     "contracts": {
@@ -71,7 +72,8 @@
         "scripts/providers/provider_canary_common.py",
         "scripts/providers/serena_canary.py",
         "scripts/providers/grepai_canary.py",
-        "scripts/providers/provider_activation.py"
+        "scripts/providers/provider_activation.py",
+        "scripts/check_blindspot_hybrid.py"
       ]
     }
   },
