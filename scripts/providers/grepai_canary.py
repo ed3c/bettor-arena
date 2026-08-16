@@ -197,14 +197,22 @@ ignore:
 """
 
 
-def ollama_identity(root: Path, workload: dict[str, Any]) -> dict[str, str]:
+def ollama_identity(
+    root: Path,
+    workload: dict[str, Any],
+    environment: dict[str, str],
+) -> dict[str, str]:
     result = run_fixed(
         ["ollama", "list"],
         cwd=root,
         timeout=30,
-        environment=safe_environment(),
+        environment=environment,
     )
-    require(result.exit == 0, "GrepAI local Ollama is unavailable")
+    require(
+        result.exit == 0,
+        "GrepAI local Ollama is unavailable: "
+        + (result.stderr or result.stdout)[-2048:].strip(),
+    )
     embedder = workload["provider"]["embedder"]
     matching = [
         line.split()
@@ -263,7 +271,6 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
         workload["executable"]["command"], workload["executable"]["sha256"]
     )
     installed = installed_identity(executable["command"], workload)
-    model = ollama_identity(root, workload)
     manifest = manifest_observation(root, workload)
     coverage = coverage_manifest(root, workload["coverage"])
     query = workload["provider"]["query"]
@@ -293,6 +300,7 @@ def run_live(root: Path, workload: dict[str, Any], output: Path) -> dict[str, An
             }
         )
         Path(environment["HOME"]).mkdir(mode=0o700)
+        model = ollama_identity(root, workload, environment)
         watcher = ManagedProcess(
             [executable["command"], "watch"],
             cwd=project,
