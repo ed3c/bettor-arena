@@ -27,7 +27,9 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/repair_codegraph_retirement.py
+          python3 scripts/repair_codegraph_retirement_ownership_fix.py
           rm scripts/repair_codegraph_retirement.py
+          rm scripts/repair_codegraph_retirement_ownership_fix.py
           rm .github/workflows/one-shot-codegraph-retirement.yml
           git add -A
           git diff --cached --check
