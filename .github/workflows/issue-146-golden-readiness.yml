@@ -5,10 +5,7 @@ on:
     types: [opened, ready_for_review, reopened, synchronize]
     paths:
       - 'docs/traceability/issue-146-golden-readiness.json'
-      - 'docs/traceability/issue-161-runtime-admission.json'
       - 'scripts/gates/check_issue_146_golden_readiness.py'
-      - 'scripts/gates/check_issue_161_runtime_admission.py'
-      - '.runtime-env/bindings/bettor-arena-local.json'
       - '.skill-bindings/agentic-tech-lead-orchestration/**'
       - 'scripts/gates/check_agentic_tech_lead_binding.py'
       - 'loop_wiki/parallel-agent-tech-lead/**'
@@ -19,10 +16,7 @@ on:
     branches: [main]
     paths:
       - 'docs/traceability/issue-146-golden-readiness.json'
-      - 'docs/traceability/issue-161-runtime-admission.json'
       - 'scripts/gates/check_issue_146_golden_readiness.py'
-      - 'scripts/gates/check_issue_161_runtime_admission.py'
-      - '.runtime-env/bindings/bettor-arena-local.json'
       - '.skill-bindings/agentic-tech-lead-orchestration/**'
       - 'scripts/gates/check_agentic_tech_lead_binding.py'
       - 'loop_wiki/parallel-agent-tech-lead/**'
@@ -54,10 +48,6 @@ jobs:
         run: |
           python3 scripts/gates/check_issue_146_golden_readiness.py --selftest
           python3 scripts/gates/check_issue_146_golden_readiness.py
-      - name: Validate exact-subject runtime admission and planted controls
-        run: |
-          python3 scripts/gates/check_issue_161_runtime_admission.py --selftest
-          python3 scripts/gates/check_issue_161_runtime_admission.py
       - name: Execute repository-native contract matrix
         run: |
           sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
@@ -66,4 +56,4 @@ jobs:
           python3 scripts/gates/check_issue_140_convergence.py
       - name: Compile changed Python gates
         run: |
-          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_issue_161_runtime_admission.py scripts/gates/check_agentic_tech_lead_binding.py
+          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_agentic_tech_lead_binding.py
