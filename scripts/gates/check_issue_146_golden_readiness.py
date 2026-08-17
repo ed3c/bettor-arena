@@ -49,7 +49,10 @@ def validate(receipt: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.append("Phase-0 topology must remain COOPERATIVE")
     if selected.get("topology_execution_state") != "NOT_EXERCISED":
         errors.append("physical topology must remain NOT_EXERCISED")
-    if selected.get("interface_owner") != ".skill-bindings/agentic-tech-lead-orchestration/binding.json":
+    if (
+        selected.get("interface_owner")
+        != ".skill-bindings/agentic-tech-lead-orchestration/binding.json"
+    ):
         errors.append("single interface owner drifted")
 
     packets = receipt.get("planned_packets", [])
@@ -70,7 +73,11 @@ def validate(receipt: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.append("command matrix empty")
     for command in commands:
         argv = command.get("argv", [])
-        if not isinstance(argv, list) or not argv or not all(isinstance(x, str) and x for x in argv):
+        if (
+            not isinstance(argv, list)
+            or not argv
+            or not all(isinstance(x, str) and x for x in argv)
+        ):
             errors.append("command argv invalid")
             continue
         if placeholder in argv or any(placeholder in x for x in argv):
@@ -85,7 +92,15 @@ def validate(receipt: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append("command output budget unbounded")
 
     lanes = receipt.get("tool_lanes", {})
-    for lane in ("grepai", "scip_lsp", "tree_sitter", "serena", "lancedb", "git_town", "forgejo"):
+    for lane in (
+        "grepai",
+        "scip_lsp",
+        "tree_sitter",
+        "serena",
+        "lancedb",
+        "git_town",
+        "forgejo",
+    ):
         if lanes.get(lane) != "NOT_EXERCISED":
             errors.append(f"{lane} must remain NOT_EXERCISED in Phase 0")
     admission = receipt.get("admission", {})
@@ -115,26 +130,62 @@ def validate(receipt: dict[str, Any], root: Path = ROOT) -> list[str]:
             errors.append("parent queue subject advanced or drifted")
 
     try:
-        binding = load(root / ".skill-bindings/agentic-tech-lead-orchestration/binding.json")
+        binding = load(
+            root / ".skill-bindings/agentic-tech-lead-orchestration/binding.json"
+        )
     except Exception as exc:
         errors.append(str(exc))
     else:
-        roles = {x.get("role"): x for x in binding.get("modules", []) if isinstance(x, dict)}
+        roles = {
+            x.get("role"): x for x in binding.get("modules", []) if isinstance(x, dict)
+        }
         for role in ("DETERMINISTIC_GRAPH", "STRUCTURAL_SLICER"):
             if roles.get(role, {}).get("runtime_state") != "NOT_EXERCISED":
-                errors.append(f"{role} must distinguish implemented contract from unexercised live runtime")
+                errors.append(
+                    f"{role} must distinguish implemented contract from unexercised live runtime"
+                )
     return errors
 
 
 def selftest(base: dict[str, Any]) -> list[str]:
     failures: list[str] = []
     cases = [
-        ("placeholder", lambda x: x["command_matrix"][0].__setitem__("argv", ["sh", "REPLACE_WITH_REPOSITORY_TEST_COMMAND"]), "placeholder"),
-        ("fake live", lambda x: x["tool_lanes"].__setitem__("grepai", "PASS"), "grepai"),
-        ("queue laundering", lambda x: x["admission"].__setitem__("queue_advance", "PASS"), "queue"),
-        ("human admit erased", lambda x: x["admission"].__setitem__("parent_issue_140", "PASS"), "Human Admit"),
-        ("fake physical fanout", lambda x: x["selected_slice"].__setitem__("topology_execution_state", "PASS"), "NOT_EXERCISED"),
-        ("writer collision", lambda x: x["planned_packets"][1]["allowed_paths"].append(x["planned_packets"][0]["allowed_paths"][0]), "overlapping"),
+        (
+            "placeholder",
+            lambda x: x["command_matrix"][0].__setitem__(
+                "argv", ["sh", "REPLACE_WITH_REPOSITORY_TEST_COMMAND"]
+            ),
+            "placeholder",
+        ),
+        (
+            "fake live",
+            lambda x: x["tool_lanes"].__setitem__("grepai", "PASS"),
+            "grepai",
+        ),
+        (
+            "queue laundering",
+            lambda x: x["admission"].__setitem__("queue_advance", "PASS"),
+            "queue",
+        ),
+        (
+            "human admit erased",
+            lambda x: x["admission"].__setitem__("parent_issue_140", "PASS"),
+            "Human Admit",
+        ),
+        (
+            "fake physical fanout",
+            lambda x: x["selected_slice"].__setitem__(
+                "topology_execution_state", "PASS"
+            ),
+            "NOT_EXERCISED",
+        ),
+        (
+            "writer collision",
+            lambda x: x["planned_packets"][1]["allowed_paths"].append(
+                x["planned_packets"][0]["allowed_paths"][0]
+            ),
+            "overlapping",
+        ),
     ]
     for name, mutate, needle in cases:
         candidate = copy.deepcopy(base)

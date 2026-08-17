@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Fail closed on stale or wrongly composed runtime-env bindings before #146."""
+
 from __future__ import annotations
 
 import argparse
@@ -44,9 +45,13 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     canonical = packet.get("canonical_subjects", {})
     skills = canonical.get("skills_shared", {})
     runtime = canonical.get("runtime_env", {})
-    if skills.get("repository") != "ed3c/skills-shared" or not is_sha40(skills.get("commit")):
+    if skills.get("repository") != "ed3c/skills-shared" or not is_sha40(
+        skills.get("commit")
+    ):
         errors.append("skills-shared exact subject invalid")
-    if runtime.get("repository") != "ed3c/runtime-env" or not is_sha40(runtime.get("commit")):
+    if runtime.get("repository") != "ed3c/runtime-env" or not is_sha40(
+        runtime.get("commit")
+    ):
         errors.append("runtime-env exact subject invalid")
     required_profile = runtime.get("required_profile")
     if required_profile != "bettor-arena-tech-lead-local":
@@ -56,16 +61,26 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     binding_profile = binding.get("profile")
     observed = packet.get("checked_in_binding", {})
     if binding_source != observed.get("observed_source_commit"):
-        errors.append("packet observed binding source does not match checked-in binding")
+        errors.append(
+            "packet observed binding source does not match checked-in binding"
+        )
     if binding_profile != observed.get("observed_profile"):
-        errors.append("packet observed binding profile does not match checked-in binding")
+        errors.append(
+            "packet observed binding profile does not match checked-in binding"
+        )
 
-    module_ids = {m.get("id") for m in binding.get("modules", []) if isinstance(m, dict)}
+    module_ids = {
+        m.get("id") for m in binding.get("modules", []) if isinstance(m, dict)
+    }
     required_modules = set(runtime.get("required_modules", []))
     exact_runtime = binding_source == runtime.get("commit")
     exact_profile = binding_profile == required_profile
     scheduler_bound = required_modules.issubset(module_ids)
-    expected_state = "READY_FOR_LOCAL_CANARY" if exact_runtime and exact_profile and scheduler_bound else "BLOCKED_STALE_BINDING"
+    expected_state = (
+        "READY_FOR_LOCAL_CANARY"
+        if exact_runtime and exact_profile and scheduler_bound
+        else "BLOCKED_STALE_BINDING"
+    )
     if observed.get("state") != expected_state:
         errors.append(f"checked-in binding state must be {expected_state}")
     if packet.get("admission", {}).get("scheduler_runtime") != expected_state:
@@ -83,9 +98,20 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
 
     lanes = packet.get("evidence_lanes", {})
     for lane in (
-        "bettor_worker_processes", "bettor_linked_worktrees", "bettor_checkpoint_resume",
-        "bettor_stale_result_refusal", "bettor_budget_reconciliation", "grepai", "scip_lsp",
-        "tree_sitter", "serena", "sqlite", "lancedb", "git_town", "forgejo", "github_exact_head",
+        "bettor_worker_processes",
+        "bettor_linked_worktrees",
+        "bettor_checkpoint_resume",
+        "bettor_stale_result_refusal",
+        "bettor_budget_reconciliation",
+        "grepai",
+        "scip_lsp",
+        "tree_sitter",
+        "serena",
+        "sqlite",
+        "lancedb",
+        "git_town",
+        "forgejo",
+        "github_exact_head",
     ):
         if lanes.get(lane) != "NOT_EXERCISED":
             errors.append(f"{lane} must remain NOT_EXERCISED before local canary")
@@ -95,32 +121,53 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
 
     forbidden = packet.get("forbidden", {})
     for key in (
-        "static_fixture_as_consumer_pass", "synthetic_runtime_as_bettor_pass",
-        "arbitrary_model_shell_command", "auto_admit_darwin_git_town_artifact",
-        "auto_activate_forgejo", "auto_merge_ship_force_push",
+        "static_fixture_as_consumer_pass",
+        "synthetic_runtime_as_bettor_pass",
+        "arbitrary_model_shell_command",
+        "auto_admit_darwin_git_town_artifact",
+        "auto_activate_forgejo",
+        "auto_merge_ship_force_push",
     ):
         if forbidden.get(key) is not True:
             errors.append(f"forbidden control disabled: {key}")
     return errors
 
 
-def make_exact_scheduler_binding(packet: dict[str, Any], binding: dict[str, Any]) -> None:
+def make_exact_scheduler_binding(
+    packet: dict[str, Any], binding: dict[str, Any]
+) -> None:
     runtime = packet["canonical_subjects"]["runtime_env"]
     binding.setdefault("source", {})["commit"] = runtime["commit"]
     binding["profile"] = runtime["required_profile"]
     modules = binding.setdefault("modules", [])
-    if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
-        modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
+    if not any(
+        isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules
+    ):
+        modules.append(
+            {
+                "id": "multi-worker-scheduler",
+                "interface_version": "runtime-env/module/v1",
+            }
+        )
     packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
     packet["checked_in_binding"]["observed_profile"] = runtime["required_profile"]
 
 
-def make_wrong_profile_fake_ready(packet: dict[str, Any], binding: dict[str, Any]) -> None:
+def make_wrong_profile_fake_ready(
+    packet: dict[str, Any], binding: dict[str, Any]
+) -> None:
     runtime = packet["canonical_subjects"]["runtime_env"]
     binding.setdefault("source", {})["commit"] = runtime["commit"]
     modules = binding.setdefault("modules", [])
-    if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
-        modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
+    if not any(
+        isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules
+    ):
+        modules.append(
+            {
+                "id": "multi-worker-scheduler",
+                "interface_version": "runtime-env/module/v1",
+            }
+        )
     packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
     packet["checked_in_binding"]["state"] = "READY_FOR_LOCAL_CANARY"
     packet["admission"]["scheduler_runtime"] = "READY_FOR_LOCAL_CANARY"
@@ -129,14 +176,54 @@ def make_wrong_profile_fake_ready(packet: dict[str, Any], binding: dict[str, Any
 def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     failures: list[str] = []
     cases = [
-        ("fake ready", lambda p, b: p["admission"].__setitem__("scheduler_runtime", "READY_FOR_LOCAL_CANARY"), "scheduler runtime"),
-        ("fake live", lambda p, b: p["evidence_lanes"].__setitem__("bettor_worker_processes", "PASS"), "bettor_worker_processes"),
-        ("human admit erased", lambda p, b: p["admission"].__setitem__("git_town_darwin_artifact", "PASS"), "Human Admit"),
-        ("binding observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_source_commit", "0" * 40), "observed binding"),
-        ("profile observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_profile", "wrong-profile"), "observed binding profile"),
-        ("wrong profile fake ready", make_wrong_profile_fake_ready, "BLOCKED_STALE_BINDING"),
-        ("exact composition not admitted", make_exact_scheduler_binding, "READY_FOR_LOCAL_CANARY"),
-        ("merge authority", lambda p, b: p["admission"].__setitem__("merge_or_ship_authority", True), "merge/ship"),
+        (
+            "fake ready",
+            lambda p, b: p["admission"].__setitem__(
+                "scheduler_runtime", "READY_FOR_LOCAL_CANARY"
+            ),
+            "scheduler runtime",
+        ),
+        (
+            "fake live",
+            lambda p, b: p["evidence_lanes"].__setitem__(
+                "bettor_worker_processes", "PASS"
+            ),
+            "bettor_worker_processes",
+        ),
+        (
+            "human admit erased",
+            lambda p, b: p["admission"].__setitem__("git_town_darwin_artifact", "PASS"),
+            "Human Admit",
+        ),
+        (
+            "binding observation drift",
+            lambda p, b: p["checked_in_binding"].__setitem__(
+                "observed_source_commit", "0" * 40
+            ),
+            "observed binding",
+        ),
+        (
+            "profile observation drift",
+            lambda p, b: p["checked_in_binding"].__setitem__(
+                "observed_profile", "wrong-profile"
+            ),
+            "observed binding profile",
+        ),
+        (
+            "wrong profile fake ready",
+            make_wrong_profile_fake_ready,
+            "BLOCKED_STALE_BINDING",
+        ),
+        (
+            "exact composition not admitted",
+            make_exact_scheduler_binding,
+            "READY_FOR_LOCAL_CANARY",
+        ),
+        (
+            "merge authority",
+            lambda p, b: p["admission"].__setitem__("merge_or_ship_authority", True),
+            "merge/ship",
+        ),
     ]
     for name, mutate, needle in cases:
         p = copy.deepcopy(packet)

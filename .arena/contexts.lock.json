@@ -1,5 +1,5 @@
 {
-  "content_sha256": "3ceb2427cc549f13c078704a4fa689927b0cf9d127122d7f691434f492fe4bc8",
+  "content_sha256": "9880daaf832455cc4efabc1997d13e1ff3759293f97b0571a3e9908dcd1a2373",
   "contexts": [
     {
       "common": [
@@ -393,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "a1af76b345eb4716815289a610462ee37855b992ab3c2c255cd53ad854d1450f",
+      "context_sha256": "1f178d0871503e159ad1c7ba4cb93ab9f353c7cfbba73daa4654071b976a3268",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -517,7 +517,7 @@
           "path": "docs/integration/CROSS_REPO_INTEGRATION.md"
         },
         {
-          "blob": "16b3e36965a420118bbe26e8f3e794cf5ff5a8dd",
+          "blob": "b09c7b8bae8a2b57df4dd967a1a873b3f50356f3",
           "mode": "100644",
           "path": "docs/traceability/STACK_PR_INDEX.md"
         }

@@ -17,6 +17,7 @@ EXPECTED_MERGES = {
     "RETIRE-01": "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3",
 }
 
+
 class ContractError(ValueError):
     pass
 
@@ -31,31 +32,64 @@ def load(path: Path):
 
 
 def validate(receipt: dict, queue: dict, root: Path = ROOT) -> dict:
-    require(receipt.get("schema_version") == "bettor-arena/issue-140-convergence/v1", "receipt schema drift")
+    require(
+        receipt.get("schema_version") == "bettor-arena/issue-140-convergence/v1",
+        "receipt schema drift",
+    )
     require(receipt.get("issue") == 140, "wrong convergence issue")
     current = queue.get("current", {})
-    require(current.get("active_issue") == 140 and current.get("active_order") == 13, "machine queue is not #140/order13")
+    require(
+        current.get("active_issue") == 140 and current.get("active_order") == 13,
+        "machine queue is not #140/order13",
+    )
     item = next((x for x in queue.get("items", []) if x.get("order") == 13), None)
-    require(isinstance(item, dict) and item.get("issues") == [140] and item.get("queue_state") == "ACTIVE", "stage 13 is not ACTIVE #140")
+    require(
+        isinstance(item, dict)
+        and item.get("issues") == [140]
+        and item.get("queue_state") == "ACTIVE",
+        "stage 13 is not ACTIVE #140",
+    )
     q = receipt.get("queue", {})
     require(q.get("order") == 13 and q.get("state") == "ACTIVE", "receipt queue drift")
-    require(q.get("advance_allowed") is False, "fixture/static convergence must not advance queue")
+    require(
+        q.get("advance_allowed") is False,
+        "fixture/static convergence must not advance queue",
+    )
 
     predecessors = receipt.get("predecessors")
-    require(isinstance(predecessors, list) and len(predecessors) == 4, "predecessor set drift")
+    require(
+        isinstance(predecessors, list) and len(predecessors) == 4,
+        "predecessor set drift",
+    )
     seen = {}
     for entry in predecessors:
-        require(entry.get("state") == "PASS", f"{entry.get('id')}: predecessor not PASS")
+        require(
+            entry.get("state") == "PASS", f"{entry.get('id')}: predecessor not PASS"
+        )
         seen[entry.get("id")] = entry.get("merge_commit")
     require(seen == EXPECTED_MERGES, "predecessor merge subjects drift")
 
     architecture = receipt.get("architecture", {})
-    require(architecture.get("code_graph_rag") == "RETIRED_FROM_CANONICAL_ROUTE", "retirement state drift")
+    require(
+        architecture.get("code_graph_rag") == "RETIRED_FROM_CANONICAL_ROUTE",
+        "retirement state drift",
+    )
     for key in ("blindspots_sqlite", "context_funnel", "parallel_agent_tech_lead"):
-        require(architecture.get(key) == "IMPLEMENTED", f"{key}: convergence state drift")
-    require(architecture.get("canonical_task_state_writer") == "LoopX reducer only", "task-state authority widened")
-    require(architecture.get("skills_body_location") == "ed3c/skills-shared", "shared Skill ownership drift")
-    require(architecture.get("consumer_repo_copies_skill_body") is False, "consumer copied Skill body")
+        require(
+            architecture.get(key) == "IMPLEMENTED", f"{key}: convergence state drift"
+        )
+    require(
+        architecture.get("canonical_task_state_writer") == "LoopX reducer only",
+        "task-state authority widened",
+    )
+    require(
+        architecture.get("skills_body_location") == "ed3c/skills-shared",
+        "shared Skill ownership drift",
+    )
+    require(
+        architecture.get("consumer_repo_copies_skill_body") is False,
+        "consumer copied Skill body",
+    )
 
     live = receipt.get("live_evidence", {})
     for key in (
@@ -69,19 +103,51 @@ def validate(receipt: dict, queue: dict, root: Path = ROOT) -> dict:
         require(live.get(key) == "NOT_EXERCISED", f"{key}: false live claim")
 
     admission = receipt.get("admission", {})
-    require(admission.get("state") == "HUMAN_ADMIT_REQUIRED", "Human review boundary drift")
-    require(admission.get("queue_advance") == "BLOCKED", "queue advance authority widened")
-    require(admission.get("provider_activation") == "BLOCKED", "provider activation authority widened")
-    require(admission.get("release_promotion") == "BLOCKED", "promotion authority widened")
+    require(
+        admission.get("state") == "HUMAN_ADMIT_REQUIRED", "Human review boundary drift"
+    )
+    require(
+        admission.get("queue_advance") == "BLOCKED", "queue advance authority widened"
+    )
+    require(
+        admission.get("provider_activation") == "BLOCKED",
+        "provider activation authority widened",
+    )
+    require(
+        admission.get("release_promotion") == "BLOCKED", "promotion authority widened"
+    )
 
-    require(not (root / "docs/knowledge-providers/providers/code-graph-rag.json").exists(), "retired manifest resurrected")
+    require(
+        not (root / "docs/knowledge-providers/providers/code-graph-rag.json").exists(),
+        "retired manifest resurrected",
+    )
     registry = load(root / "docs/knowledge-providers/registry.json")
-    require(all(x.get("id") != "code-graph-rag" for x in registry.get("providers", [])), "retired registry route resurrected")
-    require((root / "loop_wiki/code-truth-graph-v2/scripts/blindspots.py").is_file(), "Blindspots runtime missing")
-    require((root / "loop_wiki/code-truth-graph-v2/scripts/context_funnel.py").is_file(), "context funnel missing")
-    require((root / "loop_wiki/parallel-agent-tech-lead/scripts/plan.py").is_file(), "Tech Lead planner missing")
-    require((root / ".arena/modules/parallel-agent-tech-lead/README.md").is_file(), "Tech Lead module route missing")
-    return {"status": "PASS", "issue": 140, "queue": "ACTIVE/HUMAN_ADMIT_REQUIRED", "predecessors": sorted(seen)}
+    require(
+        all(x.get("id") != "code-graph-rag" for x in registry.get("providers", [])),
+        "retired registry route resurrected",
+    )
+    require(
+        (root / "loop_wiki/code-truth-graph-v2/scripts/blindspots.py").is_file(),
+        "Blindspots runtime missing",
+    )
+    require(
+        (root / "loop_wiki/code-truth-graph-v2/scripts/context_funnel.py").is_file(),
+        "context funnel missing",
+    )
+    require(
+        (root / "loop_wiki/parallel-agent-tech-lead/scripts/plan.py").is_file(),
+        "Tech Lead planner missing",
+    )
+    require(
+        (root / ".arena/modules/parallel-agent-tech-lead/README.md").is_file(),
+        "Tech Lead module route missing",
+    )
+    return {
+        "status": "PASS",
+        "issue": 140,
+        "queue": "ACTIVE/HUMAN_ADMIT_REQUIRED",
+        "predecessors": sorted(seen),
+    }
 
 
 def selftest() -> dict:
@@ -90,12 +156,30 @@ def selftest() -> dict:
     validate(receipt, queue)
     controls = []
     mutations = [
-        ("premature-queue-advance", lambda r, q: r["queue"].__setitem__("advance_allowed", True)),
-        ("false-live-provider", lambda r, q: r["live_evidence"].__setitem__("grepai_canary", "PASS")),
-        ("retirement-state-laundered", lambda r, q: r["architecture"].__setitem__("code_graph_rag", "REJECTED")),
-        ("human-admit-erased", lambda r, q: r["admission"].__setitem__("state", "PASS")),
-        ("merge-subject-drift", lambda r, q: r["predecessors"][0].__setitem__("merge_commit", "0" * 40)),
-        ("queue-subject-drift", lambda r, q: q["current"].__setitem__("active_issue", 70)),
+        (
+            "premature-queue-advance",
+            lambda r, q: r["queue"].__setitem__("advance_allowed", True),
+        ),
+        (
+            "false-live-provider",
+            lambda r, q: r["live_evidence"].__setitem__("grepai_canary", "PASS"),
+        ),
+        (
+            "retirement-state-laundered",
+            lambda r, q: r["architecture"].__setitem__("code_graph_rag", "REJECTED"),
+        ),
+        (
+            "human-admit-erased",
+            lambda r, q: r["admission"].__setitem__("state", "PASS"),
+        ),
+        (
+            "merge-subject-drift",
+            lambda r, q: r["predecessors"][0].__setitem__("merge_commit", "0" * 40),
+        ),
+        (
+            "queue-subject-drift",
+            lambda r, q: q["current"].__setitem__("active_issue", 70),
+        ),
     ]
     for name, mutate in mutations:
         r, q = copy.deepcopy(receipt), copy.deepcopy(queue)
@@ -120,6 +204,7 @@ def main() -> int:
         return 2
     print(json.dumps(result, sort_keys=True))
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

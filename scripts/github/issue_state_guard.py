@@ -42,10 +42,16 @@ def queue_active_items(queue: dict[str, Any]) -> list[dict[str, Any]]:
     items = queue.get("items")
     if not isinstance(items, list):
         raise ValueError("queue.items must be list")
-    return [item for item in items if isinstance(item, dict) and item.get("queue_state") == "ACTIVE"]
+    return [
+        item
+        for item in items
+        if isinstance(item, dict) and item.get("queue_state") == "ACTIVE"
+    ]
 
 
-def validate_contract(queue: dict[str, Any], guard: dict[str, Any], root: Path = ROOT) -> list[str]:
+def validate_contract(
+    queue: dict[str, Any], guard: dict[str, Any], root: Path = ROOT
+) -> list[str]:
     errors: list[str] = []
     if guard.get("schema_version") != "issue-state-guard/v1":
         errors.append("guard schema drifted")
@@ -62,15 +68,24 @@ def validate_contract(queue: dict[str, Any], guard: dict[str, Any], root: Path =
     active = queue_active_items(queue)
     if len(active) != 1:
         errors.append(f"expected exactly one ACTIVE queue item, got {len(active)}")
-    elif active[0].get("order") != active_order or active_issue not in active[0].get("issues", []):
+    elif active[0].get("order") != active_order or active_issue not in active[0].get(
+        "issues", []
+    ):
         errors.append("queue.current does not match ACTIVE item")
 
     anchor = guard.get("queue_anchor", {})
-    if anchor.get("active_issue") != active_issue or anchor.get("active_order") != active_order:
+    if (
+        anchor.get("active_issue") != active_issue
+        or anchor.get("active_order") != active_order
+    ):
         errors.append("guard queue anchor is stale")
 
     forbidden = guard.get("forbidden_actions")
-    if not isinstance(forbidden, list) or "close_issue" not in forbidden or "advance_queue" not in forbidden:
+    if (
+        not isinstance(forbidden, list)
+        or "close_issue" not in forbidden
+        or "advance_queue" not in forbidden
+    ):
         errors.append("forbidden action ceiling weakened")
 
     protected = guard.get("protected_incomplete_issues")
@@ -93,7 +108,9 @@ def validate_contract(queue: dict[str, Any], guard: dict[str, Any], root: Path =
         try:
             receipt = load_json(receipt_path)
             state_path = item.get("required_state_path")
-            if not isinstance(state_path, list) or not all(isinstance(x, str) and x for x in state_path):
+            if not isinstance(state_path, list) or not all(
+                isinstance(x, str) and x for x in state_path
+            ):
                 errors.append(f"protected issue {issue} state path invalid")
                 continue
             observed = nested_get(receipt, state_path)
@@ -105,7 +122,13 @@ def validate_contract(queue: dict[str, Any], guard: dict[str, Any], root: Path =
     return errors
 
 
-def plan(issue: int, event: str, queue: dict[str, Any], guard: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
+def plan(
+    issue: int,
+    event: str,
+    queue: dict[str, Any],
+    guard: dict[str, Any],
+    root: Path = ROOT,
+) -> dict[str, Any]:
     errors = validate_contract(queue, guard, root)
     if errors:
         raise ValueError("; ".join(errors))
@@ -151,7 +174,9 @@ def run_selftest(queue: dict[str, Any], guard: dict[str, Any]) -> list[str]:
             failures.append(f"expected reopen for {issue}: {exc}")
         else:
             if result["decision"] != "REOPEN_REQUIRED":
-                failures.append(f"expected reopen for {issue}, got {result['decision']}")
+                failures.append(
+                    f"expected reopen for {issue}, got {result['decision']}"
+                )
 
     try:
         unrelated = plan(999999, "closed", queue, guard)

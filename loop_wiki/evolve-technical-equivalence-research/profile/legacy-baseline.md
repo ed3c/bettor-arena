@@ -71,3 +71,35 @@ F. **覆蓋率**：有可追溯技術實現等價物的維度數 / 14（[推論]
 <!-- BATCH_GAP_QUERY:START -->
 基於以下「已知相關資訊」（卡片盒原文 + 前一輪深度研究報告），針對下列缺口清單做聚焦深度研究補齊，勿重複已知。\n\n**每一缺口都要給技術實現等價物**：優先**開源可商用庫**（套件名 + repo + 授權）；若無公開實現等價物，對 AI Engineer 頻道（youtube.com/@aiDotEngineer）其他演講深研以推論生產環境配置並標 [推論]。目標：每個維度都有「可追溯的技術實現」。\n\n## 缺口清單\n${gapText}\n\n## 卡片盒原文\n${articleText}\n\n## 前一輪深度研究報告\n${reportMd}
 <!-- BATCH_GAP_QUERY:END -->
+
+## Frozen legacy extractor behaviour
+
+`GAP_TOPICS_INPUT` and `GAP_TOPICS_OUTPUT` are one observed input/output pair of
+the legacy `parseGapTopics`, captured by executing the JavaScript itself — not
+by writing down what the Python rebuild returns. That distinction is the whole
+value of the block: a baseline generated from the rebuild would compare the
+rebuild against itself and stay green through any drift.
+
+The output is deliberately lossy. The legacy extractor takes the `1.` and
+`題目三：` forms and drops the full-width `2）` one, so this pair also pins a
+known legacy quirk rather than an idealised behaviour.
+
+<!-- GAP_TOPICS_PROVENANCE:START -->
+repo: antigravity
+commit: f3f1da95ee8228e03d8f0713d5f479725a30555d
+data.js: sha256:ce177bb4752fb2ea2a14e9a406c118fac2e9caac6aed57725052a1344abfb94a
+automate.js: sha256:331ea353d5d2f0c437ac1b70f3e08f5fbb96c7e7c35dc049c638c0899ec10917
+captured_by: node --input-type=module -e 'import {parseGapTopics} from data.js'
+<!-- GAP_TOPICS_PROVENANCE:END -->
+
+<!-- GAP_TOPICS_INPUT:START -->
+前言
+研究題目清單
+1. Durable packet state implementation
+2）Retry and rollback production mechanism
+題目三：Observability evidence and eval pipeline
+<!-- GAP_TOPICS_INPUT:END -->
+
+<!-- GAP_TOPICS_OUTPUT:START -->
+["Durable packet state implementation","Observability evidence and eval pipeline"]
+<!-- GAP_TOPICS_OUTPUT:END -->

@@ -8,6 +8,7 @@ readback remain candidates and cannot become graph facts or absence proof.
 
 Exit codes: 0 PASS, 2 deterministic refusal, 64 invalid input, 70 mechanism error.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -43,7 +44,9 @@ def require(condition: bool, message: str, *, invalid: bool = False) -> None:
 
 
 def canonical(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -61,7 +64,10 @@ def load_json(path: Path) -> Any:
 
 def safe_path(value: str) -> str:
     path = PurePosixPath(value.replace("\\", "/"))
-    require(bool(value) and not path.is_absolute() and ".." not in path.parts, f"unsafe source path: {value}")
+    require(
+        bool(value) and not path.is_absolute() and ".." not in path.parts,
+        f"unsafe source path: {value}",
+    )
     return str(path)
 
 
@@ -70,18 +76,45 @@ def validate_request(value: Any) -> dict[str, Any]:
     require(value.get("schema") == REQUEST_SCHEMA, "request schema drift", invalid=True)
     subject = value.get("subject")
     require(isinstance(subject, dict), "subject missing", invalid=True)
-    require(set(subject) == {"repository", "commit", "tree"}, "subject key drift", invalid=True)
-    require(isinstance(subject["repository"], str) and "/" in subject["repository"], "subject.repository invalid", invalid=True)
+    require(
+        set(subject) == {"repository", "commit", "tree"},
+        "subject key drift",
+        invalid=True,
+    )
+    require(
+        isinstance(subject["repository"], str) and "/" in subject["repository"],
+        "subject.repository invalid",
+        invalid=True,
+    )
     for key in ("commit", "tree"):
         token = subject.get(key)
-        require(isinstance(token, str) and len(token) == 40 and all(ch in "0123456789abcdef" for ch in token), f"subject.{key} invalid", invalid=True)
+        require(
+            isinstance(token, str)
+            and len(token) == 40
+            and all(ch in "0123456789abcdef" for ch in token),
+            f"subject.{key} invalid",
+            invalid=True,
+        )
     language = value.get("language")
     require(isinstance(language, str) and language, "language missing", invalid=True)
     targets = value.get("targets")
-    require(isinstance(targets, list) and targets and all(isinstance(item, str) and item for item in targets), "targets invalid", invalid=True)
+    require(
+        isinstance(targets, list)
+        and targets
+        and all(isinstance(item, str) and item for item in targets),
+        "targets invalid",
+        invalid=True,
+    )
     require(len(targets) == len(set(targets)), "duplicate target", invalid=True)
     lenses = value.get("required_lenses")
-    require(isinstance(lenses, list) and lenses and set(lenses) <= LENSES and len(lenses) == len(set(lenses)), "required_lenses invalid", invalid=True)
+    require(
+        isinstance(lenses, list)
+        and lenses
+        and set(lenses) <= LENSES
+        and len(lenses) == len(set(lenses)),
+        "required_lenses invalid",
+        invalid=True,
+    )
     limits = value.get("limits")
     require(isinstance(limits, dict), "limits missing", invalid=True)
     expected = {"max_depth", "max_nodes", "max_paths", "max_output_bytes"}
@@ -94,13 +127,21 @@ def validate_request(value: Any) -> dict[str, Any]:
     }
     for key, (minimum, maximum) in bounds.items():
         number = limits[key]
-        require(isinstance(number, int) and not isinstance(number, bool) and minimum <= number <= maximum, f"limits.{key} out of bounds", invalid=True)
+        require(
+            isinstance(number, int)
+            and not isinstance(number, bool)
+            and minimum <= number <= maximum,
+            f"limits.{key} out of bounds",
+            invalid=True,
+        )
     return value
 
 
 def run_git(repo: Path, *args: str) -> bytes:
     try:
-        completed = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, check=False)
+        completed = subprocess.run(
+            ["git", "-C", str(repo), *args], capture_output=True, check=False
+        )
     except OSError as exc:
         raise RuntimeError(str(exc)) from exc
     if completed.returncode != 0:
@@ -110,7 +151,9 @@ def run_git(repo: Path, *args: str) -> bytes:
 
 def verify_repo_subject(repo: Path, subject: dict[str, str]) -> None:
     require(repo.is_dir(), "repository path absent", invalid=True)
-    commit = run_git(repo, "rev-parse", f"{subject['commit']}^{{commit}}").decode().strip()
+    commit = (
+        run_git(repo, "rev-parse", f"{subject['commit']}^{{commit}}").decode().strip()
+    )
     tree = run_git(repo, "rev-parse", f"{subject['commit']}^{{tree}}").decode().strip()
     require(commit == subject["commit"], "repository commit mismatch")
     require(tree == subject["tree"], "repository tree mismatch")
@@ -123,12 +166,34 @@ def connect(path: Path) -> sqlite3.Connection:
     return connection
 
 
-def read_db(db_path: Path, language: str) -> tuple[dict[str, str], list[dict[str, Any]], dict[str, dict[str, Any]]]:
+def read_db(
+    db_path: Path, language: str
+) -> tuple[dict[str, str], list[dict[str, Any]], dict[str, dict[str, Any]]]:
     with connect(db_path) as db:
-        subject_rows = {row["key"]: row["value"] for row in db.execute("SELECT key,value FROM meta WHERE key IN ('repository','commit','tree')")}
-        require(set(subject_rows) == {"repository", "commit", "tree"}, "database subject missing")
-        observations = [dict(row) for row in db.execute("SELECT * FROM observations WHERE language=? ORDER BY observation_id", (language,))]
-        coverage = {row["lens"]: dict(row) for row in db.execute("SELECT lens,language,state,freshness,tool_identity FROM coverage WHERE language=? ORDER BY lens", (language,))}
+        subject_rows = {
+            row["key"]: row["value"]
+            for row in db.execute(
+                "SELECT key,value FROM meta WHERE key IN ('repository','commit','tree')"
+            )
+        }
+        require(
+            set(subject_rows) == {"repository", "commit", "tree"},
+            "database subject missing",
+        )
+        observations = [
+            dict(row)
+            for row in db.execute(
+                "SELECT * FROM observations WHERE language=? ORDER BY observation_id",
+                (language,),
+            )
+        ]
+        coverage = {
+            row["lens"]: dict(row)
+            for row in db.execute(
+                "SELECT lens,language,state,freshness,tool_identity FROM coverage WHERE language=? ORDER BY lens",
+                (language,),
+            )
+        }
     return subject_rows, observations, coverage
 
 
@@ -136,7 +201,9 @@ def source_bytes(repo: Path, commit: str, path: str) -> bytes:
     return run_git(repo, "show", f"{commit}:{safe_path(path)}")
 
 
-def validate_readback(repo: Path, subject: dict[str, str], observations: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+def validate_readback(
+    repo: Path, subject: dict[str, str], observations: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
     facts: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
     failures: list[str] = []
@@ -163,7 +230,9 @@ def validate_readback(repo: Path, subject: dict[str, str], observations: list[di
     return facts, candidates, sorted(set(failures))
 
 
-def bounded_traversal(targets: list[str], facts: list[dict[str, Any]], max_depth: int, max_nodes: int) -> tuple[list[str], list[dict[str, Any]]]:
+def bounded_traversal(
+    targets: list[str], facts: list[dict[str, Any]], max_depth: int, max_nodes: int
+) -> tuple[list[str], list[dict[str, Any]]]:
     adjacency: dict[str, list[tuple[str, dict[str, Any]]]] = {}
     for row in facts:
         source, target = str(row["source"]), str(row["target"])
@@ -180,7 +249,10 @@ def bounded_traversal(targets: list[str], facts: list[dict[str, Any]], max_depth
         seen.add(node)
         if depth >= max_depth:
             continue
-        for neighbor, row in sorted(adjacency.get(node, []), key=lambda item: (item[0], item[1]["observation_id"])):
+        for neighbor, row in sorted(
+            adjacency.get(node, []),
+            key=lambda item: (item[0], item[1]["observation_id"]),
+        ):
             selected[row["observation_id"]] = row
             if neighbor not in seen:
                 queue.append((neighbor, depth + 1))
@@ -200,7 +272,9 @@ def compile_plan(repo: Path, db_path: Path, request: dict[str, Any]) -> dict[str
         if item is None or item["state"] != "COMPLETE" or item["freshness"] != "FRESH":
             missing_lenses.append(lens)
 
-    facts, candidates, readback_failures = validate_readback(repo, subject, observations)
+    facts, candidates, readback_failures = validate_readback(
+        repo, subject, observations
+    )
     nodes, traversed = bounded_traversal(
         request["targets"],
         facts,
@@ -210,17 +284,50 @@ def compile_plan(repo: Path, db_path: Path, request: dict[str, Any]) -> dict[str
     require(len(traversed) <= request["limits"]["max_paths"], "max_paths exceeded")
 
     target_set = set(request["targets"])
-    target_paths = sorted({row["path"] for row in facts if row["source"] in target_set or row["target"] in target_set})
+    target_paths = sorted(
+        {
+            row["path"]
+            for row in facts
+            if row["source"] in target_set or row["target"] in target_set
+        }
+    )
     dependency_signatures = [
-        {"source": row["source"], "target": row["target"], "relation": row["relation"], "lens": row["lens"], "path": row["path"], "evidence_id": row["observation_id"]}
+        {
+            "source": row["source"],
+            "target": row["target"],
+            "relation": row["relation"],
+            "lens": row["lens"],
+            "path": row["path"],
+            "evidence_id": row["observation_id"],
+        }
         for row in traversed
     ]
-    downstream_callsites = [item for item in dependency_signatures if item["target"] in target_set]
-    test_paths = sorted({row["path"] for row in traversed if row["lens"] == "test" or PurePosixPath(row["path"]).name.startswith("test_") or "/tests/" in f"/{row['path']}"})
+    downstream_callsites = [
+        item for item in dependency_signatures if item["target"] in target_set
+    ]
+    test_paths = sorted(
+        {
+            row["path"]
+            for row in traversed
+            if row["lens"] == "test"
+            or PurePosixPath(row["path"]).name.startswith("test_")
+            or "/tests/" in f"/{row['path']}"
+        }
+    )
     candidate_anchors = [
-        {"source": row["source"], "target": row["target"], "lens": row["lens"], "path": row["path"], "readback": row["readback"], "evidence_id": row["observation_id"]}
+        {
+            "source": row["source"],
+            "target": row["target"],
+            "lens": row["lens"],
+            "path": row["path"],
+            "readback": row["readback"],
+            "evidence_id": row["observation_id"],
+        }
         for row in candidates
-        if row["source"] in nodes or row["target"] in nodes or row["source"] in target_set or row["target"] in target_set
+        if row["source"] in nodes
+        or row["target"] in nodes
+        or row["source"] in target_set
+        or row["target"] in target_set
     ]
 
     if missing_lenses or readback_failures or not target_paths:
@@ -259,7 +366,10 @@ def compile_plan(repo: Path, db_path: Path, request: dict[str, Any]) -> dict[str
         },
     }
     result["content_sha256"] = sha256_bytes(canonical(result))
-    require(len(canonical(result)) <= request["limits"]["max_output_bytes"], "max_output_bytes exceeded")
+    require(
+        len(canonical(result)) <= request["limits"]["max_output_bytes"],
+        "max_output_bytes exceeded",
+    )
     return result
 
 
@@ -275,7 +385,10 @@ def main() -> int:
         result = compile_plan(args.repo, args.db, load_json(args.request))
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+            args.output.write_text(
+                json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+                encoding="utf-8",
+            )
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return OK if result["state"] == "PASS" else REFUSED
     except Refusal as exc:

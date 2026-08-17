@@ -253,10 +253,16 @@ def validate_value(value: dict[str, Any]) -> list[str]:
         if item.get("binding_state") != "PASS":
             errors.append(f"{role}.binding_state must equal 'PASS'")
     limitation = by_role.get("DETERMINISTIC_GRAPH", {}).get("limitation")
-    if limitation != "SQLite Blindspots and SCIP/LSP adapter contracts are implemented; live SCIP/LSP indexing remains NOT_EXERCISED.":
+    if (
+        limitation
+        != "SQLite Blindspots and SCIP/LSP adapter contracts are implemented; live SCIP/LSP indexing remains NOT_EXERCISED."
+    ):
         errors.append("DETERMINISTIC_GRAPH limitation missing")
     structural_limitation = by_role.get("STRUCTURAL_SLICER", {}).get("limitation")
-    if structural_limitation != "Tree-sitter identity/coverage contracts are implemented; live grammar execution remains NOT_EXERCISED.":
+    if (
+        structural_limitation
+        != "Tree-sitter identity/coverage contracts are implemented; live grammar execution remains NOT_EXERCISED."
+    ):
         errors.append("STRUCTURAL_SLICER limitation missing")
 
     automation = value.get("automation", {})

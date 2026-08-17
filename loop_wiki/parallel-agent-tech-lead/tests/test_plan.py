@@ -4,7 +4,6 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -20,7 +19,14 @@ CONTEXT = "3" * 64
 FUNNEL_DIGEST = "4" * 64
 
 
-def worker(worker_id: str, role: str, path: str, *, deps: list[str] | None = None, focus: str | None = None) -> dict:
+def worker(
+    worker_id: str,
+    role: str,
+    path: str,
+    *,
+    deps: list[str] | None = None,
+    focus: str | None = None,
+) -> dict:
     item = {
         "id": worker_id,
         "branch": f"feat/fixture-{worker_id.lower()}",
@@ -53,9 +59,15 @@ def plan(mode: str) -> dict:
             worker("B", "competitor", "src/feature/**", focus="architecture-types"),
         ]
     elif mode == "COOPERATIVE":
-        leaves = [worker("A", "sibling", "src/a/**"), worker("B", "sibling", "src/b/**")]
+        leaves = [
+            worker("A", "sibling", "src/a/**"),
+            worker("B", "sibling", "src/b/**"),
+        ]
     elif mode == "SERIAL_STACK":
-        leaves = [worker("A", "sibling", "src/a/**"), worker("B", "child", "src/a/**", deps=["A"])]
+        leaves = [
+            worker("A", "sibling", "src/a/**"),
+            worker("B", "child", "src/a/**", deps=["A"]),
+        ]
     elif mode == "HYBRID":
         leaves = [
             worker("A", "competitor", "src/feature/**", focus="minimal-diff"),
@@ -75,7 +87,12 @@ def plan(mode: str) -> dict:
         },
         "repository": "ed3c/bettor-arena",
         "mode": mode,
-        "base": {"branch": "main", "commit": BASE_COMMIT, "tree": BASE_TREE, "immutable": True},
+        "base": {
+            "branch": "main",
+            "commit": BASE_COMMIT,
+            "tree": BASE_TREE,
+            "immutable": True,
+        },
         "context": {
             "digest": CONTEXT,
             "providers": [
@@ -98,7 +115,11 @@ def plan(mode: str) -> dict:
             "max_retries_per_worker": 2,
             "max_processes_per_worker": 4,
             "max_output_bytes_per_worker": 131072,
-            "circuit_breakers": ["same-failure-signature-three-times", "context-subject-drift", "lease-conflict"],
+            "circuit_breakers": [
+                "same-failure-signature-three-times",
+                "context-subject-drift",
+                "lease-conflict",
+            ],
         },
         "acceptance": {
             "immutable_paths": ["contracts/immutable/**", "tests/acceptance/**"],
@@ -146,44 +167,68 @@ def main() -> int:
 
     controls: list[str] = []
 
-    value = plan("COOPERATIVE"); value["base"]["immutable"] = False
+    value = plan("COOPERATIVE")
+    value["base"]["immutable"] = False
     expect_refusal("mutable-base", value, "MUTABLE_BASE", controls)
 
-    value = plan("COOPERATIVE"); value["workers"][0]["context_digest"] = "9" * 64
-    expect_refusal("context-digest-mismatch", value, "CONTEXT_DIGEST_MISMATCH", controls)
+    value = plan("COOPERATIVE")
+    value["workers"][0]["context_digest"] = "9" * 64
+    expect_refusal(
+        "context-digest-mismatch", value, "CONTEXT_DIGEST_MISMATCH", controls
+    )
 
-    value = plan("COOPERATIVE"); value["workers"][1]["writable_paths"] = ["src/a/sub/**"]
+    value = plan("COOPERATIVE")
+    value["workers"][1]["writable_paths"] = ["src/a/sub/**"]
     expect_refusal("parallel-path-overlap", value, "PATH_OVERLAP", controls)
 
-    value = plan("SERIAL_STACK"); value["workers"][1].pop("consumes_contracts")
+    value = plan("SERIAL_STACK")
+    value["workers"][1].pop("consumes_contracts")
     expect_refusal("fake-linear-child", value, "FAKE_LINEAR_CHILD", controls)
 
-    value = plan("COOPERATIVE"); value["workers"][0]["writable_paths"] = ["tests/acceptance/**"]
-    expect_refusal("acceptance-test-mutation", value, "ACCEPTANCE_TEST_MUTATED", controls)
+    value = plan("COOPERATIVE")
+    value["workers"][0]["writable_paths"] = ["tests/acceptance/**"]
+    expect_refusal(
+        "acceptance-test-mutation", value, "ACCEPTANCE_TEST_MUTATED", controls
+    )
 
-    value = plan("COOPERATIVE"); value["workers"][0]["token_budget"] = 999999
+    value = plan("COOPERATIVE")
+    value["workers"][0]["token_budget"] = 999999
     expect_refusal("worker-budget-overflow", value, "WORKER_BUDGET_OVERFLOW", controls)
 
-    value = plan("COOPERATIVE"); value["automation"]["auto_merge"] = True
-    expect_refusal("auto-merge-authority", value, "AUTOMATION_AUTHORITY_ESCALATION", controls)
+    value = plan("COOPERATIVE")
+    value["automation"]["auto_merge"] = True
+    expect_refusal(
+        "auto-merge-authority", value, "AUTOMATION_AUTHORITY_ESCALATION", controls
+    )
 
-    value = plan("COOPERATIVE"); value["context"]["providers"][-1]["required"] = True
-    expect_refusal("retired-provider-required", value, "FORBIDDEN_CONTEXT_PROVIDER", controls)
+    value = plan("COOPERATIVE")
+    value["context"]["providers"][-1]["required"] = True
+    expect_refusal(
+        "retired-provider-required", value, "FORBIDDEN_CONTEXT_PROVIDER", controls
+    )
 
-    value = plan("TOURNAMENT"); value["workers"][1]["focus"] = value["workers"][0]["focus"]
-    expect_refusal("duplicate-competitor-focus", value, "MISSING_BRANCH_FOCUS", controls)
+    value = plan("TOURNAMENT")
+    value["workers"][1]["focus"] = value["workers"][0]["focus"]
+    expect_refusal(
+        "duplicate-competitor-focus", value, "MISSING_BRANCH_FOCUS", controls
+    )
 
-    value = plan("COOPERATIVE"); value["workers"][-1]["depends_on"] = ["A"]
+    value = plan("COOPERATIVE")
+    value["workers"][-1]["depends_on"] = ["A"]
     expect_refusal("premature-convergence", value, "PREMATURE_CONVERGENCE", controls)
 
-    value = plan("COOPERATIVE"); value["mode"] = "SERIAL_STACK"
+    value = plan("COOPERATIVE")
+    value["mode"] = "SERIAL_STACK"
     expect_refusal("mode-mismatch", value, "MODE_MISMATCH", controls)
 
-    value = plan("SERIAL_STACK"); value["workers"][0]["depends_on"] = ["B"]
+    value = plan("SERIAL_STACK")
+    value["workers"][0]["depends_on"] = ["B"]
     expect_refusal("dag-cycle", value, "DAG_CYCLE", controls)
 
     assert len(controls) == 12
-    print(json.dumps({"status": "PASS", "modes": 4, "controls": controls}, sort_keys=True))
+    print(
+        json.dumps({"status": "PASS", "modes": 4, "controls": controls}, sort_keys=True)
+    )
     return 0
 
 
