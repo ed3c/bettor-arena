@@ -38,7 +38,7 @@
         "predecessor": null,
         "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
         "required_capabilities": [
-          "clean-bettor-checkout",
+          "clean-bettor-execution-worktree@542a935064e06f358d7d890df5d86364bbc20f46",
           "runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23",
           "runtime-profile:bettor-arena-tech-lead-local",
           "skills-shared@dbcfdb4df76609822893aeb595e5f8ada8483435"
@@ -53,7 +53,7 @@
               "scripts/gates/issue_161_host_rebind.py",
               "--selftest"
             ],
-            "cwd": "bettor-arena",
+            "cwd": "frozen-bettor-execution-worktree",
             "timeout_seconds": 60,
             "environment_names": []
           }
@@ -61,7 +61,7 @@
         "unresolved_operations": [
           {
             "operation_id": "resolve-local-runtime-env-root-and-apply-command",
-            "resolver_source": "local host must bind an absolute clean checkout of runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23; instantiate scripts/gates/issue_161_host_rebind.py --runtime-env-root <absolute-root> --mode apply --receipt <host-private-receipt>",
+            "resolver_source": "in the frozen bettor execution worktree, bind an absolute clean checkout of runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23 and materialize scripts/gates/issue_161_host_rebind.py --runtime-env-root <absolute-root> --mode apply --receipt <host-private-receipt>",
             "required_output": "CONCRETE_COMMAND_CONTRACT"
           }
         ],
@@ -86,68 +86,6 @@
         "requires_receipt": true,
         "required_verdict": "PASS",
         "cleanup_required": false
-      },
-      "next": "bettor-physical-tech-lead-canary"
-    },
-    {
-      "id": "bettor-physical-tech-lead-canary",
-      "task_ref": "ed3c/bettor-arena#146",
-      "state": "BLOCKED_BY_PREDECESSOR",
-      "entry": {
-        "predecessor": "bettor-runtime-rebind",
-        "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
-        "required_capabilities": [
-          "admission:READY_FOR_LOCAL_CANARY",
-          "multi-worker-scheduler",
-          "linked-git-worktrees",
-          "skills-shared#231",
-          "skills-shared#234",
-          "skills-shared#256"
-        ]
-      },
-      "runtime_lane": {
-        "class": "MIXED",
-        "commands": [],
-        "unresolved_operations": [
-          {
-            "operation_id": "compile-real-bettor-domain-slice-command-matrix",
-            "resolver_source": "ed3c/bettor-arena#146 current repository manifests/workflows/README/source after #161 PASS",
-            "required_output": "CONCRETE_COMMAND_CONTRACT"
-          },
-          {
-            "operation_id": "compile-live-code-intelligence-command-contracts",
-            "resolver_source": "ed3c/skills-shared#256 exact-subject GrepAI + SCIP/LSP + Tree-sitter + Serena + SQLite requirements",
-            "required_output": "CONCRETE_COMMAND_CONTRACT"
-          },
-          {
-            "operation_id": "compile-git-town-dual-forge-command-contracts",
-            "resolver_source": "ed3c/skills-shared#234 plus admitted runtime-env Git Town/Forgejo host receipts",
-            "required_output": "CONCRETE_COMMAND_CONTRACT"
-          }
-        ],
-        "live_evidence_required": true
-      },
-      "receipt": {
-        "path": "host-private/issue-146-physical-tech-lead-canary.json",
-        "schema": "bettor-arena/issue-146-physical-tech-lead-canary/v1",
-        "required_states": [
-          "PASS",
-          "FAIL",
-          "NOT_EXERCISED",
-          "HUMAN_ADMIT_REQUIRED"
-        ],
-        "forbidden_promotions": [
-          "synthetic-worker-canary-to-admitted-consumer-pass",
-          "tool-presence-to-tool-execution-pass",
-          "git-town-success-to-implementation-pass",
-          "forgejo-success-to-github-actions-pass",
-          "issue-ui-state-to-terminal-completion"
-        ]
-      },
-      "exit": {
-        "requires_receipt": true,
-        "required_verdict": "PASS",
-        "cleanup_required": true
       },
       "next": null
     }
