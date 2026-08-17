@@ -1,0 +1,250 @@
+{
+  "schema_version": "agentic-tech-lead/local-handoff-queue/v1",
+  "shared_contract": {
+    "repository": "ed3c/skills-shared",
+    "issue": 313,
+    "pr": 314,
+    "branch": "feat/313-local-handoff-queue",
+    "head_commit": "b035a4c6767dae126a07894d7efa5c1d1626c4ee",
+    "schema_path": "skills/agentic-tech-lead-orchestration/references/local-handoff-queue.schema.json",
+    "validator_path": "skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py",
+    "admission_state": "CANDIDATE_UNMERGED"
+  },
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+    "tree": "67dfdc3e7439715b726859a255d77fb54a3cdf02",
+    "rollback_commit": "da527df670ebaa798b68b9ed02428b4f7392177a"
+  },
+  "authority": {
+    "automation_forbidden": [
+      "merge",
+      "force_push",
+      "issue_close",
+      "queue_advance",
+      "provider_activation",
+      "semantic_conflict_resolution"
+    ],
+    "human_owned": [
+      "git_town_darwin_artifact_admission",
+      "semantic_conflict_resolution",
+      "merge",
+      "promotion",
+      "rollback",
+      "permission_change"
+    ]
+  },
+  "current": {
+    "active_item": "issue-161-runtime-rebind-and-canary-admission",
+    "state": "ACTIVE"
+  },
+  "items": [
+    {
+      "id": "issue-161-runtime-rebind-and-canary-admission",
+      "task_ref": "bettor-arena#161",
+      "state": "ACTIVE",
+      "entry": {
+        "predecessor": null,
+        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+        "required_capabilities": [
+          "local-runtime-env-checkout",
+          "runtime-env-consumer-binding-generator",
+          "multi-worker-scheduler",
+          "process-worktree-runtime",
+          "local-only-runtime-inputs"
+        ]
+      },
+      "runtime_lane": {
+        "class": "LOCAL_RUNTIME",
+        "commands": [
+          {
+            "argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py", "--selftest"],
+            "cwd": ".",
+            "timeout_seconds": 120,
+            "environment_names": []
+          },
+          {
+            "argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py"],
+            "cwd": ".",
+            "timeout_seconds": 120,
+            "environment_names": []
+          },
+          {
+            "argv": ["LOCAL_RUNTIME_ENV_REBIND", ".runtime-env/bindings/bettor-arena-local.json", "runtime-env@1ac7ee55a55d38fc10b4f5693d017028af463b6e"],
+            "cwd": ".",
+            "timeout_seconds": 600,
+            "environment_names": ["RUNTIME_ENV_ROOT"]
+          },
+          {
+            "argv": ["LOCAL_SCHEDULER_CANARY", "repository-control-plane-scheduler-local", "repository-control-plane-scheduler"],
+            "cwd": ".",
+            "timeout_seconds": 1200,
+            "environment_names": ["RUNTIME_ENV_ROOT"]
+          },
+          {
+            "argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py"],
+            "cwd": ".",
+            "timeout_seconds": 120,
+            "environment_names": []
+          }
+        ],
+        "live_evidence_required": true
+      },
+      "receipt": {
+        "path": "data/local-handoff/issue-161-runtime-admission.json",
+        "schema": "bettor-arena/local-handoff/issue-161-runtime-admission/v1",
+        "required_states": ["PASS", "NOT_EXERCISED", "HUMAN_ADMIT_REQUIRED"],
+        "forbidden_promotions": [
+          "runtime_env_synthetic_scheduler_to_bettor_consumer_live_pass",
+          "stale_binding_to_ready_for_local_canary",
+          "git_town_human_admit_to_automatic_pass",
+          "issue_ui_state_to_completion"
+        ]
+      },
+      "exit": {
+        "requires_receipt": true,
+        "required_verdict": "PASS",
+        "cleanup_required": true
+      },
+      "next": "issue-146-physical-tech-lead-golden-run"
+    },
+    {
+      "id": "issue-146-physical-tech-lead-golden-run",
+      "task_ref": "bettor-arena#146",
+      "state": "BLOCKED_BY_PREDECESSOR",
+      "entry": {
+        "predecessor": "issue-161-runtime-rebind-and-canary-admission",
+        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+        "required_capabilities": [
+          "admitted-local-worker-runtime",
+          "grepai-live-session",
+          "scip-or-lsp-exact-workspace",
+          "tree-sitter-exact-grammar",
+          "serena-live-session",
+          "sqlite-local-ledger",
+          "linked-git-worktrees",
+          "local-forgejo",
+          "repository-native-test-matrix"
+        ]
+      },
+      "runtime_lane": {
+        "class": "MIXED",
+        "commands": [
+          {
+            "argv": ["sh", "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh"],
+            "cwd": ".",
+            "timeout_seconds": 600,
+            "environment_names": []
+          },
+          {
+            "argv": ["sh", "loop_wiki/code-truth-graph-v2/tests/run-all.sh"],
+            "cwd": ".",
+            "timeout_seconds": 600,
+            "environment_names": []
+          },
+          {
+            "argv": ["sh", "tests/agentic-tech-lead-binding/run-all.sh"],
+            "cwd": ".",
+            "timeout_seconds": 600,
+            "environment_names": []
+          },
+          {
+            "argv": ["python3", "scripts/gates/check_issue_140_convergence.py"],
+            "cwd": ".",
+            "timeout_seconds": 120,
+            "environment_names": []
+          },
+          {
+            "argv": ["LOCAL_TECH_LEAD_GOLDEN_RUN", "--issue", "146", "--exact-subject", "6c934f957a9ac992ab71f1515ddebd4da3597443"],
+            "cwd": ".",
+            "timeout_seconds": 7200,
+            "environment_names": [
+              "RUNTIME_ENV_ROOT",
+              "GREPAI_SESSION",
+              "SERENA_SESSION",
+              "FORGEJO_URL"
+            ]
+          }
+        ],
+        "live_evidence_required": true
+      },
+      "receipt": {
+        "path": "data/local-handoff/issue-146-physical-golden-run.json",
+        "schema": "bettor-arena/local-handoff/issue-146-physical-golden-run/v1",
+        "required_states": ["PASS", "FAIL", "ABSENT", "NOT_EXERCISED", "HUMAN_ADMIT_REQUIRED"],
+        "forbidden_promotions": [
+          "grepai_hit_without_source_readback",
+          "scip_or_lsp_wrong_workspace_to_pass",
+          "tree_sitter_parse_hole_to_complete_coverage",
+          "serena_out_of_lease_edit_to_pass",
+          "sqlite_row_without_exact_subject_to_evidence",
+          "git_town_success_to_implementation_pass",
+          "forgejo_success_to_github_actions_pass",
+          "static_fixture_to_live_pass",
+          "issue_ui_state_to_completion"
+        ]
+      },
+      "exit": {
+        "requires_receipt": true,
+        "required_verdict": "PASS",
+        "cleanup_required": true
+      },
+      "next": "issue-140-terminal-human-admission"
+    },
+    {
+      "id": "issue-140-terminal-human-admission",
+      "task_ref": "bettor-arena#140",
+      "state": "BLOCKED_BY_PREDECESSOR",
+      "entry": {
+        "predecessor": "issue-146-physical-tech-lead-golden-run",
+        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+        "required_capabilities": [
+          "exact-subject-aggregate-receipts",
+          "human-admission",
+          "pdf-terminal-queue-controller"
+        ]
+      },
+      "runtime_lane": {
+        "class": "LOCAL_HOST",
+        "commands": [
+          {
+            "argv": ["python3", "scripts/gates/check_issue_140_convergence.py"],
+            "cwd": ".",
+            "timeout_seconds": 120,
+            "environment_names": []
+          },
+          {
+            "argv": ["python3", "scripts/github/issue_state_guard.py", "plan", "--issue", "140", "--event", "closed"],
+            "cwd": ".",
+            "timeout_seconds": 60,
+            "environment_names": []
+          },
+          {
+            "argv": ["HUMAN_ADMISSION", "bettor-arena#140", "--queue-order", "13"],
+            "cwd": ".",
+            "timeout_seconds": 3600,
+            "environment_names": []
+          }
+        ],
+        "live_evidence_required": false
+      },
+      "receipt": {
+        "path": "data/local-handoff/issue-140-terminal-admission.json",
+        "schema": "bettor-arena/local-handoff/issue-140-terminal-admission/v1",
+        "required_states": ["PASS", "HUMAN_ADMIT_REQUIRED"],
+        "forbidden_promotions": [
+          "deterministic_convergence_to_human_admission",
+          "issue_closed_to_terminal_complete",
+          "queue_advance_without_typed_admission_receipt",
+          "automation_to_semantic_conflict_resolution"
+        ]
+      },
+      "exit": {
+        "requires_receipt": true,
+        "required_verdict": "PASS",
+        "cleanup_required": false
+      },
+      "next": null
+    }
+  ]
+}
