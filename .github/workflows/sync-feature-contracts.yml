@@ -1,9 +1,10 @@
 name: Sync feature modular contracts
 
-# This workflow keeps checked-in generated contracts aligned before the exact-head
-# verification workflow decides whether a feature, fix, or governed documentation
-# branch is mergeable. Documentation can change Macro Context selections and therefore
-# requires the same deterministic projections as implementation branches.
+# Sole generator owner for checked-in consumer bindings and modular projections.
+# Authored source pins select immutable upstream bytes; generated bindings, locks,
+# and receipts are derived from those bytes. Every downstream subject reads the
+# prospective Git index, so each generated dependency is staged before the next
+# layer runs and the complete tree must reach a bounded fixed point before commit.
 on:
   push:
     branches:
@@ -25,7 +26,7 @@ jobs:
   sync:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -36,30 +37,119 @@ jobs:
         with:
           bun-version: 1.3.11
 
-      - name: Render the coherent feature-branch release projections
+      - name: Resolve the immutable shared-Skills source pin
+        id: shared_source
+        shell: bash
         run: |
-          python3 scripts/arena_lock.py resolve \
-            --requirements .arena/compositions/bettor-arena.requirements.json \
-            --output .arena/locks/bettor-arena.lock.json
-          python3 scripts/arena_context.py lock \
-            --output .arena/contexts.lock.json
-          python3 scripts/arena_context.py parity \
-            --output data/context-capsules/driver-parity.json
-          python3 scripts/arena_proof.py subjects \
-            --output data/module-proof/subjects.lock.json
-          python3 scripts/arena_proof.py release \
-            --subjects data/module-proof/subjects.lock.json \
-            --output data/module-proof/release-receipt.json
-          bun loopctl/mcp_tools.ts loopctl/contract.json \
-            --policy .arena/mcp-policy.json \
-            > data/mcp/exposure.json
-          bun scripts/arena_origins.ts status \
-            --output data/origins/status.json
-          bun scripts/arena_browser.ts status \
-            --output data/browser/status.json
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import urlparse
 
-      - name: Check generated projections before delivery
+          pin = json.loads(Path(".agents/shared-skills.source.json").read_text())
+          source = pin["source"]
+          slug = urlparse(source["repository"]).path.strip("/")
+          if slug != "ed3c/skills-shared":
+              raise SystemExit(f"unexpected shared repository: {slug}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print(f"repository={slug}", file=output)
+              print(f"commit={source['commit']}", file=output)
+          PY
+
+      - name: Checkout the immutable shared-Skills source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.shared_source.outputs.repository }}
+          ref: ${{ steps.shared_source.outputs.commit }}
+          path: .shared-skills-source
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Verify the shared source before generation
         run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source \
+            --source-only
+
+      - name: Generate and stage the consumer binding with the canonical shared tool
+        run: |
+          python3 \
+            .shared-skills-source/skills/shared-skills-infra/scripts/shared_skills.py \
+            sync \
+            --requirements "$GITHUB_WORKSPACE/.agents/shared-skills.requirements.json" \
+            --target-root "$GITHUB_WORKSPACE" \
+            --apply
+          git add .agents/bindings/bettor-arena.json
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source
+          python3 scripts/gates/check_shared_skills_source_binding.py --selftest
+          python3 -m unittest tests/test_shared_skills_source_binding.py -v
+
+      - name: Render generated consumer contracts to a prospective-tree fixed point
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          render_and_stage() {
+            python3 scripts/arena_lock.py resolve \
+              --requirements .arena/compositions/bettor-arena.requirements.json \
+              --output .arena/locks/bettor-arena.lock.json
+            git add .arena/locks/bettor-arena.lock.json
+
+            python3 scripts/arena_context.py lock \
+              --output .arena/contexts.lock.json
+            python3 scripts/arena_context.py parity \
+              --output data/context-capsules/driver-parity.json
+            git add \
+              .arena/contexts.lock.json \
+              data/context-capsules/driver-parity.json
+
+            python3 scripts/arena_proof.py subjects \
+              --output data/module-proof/subjects.lock.json
+            git add data/module-proof/subjects.lock.json
+
+            python3 scripts/arena_proof.py release \
+              --subjects data/module-proof/subjects.lock.json \
+              --output data/module-proof/release-receipt.json
+            git add data/module-proof/release-receipt.json
+
+            bun loopctl/mcp_tools.ts loopctl/contract.json \
+              --policy .arena/mcp-policy.json \
+              > data/mcp/exposure.json
+            git add data/mcp/exposure.json
+
+            bun scripts/arena_origins.ts status \
+              --output data/origins/status.json
+            git add data/origins/status.json
+
+            bun scripts/arena_browser.ts status \
+              --output data/browser/status.json
+            git add data/browser/status.json
+          }
+
+          previous_tree="$(git write-tree)"
+          stable=0
+          for attempt in 1 2 3; do
+            render_and_stage
+            current_tree="$(git write-tree)"
+            echo "prospective tree attempt ${attempt}: ${current_tree}"
+            if [[ "$current_tree" == "$previous_tree" ]]; then
+              stable=1
+              break
+            fi
+            previous_tree="$current_tree"
+          done
+
+          if [[ "$stable" != 1 ]]; then
+            echo "generated consumer contracts did not reach a fixed point in 3 passes" >&2
+            exit 2
+          fi
+
+      - name: Check generated bindings and projections before delivery
+        run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source
           python3 scripts/gates/check_module_catalog.py
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check
@@ -67,11 +157,13 @@ jobs:
           bun scripts/gates/check_project_bootstrap.ts
           bun scripts/gates/check_environment_contracts.ts
 
-      - name: Commit only generated modular contracts
+      - name: Commit only generated consumer contracts
         run: |
+          rm -rf .shared-skills-source
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add \
+            .agents/bindings/bettor-arena.json \
             .arena/locks/bettor-arena.lock.json \
             .arena/contexts.lock.json \
             data/context-capsules/driver-parity.json \
@@ -81,8 +173,8 @@ jobs:
             data/origins/status.json \
             data/browser/status.json
           if git diff --cached --quiet; then
-            echo "generated modular contracts already current"
+            echo "generated consumer contracts already current"
             exit 0
           fi
-          git commit -m "chore: sync generated modular contracts"
+          git commit -m "chore: sync generated consumer contracts"
           git push origin "HEAD:${GITHUB_REF_NAME}"
