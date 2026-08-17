@@ -24,6 +24,14 @@
       ],
       "required": true
     },
+    "issue_state_guard": {
+      "paths": [
+        "scripts/github/issue_state_guard.py",
+        ".github/workflows/issue-state-guard-contract.yml",
+        ".github/workflows/issue-state-reconcile.yml"
+      ],
+      "required": true
+    },
     "proof": {
       "paths": [
         "scripts/gates/check_agent_docs.py",
@@ -96,6 +104,7 @@
     ".github-delivery",
     ".claude/hooks",
     "scripts/gates",
+    "scripts/github/issue_state_guard.py",
     "scripts/delivery_status.py",
     "scripts/delivery_sync.py",
     "scripts/migrate",
