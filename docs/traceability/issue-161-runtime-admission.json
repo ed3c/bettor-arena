@@ -17,15 +17,16 @@
     },
     "runtime_env": {
       "repository": "ed3c/runtime-env",
-      "commit": "1ac7ee55a55d38fc10b4f5693d017028af463b6e",
+      "commit": "77dca3584a4adb1c463c815bdb5ab603eae32b23",
       "required_modules": ["multi-worker-scheduler"],
-      "required_profile": "repository-control-plane-scheduler-local",
+      "required_profile": "bettor-arena-tech-lead-local",
       "required_workload": "repository-control-plane-scheduler"
     }
   },
   "checked_in_binding": {
     "path": ".runtime-env/bindings/bettor-arena-local.json",
     "observed_source_commit": "9ebbee650b7dc5ccc82aab7e40f0b899050a2549",
+    "observed_profile": "bettor-arena-runtime-local",
     "state": "BLOCKED_STALE_BINDING"
   },
   "admission": {
@@ -56,9 +57,10 @@
   "transition_rule": {
     "ready_state": "READY_FOR_LOCAL_CANARY",
     "requires_exact_runtime_env_binding": true,
+    "requires_exact_profile": true,
     "requires_scheduler_module": true,
     "requires_human_git_town_admit": false,
-    "notes": "Scheduler canary admission is independent of Git Town/Forgejo delivery admission. Git Town remains a later Human-gated lane."
+    "notes": "Scheduler canary admission requires the exact Bettor Tech Lead composition profile. Git Town/Forgejo delivery admission remains a later independent lane."
   },
   "forbidden": {
     "static_fixture_as_consumer_pass": true,
