@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 QUEUE = ROOT / "docs/traceability/local-handoff-execution-queue.json"
-SKILLS_SHARED_COMMIT = "86a02a8a79651696b77f5af2c0976939bed5bc84"
+SKILLS_SHARED_COMMIT = "dbcfdb4df76609822893aeb595e5f8ada8483435"
 VALIDATOR_RELATIVE = Path(
     "skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py"
 )
