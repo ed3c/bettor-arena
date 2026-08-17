@@ -1,9 +1,8 @@
 name: Sync feature modular contracts
 
-# This workflow keeps checked-in generated contracts aligned before the exact-head
-# verification workflow decides whether a feature, fix, or governed documentation
-# branch is mergeable. Documentation can change Macro Context selections and therefore
-# requires the same deterministic projections as implementation branches.
+# Sole generator owner for checked-in consumer bindings and modular projections.
+# Authored source pins select immutable upstream bytes; generated bindings, locks,
+# and receipts are derived from those bytes.
 on:
   push:
     branches:
@@ -25,7 +24,7 @@ jobs:
   sync:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -35,6 +34,54 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.3.11
+
+      - name: Resolve the immutable shared-Skills source pin
+        id: shared_source
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          pin = json.loads(Path(".agents/shared-skills.source.json").read_text())
+          source = pin["source"]
+          slug = urlparse(source["repository"]).path.strip("/")
+          if slug != "ed3c/skills-shared":
+              raise SystemExit(f"unexpected shared repository: {slug}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print(f"repository={slug}", file=output)
+              print(f"commit={source['commit']}", file=output)
+          PY
+
+      - name: Checkout the immutable shared-Skills source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.shared_source.outputs.repository }}
+          ref: ${{ steps.shared_source.outputs.commit }}
+          path: .shared-skills-source
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Verify the shared source before generation
+        run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source \
+            --source-only
+
+      - name: Generate the consumer binding with the canonical shared tool
+        run: |
+          python3 \
+            .shared-skills-source/skills/shared-skills-infra/scripts/shared_skills.py \
+            sync \
+            --requirements "$GITHUB_WORKSPACE/.agents/shared-skills.requirements.json" \
+            --target-root "$GITHUB_WORKSPACE" \
+            --apply
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source
+          python3 scripts/gates/check_shared_skills_source_binding.py --selftest
+          python3 -m unittest tests/test_shared_skills_source_binding.py -v
 
       - name: Render the coherent feature-branch release projections
         run: |
@@ -58,8 +105,10 @@ jobs:
           bun scripts/arena_browser.ts status \
             --output data/browser/status.json
 
-      - name: Check generated projections before delivery
+      - name: Check generated bindings and projections before delivery
         run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source
           python3 scripts/gates/check_module_catalog.py
           python3 scripts/arena_proof.py check
           python3 scripts/arena_context.py check
@@ -67,11 +116,13 @@ jobs:
           bun scripts/gates/check_project_bootstrap.ts
           bun scripts/gates/check_environment_contracts.ts
 
-      - name: Commit only generated modular contracts
+      - name: Commit only generated consumer contracts
         run: |
+          rm -rf .shared-skills-source
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add \
+            .agents/bindings/bettor-arena.json \
             .arena/locks/bettor-arena.lock.json \
             .arena/contexts.lock.json \
             data/context-capsules/driver-parity.json \
@@ -81,8 +132,8 @@ jobs:
             data/origins/status.json \
             data/browser/status.json
           if git diff --cached --quiet; then
-            echo "generated modular contracts already current"
+            echo "generated consumer contracts already current"
             exit 0
           fi
-          git commit -m "chore: sync generated modular contracts"
+          git commit -m "chore: sync generated consumer contracts"
           git push origin "HEAD:${GITHUB_REF_NAME}"

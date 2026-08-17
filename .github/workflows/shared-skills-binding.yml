@@ -1,0 +1,95 @@
+name: Shared Skills Consumer Binding
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    paths:
+      - '.agents/shared-skills.source.json'
+      - '.agents/shared-skills.requirements.json'
+      - '.agents/bindings/bettor-arena.json'
+      - '.agents/README.md'
+      - 'scripts/gates/check_shared_skills_source_binding.py'
+      - 'tests/test_shared_skills_source_binding.py'
+      - '.github/workflows/shared-skills-binding.yml'
+      - '.github/workflows/sync-feature-contracts.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/shared-skills.source.json'
+      - '.agents/shared-skills.requirements.json'
+      - '.agents/bindings/bettor-arena.json'
+      - '.agents/README.md'
+      - 'scripts/gates/check_shared_skills_source_binding.py'
+      - 'tests/test_shared_skills_source_binding.py'
+      - '.github/workflows/shared-skills-binding.yml'
+      - '.github/workflows/sync-feature-contracts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shared-skills-binding-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  binding:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Resolve the immutable shared-Skills source pin
+        id: shared_source
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          pin = json.loads(Path(".agents/shared-skills.source.json").read_text())
+          source = pin["source"]
+          slug = urlparse(source["repository"]).path.strip("/")
+          if slug != "ed3c/skills-shared":
+              raise SystemExit(f"unexpected shared repository: {slug}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print(f"repository={slug}", file=output)
+              print(f"commit={source['commit']}", file=output)
+          PY
+
+      - name: Checkout the immutable shared-Skills source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.shared_source.outputs.repository }}
+          ref: ${{ steps.shared_source.outputs.commit }}
+          path: .shared-skills-source
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Compile the binding gate
+        run: |
+          python3 -m py_compile \
+            scripts/gates/check_shared_skills_source_binding.py \
+            tests/test_shared_skills_source_binding.py
+
+      - name: Prove positive and mutation controls
+        run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py --selftest
+          python3 -m unittest tests/test_shared_skills_source_binding.py -v
+
+      - name: Verify exact source bytes and generated consumer binding
+        run: |
+          python3 scripts/gates/check_shared_skills_source_binding.py \
+            --shared-root .shared-skills-source
+          python3 \
+            .shared-skills-source/skills/shared-skills-infra/scripts/shared_skills.py \
+            sync \
+            --requirements "$GITHUB_WORKSPACE/.agents/shared-skills.requirements.json" \
+            --target-root "$GITHUB_WORKSPACE" \
+            --check

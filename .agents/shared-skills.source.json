@@ -1,0 +1,23 @@
+{
+  "schema": "shared-skills/source-pin/v1",
+  "source": {
+    "repository": "https://github.com/ed3c/skills-shared",
+    "commit": "8f5548c5b94a31e074b3aa6cbce776f754c24f61",
+    "tree": "8bbf96f1b8b88bf711528a0796dce8c0fb9eb742"
+  },
+  "interfaces": [
+    {
+      "id": "DOMAIN-DECOUPLING-V1",
+      "path": "docs/architecture/DOMAIN_DECOUPLING.md",
+      "blob": "a8725a09bae14dd606ca627d3c41a5c9e699620c"
+    }
+  ],
+  "generator": {
+    "path": "skills/shared-skills-infra/scripts/shared_skills.py",
+    "blob": "65e26819baeaeb8630a320764970ecdc6e354b0e"
+  },
+  "consumer": {
+    "requirements": ".agents/shared-skills.requirements.json",
+    "binding": ".agents/bindings/bettor-arena.json"
+  }
+}
