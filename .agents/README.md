@@ -18,4 +18,6 @@ Machine authorities:
 - `module-set.json` — aggregate Skill/runtime/host integration subject.
 - `skills/` — development projections and repo-owned Skills.
 
+For shared Skill, module, binding, projection or adapter changes, read [`../docs/architecture/DOMAIN_DECOUPLING.md`](../docs/architecture/DOMAIN_DECOUPLING.md). Resolve the exact shared subject before generating a projection. A local symlink can support development, but cannot satisfy immutable binding or release evidence.
+
 A symlink is a local development projection, not a release. Shared Skill bodies remain canonical in `skills-shared`; repo-owned differences live here or under `.skill-bindings/` as explicitly classified.
