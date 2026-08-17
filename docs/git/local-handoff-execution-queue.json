@@ -11,9 +11,9 @@
   },
   "subject": {
     "repository": "ed3c/bettor-arena",
-    "commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
-    "tree": "37f94e8165e01ef53ccdbcf45c519d63ad5f5f82",
-    "rollback_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443"
+    "commit": "542a935064e06f358d7d890df5d86364bbc20f46",
+    "tree": "78a6b573f094f1df7f3537ace551768f70210e51",
+    "rollback_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d"
   },
   "authority": {
     "automation_forbidden": ["merge", "force_push", "issue_close", "queue_advance", "provider_activation", "semantic_conflict_resolution"],
@@ -27,18 +27,19 @@
       "state": "ACTIVE",
       "entry": {
         "predecessor": null,
-        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
+        "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
         "required_capabilities": ["local-runtime-env-checkout", "runtime-env-consumer-binding-generator", "multi-worker-scheduler", "process-worktree-runtime", "exact-bettor-tech-lead-profile", "local-only-runtime-inputs"]
       },
       "runtime_lane": {
         "class": "LOCAL_RUNTIME",
         "commands": [
+          {"argv": ["python3", "scripts/gates/issue_161_host_rebind.py", "--selftest"], "cwd": ".", "timeout_seconds": 120, "environment_names": []},
           {"argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py", "--selftest"], "cwd": ".", "timeout_seconds": 120, "environment_names": []},
           {"argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py"], "cwd": ".", "timeout_seconds": 120, "environment_names": []}
         ],
         "unresolved_operations": [
-          {"operation_id": "resolve-runtime-env-consumer-rebind", "resolver_source": "ed3c/runtime-env exact admitted subject, consumer binding generator docs, nearest runtime README, and #161 exact Bettor Tech Lead profile requirements", "required_output": "CONCRETE_COMMAND_CONTRACT"},
-          {"operation_id": "resolve-scheduler-process-worktree-canary", "resolver_source": "ed3c/runtime-env multi-worker-scheduler module/profile/workload contracts and #161 exact-subject admission packet", "required_output": "CONCRETE_COMMAND_CONTRACT"}
+          {"operation_id": "materialize-host-rebind-runtime-root-and-apply", "resolver_source": "scripts/gates/issue_161_host_rebind.py pinned to runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23; resolve only the clean local runtime-env checkout path, then execute plan/apply/check with a durable receipt", "required_output": "CONCRETE_COMMAND_CONTRACT"},
+          {"operation_id": "resolve-scheduler-process-worktree-canary", "resolver_source": "ed3c/runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23 multi-worker-scheduler module/profile/workload contracts and #161 exact-subject admission packet", "required_output": "CONCRETE_COMMAND_CONTRACT"}
         ],
         "live_evidence_required": true
       },
@@ -57,7 +58,7 @@
       "state": "BLOCKED_BY_PREDECESSOR",
       "entry": {
         "predecessor": "issue-161-runtime-rebind-and-canary-admission",
-        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
+        "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
         "required_capabilities": ["admitted-local-worker-runtime", "grepai-live-session", "scip-or-lsp-exact-workspace", "tree-sitter-exact-grammar", "serena-live-session", "sqlite-local-ledger", "linked-git-worktrees", "local-forgejo", "repository-native-test-matrix"]
       },
       "runtime_lane": {
@@ -69,7 +70,7 @@
           {"argv": ["python3", "scripts/gates/check_issue_140_convergence.py"], "cwd": ".", "timeout_seconds": 120, "environment_names": []}
         ],
         "unresolved_operations": [
-          {"operation_id": "resolve-first-physical-tech-lead-golden-run", "resolver_source": "bettor-arena #146, current parallel-agent-tech-lead contracts, admitted runtime-env scheduler, skills-shared Agentic Tech Lead/Blindspots/Dual-Forge/Git-Town procedures", "required_output": "CONCRETE_COMMAND_CONTRACT"}
+          {"operation_id": "resolve-first-physical-tech-lead-golden-run", "resolver_source": "bettor-arena #146, current parallel-agent-tech-lead contracts, admitted runtime-env scheduler, skills-shared@dbcfdb4df76609822893aeb595e5f8ada8483435 Agentic Tech Lead handoff law plus admitted Blindspots/Dual-Forge/Git-Town procedures", "required_output": "CONCRETE_COMMAND_CONTRACT"}
         ],
         "live_evidence_required": true
       },
@@ -88,7 +89,7 @@
       "state": "BLOCKED_BY_PREDECESSOR",
       "entry": {
         "predecessor": "issue-146-physical-tech-lead-golden-run",
-        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
+        "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
         "required_capabilities": ["exact-subject-aggregate-receipts", "human-admission", "pdf-terminal-queue-controller"]
       },
       "runtime_lane": {
@@ -98,7 +99,7 @@
           {"argv": ["python3", "scripts/github/issue_state_guard.py", "plan", "--issue", "140", "--event", "closed"], "cwd": ".", "timeout_seconds": 60, "environment_names": []}
         ],
         "unresolved_operations": [
-          {"operation_id": "resolve-human-terminal-admission-and-typed-queue-advance", "resolver_source": "bettor-arena #140 acceptance, exact physical receipts, PDF terminal controller, and Human admission policy", "required_output": "CONCRETE_COMMAND_CONTRACT"}
+          {"operation_id": "resolve-human-terminal-admission-and-typed-queue-advance", "resolver_source": "bettor-arena #140 acceptance, exact #161/#146 physical receipts, PDF terminal controller, and Human admission policy", "required_output": "CONCRETE_COMMAND_CONTRACT"}
         ],
         "live_evidence_required": false
       },
