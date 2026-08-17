@@ -1,0 +1,55 @@
+{
+  "allowed_modes": [
+    "100644",
+    "100755"
+  ],
+  "artifacts": {
+    "control_cases": {
+      "digest": "sha256:1a9fb84f5637ef9f08846b94e249f8b272b49bc06627b00f9131bc9ca6761e71",
+      "path": ".skill-bindings/controlled-technical-language-harness/projection/cases.json"
+    }
+  },
+  "carriers": {
+    "claude_pointer": ".claude/skills/controlled-technical-language-harness",
+    "claude_pointer_target": "../../.agents/skills/controlled-technical-language-harness",
+    "codex_body": ".agents/skills/controlled-technical-language-harness"
+  },
+  "consumer": "ed3c/bettor-arena",
+  "consumer_binding_blob": "d4f4d36095862c46b0d92057ee2e6d42dea14b2a",
+  "contract_id": "bettor-arena-controlled-language-projection",
+  "contract_version": "1.0.0",
+  "evidence_ceiling": {
+    "claude_cold_start": "NOT_EXERCISED",
+    "claude_physical_carrier": "NOT_EXERCISED",
+    "codex_cold_start": "NOT_EXERCISED",
+    "codex_physical_carrier": "NOT_EXERCISED",
+    "model_or_manual_processing": "NOT_EXERCISED",
+    "official_compliance": "NOT_CLAIMED",
+    "production_termbase": "ABSENT",
+    "real_upstream_private_checkout": "NOT_EXERCISED"
+  },
+  "human_owned": [
+    "PRIVATE_UPSTREAM_CREDENTIAL_ADMISSION",
+    "HOST_TRUST",
+    "PHYSICAL_CARRIER_EXECUTION",
+    "SAFETY_SEMANTIC_ACCEPTANCE",
+    "CONFIDENTIAL_EXTERNAL_PROCESSING",
+    "MERGE",
+    "RELEASE",
+    "ROLLBACK"
+  ],
+  "private_reasoning_persistence": "FORBIDDEN",
+  "schema_version": "controlled-language-projection-contract/v1",
+  "source": {
+    "commit": "b3d47948feb6e2d44d84261354117aecfaa4f5dc",
+    "entrypoint": "skills/controlled-technical-language-harness/SKILL.md",
+    "entrypoint_blob": "5c1932161e9d4164b013f0e2b1f7dc7830021c5d",
+    "evals": "skills/controlled-technical-language-harness/evals.json",
+    "evals_blob": "4a8f35732a283550bdce6730504f5b9974513c9e",
+    "mutable_ref": null,
+    "repository": "ed3c/skills-shared",
+    "skill_path": "skills/controlled-technical-language-harness",
+    "skill_tree": "2c4582c1c0d1db27c318fbd2a1ed3957f4d2cb46",
+    "tree": "8b7a44fb080d290135223e372d77825589fdfe3a"
+  }
+}

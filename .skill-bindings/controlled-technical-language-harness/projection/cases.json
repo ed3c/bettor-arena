@@ -1,0 +1,120 @@
+{
+  "cases": [
+    {
+      "expected_error": "consumer binding blob",
+      "id": "CTL-PROJ-001",
+      "subject": "wrong 07A binding blob"
+    },
+    {
+      "expected_error": "mutable upstream ref",
+      "id": "CTL-PROJ-002",
+      "subject": "mutable upstream ref"
+    },
+    {
+      "expected_error": "selected source commit",
+      "id": "CTL-PROJ-003",
+      "subject": "wrong source commit"
+    },
+    {
+      "expected_error": "source repository tree",
+      "id": "CTL-PROJ-004",
+      "subject": "wrong source repository tree"
+    },
+    {
+      "expected_error": "source Skill tree",
+      "id": "CTL-PROJ-005",
+      "subject": "wrong source Skill tree"
+    },
+    {
+      "expected_error": "SKILL.md blob",
+      "id": "CTL-PROJ-006",
+      "subject": "wrong SKILL.md blob"
+    },
+    {
+      "expected_error": "evals blob",
+      "id": "CTL-PROJ-007",
+      "subject": "wrong evals blob"
+    },
+    {
+      "expected_error": "Skill subtree is dirty",
+      "id": "CTL-PROJ-008",
+      "subject": "dirty selected Skill subtree"
+    },
+    {
+      "expected_error": "source subtree symlink",
+      "id": "CTL-PROJ-009",
+      "subject": "source subtree symlink"
+    },
+    {
+      "expected_error": "outside the consumer checkout",
+      "id": "CTL-PROJ-010",
+      "subject": "target inside the consumer checkout"
+    },
+    {
+      "expected_error": "outside the source checkout",
+      "id": "CTL-PROJ-011",
+      "subject": "target inside the source checkout"
+    },
+    {
+      "expected_error": "disposable target must be empty",
+      "id": "CTL-PROJ-012",
+      "subject": "non-empty target"
+    },
+    {
+      "expected_error": "missing projected file",
+      "id": "CTL-PROJ-013",
+      "subject": "missing projected file"
+    },
+    {
+      "expected_error": "changed projected bytes",
+      "id": "CTL-PROJ-014",
+      "subject": "changed projected bytes"
+    },
+    {
+      "expected_error": "executable-mode drift",
+      "id": "CTL-PROJ-015",
+      "subject": "executable-mode drift"
+    },
+    {
+      "expected_error": "extra projected file",
+      "id": "CTL-PROJ-016",
+      "subject": "extra projected file"
+    },
+    {
+      "expected_error": "Claude pointer must be repository-relative",
+      "id": "CTL-PROJ-017",
+      "subject": "absolute Claude pointer"
+    },
+    {
+      "expected_error": "Claude pointer must resolve to the Codex body",
+      "id": "CTL-PROJ-018",
+      "subject": "wrong Claude pointer"
+    },
+    {
+      "expected_error": "not a second body",
+      "id": "CTL-PROJ-019",
+      "subject": "Codex and Claude bodies diverge"
+    },
+    {
+      "expected_error": "machine-local absolute paths",
+      "id": "CTL-PROJ-020",
+      "subject": "receipt leaks an absolute machine path"
+    },
+    {
+      "expected_error": "secret-shaped material",
+      "id": "CTL-PROJ-021",
+      "subject": "receipt leaks a secret or session token"
+    },
+    {
+      "expected_error": "private reasoning fields",
+      "id": "CTL-PROJ-022",
+      "subject": "receipt leaks private reasoning"
+    },
+    {
+      "expected_error": "cannot promote codex_physical_carrier",
+      "id": "CTL-PROJ-023",
+      "subject": "static materializer success shown as physical carrier PASS"
+    }
+  ],
+  "schema_version": "controlled-language-projection-cases/v1"
+}
