@@ -2,15 +2,25 @@ name: Issue 146 golden-run readiness
 
 on:
   pull_request:
-    types: [opened, ready_for_review, reopened, synchronize]
+    types: [ready_for_review]
     paths:
+      - 'docs/architecture/tech-lead-shadow-monitor/**'
+      - 'docs/INDEX.md'
+      - 'docs/git/README.md'
+      - 'docs/git/stack-prs.index.json'
+      - 'docs/git/stack-prs.index.schema.json'
+      - 'docs/traceability/local-handoff-execution-queue.json'
+      - 'scripts/gates/check_tech_lead_shadow_closure.py'
+      - 'scripts/gates/check_git_town_stack_docs.py'
+      - 'scripts/gates/check_local_handoff_execution_queue.py'
+      - 'scripts/gates/check_local_handoff_queue.py'
+      - 'tests/test_tech_lead_shadow_closure.py'
+      - 'tests/test_git_town_stack_docs.py'
       - 'docs/traceability/issue-146-golden-readiness.json'
       - 'docs/traceability/issue-161-runtime-admission.json'
-      - 'docs/git/local-handoff-execution-queue.json'
       - 'scripts/gates/check_issue_146_golden_readiness.py'
       - 'scripts/gates/check_issue_161_runtime_admission.py'
       - 'scripts/gates/issue_161_host_rebind.py'
-      - 'scripts/gates/check_local_handoff_execution_queue.py'
       - '.runtime-env/bindings/bettor-arena-local.json'
       - '.skill-bindings/agentic-tech-lead-orchestration/**'
       - 'scripts/gates/check_agentic_tech_lead_binding.py'
@@ -18,23 +28,7 @@ on:
       - 'loop_wiki/code-truth-graph-v2/**'
       - 'docs/git/pdf-terminal-sequence.json'
       - '.github/workflows/issue-146-golden-readiness.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'docs/traceability/issue-146-golden-readiness.json'
-      - 'docs/traceability/issue-161-runtime-admission.json'
-      - 'docs/git/local-handoff-execution-queue.json'
-      - 'scripts/gates/check_issue_146_golden_readiness.py'
-      - 'scripts/gates/check_issue_161_runtime_admission.py'
-      - 'scripts/gates/issue_161_host_rebind.py'
-      - 'scripts/gates/check_local_handoff_execution_queue.py'
-      - '.runtime-env/bindings/bettor-arena-local.json'
-      - '.skill-bindings/agentic-tech-lead-orchestration/**'
-      - 'scripts/gates/check_agentic_tech_lead_binding.py'
-      - 'loop_wiki/parallel-agent-tech-lead/**'
-      - 'loop_wiki/code-truth-graph-v2/**'
-      - 'docs/git/pdf-terminal-sequence.json'
-      - '.github/workflows/issue-146-golden-readiness.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -53,30 +47,67 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
-      - name: Validate Phase-0 receipt and planted controls
+
+      - name: Bind exact candidate head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 scripts/gates/check_issue_146_golden_readiness.py --selftest
-          python3 scripts/gates/check_issue_146_golden_readiness.py
-      - name: Validate exact-subject runtime admission and planted controls
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          tree="$(git rev-parse HEAD^{tree})"
+          printf 'expected=%s\nobserved=%s\ntree=%s\n' \
+            "$EXPECTED_SHA" "$observed" "$tree"
+          test "$observed" = "$EXPECTED_SHA"
+
+      - name: Validate Tech Lead and Shadow closure monitor
         run: |
-          python3 scripts/gates/check_issue_161_runtime_admission.py --selftest
-          python3 scripts/gates/check_issue_161_runtime_admission.py
-      - name: Validate fail-closed local rebind handoff
+          set -euo pipefail
+          python3 scripts/gates/check_tech_lead_shadow_closure.py --selftest
+          python3 scripts/gates/check_tech_lead_shadow_closure.py
+          python3 -m unittest -q tests/test_tech_lead_shadow_closure.py
+
+      - name: Validate molecular and process Stack snapshot
         run: |
-          python3 scripts/gates/issue_161_host_rebind.py --selftest
-      - name: Validate zero-context Local Handoff Execution Queue
+          set -euo pipefail
+          python3 scripts/gates/check_git_town_stack_docs.py --selftest
+          python3 scripts/gates/check_git_town_stack_docs.py
+          python3 -m unittest -q tests/test_git_town_stack_docs.py
+
+      - name: Validate one Local Handoff authority
         run: |
+          set -euo pipefail
           python3 scripts/gates/check_local_handoff_execution_queue.py --selftest
           python3 scripts/gates/check_local_handoff_execution_queue.py
+          test ! -e docs/git/local-handoff-execution-queue.json
+
+      - name: Validate Phase-0 readiness and runtime admission
+        run: |
+          set -euo pipefail
+          python3 scripts/gates/check_issue_146_golden_readiness.py --selftest
+          python3 scripts/gates/check_issue_146_golden_readiness.py
+          python3 scripts/gates/check_issue_161_runtime_admission.py --selftest
+          python3 scripts/gates/check_issue_161_runtime_admission.py
+          python3 scripts/gates/issue_161_host_rebind.py --selftest
+
       - name: Execute repository-native contract matrix
         run: |
+          set -euo pipefail
           sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
           sh loop_wiki/code-truth-graph-v2/tests/run-all.sh
           sh tests/agentic-tech-lead-binding/run-all.sh
           python3 scripts/gates/check_issue_140_convergence.py
+
       - name: Compile changed Python gates
         run: |
-          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_issue_161_runtime_admission.py scripts/gates/issue_161_host_rebind.py scripts/gates/check_local_handoff_execution_queue.py scripts/gates/check_agentic_tech_lead_binding.py
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/gates/check_tech_lead_shadow_closure.py \
+            scripts/gates/check_git_town_stack_docs.py \
+            scripts/gates/check_local_handoff_execution_queue.py \
+            scripts/gates/check_local_handoff_queue.py \
+            tests/test_tech_lead_shadow_closure.py \
+            tests/test_git_town_stack_docs.py
