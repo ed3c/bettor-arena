@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Zero-network Stack governance verifier; never executes Git Town. Exit 0/2/64."""
+"""Validate current molecular/process/external-evidence Stack snapshot.
+
+This gate never executes Git Town. Exit 0/2/64.
+"""
+from __future__ import annotations
 
 import argparse
 import copy
@@ -7,341 +11,271 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
-MAIN = "ea8c4a101bcf44ffe54c78ef53da583afa9efad2"
-SCHEMA = "bettor-arena/stack-pr-index/v2"
-SKILL = {
-    "repository": "ed3c/skills-shared",
-    "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
-    "blob": "eb2d915bca3e8a3938625f7d33a10fae95a15769",
-    "path": "skills/git-town-stacked-pr-worker/SKILL.md",
-    "reference_state": "PINNED",
-    "selection_state": "NOT_SELECTED",
+ROOT = Path(__file__).resolve().parents[2]
+INDEX = ROOT / "docs/git/stack-prs.index.json"
+SCHEMA_PATH = ROOT / "docs/git/stack-prs.index.schema.json"
+MONITOR = ROOT / "docs/architecture/tech-lead-shadow-monitor/README.md"
+DOC_INDEX = ROOT / "docs/INDEX.md"
+QUEUE = ROOT / "docs/traceability/local-handoff-execution-queue.json"
+
+MAIN = "4655b18a150716ad7a3a0edbe3201fd2927eef80"
+TREE = "849328ac84c770d5932a16b4a3a9f0946dff8dba"
+SHARED_COMMIT = "86a02a8a79651696b77f5af2c0976939bed5bc84"
+SHARED_BLOB = "714f1b0e3abb6d569f59c0eef18c09318d0886cf"
+EXPECTED_MERGES = {
+    153: "0e27c9898925259b58c136e01fa4de175ad75231",
+    155: "9ec507f685c9f3d0fcf97238d036a22be92fddf5",
+    156: "d45c1bd8e9f1ba9c92c6926173efd59a4dfdcf33",
+    157: "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3",
+    158: "e67a803ba6d12f8141a1bed3a26d9ec928931e35",
+    159: "1970a2a6db3b743a2ad9204bcf506e80dbfd799b",
+    169: "8c911b998fdf77d1abdfa4bb4153b0a7a5eaa9cf",
+    154: MAIN,
 }
-GIT_TOWN = {
-    "binary_state": "ABSENT",
-    "configuration_state": "ABSENT",
-    "live_sync_state": "NOT_EXERCISED",
-    "publication_state": "NOT_EXERCISED",
-    "automation_policy": "POLICY_ADMITTED",
-}
-FILES = """README.md AGENTS.md CLAUDE.md docs/README.md docs/INDEX.md docs/git/README.md docs/git/REPO_PROFILE.md docs/git/STACKED_PRS.md docs/git/WORKER_PROTOCOL.md docs/git/GIT_TOWN_ADMISSION.md docs/git/stack-prs.index.schema.json docs/git/stack-prs.index.json docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md docs/architecture/STATE_MACHINES.md docs/architecture/agent-entrypoints.contract.json docs/traceability/STACK_PR_INDEX.md .arena/contexts/macro.json""".split()
-MARK = {
-    "README.md": [
-        "Git Town Stacked-PR governance",
-        "Directory → State Machine ownership",
-        "RESOLVED_BY_HUMAN",
-    ],
-    "AGENTS.md": [
-        "## Git Town Stacked-PR Worker route",
-        SKILL["path"],
-        "## Completion contract",
-    ],
-    "CLAUDE.md": ["docs/git/REPO_PROFILE.md", SKILL["path"], "Claude Code 不得"],
-    "docs/git/README.md": [
-        "## State Machine",
-        "## Data flow",
-        "Automated admission boundary",
-    ],
-    "docs/git/REPO_PROFILE.md": [
-        "binary_state: ABSENT",
-        "configuration_state: ABSENT",
-        "one_worker_one_worktree: true",
-        "## Rollback boundary",
-    ],
-    "docs/git/STACKED_PRS.md": [
-        "PR #75",
-        "MERGED_TO_MAIN",
-        "PR #76",
-        "PR #77",
-        "RESOLVED_BY_HUMAN",
-        "issue #80",
-    ],
-    "docs/git/WORKER_PROTOCOL.md": [
-        "## Worker State Machine",
-        "## Conflict protocol",
-        "## Rollback boundary",
-    ],
-    "docs/git/GIT_TOWN_ADMISSION.md": [
-        "not currently admitted",
-        ".git-town.toml",
-        "## Unblock criteria",
-    ],
-    "docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md": [
-        "docs/git/",
-        "Git Town Stack State Machine",
-    ],
-    "docs/architecture/STATE_MACHINES.md": [
-        "Git Town Stacked-PR worker State Machine",
-        "MERGED_TO_PARENT",
-    ],
-    "docs/traceability/STACK_PR_INDEX.md": [
-        "Canonical shared Git Town method",
-        "PR #75",
-        "PR #76",
-        "PR #77",
-        "issue #80",
-    ],
-}
-# Home roots are assembled at runtime so this gate does not flag its own source,
-# the same way check_root_coupling.py does it.
-_HOME = "|".join(
-    a + b for a, b in (("/Use", "rs/"), ("/ho", "me/"), ("[A-Za-z]:\\\\Use", "rs\\\\"))
-)
-BAD = [
-    re.compile(x)
-    for x in [
-        r"<[A-Z][A-Z0-9_ -]{2,}>",
-        r"(^|[\s`'\"])(" + _HOME + r")",
-        r"https://[^/\s:@]+:[^/\s@]+@",
-        r"\b(?:ghp_|github_pat_|sk-)[A-Za-z0-9_]{20,}\b",
-    ]
-]
-HEX = re.compile(r"^[0-9a-f]{40}$")
+SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
 class Fatal(Exception):
     pass
 
 
-def read(p):
+def load(path: Path) -> dict[str, Any]:
     try:
-        return p.read_text(encoding="utf-8")
-    except OSError as e:
-        raise Fatal(f"unreadable {p}: {e}")
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise Fatal(f"{path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise Fatal(f"{path}: object required")
+    return value
 
 
-def obj(s, name):
-    try:
-        v = json.loads(s)
-    except json.JSONDecodeError as e:
-        raise Fatal(f"invalid JSON {name}: {e}")
-    if not isinstance(v, dict):
-        raise Fatal(f"object required: {name}")
-    return v
-
-
-def load(root):
-    missing = [x for x in FILES if not (root / x).is_file()]
-    if missing:
-        raise Fatal("missing " + ", ".join(missing))
-    docs = {x: read(root / x) for x in FILES}
-    return {
-        "docs": docs,
-        "index": obj(docs["docs/git/stack-prs.index.json"], "index"),
-        "entry": obj(
-            docs["docs/architecture/agent-entrypoints.contract.json"], "entry"
-        ),
-        "macro": obj(docs[".arena/contexts/macro.json"], "macro"),
-        "config": (root / ".git-town.toml").exists() or (root / ".git-town").exists(),
-        "shadow": (
-            root / ".agents/skills/git-town-stacked-pr-worker/SKILL.md"
-        ).exists(),
-    }
-
-
-def nodes(d):
+def nodes(index: dict[str, Any]) -> list[dict[str, Any]]:
     return [
-        n
-        for s in d.get("stacks", [])
-        if isinstance(s, dict)
-        for n in s.get("nodes", [])
-        if isinstance(n, dict)
+        node
+        for stack in index.get("stacks", [])
+        if isinstance(stack, dict)
+        for node in stack.get("nodes", [])
+        if isinstance(node, dict)
     ]
 
 
-def find(a, key, val):
-    return next((x for x in a if x.get(key) == val), None)
-
-
-def validate(v):
-    e = []
-    docs = v["docs"]
-    d = v["index"]
-    for f, ms in MARK.items():
-        e += [f"MARKER {f}: {m}" for m in ms if m not in docs[f]]
-    for f, s in docs.items():
-        if any(x.search(s) for x in BAD):
-            e.append("UNSAFE " + f)
-    if v["config"]:
-        e.append("FALSE CONFIG")
-    if v["shadow"]:
-        e.append("SHADOW SKILL")
-    r = d.get("repository", {})
-    if d.get("schema") != SCHEMA:
-        e.append("SCHEMA")
+def validate(
+    index: dict[str, Any],
+    schema: dict[str, Any],
+    monitor_text: str,
+    docs_text: str,
+    queue: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    if index.get("schema") != "bettor-arena/stack-pr-index/v3":
+        errors.append("Stack schema drifted")
+    if schema.get("properties", {}).get("schema", {}).get("const") != index.get("schema"):
+        errors.append("Stack schema document disagrees with index")
+    repo = index.get("repository", {})
     if (
-        r.get("full_name"),
-        r.get("repository_id"),
-        r.get("default_branch"),
-        r.get("observed_main_sha"),
-    ) != ("ed3c/bettor-arena", 1330387399, "main", MAIN):
-        e.append("REPO/MAIN")
-    if d.get("shared_skill") != SKILL:
-        e.append("SKILL")
-    if d.get("git_town") != GIT_TOWN:
-        e.append("GIT TOWN ADMISSION")
-    a = nodes(d)
-    ids = [x.get("id") for x in a]
-    br = [x.get("branch") for x in a if x.get("branch") not in (None, "NOT_CREATED")]
+        repo.get("full_name"),
+        repo.get("repository_id"),
+        repo.get("default_branch"),
+        repo.get("observed_main_sha"),
+        repo.get("observed_main_tree"),
+    ) != ("ed3c/bettor-arena", 1330387399, "main", MAIN, TREE):
+        errors.append("repository/main exact subject drifted")
+    if repo.get("origin_relation") != "DIVERGED" or repo.get("origin_issue") != 172:
+        errors.append("dual-origin divergence was hidden")
+    shared = index.get("shared_skill", {})
+    if (
+        shared.get("repository"),
+        shared.get("commit"),
+        shared.get("blob"),
+        shared.get("path"),
+    ) != (
+        "ed3c/skills-shared",
+        SHARED_COMMIT,
+        SHARED_BLOB,
+        "skills/git-town-stacked-pr-worker/SKILL.md",
+    ):
+        errors.append("shared Git Town method identity drifted")
+    git_town = index.get("git_town", {})
+    if (
+        git_town.get("method_state"),
+        git_town.get("binary_state"),
+        git_town.get("configuration_state"),
+        git_town.get("live_no_push_sync_state"),
+        git_town.get("publication_state"),
+    ) != (
+        "IMPLEMENTED",
+        "ABSENT",
+        "ABSENT",
+        "NOT_EXERCISED",
+        "NOT_EXERCISED",
+    ):
+        errors.append("Git Town runtime falsely promoted")
+    if index.get("program") != {
+        "issue": 61,
+        "active_order": 13,
+        "active_issue": 140,
+        "convergence_issue": 68,
+    }:
+        errors.append("PDF program pointer drifted")
+    if index.get("current_process") != {
+        "active": "issue-172",
+        "queue_path": "docs/traceability/local-handoff-execution-queue.json",
+    }:
+        errors.append("current process does not point to #172 canonical queue")
+
+    all_nodes = nodes(index)
+    ids = [node.get("id") for node in all_nodes]
     if len(ids) != len(set(ids)):
-        e.append("DUP ID")
-    if len(br) != len(set(br)):
-        e.append("DUP BRANCH")
-    for x in a:
-        h = x.get("observed_head_sha")
-        rb = x.get("rollback_subject")
-        if h is not None and not HEX.fullmatch(str(h)):
-            e.append("HEAD")
-        if not HEX.fullmatch(str(rb)):
-            e.append("ROLLBACK")
-        if any(
-            not isinstance(p, str) or Path(p).is_absolute() or ".." in Path(p).parts
-            for p in x.get("path_roots", [])
-        ):
-            e.append("PATH")
-    p = find(a, "pr", 75)
-    q = find(a, "issue", 80)
-    if not p or (p.get("publication_state"), p.get("main_presence")) != (
-        "MERGED_TO_MAIN",
-        "ON_MAIN",
+        errors.append("duplicate Stack node id")
+    issue_owners: dict[int, list[str]] = {}
+    pr_owners: dict[int, list[str]] = {}
+    for node in all_nodes:
+        issue = node.get("issue")
+        pr = node.get("pr")
+        if isinstance(issue, int):
+            issue_owners.setdefault(issue, []).append(str(node.get("id")))
+        if isinstance(pr, int):
+            pr_owners.setdefault(pr, []).append(str(node.get("id")))
+        for field in ("head_sha", "merge_commit_sha"):
+            value = node.get(field)
+            if value is not None and not SHA40.fullmatch(str(value)):
+                errors.append(f"{node.get('id')}: invalid {field}")
+        if not SHA40.fullmatch(str(node.get("rollback_subject"))):
+            errors.append(f"{node.get('id')}: invalid rollback subject")
+        for path in node.get("path_roots", []):
+            if Path(path).is_absolute() or ".." in Path(path).parts:
+                errors.append(f"{node.get('id')}: unsafe path root")
+    if any(len(owners) > 1 for owners in pr_owners.values()):
+        errors.append("duplicate PR ownership")
+
+    pr_nodes = {node.get("pr"): node for node in all_nodes if isinstance(node.get("pr"), int)}
+    for pr, merge in EXPECTED_MERGES.items():
+        node = pr_nodes.get(pr)
+        if not node:
+            errors.append(f"PR #{pr} missing from denominator")
+            continue
+        if (
+            node.get("merge_commit_sha"),
+            node.get("state"),
+            node.get("main_presence"),
+        ) != (merge, "MERGED_TO_MAIN", "ON_MAIN"):
+            errors.append(f"PR #{pr} merge/main state drifted")
+        if node.get("relation") == "TRUE_CHILD":
+            errors.append(f"PR #{pr} falsely serialized as true child")
+
+    historical = pr_nodes.get(81)
+    if (
+        not historical
+        or historical.get("relation") != "HISTORICAL"
+        or historical.get("state") != "SUPERSEDED_HISTORICAL"
+        or historical.get("main_presence") != "NOT_ON_MAIN"
     ):
-        e.append("PR75")
-    if not q or (
-        q.get("branch"),
-        q.get("base_branch"),
-        q.get("relation"),
-        q.get("main_presence"),
-    ) != ("feat/git-town-stack-governance-v1", "main", "TRUE_CHILD", "NOT_ON_MAIN"):
-        e.append("ISSUE80")
-    # The duplicate is settled: #76 landed, #77 was closed as a superseded second
-    # implementation of the same module. The pair still has to be named -- an
-    # index that simply forgot the duplicate would look identical to one where it
-    # was resolved -- so the assertion moves from "blocked" to "resolved this way".
-    x = find(a, "pr", 76)
-    if not x or (
-        x.get("issue"),
-        x.get("publication_state"),
-        x.get("main_presence"),
-    ) != (64, "MERGED_TO_MAIN", "ON_MAIN"):
-        e.append("DUP PR")
-    x = find(a, "pr", 77)
-    if not x or (x.get("issue"), x.get("relation"), x.get("publication_state")) != (
-        64,
-        "HISTORICAL",
-        "SUPERSEDED_CANDIDATE",
+        errors.append("PR #81 stale writer was not demoted to historical")
+
+    issue_nodes = {node.get("issue"): node for node in all_nodes if node.get("kind") == "ISSUE_ONLY"}
+    if (
+        issue_nodes.get(172, {}).get("state") != "ACTIVE"
+        or issue_nodes.get(172, {}).get("relation") != "PROCESS_DEPENDENCY"
     ):
-        e.append("DUP PR")
-    c = next(
-        (
-            x
-            for x in d.get("conflicts", [])
-            if isinstance(x, dict) and set(x.get("prs", [])) == {76, 77}
-        ),
-        None,
-    )
-    if not c or (c.get("type"), c.get("state"), c.get("authority")) != (
-        "DUPLICATE_ACTIVE_TERMINAL",
-        "RESOLVED_BY_HUMAN",
-        "HUMAN",
-    ):
-        e.append("CONFLICT")
-    if c and not c.get("resolution"):
-        e.append("CONFLICT RESOLUTION")
-    automation = set(d.get("automation_owned_operations", []))
-    for x in (
-        "semantic conflict resolution with a deterministic winner declared by policy",
-        "remote publication",
-        "merge ship close or delete",
-        "promotion",
-        "rollback",
-    ):
-        if x not in automation:
-            e.append("AUTOMATION")
-    for z in (v["entry"].get("canonical_documents", []), v["macro"].get("common", [])):
-        for x in (
-            "docs/git/README.md",
-            "docs/git/REPO_PROFILE.md",
-            "docs/git/STACKED_PRS.md",
-            "docs/git/stack-prs.index.json",
-        ):
-            if x not in z:
-                e.append("ROUTE")
-    return e
+        errors.append("#172 is not the active process dependency")
+    for issue in (161, 146, 140):
+        node = issue_nodes.get(issue, {})
+        if node.get("state") != "BLOCKED_BY_PREDECESSOR" or node.get("relation") != "PROCESS_DEPENDENCY":
+            errors.append(f"#{issue} predecessor block drifted")
+    if issue_nodes.get(68, {}).get("state") != "FINAL_CONVERGENCE":
+        errors.append("#68 is not final convergence")
+    for issue in (173, 174, 175):
+        if issue_nodes.get(issue, {}).get("relation") != "SIBLING":
+            errors.append(f"#{issue} is not a path-disjoint sibling")
+
+    conflicts = {item.get("id"): item for item in index.get("conflicts", [])}
+    if conflicts.get("pr-81-stale-writer", {}).get("state") != "SUPERSEDED_HISTORICAL":
+        errors.append("PR #81 writer conflict is not resolved historically")
+    if conflicts.get("dual-local-handoff-queues", {}).get("state") != "RESOLVED_IN_CANDIDATE":
+        errors.append("duplicate Local Handoff authority not resolved in candidate")
+
+    if queue.get("current", {}).get("active_item") != "dual-origin-reconciliation":
+        errors.append("Stack index and Local Handoff queue disagree")
+    if "Molecular implementation and evidence index" not in monitor_text:
+        errors.append("human molecular index missing")
+    if "Current process DAG" not in monitor_text:
+        errors.append("human process DAG missing")
+    if "tech-lead-shadow-monitor/README.md" not in docs_text:
+        errors.append("documentation index does not route to closure monitor")
+
+    return errors
 
 
-def check(root):
-    return validate(load(root))
+def selftest(
+    index: dict[str, Any],
+    schema: dict[str, Any],
+    monitor: str,
+    docs: str,
+    queue: dict[str, Any],
+) -> list[str]:
+    failures: list[str] = []
+
+    def case(name: str, mutate, needle: str) -> None:
+        i, s, m, d, q = (
+            copy.deepcopy(index),
+            copy.deepcopy(schema),
+            monitor,
+            docs,
+            copy.deepcopy(queue),
+        )
+        mutated = mutate(i, s, m, d, q)
+        if isinstance(mutated, tuple):
+            i, s, m, d, q = mutated
+        errors = validate(i, s, m, d, q)
+        if not any(needle.lower() in error.lower() for error in errors):
+            failures.append(f"{name}: control did not turn red; errors={errors}")
+
+    case("stale main", lambda i,s,m,d,q: (i["repository"].__setitem__("observed_main_sha","0"*40) or (i,s,m,d,q)), "subject drifted")
+    case("Git Town false live", lambda i,s,m,d,q: (i["git_town"].__setitem__("live_no_push_sync_state","PASS") or (i,s,m,d,q)), "falsely promoted")
+    case("missing PR", lambda i,s,m,d,q: (i["stacks"][0]["nodes"].pop() or (i,s,m,d,q)), "missing from denominator")
+    case("fake true child", lambda i,s,m,d,q: (i["stacks"][0]["nodes"][0].__setitem__("relation","TRUE_CHILD") or (i,s,m,d,q)), "falsely serialized")
+    case("PR81 active again", lambda i,s,m,d,q: (i["stacks"][3]["nodes"][0].__setitem__("state","OPEN") or (i,s,m,d,q)), "stale writer")
+    case("172 complete without receipt", lambda i,s,m,d,q: (i["stacks"][1]["nodes"][0].__setitem__("state","MERGED_TO_MAIN") or (i,s,m,d,q)), "active process")
+    case("174 serialized", lambda i,s,m,d,q: (i["stacks"][2]["nodes"][1].__setitem__("relation","TRUE_CHILD") or (i,s,m,d,q)), "not a path-disjoint sibling")
+    case("duplicate queue unresolved", lambda i,s,m,d,q: (i["conflicts"][1].__setitem__("state","BLOCKED") or (i,s,m,d,q)), "not resolved")
+    case("queue disagreement", lambda i,s,m,d,q: (q["current"].__setitem__("active_item","bettor-runtime-rebind") or (i,s,m,d,q)), "disagree")
+    case("human index missing", lambda i,s,m,d,q: (i,s,m.replace("Molecular implementation and evidence index","gone"),d,q), "human molecular")
+    return failures
 
 
-def selftest(v):
-    if validate(v):
-        raise Fatal("positive failed " + repr(validate(v)))
-
-    def ix(x):
-        return x["index"]
-
-    muts = [
-        lambda x: x.__setitem__("config", True),
-        lambda x: find(nodes(ix(x)), "pr", 75).__setitem__(
-            "main_presence", "NOT_ON_MAIN"
-        ),
-        lambda x: ix(x).__setitem__("conflicts", []),
-        lambda x: [
-            s.__setitem__("nodes", [n for n in s["nodes"] if n.get("issue") != 80])
-            for s in ix(x)["stacks"]
-        ],
-        lambda x: x["docs"].__setitem__(
-            "docs/git/REPO_PROFILE.md",
-            x["docs"]["docs/git/REPO_PROFILE.md"] + "<MAIN_BRANCH>",
-        ),
-        lambda x: x["docs"].__setitem__(
-            "docs/git/REPO_PROFILE.md",
-            x["docs"]["docs/git/REPO_PROFILE.md"] + "https://u:p@example.invalid/r",
-        ),
-        lambda x: find(nodes(ix(x)), "pr", 74)["path_roots"].append("../x"),
-        lambda x: x["docs"].__setitem__(
-            "AGENTS.md",
-            x["docs"]["AGENTS.md"].replace("## Completion contract", "## gone"),
-        ),
-        lambda x: ix(x)["repository"].__setitem__("observed_main_sha", "0" * 40),
-        lambda x: x.__setitem__("shadow", True),
-        lambda x: find(nodes(ix(x)), "pr", 79).__setitem__(
-            "branch", find(nodes(ix(x)), "pr", 78)["branch"]
-        ),
-        lambda x: ix(x)["shared_skill"].__setitem__("selection_state", "SELECTED"),
-        lambda x: ix(x).__setitem__("git_town", {"binary_state": "ADMITTED"}),
-    ]
-    for i, m in enumerate(muts, 1):
-        q = copy.deepcopy(v)
-        m(q)
-        if not validate(q):
-            raise Fatal(f"mutation {i} survived")
-    print(f"SELFTEST PASS Git Town Stack governance: 1 positive, {len(muts)} mutations")
-
-
-def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
-    p.add_argument("--selftest", action="store_true")
-    a = p.parse_args()
-    r = a.root.resolve()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    root = args.root.resolve()
     try:
-        v = load(r)
-        if a.selftest:
-            selftest(v)
-            return 0
-        e = validate(v)
-    except Fatal as x:
-        print("git-town-stack FATAL:", x, file=sys.stderr)
+        index = load(root / INDEX.relative_to(ROOT))
+        schema = load(root / SCHEMA_PATH.relative_to(ROOT))
+        monitor = (root / MONITOR.relative_to(ROOT)).read_text(encoding="utf-8")
+        docs = (root / DOC_INDEX.relative_to(ROOT)).read_text(encoding="utf-8")
+        queue = load(root / QUEUE.relative_to(ROOT))
+    except (Fatal, OSError) as exc:
+        print(f"FATAL: {exc}", file=sys.stderr)
         return 64
-    if e:
-        for x in e:
-            print("GIT-TOWN-STACK-RED", x, file=sys.stderr)
-        return 2
-    print(
-        "PASS Git Town Stack governance: profile, routes, DAG, conflict and automation boundaries"
+    errors = (
+        selftest(index, schema, monitor, docs, queue)
+        if args.selftest
+        else validate(index, schema, monitor, docs, queue)
     )
+    if errors:
+        for error in errors:
+            print(f"GIT-TOWN-STACK-RED: {error}", file=sys.stderr)
+        return 2
+    if args.selftest:
+        print("SELFTEST GREEN: current Stack snapshot controls (10 mutations)")
+    else:
+        print(
+            "PASS: molecular/process Stack snapshot "
+            f"(main={MAIN}, active=#172, merged_prs={len(EXPECTED_MERGES)})"
+        )
     return 0
 
 
