@@ -97,6 +97,15 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     return errors
 
 
+def make_exact_scheduler_binding(packet: dict[str, Any], binding: dict[str, Any]) -> None:
+    runtime = packet["canonical_subjects"]["runtime_env"]
+    binding.setdefault("source", {})["commit"] = runtime["commit"]
+    modules = binding.setdefault("modules", [])
+    if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
+        modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
+    packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
+
+
 def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     failures: list[str] = []
     cases = [
@@ -104,7 +113,7 @@ def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
         ("fake live", lambda p, b: p["evidence_lanes"].__setitem__("bettor_worker_processes", "PASS"), "bettor_worker_processes"),
         ("human admit erased", lambda p, b: p["admission"].__setitem__("git_town_darwin_artifact", "PASS"), "Human Admit"),
         ("binding observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_source_commit", "0" * 40), "observed binding"),
-        ("fake scheduler module", lambda p, b: b.setdefault("modules", []).append({"id": "multi-worker-scheduler"}), "BLOCKED_STALE_BINDING"),
+        ("exact runtime not admitted", make_exact_scheduler_binding, "READY_FOR_LOCAL_CANARY"),
         ("merge authority", lambda p, b: p["admission"].__setitem__("merge_or_ship_authority", True), "merge/ship"),
     ]
     for name, mutate, needle in cases:
