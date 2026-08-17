@@ -1,5 +1,5 @@
 {
-  "content_sha256": "251d148c19ab24cf8102505a1a7d0dee5840f55e127dc66cfb0a5d53c2e228b6",
+  "content_sha256": "41045a0b6d8d00113fb9a3fbb1fdea75394e80743bee861219783a41dd5d9c7b",
   "contexts": [
     {
       "common": [
@@ -393,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "399b972233c1f1e6f74fb159dc5f9d1fb4e9f06e89bfb3f20a61aaff26695026",
+      "context_sha256": "4f5a93052fe472562e67960d33e789a40afb437101255362a3d14e3a6687d001",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -507,7 +507,7 @@
           "path": "docs/git/pdf-terminal-sequence.json"
         },
         {
-          "blob": "75b5c29c80f851b0cdaad03cdcb9ea456318a6e6",
+          "blob": "5005808c69cf9af187d15df0e5f20728179b24bb",
           "mode": "100644",
           "path": "docs/git/stack-prs.index.json"
         },
