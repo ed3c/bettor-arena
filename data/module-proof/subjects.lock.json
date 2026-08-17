@@ -1,7 +1,7 @@
 {
   "composition": "bettor-arena",
-  "composition_lock_sha256": "6bc94a1b6e4fdc5bac4368d0953cb0d3f2c592eeb56b68f7d78782de2cf47dfa",
-  "content_sha256": "76deaf180209933d0e526ea31ac7888b473063f65c1ee9768eeae714b851e891",
+  "composition_lock_sha256": "cf50cf1e724211f6275df5784919b9d8b2fc5b248653b6fdc4466deb2af007e7",
+  "content_sha256": "ca3960a41cb3d1348c0d6bdf67b9cf6aa37a867a3a77ef1ca7206ab2a295ebb2",
   "modules": [
     {
       "closure_sha256": "f72ded76e24fcd7637eac74388b291defc5b405fbd7ef01f844b0eb049147d63",
