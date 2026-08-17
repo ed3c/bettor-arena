@@ -1,5 +1,5 @@
 {
-  "content_sha256": "10f9d2da51ff4620b68fe34f6affca1ef42a1748c3ed0aa59c0af6d2c07f3ab6",
+  "content_sha256": "3ceb2427cc549f13c078704a4fa689927b0cf9d127122d7f691434f492fe4bc8",
   "contexts": [
     {
       "common": [
@@ -393,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "82f9fd8802898ccc9dbd8db702c0b45febbc268fea590d77e20424ee63290413",
+      "context_sha256": "a1af76b345eb4716815289a610462ee37855b992ab3c2c255cd53ad854d1450f",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -482,7 +482,7 @@
           "path": "docs/git/PDF_TERMINAL_SEQUENCE.md"
         },
         {
-          "blob": "37e0514e8d2c45b36b651c3e8b442ca514a5ccf5",
+          "blob": "4edbfc2ebe2c36bd62d11e56770c763c62d6c6e6",
           "mode": "100644",
           "path": "docs/git/README.md"
         },

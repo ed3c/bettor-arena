@@ -170,6 +170,36 @@ python3 scripts/gates/check_issue_140_convergence.py
 
 The actual host rebind apply requires a clean local checkout of the pinned runtime-env subject and an explicit `--runtime-env-root`; the handoff queue leaves only that machine-local root resolution unresolved. Scheduler/process-worktree canary, physical Tech Lead run, and Human terminal admission remain separately resolved operations until their concrete contracts are materialized from the named authorities.
 
+## Data flow
+
+```text
+PDF source proposal + current GitHub/repository facts
+        ↓
+program #61 + machine queue
+        ↓
+active issue/task packet + path lease
+        ↓
+dependency-driven branch relation
+        ↓
+linked worktree and single writer
+        ↓
+implementation + positive/control/mutation
+        ↓
+bounded artifacts + cleanup + rollback receipt
+        ↓
+exact-head GitHub publication checks
+        ↓
+queue advancement candidate
+        ↓
+automated admission
+        ↓
+next active terminal
+        ↓
+#68 final composition/release
+```
+
+Git Town never replaces GitHub publication admission, module proof, LoopX state authority or the automated-admission controller.
+
 ## Evidence states
 
 Keep these distinct:
@@ -188,6 +218,29 @@ FINAL_CONVERGENCE
 ```
 
 No static fixture, synthetic runtime, provider hit, issue UI state, Git Town success, or Forgejo success may proxy a different live/evidence lane.
+
+## Automated admission boundary
+
+The typed automated-admission controller owns:
+
+```text
+Git Town executable and legal admission
+machine-resolvable conflict handling with a declared deterministic winner
+bounded continue / skip / undo declared by the controller contract
+remote publication
+PR retargeting
+merge / ship / close / delete
+provider/model/runtime/credential activation
+scoped queue waiver
+promotion
+rollback
+```
+
+Every operation binds an exact subject, emits a durable receipt and performs remote
+readback. Missing inputs produce `BLOCKED_POLICY`; the Agent does not request a
+routine confirmation prompt. See [`AUTOMATED_ADMISSION.md`](AUTOMATED_ADMISSION.md).
+
+Current queue base is recorded in [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json); GitHub remains current-state authority.
 
 ## Authority boundary
 
