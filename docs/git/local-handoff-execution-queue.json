@@ -4,11 +4,10 @@
     "repository": "ed3c/skills-shared",
     "issue": 313,
     "pr": 314,
-    "branch": "feat/313-local-handoff-queue",
-    "head_commit": "5a8a4a35f93152c6b209c83506f83af3daab0078",
+    "commit": "dbcfdb4df76609822893aeb595e5f8ada8483435",
     "schema_path": "skills/agentic-tech-lead-orchestration/references/local-handoff-queue.schema.json",
     "validator_path": "skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py",
-    "admission_state": "CANDIDATE_UNMERGED"
+    "admission_state": "MERGED_TO_MAIN"
   },
   "subject": {
     "repository": "ed3c/bettor-arena",
