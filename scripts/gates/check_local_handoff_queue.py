@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Thin consumer bridge to the canonical skills-shared Local Handoff queue validator."""
+
 from __future__ import annotations
 
 import argparse
@@ -10,11 +11,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 QUEUE = ROOT / "docs/traceability/local-handoff-execution-queue.json"
 SKILLS_SHARED_COMMIT = "dbcfdb4df76609822893aeb595e5f8ada8483435"
-VALIDATOR_RELATIVE = Path("skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py")
+VALIDATOR_RELATIVE = Path(
+    "skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py"
+)
 
 
 def git_value(repo: Path, *args: str) -> str:
-    proc = subprocess.run(["git", "-C", str(repo), *args], text=True, capture_output=True, check=False)
+    proc = subprocess.run(
+        ["git", "-C", str(repo), *args], text=True, capture_output=True, check=False
+    )
     if proc.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)} failed for {repo}")
     return proc.stdout.strip()
@@ -27,7 +32,9 @@ def validate_skills_shared(root: Path) -> Path:
         raise RuntimeError("canonical Local Handoff validator missing")
     observed = git_value(root, "rev-parse", "HEAD")
     if observed != SKILLS_SHARED_COMMIT:
-        raise RuntimeError(f"skills-shared exact subject mismatch: expected {SKILLS_SHARED_COMMIT}, got {observed}")
+        raise RuntimeError(
+            f"skills-shared exact subject mismatch: expected {SKILLS_SHARED_COMMIT}, got {observed}"
+        )
     if git_value(root, "status", "--porcelain", "--untracked-files=all"):
         raise RuntimeError("skills-shared checkout must be clean")
     return validator
@@ -73,7 +80,9 @@ def main() -> int:
         second = run_canonical_selftests(validator)
         if second != 0:
             return second
-    print(f"PASS: bettor Local Handoff queue bound to skills-shared@{SKILLS_SHARED_COMMIT}")
+    print(
+        f"PASS: bettor Local Handoff queue bound to skills-shared@{SKILLS_SHARED_COMMIT}"
+    )
     return 0
 
 

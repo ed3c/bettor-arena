@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Prepare one Local Handoff queue epoch without executing its active mutation."""
+
 from __future__ import annotations
 
 import argparse
@@ -39,13 +40,16 @@ def main() -> int:
     args = parser.parse_args()
 
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
-    bridge = run([
-        sys.executable,
-        str(BRIDGE),
-        "--skills-shared-root",
-        str(args.skills_shared_root.resolve()),
-        "--selftest",
-    ], cwd=ROOT)
+    bridge = run(
+        [
+            sys.executable,
+            str(BRIDGE),
+            "--skills-shared-root",
+            str(args.skills_shared_root.resolve()),
+            "--selftest",
+        ],
+        cwd=ROOT,
+    )
     if bridge.returncode != 0:
         print(bridge.stdout, end="")
         print(bridge.stderr, end="", file=sys.stderr)
@@ -64,7 +68,9 @@ def main() -> int:
 
     errors: list[str] = []
     if head != subject["commit"]:
-        errors.append(f"consumer head mismatch: expected {subject['commit']}, got {head}")
+        errors.append(
+            f"consumer head mismatch: expected {subject['commit']}, got {head}"
+        )
     if tree != subject["tree"]:
         errors.append(f"consumer tree mismatch: expected {subject['tree']}, got {tree}")
     if dirty:
@@ -87,11 +93,11 @@ def main() -> int:
         "consumer": {"commit": head, "tree": tree, "clean": True},
         "skills_shared": {
             "commit": "dbcfdb4df76609822893aeb595e5f8ada8483435",
-            "validator": "agentic-tech-lead-orchestration/assert_local_handoff_queue.py"
+            "validator": "agentic-tech-lead-orchestration/assert_local_handoff_queue.py",
         },
         "queue_advance": "HUMAN_OWNED",
         "live_execution": "NOT_EXERCISED",
-        "next_epoch_rule": "after active-item PASS, freeze a new exact consumer commit/tree before compiling the next queue epoch"
+        "next_epoch_rule": "after active-item PASS, freeze a new exact consumer commit/tree before compiling the next queue epoch",
     }
     payload = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
     if args.receipt:

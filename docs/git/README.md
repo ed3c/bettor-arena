@@ -2,15 +2,15 @@
 
 ## Role
 
-This directory is the **repository-owned adoption and queue layer** for the canonical shared `git-town-stacked-pr-worker` method.
+This directory is the **repository-owned adoption and queue layer** for canonical shared delivery/orchestration methods.
 
 ```text
-shared Skill
-  = reusable Git Town / stacked-PR procedure and eval contract
+shared Skills
+  = reusable Git Town / stacked-PR / Agentic Tech Lead procedures and eval contracts
 
 docs/git/
   = Bettor repository profile, ordered queue, task/path-lease policy,
-    historical Stack snapshots and runtime admission state
+    Local Handoff Execution Queue, historical Stack snapshots and runtime admission state
 
 Git Town
   = optional admitted local branch hierarchy and no-push synchronization engine
@@ -21,24 +21,25 @@ GitHub
 LoopX
   = canonical task-state authority
 
-Automated admission controller
-  = exact-subject push, merge/ship, queue, provider activation, promotion and rollback authority
+Human / typed admission
+  = semantic conflict, terminal admission, promotion and rollback boundary
 ```
 
-Bettor does not copy a local `skills/git-town-stacked-pr-worker/SKILL.md`.
+Bettor does not copy shared `SKILL.md` bodies. Consumer-specific queue instances stay here.
 
-## Canonical shared method subject
+## Local Handoff authority
+
+The portable handoff procedure is admitted from:
 
 ```text
 repository: ed3c/skills-shared
-commit:     c5750720d960a228a0d9419f28125c09d064e3e1
-blob:       eb2d915bca3e8a3938625f7d33a10fae95a15769
-path:       skills/git-town-stacked-pr-worker/SKILL.md
+commit:     dbcfdb4df76609822893aeb595e5f8ada8483435
+path:       skills/agentic-tech-lead-orchestration/SKILL.md
+schema:     skills/agentic-tech-lead-orchestration/references/local-handoff-queue.schema.json
+validator:  skills/agentic-tech-lead-orchestration/scripts/assert_local_handoff_queue.py
 ```
 
-Current consumer selection: `NOT_SELECTED`.
-
-The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d884bfc720b` resolves this path to the same blob. That proves byte-equivalent source availability, not selection into Bettor's runtime closure.
+The current consumer instance is [`local-handoff-execution-queue.json`](local-handoff-execution-queue.json). It freezes an immutable Bettor subject so the local executor does **not** chase mutable `main` while executing the handoff.
 
 ## Directory map
 
@@ -49,6 +50,7 @@ The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d8
 | [`PDF_TERMINAL_SEQUENCE.md`](PDF_TERMINAL_SEQUENCE.md) | #61/#102 queue owner | full ordered PDF completion queue and directory/data-flow map | human queue view |
 | [`pdf-terminal-sequence.schema.json`](pdf-terminal-sequence.schema.json) | queue contract owner | closed shape for orders 0–25 | machine contract |
 | [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json) | queue owner | active item, prerequisites, paths, branches, acceptance and automation bounds | current reviewed queue |
+| [`local-handoff-execution-queue.json`](local-handoff-execution-queue.json) | local handoff owner | zero-context #161 → #146 → #140 continuation contract | local execution queue |
 | [`STACKED_PRS.md`](STACKED_PRS.md) | Stack topology owner | dependency-driven branch graph and expected branches | human topology view |
 | [`WORKER_PROTOCOL.md`](WORKER_PROTOCOL.md) | task/lease owner | one Worker/worktree/branch/path lease | execution contract |
 | [`GIT_TOWN_ADMISSION.md`](GIT_TOWN_ADMISSION.md) | trusted operator | executable/config/license/SBOM/legal/live gates | mutable admission ledger |
@@ -70,7 +72,7 @@ PDF GAP INVENTORY
 → TASK PACKET + PATH LEASE
 → IMPLEMENT / CONTROL / MUTATION / CLEANUP
 → EXACT-HEAD PUBLICATION CANDIDATE
-→ AUTOMATED ADMISSION
+→ TERMINAL ADMISSION
 → QUEUE ADVANCE
 → FINAL CONVERGENCE #68
 ```
@@ -80,13 +82,45 @@ Current stopping point:
 ```text
 program                        #61
 queue index task               #102
-completed prefix               orders 0–11
-active order                   12
-active issue                   #92
+completed prefix               orders 0–12
+active order                   13
+active terminal                #140 / HUMAN_ADMIT_REQUIRED
+local handoff active item      #161 / runtime rebind + scheduler canary
+local handoff successor        #146 / physical Tech Lead golden run
+terminal handoff successor     #140 / Human admission + typed queue transition
 final convergence              #68
 ```
 
-Queue order and ancestry are separate. Global completion is serial; branch topology follows real byte dependency. A true child consumes unmerged parent bytes. Path-disjoint work starts from the updated `main` after its predecessor lands.
+The local handoff is a continuation **inside** active order 13. It does not create a second PDF terminal and cannot advance order 13 by itself.
+
+### Zero-context local handoff
+
+```text
+IMMUTABLE HANDOFF SUBJECT FROZEN
+→ #161 HOST REBIND CONTRACT SELFTEST
+→ RESOLVE CLEAN LOCAL runtime-env ROOT
+→ REBIND exact runtime-env/profile/workload
+→ SCHEDULER / PROCESS-WORKTREE CANARY
+→ #161 EXIT RECEIPT PASS
+→ #146 PHYSICAL TECH LEAD GOLDEN RUN
+→ LIVE PROVIDER / SOURCE / WORKTREE / SQLITE / FORGE RECEIPTS
+→ #146 EXIT RECEIPT PASS
+→ #140 HUMAN TERMINAL ADMISSION
+→ TYPED PDF QUEUE ADVANCEMENT
+```
+
+Current frozen handoff subject:
+
+```text
+bettor-arena commit  542a935064e06f358d7d890df5d86364bbc20f46
+bettor-arena tree    78a6b573f094f1df7f3537ace551768f70210e51
+runtime-env          77dca3584a4adb1c463c815bdb5ab603eae32b23
+profile              bettor-arena-tech-lead-local
+#161 state           BLOCKED_STALE_BINDING
+consumer canary      NOT_EXERCISED
+```
+
+A local executor starts from the single `ACTIVE` item in `local-handoff-execution-queue.json`. Any `unresolved_operations` must first be resolved from their named canonical source into a concrete argv/cwd/timeout contract. Fake command names are forbidden.
 
 ### Git Town runtime
 
@@ -99,7 +133,7 @@ SHARED_METHOD_PINNED
 → LIVE LOCAL NO-PUSH
 → REPOSITORY EVALS
 → GITHUB PUBLICATION GATE
-→ AUTOMATED ADMISSION
+→ HUMAN / POLICY ADMISSION
 → MERGE / SHIP / ROLLBACK
 ```
 
@@ -108,30 +142,33 @@ Current runtime state:
 ```text
 SHARED_METHOD_PINNED       PASS
 REPO_PROFILE_VALIDATED     IMPLEMENTED
-ORDERED_QUEUE_INDEXED      IMPLEMENTED; active order derived from machine queue
-CONTROLLER_MECHANISM       IMPLEMENTED by PR #133
-PHYSICAL_CONTROLS          PASS: 13 real-repository controls
-GIT_TOWN_EXECUTABLE        ABSENT
+ORDERED_QUEUE_INDEXED      IMPLEMENTED; #140/order 13 ACTIVE
+PHYSICAL_CONTROLS          PASS where separately observed
+GIT_TOWN_EXECUTABLE        ABSENT for the admitted Darwin lane
 GIT_TOWN_CONFIG            ABSENT
 LOCAL_NO_PUSH_SYNC         NOT_EXERCISED
-PUBLICATION                NOT_EXERCISED
-AUTOMATION_POLICY          ADMITTED; exact runtime operation remains subject-bound
-admission mechanism owner  issue #101 / PR #133; executable activation unresolved
+PUBLICATION                NOT_EXERCISED for the physical handoff result
+HUMAN_ADMIT                REQUIRED for Darwin artifact / semantic decisions
 ```
 
-## Inputs and outputs
+## Local handoff command surface
 
-| Stage | Inputs | Output | Failure state |
-|---|---|---|---|
-| Method pin | exact repository/commit/path/blob | immutable method reference | `ABSENT` / `DRIFT` |
-| Repo profile | repository identity + policies | closed profile | `PROFILE_INVALID` |
-| Ordered queue | PDF gaps + issue/PR facts | orders 0–25 | `GAP`, `DUPLICATE`, `ORDER_INVALID` |
-| Task packet | active order, issue, paths, evals, rollback | accepted work packet | `PACKET_INVALID` |
-| Branch graph | current main + byte dependencies | root/sibling/true-child/convergence relation | `STALE`, `UNKNOWN_PARENT`, `PATH_OVERLAP` |
-| Lease | linked worktree + branch + path allowlist | exclusive Worker lease | `LEASE_CONFLICT` |
-| Terminal eval | positive + control + mutation + cleanup | candidate receipt | `FAIL` |
-| Publication | exact head + GitHub checks | review candidate | `BLOCKED`, `NOT_EXERCISED` |
-| Automation edge | evidence + conflict policy + exact-head readback | merge/reject/rollback/waiver receipt | `BLOCKED_POLICY` |
+Repository-owned deterministic entrypoints already known:
+
+```sh
+python3 scripts/gates/issue_161_host_rebind.py --selftest
+python3 scripts/gates/check_issue_161_runtime_admission.py --selftest
+python3 scripts/gates/check_issue_161_runtime_admission.py
+python3 scripts/gates/check_local_handoff_execution_queue.py --selftest
+python3 scripts/gates/check_local_handoff_execution_queue.py
+
+sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
+sh loop_wiki/code-truth-graph-v2/tests/run-all.sh
+sh tests/agentic-tech-lead-binding/run-all.sh
+python3 scripts/gates/check_issue_140_convergence.py
+```
+
+The actual host rebind apply requires a clean local checkout of the pinned runtime-env subject and an explicit `--runtime-env-root`; the handoff queue leaves only that machine-local root resolution unresolved. Scheduler/process-worktree canary, physical Tech Lead run, and Human terminal admission remain separately resolved operations until their concrete contracts are materialized from the named authorities.
 
 ## Data flow
 
@@ -163,7 +200,9 @@ next active terminal
 
 Git Town never replaces GitHub publication admission, module proof, LoopX state authority or the automated-admission controller.
 
-## Stable outcomes
+## Evidence states
+
+Keep these distinct:
 
 ```text
 PASS
@@ -172,93 +211,13 @@ ABSENT
 NOT_IMPLEMENTED
 NOT_EXERCISED
 SKIPPED_BY_POLICY
-MERGED_TO_MAIN
-MERGED_TO_PARENT
+HUMAN_ADMIT_REQUIRED
 ACTIVE
 BLOCKED_BY_PREDECESSOR
 FINAL_CONVERGENCE
-SUPERSEDED_CANDIDATE
-NOT_CREATED
 ```
 
-## Resolved duplicate and current head
-
-PR #76 and PR #77 both implemented issue #64 over overlapping Worker Gateway paths. The owner admitted #76 and closed #77 as `SUPERSEDED_CANDIDATE`.
-
-The conflict remains recorded as `RESOLVED_BY_HUMAN`. Issue #82 and queue order 0 are `COMPLETE`; the active head is issue #92 at order 12. Keeping the #76/#77 record prevents later success from erasing evidence that duplicate writers once existed.
-
-## Public call surfaces
-
-Ordered queue gate:
-
-```sh
-python3 scripts/gates/check_pdf_terminal_sequence.py
-python3 scripts/gates/check_pdf_terminal_sequence.py --selftest
-python3 -m unittest -q tests/test_pdf_terminal_sequence.py
-```
-
-Historical governance gate:
-
-```sh
-python3 scripts/gates/check_git_town_stack_docs.py
-python3 scripts/gates/check_git_town_stack_docs.py --selftest
-python3 -m unittest -q tests/test_git_town_stack_docs.py
-```
-
-Neither gate executes Git Town.
-
-The repository-owned runtime controller has a separate executable gate:
-
-```sh
-sh tests/git-town/run-all.sh
-```
-
-It verifies the typed controller, fail-closed absence lane and 13 physical controls without claiming a Git Town execution.
-
-## Evidence and receipts
-
-Current evidence:
-
-```text
-GitHub base/head/state/check and reachability metadata
-repository bytes
-ordered queue and historical Stack snapshots
-zero-network verifiers
-planted mutations
-typed Git Town controller contracts and 13 physical controls
-```
-
-Not yet available:
-
-```text
-Git Town executable version/checksum/license/SBOM receipt
-admitted .git-town.toml
-dry-run/live local no-push receipt
-publication canary
-runtime rollback receipt
-```
-
-## Allowed changes
-
-- repository profile and Stack/queue policy;
-- issue/PR snapshot refresh;
-- deterministic verifier and planted controls;
-- Agent/document/Context routes;
-- current active terminal bytes under its declared path lease;
-- generated modular projections through admitted workflows.
-
-## Forbidden changes
-
-- local copy or shadow of the shared Skill;
-- future terminal branch before queue activation;
-- `.git-town.toml` before admission;
-- raw shell or arbitrary Git command execution;
-- semantic conflict resolution without a deterministic winner declared by policy;
-- raw push/merge/ship/close/delete outside the admitted controller;
-- remote, credential or permission mutation;
-- provider/runtime/model activation outside its typed policy boundary;
-- production promotion or rollback outside its exact-subject controller;
-- rewriting historical evidence.
+No static fixture, synthetic runtime, provider hit, issue UI state, Git Town success, or Forgejo success may proxy a different live/evidence lane.
 
 ## Automated admission boundary
 
@@ -282,3 +241,7 @@ readback. Missing inputs produce `BLOCKED_POLICY`; the Agent does not request a
 routine confirmation prompt. See [`AUTOMATED_ADMISSION.md`](AUTOMATED_ADMISSION.md).
 
 Current queue base is recorded in [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json); GitHub remains current-state authority.
+
+## Authority boundary
+
+Automation must not infer or perform merge, force-push, issue close, PDF queue advance, provider activation, promotion, rollback, permission change, or semantic-conflict resolution from handoff success. Human/policy-owned transitions require their own typed admission receipt.

@@ -5,6 +5,7 @@ This entrypoint never launches Workers, Git Town, Forgejo, merge, ship, or push.
 It only executes the exact runtime-env sync transaction and then asks the
 repository-owned #161 admission gate whether the consumer became admissible.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -39,7 +40,9 @@ def run(argv: list[str], cwd: Path | None = None) -> dict[str, Any]:
 
 
 def git_value(repo: Path, *args: str) -> str:
-    proc = subprocess.run(["git", "-C", str(repo), *args], text=True, capture_output=True, check=False)
+    proc = subprocess.run(
+        ["git", "-C", str(repo), *args], text=True, capture_output=True, check=False
+    )
     if proc.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)} failed for {repo}")
     return proc.stdout.strip()
@@ -61,10 +64,14 @@ def validate_runtime_root(runtime_root: Path) -> dict[str, str]:
 
 def sync_argv(runtime_cli: Path, mode: str) -> list[str]:
     argv = [
-        str(runtime_cli), "sync",
-        "--profile", PROFILE,
-        "--binding", BINDING,
-        "--workload", WORKLOAD,
+        str(runtime_cli),
+        "sync",
+        "--profile",
+        PROFILE,
+        "--binding",
+        BINDING,
+        "--workload",
+        WORKLOAD,
     ]
     for policy in POLICIES:
         argv += ["--policy", policy]
@@ -94,7 +101,9 @@ def validate_contract() -> list[str]:
     if "--apply" in probe or "--check" in probe:
         errors.append("plan must remain dry-run")
     if "multi-worker-scheduler" in probe:
-        errors.append("module must arrive through profile composition, not argv injection")
+        errors.append(
+            "module must arrive through profile composition, not argv injection"
+        )
     return errors
 
 
@@ -152,13 +161,17 @@ def main() -> int:
     try:
         runtime = validate_runtime_root(args.runtime_env_root)
         receipt["runtime_env"].update({"observed_commit": runtime["commit"]})
-        sync = run(sync_argv(Path(runtime["cli"]), args.mode), cwd=args.runtime_env_root)
+        sync = run(
+            sync_argv(Path(runtime["cli"]), args.mode), cwd=args.runtime_env_root
+        )
         receipt["sync"] = sync
         if sync["exit_code"] != 0:
             receipt["state"] = "SYNC_BLOCKED"
             exit_code = 3
         elif args.mode != "apply":
-            receipt["state"] = "DRY_RUN_COMPLETE" if args.mode == "plan" else "BINDING_CURRENT"
+            receipt["state"] = (
+                "DRY_RUN_COMPLETE" if args.mode == "plan" else "BINDING_CURRENT"
+            )
             exit_code = 0
         else:
             gate = run([sys.executable, str(GATE)], cwd=ROOT)
@@ -168,8 +181,11 @@ def main() -> int:
                 exit_code = 4
             else:
                 gate_text = subprocess.run(
-                    [sys.executable, str(GATE)], cwd=ROOT, text=True,
-                    capture_output=True, check=False,
+                    [sys.executable, str(GATE)],
+                    cwd=ROOT,
+                    text=True,
+                    capture_output=True,
+                    check=False,
                 ).stdout
                 receipt["state"] = (
                     "READY_FOR_LOCAL_CANARY"
