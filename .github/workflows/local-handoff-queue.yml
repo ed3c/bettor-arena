@@ -1,0 +1,79 @@
+name: Local Handoff Queue
+
+on:
+  pull_request:
+    paths:
+      - 'docs/traceability/local-handoff-execution-queue.json'
+      - 'docs/traceability/LOCAL_HANDOFF_EXECUTION.md'
+      - 'scripts/gates/check_local_handoff_queue.py'
+      - 'scripts/gates/prepare_local_handoff.py'
+      - '.github/workflows/local-handoff-queue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout controller candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: controller
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Checkout canonical skills-shared validator
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: ed3c/skills-shared
+          ref: dbcfdb4df76609822893aeb595e5f8ada8483435
+          path: skills-shared
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Checkout frozen Bettor execution subject
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 542a935064e06f358d7d890df5d86364bbc20f46
+          path: bettor-exec
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate shared queue and planted controls
+        working-directory: controller
+        run: |
+          python3 scripts/gates/check_local_handoff_queue.py \
+            --skills-shared-root "$GITHUB_WORKSPACE/skills-shared" \
+            --selftest
+
+      - name: Prove exact-subject local handoff admission
+        working-directory: controller
+        run: |
+          python3 scripts/gates/prepare_local_handoff.py \
+            --skills-shared-root "$GITHUB_WORKSPACE/skills-shared" \
+            --consumer-root "$GITHUB_WORKSPACE/bettor-exec" \
+            --receipt "$RUNNER_TEMP/local-handoff-admission.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ['RUNNER_TEMP']) / 'local-handoff-admission.json'
+          r = json.loads(p.read_text())
+          assert r['state'] == 'READY_FOR_ACTIVE_ITEM_EXECUTION'
+          assert r['live_execution'] == 'NOT_EXERCISED'
+          assert r['queue_advance'] == 'HUMAN_OWNED'
+          assert r['consumer']['commit'] == '542a935064e06f358d7d890df5d86364bbc20f46'
+          PY
+
+      - name: Prove stale consumer subject turns red
+        working-directory: controller
+        run: |
+          set +e
+          python3 scripts/gates/prepare_local_handoff.py \
+            --skills-shared-root "$GITHUB_WORKSPACE/skills-shared" \
+            --consumer-root "$GITHUB_WORKSPACE/controller" >/tmp/stale.out 2>/tmp/stale.err
+          rc=$?
+          set -e
+          test "$rc" -ne 0
+          grep -q 'consumer head mismatch' /tmp/stale.err
