@@ -1,0 +1,82 @@
+name: Apply issue 146 readiness correction
+
+on:
+  push:
+    branches: [feat/146-golden-readiness-v1]
+    paths: ['.github/workflows/one-shot-146-readiness-correction.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: feat/146-golden-readiness-v1
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Align binding checker, README, and exact shared subjects
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          def replace_exact(path, old, new, count=1):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              actual = text.count(old)
+              if actual != count:
+                  raise SystemExit(f'{path}: expected {count} occurrences of {old!r}, got {actual}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          checker = 'scripts/gates/check_agentic_tech_lead_binding.py'
+          replace_exact(checker,
+              '"NOT_IMPLEMENTED",\n        "EXACT_ONLY_WITH_SUBJECT_COVERAGE_READBACK",',
+              '"NOT_EXERCISED",\n        "EXACT_ONLY_WITH_SUBJECT_COVERAGE_READBACK",')
+          replace_exact(checker,
+              '"NOT_IMPLEMENTED",\n        "STRUCTURE_ONLY",',
+              '"NOT_EXERCISED",\n        "STRUCTURE_ONLY",')
+          replace_exact(checker, '"active_issue": 92,', '"active_issue": 140,')
+          replace_exact(checker,
+              '    for key, expected in expected_consumer.items():\n        exact(consumer, key, expected, errors)\n    for key in ("base_commit", "base_tree"):',
+              '    for key, expected in expected_consumer.items():\n        exact(consumer, key, expected, errors)\n    readiness = consumer.get("readiness_subject", {})\n    expected_readiness = {\n        "commit": "e67a803ba6d12f8141a1bed3a26d9ec928931e35",\n        "tree": "ed4188dd0a50bf6906f1fe1c91bbbc710899cc35",\n        "issue": 146,\n        "state": "PHASE_0_READINESS",\n    }\n    if readiness != expected_readiness:\n        errors.append("consumer readiness subject drifted")\n    for key in ("base_commit", "base_tree"):')
+          replace_exact(checker,
+              '    limitation = by_role.get("DETERMINISTIC_GRAPH", {}).get("limitation")\n    if limitation != "The existing Python AST reference adapter is not SCIP.":\n        errors.append("DETERMINISTIC_GRAPH limitation missing")',
+              '    limitation = by_role.get("DETERMINISTIC_GRAPH", {}).get("limitation")\n    if limitation != "SQLite Blindspots and SCIP/LSP adapter contracts are implemented; live SCIP/LSP indexing remains NOT_EXERCISED.":\n        errors.append("DETERMINISTIC_GRAPH limitation missing")\n    structural_limitation = by_role.get("STRUCTURAL_SLICER", {}).get("limitation")\n    if structural_limitation != "Tree-sitter identity/coverage contracts are implemented; live grammar execution remains NOT_EXERCISED.":\n        errors.append("STRUCTURAL_SLICER limitation missing")')
+
+          readme = '.skill-bindings/agentic-tech-lead-orchestration/README.md'
+          replace_exact(readme, '  active acceptance issue: #92', '  active acceptance issue: #140\n  #146 readiness subject: e67a803ba6d12f8141a1bed3a26d9ec928931e35 / ed4188dd0a50bf6906f1fe1c91bbbc710899cc35')
+          replace_exact(readme, '→ SCIP + SQLite exact-subject projection (NOT_IMPLEMENTED)', '→ SQLite Blindspots + SCIP/LSP adapter contracts (IMPLEMENTED; live SCIP/LSP NOT_EXERCISED)')
+          replace_exact(readme, '→ Tree-sitter structural slicing (NOT_IMPLEMENTED)', '→ Tree-sitter identity/coverage contracts (IMPLEMENTED; live grammar execution NOT_EXERCISED)')
+          replace_exact(readme, '| Deterministic graph (`SCIP + SQLite`) | `.arena/modules/code-truth-graph-v2` | `NOT_IMPLEMENTED` |', '| Deterministic graph (`SCIP + SQLite`) | `.arena/modules/code-truth-graph-v2` | contract `IMPLEMENTED`; live SCIP/LSP `NOT_EXERCISED` |')
+          replace_exact(readme, '| Structural slicer (`Tree-sitter`) | `.arena/modules/code-truth-graph-v2` | `NOT_IMPLEMENTED` |', '| Structural slicer (`Tree-sitter`) | `.arena/modules/code-truth-graph-v2` | contract `IMPLEMENTED`; live grammar `NOT_EXERCISED` |')
+
+          receipt_path = Path('docs/traceability/issue-146-golden-readiness.json')
+          receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
+          receipt['skills_shared_subjects'] = [
+              {
+                  'purpose': 'parallel fan-out contract schema consumed by Bettor planner',
+                  'repository': 'ed3c/skills-shared',
+                  'commit': '82a59bc9d253d9d77ea8bbdc493dd3689b423f52',
+                  'path': 'skills/git-town-stacked-pr-worker/references/FAN_OUT_CONTRACT.schema.json',
+                  'blob': 'e00bbb99fdb1a8888ff6fd03ce792254319e2697'
+              },
+              {
+                  'purpose': 'agentic-tech-lead binding candidate identity',
+                  'repository': 'ed3c/skills-shared',
+                  'commit': 'ee7aaa55ab5b779a813f78a266569d6b53ddc7b8',
+                  'tree': '674de1eafe1def98849b316c3df7664955d38caf'
+              }
+          ]
+          receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+          PY
+          rm .github/workflows/one-shot-146-readiness-correction.yml
+          python3 -m py_compile scripts/gates/check_agentic_tech_lead_binding.py scripts/gates/check_issue_146_golden_readiness.py
+          git diff --check
+          git add -A
+          git -c user.name='bettor-arena readiness owner' -c user.email='noreply@github.com' commit -m 'fix(146): converge readiness contracts [skip ci]'
+          git push origin HEAD:feat/146-golden-readiness-v1
