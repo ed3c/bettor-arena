@@ -33,11 +33,22 @@ def validate_skills_shared(root: Path) -> Path:
     return validator
 
 
-def run_shared(validator: Path, selftest: bool) -> int:
-    argv = [sys.executable, str(validator), "--queue", str(QUEUE)]
-    if selftest:
-        argv.append("--selftest")
-    return subprocess.run(argv, cwd=ROOT, check=False).returncode
+def validate_consumer_queue(validator: Path) -> int:
+    return subprocess.run(
+        [sys.executable, str(validator), "--queue", str(QUEUE)],
+        cwd=ROOT,
+        check=False,
+    ).returncode
+
+
+def run_canonical_selftests(validator: Path) -> int:
+    # Planted controls belong to the shared Skill's canonical fixture. Consumer
+    # instances are validated as data and do not fork/copy the shared test logic.
+    return subprocess.run(
+        [sys.executable, str(validator), "--selftest"],
+        cwd=validator.parent,
+        check=False,
+    ).returncode
 
 
 def main() -> int:
@@ -55,11 +66,11 @@ def main() -> int:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 2
 
-    first = run_shared(validator, False)
+    first = validate_consumer_queue(validator)
     if first != 0:
         return first
     if args.selftest:
-        second = run_shared(validator, True)
+        second = run_canonical_selftests(validator)
         if second != 0:
             return second
     print(f"PASS: bettor Local Handoff queue bound to skills-shared@{SKILLS_SHARED_COMMIT}")
