@@ -25,6 +25,7 @@ TREE = "849328ac84c770d5932a16b4a3a9f0946dff8dba"
 SHARED_COMMIT = "86a02a8a79651696b77f5af2c0976939bed5bc84"
 SHARED_BLOB = "714f1b0e3abb6d569f59c0eef18c09318d0886cf"
 EXPECTED_MERGES = {
+    81: "9b4a30e835b22f48a7ee8b3c26a44d89929eb63d",
     153: "0e27c9898925259b58c136e01fa4de175ad75231",
     155: "9ec507f685c9f3d0fcf97238d036a22be92fddf5",
     156: "d45c1bd8e9f1ba9c92c6926173efd59a4dfdcf33",
@@ -169,10 +170,12 @@ def validate(
     if (
         not historical
         or historical.get("relation") != "HISTORICAL"
-        or historical.get("state") != "SUPERSEDED_HISTORICAL"
-        or historical.get("main_presence") != "NOT_ON_MAIN"
+        or historical.get("state") != "MERGED_TO_MAIN"
+        or historical.get("main_presence") != "ON_MAIN"
+        or historical.get("head_sha") != "338c44511636ddd4edea56c493dcef5302135734"
+        or historical.get("merge_commit_sha") != "9b4a30e835b22f48a7ee8b3c26a44d89929eb63d"
     ):
-        errors.append("PR #81 stale writer was not demoted to historical")
+        errors.append("PR #81 merged historical identity drifted")
 
     issue_nodes = {node.get("issue"): node for node in all_nodes if node.get("kind") == "ISSUE_ONLY"}
     if (
@@ -191,9 +194,12 @@ def validate(
             errors.append(f"#{issue} is not a path-disjoint sibling")
 
     conflicts = {item.get("id"): item for item in index.get("conflicts", [])}
-    if conflicts.get("pr-81-stale-writer", {}).get("state") != "SUPERSEDED_HISTORICAL":
-        errors.append("PR #81 writer conflict is not resolved historically")
-    if conflicts.get("dual-local-handoff-queues", {}).get("state") != "RESOLVED_IN_CANDIDATE":
+    if "pr-81-stale-writer" in conflicts:
+        errors.append("merged PR #81 was falsely kept as an active writer conflict")
+    if (
+        conflicts.get("dual-local-handoff-queues", {}).get("state")
+        != "RESOLVED_IN_CANDIDATE"
+    ):
         errors.append("duplicate Local Handoff authority not resolved in candidate")
 
     if queue.get("current", {}).get("active_item") != "dual-origin-reconciliation":
@@ -236,10 +242,10 @@ def selftest(
     case("Git Town false live", lambda i,s,m,d,q: (i["git_town"].__setitem__("live_no_push_sync_state","PASS") or (i,s,m,d,q)), "falsely promoted")
     case("missing PR", lambda i,s,m,d,q: (i["stacks"][0]["nodes"].pop() or (i,s,m,d,q)), "missing from denominator")
     case("fake true child", lambda i,s,m,d,q: (i["stacks"][0]["nodes"][0].__setitem__("relation","TRUE_CHILD") or (i,s,m,d,q)), "falsely serialized")
-    case("PR81 active again", lambda i,s,m,d,q: (i["stacks"][3]["nodes"][0].__setitem__("state","OPEN") or (i,s,m,d,q)), "stale writer")
+    case("PR81 identity drift", lambda i,s,m,d,q: (i["stacks"][3]["nodes"][0].__setitem__("merge_commit_sha", "0"*40) or (i,s,m,d,q)), "PR #81")
     case("172 complete without receipt", lambda i,s,m,d,q: (i["stacks"][1]["nodes"][0].__setitem__("state","MERGED_TO_MAIN") or (i,s,m,d,q)), "active process")
     case("174 serialized", lambda i,s,m,d,q: (i["stacks"][2]["nodes"][1].__setitem__("relation","TRUE_CHILD") or (i,s,m,d,q)), "not a path-disjoint sibling")
-    case("duplicate queue unresolved", lambda i,s,m,d,q: (i["conflicts"][1].__setitem__("state","BLOCKED") or (i,s,m,d,q)), "not resolved")
+    case("duplicate queue unresolved", lambda i,s,m,d,q: (next(c for c in i["conflicts"] if c["id"] == "dual-local-handoff-queues").__setitem__("state","BLOCKED") or (i,s,m,d,q)), "not resolved")
     case("queue disagreement", lambda i,s,m,d,q: (q["current"].__setitem__("active_item","bettor-runtime-rebind") or (i,s,m,d,q)), "disagree")
     case("human index missing", lambda i,s,m,d,q: (i,s,m.replace("Molecular implementation and evidence index","gone"),d,q), "human molecular")
     return failures

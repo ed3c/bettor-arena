@@ -104,10 +104,10 @@ children of #172.
 | issue #175 | `SIBLING` | origin freshness repair | `PLANNED` | confirmed deterministic defect |
 | issue #68 | `CONVERGENCE` | final release/rollback | `FINAL_CONVERGENCE` | not performed |
 
-PR #81 is a historical stale candidate. Its issue #80 is closed, its branch is
-far behind current GitHub `main`, and its path lease overlaps current closure
-surfaces. Preserve the branch for forensic history; do not merge it or treat it
-as the current writer.
+PR #81 is a merged historical governance foundation (`9b4a30e835b22f48a7ee8b3c26a44d89929eb63d`).
+It introduced earlier README/AGENTS/Stack governance, but its machine snapshot
+was not current for the order-13 closure subject. PR #176 refreshes the current
+snapshot; it does not replace or undo PR #81's admitted bytes.
 
 ## Source-proposal problem closure
 
