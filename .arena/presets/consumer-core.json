@@ -5,7 +5,7 @@
   "summary": "Minimum remote-consumer composition for Claude Code and Codex CLI entrypoints, module resolution, Context Capsules, proof controls, and the Bun/TypeScript default-deny MCP runtime.",
   "modules": [
     {"id": "module-catalog", "components": ["proof", "runtime"]},
-    {"id": "arena-core", "components": ["bootstrap", "context", "proof"]},
+    {"id": "arena-core", "components": ["bootstrap", "context", "issue_state_guard", "proof"]},
     {"id": "loop-runtime", "components": ["context", "mcp", "proof", "runtime"]}
   ]
 }
