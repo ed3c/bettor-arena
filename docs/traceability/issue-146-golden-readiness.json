@@ -54,28 +54,40 @@
   "command_matrix": [
     {
       "class": "planner_contract",
-      "argv": ["sh", "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh"],
+      "argv": [
+        "sh",
+        "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh"
+      ],
       "cwd": ".",
       "timeout_seconds": 120,
       "output_budget_bytes": 1048576
     },
     {
       "class": "blindspots_contract",
-      "argv": ["sh", "loop_wiki/code-truth-graph-v2/tests/run-all.sh"],
+      "argv": [
+        "sh",
+        "loop_wiki/code-truth-graph-v2/tests/run-all.sh"
+      ],
       "cwd": ".",
       "timeout_seconds": 120,
       "output_budget_bytes": 1048576
     },
     {
       "class": "binding_contract",
-      "argv": ["sh", "tests/agentic-tech-lead-binding/run-all.sh"],
+      "argv": [
+        "sh",
+        "tests/agentic-tech-lead-binding/run-all.sh"
+      ],
       "cwd": ".",
       "timeout_seconds": 120,
       "output_budget_bytes": 1048576
     },
     {
       "class": "parent_queue_guard",
-      "argv": ["python3", "scripts/gates/check_issue_140_convergence.py"],
+      "argv": [
+        "python3",
+        "scripts/gates/check_issue_140_convergence.py"
+      ],
       "cwd": ".",
       "timeout_seconds": 60,
       "output_budget_bytes": 524288
@@ -116,5 +128,20 @@
     "physical_golden_run": "NOT_EXERCISED",
     "parent_issue_140": "HUMAN_ADMIT_REQUIRED",
     "queue_advance": "BLOCKED"
-  }
+  },
+  "skills_shared_subjects": [
+    {
+      "purpose": "parallel fan-out contract schema consumed by Bettor planner",
+      "repository": "ed3c/skills-shared",
+      "commit": "82a59bc9d253d9d77ea8bbdc493dd3689b423f52",
+      "path": "skills/git-town-stacked-pr-worker/references/FAN_OUT_CONTRACT.schema.json",
+      "blob": "e00bbb99fdb1a8888ff6fd03ce792254319e2697"
+    },
+    {
+      "purpose": "agentic-tech-lead binding candidate identity",
+      "repository": "ed3c/skills-shared",
+      "commit": "ee7aaa55ab5b779a813f78a266569d6b53ddc7b8",
+      "tree": "674de1eafe1def98849b316c3df7664955d38caf"
+    }
+  ]
 }
