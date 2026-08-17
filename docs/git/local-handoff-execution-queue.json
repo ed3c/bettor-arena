@@ -11,9 +11,9 @@
   },
   "subject": {
     "repository": "ed3c/bettor-arena",
-    "commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
-    "tree": "67dfdc3e7439715b726859a255d77fb54a3cdf02",
-    "rollback_commit": "da527df670ebaa798b68b9ed02428b4f7392177a"
+    "commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
+    "tree": "37f94e8165e01ef53ccdbcf45c519d63ad5f5f82",
+    "rollback_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443"
   },
   "authority": {
     "automation_forbidden": ["merge", "force_push", "issue_close", "queue_advance", "provider_activation", "semantic_conflict_resolution"],
@@ -27,8 +27,8 @@
       "state": "ACTIVE",
       "entry": {
         "predecessor": null,
-        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
-        "required_capabilities": ["local-runtime-env-checkout", "runtime-env-consumer-binding-generator", "multi-worker-scheduler", "process-worktree-runtime", "local-only-runtime-inputs"]
+        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
+        "required_capabilities": ["local-runtime-env-checkout", "runtime-env-consumer-binding-generator", "multi-worker-scheduler", "process-worktree-runtime", "exact-bettor-tech-lead-profile", "local-only-runtime-inputs"]
       },
       "runtime_lane": {
         "class": "LOCAL_RUNTIME",
@@ -37,7 +37,7 @@
           {"argv": ["python3", "scripts/gates/check_issue_161_runtime_admission.py"], "cwd": ".", "timeout_seconds": 120, "environment_names": []}
         ],
         "unresolved_operations": [
-          {"operation_id": "resolve-runtime-env-consumer-rebind", "resolver_source": "ed3c/runtime-env exact admitted subject, consumer binding generator docs, and nearest runtime README", "required_output": "CONCRETE_COMMAND_CONTRACT"},
+          {"operation_id": "resolve-runtime-env-consumer-rebind", "resolver_source": "ed3c/runtime-env exact admitted subject, consumer binding generator docs, nearest runtime README, and #161 exact Bettor Tech Lead profile requirements", "required_output": "CONCRETE_COMMAND_CONTRACT"},
           {"operation_id": "resolve-scheduler-process-worktree-canary", "resolver_source": "ed3c/runtime-env multi-worker-scheduler module/profile/workload contracts and #161 exact-subject admission packet", "required_output": "CONCRETE_COMMAND_CONTRACT"}
         ],
         "live_evidence_required": true
@@ -46,7 +46,7 @@
         "path": "data/local-handoff/issue-161-runtime-admission.json",
         "schema": "bettor-arena/local-handoff/issue-161-runtime-admission/v1",
         "required_states": ["PASS", "NOT_EXERCISED", "HUMAN_ADMIT_REQUIRED"],
-        "forbidden_promotions": ["runtime_env_synthetic_scheduler_to_bettor_consumer_live_pass", "stale_binding_to_ready_for_local_canary", "git_town_human_admit_to_automatic_pass", "issue_ui_state_to_completion"]
+        "forbidden_promotions": ["runtime_env_synthetic_scheduler_to_bettor_consumer_live_pass", "stale_binding_to_ready_for_local_canary", "wrong_bettor_profile_to_ready_for_local_canary", "git_town_human_admit_to_automatic_pass", "issue_ui_state_to_completion"]
       },
       "exit": {"requires_receipt": true, "required_verdict": "PASS", "cleanup_required": true},
       "next": "issue-146-physical-tech-lead-golden-run"
@@ -57,7 +57,7 @@
       "state": "BLOCKED_BY_PREDECESSOR",
       "entry": {
         "predecessor": "issue-161-runtime-rebind-and-canary-admission",
-        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
         "required_capabilities": ["admitted-local-worker-runtime", "grepai-live-session", "scip-or-lsp-exact-workspace", "tree-sitter-exact-grammar", "serena-live-session", "sqlite-local-ledger", "linked-git-worktrees", "local-forgejo", "repository-native-test-matrix"]
       },
       "runtime_lane": {
@@ -88,7 +88,7 @@
       "state": "BLOCKED_BY_PREDECESSOR",
       "entry": {
         "predecessor": "issue-146-physical-tech-lead-golden-run",
-        "required_subject_commit": "6c934f957a9ac992ab71f1515ddebd4da3597443",
+        "required_subject_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d",
         "required_capabilities": ["exact-subject-aggregate-receipts", "human-admission", "pdf-terminal-queue-controller"]
       },
       "runtime_lane": {
