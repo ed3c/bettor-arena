@@ -1,11 +1,4 @@
 {
-  "schema_version": "agentic-tech-lead/local-handoff-queue/v1",
-  "subject": {
-    "repository": "ed3c/bettor-arena",
-    "commit": "542a935064e06f358d7d890df5d86364bbc20f46",
-    "tree": "78a6b573f094f1df7f3537ace551768f70210e51",
-    "rollback_commit": "1d08d76ccf890b8f1bc706041adec12eb7fb781d"
-  },
   "authority": {
     "automation_forbidden": [
       "force_push",
@@ -17,7 +10,7 @@
     ],
     "human_owned": [
       "destructive_rollback",
-      "git_town_darwin_artifact_admission",
+      "dual_origin_reconciliation_admission",
       "issue_completion",
       "merge",
       "promotion",
@@ -26,68 +19,69 @@
     ]
   },
   "current": {
-    "active_item": "bettor-runtime-rebind",
+    "active_item": "dual-origin-reconciliation",
     "state": "ACTIVE"
   },
   "items": [
     {
-      "id": "bettor-runtime-rebind",
-      "task_ref": "ed3c/bettor-arena#161",
-      "state": "ACTIVE",
       "entry": {
         "predecessor": null,
-        "required_subject_commit": "542a935064e06f358d7d890df5d86364bbc20f46",
         "required_capabilities": [
-          "clean-bettor-execution-worktree@542a935064e06f358d7d890df5d86364bbc20f46",
-          "runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23",
-          "runtime-profile:bettor-arena-tech-lead-local",
-          "skills-shared@dbcfdb4df76609822893aeb595e5f8ada8483435"
-        ]
-      },
-      "runtime_lane": {
-        "class": "LOCAL_HOST",
-        "commands": [
-          {
-            "argv": [
-              "python3",
-              "scripts/gates/issue_161_host_rebind.py",
-              "--selftest"
-            ],
-            "cwd": "frozen-bettor-execution-worktree",
-            "timeout_seconds": 60,
-            "environment_names": []
-          }
+          "github-publication-subject@4655b18a150716ad7a3a0edbe3201fd2927eef80",
+          "observed-local-forgejo-main",
+          "exact-three-ref-ancestry",
+          "clean-reconciliation-worktree",
+          "dual-origin-delivery-contract"
         ],
-        "unresolved_operations": [
-          {
-            "operation_id": "resolve-local-runtime-env-root-and-apply-command",
-            "resolver_source": "in the frozen bettor execution worktree, bind an absolute clean checkout of runtime-env@77dca3584a4adb1c463c815bdb5ab603eae32b23 and materialize scripts/gates/issue_161_host_rebind.py --runtime-env-root <absolute-root> --mode apply --receipt <host-private-receipt>",
-            "required_output": "CONCRETE_COMMAND_CONTRACT"
-          }
-        ],
-        "live_evidence_required": true
+        "required_subject_commit": "4655b18a150716ad7a3a0edbe3201fd2927eef80"
       },
+      "exit": {
+        "cleanup_required": true,
+        "required_verdict": "PASS",
+        "requires_receipt": true
+      },
+      "id": "dual-origin-reconciliation",
+      "next": null,
       "receipt": {
-        "path": "host-private/issue-161-rebind.json",
-        "schema": "bettor-arena/issue-161-host-rebind/v1",
+        "forbidden_promotions": [
+          "observed_divergence_to_reconciled",
+          "github_main_to_local_implementation_authority",
+          "forgejo_main_to_github_publication_authority",
+          "blind_merge_or_pull_to_semantic_resolution",
+          "issue_closed_to_origin_equivalence",
+          "documentation_pass_to_live_receipt"
+        ],
+        "path": "host-private/issue-172-dual-origin-reconciliation.json",
         "required_states": [
           "PASS",
+          "FAIL",
+          "ABSENT",
           "NOT_EXERCISED",
           "HUMAN_ADMIT_REQUIRED"
         ],
-        "forbidden_promotions": [
-          "dry-run-to-live-pass",
-          "github-ci-to-local-pass",
-          "sync-success-to-worker-pass",
-          "issue-closed-to-execution-pass"
+        "schema": "bettor-arena/local-handoff/dual-origin-reconciliation/v1"
+      },
+      "runtime_lane": {
+        "class": "LOCAL_FORGE",
+        "commands": [],
+        "live_evidence_required": true,
+        "unresolved_operations": [
+          {
+            "operation_id": "resolve-dual-origin-reconciliation-command-contract",
+            "required_output": "CONCRETE_COMMAND_CONTRACT",
+            "resolver_source": "ed3c/bettor-arena#172 plus docs/integration/CROSS_REPO_INTEGRATION.md private GitHub-to-local-Forgejo loop and exact host-observed local/forgejo/github refs"
+          }
         ]
       },
-      "exit": {
-        "requires_receipt": true,
-        "required_verdict": "PASS",
-        "cleanup_required": false
-      },
-      "next": null
+      "state": "ACTIVE",
+      "task_ref": "ed3c/bettor-arena#172"
     }
-  ]
+  ],
+  "schema_version": "agentic-tech-lead/local-handoff-queue/v1",
+  "subject": {
+    "commit": "4655b18a150716ad7a3a0edbe3201fd2927eef80",
+    "repository": "ed3c/bettor-arena",
+    "rollback_commit": "8c911b998fdf77d1abdfa4bb4153b0a7a5eaa9cf",
+    "tree": "849328ac84c770d5932a16b4a3a9f0946dff8dba"
+  }
 }
