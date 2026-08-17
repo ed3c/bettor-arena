@@ -2,7 +2,7 @@
   "schema": "bettor-arena/origin-status/v1",
   "logical_source": "ed3c/bettor-arena",
   "release_manifest": ".arena/locks/bettor-arena.lock.json",
-  "release_manifest_sha256": "f313cbefc6168f615d2b16227f5597bf509479d6548a020494f5510a4d4ed9dc",
+  "release_manifest_sha256": "c4ab85e4acb5a1ef5ba72f6c5dd5d5594bfdf6cc015d107c40c1214ffcfaa619",
   "offline_contract": "PASS",
   "origins": [
     {
@@ -33,5 +33,5 @@
     "mode": null,
     "note": "Two PASS origin receipts are required."
   },
-  "content_sha256": "2e20c0589cb02b5bca5cadbcfd99c75d0a4c1b50176a1908e6acd3763ab37667"
+  "content_sha256": "c34db8731c135665e03ed5f8a40662a9edc32f14b55ef7c3e34a08d677b91427"
 }
