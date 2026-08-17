@@ -65,4 +65,5 @@ jobs:
           gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "Issue-state guard restored OPEN because repository authority still marks this issue incomplete.\n\n- closed-event subject: issue #$ISSUE_NUMBER / node $EVENT_ID\n- repository authority: main@$MAIN_SHA\n- machine queue: $ACTIVE\n- reason: $REASON\n- evidence ceiling: issue UI state cannot proxy terminal completion, live provider execution, physical Worker fan-out, Git Town/Forgejo execution, queue advancement, or release admission.\n\nNo queue state, provider state, merge, promotion, rollback, or completion state was mutated by this guard."
       - name: Confirm no-action disposition
         if: steps.plan.outputs.decision == 'NO_ACTION'
-        run: echo 'NO_ACTION: closed issue is not protected by repository authority.'
+        run: |
+          echo 'NO_ACTION: closed issue is not protected by repository authority.'
