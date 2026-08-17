@@ -203,8 +203,6 @@ Bettor does **not** copy a local same-name `SKILL.md`. It owns the repository pr
 
 The repository's current shared-Skills binding pins `b3c722da1c40301b0a12e0ef99848d884bfc720b`; that tree contains the same Git blob `eb2d915bca3e8a3938625f7d33a10fae95a15769` at the path above. This is byte-equivalence evidence for the method reference, not runtime selection.
 
-The repository's current shared-Skills binding pins `b3c722da1c40301b0a12e0ef99848d884bfc720b`; that tree contains the same Git blob `eb2d915bca3e8a3938625f7d33a10fae95a15769` at the path above. This is byte-equivalence evidence for the method reference, not runtime selection.
-
 Current admission:
 
 ```text

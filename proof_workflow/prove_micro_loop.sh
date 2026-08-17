@@ -99,7 +99,7 @@ prove_harness selftest-good-hollow "$F/selftest.sh" \
 # --- deterministic harness: the full T0 the loop iterates against ------------
 prove_harness verify-t0 "$F/verify.sh" \
   "sandbox -> quality:fast + tests + migrate + build + operator + validator + governed-baseline byte compare -> exit" \
-  -- sh "$F/verify.sh"
+  -- bash "$F/verify.sh"
 
 # --- the stages trigger.sh drives, hashed because only it can fire them ------
 # Both were found by the control group, not by reading: removing either changes

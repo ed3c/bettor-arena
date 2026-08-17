@@ -85,13 +85,6 @@
     },
     {
       "components": [
-        "contract",
-        "gate"
-      ],
-      "id": "parallel-tech-lead"
-    },
-    {
-      "components": [
         "proof",
         "runtime"
       ],

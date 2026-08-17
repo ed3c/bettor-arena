@@ -1,8 +1,8 @@
 {
   "claude_code": "NOT_EXERCISED",
   "codex_cli": "NOT_EXERCISED",
-  "content_sha256": "006c6dd48e8e75360a83934aa3799661dbe2d982b69fae64ed2200b0e5efa2ec",
-  "context_lock_sha256": "fa633b71e2045d6ed8112ae286bafd10302ab96d19412ae22a230a62f7a1a3bc",
+  "content_sha256": "f969acdd399f3c762add4bf79faf9ec4840fa4fc1c34b0c5aab7b8de7dc5a4c4",
+  "context_lock_sha256": "4960fee37ef657d52e3f8a8aa8951357d3957b41de6da4e5af4ec22e33a0ac5c",
   "note": "Fixed driver commands and shared capsule bytes are validated offline; live subscription carriers require host-owned sessions.",
   "offline_contract": "PASS",
   "schema": "bettor-arena/driver-parity-receipt/v1"

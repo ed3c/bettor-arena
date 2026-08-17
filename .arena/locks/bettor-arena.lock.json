@@ -19,7 +19,6 @@
     "knowledge-provider.live-canary/v1": "knowledge-providers",
     "knowledge-provider.memory-proposal/v1": "knowledge-providers",
     "knowledge-provider.query/v1": "knowledge-providers",
-    "loopx.parallel-tech-lead-adoption/v1": "parallel-tech-lead",
     "notebooklm.harvest/v1": "notebooklm",
     "repo-wiki.projection/v1": "openwiki",
     "seed-repo.build/v1": "perfect-seed-factory",
@@ -29,7 +28,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "281a976bca7ed36b40e5d51ae3e73f0291833c584aefdc25048feb663a738aa0",
+  "content_sha256": "481ee31bd0018c22919b3a32232a5b103b9f6f2b723047a93762723094e0b9be",
   "modules": [
     {
       "components": [
@@ -176,18 +175,6 @@
     },
     {
       "components": [
-        "contract",
-        "gate"
-      ],
-      "id": "parallel-tech-lead",
-      "interface_version": "1.0.0",
-      "manifest_sha256": "a697ba7c6ba9764e20e98af1143711cccf8cf105cc2bb3c9b3b786bbb7e4e3e1",
-      "provides": [
-        "loopx.parallel-tech-lead-adoption/v1"
-      ]
-    },
-    {
-      "components": [
         "proof",
         "runtime"
       ],
@@ -237,8 +224,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "626b6353a196e12b45a9cb5e42a8743075a2651725e006655cc0c07c9a322854",
-  "requirements_sha256": "9223c2a60e34579e6ef67c7b9db7fc37ae7dd42f7fad3d95a421ce2ba69cac28",
+  "ownership_sha256": "254d39dfab31ff3bb69593af23645d2ce6e2c1f05f23daaa288b1a3a05ef0e47",
+  "requirements_sha256": "382ca8031c31c3c1780a09bbef55993aa19de413757716689181174cf907db91",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 2071
+  "tracked_files": 2063
 }
