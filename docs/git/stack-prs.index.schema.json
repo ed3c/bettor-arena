@@ -14,10 +14,10 @@
     "program",
     "stacks",
     "conflicts",
-    "human_owned_operations"
+    "automation_owned_operations"
   ],
   "properties": {
-    "schema": {"const": "bettor-arena/stack-pr-index/v1"},
+    "schema": {"const": "bettor-arena/stack-pr-index/v2"},
     "observed_at": {"type": "string", "format": "date-time"},
     "authority": {
       "type": "object",
@@ -56,13 +56,13 @@
     "git_town": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["binary_state", "configuration_state", "live_sync_state", "publication_state", "human_admit"],
+      "required": ["binary_state", "configuration_state", "live_sync_state", "publication_state", "automation_policy"],
       "properties": {
         "binary_state": {"enum": ["ABSENT", "CANDIDATE", "ADMITTED"]},
         "configuration_state": {"enum": ["ABSENT", "CANDIDATE", "ADMITTED"]},
         "live_sync_state": {"enum": ["NOT_EXERCISED", "FAIL", "PASS"]},
         "publication_state": {"enum": ["NOT_EXERCISED", "FAIL", "PASS"]},
-        "human_admit": {"enum": ["NOT_PERFORMED", "ADMITTED", "REJECTED"]}
+        "automation_policy": {"enum": ["POLICY_ADMITTED", "POLICY_DISABLED"]}
       }
     },
     "program": {
@@ -77,7 +77,7 @@
     },
     "stacks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stack"}},
     "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
-    "human_owned_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+    "automation_owned_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
   },
   "$defs": {
     "check": {
@@ -92,7 +92,7 @@
     "node": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "kind", "issue", "pr", "branch", "base_branch", "observed_head_sha", "relation", "publication_state", "main_presence", "mergeability", "checks", "path_roots", "rollback_subject", "human_boundary"],
+      "required": ["id", "kind", "issue", "pr", "branch", "base_branch", "observed_head_sha", "relation", "publication_state", "main_presence", "mergeability", "checks", "path_roots", "rollback_subject", "automation_boundary"],
       "properties": {
         "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
         "kind": {"enum": ["ISSUE_ONLY", "PULL_REQUEST"]},
@@ -108,7 +108,7 @@
         "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
         "path_roots": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "not": {"pattern": "(^/|(^|/)\\.\\.(/|$))"}}},
         "rollback_subject": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-        "human_boundary": {"type": "string", "minLength": 1}
+        "automation_boundary": {"type": "string", "minLength": 1}
       }
     },
     "stack": {

@@ -24,7 +24,6 @@
     "docs/knowledge-providers/evals/contracts/eval-report.schema.json",
     "docs/knowledge-providers/evals/contracts/participant.schema.json",
     "docs/knowledge-providers/evals/contracts/subject.schema.json",
-    "docs/knowledge-providers/evals/participants/code-graph-rag.json",
     "docs/knowledge-providers/evals/participants/exact-search-control.json",
     "docs/knowledge-providers/evals/participants/grepai.json",
     "docs/knowledge-providers/evals/participants/mem0.json",

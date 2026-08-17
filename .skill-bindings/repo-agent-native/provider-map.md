@@ -10,7 +10,7 @@ The binding chooses capabilities first and products second. Products are replace
 | semantic candidates | GrepAI | declared in Claude/Codex project MCP | local meaning-based search and call candidates | host executable is not pinned; empty result is not absence |
 | bounded Python context | repo-context-pack | repo-owned frozen `uv` project | source-bound, deterministic package for Python analysis | partial language/domain coverage |
 | symbol/reference/diagnostics | Serena | exact Git commit in both MCP surfaces | language-aware symbols and diagnostics | candidate/edit plan until source/workspace readback; live backend unexercised |
-| cross-language graph impact | Code-Graph-RAG candidate | not configured | Tree-sitter/Memgraph graph, semantic/structural/data-flow tools | current MCP also exposes write/delete/wipe/index operations and external stores; requires a read-only admission wrapper |
+| cross-language impact evidence | SCIP/LSP + Tree-sitter + SQLite Blindspots loop | subject-bound contracts; live coverage separately evidenced | compiler/symbol facts plus structural slices with direct source readback | incomplete/stale/unsupported coverage remains `UNKNOWN`; SQLite is rebuildable evidence, not source authority |
 | user/project/session memory | Mem0 candidate | not configured | scoped long-term memory and cross-session retrieval | requires retention, provenance, redaction, conflict, expiry, and writeback policy; memory never overrides repository authority |
 
 ## Why the four products are not one “brain”
@@ -20,7 +20,7 @@ They answer different questions:
 ```text
 GrepAI              where might relevant code be?
 Serena              what symbol/reference/diagnostic structure does the language workspace expose?
-Code graph          what multi-file or cross-language edges are candidate impacts?
+Blindspots lenses   which multi-file/cross-language impacts are corroborated or still unknown?
 Memory              what prior preference, decision, incident, or hypothesis may guide search?
 ```
 
@@ -31,7 +31,7 @@ All four feed candidates or hints into the same source-verification procedure. N
 1. Use exact source discovery first or as the universal fallback.
 2. Use GrepAI when identifiers are unknown and meaning-based retrieval reduces search cost.
 3. Use Serena when symbol completeness, references, diagnostics, or bounded symbol edits matter.
-4. Admit a graph provider only with exact parser/language/subject coverage, freshness receipts, store isolation, and a read-only tool surface for analysis sessions.
+4. For impact analysis, require exact subject identity, SCIP/LSP and Tree-sitter coverage declarations, SQLite evidence provenance, and direct source readback. Do not revive Code-Graph-RAG as an active provider.
 5. Admit memory read-only before enabling writeback. Every memory needs scope, provenance, timestamp, retention/expiry, redaction class, and current-authority validation.
 6. Keep the provider outputs separate so agreement is observable rather than collapsed into one untraceable summary.
 
@@ -45,21 +45,9 @@ A consumer may replace a provider without changing the shared Skill when it pres
 
 Replacement is not based on feature count. Compare language coverage, subject identity, incremental freshness, offline/privacy model, read/write surface, operational dependencies, deterministic exports, negative controls, and measured task outcomes.
 
-## Admission gates for Code-Graph-RAG
+## Code-Graph-RAG retirement
 
-Before adding it to `.mcp.json` or `.codex/config.toml`:
-
-```text
-pin repository/package/image identity
-isolate Memgraph/Qdrant per repository or namespace
-record parser/language/path coverage and graph subject
-expose read-only tools only in normal Agent sessions
-block delete_project, wipe_database, index_repository, write_file,
-  surgical_replace_code, and structural_replace behind explicit Human Admit
-verify FOUND / NO_FLOW / UNKNOWN semantics and coverage gaps
-run A/B against current GrepAI + Serena + direct-read pipeline
-verify cleanup, persistence, storage, secrets, and network policy
-```
+Code-Graph-RAG is retained only as historical `REJECTED / ABSENT` evidence. It must not be added to `.mcp.json`, `.codex/config.toml`, provider evaluation participants, runtime activation, or queue prerequisites. Cross-module impact uses the source/SCIP/LSP/Tree-sitter/SQLite Blindspots path, with incomplete coverage remaining `UNKNOWN`.
 
 ## Admission gates for Mem0
 
@@ -78,4 +66,4 @@ A/B memory-conflict, stale-memory, cross-project leakage, and no-memory fallback
 
 ## Current decision
 
-Keep GrepAI, repo-context-pack, and Serena as configured candidate providers. Keep Code-Graph-RAG and Mem0 absent until their child admission issues produce deterministic controls and current receipts.
+Keep GrepAI, repo-context-pack, and Serena as configured candidate providers. Code-Graph-RAG is retired from the active route and remains historical `REJECTED / ABSENT`; Mem0 remains absent until its admission work produces deterministic controls and current receipts.

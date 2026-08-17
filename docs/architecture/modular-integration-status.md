@@ -140,7 +140,7 @@ all required Context Capsule paths are exact tracked files
 all selected module proof/control/mutation subjects are generated
 all applicable exact-head checks pass
 remaining live/non-live states are named
-Human Admit is explicit
+automated admission is explicit
 ```
 
 The complete PDF architecture is not yet admitted. Its principal mechanism leaves now exist; the remaining blockers are strict queue acceptance from #92 onward, final module selection, exact-subject proof/control/mutation aggregation, live host/provider/runtime canaries, origin receipt refresh and #68 release/rollback admission.

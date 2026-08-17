@@ -22,6 +22,7 @@
 - [`git/STACKED_PRS.md`](git/STACKED_PRS.md) — stacked-PR construction, retarget and land order.
 - [`git/WORKER_PROTOCOL.md`](git/WORKER_PROTOCOL.md) — what a Worker session may and may not do to a Stack.
 - [`git/GIT_TOWN_ADMISSION.md`](git/GIT_TOWN_ADMISSION.md) — admission state of the Git Town binary itself.
+- [`git/AUTOMATED_ADMISSION.md`](git/AUTOMATED_ADMISSION.md) — standing exact-subject authority for automated delivery, queue, provider and release operations.
 - [`git/stack-prs.index.json`](git/stack-prs.index.json) — machine-readable Stack topology, checked by `scripts/gates/check_git_town_stack_docs.py`.
 - [`integration/CROSS_REPO_INTEGRATION.md`](integration/CROSS_REPO_INTEGRATION.md) — four-repository ownership and release flow.
 - [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt index.

@@ -1,8 +1,8 @@
 {
   "schema": "bettor-arena/module/v1",
   "id": "knowledge-providers",
-  "interface_version": "1.2.0",
-  "summary": "Subject-bound read-only provider query contracts, complete paired provider-versus-control admission evaluations, and proposal-only project memory governance.",
+  "interface_version": "1.4.0",
+  "summary": "Subject-bound provider contracts, complete paired evaluations, isolated live canaries, exact-subject on-demand activation, and proposal-only project memory governance.",
   "roots": [
     "docs/knowledge-providers",
     "scripts/check_knowledge_providers.py",
@@ -15,7 +15,15 @@
     "scripts/knowledge_provider_eval_packet.py",
     "scripts/knowledge_provider_eval_metrics.py",
     "scripts/knowledge_provider_eval_engine.py",
-    "scripts/knowledge_provider_eval_selftest.py"
+    "scripts/knowledge_provider_eval_selftest.py",
+    "scripts/providers/provider_canary_common.py",
+    "scripts/providers/serena_canary.py",
+    "scripts/providers/grepai_canary.py",
+    "scripts/providers/provider_activation.py",
+    "data/provider-canaries",
+    "data/provider-configurations",
+    "data/provider-activations",
+    "scripts/check_blindspot_hybrid.py"
   ],
   "components": {
     "contracts": {
@@ -60,14 +68,21 @@
       "required": true,
       "paths": [
         "scripts/check_knowledge_providers.py",
-        "scripts/check_knowledge_provider_module.py"
+        "scripts/check_knowledge_provider_module.py",
+        "scripts/providers/provider_canary_common.py",
+        "scripts/providers/serena_canary.py",
+        "scripts/providers/grepai_canary.py",
+        "scripts/providers/provider_activation.py",
+        "scripts/check_blindspot_hybrid.py"
       ]
     }
   },
   "provides": [
     "knowledge-provider.query/v1",
     "knowledge-provider.memory-proposal/v1",
-    "knowledge-provider.eval/v1"
+    "knowledge-provider.eval/v1",
+    "knowledge-provider.live-canary/v1",
+    "knowledge-provider.activation/v1"
   ],
   "requires": [
     "arena.module-catalog/v1",
@@ -101,6 +116,13 @@
       "class": "provider",
       "interface_version": "1.1.0",
       "public_port": "python3 scripts/evaluate_knowledge_providers.py",
+      "external_policy": "denied"
+    },
+    {
+      "id": "knowledge-provider-activation",
+      "class": "provider",
+      "interface_version": "1.0.0",
+      "public_port": "python3 scripts/providers/provider_activation.py",
       "external_policy": "denied"
     }
   ],

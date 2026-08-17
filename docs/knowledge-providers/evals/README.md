@@ -2,7 +2,7 @@
 
 This directory turns the provider-neutral contracts into a reproducible
 provider-versus-control comparison lane. It does not launch Serena, GrepAI,
-Code-Graph-RAG, Mem0, an LLM, or an MCP server. It evaluates normalized
+Mem0, an LLM, or an MCP server. Code-Graph-RAG is historical REJECTED/ABSENT evidence and is not an active evaluator participant. It evaluates normalized
 observations against immutable repository subjects, current provider
 manifests, independent controls, and explicit hard gates.
 
@@ -43,7 +43,6 @@ evals/
 │   ├── repository-authority-control.json
 │   ├── serena.json
 │   ├── grepai.json
-│   ├── code-graph-rag.json
 │   └── mem0.json
 ├── cases/
 │   ├── symbol-public-skill-port.json
@@ -64,11 +63,10 @@ not semantic compression. The evaluator reads them transparently.
 |---|---|---|---|
 | symbol | Serena | exact repository read | Symbol lookup/reference precision and source readback |
 | semantic | GrepAI | exact repository search | Intent-only location with bounded candidate volume |
-| graph | Code-Graph-RAG | manifest/import/source traversal | Cross-module impact without converting coverage gaps into absence |
+| graph | none — retired | exact repository search | deterministic baseline only; Blindspots replacement is validated outside provider admission |
 | memory | Mem0 | current repository authority | Historical hint recall while preserving conflict and current-authority priority |
 
-Every case has exactly one provider and one control. The default contract
-requires all eight case/participant pairs. Omitting a failed participant is a
+Provider-admission cases retain provider/control pairs. The graph family is a deterministic baseline-only case after Code-Graph-RAG retirement. The active matrix requires seven case/participant pairs; historical retired observations remain fixture history only. Omitting a failed participant is a
 hard failure rather than a smaller successful experiment.
 
 ## Hard gates
@@ -149,9 +147,9 @@ being relabeled as production evidence.
 ## Current live state
 
 ```text
-Serena live observation          NOT_EXERCISED
-GrepAI live observation          NOT_EXERCISED
-Code-Graph-RAG adapter/index     NOT_CONFIGURED
+Serena live observation          PASS at exact 755f743 canary subject
+GrepAI live observation          PASS at exact 755f743 canary subject
+Code-Graph-RAG active evaluator   RETIRED (historical manifest REJECTED/ABSENT)
 Mem0 adapter/storage/writeback   NOT_CONFIGURED
 cross-provider winner            NOT_EXERCISED
 automatic admission              FORBIDDEN

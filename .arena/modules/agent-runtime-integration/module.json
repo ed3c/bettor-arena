@@ -16,6 +16,8 @@
     },
     "runtime": {
       "paths": [
+        ".runtime-env/workloads/provider-serena.json",
+        ".runtime-env/workloads/provider-grepai.json",
         "scripts/agent_runtime.py",
         "scripts/runtime-env"
       ],
@@ -39,7 +41,7 @@
     "secrets": "none"
   },
   "id": "agent-runtime-integration",
-  "interface_version": "1.2.0",
+  "interface_version": "1.3.0",
   "loops": [
     {
       "class": "aggregate",
@@ -116,5 +118,5 @@
       "shared-skills-infra"
     ]
   },
-  "summary": "Resolved skills-shared/runtime-env closure, generated host projections, Claude Code/Codex CLI adapter verdicts, and a host-owned portable Skill execution/assertion port that cannot advance state on Worker prose."
+  "summary": "Resolved skills-shared/runtime-env closure, bounded provider-canary workloads, generated host projections, Claude Code/Codex CLI adapter verdicts, and a host-owned portable Skill execution/assertion port that cannot advance state on Worker prose."
 }

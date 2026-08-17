@@ -1,6 +1,19 @@
-# Code Truth Graph v2 — evidence planes, coverage, and UNKNOWN preservation
+# Code Truth Graph v2 — Blindspots evidence loop
 
-This terminal leaf extends the existing `code-truth-graph.build/v1` mechanism with a subject-bound evidence graph. It separates direct source, AST, LSP/SCIP, build/config, sandbox runtime, production runtime, and provider/model candidates instead of flattening them into one confidence score.
+This module compiles subject-bound evidence without turning any analyzer, provider, graph, or vector index into source truth. Its deterministic route is:
+
+```text
+exact source / Git subject
+→ GrepAI candidate anchors
+→ SCIP/LSP semantic facts when exact coverage exists
+→ Tree-sitter structural facts when grammar coverage exists
+→ SQLite subject-bound Blindspots ledger
+→ exact-source readback
+→ bounded context-funnel traversal
+→ target source + dependency signatures + downstream callsites + tests
+```
+
+Code-Graph-RAG is **retired from the active route**. Historical provider/decision evidence may remain explicitly marked `REJECTED / ABSENT`; it is not a T6 candidate, runtime dependency, evaluator participant, or queue prerequisite.
 
 ## Evidence planes
 
@@ -11,49 +24,107 @@ T2_LSP_SCIP            symbol/reference fact from a pinned semantic index
 T3_BUILD_CONFIG        build/config/generated dependency observation
 T4_SANDBOX_RUNTIME     disposable runtime/test observation
 T5_PRODUCTION_RUNTIME  redacted production observation
-T6_PROVIDER_CANDIDATE  Serena/GrepAI/Code-Graph-RAG/model retrieval candidate
+T6_PROVIDER_CANDIDATE  Serena/GrepAI/model retrieval candidate only
 ```
 
-## State Machine
+## Blindspots State Machine
 
 ```text
 EXACT_SUBJECT_LOCKED
 → SOURCE_MANIFESTED
 → ANALYZER_IDENTITIES_BOUND
 → COVERAGE_DECLARED
-→ EVIDENCE_REGISTERED
-→ NODES_AND_EDGES_COMPILED
-→ PROVENANCE_AND_AUTHORITY_CHECKED
-→ GRAPH_DIGESTED
-→ QUERY
-   ├─ FOUND
-   ├─ CONTESTED
-   ├─ NO_FLOW       only under complete relevant coverage
-   └─ UNKNOWN       missing/stale/unsupported coverage is preserved
+→ NORMALIZED OBSERVATIONS IMPORTED
+→ SQLITE LEDGER DIGESTED
+→ CROSS-LENS QUERY
+   ├─ fresh support + fresh denial → CONTESTED
+   ├─ source-admissible support   → FOUND
+   ├─ complete fresh mandatory coverage + no support → NO_FLOW
+   └─ stale/partial/missing/unread-back/candidate-only → UNKNOWN
+→ EXPORT / DELETE / REBUILD
+→ WAL/SHM/TEMP RESIDUE CHECK
 ```
 
-## Authority ceiling
+`NO_FLOW` is deliberately expensive: every lens named by the query must have `COMPLETE` and `FRESH` coverage for the language/subject. An empty GrepAI result, unsupported grammar, stale SCIP workspace, partial parse, missing source readback, or provider outage can never become absence proof.
 
-- T6 provider/model output is a candidate only; it cannot become `OBSERVED`, `TESTED`, or absence proof.
-- AST proves syntax, not runtime behavior.
-- LSP/SCIP proves indexed semantic relations within declared coverage, not production reachability.
-- Runtime observations must reference exact test/runtime artifacts.
-- `NO_FLOW` is allowed only when both nodes are in scope and every required analyzer is fresh, subject-matched, executed, and complete for the relevant language.
-- The graph is a rebuildable projection. Source, tests, ADRs, runtime receipts, and future LoopX ledger events remain canonical.
+## Context-funnel State Machine
 
-## Executable reference
+The context compiler consumes the SQLite ledger but independently binds the requested Git subject and re-reads promoted source paths from that exact commit:
+
+```text
+REQUEST
+→ COMMIT/TREE VERIFY
+→ DATABASE SUBJECT CAS
+→ REQUIRED-LENS FRESHNESS CHECK
+→ SOURCE DIGEST READBACK
+→ BOUNDED BIDIRECTIONAL TRAVERSAL
+→ CONTEXT PLAN
+   ├─ target_full_source
+   ├─ dependency_signatures
+   ├─ downstream_callsites
+   ├─ tests
+   └─ candidate_anchors
+→ PASS | UNKNOWN | REFUSED
+```
+
+A candidate anchor can help locate context but never enters the fact traversal without source confirmation. Stale coverage, source drift, missing target source, subject mismatch, depth/node/path/output overflow, corrupt SQLite, and invalid input remain distinct failures. The compiler is read-only and cannot advance LoopX state.
+
+## SQLite evidence contract
+
+Each database binds exactly one repository/commit/tree. A second subject is rejected rather than mixed into the same ledger. Every observation has a content-addressed ID and records:
+
+```text
+path + source digest + language
+lens + exact tool/index/grammar identity
+source + target + relation
+source-readback state
+optional bounded span/note
+```
+
+SQLite is a rebuildable evidence projection. Source, tests, ADRs, runtime receipts, and LoopX ledger events remain higher authority. No provider may self-admit a claim.
+
+## Executable ports
+
+Existing JSON evidence graph:
 
 ```sh
 python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py check
 python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py selftest
-python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py build-python \
-  --repo <repo> --commit <sha> --paths app.py util.py --output graph.json
-python3 loop_wiki/code-truth-graph-v2/scripts/ctg_v2.py query \
-  --graph graph.json --source <node-id> --target <node-id>
 ```
 
-The Python AST adapter is a white-box fixture/reference adapter. It does not claim multi-language, LSP, sandbox, production, or provider health.
+SQLite Blindspots ledger:
+
+```sh
+python3 loop_wiki/code-truth-graph-v2/scripts/blindspots.py selftest
+python3 loop_wiki/code-truth-graph-v2/scripts/blindspots.py import \
+  --db /tmp/blindspots.sqlite --bundle observations.json
+python3 loop_wiki/code-truth-graph-v2/scripts/blindspots.py query \
+  --db /tmp/blindspots.sqlite --source A --target B --language python \
+  --required-lens source --required-lens grepai \
+  --required-lens scip-lsp --required-lens tree-sitter
+```
+
+Bounded context compiler:
+
+```sh
+python3 loop_wiki/code-truth-graph-v2/scripts/context_funnel.py compile \
+  --repo . \
+  --db /tmp/blindspots.sqlite \
+  --request request.json \
+  --output context-plan.json
+```
+
+The Python AST adapter remains a white-box reference adapter. Static tests do **not** claim live SCIP/LSP or Tree-sitter execution.
+
+## Authority ceiling
+
+- Provider/model output is candidate evidence only until current-source readback.
+- AST proves syntax, not runtime behavior.
+- LSP/SCIP proves emitted semantic relations only within declared exact coverage.
+- Runtime observations must bind exact test/runtime artifacts.
+- `NO_FLOW` requires fresh complete mandatory coverage; otherwise the answer is `UNKNOWN`.
+- SQLite and the context compiler cannot write LoopX task state, admit a release, merge, publish, or activate a provider.
 
 ## Non-goals
 
-No repository writeback, auto-fix, MCP exposure, provider activation, live LSP server, production trace ingestion, Human Admit, composition selection, merge, or release promotion occurs in this leaf.
+No repository writeback, auto-fix, generic shell/MCP exposure, provider installation, live SCIP/LSP activation, live Tree-sitter grammar claim, production trace ingestion, composition selection, merge, release promotion, or destructive rollback occurs in this module.

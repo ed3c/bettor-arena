@@ -10,7 +10,7 @@ NOT_SELECTED
 NOT_REVIEWED
 NOT_EXERCISED
 NOT_PERFORMED
-HUMAN-OWNED
+AUTOMATION-POLICY-OWNED
 ```
 
 ## Repository identity
@@ -82,8 +82,8 @@ perennial_branch_strategy: fast-forward-only
 push_default: false
 remote_sync_default: false
 semantic_conflict_policy: stop-and-return-control
-continue_skip_undo_authority: human-only
-merge_ship_close_delete_authority: human-only
+continue_skip_undo_authority: typed-controller-only
+merge_ship_close_delete_authority: automated-admission-controller
 automatic_branch_creation: denied-until-task-packet
 automatic_branch_deletion: denied
 ```
@@ -127,7 +127,7 @@ negative_or_mutation_controls: required
 evidence_boundary: required
 cleanup_contract: required
 rollback_subject: required
-human_owned_operations: required
+automation_owned_operations: required
 ```
 
 Missing fields produce `PACKET_INVALID`.
@@ -186,16 +186,16 @@ rollback evidence
 ## Publication policy
 
 ```yaml
-enabled: false
+enabled: policy-admitted; exact runtime controller still required
 github_is_publication_authority: true
 exact_head_required: true
 all_required_checks_required: true
 billing_policy: NOT_DEFINED_FOR_GIT_TOWN
-push: HUMAN-OWNED
-merge: HUMAN-OWNED
-ship: HUMAN-OWNED
-promotion: HUMAN-OWNED
-rollback: HUMAN-OWNED
+push: AUTOMATION-POLICY-OWNED
+merge: AUTOMATION-POLICY-OWNED
+ship: AUTOMATION-POLICY-OWNED
+promotion: AUTOMATION-POLICY-OWNED
+rollback: AUTOMATION-POLICY-OWNED
 ```
 
 Local Git Town sync, when admitted later, does not prove GitHub publication.
@@ -226,7 +226,7 @@ Git Town binary                 ABSENT
 .git-town.toml                  ABSENT
 local sync                      NOT_EXERCISED
 remote publication              NOT_EXERCISED
-Human Admit                     NOT_PERFORMED
+automated-admission policy      ADMITTED; exact operation NOT_EXERCISED
 ```
 
 ## Rollback boundary
@@ -239,6 +239,7 @@ GitHub subject: c72109e145193fdaf059944403477f01064a1c3d
 tree: 0c51ea279bd2036dce281898c2e980e8378ba1cb
 ```
 
-Rollback is a Human-owned Git decision. This profile never authorizes an Agent to reset, force-push, delete or rewrite history.
+Rollback is an automated-admission operation bound to exact before/after subjects.
+The policy never authorizes raw reset, force-push, deletion or history rewrite.
 
 Observed: `2026-08-15T16:50:16Z`.

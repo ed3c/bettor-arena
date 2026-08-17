@@ -1,1 +1,55 @@
-{"schema_version":"knowledge-provider-eval-observation/v1","observation_id":"obs-symbol-serena","case_id":"symbol-public-skill-port","participant_id":"serena","participant_identity_digest":"sha256:74e1651d738232fccdbd301e53863f4646fba1af24981008c6aef39653d5c59a","provider_manifest_digest":"sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9","subject":{"repository":"ed3c/bettor-arena","commit":"d291523856988cfa54316dba967fea8470194b72","tree":"71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"},"query_digest":"sha256:981e11d298c85f721d88042fbf647b88c1c9ac5092a65cfb5916042d577382af","fixture":true,"execution":{"state":"PASS","executed":true},"index":{"state":"FRESH","subject_match":true},"results":[{"id":"public-skill-port","rank":1,"verdict":"FOUND","verification":"SOURCE_READBACK_CONFIRMED","source_refs":["loopctl/contract.json"]}],"authority":{"candidate_only":true,"advanced_state":false,"waived_gate":false,"marked_tested":false,"human_admit":false,"wrote_repository":false,"wrote_memory":false,"promoted_release":false},"resources":{"latency_ms":160,"context_bytes":1536,"tool_calls":1,"result_count":1},"cleanup":{"status":"PASS","residue":[]},"memory_policy":null}
+{
+  "authority": {
+    "advanced_state": false,
+    "candidate_only": true,
+    "human_admit": false,
+    "marked_tested": false,
+    "promoted_release": false,
+    "waived_gate": false,
+    "wrote_memory": false,
+    "wrote_repository": false
+  },
+  "case_id": "symbol-public-skill-port",
+  "cleanup": {
+    "residue": [],
+    "status": "PASS"
+  },
+  "execution": {
+    "executed": true,
+    "state": "PASS"
+  },
+  "fixture": true,
+  "index": {
+    "state": "FRESH",
+    "subject_match": true
+  },
+  "memory_policy": null,
+  "observation_id": "obs-symbol-serena",
+  "participant_id": "serena",
+  "participant_identity_digest": "sha256:74e1651d738232fccdbd301e53863f4646fba1af24981008c6aef39653d5c59a",
+  "provider_manifest_digest": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654",
+  "query_digest": "sha256:981e11d298c85f721d88042fbf647b88c1c9ac5092a65cfb5916042d577382af",
+  "resources": {
+    "context_bytes": 1536,
+    "latency_ms": 160,
+    "result_count": 1,
+    "tool_calls": 1
+  },
+  "results": [
+    {
+      "id": "public-skill-port",
+      "rank": 1,
+      "source_refs": [
+        "loopctl/contract.json"
+      ],
+      "verdict": "FOUND",
+      "verification": "SOURCE_READBACK_CONFIRMED"
+    }
+  ],
+  "schema_version": "knowledge-provider-eval-observation/v1",
+  "subject": {
+    "commit": "d291523856988cfa54316dba967fea8470194b72",
+    "repository": "ed3c/bettor-arena",
+    "tree": "71d7b874dfd181e15d6b614cd6d3bf7fb47d8c43"
+  }
+}

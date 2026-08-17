@@ -417,7 +417,7 @@
         "note": "The local-process adapter attests a detached worktree, process group, timeout, explicit environment and post-run path boundary. It cannot attest network denial or OS filesystem isolation, so deny/allowlisted requests fail closed until a physical sandbox adapter is bound."
       },
       "writes": [
-        "<output>/ only; never LoopX state, promotion state or Human Admit"
+        "<output>/ only; never LoopX state, promotion state or automated admission"
       ]
     },
     {
@@ -900,7 +900,7 @@
           "data/proof-workflow/control-ctg-<commit12>.json"
         ],
         "exit": "0 five offline axes passed and four planted defects were caught · 2 a behavioral axis went red · 64 proof/environment/contract failure",
-        "note": "live PROD/device and Human admit remain explicit NOT_EXERCISED states"
+        "note": "live PROD/device and automated admission remain explicit NOT_EXERCISED states"
       },
       "writes": [
         "proof_workflow/data/<run_id>/",

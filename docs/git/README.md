@@ -21,8 +21,8 @@ GitHub
 LoopX
   = canonical task-state authority
 
-Human
-  = semantic conflict, merge/ship, provider activation, promotion and rollback authority
+Automated admission controller
+  = exact-subject push, merge/ship, queue, provider activation, promotion and rollback authority
 ```
 
 Bettor does not copy a local `skills/git-town-stacked-pr-worker/SKILL.md`.
@@ -45,10 +45,10 @@ The current Bettor binding source `skills-shared@b3c722da1c40301b0a12e0ef99848d8
 | File | Owner | Purpose | Authority |
 |---|---|---|---|
 | [`README.md`](README.md) | repository Git governance | route, State Machine and data flow | navigation |
-| [`REPO_PROFILE.md`](REPO_PROFILE.md) | repository owner | branches, remotes, policies, receipts and Human boundaries | repository policy |
+| [`REPO_PROFILE.md`](REPO_PROFILE.md) | repository owner | branches, remotes, policies, receipts and automation boundaries | repository policy |
 | [`PDF_TERMINAL_SEQUENCE.md`](PDF_TERMINAL_SEQUENCE.md) | #61/#102 queue owner | full ordered PDF completion queue and directory/data-flow map | human queue view |
 | [`pdf-terminal-sequence.schema.json`](pdf-terminal-sequence.schema.json) | queue contract owner | closed shape for orders 0–25 | machine contract |
-| [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json) | queue owner | active item, prerequisites, paths, branches, acceptance and Human bounds | current reviewed queue |
+| [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json) | queue owner | active item, prerequisites, paths, branches, acceptance and automation bounds | current reviewed queue |
 | [`STACKED_PRS.md`](STACKED_PRS.md) | Stack topology owner | dependency-driven branch graph and expected branches | human topology view |
 | [`WORKER_PROTOCOL.md`](WORKER_PROTOCOL.md) | task/lease owner | one Worker/worktree/branch/path lease | execution contract |
 | [`GIT_TOWN_ADMISSION.md`](GIT_TOWN_ADMISSION.md) | trusted operator | executable/config/license/SBOM/legal/live gates | mutable admission ledger |
@@ -70,7 +70,7 @@ PDF GAP INVENTORY
 → TASK PACKET + PATH LEASE
 → IMPLEMENT / CONTROL / MUTATION / CLEANUP
 → EXACT-HEAD PUBLICATION CANDIDATE
-→ HUMAN REVIEW
+→ AUTOMATED ADMISSION
 → QUEUE ADVANCE
 → FINAL CONVERGENCE #68
 ```
@@ -99,7 +99,7 @@ SHARED_METHOD_PINNED
 → LIVE LOCAL NO-PUSH
 → REPOSITORY EVALS
 → GITHUB PUBLICATION GATE
-→ HUMAN ADMIT
+→ AUTOMATED ADMISSION
 → MERGE / SHIP / ROLLBACK
 ```
 
@@ -115,7 +115,7 @@ GIT_TOWN_EXECUTABLE        ABSENT
 GIT_TOWN_CONFIG            ABSENT
 LOCAL_NO_PUSH_SYNC         NOT_EXERCISED
 PUBLICATION                NOT_EXERCISED
-HUMAN_ADMIT                NOT_PERFORMED
+AUTOMATION_POLICY          ADMITTED; exact runtime operation remains subject-bound
 admission mechanism owner  issue #101 / PR #133; executable activation unresolved
 ```
 
@@ -131,7 +131,7 @@ admission mechanism owner  issue #101 / PR #133; executable activation unresolve
 | Lease | linked worktree + branch + path allowlist | exclusive Worker lease | `LEASE_CONFLICT` |
 | Terminal eval | positive + control + mutation + cleanup | candidate receipt | `FAIL` |
 | Publication | exact head + GitHub checks | review candidate | `BLOCKED`, `NOT_EXERCISED` |
-| Human edge | evidence + conflict + review | merge/reject/rollback/waiver | `PENDING` |
+| Automation edge | evidence + conflict policy + exact-head readback | merge/reject/rollback/waiver receipt | `BLOCKED_POLICY` |
 
 ## Data flow
 
@@ -154,14 +154,14 @@ exact-head GitHub publication checks
         ↓
 queue advancement candidate
         ↓
-Human review
+automated admission
         ↓
 next active terminal
         ↓
 #68 final composition/release
 ```
 
-Git Town never replaces GitHub publication admission, module proof, LoopX state authority or Human governance.
+Git Town never replaces GitHub publication admission, module proof, LoopX state authority or the automated-admission controller.
 
 ## Stable outcomes
 
@@ -253,21 +253,21 @@ runtime rollback receipt
 - future terminal branch before queue activation;
 - `.git-town.toml` before admission;
 - raw shell or arbitrary Git command execution;
-- automatic semantic conflict resolution;
-- push/merge/ship/close/delete;
+- semantic conflict resolution without a deterministic winner declared by policy;
+- raw push/merge/ship/close/delete outside the admitted controller;
 - remote, credential or permission mutation;
-- provider/runtime/model activation outside its Human boundary;
-- production promotion or rollback;
+- provider/runtime/model activation outside its typed policy boundary;
+- production promotion or rollback outside its exact-subject controller;
 - rewriting historical evidence.
 
-## Human Admit boundary
+## Automated admission boundary
 
-Human or trusted operator owns:
+The typed automated-admission controller owns:
 
 ```text
 Git Town executable and legal admission
-semantic conflict resolution
-continue / skip / undo
+machine-resolvable conflict handling with a declared deterministic winner
+bounded continue / skip / undo declared by the controller contract
 remote publication
 PR retargeting
 merge / ship / close / delete
@@ -276,5 +276,9 @@ scoped queue waiver
 promotion
 rollback
 ```
+
+Every operation binds an exact subject, emits a durable receipt and performs remote
+readback. Missing inputs produce `BLOCKED_POLICY`; the Agent does not request a
+routine confirmation prompt. See [`AUTOMATED_ADMISSION.md`](AUTOMATED_ADMISSION.md).
 
 Current queue base is recorded in [`pdf-terminal-sequence.json`](pdf-terminal-sequence.json); GitHub remains current-state authority.

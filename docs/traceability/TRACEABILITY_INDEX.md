@@ -14,7 +14,7 @@ source / incident
 → immutable implementation subject
 → runtime/consumer receipt
 → convergence index
-→ Human Admit
+→ automated admission
 ```
 
 A missing edge remains explicit. This index routes to machine authority; it is not a second receipt registry.
@@ -116,7 +116,7 @@ skills-shared@3d3c179d773e251ad1ae49c9453e428784219f00
 → data/receipts/skill-measurement-universal-v2-dev.json
 → repo-agent-native legacy behavior FAIL
 → repo-agent-native physical v2 NOT_EXERCISED
-→ Human Admit remains required
+→ exact-subject automated admission remains required
 ```
 
 PR #56 evaluator bytes are on main. Provider convergence remains a later ordered acceptance lane; fixture PASS cannot proxy the active #92 live canaries.
@@ -173,5 +173,5 @@ a PDF matrix component changes state
 a live host/provider/cloud canary lands
 issue #24 gains an implementation subject
 Git Town configuration or selected Skill appears
-Human Admit promotes or rolls back
+Automated admission promotes or rolls back
 ```

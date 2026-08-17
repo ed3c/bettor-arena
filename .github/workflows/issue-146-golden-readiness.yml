@@ -1,0 +1,74 @@
+name: Issue 146 golden-run readiness
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'docs/traceability/issue-146-golden-readiness.json'
+      - 'docs/traceability/issue-161-runtime-admission.json'
+      - 'scripts/gates/check_issue_146_golden_readiness.py'
+      - 'scripts/gates/check_issue_161_runtime_admission.py'
+      - 'scripts/gates/issue_161_host_rebind.py'
+      - '.runtime-env/bindings/bettor-arena-local.json'
+      - '.skill-bindings/agentic-tech-lead-orchestration/**'
+      - 'scripts/gates/check_agentic_tech_lead_binding.py'
+      - 'loop_wiki/parallel-agent-tech-lead/**'
+      - 'loop_wiki/code-truth-graph-v2/**'
+      - 'docs/git/pdf-terminal-sequence.json'
+      - '.github/workflows/issue-146-golden-readiness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/traceability/issue-146-golden-readiness.json'
+      - 'docs/traceability/issue-161-runtime-admission.json'
+      - 'scripts/gates/check_issue_146_golden_readiness.py'
+      - 'scripts/gates/check_issue_161_runtime_admission.py'
+      - 'scripts/gates/issue_161_host_rebind.py'
+      - '.runtime-env/bindings/bettor-arena-local.json'
+      - '.skill-bindings/agentic-tech-lead-orchestration/**'
+      - 'scripts/gates/check_agentic_tech_lead_binding.py'
+      - 'loop_wiki/parallel-agent-tech-lead/**'
+      - 'loop_wiki/code-truth-graph-v2/**'
+      - 'docs/git/pdf-terminal-sequence.json'
+      - '.github/workflows/issue-146-golden-readiness.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue-146-readiness-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readiness:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate Phase-0 receipt and planted controls
+        run: |
+          python3 scripts/gates/check_issue_146_golden_readiness.py --selftest
+          python3 scripts/gates/check_issue_146_golden_readiness.py
+      - name: Validate exact-subject runtime admission and planted controls
+        run: |
+          python3 scripts/gates/check_issue_161_runtime_admission.py --selftest
+          python3 scripts/gates/check_issue_161_runtime_admission.py
+      - name: Validate fail-closed local rebind handoff
+        run: |
+          python3 scripts/gates/issue_161_host_rebind.py --selftest
+      - name: Execute repository-native contract matrix
+        run: |
+          sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
+          sh loop_wiki/code-truth-graph-v2/tests/run-all.sh
+          sh tests/agentic-tech-lead-binding/run-all.sh
+          python3 scripts/gates/check_issue_140_convergence.py
+      - name: Compile changed Python gates
+        run: |
+          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_issue_161_runtime_admission.py scripts/gates/issue_161_host_rebind.py scripts/gates/check_agentic_tech_lead_binding.py

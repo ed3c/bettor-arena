@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/provider-configuration-receipt.v1.schema.json",
+  "title": "Provider Configuration Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "outcome",
+    "subject",
+    "evidence_subject",
+    "rollback_subject",
+    "providers",
+    "authority",
+    "cleanup"
+  ],
+  "properties": {
+    "schema": {"const": "bettor-arena/provider-configuration-receipt/v1"},
+    "operation": {"const": "CONFIGURE_ON_DEMAND_READ_ONLY"},
+    "outcome": {"const": "CONFIGURED"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "evidence_subject": {"$ref": "#/$defs/subject"},
+    "rollback_subject": {"$ref": "#/$defs/subject"},
+    "providers": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider_id",
+          "manifest_digest_before",
+          "manifest_digest_after",
+          "evidence_receipt_path",
+          "state_before",
+          "state_after"
+        ],
+        "properties": {
+          "provider_id": {"enum": ["grepai", "serena"]},
+          "manifest_digest_before": {"$ref": "#/$defs/sha256"},
+          "manifest_digest_after": {"$ref": "#/$defs/sha256"},
+          "evidence_receipt_path": {"type": "string"},
+          "state_before": {"const": "CANDIDATE"},
+          "state_after": {"const": "CONFIGURED"}
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configured_provider",
+        "activated_provider",
+        "advanced_state",
+        "marked_tested",
+        "promoted_release",
+        "waived_gate"
+      ],
+      "properties": {
+        "configured_provider": {"const": true},
+        "activated_provider": {"const": false},
+        "advanced_state": {"const": false},
+        "marked_tested": {"const": false},
+        "promoted_release": {"const": false},
+        "waived_gate": {"const": false}
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "residue"],
+      "properties": {
+        "status": {"const": "PASS"},
+        "residue": {"type": "array", "maxItems": 0}
+      }
+    }
+  },
+  "$defs": {
+    "sha40": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "tree"],
+      "properties": {
+        "repository": {"const": "ed3c/bettor-arena"},
+        "commit": {"$ref": "#/$defs/sha40"},
+        "tree": {"$ref": "#/$defs/sha40"}
+      }
+    }
+  }
+}

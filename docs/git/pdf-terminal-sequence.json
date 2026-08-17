@@ -18,8 +18,8 @@
     ]
   },
   "current": {
-    "active_issue": 92,
-    "active_order": 12,
+    "active_issue": 140,
+    "active_order": 13,
     "convergence_issue": 68,
     "index_issue": 102,
     "program_issue": 61
@@ -61,8 +61,8 @@
       "validation_item": "stage-01-main-validation"
     }
   ],
-  "human_owned_operations": [
-    "semantic conflict resolution",
+  "automation_owned_operations": [
+    "semantic conflict resolution with a deterministic winner declared by policy",
     "Git Town continue, skip or undo",
     "remote publication",
     "merge, ship, close or branch deletion",
@@ -80,7 +80,7 @@
       ],
       "evidence_boundary": "This stage proves residual-file disposition and current module behavior; it does not prove a live host.",
       "expected_branch": "feat/loopx-worker-gateway-residue-v1",
-      "human_boundary": "Human owns semantic conflict decisions, merge, branch deletion and rollback.",
+      "automation_boundary": "Automated admission controller owns semantic conflict decisions, merge, branch deletion and rollback.",
       "id": "stage-00-gateway-residue",
       "issues": [
         82
@@ -109,7 +109,7 @@
       ],
       "evidence_boundary": "Reachability and deterministic controls do not prove composition selection, live providers or production admission.",
       "expected_branch": "feat/loopx-stage0-validation-v1",
-      "human_boundary": "Human owns any implementation repair merge and Stage-0 admission.",
+      "automation_boundary": "Automated admission controller owns any implementation repair merge and Stage-0 admission.",
       "id": "stage-01-main-validation",
       "issues": [
         90
@@ -146,7 +146,7 @@
       ],
       "evidence_boundary": "LangGraph checkpoints remain projections and never become task-state authority.",
       "expected_branch": "feat/loopx-strategy-hitl-v1",
-      "human_boundary": "Human signs decisions and owns exception, merge and activation.",
+      "automation_boundary": "Automated admission controller verifies and applies signed HITL decisions and owns exception, merge and activation; it does not invent the decision.",
       "id": "stage-02-strategy-hitl",
       "issues": [
         65
@@ -174,7 +174,7 @@
       ],
       "evidence_boundary": "Trace and UI projections observe state; they do not prove semantic correctness or commit state.",
       "expected_branch": "feat/loopx-observability-v1",
-      "human_boundary": "Human owns signer admission, backend activation, merge and retention policy.",
+      "automation_boundary": "Automated admission controller owns signer admission, backend activation, merge and retention policy.",
       "id": "stage-03-observability",
       "issues": [
         67
@@ -203,7 +203,7 @@
       ],
       "evidence_boundary": "A local fixture or provider declaration cannot proxy physical cloud isolation.",
       "expected_branch": "feat/loopx-runtime-fabric-v1",
-      "human_boundary": "Human owns runtime/provider activation, credentials, merge and rollback.",
+      "automation_boundary": "Automated admission controller owns runtime/provider activation, merge and rollback using existing secret references; credential or permission changes remain external inputs.",
       "id": "stage-04-runtime-fabric",
       "issues": [
         66
@@ -233,7 +233,7 @@
       ],
       "evidence_boundary": "tmux session or Herdr exit status cannot establish task, Gate or release PASS.",
       "expected_branch": "feat/loopx-worker-fleet-v1",
-      "human_boundary": "Human owns collision resolution, destructive cleanup, adapter activation and merge.",
+      "automation_boundary": "Automated admission controller applies declared collision and cleanup policy and owns adapter activation and merge; it does not invent a destructive disposition.",
       "id": "stage-05-worker-fleet",
       "issues": [
         94
@@ -257,12 +257,12 @@
     {
       "acceptance": [
         "Live, protected, blocked and expired resources are classified",
-        "Dry-run cleanup preserves ledger, Human decisions and blocked evidence",
+        "Dry-run cleanup preserves ledger, admission decisions and blocked evidence",
         "Residue and projection rebuild controls execute"
       ],
       "evidence_boundary": "GC receipts prove named resource cleanup only; they do not authorize deleting audit history.",
       "expected_branch": "feat/loopx-resource-gc-v1",
-      "human_boundary": "Human owns destructive classes, retention policy, merge and rollback.",
+      "automation_boundary": "Automated admission controller applies declared destructive classes and retention policy and owns merge and rollback; absent disposition remains BLOCKED_POLICY.",
       "id": "stage-06-resource-gc",
       "issues": [
         97
@@ -291,7 +291,7 @@
       ],
       "evidence_boundary": "LSP diagnostics are source evidence inputs, not runtime facts or Gate verdicts.",
       "expected_branch": "feat/loopx-lsp-pool-v1",
-      "human_boundary": "Human owns language-server admission, resource policy and merge.",
+      "automation_boundary": "Automated admission controller owns language-server admission, resource policy and merge.",
       "id": "stage-07-lsp-pool",
       "issues": [
         96
@@ -315,13 +315,13 @@
     },
     {
       "acceptance": [
-        "Human-admitted proposals become reducer-owned ledger events",
+        "Policy-admitted proposals become reducer-owned ledger events",
         "Expiry, supersession, conflict, export and delete are executable",
         "Replay is deterministic and projections rebuild from canonical events"
       ],
       "evidence_boundary": "Candidate compilation is not durable memory; projections remain lower authority than source and ledger.",
       "expected_branch": "feat/loopx-decision-memory-runtime-v1",
-      "human_boundary": "Human owns admission, deletion/export authorization, merge and retention changes.",
+      "automation_boundary": "Automated admission controller owns admission, deletion/export authorization, merge and retention changes.",
       "id": "stage-08-decision-memory-runtime",
       "issues": [
         103
@@ -352,7 +352,7 @@
       ],
       "evidence_boundary": "Mem0 retrieval is advisory and cannot become canonical memory or writeback authority.",
       "expected_branch": "feat/loopx-mem0-projection-v1",
-      "human_boundary": "Human owns provider mode, retention, writeback, activation and merge.",
+      "automation_boundary": "Automated admission controller owns provider mode, retention, writeback, activation and merge.",
       "id": "stage-09-mem0-projection",
       "issues": [
         93
@@ -382,7 +382,7 @@
       ],
       "evidence_boundary": "Missing source bytes or rights cannot be replaced by generated summaries or estimated locators.",
       "expected_branch": "feat/loopx-notes-source-ingest-v1",
-      "human_boundary": "Human owns source rights, external destinations, admission and merge.",
+      "automation_boundary": "Automated admission controller verifies declared source rights and external destinations before admission and merge; it does not create those rights.",
       "id": "stage-10-source-ingest",
       "issues": [
         104
@@ -412,7 +412,7 @@
       ],
       "evidence_boundary": "OpenWiki, vector and graph results are rebuildable candidates, never source truth or absence proof.",
       "expected_branch": "feat/loopx-notes-retrieval-v1",
-      "human_boundary": "Human owns provider selection, external embedding destinations, activation and merge.",
+      "automation_boundary": "Automated admission controller owns provider selection, external embedding destinations, activation and merge.",
       "id": "stage-11-notes-retrieval",
       "issues": [
         105
@@ -443,7 +443,7 @@
       ],
       "evidence_boundary": "Symbol and semantic providers emit candidates only and cannot establish source absence or Gate PASS.",
       "expected_branch": "feat/loopx-code-intelligence-canaries-v1",
-      "human_boundary": "Human owns provider activation, external services and merge.",
+      "automation_boundary": "Automated admission controller owns provider activation, external services and merge.",
       "id": "stage-12-code-intelligence-live",
       "issues": [
         92
@@ -460,36 +460,36 @@
         "stage-01-main-validation"
       ],
       "prs": [],
-      "queue_state": "ACTIVE",
+      "queue_state": "COMPLETE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
       "title": "Run live Serena and GrepAI canaries"
     },
     {
       "acceptance": [
-        "Read-only query surface and exact graph/index identity are enforced",
-        "Coverage, freshness, source provenance and delete/rebuild receipts exist",
-        "Write, delete and autonomous-edit tools stay outside normal Agent sessions"
+        "Active provider, runtime, evaluator and queue routes contain no Code-Graph-RAG participant",
+        "Historical Code-Graph-RAG evidence remains discoverable only as REJECTED/ABSENT",
+        "Blindspots/source/SCIP/Tree-sitter contracts preserve UNKNOWN when coverage or readback is incomplete"
       ],
-      "evidence_boundary": "A graph edge is a candidate until current source or runtime evidence confirms it.",
-      "expected_branch": "feat/code-graph-rag-readonly-admission-v1",
-      "human_boundary": "Human owns provider deployment, storage, privileged tools and merge.",
-      "id": "stage-13-code-graph-rag",
+      "evidence_boundary": "Retirement does not prove GrepAI, SCIP/LSP, Tree-sitter, Serena, Git Town or Forgejo live health.",
+      "expected_branch": "feat/92-context-funnel-retirement",
+      "automation_boundary": "Provider activation, semantic-conflict admission, merge, release, promotion and rollback remain separately admitted operations.",
+      "id": "stage-13-code-graph-retirement",
       "issues": [
-        41
+        140
       ],
       "order": 13,
       "owner_paths": [
-        "loop_wiki/code-truth-graph/providers/code-graph-rag",
-        "data/provider-canaries/code-graph-rag",
-        ".runtime-env/modules"
+        "docs/knowledge-providers",
+        ".skill-bindings/repo-agent-native",
+        "loop_wiki/code-truth-graph-v2"
       ],
       "prerequisite_items": [
         "stage-12-code-intelligence-live"
       ],
       "prs": [],
-      "queue_state": "BLOCKED_BY_PREDECESSOR",
+      "queue_state": "ACTIVE",
       "stack_relation": "ROOT_AFTER_PREDECESSOR",
-      "title": "Admit a read-only Code-Graph-RAG adapter"
+      "title": "Retire Code-Graph-RAG and converge the Blindspots replacement route"
     },
     {
       "acceptance": [
@@ -499,7 +499,7 @@
       ],
       "evidence_boundary": "A generated scaffold is a candidate and cannot update source knowledge or release state automatically.",
       "expected_branch": "feat/loopx-notes-scaffold-v1",
-      "human_boundary": "Human owns scaffold admission, architectural choices, merge and release.",
+      "automation_boundary": "Automated admission controller owns scaffold admission, merge and release after architectural choices are declared; it does not invent those choices.",
       "id": "stage-14-notes-scaffold",
       "issues": [
         70
@@ -525,11 +525,11 @@
       "acceptance": [
         "Diff, symbol, test and runtime deltas map to affected knowledge identities",
         "UPDATE, SUPERSEDE, CONFLICT, UNKNOWN and NOOP remain distinct",
-        "Knowledge patches require evidence and Human admission"
+        "Knowledge patches require evidence and automated admission"
       ],
       "evidence_boundary": "A code change does not automatically rewrite Notes, OpenWiki, cards or ADRs.",
       "expected_branch": "feat/loopx-code-knowledge-foldback-v1",
-      "human_boundary": "Human owns semantic reconciliation, card/ADR admission, merge and rollback.",
+      "automation_boundary": "Automated admission controller owns semantic reconciliation, card/ADR admission, merge and rollback.",
       "id": "stage-15-knowledge-foldback",
       "issues": [
         71
@@ -559,7 +559,7 @@
       ],
       "evidence_boundary": "Cache observations are host/model/profile specific and cannot become universal performance claims.",
       "expected_branch": "feat/loopx-context-assembly-v1",
-      "human_boundary": "Human owns normative prompt law, production projection promotion and merge.",
+      "automation_boundary": "Automated admission controller applies declared prompt law and owns production projection promotion and merge; it does not author missing policy.",
       "id": "stage-16-context-assembly",
       "issues": [
         95
@@ -590,7 +590,7 @@
       ],
       "evidence_boundary": "One host/model success cannot establish generalized capability or production promotion.",
       "expected_branch": "feat/loopx-skill-prompt-evolution-v1",
-      "human_boundary": "Human owns holdout access, candidate promotion, rollback and merge.",
+      "automation_boundary": "Automated admission controller enforces declared holdout access and owns candidate promotion, rollback and merge; it cannot grant missing access.",
       "id": "stage-17-skill-prompt-evolution",
       "issues": [
         72
@@ -619,7 +619,7 @@
       ],
       "evidence_boundary": "Local scripts or act cannot proxy GitHub-hosted runner permissions, services or exact-head status.",
       "expected_branch": "feat/loopx-ci-parity-v1",
-      "human_boundary": "Human or trusted operator owns workflow dispatch, billing recovery, publication and merge.",
+      "automation_boundary": "Automated admission controller owns workflow dispatch, publication and merge within an admitted budget; billing recovery remains an external input.",
       "id": "stage-18-ci-parity",
       "issues": [
         98
@@ -649,7 +649,7 @@
       ],
       "evidence_boundary": "Source visibility, package installation or another host's PASS cannot proxy a live host canary.",
       "expected_branch": "feat/loopx-six-host-live-matrix-v1",
-      "human_boundary": "Human owns credentials, provider/model selection, host activation and merge.",
+      "automation_boundary": "Automated admission controller owns allowlisted provider/model selection, host activation and merge using existing secret references; credential changes remain external inputs.",
       "id": "stage-19-six-host-live",
       "issues": [
         91
@@ -679,7 +679,7 @@
       ],
       "evidence_boundary": "Paired cases describe the pinned hosts and workloads only; they are not universal model rankings.",
       "expected_branch": "feat/loopx-codex-claude-ab-v1",
-      "human_boundary": "Human owns provider spend, model selection, promotion and merge.",
+      "automation_boundary": "Automated admission controller enforces the admitted spend ceiling and model allowlist and owns promotion and merge; it cannot broaden either bound.",
       "id": "stage-20-codex-claude-ab",
       "issues": [
         45
@@ -705,7 +705,7 @@
       ],
       "evidence_boundary": "Provider evaluation produces candidate recommendations; it cannot activate a provider or mark task state.",
       "expected_branch": "eval/loopx-provider-convergence-v1",
-      "human_boundary": "Human owns provider admission, comparison thresholds, activation and merge.",
+      "automation_boundary": "Automated admission controller applies declared comparison thresholds and owns provider admission, activation and merge; missing thresholds remain BLOCKED_POLICY.",
       "id": "stage-21-provider-evaluation",
       "issues": [
         46,
@@ -720,7 +720,7 @@
       "prerequisite_items": [
         "stage-09-mem0-projection",
         "stage-12-code-intelligence-live",
-        "stage-13-code-graph-rag",
+        "stage-13-code-graph-retirement",
         "stage-20-codex-claude-ab"
       ],
       "prs": [
@@ -738,7 +738,7 @@
       ],
       "evidence_boundary": "The Console prepares requests and cannot mutate state, mark Gates, merge, promote or rollback.",
       "expected_branch": "feat/loopx-harness-console-v1",
-      "human_boundary": "Human owns signer identity, action confirmation, production activation and merge.",
+      "automation_boundary": "Automated admission controller verifies signer identity and action confirmation and owns production activation and merge; it does not fabricate either input.",
       "id": "stage-22-harness-console",
       "issues": [
         99
@@ -770,7 +770,7 @@
       ],
       "evidence_boundary": "PDF or vendor numbers are source proposals until reproduced on exact profiles; five trials do not characterize a tail.",
       "expected_branch": "feat/loopx-benchmark-v1",
-      "human_boundary": "Human owns benchmark thresholds, claim promotion, spend and merge.",
+      "automation_boundary": "Automated admission controller enforces declared benchmark thresholds and spend bounds and owns claim promotion and merge; it cannot invent or widen those inputs.",
       "id": "stage-23-benchmark",
       "issues": [
         100
@@ -805,7 +805,7 @@
       ],
       "evidence_boundary": "Git Town may synchronize admitted local branches; it cannot decide semantic conflicts, publication, merge or release.",
       "expected_branch": "feat/git-town-runtime-admission-v1",
-      "human_boundary": "Human owns conflict resolution, publication, merge/ship, promotion and rollback.",
+      "automation_boundary": "Automated admission controller owns conflict resolution, publication, merge/ship, promotion and rollback.",
       "id": "stage-24-git-town-runtime",
       "issues": [
         101
@@ -834,11 +834,11 @@
       "acceptance": [
         "Selected module, Context, proof and release sets are identical at exact head",
         "Cold-start, Ledger, HITL, memory, Worker, provider, runtime, CI and projection canaries execute",
-        "Every exclusion remains named and Human Admit records release and rollback"
+        "Every exclusion remains named and automated admission records release and rollback"
       ],
-      "evidence_boundary": "Terminal green checks create release inputs; only convergence and Human Admit can produce an immutable release.",
+      "evidence_boundary": "Terminal green checks create release inputs; only convergence and automated admission can produce an immutable release.",
       "expected_branch": "integration/loopx-harness-convergence-v1",
-      "human_boundary": "Human alone admits the release, promotion, rollback and any scoped exclusion.",
+      "automation_boundary": "Automated admission controller alone admits the release, promotion, rollback and policy-declared scoped exclusions; an undeclared exclusion remains BLOCKED_POLICY.",
       "id": "stage-25-final-convergence",
       "issues": [
         68
@@ -869,7 +869,7 @@
         "stage-10-source-ingest",
         "stage-11-notes-retrieval",
         "stage-12-code-intelligence-live",
-        "stage-13-code-graph-rag",
+        "stage-13-code-graph-retirement",
         "stage-14-notes-scaffold",
         "stage-15-knowledge-foldback",
         "stage-16-context-assembly",
@@ -888,12 +888,12 @@
       "title": "Converge modules, live acceptance, release and rollback"
     }
   ],
-  "observed_at": "2026-08-15T16:50:16Z",
+  "observed_at": "2026-08-16T17:26:03Z",
   "queue_policy": {
     "active_limit": 1,
     "branch_topology": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN",
     "future_branch_creation": "BLOCKED_UNTIL_QUEUE_ITEM_ACTIVE",
-    "later_completion": "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER",
+    "later_completion": "REQUIRES_PREDECESSOR_OR_POLICY_WAIVER",
     "ordering": "STRICT_GLOBAL_COMPLETION"
   },
   "repository": {
@@ -902,7 +902,7 @@
     "full_name": "ed3c/bettor-arena",
     "repository_id": 1330387399
   },
-  "schema": "bettor-arena/pdf-terminal-sequence/v1",
+  "schema": "bettor-arena/pdf-terminal-sequence/v2",
   "shared_skill": {
     "blob": "eb2d915bca3e8a3938625f7d33a10fae95a15769",
     "commit": "c5750720d960a228a0d9419f28125c09d064e3e1",
@@ -915,6 +915,6 @@
     "kind": "ATTACHED_PDF_SOURCE_PROPOSAL",
     "pages": 41,
     "repository_copy": "ABSENT",
-    "title": "LLM \u6cdb\u5316\uff1a\u6a21\u578b\u6b0a\u91cd\u8207 Harness"
+    "title": "LLM 泛化：模型權重與 Harness"
   }
 }

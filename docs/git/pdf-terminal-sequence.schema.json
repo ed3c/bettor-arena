@@ -15,10 +15,10 @@
     "current",
     "items",
     "convergence",
-    "human_owned_operations"
+    "automation_owned_operations"
   ],
   "properties": {
-    "schema": {"const": "bettor-arena/pdf-terminal-sequence/v1"},
+    "schema": {"const": "bettor-arena/pdf-terminal-sequence/v2"},
     "observed_at": {"type": "string", "format": "date-time"},
     "repository": {
       "type": "object",
@@ -79,7 +79,7 @@
       "properties": {
         "ordering": {"const": "STRICT_GLOBAL_COMPLETION"},
         "active_limit": {"const": 1},
-        "later_completion": {"const": "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER"},
+        "later_completion": {"const": "REQUIRES_PREDECESSOR_OR_POLICY_WAIVER"},
         "branch_topology": {"const": "DEPENDENCY_DRIVEN_NOT_ONE_DEEP_CHAIN"},
         "future_branch_creation": {"const": "BLOCKED_UNTIL_QUEUE_ITEM_ACTIVE"}
       }
@@ -118,7 +118,7 @@
         }
       }
     },
-    "human_owned_operations": {
+    "automation_owned_operations": {
       "type": "array",
       "minItems": 6,
       "uniqueItems": true,
@@ -142,7 +142,7 @@
         "queue_state",
         "acceptance",
         "evidence_boundary",
-        "human_boundary"
+        "automation_boundary"
       ],
       "properties": {
         "order": {"type": "integer", "minimum": 0, "maximum": 25},
@@ -162,7 +162,7 @@
         "queue_state": {"enum": ["COMPLETE", "ACTIVE", "BLOCKED_BY_PREDECESSOR", "FINAL_CONVERGENCE"]},
         "acceptance": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "evidence_boundary": {"type": "string", "minLength": 1},
-        "human_boundary": {"type": "string", "minLength": 1}
+        "automation_boundary": {"type": "string", "minLength": 1}
       }
     }
   }

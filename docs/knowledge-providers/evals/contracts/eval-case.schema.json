@@ -1,1 +1,148 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-evals/eval-case.schema.json","title":"Knowledge Provider Eval Case v1","type":"object","additionalProperties":false,"required":["schema_version","id","family","capability","subject","query","query_digest","participants","oracle","hard_gates","budgets","eligible_recommendations","fixture_subject"],"properties":{"schema_version":{"const":"knowledge-provider-eval-case/v1"},"id":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"},"family":{"enum":["symbol","semantic","graph","memory"]},"capability":{"enum":["symbol.lookup","search.semantic","graph.impact","memory.recall"]},"subject":{"$ref":"#/$defs/subject"},"query":{"type":"object","minProperties":1},"query_digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},"participants":{"type":"array","minItems":2,"maxItems":2,"uniqueItems":true,"items":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"}},"oracle":{"type":"object","additionalProperties":false,"required":["relevant_ids","must_remain_unknown"],"properties":{"relevant_ids":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"}},"must_remain_unknown":{"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"}}}},"hard_gates":{"type":"object","minProperties":7},"budgets":{"type":"object","minProperties":4},"eligible_recommendations":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["PRIMARY_CANDIDATE","SECONDARY_CANDIDATE","EXPERIMENTAL","REJECTED"]}},"fixture_subject":{"type":"boolean"},"memory_policy":{"type":"object","minProperties":3}},"$defs":{"subject":{"type":"object","additionalProperties":false,"required":["repository","commit","tree"],"properties":{"repository":{"type":"string","pattern":"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},"commit":{"type":"string","pattern":"^[0-9a-f]{40}$"},"tree":{"type":"string","pattern":"^[0-9a-f]{40}$"}}}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/knowledge-provider-evals/eval-case.schema.json",
+  "title": "Knowledge Provider Eval Case v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "family",
+    "capability",
+    "subject",
+    "query",
+    "query_digest",
+    "participants",
+    "oracle",
+    "hard_gates",
+    "budgets",
+    "eligible_recommendations",
+    "fixture_subject"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-provider-eval-case/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"
+    },
+    "family": {
+      "enum": [
+        "symbol",
+        "semantic",
+        "graph",
+        "memory"
+      ]
+    },
+    "capability": {
+      "enum": [
+        "symbol.lookup",
+        "search.semantic",
+        "graph.impact",
+        "memory.recall"
+      ]
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "query": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "query_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"
+      }
+    },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relevant_ids",
+        "must_remain_unknown"
+      ],
+      "properties": {
+        "relevant_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"
+          }
+        },
+        "must_remain_unknown": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"
+          }
+        }
+      }
+    },
+    "hard_gates": {
+      "type": "object",
+      "minProperties": 7
+    },
+    "budgets": {
+      "type": "object",
+      "minProperties": 4
+    },
+    "eligible_recommendations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "PRIMARY_CANDIDATE",
+          "SECONDARY_CANDIDATE",
+          "EXPERIMENTAL",
+          "REJECTED"
+        ]
+      }
+    },
+    "fixture_subject": {
+      "type": "boolean"
+    },
+    "memory_policy": {
+      "type": "object",
+      "minProperties": 3
+    }
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    }
+  }
+}

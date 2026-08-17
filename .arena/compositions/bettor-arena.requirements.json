@@ -14,6 +14,7 @@
       "components": [
         "bootstrap",
         "context",
+        "issue_state_guard",
         "proof"
       ],
       "id": "arena-core"

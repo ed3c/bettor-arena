@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bettor-arena/parallel-agent-tech-lead/plan.schema.json",
+  "title": "Bettor repository-owned Tech Lead fan-out plan",
+  "type": "object",
+  "required": ["schema", "upstream_contract", "repository", "mode", "base", "context", "budgets", "acceptance", "workers", "human_owned_operations"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "bettor-arena/tech-lead-plan/v1"},
+    "upstream_contract": {
+      "type": "object",
+      "required": ["repository", "commit", "schema_path", "schema_blob"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": {"const": "ed3c/skills-shared"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "schema_path": {"const": "skills/git-town-stacked-pr-worker/references/FAN_OUT_CONTRACT.schema.json"},
+        "schema_blob": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "repository": {"const": "ed3c/bettor-arena"},
+    "mode": {"enum": ["TOURNAMENT", "COOPERATIVE", "SERIAL_STACK", "HYBRID"]},
+    "base": {"type": "object"},
+    "context": {"type": "object"},
+    "budgets": {"type": "object"},
+    "acceptance": {"type": "object"},
+    "workers": {"type": "array", "minItems": 1},
+    "human_owned_operations": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  }
+}

@@ -1,0 +1,51 @@
+name: Issue 140 deterministic convergence
+
+on:
+  pull_request:
+    paths:
+      - 'docs/traceability/issue-140-convergence.json'
+      - 'scripts/gates/check_issue_140_convergence.py'
+      - 'docs/git/pdf-terminal-sequence.json'
+      - 'docs/knowledge-providers/**'
+      - 'loop_wiki/code-truth-graph-v2/**'
+      - 'loop_wiki/parallel-agent-tech-lead/**'
+      - '.arena/modules/parallel-agent-tech-lead/**'
+      - '.github/workflows/issue-140-convergence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/traceability/issue-140-convergence.json'
+      - 'scripts/gates/check_issue_140_convergence.py'
+      - 'docs/git/pdf-terminal-sequence.json'
+      - 'docs/knowledge-providers/**'
+      - 'loop_wiki/code-truth-graph-v2/**'
+      - 'loop_wiki/parallel-agent-tech-lead/**'
+      - '.arena/modules/parallel-agent-tech-lead/**'
+      - '.github/workflows/issue-140-convergence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  convergence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate aggregate convergence receipt
+        run: |
+          python3 scripts/gates/check_issue_140_convergence.py --selftest
+          python3 scripts/gates/check_issue_140_convergence.py
+      - name: Validate predecessor contracts remain green
+        run: |
+          sh loop_wiki/code-truth-graph-v2/tests/run-all.sh
+          sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
+          python3 scripts/gates/check_code_graph_rag_retirement.py --selftest
+          python3 scripts/gates/check_code_graph_rag_retirement.py
+          python3 scripts/gates/check_agentic_tech_lead_binding.py
+          python3 scripts/gates/check_pdf_terminal_sequence.py

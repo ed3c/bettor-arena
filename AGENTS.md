@@ -31,9 +31,10 @@ For module, Macro/Micro loop, Skill, runtime-env, proof, MCP, provider, LoopX, W
 21. [`docs/git/stack-prs.index.json`](docs/git/stack-prs.index.json)
 22. [`docs/traceability/STACK_PR_INDEX.md`](docs/traceability/STACK_PR_INDEX.md)
 23. [`docs/agent-runtime-integration.md`](docs/agent-runtime-integration.md)
-24. the current active issue/task packet and exact GitHub base/head/checks
-25. `sh loopctl/loopctl.sh contract`
-26. the nearest module README, `module.json`, contracts, source, tests and exact-subject receipts
+24. [`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md)
+25. the current active issue/task packet and exact GitHub base/head/checks
+26. `sh loopctl/loopctl.sh contract`
+27. the nearest module README, `module.json`, contracts, source, tests and exact-subject receipts
 
 A missing route, owner, branch edge, path lease, eval, receipt, provider subject or exact head is `ABSENT`. Do not infer it. Open a new Agent session after passive-context changes before claiming the updated route was loaded.
 
@@ -73,7 +74,7 @@ Never import these source examples without redesign:
 - LangGraph checkpoint as canonical state;
 - raw Thought Stream or private chain-of-thought persistence;
 - provider/model prose promoted to `TESTED` or PASS;
-- automatic merge after a Gate;
+- automatic merge after a generic Gate without the exact-head automated-admission contract;
 - unverified latency, RAM, license, cost, security or certainty claims.
 
 ## LoopX PDF verification protocol
@@ -94,8 +95,30 @@ strategy graph proposes
 Worker executes
 Gates observe
 LoopX reducer alone commits canonical task state
-Human alone admits scoped exceptions, merge, promotion and rollback
+the automated-admission controller alone admits push, merge, queue advancement,
+provider activation, promotion and rollback for an exact verified subject
 ```
+
+## Automated admission contract
+
+[`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md) is the
+authority SSOT for irreversible delivery operations. The repository owner grants
+standing authorization for Agents to push, merge, advance the ordered queue,
+activate an allowlisted provider, promote and roll back without a per-operation
+confirmation prompt, but only through the named typed controllers and exact-subject
+gates in that contract.
+
+Automation is fail-closed. A missing lease, receipt, exact head, required check,
+provider identity, budget/data-scope bound, cleanup proof or rollback subject is
+`BLOCKED_POLICY`; it is never inferred. Semantic conflicts that lack a deterministic
+declared winner stop as `CONFLICT` and open or update the owning issue. They do not
+grant permission to guess.
+
+Conserve GitHub Actions: keep repair commits local, publish once at the meaningful
+head transition, never use no-op pushes to retrigger CI, and rerun only failed jobs
+when the failure is classified as transient. Merge uses an expected-head compare-
+and-swap; queue advancement follows merge readback and reruns the deterministic queue
+gate before the next item becomes active.
 
 ## Three-strike recovery and dual-origin delivery
 
@@ -113,11 +136,11 @@ schema: docs/git/pdf-terminal-sequence.schema.json
 human view: docs/git/PDF_TERMINAL_SEQUENCE.md
 program: #61
 index task: #102
-current active item: #92 (order 12)
+current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 final convergence: #68
 ```
 
-**Only one queue item may be ACTIVE.** A later item may not be called complete until every earlier item is complete on an immutable subject or a Human records an explicit scoped waiver.
+**Only one queue item may be ACTIVE.** A later item may not be called complete until every earlier item is complete on an immutable subject or the automated-admission controller records an explicit, scoped, expiring waiver receipt allowed by policy.
 
 **Do not create a future terminal branch** before its queue item becomes active. Issue creation is planning evidence; a branch or empty PR is not implementation progress.
 
@@ -140,12 +163,12 @@ Do not create a 26-deep branch chain merely to mirror queue order. Once a predec
 
 ```text
 #82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
-→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71
 → #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
 → #101 → #68
 ```
 
-Orders 0–11 are complete in the machine queue. Later implementation bytes may already be reachable from `main`, but they do not proxy the active #92 live-provider acceptance or any later queue item.
+Orders 0–12 are complete in the machine queue. Order 13 / #140 is ACTIVE with deterministic Blindspots, context-funnel, Tech Lead and retirement leaves merged; Human Admit and any independently required live evidence remain separate and fixture/static evidence cannot advance the queue.
 
 ### Queue advancement receipt
 
@@ -161,7 +184,7 @@ hollow or planted mutation that turns red
 bounded artifacts and cleanup/residue receipt
 rollback subject
 exact-head GitHub checks when a PR exists
-Human review for merge or activation
+automated-admission receipt for merge or activation
 ```
 
 Record `PASS`, `FAIL`, `ABSENT`, `NOT_IMPLEMENTED`, `NOT_EXERCISED` and `SKIPPED_BY_POLICY` separately.
@@ -191,7 +214,7 @@ Git Town executable/version/checksum     ABSENT
 license/SBOM/legal review                NOT_REVIEWED
 live no-push sync                        NOT_EXERCISED
 remote publication                       NOT_EXERCISED
-merge/ship/rollback                       HUMAN-OWNED
+merge/ship/rollback                       AUTOMATION-POLICY-OWNED
 ```
 
 Before branch or Stack work, read:
@@ -217,7 +240,7 @@ dependencies and path leases
 required positive/control/mutation evals
 evidence and cleanup boundary
 rollback subject
-Human-owned operations
+automation-owned operations and their controller routes
 ```
 
 ### Branch and worktree laws
@@ -232,17 +255,18 @@ Human-owned operations
 - Reachability from current `main` is required before claiming current-main integration.
 - Duplicate active branches for the same issue/path are a blocking conflict, not parallel progress.
 
-### Prohibited Git Town operations for Agents
+### Automated Git Town and delivery operations
 
-Agents and background Workers must not:
+Agents and background Workers may push, merge, ship, close, delete, advance the
+queue, activate providers, promote and roll back only through the admitted typed
+controller named by [`docs/git/AUTOMATED_ADMISSION.md`](docs/git/AUTOMATED_ADMISSION.md).
+The controller must bind the exact head and rollback subject and emit a receipt.
 
-- resolve semantic conflicts;
-- execute continue, skip or undo after conflict;
-- push, merge, ship, close or delete branches;
-- change remotes, credential helpers or permissions;
-- create `.git-town.toml` before executable/version/legal admission;
-- convert a local sync into publication evidence;
-- promote a candidate or perform rollback.
+Direct or ambiguous paths remain prohibited: raw Git Town continue/skip/undo after
+a conflict, guessed semantic conflict resolution, remote/credential/permission
+mutation, premature `.git-town.toml`, local-sync-as-publication evidence, force push,
+and controller bypass. A conflict without a deterministic policy winner stops and is
+recorded; it is not silently resolved.
 
 Issue #101 and PR #133 landed the fail-closed admission mechanism. Actual Git Town activation remains blocked until an exact executable, configuration, supply-chain evidence and live no-push canary are admitted.
 
@@ -250,7 +274,7 @@ Issue #101 and PR #133 landed the fail-closed admission mechanism. Actual Git To
 
 ```text
 Macro loop
-  owns architecture, module composition, Stack queue, routing, Human Admit and release
+  owns architecture, module composition, Stack queue, routing, automated admission and release
 
 Micro loop
   owns one typed Todo, one leased workspace, bounded context, execution and Gate artifacts
@@ -273,7 +297,7 @@ Handoff output must contain TaskResult, artifact refs, Gate results, evidence-bo
 
 - `loopctl/contract.json` is the canonical public CLI surface.
 - MCP derives from the CLI contract and `.arena/mcp-policy.json`; it is default deny and stateless unless an explicit handle is supplied.
-- Generic shell, arbitrary host paths, secrets, browser profiles, merge and Human Admit are never MCP tools.
+- Generic shell, arbitrary host paths, secrets and browser profiles are never MCP tools. Merge, queue, provider activation, promotion and rollback may be exposed only as default-deny typed tools backed by the automated-admission contract.
 - `.arena/contexts/*.json` selects passive context; `.arena/contexts.lock.json` binds exact bytes.
 - LangGraph, UI, vector/graph indexes, OpenWiki and memory providers are projections, not task-state authority.
 
@@ -323,7 +347,7 @@ relevant State Machine and directory maps
 deterministic verifier and exact-head checks
 ```
 
-Do not silently rewrite history. Keep `MERGED_TO_PARENT`, `MERGED_TO_MAIN`, `SUPERSEDED_CANDIDATE`, conflict and Human-waiver records distinct.
+Do not silently rewrite history. Keep `MERGED_TO_PARENT`, `MERGED_TO_MAIN`, `SUPERSEDED_CANDIDATE`, conflict and policy-waiver records distinct.
 
 ## Module and generated-file rules
 
@@ -363,7 +387,7 @@ CONTINUE
   actionable queue work remains
 
 BLOCKED
-  a named dependency, permission, source or Human decision is missing
+  a named dependency, permission, source or automation-policy input is missing
 
 FAILED
   checked input/state is invalid and cannot be repaired within the current scope
@@ -372,14 +396,16 @@ FAILED
 For this ordered Stack:
 
 ```text
-current active item: #92 (order 12)
+current active item: #140 (order 13; HUMAN_ADMIT_REQUIRED)
 future implementation items: BLOCKED_BY_PREDECESSOR
 final convergence: #68
 Git Town runtime: NOT_EXERCISED
 complete PDF architecture: NOT_EXERCISED as one admitted release subject
 ```
 
-Green documentation checks create a review candidate only. Agents do not merge, promote or roll back.
+Green documentation checks create a candidate only. Agents merge, advance, activate,
+promote or roll back only after the automated-admission controller verifies the exact
+subject and writes its receipt.
 
 <!-- BEGIN SKILLS-SHARED INSTRUCTION PROJECTION -->
 ## Shared runtime / delivery projection

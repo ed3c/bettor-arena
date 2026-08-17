@@ -1,0 +1,95 @@
+{
+  "schema_version": "bettor-arena/issue-140-convergence/v1",
+  "issue": 140,
+  "queue": {
+    "order": 13,
+    "state": "ACTIVE",
+    "advance_allowed": false,
+    "reason": "Deterministic consumer architecture is converged, but issue #140 requires exact-subject live/deterministic acceptance plus Human review; fixture/static evidence cannot advance the queue."
+  },
+  "base": {
+    "repository": "ed3c/bettor-arena",
+    "main_commit": "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3"
+  },
+  "predecessors": [
+    {
+      "id": "BLIND-01",
+      "pr": 153,
+      "merge_commit": "0e27c9898925259b58c136e01fa4de175ad75231",
+      "state": "PASS",
+      "provides": [
+        "subject-bound SQLite Blindspots ledger",
+        "FOUND/CONTESTED/NO_FLOW/UNKNOWN reducer",
+        "fresh-complete coverage law",
+        "source-readback authority",
+        "WAL/SHM cleanup controls"
+      ]
+    },
+    {
+      "id": "CONTEXT-FUNNEL",
+      "issue": 138,
+      "pr": 155,
+      "merge_commit": "9ec507f685c9f3d0fcf97238d036a22be92fddf5",
+      "state": "PASS",
+      "provides": [
+        "exact commit/tree CAS",
+        "SQLite subject binding",
+        "bounded bidirectional traversal",
+        "target/dependency/callsite/test context plan"
+      ]
+    },
+    {
+      "id": "ADE-01",
+      "issue": 139,
+      "pr": 156,
+      "merge_commit": "d45c1bd8e9f1ba9c92c6926173efd59a4dfdcf33",
+      "state": "PASS",
+      "provides": [
+        "TOURNAMENT/COOPERATIVE/SERIAL_STACK/HYBRID planner",
+        "path/resource/oracle/budget controls",
+        "repository-owned Worker packet compiler",
+        "permanent exact-head Tech Lead workflow"
+      ]
+    },
+    {
+      "id": "RETIRE-01",
+      "pr": 157,
+      "merge_commit": "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3",
+      "state": "PASS",
+      "provides": [
+        "Code-Graph-RAG provider manifest absence",
+        "provider/evaluator registry absence",
+        "canonical evaluator fixture pruning",
+        "RETIRED_FROM_CANONICAL_ROUTE binding state"
+      ]
+    }
+  ],
+  "architecture": {
+    "code_graph_rag": "RETIRED_FROM_CANONICAL_ROUTE",
+    "blindspots_sqlite": "IMPLEMENTED",
+    "context_funnel": "IMPLEMENTED",
+    "parallel_agent_tech_lead": "IMPLEMENTED",
+    "canonical_task_state_writer": "LoopX reducer only",
+    "skills_body_location": "ed3c/skills-shared",
+    "consumer_repo_copies_skill_body": false
+  },
+  "live_evidence": {
+    "grepai_canary": "NOT_EXERCISED",
+    "serena_canary": "NOT_EXERCISED",
+    "scip_lsp_live_execution": "NOT_EXERCISED",
+    "tree_sitter_live_grammar_coverage": "NOT_EXERCISED",
+    "git_town_executable_sync": "NOT_EXERCISED",
+    "forgejo_exact_ancestry": "NOT_EXERCISED"
+  },
+  "admission": {
+    "state": "HUMAN_ADMIT_REQUIRED",
+    "merge_of_leaf_prs": "PASS",
+    "queue_advance": "BLOCKED",
+    "provider_activation": "BLOCKED",
+    "release_promotion": "BLOCKED"
+  },
+  "rollback": {
+    "pre_convergence_main": "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3",
+    "policy": "No destructive rollback is performed by this receipt; use exact-subject automated admission after Human decision."
+  }
+}
