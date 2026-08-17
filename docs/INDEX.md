@@ -22,6 +22,36 @@ PDF/article issue is closed:
 GitHub metadata. The closure monitor identifies the current subject; GitHub
 issue/PR metadata remains current external authority.
 
+## Dual-Agent source-problem closure route
+
+This route specializes the parent Tech Lead + Shadow monitor for the uploaded
+`双 Agent 架构：云端本地协同` source. The PDF remains `SOURCE_PROPOSAL`; this
+route records owners and missing evidence rather than promoting its claims:
+
+- [`architecture/dual-agent-closure/AGENTS.md`](architecture/dual-agent-closure/AGENTS.md) — mandatory source classification, Tech Lead packet, authority, writer-lease, Shadow-review and stop laws.
+- [`architecture/dual-agent-closure/README.md`](architecture/dual-agent-closure/README.md) — source-problem denominator, current closure verdict, cross-repository directory → State Machine → DAG → data-flow map, issue matrix and Molecular Stack PR index.
+- [`architecture/dual-agent-closure/closure-matrix.json`](architecture/dual-agent-closure/closure-matrix.json) — machine-readable problem, repository-plane, issue, process-edge, evidence-stage and forbidden-promotion matrix.
+
+Issue [`#187`](https://github.com/ed3c/bettor-arena/issues/187) owns this route.
+Its branch is a **true documentation child** of the unmerged Tech Lead/Shadow
+parent PR because it consumes that parent's route and closure vocabulary. The
+process DAG recorded here is not Git ancestry: cross-repository prerequisites
+remain issue/evidence edges, while Git Town children require actual unmerged-byte
+dependency.
+
+The route preserves these distinct states:
+
+```text
+source problem bound
+!= mechanism implemented
+!= deterministic PASS
+!= physical local/cloud execution
+!= user-outcome verification
+!= Human Admit
+!= licensed release
+!= production operation and rollback
+```
+
 ## Standard multi-hop routes
 
 - [`architecture/DOCUMENT_ROUTING.md`](architecture/DOCUMENT_ROUTING.md) — route names and assertions.
@@ -65,6 +95,7 @@ python3 scripts/gates/check_tech_lead_shadow_closure.py
 python3 scripts/gates/check_tech_lead_shadow_closure.py --selftest
 python3 scripts/gates/check_local_handoff_execution_queue.py
 python3 scripts/gates/check_local_handoff_execution_queue.py --selftest
+python3 -m json.tool docs/architecture/dual-agent-closure/closure-matrix.json >/dev/null
 ```
 
 The nearest README routes to machine authority. Prose never overrides manifests,
