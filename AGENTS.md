@@ -96,7 +96,23 @@ A green document audit proves agreement for exact repository bytes only. It does
 
 ## LoopX PDF verification protocol
 
-Use only the LoopX routes listed in the conditional table. The strategy graph may propose; Workers/providers may execute; hard Gates observe; the LoopX reducer commits canonical task state; the admitted controller alone performs irreversible transitions. Presence of the LoopX documents does not mean the LoopX kernel or HITL runtime is implemented.
+Use only the LoopX routes listed in the conditional table. Execute the owning verifier only when this route is selected:
+
+```sh
+python3 scripts/gates/check_pdf_loopx_harness_integration.py
+python3 scripts/gates/check_pdf_loopx_harness_integration.py --selftest
+```
+
+Preserve this authority wording because the existing machine contract consumes these route anchors:
+
+```text
+strategy graph proposes
+Worker/provider executes
+hard Gates observe
+LoopX reducer alone commits canonical task state
+```
+
+The admitted controller alone performs irreversible transitions. Presence of the LoopX documents does not mean the LoopX kernel or HITL runtime is implemented.
 
 ## Automated admission contract
 
@@ -124,7 +140,7 @@ Human route:
 docs/git/PDF_TERMINAL_SEQUENCE.md
 ```
 
-Read the current active item from the machine file. Do not duplicate the mutable queue in this document. Only one item is active. Do not create a future terminal branch before activation.
+Read the current active item from the machine file. Do not duplicate the mutable queue in this document. Only one queue item may be ACTIVE. Do not create a future terminal branch before activation.
 
 Queue order is a process dependency. Git ancestry follows actual byte dependency.
 
