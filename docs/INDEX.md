@@ -8,25 +8,38 @@
 - [`../CONTEXT.md`](../CONTEXT.md) — current four-repository/PDF handoff and glossary.
 - [`../ARCHITECTURE.md`](../ARCHITECTURE.md) — stable placement and engineering invariants.
 
+## Current Tech Lead + Shadow closure route
+
+Read this route before using a historical Stack snapshot or claiming that a
+PDF/article issue is closed:
+
+- [`architecture/tech-lead-shadow-monitor/AGENTS.md`](architecture/tech-lead-shadow-monitor/AGENTS.md) — mandatory Tech Lead/Shadow procedure, writer leases and stop conditions.
+- [`architecture/tech-lead-shadow-monitor/README.md`](architecture/tech-lead-shadow-monitor/README.md) — current directory → State Machine map, DAG, data flow, molecular PR index, closure status and Local Handoff queue.
+- [`architecture/tech-lead-shadow-monitor/closure-matrix.json`](architecture/tech-lead-shadow-monitor/closure-matrix.json) — machine-readable real-problem denominator and evidence ceilings.
+- [`traceability/local-handoff-execution-queue.json`](traceability/local-handoff-execution-queue.json) — the one canonical local/runtime continuation queue.
+
+`traceability/STACK_PR_INDEX.md` retains historical narrative and can lag current
+GitHub metadata. The closure monitor identifies the current subject; GitHub
+issue/PR metadata remains current external authority.
+
 ## Standard multi-hop routes
 
 - [`architecture/DOCUMENT_ROUTING.md`](architecture/DOCUMENT_ROUTING.md) — route names and assertions.
-- [`architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) — 41-page source proposal versus current Bettor mechanisms.
+- [`architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) — source proposal versus current Bettor mechanisms.
 - [`architecture/pdf-harness-integration.matrix.json`](architecture/pdf-harness-integration.matrix.json) — machine-readable component states and evidence paths.
 - [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) — directory owners, inputs, outputs, transitions and data flow.
-- [`architecture/STATE_MACHINES.md`](architecture/STATE_MACHINES.md) — current state machines and missing LoopX target.
+- [`architecture/STATE_MACHINES.md`](architecture/STATE_MACHINES.md) — current State Machines and missing LoopX target.
 - [`architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md`](architecture/PDF_LOOPX_HARNESS_TRACEABILITY.md) — LoopX-specific requirement, authority and gap audit.
 - [`architecture/pdf-loopx-harness.integration.json`](architecture/pdf-loopx-harness.integration.json) — executable LoopX audit contract.
 - [`git/README.md`](git/README.md) — repository-owned Git Town adoption and Stack policy.
 - [`git/REPO_PROFILE.md`](git/REPO_PROFILE.md) — observed repository shape the Stack policy is bound to.
-- [`git/STACKED_PRS.md`](git/STACKED_PRS.md) — stacked-PR construction, retarget and land order.
+- [`git/STACKED_PRS.md`](git/STACKED_PRS.md) — historical construction, retarget and land rules.
 - [`git/WORKER_PROTOCOL.md`](git/WORKER_PROTOCOL.md) — what a Worker session may and may not do to a Stack.
 - [`git/GIT_TOWN_ADMISSION.md`](git/GIT_TOWN_ADMISSION.md) — admission state of the Git Town binary itself.
-- [`git/AUTOMATED_ADMISSION.md`](git/AUTOMATED_ADMISSION.md) — standing exact-subject authority for automated delivery, queue, provider and release operations.
-- [`git/stack-prs.index.json`](git/stack-prs.index.json) — machine-readable Stack topology, checked by `scripts/gates/check_git_town_stack_docs.py`.
+- [`git/AUTOMATED_ADMISSION.md`](git/AUTOMATED_ADMISSION.md) — exact-subject authority for automated delivery, queue, provider and release operations.
 - [`integration/CROSS_REPO_INTEGRATION.md`](integration/CROSS_REPO_INTEGRATION.md) — four-repository ownership and release flow.
-- [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt index.
-- [`traceability/STACK_PR_INDEX.md`](traceability/STACK_PR_INDEX.md) — molecular sibling/child/terminal/convergence topology.
+- [`traceability/TRACEABILITY_INDEX.md`](traceability/TRACEABILITY_INDEX.md) — source/decision/issue/PR/eval/receipt history.
+- [`traceability/STACK_PR_INDEX.md`](traceability/STACK_PR_INDEX.md) — historical molecular topology narrative.
 
 ## Canonical modular contracts
 
@@ -48,11 +61,12 @@
 ## Validation
 
 ```sh
-python3 scripts/gates/check_pdf_harness_integration.py
-python3 scripts/gates/check_pdf_harness_integration.py --selftest
-python3 scripts/gates/check_agent_docs.py
-python3 scripts/gates/check_readme_coverage.py
-python3 scripts/gates/check_module_catalog.py
+python3 scripts/gates/check_tech_lead_shadow_closure.py
+python3 scripts/gates/check_tech_lead_shadow_closure.py --selftest
+python3 scripts/gates/check_local_handoff_execution_queue.py
+python3 scripts/gates/check_local_handoff_execution_queue.py --selftest
 ```
 
-The nearest README routes to machine authority. Prose never overrides manifests, contracts, scripts, tests, receipts or Git history.
+The nearest README routes to machine authority. Prose never overrides manifests,
+contracts, scripts, tests, receipts, Git history, local runtime observations, or
+Human admission.

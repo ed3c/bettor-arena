@@ -1,0 +1,256 @@
+{
+  "closure_items": [
+    {
+      "deterministic": "OBSERVED_DIVERGENCE",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "dual-origin",
+      "live": "NOT_RECONCILED",
+      "mechanism": "IMPLEMENTED",
+      "next": "reconcile exact local/forgejo/github ancestry",
+      "owner": "ed3c/bettor-arena#172",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "NOT_REQUIRED_FOR_STATIC",
+      "id": "blindspots-context-funnel",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "#146 physical exact-subject run",
+      "owner": "ed3c/bettor-arena#140",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "parallel-tech-lead",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "#161 then #146",
+      "owner": "ed3c/bettor-arena#146",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "procedural-shadow-independent-live",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "independent same-subject Shadow receipt",
+      "owner": "skills-shared#232 + bettor-arena#146",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "git-town-runtime",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "admit exact executable/config and no-push canary",
+      "owner": "ed3c/bettor-arena#101",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "controlled-language-deterministic",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "consumer projection and carrier canaries #83/#88/#108",
+      "owner": "ed3c/skills-shared#115",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "NOT_APPLICABLE",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "controlled-language-heuristic-semantic",
+      "live": "NOT_EXERCISED",
+      "mechanism": "NOT_IMPLEMENTED",
+      "next": "pinned heuristic/model implementation and calibrated corpus",
+      "owner": "ed3c/skills-shared#115",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "NOT_EXERCISED",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "production-termbase-and-safety-review",
+      "live": "NOT_EXERCISED",
+      "mechanism": "ABSENT",
+      "next": "Human-admitted TN/TV and Warning/Caution review receipts",
+      "owner": "ed3c/bettor-arena#83",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "confidential-external-processing",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "approved private/external lane canary",
+      "owner": "ed3c/bettor-arena#83",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "PASS",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "intent-promotion",
+      "live": "NOT_EXERCISED",
+      "mechanism": "IMPLEMENTED",
+      "next": "subject-bound admitted consumer writeback",
+      "owner": "ed3c/skills-shared",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "NOT_EXERCISED",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "production-memory-writeback",
+      "live": "NOT_EXERCISED",
+      "mechanism": "NOT_IMPLEMENTED",
+      "next": "append-only admitted memory/context projection",
+      "owner": "ed3c/bettor-arena",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "FAIL",
+      "human": "NOT_REQUIRED_FOR_FIX",
+      "id": "workflow-receipt-status",
+      "live": "NOT_APPLICABLE",
+      "mechanism": "DEFECT_CONFIRMED",
+      "next": "prevent forced red receipt from becoming green lock",
+      "owner": "ed3c/bettor-arena#174",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "FAIL",
+      "human": "NOT_REQUIRED_FOR_FIX",
+      "id": "origin-projection-freshness",
+      "live": "NOT_EXERCISED",
+      "mechanism": "DEFECT_CONFIRMED",
+      "next": "bind scratch render comparison to exact-tree admission",
+      "owner": "ed3c/bettor-arena#175",
+      "release": "BLOCKED"
+    },
+    {
+      "deterministic": "NOT_EXERCISED",
+      "human": "HUMAN_ADMIT_REQUIRED",
+      "id": "final-release",
+      "live": "NOT_EXERCISED",
+      "mechanism": "NOT_IMPLEMENTED",
+      "next": "complete predecessors and compose exact terminal subjects",
+      "owner": "ed3c/bettor-arena#68",
+      "release": "BLOCKED"
+    }
+  ],
+  "directory_owners": [
+    {
+      "evidence_ceiling": "DOCUMENT_AND_DETERMINISTIC_CONSISTENCY",
+      "inputs": ["PDF/source proposal", "GitHub issues/PRs", "repository contracts", "receipts"],
+      "outputs": ["closure matrix", "DAG/data-flow map", "Agent route"],
+      "owner": "tech-lead-shadow-closure",
+      "path": "docs/architecture/tech-lead-shadow-monitor/",
+      "state_machine": "DISCOVER → CLASSIFY → MAP_OWNER → ASSERT_EVIDENCE → REGISTER_GAP → HANDOFF"
+    },
+    {
+      "evidence_ceiling": "LOCAL_RUNTIME_RECEIPT_REQUIRED",
+      "inputs": ["exact GitHub publication subject", "local/Forgejo observations", "owner issue"],
+      "outputs": ["host-private exact-subject receipt", "next immutable epoch"],
+      "owner": "local-handoff",
+      "path": "docs/traceability/local-handoff-execution-queue.json",
+      "state_machine": "FREEZE_SUBJECT → ONE_ACTIVE_ITEM → RESOLVE_COMMAND → EXECUTE_LOCAL_LANE → ASSERT_RECEIPT → NEXT_EPOCH_OR_BLOCK"
+    },
+    {
+      "evidence_ceiling": "DETERMINISTIC_STATIC_UNLESS_LIVE_RECEIPT",
+      "inputs": ["exact source tree", "SCIP/LSP/Tree-sitter/provider candidates"],
+      "outputs": ["SQLite evidence", "bounded context plan"],
+      "owner": "blindspots-and-context-funnel",
+      "path": "loop_wiki/code-truth-graph-v2/",
+      "state_machine": "OBSERVE → COVERAGE/FRESHNESS → SOURCE_READBACK → FOUND/CONTESTED/NO_FLOW/UNKNOWN"
+    },
+    {
+      "evidence_ceiling": "CONTRACT_AND_FIXTURE_UNTIL_PHYSICAL_RUN",
+      "inputs": ["frozen task", "context funnel receipt", "budgets", "leases"],
+      "outputs": ["bounded worker packets", "comparison/convergence receipt"],
+      "owner": "parallel-tech-lead",
+      "path": "loop_wiki/parallel-agent-tech-lead/",
+      "state_machine": "REQUEST → CONTRACT → CAPABILITY_DAG → WORKER_PACKETS → ATTEMPTS → CONVERGENCE → GLOBAL_OBJECTIVE"
+    },
+    {
+      "evidence_ceiling": "DECLARED_GATE_SUBJECT_ONLY",
+      "inputs": ["contracts", "fixtures", "exact repository bytes"],
+      "outputs": ["machine verdicts"],
+      "owner": "deterministic-gates",
+      "path": "scripts/gates/",
+      "state_machine": "LOAD_EXACT_SUBJECT → ASSERT → CONTROL/MUTATION → 0/2/64/70"
+    },
+    {
+      "evidence_ceiling": "NOT_EXERCISED_UNTIL_LOCAL_RECEIPT",
+      "inputs": ["runtime-env immutable release", "local host root"],
+      "outputs": ["secret-free binding", "local canary receipt"],
+      "owner": "runtime-contract-consumer",
+      "path": ".runtime-env/",
+      "state_machine": "DECLARE → RESOLVE → REBIND → MATERIALIZE → CANARY → RECEIPT"
+    },
+    {
+      "evidence_ceiling": "ORDER_13_REMAINS_ACTIVE",
+      "inputs": ["terminal receipts", "current GitHub metadata"],
+      "outputs": ["active-order transition"],
+      "owner": "pdf-terminal-queue",
+      "path": "docs/git/pdf-terminal-sequence.json",
+      "state_machine": "PREDECESSOR_COMPLETE → ONE_ACTIVE_TERMINAL → TERMINAL_RECEIPT → HUMAN/TYPED_ADMISSION → ADVANCE"
+    },
+    {
+      "evidence_ceiling": "BLOCKED_BY_PREDECESSORS",
+      "inputs": ["all admitted terminal subjects"],
+      "outputs": ["content-addressed release", "rollback subject"],
+      "owner": "final-convergence-68",
+      "path": ".arena/compositions/ + data/module-proof/",
+      "state_machine": "SELECT → LOCK → PROVE → LIVE_CANARIES → ADMIT → RELEASE/ROLLBACK"
+    }
+  ],
+  "independent_siblings": [
+    {"branch": "docs/173-tech-lead-shadow-closure", "id": "issue-173", "pr": null, "relation": "SIBLING", "state": "BRANCH_NOT_CREATED", "task_ref": "ed3c/bettor-arena#173"},
+    {"branch": null, "id": "issue-174", "pr": null, "relation": "SIBLING", "state": "PLANNED", "task_ref": "ed3c/bettor-arena#174"},
+    {"branch": null, "id": "issue-175", "pr": null, "relation": "SIBLING", "state": "PLANNED", "task_ref": "ed3c/bettor-arena#175"}
+  ],
+  "local_handoff": {
+    "canonical_path": "docs/traceability/local-handoff-execution-queue.json",
+    "current_active_issue": 172,
+    "deprecated_duplicate_path": "docs/git/local-handoff-execution-queue.json",
+    "epoch_policy": "ONE_IMMUTABLE_SUBJECT_PER_EPOCH",
+    "next_epoch_after": "dual-origin reconciliation receipt and newly frozen exact subject"
+  },
+  "molecular_pr_index": [
+    {"evidence_ceiling": "DETERMINISTIC_STATIC", "head": "056f45d1ea7dae3fb5d77faead5fae1fd31ed0b3", "issue": 140, "merge_commit": "0e27c9898925259b58c136e01fa4de175ad75231", "pr": 153, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Blindspots SQLite evidence ledger"},
+    {"evidence_ceiling": "DETERMINISTIC_STATIC", "head": "fd6af52e34cbaadbba10b2ec70179c8f7e567faa", "issue": 138, "merge_commit": "9ec507f685c9f3d0fcf97238d036a22be92fddf5", "pr": 155, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Exact-subject context funnel"},
+    {"evidence_ceiling": "PLANNER_FIXTURE", "head": "7fba9172e47f3f7b6a94155ea221cf81db50858b", "issue": 139, "merge_commit": "d45c1bd8e9f1ba9c92c6926173efd59a4dfdcf33", "pr": 156, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Repository-owned Tech Lead fan-out planner"},
+    {"evidence_ceiling": "ROUTE_RETIREMENT", "head": "3970d91ffd333cb491b695823ea3d460e4a204f5", "issue": 140, "merge_commit": "ad0fdde3e46aa6ab6c59ced145bead7fa4fc72d3", "pr": 157, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Retire Code-Graph-RAG canonical routes"},
+    {"evidence_ceiling": "DETERMINISTIC_NO_QUEUE_ADVANCE", "head": "fb94d01cb407e2a42f23b2bdca9eaa50b4bc0817", "issue": 140, "merge_commit": "e67a803ba6d12f8141a1bed3a26d9ec928931e35", "pr": 158, "relation": "CONVERGENCE", "state": "MERGED_TO_MAIN", "title": "Deterministic order-13 convergence"},
+    {"evidence_ceiling": "READINESS_NOT_PHYSICAL_RUN", "head": "7fadf5d29ed5df00d49b53a96ac10fbae3c510fa", "issue": 146, "merge_commit": "1970a2a6db3b743a2ad9204bcf506e80dbfd799b", "pr": 159, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Physical Tech Lead readiness"},
+    {"evidence_ceiling": "QUEUE_CONTRACT_NOT_EXECUTION", "head": "1f9adb2bf81ff12c2d8d9591d9e82fff9d7517b3", "issue": null, "merge_commit": "8c911b998fdf77d1abdfa4bb4153b0a7a5eaa9cf", "pr": 169, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Local Handoff queue #161→#146→#140"},
+    {"evidence_ceiling": "CONTRACT_ADOPTION_NOT_WORKER_RUN", "head": "2e96d0f3fbd15c0abda0df6ffa4d9a91c14d55ee", "issue": 146, "merge_commit": "4655b18a150716ad7a3a0edbe3201fd2927eef80", "pr": 154, "relation": "ROOT_AFTER_PREDECESSOR", "state": "MERGED_TO_MAIN", "title": "Parallel Tech Lead consumer adoption"}
+  ],
+  "observed_at": "2026-08-17T09:00:00Z",
+  "process_dag": [
+    {"git_parent": null, "id": "issue-172", "predecessor": null, "relation": "PROCESS_DEPENDENCY", "state": "ACTIVE", "task_ref": "ed3c/bettor-arena#172"},
+    {"git_parent": null, "id": "issue-161", "predecessor": "issue-172", "relation": "PROCESS_DEPENDENCY", "state": "BLOCKED_BY_PREDECESSOR", "task_ref": "ed3c/bettor-arena#161"},
+    {"git_parent": null, "id": "issue-146", "predecessor": "issue-161", "relation": "PROCESS_DEPENDENCY", "state": "BLOCKED_BY_PREDECESSOR", "task_ref": "ed3c/bettor-arena#146"},
+    {"git_parent": null, "id": "issue-140", "predecessor": "issue-146", "relation": "PROCESS_DEPENDENCY", "state": "BLOCKED_BY_PREDECESSOR", "task_ref": "ed3c/bettor-arena#140"},
+    {"git_parent": null, "id": "issue-68", "predecessor": "issue-140", "relation": "PROCESS_DEPENDENCY", "state": "FINAL_CONVERGENCE", "task_ref": "ed3c/bettor-arena#68"}
+  ],
+  "roles": {
+    "shadow_architect": {"forbidden": ["second-state-writer", "silent-builder-branch-edit", "live-pass-imputation", "human-admit-imputation"], "owns": ["independent-applicability-review", "contradiction-detection", "global-objective-review", "evidence-ceiling-review", "closure-gap-registration"]},
+    "tech_lead": {"forbidden": ["self-certify-global-objective", "proxy-live-evidence", "semantic-conflict-guess"], "owns": ["problem-decomposition", "interface-freeze", "task-dag", "writer-path-resource-leases", "convergence-owner", "local-handoff-queue"]}
+  },
+  "schema_version": "bettor-arena/tech-lead-shadow-closure/v1",
+  "source_proposals": [
+    {
+      "accepted_problem_classes": ["deterministic-semantic-deterministic-human-loop", "project-termbase-boundary", "warning-caution-human-review", "privacy-and-local-runtime", "multi-hop-agent-docs", "molecular-stack-traceability", "intent-promotion-and-memory-hygiene"],
+      "authority": "SOURCE_PROPOSAL",
+      "forbidden_promotions": ["source-proposal-to-official-standard", "prompt-output-to-compliance-pass", "static-fixture-to-live-pass", "agent-memory-to-canonical-authority"],
+      "id": "ste100-llm-harness-pdf",
+      "locator": "google-drive:1vqFNBQmCwh9xgziZxlO0oYk6fZQg9rQ_"
+    }
+  ],
+  "state_machine": ["SOURCE_PROPOSAL", "MECHANISM_IMPLEMENTED", "DETERMINISTICLY_VERIFIED", "LIVE_OR_PHYSICAL_EXECUTED", "HUMAN_ADMITTED", "RELEASED"],
+  "subject": {"commit": "4655b18a150716ad7a3a0edbe3201fd2927eef80", "local_implementation_authority": "FORGEJO", "origin_relation": "DIVERGED", "publication_authority": "GITHUB", "repository": "ed3c/bettor-arena", "rollback_commit": "8c911b998fdf77d1abdfa4bb4153b0a7a5eaa9cf", "tree": "849328ac84c770d5932a16b4a3a9f0946dff8dba"}
+}
