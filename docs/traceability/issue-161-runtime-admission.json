@@ -1,0 +1,71 @@
+{
+  "schema_version": "issue-161-runtime-admission/v1",
+  "issue": 161,
+  "parent_issue": 146,
+  "consumer_subject": {
+    "repository": "ed3c/bettor-arena",
+    "base_commit": "1970a2a6db3b743a2ad9204bcf506e80dbfd799b",
+    "base_tree": "0cbc4c53df2126fa7caad72fd1a382b2b9559f3c",
+    "default_branch": "main"
+  },
+  "canonical_subjects": {
+    "skills_shared": {
+      "repository": "ed3c/skills-shared",
+      "commit": "79439d615434b2ba271c6cbf2fbe62cd69ad826f",
+      "scheduler_schema": "skills/agentic-tech-lead-orchestration/references/scheduler-lifecycle.schema.json",
+      "scheduler_validator": "skills/agentic-tech-lead-orchestration/scripts/assert_scheduler_lifecycle.py"
+    },
+    "runtime_env": {
+      "repository": "ed3c/runtime-env",
+      "commit": "1ac7ee55a55d38fc10b4f5693d017028af463b6e",
+      "required_modules": ["multi-worker-scheduler"],
+      "required_profile": "repository-control-plane-scheduler-local",
+      "required_workload": "repository-control-plane-scheduler"
+    }
+  },
+  "checked_in_binding": {
+    "path": ".runtime-env/bindings/bettor-arena-local.json",
+    "observed_source_commit": "9ebbee650b7dc5ccc82aab7e40f0b899050a2549",
+    "state": "BLOCKED_STALE_BINDING"
+  },
+  "admission": {
+    "scheduler_runtime": "BLOCKED_STALE_BINDING",
+    "consumer_live_canary": "NOT_EXERCISED",
+    "git_town_darwin_artifact": "HUMAN_ADMIT_REQUIRED",
+    "forgejo_service_activation": "NOT_EXERCISED",
+    "merge_or_ship_authority": false
+  },
+  "evidence_lanes": {
+    "runtime_env_synthetic_scheduler": "PASS",
+    "runtime_env_synthetic_worktrees": "PASS",
+    "bettor_worker_processes": "NOT_EXERCISED",
+    "bettor_linked_worktrees": "NOT_EXERCISED",
+    "bettor_checkpoint_resume": "NOT_EXERCISED",
+    "bettor_stale_result_refusal": "NOT_EXERCISED",
+    "bettor_budget_reconciliation": "NOT_EXERCISED",
+    "grepai": "NOT_EXERCISED",
+    "scip_lsp": "NOT_EXERCISED",
+    "tree_sitter": "NOT_EXERCISED",
+    "serena": "NOT_EXERCISED",
+    "sqlite": "NOT_EXERCISED",
+    "lancedb": "NOT_EXERCISED",
+    "git_town": "NOT_EXERCISED",
+    "forgejo": "NOT_EXERCISED",
+    "github_exact_head": "NOT_EXERCISED"
+  },
+  "transition_rule": {
+    "ready_state": "READY_FOR_LOCAL_CANARY",
+    "requires_exact_runtime_env_binding": true,
+    "requires_scheduler_module": true,
+    "requires_human_git_town_admit": false,
+    "notes": "Scheduler canary admission is independent of Git Town/Forgejo delivery admission. Git Town remains a later Human-gated lane."
+  },
+  "forbidden": {
+    "static_fixture_as_consumer_pass": true,
+    "synthetic_runtime_as_bettor_pass": true,
+    "arbitrary_model_shell_command": true,
+    "auto_admit_darwin_git_town_artifact": true,
+    "auto_activate_forgejo": true,
+    "auto_merge_ship_force_push": true
+  }
+}
