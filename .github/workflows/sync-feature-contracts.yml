@@ -2,7 +2,9 @@ name: Sync feature modular contracts
 
 # Sole generator owner for checked-in consumer bindings and modular projections.
 # Authored source pins select immutable upstream bytes; generated bindings, locks,
-# and receipts are derived from those bytes.
+# and receipts are derived from those bytes. Every downstream subject reads the
+# prospective Git index, so each generated dependency is staged before the next
+# layer runs and the complete tree must reach a bounded fixed point before commit.
 on:
   push:
     branches:
@@ -70,7 +72,7 @@ jobs:
             --shared-root .shared-skills-source \
             --source-only
 
-      - name: Generate the consumer binding with the canonical shared tool
+      - name: Generate and stage the consumer binding with the canonical shared tool
         run: |
           python3 \
             .shared-skills-source/skills/shared-skills-infra/scripts/shared_skills.py \
@@ -78,32 +80,71 @@ jobs:
             --requirements "$GITHUB_WORKSPACE/.agents/shared-skills.requirements.json" \
             --target-root "$GITHUB_WORKSPACE" \
             --apply
+          git add .agents/bindings/bettor-arena.json
           python3 scripts/gates/check_shared_skills_source_binding.py \
             --shared-root .shared-skills-source
           python3 scripts/gates/check_shared_skills_source_binding.py --selftest
           python3 -m unittest tests/test_shared_skills_source_binding.py -v
 
-      - name: Render the coherent feature-branch release projections
+      - name: Render generated consumer contracts to a prospective-tree fixed point
+        shell: bash
         run: |
-          python3 scripts/arena_lock.py resolve \
-            --requirements .arena/compositions/bettor-arena.requirements.json \
-            --output .arena/locks/bettor-arena.lock.json
-          python3 scripts/arena_context.py lock \
-            --output .arena/contexts.lock.json
-          python3 scripts/arena_context.py parity \
-            --output data/context-capsules/driver-parity.json
-          python3 scripts/arena_proof.py subjects \
-            --output data/module-proof/subjects.lock.json
-          python3 scripts/arena_proof.py release \
-            --subjects data/module-proof/subjects.lock.json \
-            --output data/module-proof/release-receipt.json
-          bun loopctl/mcp_tools.ts loopctl/contract.json \
-            --policy .arena/mcp-policy.json \
-            > data/mcp/exposure.json
-          bun scripts/arena_origins.ts status \
-            --output data/origins/status.json
-          bun scripts/arena_browser.ts status \
-            --output data/browser/status.json
+          set -euo pipefail
+
+          render_and_stage() {
+            python3 scripts/arena_lock.py resolve \
+              --requirements .arena/compositions/bettor-arena.requirements.json \
+              --output .arena/locks/bettor-arena.lock.json
+            git add .arena/locks/bettor-arena.lock.json
+
+            python3 scripts/arena_context.py lock \
+              --output .arena/contexts.lock.json
+            python3 scripts/arena_context.py parity \
+              --output data/context-capsules/driver-parity.json
+            git add \
+              .arena/contexts.lock.json \
+              data/context-capsules/driver-parity.json
+
+            python3 scripts/arena_proof.py subjects \
+              --output data/module-proof/subjects.lock.json
+            git add data/module-proof/subjects.lock.json
+
+            python3 scripts/arena_proof.py release \
+              --subjects data/module-proof/subjects.lock.json \
+              --output data/module-proof/release-receipt.json
+            git add data/module-proof/release-receipt.json
+
+            bun loopctl/mcp_tools.ts loopctl/contract.json \
+              --policy .arena/mcp-policy.json \
+              > data/mcp/exposure.json
+            git add data/mcp/exposure.json
+
+            bun scripts/arena_origins.ts status \
+              --output data/origins/status.json
+            git add data/origins/status.json
+
+            bun scripts/arena_browser.ts status \
+              --output data/browser/status.json
+            git add data/browser/status.json
+          }
+
+          previous_tree="$(git write-tree)"
+          stable=0
+          for attempt in 1 2 3; do
+            render_and_stage
+            current_tree="$(git write-tree)"
+            echo "prospective tree attempt ${attempt}: ${current_tree}"
+            if [[ "$current_tree" == "$previous_tree" ]]; then
+              stable=1
+              break
+            fi
+            previous_tree="$current_tree"
+          done
+
+          if [[ "$stable" != 1 ]]; then
+            echo "generated consumer contracts did not reach a fixed point in 3 passes" >&2
+            exit 2
+          fi
 
       - name: Check generated bindings and projections before delivery
         run: |
