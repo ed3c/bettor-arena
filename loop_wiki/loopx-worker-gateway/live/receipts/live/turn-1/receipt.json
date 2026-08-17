@@ -1,0 +1,91 @@
+{
+  "adapter": {
+    "adapter_id": "claude-code",
+    "binary_identity": "claude",
+    "descriptor_digest": "sha256:3feab33ddb922a0e541177d5eb59fe47d489b6bc2b48cf3a350b5a23f393c386",
+    "host_id": "claude-code",
+    "implementation_state": "IMPLEMENTED"
+  },
+  "artifacts": [
+    {
+      "artifact_id": "worker-stdout",
+      "bytes": 312,
+      "digest": "sha256:1d1f671d43e656e6f7a13c423866b9333a5381efe1b23f5835515447c951fc7d",
+      "kind": "STDOUT",
+      "media_type": "text/plain",
+      "path": "artifacts/1d1f671d43e656e6f7a13c423866b9333a5381efe1b23f5835515447c951fc7d",
+      "producer": "worker-gateway"
+    },
+    {
+      "artifact_id": "worker-stderr",
+      "bytes": 0,
+      "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "STDERR",
+      "media_type": "text/plain",
+      "path": "artifacts/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer": "worker-gateway"
+    },
+    {
+      "artifact_id": "worker-events",
+      "bytes": 1411,
+      "digest": "sha256:fae2dc32111268ba228067bb69e2728d2df1a34c16c922ccd996a4b9768286fe",
+      "kind": "WORKER_EVENT",
+      "media_type": "application/x-ndjson",
+      "path": "artifacts/fae2dc32111268ba228067bb69e2728d2df1a34c16c922ccd996a4b9768286fe",
+      "producer": "worker-gateway"
+    },
+    {
+      "artifact_id": "worker-diff",
+      "bytes": 0,
+      "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "GIT_DIFF",
+      "media_type": "text/x-diff",
+      "path": "artifacts/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer": "worker-gateway"
+    }
+  ],
+  "authority": {
+    "performed_human_admit": false,
+    "promoted_release": false,
+    "submitted_gate_verdict": false,
+    "wrote_durable_memory": false,
+    "wrote_loopx_state": false
+  },
+  "cleanup": {
+    "residue_paths": [],
+    "state": "PASS"
+  },
+  "content_digest": "sha256:709d6c0d73ee8e03a3c337a971957468b92b94000d1199f8621baa9ec03483d8",
+  "context": {
+    "digest": "sha256:f3e7aac82cc5bd60a274e4ce7558272238e10b8cb80ba490eda20beb2ae821b3"
+  },
+  "executed": true,
+  "process": {
+    "cancelled": false,
+    "exit_code": 0,
+    "process_group_killed": false,
+    "timed_out": false
+  },
+  "receipt_id": "issue-91-live-turn-receipt",
+  "request_id": "issue-91-live-turn",
+  "schema_version": "loopx/worker-receipt/v1",
+  "skill": {
+    "digest": "sha256:6768afe8884c74e31042f427f7055132dc16e14b4792bf1e4a7f2f444e6a92c0",
+    "name": "claude-code-live-canary"
+  },
+  "status": "PASS",
+  "subject": {
+    "commit": "98ff155660b35bb017065e5a48142c0c360cf00c",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "issue-91-claude-code-live-canary",
+    "tree": "bbe19d6bd1d2fae8324f837bcdf9d85149798ee4"
+  },
+  "trace": {
+    "completeness": "PROCESS_ONLY",
+    "event_count": 3,
+    "events_digest": "sha256:fae2dc32111268ba228067bb69e2728d2df1a34c16c922ccd996a4b9768286fe",
+    "opaque_segments": [
+      "hidden host/model internals remain UNKNOWN"
+    ]
+  }
+}

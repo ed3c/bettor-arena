@@ -1,0 +1,27 @@
+{
+  "adapter_descriptor_digest": "sha256:3feab33ddb922a0e541177d5eb59fe47d489b6bc2b48cf3a350b5a23f393c386",
+  "carrier_launched_host_binary": "claude",
+  "cleanup_observation": "pruned; 58 worktrees registered, none leased by the gateway",
+  "contract_markers": [
+    "request=SCHEMA_VALID",
+    "descriptor=SCHEMA_VALID"
+  ],
+  "gateway_exit_code": 0,
+  "host_id": "claude-code",
+  "mode": "LIVE_CLAUDE_CODE",
+  "non_claims": [
+    "a green run is an observation, not a Gate PASS",
+    "this lane cannot change LIVE_MATRIX.md for any host",
+    "no physical network or filesystem isolation is attested",
+    "host-internal reasoning and tool use remain UNKNOWN at PROCESS_ONLY"
+  ],
+  "observed_at": "2026-08-17T17:32:28Z",
+  "receipt_binary_identity": "claude",
+  "receipt_path": "loop_wiki/loopx-worker-gateway/live/receipts/live/turn-1/receipt.json",
+  "schema": "issue-91/live-lane/v1",
+  "subject": {
+    "commit": "98ff155660b35bb017065e5a48142c0c360cf00c",
+    "repository": "ed3c/bettor-arena",
+    "tree": "bbe19d6bd1d2fae8324f837bcdf9d85149798ee4"
+  }
+}

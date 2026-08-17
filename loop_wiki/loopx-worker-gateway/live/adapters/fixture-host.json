@@ -1,0 +1,30 @@
+{
+  "adapter_entry": "live/carrier.py",
+  "adapter_id": "fixture-host",
+  "binary": "python3",
+  "capabilities": {
+    "loaded_context_digest": false,
+    "loaded_skill_digest": false,
+    "offline": true,
+    "session_resume": false,
+    "streaming": false,
+    "structured_output": true
+  },
+  "classification": "WHITE_BOX_REFERENCE",
+  "content_digest": "sha256:df24bc0222883deca7534d1a34f9ca4350b0ac1bf34f4b07f67e9a5721cca34b",
+  "host_id": "fixture-host",
+  "implementation_state": "IMPLEMENTED",
+  "instruction_routes": [
+    "loop_wiki/loopx-worker-gateway/live/README.md"
+  ],
+  "schema_version": "loopx/worker-adapter/v1",
+  "skill_roots": [
+    "loop_wiki/loopx-worker-gateway/live/payload"
+  ],
+  "source_identity": null,
+  "trace_ceiling": "PROCESS_ONLY",
+  "transport": "CLI",
+  "version_argv": [
+    "--version"
+  ]
+}

@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "0b0d1a5d571dfdda89d655e1a4fd619ad8d27d55",
+  "workflow_commit": "98ff155660b35bb017065e5a48142c0c360cf00c",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-0b0d1a5d571d-dirty.json",
-    "container": "container-0b0d1a5d571d-dirty.json",
-    "ctg": "ctg-0b0d1a5d571d-dirty.json",
-    "equivalence": "equivalence-0b0d1a5d571d-dirty.json",
-    "harness": "harness-0b0d1a5d571d-dirty.json",
-    "macro": "macro-0b0d1a5d571d-dirty.json",
-    "micro": "micro-0b0d1a5d571d-dirty.json",
-    "notebooklm": "notebooklm-0b0d1a5d571d-dirty.json",
-    "openwiki": "openwiki-0b0d1a5d571d-dirty.json",
-    "policy": "policy-0b0d1a5d571d-dirty.json",
-    "skill-execution": "skill-execution-0b0d1a5d571d-dirty.json",
-    "workflow": "workflow-0b0d1a5d571d-dirty.json"
+    "agent-runtime": "agent-runtime-98ff155660b3-dirty.json",
+    "container": "container-98ff155660b3-dirty.json",
+    "ctg": "ctg-98ff155660b3-dirty.json",
+    "equivalence": "equivalence-98ff155660b3-dirty.json",
+    "harness": "harness-98ff155660b3-dirty.json",
+    "macro": "macro-98ff155660b3-dirty.json",
+    "micro": "micro-98ff155660b3-dirty.json",
+    "notebooklm": "notebooklm-98ff155660b3-dirty.json",
+    "openwiki": "openwiki-98ff155660b3-dirty.json",
+    "policy": "policy-98ff155660b3-dirty.json",
+    "skill-execution": "skill-execution-98ff155660b3-dirty.json",
+    "workflow": "workflow-98ff155660b3-dirty.json"
   },
   "counts": {
     "artifact": 45,
     "context": 62,
     "harness": 143
   },
-  "workflow_digest": "ca76f9f20d74090ada526966c9c7791f8b3e5b6740d4e22adea66544b1839bbc",
+  "workflow_digest": "0016c0eb9771b41392a829de9c082bc93127fc075c92fd65ed4c7d71ce599eed",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "10460887f296928e06fbf1a72eb5e4a3234508a5228609b2736c3946f3d5ff59",
@@ -237,8 +237,8 @@
         "macro"
       ]
     },
-    "data/receipts/post-commit-0b0d1a5d571dfdda89d655e1a4fd619ad8d27d55.json": {
-      "sha256": "5dbcf4687d49664850a82ea4962f739c4d26c9cb556364afe3601dda04b95b86",
+    "data/receipts/post-commit-98ff155660b35bb017065e5a48142c0c360cf00c.json": {
+      "sha256": "f809a4fb21eb8b7f07052ea9661dcc04c0a4c9d0fd8a3b690d0bf8b14db5e03e",
       "hash_source": "worktree",
       "kind": "artifact",
       "loops": [

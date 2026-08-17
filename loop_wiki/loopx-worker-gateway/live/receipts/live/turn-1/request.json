@@ -1,0 +1,66 @@
+{
+  "adapter_id": "claude-code",
+  "content_digest": "sha256:d595776c4a19f1a2227460b49c4eb852b2c6101f1b4299e7d09cbde7f6321cd4",
+  "context": {
+    "digest": "sha256:f3e7aac82cc5bd60a274e4ce7558272238e10b8cb80ba490eda20beb2ae821b3",
+    "entry_files": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "credential_refs": [],
+  "host_id": "claude-code",
+  "policy": {
+    "env_allowlist": [
+      "HOME",
+      "LOGNAME",
+      "TMPDIR",
+      "USER"
+    ],
+    "max_output_bytes": 1048576,
+    "max_processes": 8,
+    "network": "HOST_POLICY",
+    "require_process_group": true,
+    "timeout_ms": 330000
+  },
+  "request_id": "issue-91-live-turn",
+  "schema_version": "loopx/worker-request/v1",
+  "skill": {
+    "digest": "sha256:6768afe8884c74e31042f427f7055132dc16e14b4792bf1e4a7f2f444e6a92c0",
+    "name": "claude-code-live-canary",
+    "source_ref": "loop_wiki/loopx-worker-gateway/live/payload/SKILL.md"
+  },
+  "subject": {
+    "commit": "98ff155660b35bb017065e5a48142c0c360cf00c",
+    "repository": "ed3c/bettor-arena",
+    "task_id": "issue-91-claude-code-live-canary",
+    "tree": "bbe19d6bd1d2fae8324f837bcdf9d85149798ee4"
+  },
+  "task": {
+    "expected_artifacts": [
+      "STDOUT",
+      "STDERR",
+      "GIT_DIFF",
+      "WORKER_EVENT"
+    ],
+    "mode": "READ_ONLY",
+    "prompt_ref": {
+      "artifact_id": "issue-91-live-prompt",
+      "bytes": 112,
+      "digest": "sha256:6c22280e7a370b7fe9fe7fd918c42283bc724734c6efaf70e9499e5c7a86eb24",
+      "kind": "FILE",
+      "media_type": "text/plain",
+      "path": "loop_wiki/loopx-worker-gateway/live/payload/live-turn-prompt.txt",
+      "producer": "issue-91-live-lane"
+    }
+  },
+  "workspace": {
+    "cleanup": "REQUIRED",
+    "lease_id": "issue-91-live-lease",
+    "read_only_paths": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "writable_paths": []
+  }
+}
