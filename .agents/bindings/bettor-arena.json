@@ -1,7 +1,7 @@
 {
   "binding": "bettor-arena",
-  "content_sha256": "4f99db5296a35f4d917a0ada587c37d93a5a8510d3144bcd681b2d2af82dee20",
-  "registry_sha256": "d938691267b2b3097d3ab3815e104d892a1cbfe82255170a889e03a82cb915ae",
+  "content_sha256": "600634925f224bd5fbd3e7af183ab6396cd9e071c869eeaf3f8a0f374c61aaba",
+  "registry_sha256": "b02bea2cd6cccf97769696205398e4da349ac984240027c1836ec6de65e3594c",
   "repo_owned": [
     "harness-wiki",
     "product-ops",
@@ -11,57 +11,57 @@
   "schema": "shared-skills/consumer-binding/v1",
   "skills": [
     {
-      "content_sha256": "92d2afd1017f25b4b6009e09e939f0c25148c126489d8895eb51a2f621e94fbe",
+      "content_sha256": "ee2cf05c96a123231e39ed851f5315808e88e5a372de81171e25a4ab7413ce40",
       "entrypoint": "skills/autoresearch-composer/SKILL.md",
       "name": "autoresearch-composer"
     },
     {
-      "content_sha256": "f1b54cf4b02320fe343062624afd19d15a632ac15dbabe36558a42018adf9e28",
+      "content_sha256": "1513c099992d9fb37c35daf14d985e13a6da5070146a437e87e155f49cdab704",
       "entrypoint": "skills/dr-research-loop/SKILL.md",
       "name": "dr-research-loop"
     },
     {
-      "content_sha256": "bbfed7b713adcf420bf15cd4ae9b0b6a52c069c60cb6fd0d52809c9e4a2cb2e0",
+      "content_sha256": "1a6148c5b54808b4eee855543f35e53e9257cac80fd0032f6bd2ac2b2c7f644b",
       "entrypoint": "skills/dr-to-mvp/SKILL.md",
       "name": "dr-to-mvp"
     },
     {
-      "content_sha256": "e66393e7e8bc986c4994bd5d30d02cfa204a82375f8f0c38be65dd123bf9d963",
+      "content_sha256": "cbeb1cac1e3bb1e5d7065b3a6165faa12968d2aaffc7e12cfc6491e56198b373",
       "entrypoint": "skills/external-verify/SKILL.md",
       "name": "external-verify"
     },
     {
-      "content_sha256": "4a3059be06340a036f90183ef1d448b8368a8b77e4209e87ec1d2717c0354e7f",
+      "content_sha256": "23cdf28561a679af5e457a1ac40d12514adf11ceb5b4ca029b9d3759260616cb",
       "entrypoint": "skills/fold-in/SKILL.md",
       "name": "fold-in"
     },
     {
-      "content_sha256": "838e6f28e1c91af16422a65567cdb457a4ce2203d0c56257f63f6234c37553eb",
+      "content_sha256": "8e7bd20a2831f751488f20ac7e1cb144ca83f863de9ab3adfd86dcf781ab99d2",
       "entrypoint": "skills/forgejo-delivery-loop/SKILL.md",
       "name": "forgejo-delivery-loop"
     },
     {
-      "content_sha256": "f62491cc19802f99b73ea48f8dfb213418cb7e59fa3537e209fe23013bfb44fe",
+      "content_sha256": "5dfb7d6fbd5d88bfa12ab1af41ae8606e5b181eac830faeeb21bfdd05de4fea4",
       "entrypoint": "skills/gemini-conversation-research/SKILL.md",
       "name": "gemini-conversation-research"
     },
     {
-      "content_sha256": "1e6fb21abe1624d246d060e6978ca77ddfb3190b958dbe28f61d2b569f5d02a2",
+      "content_sha256": "b357ee374cf4fc7f98e97b7ddf69a33f8ee1a08e70ff0fbe2f1e8fcf0fa42199",
       "entrypoint": "skills/github-delivery-loop/SKILL.md",
       "name": "github-delivery-loop"
     },
     {
-      "content_sha256": "58b45dc4967a358cf9b51b270fee88761668e819fddb3a7c64545942b3c55b31",
+      "content_sha256": "805cbc17c4703fbe91f4031e12c556e91805602074d0aed2dcd04ea511541b9d",
       "entrypoint": "skills/gitlab-delivery-loop/SKILL.md",
       "name": "gitlab-delivery-loop"
     },
     {
-      "content_sha256": "d16fd975a93af0573ffc1c6e62e6b2a09a9dab7a4f9efc54976283b984ffa8bb",
+      "content_sha256": "ddc71de085927e7342ec63ae5e231a37023e55996f7c066296e3020aba7899f6",
       "entrypoint": "skills/html-for-decisions/SKILL.md",
       "name": "html-for-decisions"
     },
     {
-      "content_sha256": "782e747ea2278816f1dc9adaa98700a9ea5f01ab78d1062664c751d8106daa4f",
+      "content_sha256": "ffb33e85b3005459570fdd5b6f6226282895569ecb4353bcfd40282351d0a63f",
       "entrypoint": "skills/judge-loop-chooser/SKILL.md",
       "name": "judge-loop-chooser"
     },
@@ -71,60 +71,60 @@
       "name": "knowledge-continuity"
     },
     {
-      "content_sha256": "6006e2548f0e8c1a2c7fc817ddc0d789bb089d894cc492eff3aa4d60fa4087e4",
+      "content_sha256": "5ef272563d5c83cd65acf894a920d2dca3a3585b0a365f2b98b66ad59e9748c4",
       "entrypoint": "skills/loop-harness-review-handoff/SKILL.md",
       "name": "loop-harness-review-handoff"
     },
     {
-      "content_sha256": "110f3d6644da6d1a022f6677f7fcee5365e46e2c80501d449975deb8ac50dd06",
+      "content_sha256": "12f41ef8b7ae7f554e9811a77c593787595b0d569a3e1376b1f86b822a2ae8c7",
       "entrypoint": "skills/loop-harness-standard/SKILL.md",
       "name": "loop-harness-standard"
     },
     {
-      "content_sha256": "0fa7661a597e7440aadaa824fee912fc8ff4b8f72ee7c942e546a4a29401ed80",
+      "content_sha256": "869a278036d4c591f454e674fa3452771e63b8b6a6bfde039fa6659fb2571fb4",
       "entrypoint": "skills/path-b-reduction/SKILL.md",
       "name": "path-b-reduction"
     },
     {
-      "content_sha256": "f2c09185ac5e297c84915fd6543988fb279a821e48e1c3d4a29d8d346773e9cd",
+      "content_sha256": "a1c9a3b798b3d931c41f11ec12e29c4998a4920b6d74f90eb1003115204df6bd",
       "entrypoint": "skills/repo-agent-native/SKILL.md",
       "name": "repo-agent-native"
     },
     {
-      "content_sha256": "e619585fa2e61dd115bef4f3ea9d4cb825c6384761cb507d298b0b0117e8d5cd",
+      "content_sha256": "cba35b223c655f73001d84e586e9474fa9ae2b8e76a748b7c66da34df5f7f078",
       "entrypoint": "skills/repo-fullstack-debugger/SKILL.md",
       "name": "repo-fullstack-debugger"
     },
     {
-      "content_sha256": "7e6031e9b36e18d041a0352416e9020ea24212e34122f0d2c070c97f61869d5e",
+      "content_sha256": "f8475aef7d2b368c3ab3aba43336f0718723d534a78ad2186e21faad82a09261",
       "entrypoint": "skills/repo-wiki-converge/SKILL.md",
       "name": "repo-wiki-converge"
     },
     {
-      "content_sha256": "b9bd577bb77ad3511b6d01dde180f36fd2cd9dba24766699e7b928ef4c775843",
+      "content_sha256": "6886ed2a9e598dad4602169dcd4091c62de06358f9879c59598f7f05c3b4b8ad",
       "entrypoint": "skills/sdlc-plan-composer/SKILL.md",
       "name": "sdlc-plan-composer"
     },
     {
-      "content_sha256": "c78a8ba0acbccc897b7ceca7e37777e8a0c0f6a4ce496c05c46d21e85eb89231",
+      "content_sha256": "d6e8dfb7dd47bc519f4d0f6ed2a984e059a92656043619754f146db12168510b",
       "entrypoint": "skills/shared-skills-infra/SKILL.md",
       "name": "shared-skills-infra"
     },
     {
-      "content_sha256": "f6eb7e962ae1bacea1742f4c0f49c7f980e01050e4ad27156d1d1dabbc59733c",
+      "content_sha256": "23c05d4b7192b52317b32aa648e9cab7aa0d74c51ca5a52c551da1b2311175dc",
       "entrypoint": "skills/truth-verify-loop/SKILL.md",
       "name": "truth-verify-loop"
     },
     {
-      "content_sha256": "af7cfe9a50f5c90513c47082cd3bb8007661e3d90835c27c7225bae499892b47",
+      "content_sha256": "4c703c7208f482c0906fcf0a1a32b77eebfb3a4dc4d06da2f4a1d0967c2ac226",
       "entrypoint": "skills/unknown-discovery-composer/SKILL.md",
       "name": "unknown-discovery-composer"
     }
   ],
   "source": {
-    "commit": "b3c722da1c40301b0a12e0ef99848d884bfc720b",
+    "commit": "8f5548c5b94a31e074b3aa6cbce776f754c24f61",
     "repository": "https://github.com/ed3c/skills-shared",
-    "tree": "df3cae849412625e70c2352f7e9a2cbbc770288a"
+    "tree": "8bbf96f1b8b88bf711528a0796dce8c0fb9eb742"
   },
   "surfaces": {
     "claude": ".claude/skills",
