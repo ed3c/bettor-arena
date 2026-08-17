@@ -5,8 +5,8 @@ Bettor Arena is the Integration / Acceptance reference for the shared multi-hop 
 ```text
 README / AGENTS / CLAUDE
 → CONTEXT + ARCHITECTURE
-→ PDF audit + modular target/current status
-→ directory State Machine map
+→ docs/INDEX topic selection
+→ conditional architecture AGENTS
 → nearest directory README
 → machine manifest/contract/script/verifier
 → current receipt + molecular Stack index
@@ -21,7 +21,9 @@ CLAUDE.md
 CONTEXT.md
 ARCHITECTURE.md
 docs/INDEX.md
+docs/architecture/AGENTS.md
 docs/architecture/DOCUMENT_ROUTING.md
+docs/architecture/DOMAIN_DECOUPLING.md
 docs/architecture/PDF_HARNESS_INTEGRATION_AUDIT.md
 docs/architecture/pdf-harness-integration.matrix.json
 docs/architecture/DIRECTORY_STATE_MACHINE_MAP.md
@@ -38,11 +40,22 @@ docs/traceability/STACK_PR_INDEX.md
 
 ```text
 root entry
-→ architecture/current status
+→ docs/INDEX
 → nearest README
 → module manifest/public contract
 → source/tests/receipts
 → exact issue/PR
+```
+
+### Domain, Skill, binding or adapter work
+
+```text
+root entry
+→ docs/architecture/AGENTS.md
+→ DOMAIN_DECOUPLING.md
+→ .agents or .skill-bindings nearest README
+→ exact requirement/binding/module contract
+→ consumer proof and receipt
 ```
 
 ### PDF Harness verification
@@ -86,6 +99,11 @@ root entry
 - `DR-14`: irreversible delivery, queue, provider and release operations route through `docs/git/AUTOMATED_ADMISSION.md`; prose or a generic Gate cannot authorize them.
 - `DR-15`: desired, locked and released module sets agree before integration is called coherent.
 - `DR-16`: every active/stale molecular leaf is indexed with relation, state and automation boundary.
+- `DR-20`: this modular consumer provides `docs/architecture/DOMAIN_DECOUPLING.md`.
+- `DR-21`: architecture `AGENTS.md` loads the domain contract conditionally and does not repeat it.
+- `DR-22`: consumer bindings use immutable identities and do not copy canonical shared Skill bodies.
+- `DR-23`: consumer specialization only tightens constraints, narrows effects, increases evidence, or reduces authority.
+- `DR-24`: mutable issue/PR/provider/runtime state remains in current machine routes, not in the stable shared contract.
 
 Each route leaves an in-place summary before linking away, following the `knowledge-continuity` rule. The normal path from nearest README to machine authority and evidence should take no more than two intentional hops.
 

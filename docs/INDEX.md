@@ -10,7 +10,9 @@
 
 ## Standard multi-hop routes
 
+- [`architecture/AGENTS.md`](architecture/AGENTS.md) — conditional architecture-topic router; load only the matching contract.
 - [`architecture/DOCUMENT_ROUTING.md`](architecture/DOCUMENT_ROUTING.md) — route names and assertions.
+- [`architecture/DOMAIN_DECOUPLING.md`](architecture/DOMAIN_DECOUPLING.md) — shared procedural core to Bettor requirements, bindings, modules, runtime and receipts.
 - [`architecture/PDF_HARNESS_INTEGRATION_AUDIT.md`](architecture/PDF_HARNESS_INTEGRATION_AUDIT.md) — 41-page source proposal versus current Bettor mechanisms.
 - [`architecture/pdf-harness-integration.matrix.json`](architecture/pdf-harness-integration.matrix.json) — machine-readable component states and evidence paths.
 - [`architecture/DIRECTORY_STATE_MACHINE_MAP.md`](architecture/DIRECTORY_STATE_MACHINE_MAP.md) — directory owners, inputs, outputs, transitions and data flow.
