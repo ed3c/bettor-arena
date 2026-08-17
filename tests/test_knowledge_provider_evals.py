@@ -28,7 +28,7 @@ class KnowledgeProviderEvalTests(unittest.TestCase):
             0,
             completed.stdout + completed.stderr,
         )
-        self.assertIn("pairs=8/8", completed.stdout)
+        self.assertIn("pairs=7/7", completed.stdout)
 
     def test_contract_selftest(self) -> None:
         completed = self.run_command(

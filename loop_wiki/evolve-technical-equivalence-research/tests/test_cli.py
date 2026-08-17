@@ -7,11 +7,10 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
-import sys
-
 
 ROOT = Path(__file__).resolve().parents[1]
 ARENA = ROOT.parents[1]
@@ -25,6 +24,7 @@ from equivalence import (  # noqa: E402
     collect_live_research,
     completed_adapter_run,
     extract_structured_candidates,
+    grounding,
     load_resume_cache,
     materialize_adapter_mirror,
     plan_gap_prompts,
@@ -1479,6 +1479,72 @@ def canonical_digest_field(payload: dict, field: str) -> str:
     body.pop(field, None)
     raw = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(raw.encode()).hexdigest()
+
+
+def adoptable_candidate(**overrides) -> dict:
+    """A candidate with no audit, no probe and no checkout — the normal case.
+
+    Every heavy-evidence field is deliberately absent: the tier exists precisely
+    for the candidate that has been *found* and not yet analysed, so a fixture
+    carrying that evidence would test a path the tier never runs on.
+    """
+    candidate = {
+        "candidate_id": "cand-1",
+        "claim": "durable packet state via an embedded log",
+        "repo_url": "https://github.com/example/thing",
+        "commit": "0" * 40,
+        "spdx": "Apache-2.0",
+        "source_urls": ["https://example.com/docs"],
+        "code_anchors": ["src/log.rs:1"],
+        "inference": False,
+        "load_bearing": False,
+        "equivalence_uncertain": False,
+        "wrong_decision_costly": False,
+        "adopters": [{"org": "Netflix", "source_url": "https://netflix.example/post"}],
+    }
+    candidate.update(overrides)
+    return candidate
+
+
+class CommercialAdoptionTierTest(unittest.TestCase):
+    def test_permissive_license_plus_cited_adopter_reaches_the_tier(self) -> None:
+        state, reasons = grounding(adoptable_candidate())
+        self.assertEqual(state, "commercially_adoptable")
+        self.assertTrue(any("netflix" in r for r in reasons))
+
+    def test_the_tier_states_what_it_is_not_claiming(self) -> None:
+        _state, reasons = grounding(adoptable_candidate())
+        joined = " ".join(reasons)
+        self.assertIn("not equivalence", joined)
+        # The deferred heavy evidence must be named, not silently dropped: this
+        # state is reached *because* an audit and a probe are missing, and a
+        # reader who cannot see which ones has no way back to the real question.
+        self.assertIn("deferred to later analysis", joined)
+
+    def test_the_tier_can_never_reach_technical_equivalent(self) -> None:
+        for override in (
+            {"spdx": "GPL-3.0-only"},
+            {"adopters": [{"org": "SomeStartup", "source_url": "https://x.example"}]},
+            {"adopters": []},
+            {"adopters": [{"org": "Google"}]},
+            {"adopters": [{"org": "Google", "source_url": "http://insecure.example"}]},
+            {"commit": "abc"},
+            {"repo_url": "git@github.com:example/thing.git"},
+        ):
+            with self.subTest(override=override):
+                state, _reasons = grounding(adoptable_candidate(**override))
+                self.assertEqual(state, "candidate")
+
+    def test_copyleft_is_refused_even_with_a_giant_adopter(self) -> None:
+        state, _reasons = grounding(adoptable_candidate(spdx="AGPL-3.0-only"))
+        self.assertEqual(state, "candidate")
+
+    def test_adoption_never_substitutes_for_the_judge_gate(self) -> None:
+        # The judge packet is built from `technical_equivalent` alone. If the
+        # tier ever leaked into that set, a licence check plus a blog post would
+        # be routed to a semantic judge as though it were an audited rebuild.
+        state, _reasons = grounding(adoptable_candidate())
+        self.assertNotEqual(state, "technical_equivalent")
 
 
 if __name__ == "__main__":

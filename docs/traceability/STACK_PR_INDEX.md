@@ -97,6 +97,21 @@ This mapping is independent of ordered acceptance. A later merged PR remains blo
 | 22–24 | #99/#100/#101 | #131/#134, #132/#135, #133 | bytes/mechanisms merged; acceptance blocked |
 | 25 | #68 | none | final convergence |
 
+## Terminal implementation PR reachability
+
+This mapping is independent of ordered acceptance. A later merged PR remains blocked in the queue until its predecessors settle.
+
+| Orders | Issues | Implementation PRs on main | Queue interpretation |
+|---|---|---|---|
+| foundation | #62/#63/#64/#42/#69 | #74/#75/#76/#78/#79 | consumed by order 1 |
+| 0–4 | #82/#90/#65/#67/#66 | #76/#77, #109, #106, #116, #117 | orders 0–4 complete; #77 superseded |
+| 5–11 | #94/#97/#96/#103/#93/#104/#105 | #122/#123/#124/#125/#126/#127/#128 | orders 5–11 complete |
+| 12–13 | #92/#41 | none | active then blocked |
+| 14–18 | #70/#71/#95/#72/#98 | #118/#119/#129/#120/#130 | bytes merged; acceptance blocked |
+| 19–21 | #91/#45/#46/#56 | #56 evaluator only | live/A-B/convergence blocked |
+| 22–24 | #99/#100/#101 | #131/#134, #132/#135, #133 | bytes/mechanisms merged; acceptance blocked |
+| 25 | #68 | none | final convergence |
+
 ## Current-main LoopX foundation
 
 ```text

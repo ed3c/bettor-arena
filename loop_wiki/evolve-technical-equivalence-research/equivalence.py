@@ -12,9 +12,9 @@ import selectors
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
-
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent
 PROFILE = ROOT / "profile" / "technical-equivalence.md"
@@ -30,6 +30,36 @@ COMMERCIAL_SPDX_ALLOWLIST = {
     "ISC",
     "MIT",
     "Unlicense",
+}
+# Organisations whose production adoption is accepted as the sufficient signal
+# for the `commercially_adoptable` tier. Written out rather than inferred from
+# the repository owner: a repo living under an organisation's account says who
+# publishes it, not who runs it, and the tier is about the second.
+TECH_GIANT_ADOPTERS = {
+    "alibaba",
+    "amazon",
+    "anthropic",
+    "apple",
+    "aws",
+    "bytedance",
+    "cloudflare",
+    "databricks",
+    "google",
+    "ibm",
+    "intel",
+    "linkedin",
+    "meta",
+    "microsoft",
+    "netflix",
+    "nvidia",
+    "openai",
+    "oracle",
+    "salesforce",
+    "shopify",
+    "snowflake",
+    "stripe",
+    "tencent",
+    "uber",
 }
 ADAPTER_TIMEOUT_SECONDS = 45 * 60
 
@@ -571,14 +601,69 @@ def grounding(candidate: dict[str, Any]) -> tuple[str, list[str]]:
             or not comparison.get("decision")
         ):
             reasons.append("load-bearing rebuild comparison bindings mismatch")
-    return (
-        ("candidate", reasons)
-        if reasons
-        else (
+    if not reasons:
+        return (
             "technical_equivalent",
             ["code audit, real probe and required rebuild comparison passed"],
         )
+    adoptable, adoption_reasons = commercial_adoption(candidate)
+    if adoptable:
+        return "commercially_adoptable", adoption_reasons + [
+            "deferred to later analysis: " + "; ".join(reasons)
+        ]
+    return "candidate", reasons
+
+
+def commercial_adoption(candidate: dict[str, Any]) -> tuple[bool, list[str]]:
+    """The sufficient-for-now tier: permissively licensed and actually run.
+
+    Finding a non-copyleft, commercially usable repository that a major vendor
+    runs in production is a decidable question with a citable answer. Whether it
+    is *technically equivalent* to the thing it would replace is not, and it
+    only becomes decidable after a code audit, a real probe and — when the
+    decision is load-bearing — an actual rebuild to compare against. Collapsing
+    the two costs the whole loop: every candidate stalls behind an analysis that
+    has not happened, and the pressure is then to call the cheap answer the
+    expensive one.
+
+    So this is a separate, weaker state that says exactly what it found. It can
+    never become `technical_equivalent`, and it does not enter a judge packet —
+    that gate reads `technical_equivalent` alone, which is what keeps the two
+    claims from converging by accident downstream.
+    """
+    reasons: list[str] = []
+    spdx = candidate.get("spdx")
+    if spdx not in COMMERCIAL_SPDX_ALLOWLIST:
+        return False, []
+    if not re.fullmatch(r"https://[^\s]+", str(candidate.get("repo_url") or "")):
+        return False, []
+    if not re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("commit") or "")):
+        return False, []
+
+    adopters = candidate.get("adopters")
+    if not isinstance(adopters, list) or not adopters:
+        return False, []
+    named: list[str] = []
+    for entry in adopters:
+        if not isinstance(entry, dict):
+            return False, []
+        org = str(entry.get("org") or "").strip().lower()
+        url = str(entry.get("source_url") or "")
+        if org not in TECH_GIANT_ADOPTERS:
+            return False, []
+        if not re.fullmatch(r"https://[^\s]+", url):
+            return False, []
+        named.append(org)
+
+    reasons.append(
+        f"{spdx} is commercially usable without a copyleft obligation, and "
+        f"production adoption is cited for: {', '.join(sorted(set(named)))}"
     )
+    reasons.append(
+        "claims license and adoption only — not equivalence, not behaviour, "
+        "and not fitness for the gap it was found for"
+    )
+    return True, reasons
 
 
 def normalize_candidates(
