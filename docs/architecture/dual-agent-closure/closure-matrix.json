@@ -1,0 +1,253 @@
+{
+  "schema_version": "bettor.dual-agent-closure.v1",
+  "source": {
+    "id": "DA-SRC-001",
+    "title": "双 Agent 架构：云端本地协同",
+    "class": "SOURCE_PROPOSAL",
+    "bytes_committed": false,
+    "locators": {
+      "DA-L01": "page 1, source lines 5-17: always-on cloud and local sovereign lanes",
+      "DA-L02": "page 2, source lines 53-73: durable offload and reconnect result return",
+      "DA-L03": "page 3, source lines 85-107: API-first with browser fallback",
+      "DA-L04": "page 4, source lines 115-145: shared organizational memory proposal"
+    }
+  },
+  "parent_monitor": {
+    "repository": "ed3c/bettor-arena",
+    "issue": 173,
+    "pull_request": 176,
+    "branch": "docs/173-tech-lead-shadow-closure",
+    "state": "DRAFT_PARENT"
+  },
+  "documentation_subject": {
+    "issue": 187,
+    "branch": "docs/187-dual-agent-closure",
+    "base": "docs/173-tech-lead-shadow-closure",
+    "stack_class": "TRUE_CHILD",
+    "owned_paths": [
+      "docs/architecture/dual-agent-closure/AGENTS.md",
+      "docs/architecture/dual-agent-closure/README.md",
+      "docs/architecture/dual-agent-closure/closure-matrix.json",
+      "docs/INDEX.md"
+    ],
+    "evidence_ceiling": "DOCUMENTATION_AND_TRACEABILITY_CANDIDATE"
+  },
+  "evidence_ladder": [
+    "SOURCE_PROPOSAL",
+    "OWNER_AND_CONTRACT_BOUND",
+    "MECHANISM_IMPLEMENTED",
+    "DETERMINISTICLY_VERIFIED",
+    "LIVE_OR_PHYSICAL_EXECUTED",
+    "USER_OUTCOME_VERIFIED",
+    "HUMAN_ADMITTED",
+    "RELEASED",
+    "OPERATED_WITH_ROLLBACK"
+  ],
+  "current_verdict": {
+    "problem_denominator": "BOUND",
+    "authority_map": "BOUND",
+    "portable_method": "NOT_IMPLEMENTED",
+    "offload_contracts": "NOT_IMPLEMENTED",
+    "offline_reconnect_transport": "NOT_IMPLEMENTED",
+    "identity_policy_secret_binding": "NOT_IMPLEMENTED",
+    "durable_workflow": "NOT_IMPLEMENTED",
+    "effect_ledger": "NOT_IMPLEMENTED",
+    "api_browser_adapter": "NOT_IMPLEMENTED",
+    "gvisor_adapter": "NOT_IMPLEMENTED",
+    "physical_canary": "NOT_EXERCISED",
+    "independent_verification": "NOT_IMPLEMENTED",
+    "license_closure": "HUMAN_ADMIT_REQUIRED",
+    "release": "NOT_RELEASED"
+  },
+  "problems": [
+    {
+      "id": "DA-P01",
+      "locators": ["DA-L01"],
+      "problem": "always-on cloud execution",
+      "owners": ["bettor runtime fabric", "agent-shield runtime providers"],
+      "issues": ["bettor#66", "bettor#183", "bettor#184", "bettor#186", "agent-shield#3", "agent-shield#40", "agent-shield#95", "agent-shield#147"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "live": "NOT_EXERCISED",
+      "next": "implement and exercise one exact selected cloud runtime"
+    },
+    {
+      "id": "DA-P02",
+      "locators": ["DA-L01"],
+      "problem": "local sovereign execution and private-data boundary",
+      "owners": ["runtime-env local runtime", "bettor reconciliation", "agent-shield local/device providers"],
+      "issues": ["runtime-env#57", "runtime-env#58", "runtime-env#59", "bettor#161", "bettor#183", "bettor#186"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "live": "NOT_EXERCISED_FOR_SELECTED_SUBJECT",
+      "next": "bind LOCAL_ONLY policy and exercise local submit/restart/reconcile"
+    },
+    {
+      "id": "DA-P03",
+      "locators": ["DA-L02"],
+      "problem": "durable local-cloud offload, reconnect and structured result return",
+      "owners": ["skills-shared method", "runtime-env contracts/transport/identity", "bettor workflow/effects"],
+      "issues": ["skills-shared#359", "runtime-env#57", "runtime-env#58", "runtime-env#59", "bettor#183", "bettor#184", "bettor#185", "bettor#186"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "mechanism": "NOT_IMPLEMENTED_AS_END_TO_END_ROUTE",
+      "live": "NOT_EXERCISED",
+      "next": "implement packet, outbox/inbox, transport, workflow, idempotency and restart reconstruction"
+    },
+    {
+      "id": "DA-P04",
+      "locators": ["DA-L03"],
+      "problem": "API-first integration",
+      "owners": ["agent-shield integrations", "bettor effect ledger"],
+      "issues": ["agent-shield#144", "bettor#185", "bettor#186"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "mechanism": "NOT_IMPLEMENTED",
+      "live": "NOT_EXERCISED",
+      "next": "bind provider/schema/auth/terms/errors and exercise one exact API"
+    },
+    {
+      "id": "DA-P05",
+      "locators": ["DA-L03"],
+      "problem": "bounded browser fallback with lower evidence ceiling",
+      "owners": ["agent-shield Playwright provider", "bettor policy/Gates"],
+      "issues": ["agent-shield#139", "agent-shield#144", "bettor#186"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "mechanism": "NOT_IMPLEMENTED_FOR_SELECTED_ROUTE",
+      "live": "NOT_EXERCISED",
+      "next": "implement closed workflow, assertions, artifact bounds and cleanup"
+    },
+    {
+      "id": "DA-P06",
+      "locators": ["DA-L04"],
+      "problem": "shared memory without becoming workflow or effect authority",
+      "owners": ["bettor memory/notes/context", "bettor LoopX reducer"],
+      "issues": ["bettor#63", "bettor#67", "bettor#103", "bettor#105", "bettor#183", "bettor#186", "bettor#68"],
+      "stage": "MECHANISM_IMPLEMENTED_FOR_MULTIPLE_PROJECTIONS",
+      "live": "NOT_EXERCISED_FOR_SELECTED_END_TO_END_SUBJECT",
+      "next": "select exact projections while preserving LoopX/effect authority"
+    },
+    {
+      "id": "DA-P07",
+      "locators": ["DA-L02"],
+      "problem": "reduced operator burden and usable recovery",
+      "owners": ["bettor physical canary", "bettor final release", "FDE deployment specification"],
+      "issues": ["bettor#186", "bettor#68"],
+      "stage": "OWNER_AND_CONTRACT_BOUND",
+      "user_outcome": "NOT_EXERCISED",
+      "next": "run reproducible install/offload/reconnect/inspect/recover canary"
+    },
+    {
+      "id": "DA-P08",
+      "locators": [],
+      "problem": "explicit commercial/open-source rights for mandatory release subjects",
+      "owners": ["repository owners", "bettor final release"],
+      "issues": ["skills-shared#360", "bettor#182", "agent-shield#143", "fde#97", "bettor#68"],
+      "stage": "HUMAN_ADMIT_REQUIRED",
+      "release": "NOT_RELEASED",
+      "next": "select exact licenses, notices, provenance, SBOM and release gates"
+    }
+  ],
+  "planes": [
+    {
+      "ref": "skills-shared",
+      "state_machine": "PROBLEM_TO_PORTABLE_METHOD_TO_PROOF_TO_RELEASE",
+      "input": "problem plus exact task/data/effect/authority classes",
+      "output": "portable laws, procedure, controls and stop conditions",
+      "ceiling": "PORTABLE_METHOD_ONLY",
+      "issues": [359, 360]
+    },
+    {
+      "ref": "runtime-env",
+      "state_machine": "OFFLOAD_CONTRACT_TO_RUNTIME_BINDING_TO_TRANSPORT_OR_IDENTITY_RECEIPT",
+      "input": "portable method plus exact runtime/policy/host subjects",
+      "output": "secret-free packet/receipt contracts and host metadata receipts",
+      "ceiling": "EXACT_RUNTIME_INVOCATION_OR_HOST_CANARY",
+      "issues": [57, 58, 59]
+    },
+    {
+      "ref": "bettor-arena",
+      "state_machine": "JOB_TO_WORKFLOW_TO_GATE_TO_EFFECT_TO_USER_RESULT_TO_RELEASE",
+      "input": "validated jobs, observations, Human signals and evidence",
+      "output": "canonical task/effect events, user result and release candidate",
+      "ceiling": "SELECTED_COMPOSITION_ONLY",
+      "issues": [182, 183, 184, 185, 186, 187, 68]
+    },
+    {
+      "ref": "agent-shield-monorepo",
+      "state_machine": "CLOSED_PROVIDER_REQUEST_TO_EXECUTION_TO_ARTIFACT_AND_CLEANUP_RECEIPT",
+      "input": "exact runtime or integration request",
+      "output": "provider observation, artifact, effect-attempt and cleanup receipts",
+      "ceiling": "ONE_EXACT_PROVIDER_ENVIRONMENT",
+      "issues": [143, 144, 147]
+    },
+    {
+      "ref": "truth-verify-loop",
+      "state_machine": "BUNDLE_TO_READBACK_TO_DISAGREEMENT_TO_EVIDENCE_CLOSURE",
+      "input": "content-bound Dual-Agent evidence bundle",
+      "output": "SUPPORTED, REFUTED, CONFLICTED, STALE or UNVERIFIABLE",
+      "ceiling": "EVIDENCE_CLOSURE_NOT_TASK_OR_RELEASE_AUTHORITY",
+      "issues": [22]
+    },
+    {
+      "ref": "fde-agent-platform",
+      "state_machine": "CAPABILITY_TO_ROLE_PACK_TO_PRIVATE_OVERLAY_TO_DEPLOYMENT_SPEC",
+      "input": "admitted capability plus private tenant policy",
+      "output": "governed tenant deployment specification",
+      "ceiling": "SPECIFICATION_NOT_PRODUCTION_EXECUTION",
+      "issues": [97]
+    }
+  ],
+  "process_edges": [
+    ["skills-shared#359", "runtime-env#57", "PROCESS_PREREQUISITE_NOT_GIT_ANCESTRY"],
+    ["runtime-env#57", "runtime-env#58", "CONTRACT_PREREQUISITE"],
+    ["runtime-env#57", "runtime-env#59", "CONTRACT_PREREQUISITE"],
+    ["runtime-env#58", "bettor#184", "RUNTIME_EVENT_INPUT"],
+    ["runtime-env#59", "bettor#184", "ADMISSION_INPUT"],
+    ["bettor#184", "bettor#185", "WORKFLOW_EFFECT_CONTRACT"],
+    ["bettor#185", "agent-shield#144", "EFFECT_BOUNDARY"],
+    ["runtime-env#59", "agent-shield#147", "RUNTIME_ADMISSION"],
+    ["runtime-env#58", "bettor#186", "PHYSICAL_PREREQUISITE"],
+    ["runtime-env#59", "bettor#186", "PHYSICAL_PREREQUISITE"],
+    ["bettor#184", "bettor#186", "PHYSICAL_PREREQUISITE"],
+    ["bettor#185", "bettor#186", "PHYSICAL_PREREQUISITE"],
+    ["agent-shield#144", "bettor#186", "PHYSICAL_PREREQUISITE"],
+    ["agent-shield#147", "bettor#186", "SELECT_OR_EXPLICITLY_EXCLUDE"],
+    ["bettor#186", "truth-verify-loop#22", "EVIDENCE_BUNDLE_INPUT"],
+    ["truth-verify-loop#22", "bettor#187", "CLOSURE_INPUT"],
+    ["bettor#187", "bettor#68", "TRACEABILITY_INPUT"]
+  ],
+  "molecular_stacks": {
+    "skills-shared#359": ["DA-M-C", "DA-M-K", "DA-M-E", "DA-M-D"],
+    "runtime-env#57": ["DA-RC-C", "DA-RC-K", "DA-RC-E", "DA-RC-D"],
+    "runtime-env#58": ["DA-TR-C", "DA-TR-L", "DA-TR-N", "DA-TR-E", "DA-TR-D"],
+    "runtime-env#59": ["DA-ID-C", "DA-ID-L", "DA-ID-CLOUD", "DA-ID-P", "DA-ID-E", "DA-ID-D"],
+    "bettor#184": ["DA-WF-C", "DA-WF-K", "DA-WF-R", "DA-WF-H", "DA-WF-COMP", "DA-WF-E", "DA-WF-D"],
+    "bettor#185": ["DA-EF-C", "DA-EF-K", "DA-EF-P", "DA-EF-A", "DA-EF-COMP", "DA-EF-E", "DA-EF-D"],
+    "agent-shield#144": ["DA-INT-C", "DA-INT-API", "DA-INT-BR", "DA-INT-POL", "DA-INT-E", "DA-INT-D"],
+    "bettor#186": ["DA-X-C", "DA-X-L", "DA-X-CLOUD", "DA-X-EF", "DA-X-SHADOW", "DA-X-D"],
+    "truth-verify-loop#22": ["DA-TV-C", "DA-TV-DLV", "DA-TV-EF", "DA-TV-ART", "DA-TV-USER", "DA-TV-E", "DA-TV-D"],
+    "bettor#187": ["DA-DOC-AGENT", "DA-DOC-MAP", "DA-DOC-MATRIX", "DA-DOC-INDEX"]
+  },
+  "authority": {
+    "task_state_writer": "bettor LoopX reducer",
+    "effect_state_writer": "bettor Dual-Agent effect ledger after implementation",
+    "provider_execution_owner": "agent-shield-monorepo",
+    "independent_evidence_owner": "truth-verify-loop#22",
+    "release_owner": "bettor#68",
+    "human_owned": ["semantic conflicts", "credentials", "data egress", "irreversible effects", "licenses", "merge", "production", "release", "rollback"]
+  },
+  "forbidden_promotions": [
+    "SOURCE_PROPOSAL_TO_PASS",
+    "ISSUE_CLOSED_TO_RUNTIME_PASS",
+    "MECHANISM_TO_LIVE_PASS",
+    "TRANSPORT_ACK_TO_TASK_SUCCESS",
+    "WORKFLOW_COMPLETE_TO_GATE_PASS",
+    "GATE_PASS_TO_EFFECT_COMMITTED",
+    "ARTIFACT_REFERENCE_TO_READBACK",
+    "BACKEND_RESULT_TO_USER_RESULT",
+    "LOCAL_TO_CLOUD_SUBSTITUTION",
+    "API_TO_BROWSER_SUBSTITUTION",
+    "ONE_PROVIDER_TO_ANOTHER",
+    "FIXTURE_TO_PHYSICAL_PASS",
+    "LICENSE_CANDIDATE_TO_LEGAL_ADMISSION",
+    "TERMINAL_MERGES_TO_RELEASE",
+    "ELIGIBILITY_TO_HUMAN_ADMIT"
+  ]
+}
