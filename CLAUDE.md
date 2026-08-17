@@ -42,7 +42,7 @@ Canonical queue:
 human:   docs/git/PDF_TERMINAL_SEQUENCE.md
 machine: docs/git/pdf-terminal-sequence.json
 program: #61
-active:  order 0 / #82
+active:  order 13 / #140
 final:   order 25 / #68
 ```
 
@@ -52,7 +52,7 @@ Current sequence:
 
 ```text
 #82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
-→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71
 → #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
 → #101 → #68
 ```

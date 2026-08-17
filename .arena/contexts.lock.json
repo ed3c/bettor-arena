@@ -1,5 +1,5 @@
 {
-  "content_sha256": "41045a0b6d8d00113fb9a3fbb1fdea75394e80743bee861219783a41dd5d9c7b",
+  "content_sha256": "dd45170ee9cd89bf2081e9c145c8ee18a67dd23efcbf9c6701efac96ff8159cc",
   "contexts": [
     {
       "common": [
@@ -12,7 +12,7 @@
         ".agents/shared-skills.requirements.json",
         ".runtime-env/requirements.json"
       ],
-      "context_sha256": "80bbb9f5600d3ae53cdf2339a521061f7de773deb5f99dd8e9cba23308d83bde",
+      "context_sha256": "09546d2e22e7b1623506a5224ad1d843508acf158b4dc79605857c9a908574ed",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -51,7 +51,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -90,7 +90,7 @@
         "loop_wiki/code-truth-graph/modules/eight-base-laws.md",
         "loop_wiki/code-truth-graph/modules/exchange-formats.md"
       ],
-      "context_sha256": "3aacb2a1832d0485dec02ea1bf1e3faaf92e4bb9f30933b2e0e1d862cef1d233",
+      "context_sha256": "a7403dd6cd48846e4fe5f45dc8d44685a35e969e329fa04f5c8e41eff8cbf13b",
       "cwd": "loop_wiki/code-truth-graph",
       "drivers": {
         "claude-code": {
@@ -114,7 +114,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -197,7 +197,7 @@
         "docs/knowledge-providers/evals/cases/symbol-public-skill-port.json",
         ".arena/modules/knowledge-providers/module.json"
       ],
-      "context_sha256": "cdb84713dadaf60227cd27644e7ce42ed3984f1b2b48deb70e2d82b379a8d501",
+      "context_sha256": "f4be5785530cee0f020ebb1226c3c94a24c48553119d22c4110b5307b9b42569",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -226,7 +226,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -393,7 +393,7 @@
         "docs/traceability/STACK_PR_INDEX.md",
         "docs/agent-runtime-integration.md"
       ],
-      "context_sha256": "4f5a93052fe472562e67960d33e789a40afb437101255362a3d14e3a6687d001",
+      "context_sha256": "1d5659d199da26fb112752d6fe809d484832661006ea71f8676e9f9673a9747f",
       "cwd": ".",
       "drivers": {
         "claude-code": {
@@ -417,7 +417,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -482,7 +482,7 @@
           "path": "docs/git/PDF_TERMINAL_SEQUENCE.md"
         },
         {
-          "blob": "4edbfc2ebe2c36bd62d11e56770c763c62d6c6e6",
+          "blob": "29c68ed4c5e20278f6c9d9a533b54c60e8f1f161",
           "mode": "100644",
           "path": "docs/git/README.md"
         },
@@ -543,7 +543,7 @@
         ".agents/skills/notebooklm-workflow/modules/ai-monetization-doc-harvest.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "0b76f2eda27ea4fccedcebd79bafa0c34f79bd0bd23bf9da0f406d1255555639",
+      "context_sha256": "bbf386dd14a0fc899bf96b1c1843b102fbf65683e1169a78bda21d592563ae80",
       "cwd": "notebooklm",
       "drivers": {
         "claude-code": {
@@ -577,7 +577,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -613,7 +613,7 @@
         "kb-ingest/port/README.md",
         "docs/architecture/modular-integration-requirements.md"
       ],
-      "context_sha256": "09a8196b4fc8f98253bd725d3d06dc7be7ca5f1656ad7864d797c26d90fac959",
+      "context_sha256": "efcbb61f7f8f208116ce471470fcad61976e170918216a92e69970ea1f9d41eb",
       "cwd": "kb-ingest",
       "drivers": {
         "claude-code": {
@@ -637,7 +637,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -686,7 +686,7 @@
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/eight-base-laws.md",
         "loop_wiki/evolve-perfect-seed-repo-factory/modules/exchange-formats.md"
       ],
-      "context_sha256": "292170b4445302760a2ab431b0e3ef8b52a4425d38ceedc06998a8feb9df6642",
+      "context_sha256": "f8a40b9f4d8dfaed99410a8ae337d77419476cc78c841522fe74ba151b60eef3",
       "cwd": "loop_wiki/evolve-perfect-seed-repo-factory",
       "drivers": {
         "claude-code": {
@@ -710,7 +710,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },
@@ -774,7 +774,7 @@
         "loop_wiki/evolve-technical-equivalence-research/modules/exchange-formats.md",
         "loop_wiki/evolve-technical-equivalence-research/modules/production-readiness.md"
       ],
-      "context_sha256": "997c4ff33520016ee83974c824f302811059f96f829546d9ca4de61f58aeff85",
+      "context_sha256": "04421ddc50178cac628e3bb36023e1b67e627abbde0c99ef6f078f0cce1e8bcd",
       "cwd": "loop_wiki/evolve-technical-equivalence-research",
       "drivers": {
         "claude-code": {
@@ -798,7 +798,7 @@
           "path": "ARCHITECTURE.md"
         },
         {
-          "blob": "7c2c4a484ab9ca7d157e4c123147794b05389073",
+          "blob": "51bc17fc07b51bef9237d3aa73606b845de62deb",
           "mode": "100644",
           "path": "CLAUDE.md"
         },

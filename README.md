@@ -227,8 +227,8 @@ Canonical ordered queue:
 - [`docs/git/pdf-terminal-sequence.schema.json`](docs/git/pdf-terminal-sequence.schema.json)
 
 ```text
-completed prefix: orders 0–11
-current active item: #92 (order 12)
+completed prefix: orders 0–12
+current active item: #140 (order 13)
 queue length: 26 terminal stages, orders 0–25
 final convergence: #68
 active limit: 1
@@ -241,7 +241,7 @@ Condensed sequence:
 
 ```text
 #82 → #90 → #65 → #67 → #66 → #94 → #97 → #96
-→ #103 → #93 → #104 → #105 → #92 → #41 → #70 → #71
+→ #103 → #93 → #104 → #105 → #92 → #140 → #70 → #71
 → #95 → #72 → #98 → #91 → #45 → #46/#56 → #99 → #100
 → #101 → #68
 ```
