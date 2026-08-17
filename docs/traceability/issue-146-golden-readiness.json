@@ -1,0 +1,120 @@
+{
+  "schema_version": "issue-146-golden-readiness/v1",
+  "issue": 146,
+  "parent_issue": 140,
+  "phase": "PHASE_0_READINESS",
+  "subject": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "e67a803ba6d12f8141a1bed3a26d9ec928931e35",
+    "tree": "ed4188dd0a50bf6906f1fe1c91bbbc710899cc35",
+    "default_branch": "main",
+    "dirty_state": "NOT_OBSERVABLE_FROM_GITHUB_SUBJECT"
+  },
+  "selected_slice": {
+    "goal": "Correct the Agentic Tech Lead consumer binding to the landed Blindspots/parallel-planner architecture and freeze a replayable exact-subject readiness contract for the first physical golden run.",
+    "non_goals": [
+      "claim live GrepAI, SCIP/LSP, Tree-sitter, Serena, Git Town or Forgejo execution",
+      "advance PDF queue order 13 / issue 140",
+      "create a duplicate .agentic/parallel-tech-lead runtime",
+      "manufacture parallelism or fake Worker receipts",
+      "merge, promote or resolve semantic conflicts"
+    ],
+    "topology": "COOPERATIVE",
+    "topology_execution_state": "NOT_EXERCISED",
+    "interface_owner": ".skill-bindings/agentic-tech-lead-orchestration/binding.json",
+    "convergence_owner": "issue-146 readiness gate"
+  },
+  "planned_packets": [
+    {
+      "id": "binding-current-state",
+      "allowed_paths": [
+        ".skill-bindings/agentic-tech-lead-orchestration/README.md",
+        ".skill-bindings/agentic-tech-lead-orchestration/binding.json",
+        "scripts/gates/check_agentic_tech_lead_binding.py"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "golden-readiness-contract",
+      "allowed_paths": [
+        "docs/traceability/issue-146-golden-readiness.json",
+        "scripts/gates/check_issue_146_golden_readiness.py",
+        ".github/workflows/issue-146-golden-readiness.yml"
+      ],
+      "depends_on": []
+    }
+  ],
+  "canonical_routes": {
+    "planner": "loop_wiki/parallel-agent-tech-lead/scripts/plan.py",
+    "planner_suite": "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh",
+    "blindspots_suite": "loop_wiki/code-truth-graph-v2/tests/run-all.sh",
+    "binding_suite": "tests/agentic-tech-lead-binding/run-all.sh",
+    "parent_convergence_gate": "scripts/gates/check_issue_140_convergence.py"
+  },
+  "command_matrix": [
+    {
+      "class": "planner_contract",
+      "argv": ["sh", "loop_wiki/parallel-agent-tech-lead/tests/run-all.sh"],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "output_budget_bytes": 1048576
+    },
+    {
+      "class": "blindspots_contract",
+      "argv": ["sh", "loop_wiki/code-truth-graph-v2/tests/run-all.sh"],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "output_budget_bytes": 1048576
+    },
+    {
+      "class": "binding_contract",
+      "argv": ["sh", "tests/agentic-tech-lead-binding/run-all.sh"],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "output_budget_bytes": 1048576
+    },
+    {
+      "class": "parent_queue_guard",
+      "argv": ["python3", "scripts/gates/check_issue_140_convergence.py"],
+      "cwd": ".",
+      "timeout_seconds": 60,
+      "output_budget_bytes": 524288
+    }
+  ],
+  "quality_lanes": {
+    "type_check": "NOT_CONFIGURED_FOR_SELECTED_PYTHON_MARKDOWN_JSON_SLICE",
+    "lint": "NOT_CONFIGURED_FOR_SELECTED_PYTHON_MARKDOWN_JSON_SLICE",
+    "unit_contract": "PLANNED_EXACT_HEAD_EXECUTION",
+    "integration_contract": "PLANNED_EXACT_HEAD_EXECUTION",
+    "e2e": "NOT_EXERCISED"
+  },
+  "tool_lanes": {
+    "grepai": "NOT_EXERCISED",
+    "scip_lsp": "NOT_EXERCISED",
+    "tree_sitter": "NOT_EXERCISED",
+    "serena": "NOT_EXERCISED",
+    "sqlite_blindspots_contract": "IMPLEMENTED_NOT_LIVE_PROVIDER_PROOF",
+    "lancedb": "NOT_EXERCISED",
+    "git_town": "NOT_EXERCISED",
+    "forgejo": "NOT_EXERCISED",
+    "github_exact_head_checks": "PENDING_PR_HEAD"
+  },
+  "forbidden": {
+    "placeholder_command": "REPLACE_WITH_REPOSITORY_TEST_COMMAND",
+    "stale_runtime_root": ".agentic/parallel-tech-lead",
+    "retired_provider": "code-graph-rag",
+    "queue_advance_before_parent_admit": true,
+    "acceptance_assertion_weakening": true
+  },
+  "rollback": {
+    "subject_commit": "e67a803ba6d12f8141a1bed3a26d9ec928931e35",
+    "subject_tree": "ed4188dd0a50bf6906f1fe1c91bbbc710899cc35",
+    "cleanup_boundary": "No physical Worker, provider session, Git Town process, Forgejo mutation, SQLite WAL/SHM or worktree is created by Phase 0."
+  },
+  "admission": {
+    "phase_0": "READY_FOR_DETERMINISTIC_VERIFICATION",
+    "physical_golden_run": "NOT_EXERCISED",
+    "parent_issue_140": "HUMAN_ADMIT_REQUIRED",
+    "queue_advance": "BLOCKED"
+  }
+}
