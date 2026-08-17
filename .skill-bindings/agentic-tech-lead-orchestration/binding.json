@@ -8,7 +8,13 @@
     "repository": "ed3c/bettor-arena",
     "base_commit": "bfabd45d4732e66961d4ba5f958d240feb15b32d",
     "base_tree": "ae5ee587b46a98bffc8571156dbedc55fbaa44f1",
-    "active_issue": 92
+    "active_issue": 140,
+    "readiness_subject": {
+      "commit": "e67a803ba6d12f8141a1bed3a26d9ec928931e35",
+      "tree": "ed4188dd0a50bf6906f1fe1c91bbbc710899cc35",
+      "issue": 146,
+      "state": "PHASE_0_READINESS"
+    }
   },
   "skill": {
     "name": "agentic-tech-lead-orchestration",
@@ -61,9 +67,9 @@
       "module_id": "code-truth-graph-v2",
       "interface_version": "1.0.0",
       "binding_state": "PASS",
-      "runtime_state": "NOT_IMPLEMENTED",
+      "runtime_state": "NOT_EXERCISED",
       "authority": "EXACT_ONLY_WITH_SUBJECT_COVERAGE_READBACK",
-      "limitation": "The existing Python AST reference adapter is not SCIP."
+      "limitation": "SQLite Blindspots and SCIP/LSP adapter contracts are implemented; live SCIP/LSP indexing remains NOT_EXERCISED."
     },
     {
       "role": "STRUCTURAL_SLICER",
@@ -72,8 +78,9 @@
       "module_id": "code-truth-graph-v2",
       "interface_version": "1.0.0",
       "binding_state": "PASS",
-      "runtime_state": "NOT_IMPLEMENTED",
-      "authority": "STRUCTURE_ONLY"
+      "runtime_state": "NOT_EXERCISED",
+      "authority": "STRUCTURE_ONLY",
+      "limitation": "Tree-sitter identity/coverage contracts are implemented; live grammar execution remains NOT_EXERCISED."
     },
     {
       "role": "CONTEXT_ASSEMBLY",

@@ -20,7 +20,8 @@ consumer binding
   repository: ed3c/bettor-arena
   parent commit: bfabd45d4732e66961d4ba5f958d240feb15b32d
   parent tree: ae5ee587b46a98bffc8571156dbedc55fbaa44f1
-  active acceptance issue: #92
+  active acceptance issue: #140
+  #146 readiness subject: e67a803ba6d12f8141a1bed3a26d9ec928931e35 / ed4188dd0a50bf6906f1fe1c91bbbc710899cc35
 ```
 
 The PDF is a `SOURCE_PROPOSAL`. Repository contracts, current source, tests,
@@ -55,8 +56,8 @@ Issue / PRD / source proposal
 → locked Bettor task packet
 → GrepAI candidate intent anchors
 → current-source readback
-→ SCIP + SQLite exact-subject projection (NOT_IMPLEMENTED)
-→ Tree-sitter structural slicing (NOT_IMPLEMENTED)
+→ SQLite Blindspots + SCIP/LSP adapter contracts (IMPLEMENTED; live SCIP/LSP NOT_EXERCISED)
+→ Tree-sitter identity/coverage contracts (IMPLEMENTED; live grammar execution NOT_EXERCISED)
 → LoopX context assembly
 → LoopX Worker Fleet leases
 → Serena bounded execution candidate
@@ -76,8 +77,8 @@ behind a generic “integrated” claim.
 | Portable role | Bettor owner | Current runtime state |
 |---|---|---|
 | Intent anchor (`grepai`) | `.arena/modules/knowledge-providers` | `NOT_EXERCISED` |
-| Deterministic graph (`SCIP + SQLite`) | `.arena/modules/code-truth-graph-v2` | `NOT_IMPLEMENTED` |
-| Structural slicer (`Tree-sitter`) | `.arena/modules/code-truth-graph-v2` | `NOT_IMPLEMENTED` |
+| Deterministic graph (`SCIP + SQLite`) | `.arena/modules/code-truth-graph-v2` | contract `IMPLEMENTED`; live SCIP/LSP `NOT_EXERCISED` |
+| Structural slicer (`Tree-sitter`) | `.arena/modules/code-truth-graph-v2` | contract `IMPLEMENTED`; live grammar `NOT_EXERCISED` |
 | Prompt/context assembly | `.arena/modules/loopx-context-assembly` | `NOT_EXERCISED` |
 | Agent executor (`Serena`) | `.arena/modules/knowledge-providers` | `NOT_EXERCISED` |
 | Vector candidate store (`LanceDB`) | `.arena/modules/loopx-notes-retrieval` | `NOT_IMPLEMENTED` |
