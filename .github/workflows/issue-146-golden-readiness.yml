@@ -6,9 +6,11 @@ on:
     paths:
       - 'docs/traceability/issue-146-golden-readiness.json'
       - 'docs/traceability/issue-161-runtime-admission.json'
+      - 'docs/git/local-handoff-execution-queue.json'
       - 'scripts/gates/check_issue_146_golden_readiness.py'
       - 'scripts/gates/check_issue_161_runtime_admission.py'
       - 'scripts/gates/issue_161_host_rebind.py'
+      - 'scripts/gates/check_local_handoff_execution_queue.py'
       - '.runtime-env/bindings/bettor-arena-local.json'
       - '.skill-bindings/agentic-tech-lead-orchestration/**'
       - 'scripts/gates/check_agentic_tech_lead_binding.py'
@@ -21,9 +23,11 @@ on:
     paths:
       - 'docs/traceability/issue-146-golden-readiness.json'
       - 'docs/traceability/issue-161-runtime-admission.json'
+      - 'docs/git/local-handoff-execution-queue.json'
       - 'scripts/gates/check_issue_146_golden_readiness.py'
       - 'scripts/gates/check_issue_161_runtime_admission.py'
       - 'scripts/gates/issue_161_host_rebind.py'
+      - 'scripts/gates/check_local_handoff_execution_queue.py'
       - '.runtime-env/bindings/bettor-arena-local.json'
       - '.skill-bindings/agentic-tech-lead-orchestration/**'
       - 'scripts/gates/check_agentic_tech_lead_binding.py'
@@ -63,6 +67,10 @@ jobs:
       - name: Validate fail-closed local rebind handoff
         run: |
           python3 scripts/gates/issue_161_host_rebind.py --selftest
+      - name: Validate zero-context Local Handoff Execution Queue
+        run: |
+          python3 scripts/gates/check_local_handoff_execution_queue.py --selftest
+          python3 scripts/gates/check_local_handoff_execution_queue.py
       - name: Execute repository-native contract matrix
         run: |
           sh loop_wiki/parallel-agent-tech-lead/tests/run-all.sh
@@ -71,4 +79,4 @@ jobs:
           python3 scripts/gates/check_issue_140_convergence.py
       - name: Compile changed Python gates
         run: |
-          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_issue_161_runtime_admission.py scripts/gates/issue_161_host_rebind.py scripts/gates/check_agentic_tech_lead_binding.py
+          python3 -m py_compile scripts/gates/check_issue_146_golden_readiness.py scripts/gates/check_issue_161_runtime_admission.py scripts/gates/issue_161_host_rebind.py scripts/gates/check_local_handoff_execution_queue.py scripts/gates/check_agentic_tech_lead_binding.py
