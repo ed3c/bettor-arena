@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail closed on stale runtime-env bindings before the #146 physical canary."""
+"""Fail closed on stale or wrongly composed runtime-env bindings before #146."""
 from __future__ import annotations
 
 import argparse
@@ -48,18 +48,25 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
         errors.append("skills-shared exact subject invalid")
     if runtime.get("repository") != "ed3c/runtime-env" or not is_sha40(runtime.get("commit")):
         errors.append("runtime-env exact subject invalid")
+    required_profile = runtime.get("required_profile")
+    if required_profile != "bettor-arena-tech-lead-local":
+        errors.append("required Bettor Tech Lead profile drifted")
 
     binding_source = binding.get("source", {}).get("commit")
-    observed = packet.get("checked_in_binding", {}).get("observed_source_commit")
-    if binding_source != observed:
+    binding_profile = binding.get("profile")
+    observed = packet.get("checked_in_binding", {})
+    if binding_source != observed.get("observed_source_commit"):
         errors.append("packet observed binding source does not match checked-in binding")
+    if binding_profile != observed.get("observed_profile"):
+        errors.append("packet observed binding profile does not match checked-in binding")
 
     module_ids = {m.get("id") for m in binding.get("modules", []) if isinstance(m, dict)}
     required_modules = set(runtime.get("required_modules", []))
     exact_runtime = binding_source == runtime.get("commit")
+    exact_profile = binding_profile == required_profile
     scheduler_bound = required_modules.issubset(module_ids)
-    expected_state = "READY_FOR_LOCAL_CANARY" if exact_runtime and scheduler_bound else "BLOCKED_STALE_BINDING"
-    if packet.get("checked_in_binding", {}).get("state") != expected_state:
+    expected_state = "READY_FOR_LOCAL_CANARY" if exact_runtime and exact_profile and scheduler_bound else "BLOCKED_STALE_BINDING"
+    if observed.get("state") != expected_state:
         errors.append(f"checked-in binding state must be {expected_state}")
     if packet.get("admission", {}).get("scheduler_runtime") != expected_state:
         errors.append(f"scheduler runtime admission must be {expected_state}")
@@ -100,10 +107,23 @@ def validate(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
 def make_exact_scheduler_binding(packet: dict[str, Any], binding: dict[str, Any]) -> None:
     runtime = packet["canonical_subjects"]["runtime_env"]
     binding.setdefault("source", {})["commit"] = runtime["commit"]
+    binding["profile"] = runtime["required_profile"]
     modules = binding.setdefault("modules", [])
     if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
         modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
     packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
+    packet["checked_in_binding"]["observed_profile"] = runtime["required_profile"]
+
+
+def make_wrong_profile_fake_ready(packet: dict[str, Any], binding: dict[str, Any]) -> None:
+    runtime = packet["canonical_subjects"]["runtime_env"]
+    binding.setdefault("source", {})["commit"] = runtime["commit"]
+    modules = binding.setdefault("modules", [])
+    if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
+        modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
+    packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
+    packet["checked_in_binding"]["state"] = "READY_FOR_LOCAL_CANARY"
+    packet["admission"]["scheduler_runtime"] = "READY_FOR_LOCAL_CANARY"
 
 
 def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
@@ -113,7 +133,9 @@ def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
         ("fake live", lambda p, b: p["evidence_lanes"].__setitem__("bettor_worker_processes", "PASS"), "bettor_worker_processes"),
         ("human admit erased", lambda p, b: p["admission"].__setitem__("git_town_darwin_artifact", "PASS"), "Human Admit"),
         ("binding observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_source_commit", "0" * 40), "observed binding"),
-        ("exact runtime not admitted", make_exact_scheduler_binding, "READY_FOR_LOCAL_CANARY"),
+        ("profile observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_profile", "wrong-profile"), "observed binding profile"),
+        ("wrong profile fake ready", make_wrong_profile_fake_ready, "BLOCKED_STALE_BINDING"),
+        ("exact composition not admitted", make_exact_scheduler_binding, "READY_FOR_LOCAL_CANARY"),
         ("merge authority", lambda p, b: p["admission"].__setitem__("merge_or_ship_authority", True), "merge/ship"),
     ]
     for name, mutate, needle in cases:
