@@ -1,0 +1,34 @@
+{
+  "schema_version": "issue-state-guard/v1",
+  "authority": {
+    "queue": "docs/git/pdf-terminal-sequence.json",
+    "rule": "GitHub issue closed state is advisory until repository queue/admission evidence permits completion."
+  },
+  "queue_anchor": {
+    "active_issue": 140,
+    "active_order": 13
+  },
+  "protected_incomplete_issues": [
+    {
+      "issue": 146,
+      "reason": "The first physical Bettor Tech Lead golden run is incomplete; only Phase-0 deterministic readiness is landed.",
+      "receipt": "docs/traceability/issue-146-golden-readiness.json",
+      "required_state_path": ["admission", "physical_golden_run"],
+      "required_state_value": "NOT_EXERCISED"
+    }
+  ],
+  "reopen_comment": {
+    "evidence_ceiling": "Issue UI state cannot proxy terminal completion, live provider execution, physical Worker fan-out, Git Town/Forgejo execution, queue advancement, or release admission.",
+    "prefix": "Issue-state guard restored OPEN because repository authority still marks this issue incomplete."
+  },
+  "forbidden_actions": [
+    "close_issue",
+    "complete_issue",
+    "advance_queue",
+    "merge",
+    "promote",
+    "rollback",
+    "infer_completion_from_pr_merge",
+    "infer_completion_from_reference"
+  ]
+}
