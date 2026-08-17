@@ -29,7 +29,7 @@ Agent Shield domain/provider canaries
         ↓
 Bettor external-release acceptance
         ↓
-Human promotion or rollback
+automated promotion or rollback
 ```
 
 ## PDF architecture allocation
@@ -69,7 +69,7 @@ bettor-arena
   → public execution
   → proof/control/mutation
   → external acceptance
-  → Human Admit
+  → automated admission
 
 agent-shield-monorepo
   DOMAIN REQUIREMENT
@@ -86,7 +86,7 @@ strategy graph proposes
 worker/provider executes
 hard gates observe
 Bettor LoopX reducer commits
-Human admits
+Automated admission controller admits
 ```
 
 <a id="private-github-local-forgejo-delivery-loop"></a>
@@ -117,7 +117,7 @@ private GitHub bootstrap + ChatGPT/Codex repository authorization
 
 1. The implementation queue is the registered Forgejo PRD/milestone and its open slice issues. One issue owns one acceptance boundary and one idempotency marker.
 2. For each admitted issue, create an isolated worktree at the start, implement in small testable commits, run the issue's verification and negative control, self-review the diff, and open a Forgejo PR whose body contains `Closes #N`.
-3. The repository owner has supplied standing Human Admit for this declared loop. After required current-head receipts are complete, commit gates and review are green, and any contract-declared checked-red evidence is explicitly reported, commit and push normally, merge the PR to `forgejo/main` without another confirmation prompt, then fast-forward the local main checkout. A worktree result, green model response, or local test alone still cannot authorize merge.
+3. The repository owner has supplied standing automated-admission authority for this declared loop. After required current-head receipts are complete, commit gates and review are green, and any contract-declared checked-red evidence is explicitly reported, commit and push normally, merge the PR to `forgejo/main` without another confirmation prompt, then fast-forward the local main checkout. A worktree result, green model response, or local test alone still cannot authorize merge.
 4. New findings become a new Forgejo issue under the same milestone. Do not expand the active PR or silently rewrite the original acceptance criteria.
 
 ### 3. Three-strike root-cause escalation
@@ -190,7 +190,7 @@ consumer requirement digest
 runtime policy digest
 known non-success states
 rollback subject
-Human Admit
+automated admission
 ```
 
 Forbidden:
@@ -234,7 +234,7 @@ source / notes / code / logs
 → provider candidate query
 → current source/test/runtime readback
 → evidence-bound card/decision proposal
-→ Human Admit where durable state changes
+→ automated admission where durable state changes
 ```
 
 Mem0, vector indexes, graph databases and OpenWiki are projections. Git/source/receipts/current ADR and the eventual LoopX event ledger remain higher authority.
@@ -257,7 +257,7 @@ license suitability
 cloud/local equivalence
 model quality
 live worker compatibility
-Human promotion
+automated promotion
 ```
 
 These require independent primary-source review plus exact runtime receipts.

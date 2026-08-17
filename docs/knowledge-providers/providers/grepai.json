@@ -1,25 +1,17 @@
 {
-  "schema_version": "knowledge-provider-manifest/v1",
-  "provider_id": "grepai",
-  "source": {
-    "repository": "yoanbernabeu/grepai",
-    "commit": "c4f294b38552dc4dad253d6a8118ba2799a2d61d",
-    "license": "MIT"
+  "activation": {
+    "artifact_digest": "sha256:e2d5ad30710eba500cb5d783a914ea16ba4e5c66ac23abe8691165b4aa5732bc",
+    "data_scope": "EXACT_SUBJECT_COVERAGE_ONLY",
+    "mode": "ON_DEMAND_READ_ONLY",
+    "network_scope": "LOOPBACK_ONLY",
+    "request_ceiling": 5,
+    "rollback": "RESTORE_ROLLBACK_SUBJECT",
+    "sbom_disposition": "HOMEBREW_SPDX",
+    "secret_references": [],
+    "spend_usd_ceiling": 0,
+    "version": "0.30.0"
   },
-  "admission": {
-    "state": "CANDIDATE",
-    "runtime_state": "NOT_EXERCISED",
-    "live_claim": false
-  },
-  "capabilities": [
-    "search.semantic",
-    "callgraph.trace"
-  ],
   "adapter": {
-    "transport": "mcp",
-    "identity_state": "UNPINNED",
-    "digest": null,
-    "read_only": true,
     "allowed_operations": [
       "search",
       "trace_callers",
@@ -31,25 +23,45 @@
       "init",
       "write",
       "delete"
-    ]
+    ],
+    "digest": "sha256:e2d5ad30710eba500cb5d783a914ea16ba4e5c66ac23abe8691165b4aa5732bc",
+    "identity_state": "PINNED",
+    "read_only": true,
+    "transport": "mcp"
   },
-  "index": {
-    "required": true,
-    "subject_bound": true,
-    "rebuildable": true,
-    "freshness_required": true
+  "admission": {
+    "live_claim": true,
+    "runtime_state": "PASS",
+    "state": "ADMITTED"
   },
   "authority": {
-    "result_class": "CANDIDATE_ONLY",
-    "may_write_repository": false,
-    "may_write_memory": false,
     "may_advance_state": false,
-    "may_waive_gate": false,
+    "may_human_admit": false,
     "may_mark_tested": false,
-    "may_human_admit": false
+    "may_waive_gate": false,
+    "may_write_memory": false,
+    "may_write_repository": false,
+    "result_class": "CANDIDATE_ONLY"
+  },
+  "capabilities": [
+    "search.semantic",
+    "callgraph.trace"
+  ],
+  "index": {
+    "freshness_required": true,
+    "rebuildable": true,
+    "required": true,
+    "subject_bound": true
   },
   "limits": {
-    "max_results": 100,
-    "max_bytes": 262144
+    "max_bytes": 262144,
+    "max_results": 100
+  },
+  "provider_id": "grepai",
+  "schema_version": "knowledge-provider-manifest/v1",
+  "source": {
+    "commit": "176ff9dbd091345b6e8b2afd4d79664b4aa17194",
+    "license": "MIT",
+    "repository": "yoanbernabeu/grepai"
   }
 }

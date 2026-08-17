@@ -6,7 +6,7 @@ This directory contains repository-wide contracts and current-state ledgers. It 
 
 - [`PDF_HARNESS_INTEGRATION_AUDIT.md`](PDF_HARNESS_INTEGRATION_AUDIT.md) — attached 41-page Harness proposal mapped to exact current Bettor mechanisms, gaps and acceptance criteria.
 - [`pdf-harness-integration.matrix.json`](pdf-harness-integration.matrix.json) — machine-readable integration matrix used by the offline gate.
-- [`DIRECTORY_STATE_MACHINE_MAP.md`](DIRECTORY_STATE_MACHINE_MAP.md) — directory placement mapped to state-machine owner, input, output, transitions and Human boundary.
+- [`DIRECTORY_STATE_MACHINE_MAP.md`](DIRECTORY_STATE_MACHINE_MAP.md) — directory placement mapped to state-machine owner, input, output, transitions and automation boundary.
 - [`modular-integration-requirements.md`](modular-integration-requirements.md) — normative modular-integration target.
 - [`modular-integration-status.md`](modular-integration-status.md) — mutable current implementation ledger.
 - [`STATE_MACHINES.md`](STATE_MACHINES.md) — current Macro/Micro/module/MCP/proof/project/origin machines and the missing LoopX target.
@@ -18,7 +18,7 @@ This directory contains repository-wide contracts and current-state ledgers. It 
 
 ## Source boundary
 
-The PDF is `SOURCE_PROPOSAL_ONLY`. Its diagrams and examples cannot establish current implementation, live provider state, performance, security, license, cost or Human Admit. The audit explicitly rejects raw shell strings, Worker-owned state, unscoped force-skip, checkpoint split-brain and private Thought Stream persistence.
+The PDF is `SOURCE_PROPOSAL_ONLY`. Its diagrams and examples cannot establish current implementation, live provider state, performance, security, license, cost or automated admission. The audit explicitly rejects raw shell strings, Worker-owned state, unscoped force-skip, checkpoint split-brain and private Thought Stream persistence.
 
 ## Validation
 

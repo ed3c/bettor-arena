@@ -16,7 +16,7 @@ from knowledge_provider_eval_common import (
     strict_keys,
 )
 
-PROVIDERS = {"serena", "grepai", "code-graph-rag", "mem0"}
+PROVIDERS = {"serena", "grepai", "mem0"}
 PARTICIPANTS = PROVIDERS | {"exact-search-control", "repository-authority-control"}
 
 
@@ -40,7 +40,7 @@ def provider_digests(root: Path) -> dict[str, str]:
         require(digest(m) == want, f"{pid}: manifest digest drift")
         require(pid not in out, f"duplicate provider: {pid}")
         out[pid] = want
-    require(set(out) == PROVIDERS, "provider set")
+    require(set(out) == PROVIDERS, "provider registry set")
     common_safety(reg)
     return out
 

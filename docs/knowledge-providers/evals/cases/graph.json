@@ -10,13 +10,23 @@
   },
   "query": {
     "text": "identify the module and public contracts affected by changing provider authority rules",
-    "path_scope": [".arena", "docs", "scripts"]
+    "path_scope": [
+      ".arena",
+      "docs",
+      "scripts"
+    ]
   },
   "query_digest": "sha256:50b2232e6fa9ee7db15f17daae9539c6066fdb9ffda0da7753f9b661d4f0409f",
-  "participants": ["exact-search-control", "code-graph-rag"],
+  "participants": [
+    "exact-search-control"
+  ],
   "oracle": {
-    "relevant_ids": ["knowledge-provider-module"],
-    "must_remain_unknown": ["runtime-provider-health"]
+    "relevant_ids": [
+      "knowledge-provider-module"
+    ],
+    "must_remain_unknown": [
+      "runtime-provider-health"
+    ]
   },
   "hard_gates": {
     "source_readback_required": true,
@@ -33,6 +43,8 @@
     "max_latency_ms": 20000,
     "max_tool_calls": 10
   },
-  "eligible_recommendations": ["EXPERIMENTAL"],
+  "eligible_recommendations": [
+    "REJECTED"
+  ],
   "fixture_subject": true
 }

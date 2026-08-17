@@ -14,7 +14,9 @@
     "arena.proof-kernel/v1": "proof-kernel",
     "arena.stateless-mcp/v1": "loop-runtime",
     "code-truth-graph.build/v1": "code-truth-graph",
+    "knowledge-provider.activation/v1": "knowledge-providers",
     "knowledge-provider.eval/v1": "knowledge-providers",
+    "knowledge-provider.live-canary/v1": "knowledge-providers",
     "knowledge-provider.memory-proposal/v1": "knowledge-providers",
     "knowledge-provider.query/v1": "knowledge-providers",
     "notebooklm.harvest/v1": "notebooklm",
@@ -26,7 +28,7 @@
     "wiki-update-request.produce/v1": "perfect-seed-factory"
   },
   "composition": "bettor-arena",
-  "content_sha256": "06e0d891106d5468977e7a25566ecfb8b2adb51bf85a1cbcad93f6d0d1fd769b",
+  "content_sha256": "481ee31bd0018c22919b3a32232a5b103b9f6f2b723047a93762723094e0b9be",
   "modules": [
     {
       "components": [
@@ -36,8 +38,8 @@
         "runtime"
       ],
       "id": "agent-runtime-integration",
-      "interface_version": "1.2.0",
-      "manifest_sha256": "4559928169c66d23aee30606b9585b4ffb521fa37adb34b4e49c9af9eb69f619",
+      "interface_version": "1.3.0",
+      "manifest_sha256": "643c1f91c27a64499a560dfdad78033334dbb63cd9e43eab8d106d4d7097eda3",
       "provides": [
         "agent-runtime.aggregate/v1",
         "skill-execution.runner/v1"
@@ -47,11 +49,12 @@
       "components": [
         "bootstrap",
         "context",
+        "issue_state_guard",
         "proof"
       ],
       "id": "arena-core",
       "interface_version": "1.2.0",
-      "manifest_sha256": "a0b21264b242eeedb459e59b000adf92dd66e8165a5c7b6f6097c20a9b353613",
+      "manifest_sha256": "d7709030e7d1837ffc6cdc9c59a143247ea2baa72340c4289ec85660655204b2",
       "provides": [
         "arena.host-gates/v1",
         "arena.passive-context/v1",
@@ -93,10 +96,12 @@
         "registry"
       ],
       "id": "knowledge-providers",
-      "interface_version": "1.2.0",
-      "manifest_sha256": "8447deb2aff4ecb6a13731c3540bb3258877af0264f557fce0542a14cada91d2",
+      "interface_version": "1.4.0",
+      "manifest_sha256": "32c897ecc47f45e44875ac838dc7158546577257ddc65b2e654c394b763d8ec2",
       "provides": [
+        "knowledge-provider.activation/v1",
         "knowledge-provider.eval/v1",
+        "knowledge-provider.live-canary/v1",
         "knowledge-provider.memory-proposal/v1",
         "knowledge-provider.query/v1"
       ]
@@ -219,8 +224,8 @@
     }
   ],
   "ownership_classes_sha256": "cf3407244ae15de7d56c359209a4f93c293d0376efe041f1bcd0800f2d89002b",
-  "ownership_sha256": "f41296958de3d058382a3d17ae44b0531f12f2be8f690c22bc8c8043ddf46b83",
-  "requirements_sha256": "f609832ef81c051449431a4edb34504d875304b01367762508163cb8d78e209b",
+  "ownership_sha256": "254d39dfab31ff3bb69593af23645d2ce6e2c1f05f23daaa288b1a3a05ef0e47",
+  "requirements_sha256": "382ca8031c31c3c1780a09bbef55993aa19de413757716689181174cf907db91",
   "schema": "bettor-arena/composition-lock/v1",
-  "tracked_files": 1991
+  "tracked_files": 2063
 }

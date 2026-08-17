@@ -1,27 +1,27 @@
 {
   "schema_version": "bettor-arena-workflow-lock@1.0.0",
-  "workflow_commit": "8d47fc1c9dfd1550c1f45504f6c11fc1f04f6a0b",
+  "workflow_commit": "254f2dedad82eca66ed825833827db3f7e33606d",
   "workflow_tags": [],
   "built_from": {
-    "agent-runtime": "agent-runtime-8d47fc1c9dfd-dirty.json",
-    "container": "container-8d47fc1c9dfd-dirty.json",
-    "ctg": "ctg-8d47fc1c9dfd-dirty.json",
-    "equivalence": "equivalence-8d47fc1c9dfd-dirty.json",
-    "harness": "harness-8d47fc1c9dfd-dirty.json",
-    "macro": "macro-8d47fc1c9dfd-dirty.json",
-    "micro": "micro-8d47fc1c9dfd-dirty.json",
-    "notebooklm": "notebooklm-8d47fc1c9dfd-dirty.json",
-    "openwiki": "openwiki-8d47fc1c9dfd-dirty.json",
-    "policy": "policy-8d47fc1c9dfd-dirty.json",
-    "skill-execution": "skill-execution-8d47fc1c9dfd-dirty.json",
-    "workflow": "workflow-8d47fc1c9dfd-dirty.json"
+    "agent-runtime": "agent-runtime-254f2dedad82-dirty.json",
+    "container": "container-254f2dedad82-dirty.json",
+    "ctg": "ctg-254f2dedad82-dirty.json",
+    "equivalence": "equivalence-254f2dedad82-dirty.json",
+    "harness": "harness-254f2dedad82-dirty.json",
+    "macro": "macro-254f2dedad82-dirty.json",
+    "micro": "micro-254f2dedad82-dirty.json",
+    "notebooklm": "notebooklm-254f2dedad82-dirty.json",
+    "openwiki": "openwiki-254f2dedad82-dirty.json",
+    "policy": "policy-254f2dedad82-dirty.json",
+    "skill-execution": "skill-execution-254f2dedad82-dirty.json",
+    "workflow": "workflow-254f2dedad82-dirty.json"
   },
   "counts": {
-    "artifact": 31,
+    "artifact": 45,
     "context": 62,
     "harness": 143
   },
-  "workflow_digest": "e2c3a1c910ba88299950fafc2a17264c502ab279c81cf8a0696d5474516287e3",
+  "workflow_digest": "e0c3d89f2a422ad062aa797f5b6a22e3ec7fa941b4e2f6669220320b4b373c02",
   "files": {
     ".agents/bindings/bettor-arena.json": {
       "sha256": "10460887f296928e06fbf1a72eb5e4a3234508a5228609b2736c3946f3d5ff59",
@@ -196,7 +196,7 @@
       ]
     },
     "AGENTS.md": {
-      "sha256": "a6389686ff71ef3e02f1c2d57e645b2cd9665ee2e62b8607aba61602ba8fdd3e",
+      "sha256": "7d00b78071929acabfa0f4281cc53bf670d752047b2abd25dbc6538bb8b2ead9",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -204,7 +204,7 @@
       ]
     },
     "ARCHITECTURE.md": {
-      "sha256": "044bd83d31f621d01f8797711653d8b6fa39477dda6aa5757332cc08c6edf9a4",
+      "sha256": "e027c88af63efa1cf62537f65d46d104a07c671d499897da3f885f6b5bd15ca7",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -213,7 +213,7 @@
       ]
     },
     "CLAUDE.md": {
-      "sha256": "f253c5691037b84cae16678942c466910968583cf0c296fb06a052b882a58305",
+      "sha256": "ffc0ccbd0257449480f93948704692f1465d1b6281e594f99fa5bdbcfaa3d847",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -221,7 +221,7 @@
       ]
     },
     "CONTEXT.md": {
-      "sha256": "b75a3b50873dd0d2d2b05bd65968d0015299f53f158f4bbde2ab55b5bd16325a",
+      "sha256": "2a199274cbb0efa71b01f03ee67486dfc3fd0fe6422a5a6a000d3fb7450d4c2d",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -235,6 +235,63 @@
       "kind": "harness",
       "loops": [
         "macro"
+      ]
+    },
+    "data/receipts/post-commit-254f2dedad82eca66ed825833827db3f7e33606d.json": {
+      "sha256": "4b1dd33e1bab10e3f021738105010a0d70b386a682a32ddf75520597d64726a6",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "macro"
+      ]
+    },
+    "data/wiki-update/request-ingest-note.json": {
+      "sha256": "f537c0505acbff8d5e7aef5361ea4d707f8d66426413a666d259297db56b2831",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-issue23-dryrun.json": {
+      "sha256": "fc6b1b7e2f4489c9ac5e55204473a808500775c484216427aa5a771936cdbf50",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-pdf-probe.json": {
+      "sha256": "05677e0bd9d67aa362f2b88259e35c287c06dc9499f0e783ff76219dbe6dd8c8",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-poweron-2026-08-06.json": {
+      "sha256": "3788c59bbd3f2ddeacd4344db71f0b4f69a8642073e313494fe1c55fa457eb4b",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-repo-probe.json": {
+      "sha256": "b9dcae0f8b8d0d7561692adbe03e9be821f1239a45bed64d1946e0aebca6c7f8",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "data/wiki-update/request-review-i23.json": {
+      "sha256": "793896b5c3b5fcc7b5b6c034ada78b1fc1766aa1d46040294107ae013d49d990",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro",
+        "openwiki"
       ]
     },
     "delivery.json": {
@@ -254,7 +311,7 @@
       ]
     },
     "docs/integration/CROSS_REPO_INTEGRATION.md": {
-      "sha256": "0cbe8405496a496486629b9c1c857d941fdb54fbba06ae5f5457ea72801642eb",
+      "sha256": "b34cf4a26077c03a3edd4d4f956372cf570d22a154cdf8d3a5bb269036ef89d4",
       "hash_source": "index",
       "kind": "context",
       "loops": [
@@ -749,6 +806,62 @@
         "micro"
       ]
     },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.dr-example.json": {
+      "sha256": "bc3aab30e40f0c6208113cff83d66d72b70f421acd2eacbba74a16a61da6f13e",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.ingest-note.json": {
+      "sha256": "773e5a8a24c53314607a2c2352341e3e36f3597451a78ea4a83625f7f1e5ef6f",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.issue23-dryrun.json": {
+      "sha256": "316a1589249f33b084b043cf3685a68cd51c68afe31dbb4682a6442b13f0c6b6",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.pdf-probe.json": {
+      "sha256": "5c9cd90f18cb98c51e405678c31bcf144046d3058edf6c5959827fd54878d03b",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.poweron-2026-08-06.json": {
+      "sha256": "3550af48e84dd64b7dbd7c9b94139adb99797a9cb4d672df3dd1a6ebce5180ee",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.repo-probe.json": {
+      "sha256": "21509042a959e8d40c9cc45e96a6cd7ab9f71ec425c9531e754bf920ff0e93f3",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
+    "loop_wiki/evolve-perfect-seed-repo-factory/packets/outbox/route-result.review-i23.json": {
+      "sha256": "360c6013983c5c97354cc0e2238d6b3497911c89ec95930a97f6343ac7a7f9af",
+      "hash_source": "worktree",
+      "kind": "artifact",
+      "loops": [
+        "micro"
+      ]
+    },
     "loop_wiki/evolve-perfect-seed-repo-factory/portability.sh": {
       "sha256": "0beb4c2b50534afc8927d5615c06d8b3500a61900361a15cb5f5a99ea9a0d454",
       "hash_source": "index",
@@ -1110,7 +1223,7 @@
       ]
     },
     "loopctl/contract.json": {
-      "sha256": "f8e540b436cdd8cf97520f44b5a769bebae934623354f3bb8ff52ceb4cd58a7f",
+      "sha256": "3f5e91b458a58bbd70128714b45981046e39539164673f02ef97c37d1ee12dc3",
       "hash_source": "index",
       "kind": "harness",
       "loops": [
@@ -1774,7 +1887,7 @@
       ]
     },
     "proof_workflow/prove_micro_loop.sh": {
-      "sha256": "5e7f1f5e7eb366073c098e5b274fc9107b9877af2abab8967299ef0df9642244",
+      "sha256": "827181c96ddcb8c342abe53ab41fc77766891c9bd64c79e4d0291b502998f245",
       "hash_source": "index",
       "kind": "harness",
       "loops": [

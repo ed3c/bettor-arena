@@ -1,13 +1,14 @@
 name: Sync feature modular contracts
 
 # This workflow keeps checked-in generated contracts aligned before the exact-head
-# verification workflow decides whether a feature or governed documentation branch
-# is mergeable. Documentation can change Macro Context selections and therefore
+# verification workflow decides whether a feature, fix, or governed documentation
+# branch is mergeable. Documentation can change Macro Context selections and therefore
 # requires the same deterministic projections as implementation branches.
 on:
   push:
     branches:
       - 'feat/**'
+      - 'fix/**'
       - 'integration/**'
       - 'refactor/**'
       - 'docs/**'

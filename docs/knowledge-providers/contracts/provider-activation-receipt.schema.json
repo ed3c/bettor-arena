@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ed3c.github.io/bettor-arena/contracts/provider-activation-receipt.v1.schema.json",
+  "title": "Provider Activation Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "outcome",
+    "subject",
+    "rollback_subject",
+    "providers",
+    "policy",
+    "authority",
+    "cleanup"
+  ],
+  "properties": {
+    "schema": {"const": "bettor-arena/provider-activation-receipt/v1"},
+    "operation": {"const": "ACTIVATE_ON_DEMAND_READ_ONLY"},
+    "outcome": {"const": "ADMITTED"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "rollback_subject": {"$ref": "#/$defs/subject"},
+    "providers": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider_id",
+          "manifest_path",
+          "canary_receipt_path",
+          "manifest_digest_before",
+          "manifest_digest_after",
+          "executable_digest",
+          "version",
+          "source_commit",
+          "sbom_disposition",
+          "state_before",
+          "state_after"
+        ],
+        "properties": {
+          "provider_id": {"enum": ["grepai", "serena"]},
+          "manifest_path": {"type": "string"},
+          "canary_receipt_path": {"type": "string"},
+          "manifest_digest_before": {"$ref": "#/$defs/sha256"},
+          "manifest_digest_after": {"$ref": "#/$defs/sha256"},
+          "executable_digest": {"$ref": "#/$defs/sha256"},
+          "version": {"type": "string", "minLength": 1},
+          "source_commit": {"$ref": "#/$defs/sha40"},
+          "sbom_disposition": {"type": "string", "minLength": 1},
+          "state_before": {"const": "CONFIGURED"},
+          "state_after": {"const": "ADMITTED"}
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_scope",
+        "external_network",
+        "external_spend_usd",
+        "secrets",
+        "source_readback",
+        "cleanup",
+        "exact_subject"
+      ],
+      "properties": {
+        "data_scope": {"const": "EXACT_SUBJECT_COVERAGE_ONLY"},
+        "external_network": {"const": "DENIED_OR_LOOPBACK_ONLY"},
+        "external_spend_usd": {"const": 0},
+        "secrets": {"const": "DENIED"},
+        "source_readback": {"const": "PASS"},
+        "cleanup": {"const": "PASS"},
+        "exact_subject": {"const": "PASS"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activated_provider",
+        "advanced_state",
+        "marked_tested",
+        "promoted_release",
+        "waived_gate"
+      ],
+      "properties": {
+        "activated_provider": {"const": true},
+        "advanced_state": {"const": false},
+        "marked_tested": {"const": false},
+        "promoted_release": {"const": false},
+        "waived_gate": {"const": false}
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "residue"],
+      "properties": {
+        "status": {"const": "PASS"},
+        "residue": {"type": "array", "maxItems": 0}
+      }
+    }
+  },
+  "$defs": {
+    "sha40": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "tree"],
+      "properties": {
+        "repository": {"const": "ed3c/bettor-arena"},
+        "commit": {"$ref": "#/$defs/sha40"},
+        "tree": {"$ref": "#/$defs/sha40"}
+      }
+    }
+  }
+}

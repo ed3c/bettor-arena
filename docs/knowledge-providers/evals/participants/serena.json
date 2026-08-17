@@ -1,8 +1,10 @@
 {
+  "families": [
+    "symbol"
+  ],
+  "human_admit_required": true,
   "id": "serena",
-  "kind": "provider",
-  "families": ["symbol"],
   "identity_digest": "sha256:74e1651d738232fccdbd301e53863f4646fba1af24981008c6aef39653d5c59a",
-  "manifest_digest": "sha256:158d1f02cad1033a9ea3a46bdaf66b80872d26a6a7680e91007f5b1df8d794b9",
-  "human_admit_required": true
+  "kind": "provider",
+  "manifest_digest": "sha256:bd1e411640d3df52badfe947b1744b77078789209e30e9f32632293c84b51654"
 }

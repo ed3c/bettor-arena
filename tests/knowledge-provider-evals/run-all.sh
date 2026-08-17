@@ -24,9 +24,9 @@ assert report["status"] == "PASS"
 assert report["evidence_scope"] == "FIXTURE_ONLY"
 assert report["pair_coverage"] == {
     "complete": True,
-    "expected": 8,
+    "expected": 7,
     "missing": [],
-    "observed": 8,
+    "observed": 7,
     "unexpected": [],
 }
 assert report["admission"]["automatic_admission"] is False

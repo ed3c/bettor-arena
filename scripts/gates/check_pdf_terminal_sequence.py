@@ -87,7 +87,7 @@ def require_markers(text: str, label: str, markers: list[str]) -> None:
 def validate_shape(value: Any) -> dict[str, Any]:
     require(isinstance(value, dict), "sequence must be an object")
     require(
-        value.get("schema") == "bettor-arena/pdf-terminal-sequence/v1",
+        value.get("schema") == "bettor-arena/pdf-terminal-sequence/v2",
         "sequence schema drift",
     )
 
@@ -144,7 +144,7 @@ def validate_shape(value: Any) -> dict[str, Any]:
     )
     require(policy.get("active_limit") == 1, "active_limit must remain one")
     require(
-        policy.get("later_completion") == "REQUIRES_PREDECESSOR_OR_HUMAN_WAIVER",
+        policy.get("later_completion") == "REQUIRES_PREDECESSOR_OR_POLICY_WAIVER",
         "later-completion policy drift",
     )
     require(
@@ -286,8 +286,9 @@ def validate_items(value: dict[str, Any]) -> list[dict[str, Any]]:
             f"{item_id}: evidence boundary missing",
         )
         require(
-            isinstance(item.get("human_boundary"), str) and item["human_boundary"],
-            f"{item_id}: Human boundary missing",
+            isinstance(item.get("automation_boundary"), str)
+            and item["automation_boundary"],
+            f"{item_id}: Automation boundary missing",
         )
 
         state = item.get("queue_state")
@@ -326,8 +327,8 @@ def validate_items(value: dict[str, Any]) -> list[dict[str, Any]]:
             False,
             f"COMPLETE items are not a prefix; orders {missing} are unfinished but "
             f"later orders are COMPLETE. STRICT_GLOBAL_COMPLETION means a stage "
-            "finished ahead of its predecessor needs the Human waiver the policy "
-            "names, recorded as such rather than left as a gap",
+            "finished ahead of its predecessor needs the policy-waiver receipt "
+            "named by the contract rather than an unexplained gap",
         )
 
     # The summary agrees with the list it summarises. Checking `current` against
@@ -409,11 +410,11 @@ def validate_convergence(value: dict[str, Any]) -> None:
     )
 
 
-def validate_human_boundary(value: dict[str, Any]) -> None:
-    operations = value.get("human_owned_operations")
+def validate_automation_boundary(value: dict[str, Any]) -> None:
+    operations = value.get("automation_owned_operations")
     require(
         isinstance(operations, list) and len(operations) >= 6,
-        "human_owned_operations missing",
+        "automation_owned_operations missing",
     )
     joined = "\n".join(str(item).lower() for item in operations)
     for marker in (
@@ -423,7 +424,7 @@ def validate_human_boundary(value: dict[str, Any]) -> None:
         "promotion",
         "rollback",
     ):
-        require(marker in joined, f"Human-owned operation missing: {marker}")
+        require(marker in joined, f"Automation-owned operation missing: {marker}")
 
 
 def validate_docs(root: Path, items: list[dict[str, Any]]) -> None:
@@ -501,7 +502,7 @@ def validate_repository(root: Path) -> dict[str, Any]:
     validate_foundation(sequence)
     items = validate_items(sequence)
     validate_convergence(sequence)
-    validate_human_boundary(sequence)
+    validate_automation_boundary(sequence)
     validate_docs(root, items)
     return {
         "status": "PASS",
@@ -678,8 +679,8 @@ def run_selftest(root: Path) -> dict[str, Any]:
     # Six entries, none of them the required markers. A shorter list would trip
     # the length check first and this control would go red for the wrong reason
     # -- which is what expect_failure is here to catch, and did.
-    bad_human = copy.deepcopy(original)
-    bad_human["human_owned_operations"] = [
+    bad_automation = copy.deepcopy(original)
+    bad_automation["automation_owned_operations"] = [
         "inspection only",
         "reading the queue",
         "asking a question",
@@ -689,20 +690,20 @@ def run_selftest(root: Path) -> dict[str, Any]:
     ]
     outcomes.append(
         expect_failure(
-            "human-boundary-loss",
-            lambda: validate_human_boundary(bad_human),
-            "Human-owned operation missing",
+            "automation-boundary-loss",
+            lambda: validate_automation_boundary(bad_automation),
+            "Automation-owned operation missing",
         )
     )
 
     # The length floor needs its own control, or removing it would be invisible.
-    bad_human_short = copy.deepcopy(original)
-    bad_human_short["human_owned_operations"] = ["inspection only"]
+    bad_automation_short = copy.deepcopy(original)
+    bad_automation_short["automation_owned_operations"] = ["inspection only"]
     outcomes.append(
         expect_failure(
-            "human-boundary-truncated",
-            lambda: validate_human_boundary(bad_human_short),
-            "human_owned_operations missing",
+            "automation-boundary-truncated",
+            lambda: validate_automation_boundary(bad_automation_short),
+            "automation_owned_operations missing",
         )
     )
 

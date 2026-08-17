@@ -1,7 +1,9 @@
 # Knowledge Providers — subject-bound projection contracts
 
 This module decouples repository knowledge capabilities from Serena, GrepAI,
-Code-Graph-RAG, Mem0, or any future implementation.
+Mem0, deterministic compiler/AST projections, or any future implementation.
+The historical Code-Graph-RAG manifest remains registered only as a rejected
+migration/audit record; it is not an active provider selection.
 
 It does **not** make a provider authoritative. Current source, manifests,
 tests, exact runtime receipts, current ADRs, LoopX state transitions, and
@@ -24,6 +26,22 @@ source / manifest / test / runtime readback
         ↓
 downstream hard assertion
 ```
+
+The active code-intelligence funnel is deliberately split by role:
+
+```text
+natural-language intent
+→ GrepAI candidate anchors
+→ current-source readback
+→ SCIP + SQLite exact-subject Def/Ref and impact projection when admitted
+→ Tree-sitter AST/CST slicing and syntax checks
+→ Serena bounded execution or deterministic fallback
+→ optional LanceDB subject-bound candidate retrieval
+```
+
+No provider may combine those roles into an unverified second graph. A vector
+or semantic match never proves type identity, call edges, code absence, task
+state, or merge safety.
 
 Memory uses a separate proposal lane:
 
@@ -48,20 +66,25 @@ optional rebuildable memory projection
 | query receipt | what the adapter observed for the exact request | current source truth, `TESTED`, hard-gate PASS |
 | memory proposal | a bounded add/supersede/delete proposal | canonical memory mutation or repository law |
 | eval report | paired metrics and hard-gate outcome for exact observations | automatic admission or a universal winner |
-| source/test/runtime receipt | current mechanism or executed result for its exact subject | Human Admit or future availability |
+| source/test/runtime receipt | current mechanism or executed result for its exact subject | typed activation or future availability |
 
 ## Public capability vocabulary
 
 - Serena: `symbol.lookup`, `symbol.references`, `symbol.rename-plan`,
   `diagnostics.read`.
-- GrepAI: `search.semantic`, `callgraph.trace`.
-- Code-Graph-RAG: `graph.neighbors`, `graph.path`, `graph.impact`,
-  `structural.search`, `dataflow.trace`.
+- GrepAI: `search.semantic`, `callgraph.trace` as candidate discovery only.
+- Deterministic code intelligence: SCIP/LSP Def/Ref/type/call relations plus
+  SQLite subject and coverage metadata; Tree-sitter provides structural slices.
+  These are repository controls, not a provider authority class.
 - Mem0: `memory.recall`, `memory.write-proposal`,
   `memory.delete-proposal`.
+- Code-Graph-RAG: historical capability vocabulary remains in its immutable
+  manifest, but admission is `REJECTED`, runtime is `ABSENT`, and it cannot be
+  selected by a task or Worker.
 
-All current providers are `CANDIDATE`; live execution remains
-`NOT_EXERCISED` or `NOT_CONFIGURED`.
+Serena and GrepAI remain subject-bound candidates until their exact-subject live
+receipts pass the typed activation controller. Mem0 remains a candidate.
+Code-Graph-RAG is not a candidate.
 
 ## Read order
 
@@ -112,13 +135,19 @@ provider registry digest checks       IMPLEMENTED
 admission evaluation schemas          IMPLEMENTED on feature branch
 paired fixture evaluator              IMPLEMENTED on feature branch
 exact-head evaluation CI              NOT_EXERCISED
-live Serena                           NOT_EXERCISED
-live GrepAI                           NOT_EXERCISED
-Code-Graph-RAG runtime                NOT_CONFIGURED
+live Serena                           PASS for exact 755f743 subject
+live GrepAI                           PASS for exact 755f743 subject
+typed provider activation             ADMITTED for exact 755f743 subject
+SCIP + SQLite exact-subject runtime    NOT_EXERCISED
+Tree-sitter slicing runtime           NOT_EXERCISED
+LanceDB subject-bound retrieval       NOT_EXERCISED
+Code-Graph-RAG admission              REJECTED
+Code-Graph-RAG runtime                ABSENT
 Mem0 runtime/writeback                NOT_CONFIGURED
 cross-provider winner                 NOT_EXERCISED
 ```
 
-Provider installation, MCP trust, persistent-store retention, graph rebuild,
-memory writeback, merge, promotion, and production rollback remain Human
-Admit.
+Provider installation, credential changes, persistent-store retention, graph
+rebuild, memory writeback, merge, promotion, and production rollback remain
+outside provider authority. Serena/GrepAI on-demand activation is allowed only
+through the exact-subject controller in `activation/README.md`.

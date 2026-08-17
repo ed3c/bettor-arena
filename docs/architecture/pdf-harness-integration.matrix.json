@@ -152,7 +152,7 @@
         "dead-end and quirk validity scope",
         "expiry and supersession",
         "privacy and deletion receipt",
-        "Human Admit for durable writeback"
+        "automated admission for durable writeback"
       ]
     },
     {
@@ -243,7 +243,7 @@
       ],
       "missing_live_receipts": [
         "rendered UI (render_state: NOT_IMPLEMENTED \u2014 no HTML, websocket or browser)",
-        "production console activation (Human Admit)"
+        "production console activation (automated admission)"
       ]
     }
   ],

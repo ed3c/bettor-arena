@@ -83,8 +83,9 @@ root entry
 - `DR-11`: Git Town configuration must be observed; molecular terms alone do not prove it is active.
 - `DR-12`: source proposals do not become implementation or live evidence without verification and receipts.
 - `DR-13`: the PDF audit distinguishes the existing modular foundation from the missing LoopX kernel.
-- `DR-14`: desired, locked and released module sets agree before integration is called coherent.
-- `DR-15`: every active/stale molecular leaf is indexed with relation, state and Human boundary.
+- `DR-14`: irreversible delivery, queue, provider and release operations route through `docs/git/AUTOMATED_ADMISSION.md`; prose or a generic Gate cannot authorize them.
+- `DR-15`: desired, locked and released module sets agree before integration is called coherent.
+- `DR-16`: every active/stale molecular leaf is indexed with relation, state and automation boundary.
 
 Each route leaves an in-place summary before linking away, following the `knowledge-continuity` rule. The normal path from nearest README to machine authority and evidence should take no more than two intentional hops.
 

@@ -31,7 +31,7 @@ MODULE PROPOSED
 → PROOF SUBJECTS
 → PROOF / CONTROL / MUTATION
 → RELEASE RECEIPT
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 → MERGE / PROMOTE / ROLLBACK
 ```
 
@@ -50,7 +50,7 @@ TYPED REQUEST
 → CALLER NEXT EDGE
 ```
 
-A Micro loop cannot merge, promote, widen permissions or Human Admit.
+A Micro loop cannot directly merge, promote, widen permissions or admit; it submits exact evidence to the automated controller.
 
 ## 4. Module lifecycle
 
@@ -62,7 +62,7 @@ PROPOSED
 → CONTROLLED
 → MUTATION-SENSITIVE
 → RELEASE-CANDIDATE
-→ HUMAN-ADMITTED
+→ POLICY-ADMITTED
 → RELEASED
 → SUPERSEDED / ROLLED BACK
 ```
@@ -116,7 +116,7 @@ CLI CONTRACT
 → CLEANUP
 ```
 
-No generic shell, host path, secret, browser profile or Human Admit tool is allowed.
+No generic shell, host path, secret or browser-profile tool is allowed; admission uses named default-deny typed tools only.
 
 ## 8. Proof kernel
 
@@ -186,7 +186,7 @@ MANIFEST
 → RECEIPT
 → CURRENT AUTHORITY READBACK
 → CANDIDATE
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 ```
 
 Serena, GrepAI, Code-Graph-RAG and Mem0 remain replaceable candidates within their admitted capability ceilings.
@@ -199,7 +199,7 @@ LOGICAL RELEASE
 → EQUIVALENCE
 → BROWSER / PROVIDER CANARIES
 → EXTERNAL ACCEPTANCE
-→ HUMAN PROMOTION
+→ AUTOMATED PROMOTION
 ```
 
 Signed-in sessions and credentials stay host-owned.
@@ -212,7 +212,7 @@ SHARED SKILL SUBJECT PINNED
 → EXECUTABLE / LICENSE / SBOM ADMISSION
 → CONFIG CANDIDATE
 → ISOLATED CANARIES
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 → ENABLED
 ```
 
@@ -225,7 +225,7 @@ typed controller         IMPLEMENTED by PR #133
 physical controls        PASS: 13 real-repository controls
 executable/config        ABSENT
 canaries                 NOT_EXERCISED
-Human Admit              NOT_PERFORMED
+automated admission      NOT_EXERCISED
 ```
 
 ## 15. Git Town Stacked-PR worker State Machine
@@ -241,7 +241,7 @@ PARENT ISSUE
 → OPTIONAL LOCAL SYNC DRY RUN
 → EXACT-HEAD GITHUB CHECKS
 → CONVERGENCE
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 → MERGE / SHIP / ROLLBACK
 ```
 
@@ -258,8 +258,8 @@ Hard rules:
 
 - one Worker, one linked worktree, one branch and one path lease;
 - no primary-checkout unattended edits;
-- no semantic conflict auto-resolution;
-- no push, merge, ship, close or delete;
+- no guessed semantic conflict resolution; a declared deterministic winner may be applied only by the typed controller;
+- no raw push, merge, ship, close or delete; exact-subject operations use the automated-admission controller;
 - `MERGED_TO_PARENT` is not `MERGED_TO_MAIN`;
 - duplicate issue/path writers are blocking.
 
@@ -285,7 +285,7 @@ SOURCE / INCIDENT
 → EVALS
 → GENERATED LOCKS / INDEXES
 → CONVERGENCE
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 ```
 
 Git Town local synchronization and GitHub publication remain separate State Machines.
@@ -301,7 +301,7 @@ OBJECTIVE_ACCEPTED
 → WORKER_OBSERVED
 → HARD_GATES_EVALUATED
 → EVIDENCE_SUBJECT_BOUND
-→ READY_FOR_HUMAN_ADMIT
+→ READY_FOR_AUTOMATED_ADMIT
 ```
 
 This is a compatibility projection of the detailed target below. It is not a claim that the runtime exists on `main`.
@@ -328,7 +328,7 @@ strategy proposes
 Worker executes
 Gates observe
 LoopX reducer commits
-Human admits
+Automated controller admits
 ```
 
 Current `main` contains the Contract, Ledger and the later terminal mechanisms. They remain outside the 14-module selected release composition, and live end-to-end evidence remains incomplete.
@@ -357,8 +357,9 @@ CURRENT LOOPX SNAPSHOT
 → RESULT EVENT
 → REDUCER
 → CONTINUE OR INTERRUPT
-→ SIGNED HUMAN DECISION
+→ SIGNED HUMAN / POLICY DECISION
 → REVALIDATE
+→ AUTOMATED ADMISSION
 → RESUME / ABORT / SCOPED EXCEPTION
 ```
 
@@ -372,7 +373,7 @@ OBSERVATION / DEAD END / QUIRK / DECISION
 → SCOPE / RETENTION / PRIVACY
 → CONFLICT / SUPERSESSION
 → CAPSULE PROPOSAL
-→ HUMAN ADMIT
+→ AUTOMATED ADMIT
 → LOOPX MEMORY EVENT
 → OPTIONAL REBUILDABLE INDEX
 → EXPIRY / DELETE RECEIPT
@@ -405,8 +406,9 @@ LEDGER EVENT
 → TRACE ENVELOPE
 → OPTIONAL BACKEND
 → UI INSPECTION
-→ SIGNED HUMAN REQUEST
+→ SIGNED HUMAN / POLICY REQUEST
 → LOOPX VALIDATION
+→ AUTOMATED ADMISSION
 → LEDGER EVENT
 ```
 
@@ -445,4 +447,4 @@ Stack index
 exact-head evidence
 ```
 
-Merge, ship, semantic conflict resolution, promotion and rollback remain Human-owned.
+Merge, ship, policy-declared conflict resolution, promotion and rollback are automation-policy-owned.

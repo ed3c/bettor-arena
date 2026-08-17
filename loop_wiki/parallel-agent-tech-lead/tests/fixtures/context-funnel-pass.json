@@ -1,0 +1,20 @@
+{
+  "schema": "bettor-arena/context-funnel-result/v1",
+  "fixture": true,
+  "state": "PASS",
+  "subject": {
+    "repository": "ed3c/bettor-arena-fixture",
+    "commit": "1111111111111111111111111111111111111111",
+    "tree": "2222222222222222222222222222222222222222"
+  },
+  "coverage": {
+    "required_lenses": ["source", "grepai", "scip-lsp", "tree-sitter"],
+    "missing_or_unfresh_lenses": [],
+    "readback_failures": []
+  },
+  "authority": {
+    "fixture_only": true,
+    "advances_state": false,
+    "live_provider_claim": "NOT_EXERCISED"
+  }
+}
