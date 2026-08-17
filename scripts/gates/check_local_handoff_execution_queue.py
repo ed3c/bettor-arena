@@ -13,8 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 QUEUE = ROOT / "docs/git/local-handoff-execution-queue.json"
 RUNTIME_PACKET = ROOT / "docs/traceability/issue-161-runtime-admission.json"
 PDF_QUEUE = ROOT / "docs/git/pdf-terminal-sequence.json"
+HOST_REBIND = ROOT / "scripts/gates/issue_161_host_rebind.py"
 SHA40 = set("0123456789abcdef")
 SHARED_COMMIT = "dbcfdb4df76609822893aeb595e5f8ada8483435"
+HANDOFF_COMMIT = "542a935064e06f358d7d890df5d86364bbc20f46"
+HANDOFF_TREE = "78a6b573f094f1df7f3537ace551768f70210e51"
+RUNTIME_COMMIT = "77dca3584a4adb1c463c815bdb5ab603eae32b23"
 FORBIDDEN = {"merge", "force_push", "issue_close", "queue_advance", "provider_activation", "semantic_conflict_resolution"}
 
 
@@ -43,9 +47,21 @@ def validate(queue: dict[str, Any], runtime: dict[str, Any], pdf: dict[str, Any]
             errors.append(f"subject.{key} must be SHA-40")
     if subject.get("repository") != "ed3c/bettor-arena":
         errors.append("consumer repository drifted")
-    runtime_consumer = runtime.get("consumer_subject", {})
-    if subject.get("commit") != runtime_consumer.get("base_commit") or subject.get("tree") != runtime_consumer.get("base_tree"):
-        errors.append("handoff subject does not match #161 runtime admission subject")
+    if subject.get("commit") != HANDOFF_COMMIT or subject.get("tree") != HANDOFF_TREE:
+        errors.append("handoff freeze subject drifted")
+
+    if runtime.get("issue") != 161 or runtime.get("parent_issue") != 146:
+        errors.append("#161 runtime admission lineage drifted")
+    runtime_authority = runtime.get("canonical_subjects", {}).get("runtime_env", {})
+    if runtime_authority.get("commit") != RUNTIME_COMMIT:
+        errors.append("#161 runtime-env authority drifted")
+    if runtime_authority.get("required_profile") != "bettor-arena-tech-lead-local":
+        errors.append("#161 Bettor Tech Lead profile drifted")
+    if runtime.get("admission", {}).get("consumer_live_canary") != "NOT_EXERCISED":
+        errors.append("#161 consumer live canary falsely promoted before handoff")
+    if not HOST_REBIND.is_file():
+        errors.append("repo-owned #161 host rebind entrypoint missing")
+
     authority = set(queue.get("authority", {}).get("automation_forbidden", []))
     if not FORBIDDEN.issubset(authority):
         errors.append("handoff automation authority widened")
@@ -94,6 +110,9 @@ def validate(queue: dict[str, Any], runtime: dict[str, Any], pdf: dict[str, Any]
         exit_contract = item.get("exit", {})
         if exit_contract.get("requires_receipt") is not True or exit_contract.get("required_verdict") != "PASS":
             errors.append(f"{item_id}: exit must require PASS receipt")
+    first_argvs = [command.get("argv", []) for command in items[0].get("runtime_lane", {}).get("commands", [])]
+    if ["python3", "scripts/gates/issue_161_host_rebind.py", "--selftest"] not in first_argvs:
+        errors.append("#161 host rebind selftest is not a concrete entry command")
     return errors
 
 
@@ -101,7 +120,8 @@ def selftest(queue: dict[str, Any], runtime: dict[str, Any], pdf: dict[str, Any]
     failures: list[str] = []
     cases = [
         ("shared pin", lambda q, r, p: q["shared_contract"].__setitem__("commit", "0" * 40), "shared handoff"),
-        ("subject drift", lambda q, r, p: q["subject"].__setitem__("commit", "f" * 40), "runtime admission subject"),
+        ("subject drift", lambda q, r, p: q["subject"].__setitem__("commit", "f" * 40), "freeze subject"),
+        ("runtime authority", lambda q, r, p: r["canonical_subjects"]["runtime_env"].__setitem__("commit", "0" * 40), "runtime-env authority"),
         ("two active", lambda q, r, p: q["items"][1].__setitem__("state", "ACTIVE"), "single ACTIVE"),
         ("fake command", lambda q, r, p: q["items"][0]["runtime_lane"]["commands"][0].__setitem__("argv", ["LOCAL_FAKE"]), "fake/placeholder"),
         ("unresolved complete", lambda q, r, p: q["items"][0].__setitem__("state", "COMPLETE"), "unresolved operation cannot be COMPLETE"),
