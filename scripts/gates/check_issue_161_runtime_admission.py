@@ -119,13 +119,15 @@ def make_exact_scheduler_binding(packet: dict[str, Any], binding: dict[str, Any]
     packet["checked_in_binding"]["observed_profile"] = runtime["required_profile"]
 
 
-def make_exact_commit_wrong_profile(packet: dict[str, Any], binding: dict[str, Any]) -> None:
+def make_wrong_profile_fake_ready(packet: dict[str, Any], binding: dict[str, Any]) -> None:
     runtime = packet["canonical_subjects"]["runtime_env"]
     binding.setdefault("source", {})["commit"] = runtime["commit"]
     modules = binding.setdefault("modules", [])
     if not any(isinstance(m, dict) and m.get("id") == "multi-worker-scheduler" for m in modules):
         modules.append({"id": "multi-worker-scheduler", "interface_version": "runtime-env/module/v1"})
     packet["checked_in_binding"]["observed_source_commit"] = runtime["commit"]
+    packet["checked_in_binding"]["state"] = "READY_FOR_LOCAL_CANARY"
+    packet["admission"]["scheduler_runtime"] = "READY_FOR_LOCAL_CANARY"
 
 
 def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
@@ -136,7 +138,7 @@ def selftest(packet: dict[str, Any], binding: dict[str, Any]) -> list[str]:
         ("human admit erased", lambda p, b: p["admission"].__setitem__("git_town_darwin_artifact", "PASS"), "Human Admit"),
         ("binding observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_source_commit", "0" * 40), "observed binding"),
         ("profile observation drift", lambda p, b: p["checked_in_binding"].__setitem__("observed_profile", "wrong-profile"), "observed binding profile"),
-        ("exact runtime wrong profile", make_exact_commit_wrong_profile, "BLOCKED_STALE_BINDING"),
+        ("wrong profile fake ready", make_wrong_profile_fake_ready, "BLOCKED_STALE_BINDING"),
         ("exact composition not admitted", make_exact_scheduler_binding, "READY_FOR_LOCAL_CANARY"),
         ("merge authority", lambda p, b: p["admission"].__setitem__("merge_or_ship_authority", True), "merge/ship"),
     ]
