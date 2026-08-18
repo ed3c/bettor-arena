@@ -1,0 +1,103 @@
+{
+  "schema_version": "inception-owner-preflight/v1",
+  "atom_id": "INCEPTION-A5",
+  "stage": "OWNER_IMPLEMENTATION_PREPARATION",
+  "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+  "repository": "ed3c/bettor-arena",
+  "branch": "agent/inception-a5-discovery-admission",
+  "base_subject": {
+    "commit": "6bf8f7966c02b49294e22b329a6fce68fa50a815",
+    "tree": "05bc4982db6ea8a1609e4b5cc374a3db6a125da2"
+  },
+  "controller_subject": {
+    "repository": "ed3c/enterprise_agent_system",
+    "pull_request": 29,
+    "commit": "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e",
+    "tree": "c3851a6953d456d0342a9776eed28561c1af0ca1",
+    "packet_digest": "sha256:1df5d049ece49aeef3c4418725296cd74f1c02d1e29ad325f68899d03e13d2a6",
+    "bundle_digest": "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
+  },
+  "owner_issue": "https://github.com/ed3c/bettor-arena/issues/192",
+  "upstream_issue": "https://github.com/ed3c/enterprise_agent_system/issues/17",
+  "interface": "inception/discovery-admission",
+  "state_machine": [
+    "SOURCE_PROPOSAL_CAPTURED",
+    "RIGHTS_AND_FOUR_TIER_TERMS_REVIEWED",
+    "INTERFACE_FIT_MAPPED",
+    "RESTRICTED_CONTEXT_BOUND",
+    "ISOLATED_CANDIDATE_PREPARED",
+    "MATCHED_BENCHMARK_EXECUTED",
+    "INDEPENDENT_SHADOW_REVIEWED",
+    "HUMAN_ADMITTED_OR_REJECTED_OR_BLOCKED_OR_DEFERRED"
+  ],
+  "existing_mechanisms": [
+    "loop_wiki/loopx-source-ingest/**",
+    "loop_wiki/loopx-benchmark/**",
+    "loop_wiki/loopx-skill-evolution/**",
+    "proof_workflow/**",
+    "docs/git/AUTOMATED_ADMISSION.md"
+  ],
+  "writable_paths": [
+    "loop_wiki/inception-discovery-admission/**",
+    ".arena/modules/inception-discovery-admission/**",
+    "data/inception-discovery-admission/**",
+    ".github/workflows/inception-a5-discovery-admission.yml"
+  ],
+  "read_only_paths": [
+    "loop_wiki/loopx-source-ingest/**",
+    "loop_wiki/loopx-benchmark/**",
+    "loop_wiki/loopx-skill-evolution/**",
+    ".arena/compositions/**",
+    ".arena/locks/**",
+    "docs/git/pdf-terminal-sequence.json",
+    "data/module-proof/**"
+  ],
+  "resource_leases": [
+    "candidate-registry:inception-discovery-fixture",
+    "benchmark-namespace:inception-discovery",
+    "isolated-workspace:inception-adaptation"
+  ],
+  "required_evidence_lanes": [
+    "DETERMINISTIC",
+    "SANDBOX",
+    "INDEPENDENT_SHADOW",
+    "HUMAN_ADMIT"
+  ],
+  "positive_controls": [
+    "source revision content and terms digests are captured before candidate use",
+    "candidate maps to one canonical Protocol or SPI",
+    "benchmark arms use identical workload budget environment and repetitions",
+    "rejected blocked unknown deferred and failed attempts remain visible"
+  ],
+  "mutation_controls": [
+    "mutable main latest nightly or unpinned source",
+    "terms captured after bytes enter candidate context",
+    "restricted bytes included in synthesis prompt or artifact",
+    "AST or model rewrite self-claims clean-room status",
+    "failed timeout OOM or discarded trials removed",
+    "mixed cache or unmatched benchmark subjects",
+    "same provider or host counted as independent corroboration",
+    "candidate activation without Human admission"
+  ],
+  "cleanup_contract": {
+    "required": true,
+    "inventory": ["path", "process", "port", "container", "index", "artifact"],
+    "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
+  },
+  "forbidden_actions": [
+    "modify shared registries or release indexes",
+    "claim legal or commercial clearance",
+    "activate dependency or provider",
+    "close issues",
+    "merge",
+    "release",
+    "rollback"
+  ],
+  "claims_not_proven": [
+    "No source candidate has been admitted.",
+    "No clean-room process, benchmark or independent Shadow has executed.",
+    "No legal, security or Human admission exists.",
+    "No merge, release or rollback has occurred."
+  ],
+  "next_transition": "ADD_STRICT_CANDIDATE_TERMS_CONTRACT_AND_FIRST_HOLLOW_CONTROL"
+}
