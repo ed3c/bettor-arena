@@ -1,0 +1,114 @@
+{
+  "schema_version": "inception-owner-preflight/v1",
+  "atom_id": "INCEPTION-A1",
+  "stage": "OWNER_IMPLEMENTATION_PREPARATION",
+  "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+  "repository": "ed3c/bettor-arena",
+  "branch": "agent/inception-a1-compaction-recovery",
+  "base_subject": {
+    "commit": "6bf8f7966c02b49294e22b329a6fce68fa50a815",
+    "tree": "05bc4982db6ea8a1609e4b5cc374a3db6a125da2"
+  },
+  "controller_subject": {
+    "repository": "ed3c/enterprise_agent_system",
+    "pull_request": 29,
+    "commit": "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e",
+    "tree": "c3851a6953d456d0342a9776eed28561c1af0ca1",
+    "packet_digest": "sha256:e20049d29ce3ddca00a6aa74802e042a562ca3ee7336f86e91cc945102ee9540",
+    "bundle_digest": "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
+  },
+  "source_subject": {
+    "id": "SRC-PDF-INCEPTION-001",
+    "digest": "sha256:a6f1245ff865cae24838ed8ec4828330be684f3c03b29b9064ade8bfac94d8da",
+    "class": "SOURCE_PROPOSAL",
+    "egress": "LOCAL_ONLY"
+  },
+  "owner_issue": "https://github.com/ed3c/bettor-arena/issues/191",
+  "upstream_issue": "https://github.com/ed3c/enterprise_agent_system/issues/5",
+  "interface": "inception/domain-state-compaction",
+  "state_machine": [
+    "BUDGET_OBSERVED",
+    "SOFT_CHECKPOINT_REQUESTED",
+    "SAFE_TOOL_BOUNDARY_REACHED",
+    "SNAPSHOT_PREPARED",
+    "SNAPSHOT_VALIDATED",
+    "SNAPSHOT_COMMITTED",
+    "CONTEXT_RECONSTRUCTED",
+    "RECOVERY_PROBED",
+    "RESUMED_OR_ROLLED_BACK_OR_HUMAN_ESCALATED"
+  ],
+  "existing_mechanisms": [
+    "loop_wiki/loopx-kernel/**",
+    "loop_wiki/loopx-ledger/**",
+    "loop_wiki/loopx-strategy-hitl/**",
+    "loop_wiki/loopx-context-assembly/**",
+    "loop_wiki/loopx-resource-gc/**"
+  ],
+  "writable_paths": [
+    "loop_wiki/inception-compaction-recovery/**",
+    ".arena/modules/inception-compaction-recovery/**",
+    "data/inception-compaction-recovery/**",
+    ".github/workflows/inception-a1-compaction-recovery.yml"
+  ],
+  "read_only_paths": [
+    "loop_wiki/loopx-kernel/**",
+    "loop_wiki/loopx-ledger/**",
+    "loop_wiki/loopx-strategy-hitl/**",
+    "loop_wiki/loopx-context-assembly/**",
+    "loop_wiki/loopx-resource-gc/**",
+    ".arena/compositions/**",
+    ".arena/locks/**",
+    "docs/git/pdf-terminal-sequence.json",
+    "data/module-proof/**"
+  ],
+  "resource_leases": [
+    "local-storage-namespace:inception-compaction",
+    "sqlite-database:inception-compaction-fixture",
+    "filesystem-fixture:inception-compaction-crash-matrix"
+  ],
+  "required_evidence_lanes": [
+    "DETERMINISTIC",
+    "LOCAL",
+    "INDEPENDENT_RECOVERY_READBACK"
+  ],
+  "positive_controls": [
+    "complete ordered tool transaction is preserved",
+    "checkpoint activation increments exact task revision once",
+    "prior checkpoint remains available until recovery probe passes",
+    "reconstructed context preserves unresolved work leases pending effects and artifacts"
+  ],
+  "mutation_controls": [
+    "assistant tool call split from one or more results",
+    "parallel tool results reordered",
+    "stale expected revision",
+    "two active compactors",
+    "crash before and after each persistence transition",
+    "corrupt or missing artifact",
+    "digest mismatch",
+    "premature deletion of rollback checkpoint",
+    "secret or local-only payload in portable receipt",
+    "dirty process path port mount or database residue"
+  ],
+  "cleanup_contract": {
+    "required": true,
+    "inventory": ["path", "process", "port", "mount", "database", "artifact"],
+    "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
+  },
+  "forbidden_actions": [
+    "duplicate canonical ledger reducer or queue",
+    "modify shared composition or release indexes",
+    "publish source bytes",
+    "perform production recovery",
+    "close issues",
+    "merge",
+    "release",
+    "rollback"
+  ],
+  "claims_not_proven": [
+    "No compaction implementation has been added.",
+    "No local fault-injection run has executed.",
+    "No provider tokenizer or context-limit receipt exists.",
+    "No production recovery, Human admission, release or rollback has occurred."
+  ],
+  "next_transition": "ADD_STRICT_CONTRACT_AND_FIRST_HOLLOW_OR_FAILING_CONTROL"
+}
