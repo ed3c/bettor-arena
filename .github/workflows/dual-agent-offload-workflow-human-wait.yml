@@ -1,0 +1,30 @@
+name: Dual-Agent workflow Human wait
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/workflow_human_wait.py'
+      - 'loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py'
+      - '.github/workflows/dual-agent-offload-workflow-human-wait.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/workflow_human_wait.py'
+      - 'loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py'
+      - '.github/workflows/dual-agent-offload-workflow-human-wait.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  human-wait:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Human boundary
+        run: python3 -m py_compile loop_wiki/dual-agent-offload-workflow/workflow_human_wait.py loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py
+      - name: Re-run reducer replay controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Run Human wait revalidation matrix
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py
