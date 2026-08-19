@@ -1,8 +1,8 @@
 {
   "schema_version": "inception-owner-preflight/v1",
   "atom_id": "INCEPTION-A5",
-  "stage": "OWNER_IMPLEMENTATION_PREPARATION",
-  "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+  "stage": "OWNER_IMPLEMENTATION",
+  "state": "FIRST_IMPLEMENTATION_CANDIDATE",
   "repository": "ed3c/bettor-arena",
   "branch": "agent/inception-a5-discovery-admission",
   "base_subject": {
@@ -37,6 +37,10 @@
     "proof_workflow/**",
     "docs/git/AUTOMATED_ADMISSION.md"
   ],
+  "implementation_subjects": [
+    "loop_wiki/inception-discovery-admission/candidate_contract.py",
+    "loop_wiki/inception-discovery-admission/test_candidate_contract.py"
+  ],
   "writable_paths": [
     "loop_wiki/inception-discovery-admission/**",
     ".arena/modules/inception-discovery-admission/**",
@@ -57,12 +61,7 @@
     "benchmark-namespace:inception-discovery",
     "isolated-workspace:inception-adaptation"
   ],
-  "required_evidence_lanes": [
-    "DETERMINISTIC",
-    "SANDBOX",
-    "INDEPENDENT_SHADOW",
-    "HUMAN_ADMIT"
-  ],
+  "required_evidence_lanes": ["DETERMINISTIC", "SANDBOX", "INDEPENDENT_SHADOW", "HUMAN_ADMIT"],
   "positive_controls": [
     "source revision content and terms digests are captured before candidate use",
     "candidate maps to one canonical Protocol or SPI",
@@ -94,10 +93,10 @@
     "rollback"
   ],
   "claims_not_proven": [
-    "No source candidate has been admitted.",
-    "No clean-room process, benchmark or independent Shadow has executed.",
-    "No legal, security or Human admission exists.",
-    "No merge, release or rollback has occurred."
+    "No external source candidate has been admitted.",
+    "No restricted third-party source bytes were ingested by this public fixture.",
+    "No matched benchmark or independent Shadow has executed for an external candidate.",
+    "No legal, security, Human admission, merge, release or rollback has occurred."
   ],
-  "next_transition": "ADD_STRICT_CANDIDATE_TERMS_CONTRACT_AND_FIRST_HOLLOW_CONTROL"
+  "next_transition": "RUN_MATCHED_PUBLIC_FIXTURE_BENCHMARK_AND_INDEPENDENT_SHADOW"
 }
