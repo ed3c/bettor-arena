@@ -1,19 +1,21 @@
-# Inception A6 — durable ingress, effect identity and readback
+# Inception A6 — durable ingress, effect identity and restart reconciliation
 
-Status: **FIRST PUBLIC IMPLEMENTATION CANDIDATE**  
-Upstream profile issue: `ed3c/enterprise_agent_system#18`  
+Status: **PUBLIC RESTART + UNKNOWN_EFFECT RECONCILIATION CANDIDATE**
+Upstream profile issue: `ed3c/enterprise_agent_system#18`
 Owner issue: `ed3c/bettor-arena#193`
 
-This leaf implements a bounded file-backed fixture for authenticated event admission, replay/dedupe identity, typed reversible `WriteIntent`, effect reservation, timeout-to-`UNKNOWN_EFFECT`, blind-retry refusal and exact remote-version readback before `COMMITTED`. It does not accept production credentials or perform a real external write.
+This leaf implements a bounded file-backed fixture for authenticated event admission, replay/dedupe identity, typed reversible `WriteIntent`, effect reservation, timeout-to-`UNKNOWN_EFFECT`, blind-retry refusal and exact remote-version readback before `COMMITTED`. P4 now kills the worker process after `UNKNOWN_EFFECT`, reopens the SQLite state in a fresh process and verifies reconciliation. It does not accept production credentials or perform a real external write.
 
 ## Implementation subjects
 
 ```text
 effect_contract.py
 test_effect_contract.py
+reconciliation_worker.py
+test_reconciliation_matrix.py
 ```
 
-The public fixture uses SQLite WAL + `synchronous=FULL` and refuses `:memory:` as durable-ingress evidence. It stores event identity separately from effect identity and retains state across close/reopen.
+The public fixture uses SQLite WAL + `synchronous=FULL` and refuses `:memory:` as durable-ingress evidence. Event identity and effect identity remain separate across restart.
 
 ## State Machine
 
@@ -30,7 +32,25 @@ EVENT_RECEIVED
 → COMMITTED | UNKNOWN_EFFECT | COMPENSATED | HUMAN_ESCALATED
 ```
 
-The current implementation covers the public deterministic path through `EFFECT_RESERVED`, a simulated `ATTEMPTED → UNKNOWN_EFFECT` timeout, and exact readback-to-`COMMITTED` against a reversible local fixture. It does not execute a provider API or browser effect.
+## Restart reconciliation matrix
+
+```text
+persist authenticated event
+→ reserve effect
+→ ATTEMPTED
+→ timeout after possible mutation
+→ UNKNOWN_EFFECT committed
+→ os._exit() without close
+→ fresh SQLite process
+→ state readback = UNKNOWN_EFFECT
+→ blind retry = false
+├─ stale remote version → refuse; remain UNKNOWN_EFFECT
+└─ exact version + readback digest → COMMITTED
+→ close / reopen
+→ COMMITTED + idempotent event identity persist
+```
+
+The matrix also proves that event/effect identity collisions remain refused after restart. A local reversible test double is not a provider API/browser receipt.
 
 ## Contract laws
 
@@ -47,7 +67,7 @@ UNKNOWN_EFFECT → blind retry forbidden
 COMMITTED requires readback digest and exact expected remote version
 ```
 
-Therefore these remain different facts:
+These remain separate facts:
 
 ```text
 HTTP 202
@@ -55,8 +75,11 @@ inbox persistence
 task admission
 effect reservation
 external attempt
+UNKNOWN_EFFECT
 remote readback
 COMMITTED
+compensation
+Human escalation
 ```
 
 ## Existing canonical mechanisms reused
@@ -69,7 +92,7 @@ COMMITTED
 | `docs/git/AUTOMATED_ADMISSION.md` | guarded irreversible operations | missing intent fails closed |
 | `loop_wiki/loopx-resource-gc/` | residue/protected-evidence handling | no silent destructive cleanup |
 
-No second generic queue, reducer or production effect ledger is introduced by this leaf.
+No second generic queue, reducer or production effect ledger is introduced.
 
 ## Writer lease
 
@@ -84,21 +107,22 @@ Production credentials, shared queues, provider sessions, root `loopctl`/MCP sur
 
 ## Next transition
 
-`RUN_RESTART_UNKNOWN_EFFECT_RECONCILIATION_AND_CLEANUP_MATRIX`
+`RUN_REVERSIBLE_COMPENSATION_FIXTURE_THEN_PROVIDER_ADAPTER_CANARY`
 
-The next atom must expand restart/fault injection around UNKNOWN_EFFECT reconciliation and terminal cleanup before any real provider adapter is considered.
+Compensation must receive its own receipt before any provider adapter or real effect is considered. This restart matrix does not imply compensation occurred.
 
 ## Evidence ceiling
 
 ```text
-durable inbox/effect fixture  DETERMINISTIC_CANDIDATE
-duplicate/collision controls  DETERMINISTIC_CANDIDATE
-UNKNOWN_EFFECT refusal        DETERMINISTIC_CANDIDATE
-close/reopen readback         DETERMINISTIC_CANDIDATE
-real external write           NOT_PERFORMED
-independent reconciliation    NOT_EXERCISED
-production credentials        ABSENT
-Human admission               NOT_PERFORMED
+durable inbox/effect contract      DETERMINISTIC_PASS candidate
+abrupt UNKNOWN_EFFECT restart       TARGETED_PUBLIC_CANARY
+blind-retry persistence             TARGETED_PUBLIC_CANARY
+local readback reconciliation       TARGETED_PUBLIC_CANARY
+real external write                 NOT_PERFORMED
+real remote reconciliation          NOT_EXERCISED
+compensation                        NOT_EXERCISED
+production credentials              ABSENT
+Human admission / release           NOT_PERFORMED
 ```
 
 Machine authority: [`preflight.json`](preflight.json).
