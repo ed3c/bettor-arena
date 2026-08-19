@@ -1,15 +1,16 @@
 # Inception A1 — durable compaction and recovery
 
-Status: **FIRST PUBLIC IMPLEMENTATION CANDIDATE**  
+Status: **PUBLIC CRASH-MATRIX VERIFICATION CANDIDATE**  
 Upstream profile issue: `ed3c/enterprise_agent_system#5`  
 Owner issue: `ed3c/bettor-arena#191`
 
 This leaf binds the Agent Thinking Inception source proposal to Bettor's existing
-LoopX state, ledger, HITL, context-assembly and resource-GC mechanisms. The first
-implementation candidate proves a narrow file-backed checkpoint contract and
-recovery/activation semantics in public CI. It does **not** implement a second
-LoopX ledger, summarize live model context, exercise a provider tokenizer, or
-claim production durability, merge, release or rollback.
+LoopX state, ledger, HITL, context-assembly and resource-GC mechanisms. It now
+proves a narrow file-backed checkpoint contract plus abrupt-process crash behavior
+at prepare, recovery-probe and activation commit boundaries in public CI. It does
+**not** implement a second LoopX ledger, summarize live model context, exercise a
+provider tokenizer, or claim production/multi-host durability, merge, release or
+rollback.
 
 ## Exact lineage
 
@@ -53,6 +54,7 @@ checkpoint_contract.py
   SafeToolTransaction
   CheckpointCandidate
   SqliteCheckpointFixture
+  named fault-hook durability boundaries
 
 test_checkpoint_contract.py
   file-backed close/reopen persistence
@@ -61,11 +63,18 @@ test_checkpoint_contract.py
   recovery-PASS-before-activation control
   idempotency and checkpoint-id collision control
   invalid digest and in-memory durability refusals
+
+test_crash_matrix.py
+  child-process os._exit fault injection
+  prepare_before_commit / prepare_after_commit
+  recovery_before_commit / recovery_after_commit
+  activate_before_commit / activate_after_commit
+  fresh-process readback and WAL/SHM residue checks
 ```
 
 The SQLite fixture uses WAL plus `synchronous=FULL` and retains prior checkpoint
-rows. It is deterministic public evidence only; production storage remains under
-the existing LoopX persistence owner.
+rows. Fault hooks exist only as a deterministic public-test seam. Production
+storage remains under the existing LoopX persistence owner.
 
 ## State Machine
 
@@ -81,10 +90,31 @@ BUDGET_OBSERVED
 → RESUMED | ROLLED_BACK | HUMAN_ESCALATED
 ```
 
-The implemented candidate currently covers the middle persistence boundary:
+The implemented public candidate covers the middle persistence boundary:
 `SAFE_TOOL_BOUNDARY_REACHED → SNAPSHOT_PREPARED → RECOVERY_PROBED → activation`.
 A complete assistant/tool/result transaction is atomic. A prepared checkpoint
 cannot become active until the recovery probe is `PASS`.
+
+## Crash matrix
+
+```text
+PREPARE transaction
+  crash before commit → row absent after fresh-process reopen
+  crash after commit  → row present, active revision unchanged
+
+RECOVERY probe
+  crash before commit → recovery_state remains NOT_EXERCISED
+  crash after commit  → recovery_state = PASS, still not active
+
+ACTIVATION
+  crash before commit → active revision unchanged
+  crash after commit  → exact new revision/checkpoint visible after reopen
+```
+
+Each child exits abruptly with a dedicated non-zero code rather than raising a
+normal Python exception. A separate parent process reopens the SQLite file and
+checks durable visibility. Terminal readback also checks that `-wal` and `-shm`
+residue is absent after all connections close.
 
 ## Data flow
 
@@ -97,13 +127,13 @@ validate CheckpointCandidate
         ↓
 BEGIN IMMEDIATE + expected-revision CAS
         ↓
-file-backed checkpoint row retained
+prepare commit boundary ← crash matrix → fresh-process readback
         ↓
-recovery probe
-        ├─ PASS → exact single activation
-        └─ FAIL / absent → no activation
+recovery probe boundary ← crash matrix → fresh-process readback
         ↓
-close / reopen readback proves persisted candidate and active revision
+activation boundary     ← crash matrix → fresh-process readback
+        ↓
+context reconstruction remains a separate next-stage canary
 ```
 
 ## Writer and resource lease
@@ -118,37 +148,27 @@ data/inception-compaction-recovery/**
 Read-only dependencies include all existing LoopX modules, root/shared indexes,
 composition locks, release manifests, ordered terminal queues and source bytes.
 
-Resource leases:
+## Current deterministic evidence ceiling
 
 ```text
-local-storage-namespace:inception-compaction
-sqlite-database:inception-compaction-fixture
-filesystem-fixture:inception-compaction-crash-matrix
+file-backed checkpoint contract  DETERMINISTIC_PASS candidate
+SQLite close/reopen readback      DETERMINISTIC_PASS candidate
+six abrupt crash boundaries       PUBLIC_VERIFICATION_CANDIDATE
+WAL/SHM terminal residue check    PUBLIC_VERIFICATION_CANDIDATE
+live context reconstruction       NOT_EXERCISED
+provider tokenizer/context limit  NOT_EXERCISED
+multi-host/production recovery    NOT_EXERCISED
+Human admission                   NOT_PERFORMED
+merge / release / rollback        NOT_PERFORMED
 ```
 
-## Current deterministic evidence
-
-The exact implementation workflow runs the contract tests, Python compilation,
-changed-path lease checks and patch hygiene. Machine state is maintained in
-[`preflight.json`](preflight.json).
+Machine state is maintained in [`preflight.json`](preflight.json).
 
 ## Next transition
 
-`RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK`
+`RUN_PUBLIC_CONTEXT_RECONSTRUCTION_FIXTURE_AND_SHADOW_READBACK`
 
-The next atom must add crash-before/crash-after fault injection around persistence
-transitions and an independent readback receipt before any live context-compaction
-or production durability claim is considered.
-
-## Evidence ceiling
-
-```text
-file-backed contract candidate  DETERMINISTIC_PASS
-SQLite close/reopen readback    DETERMINISTIC_PASS
-full crash fault matrix         NOT_EXERCISED
-live context reconstruction     NOT_EXERCISED
-provider tokenizer budget       NOT_EXERCISED
-production recovery             NOT_EXERCISED
-Human admission                 NOT_PERFORMED
-release / rollback              NOT_PERFORMED
-```
+A green crash matrix does not prove summary fidelity or live context recovery. The
+next atom must reconstruct one bounded public fixture from a committed checkpoint,
+preserve evidence anchors/unresolved work, and read it back independently before
+any live model/provider claim is considered.
