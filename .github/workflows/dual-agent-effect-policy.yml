@@ -1,0 +1,30 @@
+name: Dual-Agent effect policy gate
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-policy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-policy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  effect-policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile effect policy boundary
+        run: python3 -m py_compile loop_wiki/dual-agent-effect-ledger/effect_contract.py loop_wiki/dual-agent-effect-ledger/effect_reducer.py loop_wiki/dual-agent-effect-ledger/effect_policy_gate.py loop_wiki/dual-agent-effect-ledger/test_effect_policy_gate.py
+      - name: Re-run parent effect contract controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_contract.py
+      - name: Re-run parent effect reducer controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_reducer.py
+      - name: Run deterministic policy Human precondition controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_policy_gate.py
