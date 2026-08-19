@@ -65,7 +65,7 @@ jobs:
           assert manifest["cleanup_contract"]["required"] is True
           assert manifest["cleanup_contract"]["rollback_subject"] == base["commit"]
           assert manifest["next_transition"] == "RUN_PUBLIC_CONTEXT_RECONSTRUCTION_FIXTURE_AND_SHADOW_READBACK"
-          assert "test_crash_matrix.py" in manifest["implementation_subjects"]
+          assert any(path.endswith("/test_crash_matrix.py") for path in manifest["implementation_subjects"])
 
           changed = subprocess.check_output(
               ["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True
