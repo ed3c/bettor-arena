@@ -1,0 +1,30 @@
+name: Dual-Agent workflow retry restart
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/workflow_retry_restart.py'
+      - 'loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py'
+      - '.github/workflows/dual-agent-offload-workflow-retry-restart.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/workflow_retry_restart.py'
+      - 'loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py'
+      - '.github/workflows/dual-agent-offload-workflow-retry-restart.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  retry-restart:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile workflow boundary
+        run: python3 -m py_compile loop_wiki/dual-agent-offload-workflow/workflow_retry_restart.py loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py
+      - name: Re-run reducer replay controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Run retry restart cancellation matrix
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py
