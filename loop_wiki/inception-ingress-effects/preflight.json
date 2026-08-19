@@ -43,7 +43,8 @@
     "loop_wiki/inception-ingress-effects/effect_contract.py",
     "loop_wiki/inception-ingress-effects/test_effect_contract.py",
     "loop_wiki/inception-ingress-effects/reconciliation_worker.py",
-    "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py"
+    "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py",
+    "loop_wiki/inception-ingress-effects/test_restart_reconciliation.py"
   ],
   "writable_paths": [
     "loop_wiki/inception-ingress-effects/**",
@@ -73,6 +74,7 @@
     "PUBLIC_PROCESS_RESTART",
     "UNKNOWN_EFFECT_RECONCILIATION",
     "REMOTE_READBACK_TEST_DOUBLE",
+    "TERMINAL_SQLITE_RESIDUE_READBACK",
     "REAL_EXTERNAL_EFFECT_SEPARATE",
     "COMPENSATION_SEPARATE"
   ],
@@ -81,10 +83,13 @@
     "duplicate delivery creates one admitted event and one effect identity",
     "timeout after possible mutation commits UNKNOWN_EFFECT before abrupt process termination",
     "fresh process readback preserves UNKNOWN_EFFECT and blind retry remains forbidden",
+    "RESERVED ATTEMPTED and UNKNOWN_EFFECT each survive close and reopen with correct retry policy",
     "stale remote version cannot clear UNKNOWN_EFFECT",
+    "invalid readback digest cannot clear UNKNOWN_EFFECT",
     "exact expected remote version and digest are required before COMMITTED",
     "COMMITTED state and event idempotency persist across a second reopen",
-    "fixture directory is removed after the reconciliation matrix"
+    "terminal SQLite WAL and SHM residue is absent after all handles close",
+    "fixture directory is removed after the abrupt reconciliation matrix"
   ],
   "mutation_controls": [
     "missing or invalid signature",
@@ -92,17 +97,18 @@
     "HTTP acknowledgement represented as durable admission",
     "queue delivery represented as effect success",
     "stale expected remote version",
+    "invalid readback digest",
     "timeout after possible external mutation",
     "blind retry while effect state is unknown",
     "event or effect identity collision after restart",
     "API and browser receipt substitution",
     "missing compensation or Human escalation promoted to success",
     "credential value or secret-bearing receipt",
-    "dirty process path port container queue or database residue"
+    "dirty process path port container queue database WAL SHM or artifact residue"
   ],
   "cleanup_contract": {
     "required": true,
-    "inventory": ["path", "process", "port", "container", "queue", "database", "artifact"],
+    "inventory": ["path", "process", "port", "container", "queue", "database", "wal", "shm", "artifact"],
     "persistent_external_effects": false,
     "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
   },
