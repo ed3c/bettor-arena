@@ -1,38 +1,48 @@
-# Inception A5 — bounded discovery and admission preflight
+# Inception A5 — bounded discovery and admission
 
-Status: **OWNER IMPLEMENTATION PREPARATION ONLY**  
+Status: **FIRST PUBLIC IMPLEMENTATION CANDIDATE**  
 Upstream profile issue: `ed3c/enterprise_agent_system#17`  
 Owner issue: `ed3c/bettor-arena#192`
 
-This leaf prepares a bounded source-discovery, interface-fit, isolated adaptation,
-matched benchmark, independent Shadow and Human-admission pipeline. External
-projects, papers, models, datasets and traces remain proposals until their exact
-subjects, terms, evidence and admission states are independently bound.
+This leaf implements a strict public candidate contract for source identity, terms-before-bytes review, one-SPI mapping, restricted-context isolation and benchmark-denominator honesty. It does not download restricted third-party bytes, establish clean-room independence, run a real external benchmark, make legal/commercial conclusions, Human-admit a candidate, activate a provider, merge, release or rollback.
 
-## Exact preparation subject
+## Implementation subjects
 
 ```text
-repository        ed3c/bettor-arena
-base commit       6bf8f7966c02b49294e22b329a6fce68fa50a815
-base tree         05bc4982db6ea8a1609e4b5cc374a3db6a125da2
-branch            agent/inception-a5-discovery-admission
-controller commit 6e0a916fd06dd8635d77c9a8c4d1b475185ea13e
-controller tree   c3851a6953d456d0342a9776eed28561c1af0ca1
-packet digest     sha256:1df5d049ece49aeef3c4418725296cd74f1c02d1e29ad325f68899d03e13d2a6
-packet bundle     sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3
+candidate_contract.py
+test_candidate_contract.py
 ```
 
-## Existing canonical mechanisms to adapt
+The candidate contract requires:
 
-| Existing path | Reusable responsibility | Boundary |
-|---|---|---|
-| `loop_wiki/loopx-source-ingest/` | rights-before-bytes, source manifests and gap states | manifest decides no semantic meaning |
-| `loop_wiki/loopx-benchmark/` | complete trial denominator and scoped claim ladder | no automatic promotion |
-| `loop_wiki/loopx-skill-evolution/` | baseline, mutation traps, sealed holdout and replication | candidate only until Human Admit |
-| `docs/git/AUTOMATED_ADMISSION.md` | exact-subject admission and readback contract | missing intent or policy fails closed |
-| `proof_workflow/` | deterministic proof/control/mutation semantics | no legal or commercial clearance |
+```text
+exact repository + 40-hex commit + 40-hex tree
+content digest + terms digest
+terms_captured_before_candidate_bytes = true
+rights_state = REVIEW_REQUIRED | BLOCKED | UNKNOWN
+exactly one target SPI
+raw_source_bytes_allowed = false
+artifact_mode = DERIVED_INTERFACE_ONLY
+self_claim_clean_room = false
+Human admission subject = null during automated candidate stage
+```
 
-## Target State Machine
+The benchmark lane remains separate. `NOT_EXERCISED` must have no fabricated outcomes. Once executed, every recorded outcome must be one of:
+
+```text
+PASS
+FAILED
+TIMEOUT
+OOM
+BLOCKED
+REJECTED
+DEFERRED
+INCONCLUSIVE
+```
+
+The validator refuses mutable source identities, missing terms digests, rights review after candidate bytes, restricted bytes in the synthesis surface, multiple SPIs, clean-room self-claims, fabricated benchmark outcomes, automated `ADMITTED`, commercial-safety claims or promotion.
+
+## State Machine
 
 ```text
 SOURCE_PROPOSAL_CAPTURED
@@ -45,28 +55,19 @@ SOURCE_PROPOSAL_CAPTURED
 → HUMAN_ADMITTED | REJECTED | BLOCKED | DEFERRED
 ```
 
-## Data flow
+The current public implementation covers the deterministic contract through `ISOLATED_CANDIDATE_PREPARED`; matched benchmark, independent Shadow over an external candidate and Human disposition remain unexercised.
 
-```text
-exact source revision + content digest + terms digest
-        ↓
-Code / Model / Data / Trace policy candidates
-        ↓
-one canonical Protocol or SPI fit record
-        ↓
-restricted-context and clean-room process boundary
-        ↓
-isolated reversible candidate
-        ↓
-matched repeated benchmark with complete failures
-        ↓
-independent Shadow + Human disposition
-```
+## Existing canonical mechanisms reused
 
-An SPDX label, AST slice or model rewrite cannot by itself establish commercial
-safety, clean-room independence, equivalence or superiority.
+| Existing path | Reusable responsibility | Boundary |
+|---|---|---|
+| `loop_wiki/loopx-source-ingest/` | rights-before-bytes and source manifests | no semantic/legal conclusion |
+| `loop_wiki/loopx-benchmark/` | complete trial denominator | no automatic promotion |
+| `loop_wiki/loopx-skill-evolution/` | baseline/mutation/holdout/replication | candidate only until Human Admit |
+| `docs/git/AUTOMATED_ADMISSION.md` | exact-subject guarded operations | missing intent/policy fails closed |
+| `proof_workflow/` | deterministic proof/control/mutation semantics | no legal clearance |
 
-## Provisional lease
+## Writer lease
 
 ```text
 loop_wiki/inception-discovery-admission/**
@@ -75,25 +76,24 @@ data/inception-discovery-admission/**
 .github/workflows/inception-a5-discovery-admission.yml
 ```
 
-Shared candidate registries, module composition, locks, release manifests,
-ordered terminal queues and aggregate indexes remain read-only until convergence.
+Shared registries, composition locks, release manifests, ordered terminal queues and aggregate indexes remain read-only.
 
-## First implementation commit admission
+## Next transition
 
-The next commit must add a strict candidate/source/terms contract plus a hollow
-or failing control. It must preserve `REJECTED`, `BLOCKED`, `UNKNOWN`,
-`DEFERRED`, `FAILED`, `TIMEOUT` and `OOM` attempts in the denominator and must
-not add an activation or promote command.
+`RUN_MATCHED_PUBLIC_FIXTURE_BENCHMARK_AND_INDEPENDENT_SHADOW`
+
+The next atom may execute a matched benchmark only on public/reversible fixture subjects with exact workload/environment digests and a complete failure denominator.
 
 ## Evidence ceiling
 
 ```text
-OWNER_PREPARATION_READY
-candidate implementation NOT_STARTED
-benchmark run            NOT_EXERCISED
-independent Shadow       NOT_EXERCISED
-Human admission          HUMAN_ADMIT_REQUIRED
-merge / release          NOT_PERFORMED
+candidate contract          DETERMINISTIC_CANDIDATE
+mutation controls           DETERMINISTIC_CANDIDATE
+external source ingestion   NOT_PERFORMED
+matched benchmark           NOT_EXERCISED
+independent Shadow          NOT_EXERCISED
+Human admission             HUMAN_ADMIT_REQUIRED
+merge / release / rollback  NOT_PERFORMED
 ```
 
 Machine authority: [`preflight.json`](preflight.json).
