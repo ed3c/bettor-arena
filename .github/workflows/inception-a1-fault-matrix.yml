@@ -1,0 +1,90 @@
+name: Inception A1 P4 crash fault matrix
+
+on:
+  push:
+    branches: [agent/inception-a1-fault-matrix]
+  pull_request:
+    paths:
+      - loop_wiki/inception-compaction-recovery/fault-matrix/**
+      - .github/workflows/inception-a1-fault-matrix.yml
+
+permissions:
+  contents: read
+
+jobs:
+  process-fault-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact workflow subject
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate true-child subject and lease
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+
+          root = pathlib.Path.cwd()
+          parent = "77c0da129a933a11de067dac051db14c3e002eec"
+          subprocess.run(["git", "merge-base", "--is-ancestor", parent, "HEAD"], check=True)
+          parent_tree = subprocess.check_output(["git", "rev-parse", f"{parent}^{{tree}}"], text=True).strip()
+          assert parent_tree == "9528723b822ea80f02910e8dd1aada6a94815525", parent_tree
+
+          manifest = json.loads((root / "loop_wiki/inception-compaction-recovery/fault-matrix/preflight.json").read_text())
+          assert manifest["atom_id"] == "INCEPTION-A1-FAULT"
+          assert manifest["stage"] == "PUBLIC_FAULT_EVIDENCE"
+          assert manifest["state"] == "FAULT_MATRIX_CANDIDATE"
+          assert manifest["stack_class"] == "TRUE_CHILD"
+          assert manifest["parent_subject"] == {
+              "pull_request": 194,
+              "commit": parent,
+              "tree": parent_tree,
+          }
+          assert len(manifest["fault_cases"]) == 7
+          assert len(manifest["fault_cases"]) == len(set(manifest["fault_cases"]))
+          assert manifest["cleanup_contract"]["required"] is True
+          assert manifest["cleanup_contract"]["persistent_external_effects"] is False
+          assert manifest["next_transition"] == "RUN_LIVE_CONTEXT_RECONSTRUCTION_AND_PROVIDER_BUDGET_CANARY"
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", f"{parent}...HEAD"], text=True
+          ).splitlines()
+          allowed_exact = {".github/workflows/inception-a1-fault-matrix.yml"}
+          allowed_prefix = "loop_wiki/inception-compaction-recovery/fault-matrix/"
+          violations = [p for p in changed if p not in allowed_exact and not p.startswith(allowed_prefix)]
+          assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          required = {
+              "loop_wiki/inception-compaction-recovery/fault-matrix/fault_worker.py",
+              "loop_wiki/inception-compaction-recovery/fault-matrix/test_fault_matrix.py",
+              "loop_wiki/inception-compaction-recovery/fault-matrix/preflight.json",
+              "loop_wiki/inception-compaction-recovery/fault-matrix/README.md",
+              ".github/workflows/inception-a1-fault-matrix.yml",
+          }
+          assert required.issubset(set(changed)), "FAULT_MATRIX_SUBJECT_MISSING"
+          print(f"PASS true-child parent={parent} changed={len(changed)} cases={len(manifest['fault_cases'])}")
+          PY
+
+      - name: Re-run exact parent contract controls
+        run: |
+          cd loop_wiki/inception-compaction-recovery
+          python3 test_checkpoint_contract.py
+
+      - name: Execute abrupt-process crash matrix
+        run: python3 loop_wiki/inception-compaction-recovery/fault-matrix/test_fault_matrix.py -v
+
+      - name: Compile fault harness
+        run: |
+          python3 -m py_compile \
+            loop_wiki/inception-compaction-recovery/fault-matrix/fault_worker.py \
+            loop_wiki/inception-compaction-recovery/fault-matrix/test_fault_matrix.py
+          python3 -m json.tool loop_wiki/inception-compaction-recovery/fault-matrix/preflight.json >/dev/null
+
+      - name: Check committed patch hygiene
+        run: git diff --check 77c0da129a933a11de067dac051db14c3e002eec...HEAD
