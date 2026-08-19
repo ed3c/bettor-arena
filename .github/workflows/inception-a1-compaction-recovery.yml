@@ -1,4 +1,4 @@
-name: Inception A1 owner implementation
+name: Inception A1 public verification
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  deterministic-contract:
+  crash-matrix:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Validate exact A1 manifest and lease
+      - name: Validate exact A1 verification manifest and lease
         shell: bash
         run: |
           set -euo pipefail
@@ -39,8 +39,8 @@ jobs:
           exact = {
               "schema_version": "inception-owner-preflight/v1",
               "atom_id": "INCEPTION-A1",
-              "stage": "OWNER_IMPLEMENTATION",
-              "state": "FIRST_IMPLEMENTATION_CANDIDATE",
+              "stage": "OWNER_PUBLIC_VERIFICATION",
+              "state": "CRASH_MATRIX_CANDIDATE",
               "repository": "ed3c/bettor-arena",
               "branch": "agent/inception-a1-compaction-recovery",
           }
@@ -64,8 +64,8 @@ jobs:
           assert not set(manifest["writable_paths"]) & set(manifest["read_only_paths"])
           assert manifest["cleanup_contract"]["required"] is True
           assert manifest["cleanup_contract"]["rollback_subject"] == base["commit"]
-          assert manifest["next_transition"] == "RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK"
-          assert "checkpoint_contract.py" in manifest["implementation_subjects"][0]
+          assert manifest["next_transition"] == "RUN_PUBLIC_CONTEXT_RECONSTRUCTION_FIXTURE_AND_SHADOW_READBACK"
+          assert "test_crash_matrix.py" in manifest["implementation_subjects"]
 
           changed = subprocess.check_output(
               ["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True
@@ -84,6 +84,7 @@ jobs:
           required = {
               "loop_wiki/inception-compaction-recovery/checkpoint_contract.py",
               "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py",
+              "loop_wiki/inception-compaction-recovery/test_crash_matrix.py",
           }
           assert required.issubset(set(changed)), "IMPLEMENTATION_SUBJECT_MISSING"
 
@@ -93,12 +94,20 @@ jobs:
           print(f"PASS atom=INCEPTION-A1 changed={len(changed)} mutations={len(manifest['mutation_controls'])}")
           PY
 
-      - name: Execute checkpoint contract and mutation controls
+      - name: Execute checkpoint contracts
         run: |
           python3 loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py
+
+      - name: Execute abrupt-process crash matrix
+        run: |
+          python3 loop_wiki/inception-compaction-recovery/test_crash_matrix.py
+
+      - name: Compile exact Python subjects
+        run: |
           python3 -m py_compile \
             loop_wiki/inception-compaction-recovery/checkpoint_contract.py \
-            loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py
+            loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py \
+            loop_wiki/inception-compaction-recovery/test_crash_matrix.py
 
       - name: Check textual patch hygiene
         run: git diff --check
