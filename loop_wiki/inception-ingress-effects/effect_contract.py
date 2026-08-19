@@ -143,12 +143,26 @@ class SqliteEffectFixture:
         )
         self.connection.commit()
 
-    def state(self, effect_id: str) -> str:
-        row = self.connection.execute("SELECT state FROM effects WHERE effect_id = ?", (effect_id,)).fetchone()
+    def readback(self, effect_id: str) -> tuple[str, str, str, str | None, str | None]:
+        row = self.connection.execute(
+            "SELECT expected_remote_version, capability, state, readback_version, readback_digest FROM effects WHERE effect_id = ?",
+            (effect_id,),
+        ).fetchone()
         _require(row is not None, "unknown effect")
-        state = str(row[0])
-        _require(state in _STATES, "invalid effect state")
-        return state
+        expected, capability, state, readback_version, readback_digest = row
+        _require(str(state) in _STATES, "invalid effect state")
+        if readback_digest is not None:
+            _digest(str(readback_digest), "readback_digest")
+        return (
+            str(expected),
+            str(capability),
+            str(state),
+            None if readback_version is None else str(readback_version),
+            None if readback_digest is None else str(readback_digest),
+        )
+
+    def state(self, effect_id: str) -> str:
+        return self.readback(effect_id)[2]
 
     def _transition(self, effect_id: str, allowed: set[str], target: str) -> None:
         current = self.state(effect_id)
