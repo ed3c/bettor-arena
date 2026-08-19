@@ -1,15 +1,17 @@
-# Inception A1 — durable compaction and recovery preflight
+# Inception A1 — durable compaction and recovery
 
-Status: **OWNER IMPLEMENTATION PREPARATION ONLY**  
+Status: **FIRST PUBLIC IMPLEMENTATION CANDIDATE**  
 Upstream profile issue: `ed3c/enterprise_agent_system#5`  
 Owner issue: `ed3c/bettor-arena#191`
 
 This leaf binds the Agent Thinking Inception source proposal to Bettor's existing
-LoopX state, ledger, HITL, context-assembly and resource-GC mechanisms. It does
-not yet implement or execute a new compactor, VFS, provider tokenizer, durable
-checkpoint activation, production recovery, merge, release or rollback.
+LoopX state, ledger, HITL, context-assembly and resource-GC mechanisms. The first
+implementation candidate proves a narrow file-backed checkpoint contract and
+recovery/activation semantics in public CI. It does **not** implement a second
+LoopX ledger, summarize live model context, exercise a provider tokenizer, or
+claim production durability, merge, release or rollback.
 
-## Exact preparation subject
+## Exact lineage
 
 ```text
 repository        ed3c/bettor-arena
@@ -26,11 +28,12 @@ source digest     sha256:a6f1245ff865cae24838ed8ec4828330be684f3c03b29b9064ade8b
 ## Source-proposal boundary
 
 The source proposes a token-watermark watchdog that summarizes older history,
-writes a state snapshot to VFS and reconstructs the active context. These are
-requirements to test, not current repository facts. Fixed `75%`/`80%` values,
-summary losslessness and an in-memory VFS receive no production evidence credit.
+writes a state snapshot to VFS and reconstructs the active context. These remain
+requirements to test. Fixed `75%`/`80%` values, character-count token estimates,
+summary losslessness and an in-memory dictionary receive no production evidence
+credit.
 
-## Existing canonical mechanisms to adapt
+## Existing canonical mechanisms reused
 
 | Existing path | Reusable responsibility | Boundary |
 |---|---|---|
@@ -43,7 +46,28 @@ summary losslessness and an in-memory VFS receive no production evidence credit.
 No second generic ledger, reducer, queue, workflow engine or state writer may be
 introduced in this leaf.
 
-## Target State Machine
+## Implementation subjects
+
+```text
+checkpoint_contract.py
+  SafeToolTransaction
+  CheckpointCandidate
+  SqliteCheckpointFixture
+
+test_checkpoint_contract.py
+  file-backed close/reopen persistence
+  ordered assistant/tool/result transaction control
+  exact revision/CAS control
+  recovery-PASS-before-activation control
+  idempotency and checkpoint-id collision control
+  invalid digest and in-memory durability refusals
+```
+
+The SQLite fixture uses WAL plus `synchronous=FULL` and retains prior checkpoint
+rows. It is deterministic public evidence only; production storage remains under
+the existing LoopX persistence owner.
+
+## State Machine
 
 ```text
 BUDGET_OBSERVED
@@ -57,32 +81,32 @@ BUDGET_OBSERVED
 → RESUMED | ROLLED_BACK | HUMAN_ESCALATED
 ```
 
-A complete assistant/tool/result transaction is atomic. `SNAPSHOT_COMMITTED`
-may not replace the previous active checkpoint until independent reconstruction
-and recovery probes pass.
+The implemented candidate currently covers the middle persistence boundary:
+`SAFE_TOOL_BOUNDARY_REACHED → SNAPSHOT_PREPARED → RECOVERY_PROBED → activation`.
+A complete assistant/tool/result transaction is atomic. A prepared checkpoint
+cannot become active until the recovery probe is `PASS`.
 
 ## Data flow
 
 ```text
-provider/model/tokenizer budget receipt
-+ exact task revision
-+ complete transaction boundary
-+ unresolved work / leases / pending effects / artifacts
+exact task revision
++ complete ordered tool transaction
++ state/artifact/unresolved-work/lease/pending-effect digests
         ↓
-prepare content-addressed snapshot candidate
+validate CheckpointCandidate
         ↓
-validate manifest, digests and version transition
+BEGIN IMMEDIATE + expected-revision CAS
         ↓
-atomically activate new checkpoint while retaining rollback subject
+file-backed checkpoint row retained
         ↓
-reconstruct bounded context and run recovery probe
-        ├─ PASS → resume
-        └─ FAIL → rollback or Human escalation
+recovery probe
+        ├─ PASS → exact single activation
+        └─ FAIL / absent → no activation
+        ↓
+close / reopen readback proves persisted candidate and active revision
 ```
 
-## Provisional writer and resource lease
-
-Writable only after exact-head revalidation:
+## Writer and resource lease
 
 ```text
 loop_wiki/inception-compaction-recovery/**
@@ -94,7 +118,7 @@ data/inception-compaction-recovery/**
 Read-only dependencies include all existing LoopX modules, root/shared indexes,
 composition locks, release manifests, ordered terminal queues and source bytes.
 
-Resource lease candidates:
+Resource leases:
 
 ```text
 local-storage-namespace:inception-compaction
@@ -102,29 +126,29 @@ sqlite-database:inception-compaction-fixture
 filesystem-fixture:inception-compaction-crash-matrix
 ```
 
-## First implementation commit admission
+## Current deterministic evidence
 
-The next commit must first add a strict contract and a failing or hollow control
-for one bounded transition. It must bind an actual SQLite, PostgreSQL or
-filesystem fault-injection subject and prove that an in-memory dictionary cannot
-satisfy durable recovery.
+The exact implementation workflow runs the contract tests, Python compilation,
+changed-path lease checks and patch hygiene. Machine state is maintained in
+[`preflight.json`](preflight.json).
 
-Required controls include transaction split/reorder, stale revision, concurrent
-activators, crash before/after every persistence transition, corrupt artifact,
-missing digest, recovery failure, premature deletion, secret leakage and dirty
-residue.
+## Next transition
+
+`RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK`
+
+The next atom must add crash-before/crash-after fault injection around persistence
+transitions and an independent readback receipt before any live context-compaction
+or production durability claim is considered.
 
 ## Evidence ceiling
 
 ```text
-OWNER_PREPARATION_READY
-implementation code       NOT_STARTED
-local fault execution     NOT_EXERCISED
-provider tokenizer budget NOT_EXERCISED
-production recovery       NOT_EXERCISED
-Human admission           NOT_PERFORMED
-release / rollback        NOT_PERFORMED
+file-backed contract candidate  DETERMINISTIC_PASS
+SQLite close/reopen readback    DETERMINISTIC_PASS
+full crash fault matrix         NOT_EXERCISED
+live context reconstruction     NOT_EXERCISED
+provider tokenizer budget       NOT_EXERCISED
+production recovery             NOT_EXERCISED
+Human admission                 NOT_PERFORMED
+release / rollback              NOT_PERFORMED
 ```
-
-The machine-readable authority for this preparation stage is
-[`preflight.json`](preflight.json).
