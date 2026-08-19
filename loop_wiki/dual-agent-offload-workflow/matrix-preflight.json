@@ -1,0 +1,53 @@
+{
+  "schema": "bettor-arena/dual-agent-offload-workflow/matrix-preflight/v1",
+  "issue": 206,
+  "atom": "DA-WF-E",
+  "common_parent": {
+    "pull_request": 202,
+    "commit": "7821e81f15d64ff3119d9bdb9278fc725e5aa398",
+    "tree": "60d486041b36608d5d03e33b2eb8944c9899b50b"
+  },
+  "runtime_contract_set": "e6671977dbf0a378474f924a142a82843bc0e3429f4546ffb0145af73f7827fe",
+  "siblings": [
+    {
+      "atom": "DA-WF-R",
+      "pull_request": 209,
+      "commit": "37376884bebc7403fab52dc0b2bff8ab5bb61060",
+      "tree": "19b0008b218c10385fc4e5d9a6556464b55f526c",
+      "files": {
+        "loop_wiki/dual-agent-offload-workflow/workflow_retry_restart.py": "4127e52ad74c27024dcc53cf7dd827583f55eb82",
+        "loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py": "2218c8e85a5b0eba0ec5cd170fd242afa270b0e8"
+      }
+    },
+    {
+      "atom": "DA-WF-H",
+      "pull_request": 210,
+      "commit": "460d8419d579c7dba50800c790af2dce053fbb23",
+      "tree": "5ec3a7bda1c2bbd294943324ce01c55557b9fdba",
+      "files": {
+        "loop_wiki/dual-agent-offload-workflow/workflow_human_wait.py": "41f8897cdd16c34c7d34c1f182d7848d26ab91b0",
+        "loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py": "0d878bf2326696f69f45ece3d77b1e04fc2d45ac"
+      }
+    },
+    {
+      "atom": "DA-WF-COMP",
+      "pull_request": 211,
+      "commit": "e425ec026c4792b94cf8b2214b4179260e2f1834",
+      "tree": "4a50ff3a58785eb50363304725641e8b3a0e003e",
+      "files": {
+        "loop_wiki/dual-agent-offload-workflow/workflow_compensation.py": "ce1135b201a5396fc3ef56602807f7b84947249f",
+        "loop_wiki/dual-agent-offload-workflow/test_workflow_compensation.py": "4f85e05cfbff715f6ad18dc6fa7f7679fe7df198"
+      }
+    }
+  ],
+  "evidence_ceiling": "COMPLETE_DETERMINISTIC_WORKFLOW_REPLAY_MATRIX_ONLY",
+  "external_states": {
+    "durable_engine": "NOT_EXERCISED",
+    "physical_transport": "NOT_EXERCISED",
+    "provider": "NOT_EXERCISED",
+    "external_effect": "NOT_EXERCISED",
+    "live_human": "NOT_EXERCISED",
+    "user_outcome": "NOT_EXERCISED",
+    "release": "NOT_EXERCISED"
+  }
+}
