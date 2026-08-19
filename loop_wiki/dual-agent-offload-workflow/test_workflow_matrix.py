@@ -71,7 +71,14 @@ def refuse(code: str, detail: str = "") -> None:
 def expect(code: str, fn: Callable[[], Any]) -> None:
     try:
         fn()
-    except (MatrixError, reducer.ReplayError, retry.BoundaryError, human.HumanBoundaryError, comp.CompensationError) as exc:
+    except (
+        MatrixError,
+        reducer.ReplayError,
+        contract.WorkflowContractError,
+        retry.BoundaryError,
+        human.HumanBoundaryError,
+        comp.CompensationError,
+    ) as exc:
         actual = getattr(exc, "code", "")
         if actual != code:
             raise AssertionError(f"expected {code}, got {exc}") from exc
