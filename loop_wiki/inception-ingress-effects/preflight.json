@@ -1,8 +1,8 @@
 {
   "schema_version": "inception-owner-preflight/v1",
   "atom_id": "INCEPTION-A6",
-  "stage": "OWNER_IMPLEMENTATION_PREPARATION",
-  "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+  "stage": "OWNER_IMPLEMENTATION",
+  "state": "FIRST_IMPLEMENTATION_CANDIDATE",
   "repository": "ed3c/bettor-arena",
   "branch": "agent/inception-a6-ingress-effects",
   "base_subject": {
@@ -39,6 +39,10 @@
     "loop_wiki/loopx-resource-gc/**",
     "docs/git/AUTOMATED_ADMISSION.md"
   ],
+  "implementation_subjects": [
+    "loop_wiki/inception-ingress-effects/effect_contract.py",
+    "loop_wiki/inception-ingress-effects/test_effect_contract.py"
+  ],
   "writable_paths": [
     "loop_wiki/inception-ingress-effects/**",
     ".arena/modules/inception-ingress-effects/**",
@@ -62,12 +66,7 @@
     "effect-ledger:inception-test-double",
     "provider-session:reversible-test-double-only"
   ],
-  "required_evidence_lanes": [
-    "DETERMINISTIC",
-    "LOCAL_TEST_DOUBLE",
-    "EFFECT_READBACK",
-    "INDEPENDENT_RECONCILIATION"
-  ],
+  "required_evidence_lanes": ["DETERMINISTIC", "LOCAL_TEST_DOUBLE", "EFFECT_READBACK", "INDEPENDENT_RECONCILIATION"],
   "positive_controls": [
     "authenticated event is persisted before task admission",
     "duplicate delivery creates one admitted task and one effect identity",
@@ -103,10 +102,10 @@
     "rollback"
   ],
   "claims_not_proven": [
-    "No ingress or effect implementation has been added.",
-    "No webhook, provider API, browser or external write has executed.",
-    "No remote readback, compensation or unknown-effect reconciliation receipt exists.",
+    "No real webhook, provider API, browser or external write has executed.",
+    "The SQLite fixture is deterministic public evidence, not a production queue or effect ledger.",
+    "No independent remote-effect reconciliation or compensation receipt exists.",
     "No Human admission, merge, release or rollback has occurred."
   ],
-  "next_transition": "ADD_STRICT_INGRESS_WRITE_INTENT_EFFECT_CONTRACTS_AND_FIRST_HOLLOW_CONTROL"
+  "next_transition": "RUN_RESTART_UNKNOWN_EFFECT_RECONCILIATION_AND_CLEANUP_MATRIX"
 }
