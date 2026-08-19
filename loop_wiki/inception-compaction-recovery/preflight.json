@@ -1,8 +1,8 @@
 {
   "schema_version": "inception-owner-preflight/v1",
   "atom_id": "INCEPTION-A1",
-  "stage": "OWNER_IMPLEMENTATION",
-  "state": "FIRST_IMPLEMENTATION_CANDIDATE",
+  "stage": "OWNER_PUBLIC_VERIFICATION",
+  "state": "CRASH_MATRIX_CANDIDATE",
   "repository": "ed3c/bettor-arena",
   "branch": "agent/inception-a1-compaction-recovery",
   "base_subject": {
@@ -23,8 +23,8 @@
     "class": "SOURCE_PROPOSAL",
     "egress": "LOCAL_ONLY"
   },
-  "owner_issue": "https://github.com/ed3c/bettor-arena/issues/191",
-  "upstream_issue": "https://github.com/ed3c/enterprise_agent_system/issues/5",
+  "owner_issue": "ed3c/bettor-arena#191",
+  "upstream_issue": "ed3c/enterprise_agent_system#5",
   "interface": "inception/domain-state-compaction",
   "state_machine": [
     "BUDGET_OBSERVED",
@@ -46,7 +46,8 @@
   ],
   "implementation_subjects": [
     "loop_wiki/inception-compaction-recovery/checkpoint_contract.py",
-    "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py"
+    "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py",
+    "loop_wiki/inception-compaction-recovery/test_crash_matrix.py"
   ],
   "writable_paths": [
     "loop_wiki/inception-compaction-recovery/**",
@@ -72,15 +73,16 @@
   ],
   "required_evidence_lanes": [
     "DETERMINISTIC",
-    "LOCAL",
+    "PUBLIC_PROCESS_CRASH",
     "INDEPENDENT_RECOVERY_READBACK"
   ],
   "positive_controls": [
     "file-backed SQLite checkpoint survives close and reopen",
     "complete ordered tool transaction is preserved",
     "checkpoint activation increments exact task revision once",
-    "prior checkpoint remains available until recovery probe passes",
-    "reconstructed state binds unresolved work leases pending effects and artifacts"
+    "prepare recovery and activation boundaries are tested before and after commit",
+    "fresh-process readback distinguishes rolled-back from committed state",
+    "SQLite WAL and SHM residue is absent after terminal readback"
   ],
   "mutation_controls": [
     "in-memory SQLite is rejected as durable evidence",
@@ -92,13 +94,19 @@
     "activation before recovery PASS",
     "checkpoint id collision",
     "corrupt or missing digest",
+    "process crash before prepare commit",
+    "process crash after prepare commit",
+    "process crash before recovery commit",
+    "process crash after recovery commit",
+    "process crash before activation commit",
+    "process crash after activation commit",
     "premature deletion of rollback checkpoint",
     "secret or local-only payload in portable receipt",
     "dirty process path port mount or database residue"
   ],
   "cleanup_contract": {
     "required": true,
-    "inventory": ["path", "process", "port", "mount", "database", "artifact"],
+    "inventory": ["path", "process", "port", "mount", "database", "wal", "shm", "artifact"],
     "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
   },
   "forbidden_actions": [
@@ -112,11 +120,11 @@
     "rollback"
   ],
   "claims_not_proven": [
-    "The SQLite fixture is deterministic public evidence, not the production LoopX persistence backend.",
-    "Crash-before-and-after transition fault injection is not yet complete.",
+    "The SQLite crash matrix is deterministic public evidence, not the production LoopX persistence backend.",
     "No provider tokenizer or context-limit receipt exists.",
     "No live context reconstruction has executed.",
-    "No production recovery, Human admission, release or rollback has occurred."
+    "No multi-host durability or production recovery has been proven.",
+    "No Human admission, release or rollback has occurred."
   ],
-  "next_transition": "RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK"
+  "next_transition": "RUN_PUBLIC_CONTEXT_RECONSTRUCTION_FIXTURE_AND_SHADOW_READBACK"
 }
