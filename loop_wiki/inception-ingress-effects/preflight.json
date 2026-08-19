@@ -1,8 +1,8 @@
 {
   "schema_version": "inception-owner-preflight/v1",
   "atom_id": "INCEPTION-A6",
-  "stage": "OWNER_IMPLEMENTATION",
-  "state": "FIRST_IMPLEMENTATION_CANDIDATE",
+  "stage": "OWNER_PUBLIC_VERIFICATION",
+  "state": "RESTART_RECONCILIATION_CANDIDATE",
   "repository": "ed3c/bettor-arena",
   "branch": "agent/inception-a6-ingress-effects",
   "base_subject": {
@@ -17,8 +17,8 @@
     "packet_digest": "sha256:c464b74f13ca211e15f07d90b3d3e50a0298ac5aa178e69197390166a5bc98da",
     "bundle_digest": "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
   },
-  "owner_issue": "https://github.com/ed3c/bettor-arena/issues/193",
-  "upstream_issue": "https://github.com/ed3c/enterprise_agent_system/issues/18",
+  "owner_issue": "ed3c/bettor-arena#193",
+  "upstream_issue": "ed3c/enterprise_agent_system#18",
   "interface": "inception/ingress-effect-writeback",
   "state_machine": [
     "EVENT_RECEIVED",
@@ -41,7 +41,9 @@
   ],
   "implementation_subjects": [
     "loop_wiki/inception-ingress-effects/effect_contract.py",
-    "loop_wiki/inception-ingress-effects/test_effect_contract.py"
+    "loop_wiki/inception-ingress-effects/test_effect_contract.py",
+    "loop_wiki/inception-ingress-effects/reconciliation_worker.py",
+    "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py"
   ],
   "writable_paths": [
     "loop_wiki/inception-ingress-effects/**",
@@ -66,12 +68,23 @@
     "effect-ledger:inception-test-double",
     "provider-session:reversible-test-double-only"
   ],
-  "required_evidence_lanes": ["DETERMINISTIC", "LOCAL_TEST_DOUBLE", "EFFECT_READBACK", "INDEPENDENT_RECONCILIATION"],
+  "required_evidence_lanes": [
+    "DETERMINISTIC_CONTRACT",
+    "PUBLIC_PROCESS_RESTART",
+    "UNKNOWN_EFFECT_RECONCILIATION",
+    "REMOTE_READBACK_TEST_DOUBLE",
+    "REAL_EXTERNAL_EFFECT_SEPARATE",
+    "COMPENSATION_SEPARATE"
+  ],
   "positive_controls": [
     "authenticated event is persisted before task admission",
-    "duplicate delivery creates one admitted task and one effect identity",
-    "remote readback is required before COMMITTED",
-    "restart preserves inbox task reservation attempt and reconciliation state"
+    "duplicate delivery creates one admitted event and one effect identity",
+    "timeout after possible mutation commits UNKNOWN_EFFECT before abrupt process termination",
+    "fresh process readback preserves UNKNOWN_EFFECT and blind retry remains forbidden",
+    "stale remote version cannot clear UNKNOWN_EFFECT",
+    "exact expected remote version and digest are required before COMMITTED",
+    "COMMITTED state and event idempotency persist across a second reopen",
+    "fixture directory is removed after the reconciliation matrix"
   ],
   "mutation_controls": [
     "missing or invalid signature",
@@ -81,19 +94,23 @@
     "stale expected remote version",
     "timeout after possible external mutation",
     "blind retry while effect state is unknown",
+    "event or effect identity collision after restart",
     "API and browser receipt substitution",
-    "missing compensation or Human escalation",
+    "missing compensation or Human escalation promoted to success",
     "credential value or secret-bearing receipt",
     "dirty process path port container queue or database residue"
   ],
   "cleanup_contract": {
     "required": true,
     "inventory": ["path", "process", "port", "container", "queue", "database", "artifact"],
+    "persistent_external_effects": false,
     "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
   },
   "forbidden_actions": [
     "use production credentials",
     "perform real external writes",
+    "claim the local readback test double is a provider receipt",
+    "claim compensation has executed when only reconciliation is tested",
     "modify shared queue or release state",
     "expose generic shell or browser authority",
     "close issues",
@@ -103,9 +120,9 @@
   ],
   "claims_not_proven": [
     "No real webhook, provider API, browser or external write has executed.",
-    "The SQLite fixture is deterministic public evidence, not a production queue or effect ledger.",
-    "No independent remote-effect reconciliation or compensation receipt exists.",
-    "No Human admission, merge, release or rollback has occurred."
+    "The abrupt-process SQLite fixture is public restart evidence, not a production queue or remote effect ledger.",
+    "No real external-effect reconciliation, compensation or Human escalation receipt exists.",
+    "No production credentials, Human admission, merge, release or rollback has occurred."
   ],
-  "next_transition": "RUN_RESTART_UNKNOWN_EFFECT_RECONCILIATION_AND_CLEANUP_MATRIX"
+  "next_transition": "RUN_REVERSIBLE_COMPENSATION_FIXTURE_THEN_PROVIDER_ADAPTER_CANARY"
 }
