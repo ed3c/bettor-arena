@@ -1,0 +1,39 @@
+{
+  "schema": "bettor-arena/dual-agent-offload-workflow/preflight/v1",
+  "issue": 199,
+  "parent_issue": 184,
+  "atom": "DA-WF-C",
+  "base": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "6bf8f7966c02b49294e22b329a6fce68fa50a815",
+    "tree": "05bc4982db6ea8a1609e4b5cc374a3db6a125da2"
+  },
+  "runtime_contract": {
+    "repository": "ed3c/runtime-env",
+    "pull_request": 69,
+    "commit": "1fd6a65a2e628ba1b31e89800297e7202dadf126",
+    "tree": "cc287010c96391e0a718141c2f4afb92bac3db06",
+    "contract_set_digest": "e6671977dbf0a378474f924a142a82843bc0e3429f4546ffb0145af73f7827fe",
+    "offload_schema_id": "https://runtime-env.invalid/contracts/dual-agent/offload-job.v1.schema.json"
+  },
+  "authority": {
+    "canonical_task_writer": "loopx-ledger",
+    "loopx_write_mode": "PROPOSAL_ONLY",
+    "effect_owner": "dual-agent-effect-ledger"
+  },
+  "writable_paths": [
+    "loop_wiki/dual-agent-offload-workflow/README.md",
+    "loop_wiki/dual-agent-offload-workflow/workflow_contract.py",
+    "loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py",
+    "loop_wiki/dual-agent-offload-workflow/preflight.json",
+    ".github/workflows/dual-agent-offload-workflow.yml"
+  ],
+  "forbidden_promotions": [
+    "transport_pass_to_task_pass",
+    "provider_pass_to_gate_pass",
+    "workflow_pass_to_user_outcome",
+    "fixture_pass_to_live_pass",
+    "ci_pass_to_release"
+  ],
+  "evidence_ceiling": "DETERMINISTIC_WORKFLOW_CONTRACT_ONLY"
+}
