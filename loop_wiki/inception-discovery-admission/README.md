@@ -1,19 +1,21 @@
-# Inception A5 — bounded discovery and admission
+# Inception A5 — bounded discovery and admission verification
 
-Status: **FIRST PUBLIC IMPLEMENTATION CANDIDATE**  
-Upstream profile issue: `ed3c/enterprise_agent_system#17`  
+Status: **PUBLIC MATCHED-FIXTURE BENCHMARK CANDIDATE**
+Upstream profile issue: `ed3c/enterprise_agent_system#17`
 Owner issue: `ed3c/bettor-arena#192`
 
-This leaf implements a strict public candidate contract for source identity, terms-before-bytes review, one-SPI mapping, restricted-context isolation and benchmark-denominator honesty. It does not download restricted third-party bytes, establish clean-room independence, run a real external benchmark, make legal/commercial conclusions, Human-admit a candidate, activate a provider, merge, release or rollback.
+This leaf keeps source identity, terms-before-bytes review, one-SPI mapping and restricted-context isolation, then executes a matched public fixture benchmark. It does not download restricted third-party bytes, establish clean-room independence, benchmark a real external project/model, make legal/commercial conclusions, Human-admit a candidate, activate a provider, merge, release or rollback.
 
 ## Implementation subjects
 
 ```text
 candidate_contract.py
 test_candidate_contract.py
+benchmark_fixture.py
+test_benchmark_fixture.py
 ```
 
-The candidate contract requires:
+## Candidate contract
 
 ```text
 exact repository + 40-hex commit + 40-hex tree
@@ -27,7 +29,25 @@ self_claim_clean_room = false
 Human admission subject = null during automated candidate stage
 ```
 
-The benchmark lane remains separate. `NOT_EXERCISED` must have no fabricated outcomes. Once executed, every recorded outcome must be one of:
+## Matched benchmark contract
+
+The P4 fixture has two distinct arms:
+
+```text
+protocol-oracle/v1
+candidate-contract/v1
+```
+
+Both consume the same sealed subject:
+
+```text
+workload_digest
+environment_digest
+case set
+repetitions
+```
+
+The benchmark intentionally executes the entire categorical denominator on every repetition:
 
 ```text
 PASS
@@ -40,7 +60,15 @@ DEFERRED
 INCONCLUSIVE
 ```
 
-The validator refuses mutable source identities, missing terms digests, rights review after candidate bytes, restricted bytes in the synthesis surface, multiple SPIs, clean-room self-claims, fabricated benchmark outcomes, automated `ADMITTED`, commercial-safety claims or promotion.
+`TIMEOUT` and `OOM` are planted bounded fixture failures; they test denominator retention, not real infrastructure capacity. The candidate arm must match the sealed protocol oracle trial-for-trial. Environment/repetition drift, omitted trials, duplicate trial keys, or an unknown outcome fail closed.
+
+The only allowed comparison disposition is:
+
+```text
+MATCHED_FIXTURE_NO_SUPERIORITY_CLAIM
+```
+
+No latency/cost/quality superiority is inferred from this deterministic fixture.
 
 ## State Machine
 
@@ -55,7 +83,7 @@ SOURCE_PROPOSAL_CAPTURED
 → HUMAN_ADMITTED | REJECTED | BLOCKED | DEFERRED
 ```
 
-The current public implementation covers the deterministic contract through `ISOLATED_CANDIDATE_PREPARED`; matched benchmark, independent Shadow over an external candidate and Human disposition remain unexercised.
+The current public lane covers a sealed fixture through `MATCHED_BENCHMARK_EXECUTED`. External-candidate benchmarking and Human admission remain separate.
 
 ## Existing canonical mechanisms reused
 
@@ -80,20 +108,21 @@ Shared registries, composition locks, release manifests, ordered terminal queues
 
 ## Next transition
 
-`RUN_MATCHED_PUBLIC_FIXTURE_BENCHMARK_AND_INDEPENDENT_SHADOW`
+`BIND_EXTERNAL_PUBLIC_CANDIDATE_TERMS_AND_RUN_MATCHED_BENCHMARK`
 
-The next atom may execute a matched benchmark only on public/reversible fixture subjects with exact workload/environment digests and a complete failure denominator.
+An external public candidate must first bind immutable source/terms and an admissible restricted-context route. This fixture cannot proxy that lane.
 
 ## Evidence ceiling
 
 ```text
-candidate contract          DETERMINISTIC_CANDIDATE
-mutation controls           DETERMINISTIC_CANDIDATE
-external source ingestion   NOT_PERFORMED
-matched benchmark           NOT_EXERCISED
-independent Shadow          NOT_EXERCISED
-Human admission             HUMAN_ADMIT_REQUIRED
-merge / release / rollback  NOT_PERFORMED
+candidate contract             DETERMINISTIC_PASS candidate
+matched sealed fixture         TARGETED_PUBLIC_CANARY
+failure denominator retention  TARGETED_PUBLIC_CANARY
+external source ingestion      NOT_PERFORMED
+external candidate benchmark   NOT_EXERCISED
+external independent Shadow    NOT_EXERCISED
+Human admission                HUMAN_ADMIT_REQUIRED
+merge / release / rollback     NOT_PERFORMED
 ```
 
 Machine authority: [`preflight.json`](preflight.json).
