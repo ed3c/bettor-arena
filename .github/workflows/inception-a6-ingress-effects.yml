@@ -56,9 +56,11 @@ jobs:
               "loop_wiki/inception-ingress-effects/test_effect_contract.py",
               "loop_wiki/inception-ingress-effects/reconciliation_worker.py",
               "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py",
+              "loop_wiki/inception-ingress-effects/test_restart_reconciliation.py",
           }
           assert required.issubset(set(manifest["implementation_subjects"])), "IMPLEMENTATION_SUBJECT_MISSING"
           assert "PUBLIC_PROCESS_RESTART" in manifest["required_evidence_lanes"]
+          assert "TERMINAL_SQLITE_RESIDUE_READBACK" in manifest["required_evidence_lanes"]
           assert "REAL_EXTERNAL_EFFECT_SEPARATE" in manifest["required_evidence_lanes"]
           assert "COMPENSATION_SEPARATE" in manifest["required_evidence_lanes"]
 
@@ -74,6 +76,7 @@ jobs:
           )
           violations = [p for p in changed if p not in allowed_exact and not p.startswith(allowed_prefixes)]
           assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          assert required.issubset(set(changed)), "IMPLEMENTATION_SUBJECT_NOT_IN_STACK"
           print(f"PASS atom=INCEPTION-A6 changed={len(changed)}")
           PY
 
@@ -83,13 +86,17 @@ jobs:
       - name: Execute abrupt restart and UNKNOWN_EFFECT reconciliation matrix
         run: python3 loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py -v
 
+      - name: Execute close-reopen persistence and terminal SQLite residue matrix
+        run: python3 loop_wiki/inception-ingress-effects/test_restart_reconciliation.py -v
+
       - name: Compile exact Python subjects
         run: |
           python3 -m py_compile \
             loop_wiki/inception-ingress-effects/effect_contract.py \
             loop_wiki/inception-ingress-effects/test_effect_contract.py \
             loop_wiki/inception-ingress-effects/reconciliation_worker.py \
-            loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py
+            loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py \
+            loop_wiki/inception-ingress-effects/test_restart_reconciliation.py
 
       - name: Check textual patch hygiene
         run: git diff --check
