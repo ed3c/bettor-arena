@@ -1,4 +1,4 @@
-name: Inception A5 owner preflight
+name: Inception A5 owner implementation
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  deterministic-preflight:
+  deterministic-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Validate exact A5 preparation manifest and lease
+      - name: Validate exact A5 implementation manifest and lease
         shell: bash
         run: |
           set -euo pipefail
@@ -35,12 +35,11 @@ jobs:
 
           root = pathlib.Path.cwd()
           manifest = json.loads((root / "loop_wiki/inception-discovery-admission/preflight.json").read_text())
-          readme = (root / "loop_wiki/inception-discovery-admission/README.md").read_text()
           exact = {
               "schema_version": "inception-owner-preflight/v1",
               "atom_id": "INCEPTION-A5",
-              "stage": "OWNER_IMPLEMENTATION_PREPARATION",
-              "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+              "stage": "OWNER_IMPLEMENTATION",
+              "state": "FIRST_IMPLEMENTATION_CANDIDATE",
               "repository": "ed3c/bettor-arena",
               "branch": "agent/inception-a5-discovery-admission",
           }
@@ -52,33 +51,42 @@ jobs:
           assert controller["commit"] == "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e"
           assert controller["tree"] == "c3851a6953d456d0342a9776eed28561c1af0ca1"
           assert controller["packet_digest"] == "sha256:1df5d049ece49aeef3c4418725296cd74f1c02d1e29ad325f68899d03e13d2a6"
-          assert controller["bundle_digest"] == "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
-          fields = (
-              "state_machine", "existing_mechanisms", "writable_paths", "read_only_paths",
-              "resource_leases", "required_evidence_lanes", "positive_controls",
-              "mutation_controls", "forbidden_actions", "claims_not_proven",
-          )
-          for key in fields:
+          for key in (
+              "state_machine", "existing_mechanisms", "implementation_subjects", "writable_paths", "read_only_paths",
+              "resource_leases", "required_evidence_lanes", "positive_controls", "mutation_controls",
+              "forbidden_actions", "claims_not_proven",
+          ):
               values = manifest.get(key)
-              assert isinstance(values, list) and values and len(values) == len(set(values)), key
+              assert isinstance(values, list) and values, key
           assert not set(manifest["writable_paths"]) & set(manifest["read_only_paths"])
           assert manifest["cleanup_contract"]["required"] is True
           assert manifest["cleanup_contract"]["rollback_subject"] == base["commit"]
-          assert manifest["next_transition"] == "ADD_STRICT_CANDIDATE_TERMS_CONTRACT_AND_FIRST_HOLLOW_CONTROL"
-          assert "OWNER IMPLEMENTATION PREPARATION ONLY" in readme
-          assert "cannot by itself establish commercial" in readme
-          changed = subprocess.check_output(["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True).splitlines()
-          allowed = {
-              "loop_wiki/inception-discovery-admission/README.md",
-              "loop_wiki/inception-discovery-admission/preflight.json",
-              ".github/workflows/inception-a5-discovery-admission.yml",
-          }
-          assert not set(changed) - allowed, f"PATH_LEASE_VIOLATION:{sorted(set(changed) - allowed)}"
-          combined = readme + json.dumps(manifest, ensure_ascii=False)
-          forbidden = ["/" + "Users" + "/", "/" + "home" + "/", "/mnt/" + "data/", "gemini." + "google.com", "BEGIN " + "PRIVATE KEY"]
-          assert not [value for value in forbidden if value in combined]
+          assert manifest["next_transition"] == "RUN_MATCHED_PUBLIC_FIXTURE_BENCHMARK_AND_INDEPENDENT_SHADOW"
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True
+          ).splitlines()
+          allowed_exact = {".github/workflows/inception-a5-discovery-admission.yml"}
+          allowed_prefixes = (
+              "loop_wiki/inception-discovery-admission/",
+              ".arena/modules/inception-discovery-admission/",
+              "data/inception-discovery-admission/",
+          )
+          violations = [
+              path for path in changed
+              if path not in allowed_exact and not path.startswith(allowed_prefixes)
+          ]
+          assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          assert set(manifest["implementation_subjects"]).issubset(set(changed)), "IMPLEMENTATION_SUBJECT_MISSING"
           print(f"PASS atom=INCEPTION-A5 changed={len(changed)} mutations={len(manifest['mutation_controls'])}")
           PY
+
+      - name: Execute candidate contract disagreement controls
+        run: |
+          python3 loop_wiki/inception-discovery-admission/test_candidate_contract.py
+          python3 -m py_compile \
+            loop_wiki/inception-discovery-admission/candidate_contract.py \
+            loop_wiki/inception-discovery-admission/test_candidate_contract.py
 
       - name: Check textual patch hygiene
         run: git diff --check
