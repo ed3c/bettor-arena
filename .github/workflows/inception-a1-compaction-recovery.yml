@@ -1,4 +1,4 @@
-name: Inception A1 owner preflight
+name: Inception A1 owner implementation
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  deterministic-preflight:
+  deterministic-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Validate exact A1 preparation manifest and lease
+      - name: Validate exact A1 manifest and lease
         shell: bash
         run: |
           set -euo pipefail
@@ -39,8 +39,8 @@ jobs:
           exact = {
               "schema_version": "inception-owner-preflight/v1",
               "atom_id": "INCEPTION-A1",
-              "stage": "OWNER_IMPLEMENTATION_PREPARATION",
-              "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+              "stage": "OWNER_IMPLEMENTATION",
+              "state": "FIRST_IMPLEMENTATION_CANDIDATE",
               "repository": "ed3c/bettor-arena",
               "branch": "agent/inception-a1-compaction-recovery",
           }
@@ -53,32 +53,52 @@ jobs:
           assert controller["tree"] == "c3851a6953d456d0342a9776eed28561c1af0ca1"
           assert controller["packet_digest"] == "sha256:e20049d29ce3ddca00a6aa74802e042a562ca3ee7336f86e91cc945102ee9540"
           assert controller["bundle_digest"] == "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
-          list_fields = (
-              "state_machine", "existing_mechanisms", "writable_paths", "read_only_paths",
-              "resource_leases", "required_evidence_lanes", "positive_controls",
-              "mutation_controls", "forbidden_actions", "claims_not_proven",
-          )
-          for key in list_fields:
+          for key in (
+              "state_machine", "existing_mechanisms", "implementation_subjects",
+              "writable_paths", "read_only_paths", "resource_leases",
+              "required_evidence_lanes", "positive_controls", "mutation_controls",
+              "forbidden_actions", "claims_not_proven",
+          ):
               values = manifest.get(key)
               assert isinstance(values, list) and values and len(values) == len(set(values)), key
           assert not set(manifest["writable_paths"]) & set(manifest["read_only_paths"])
           assert manifest["cleanup_contract"]["required"] is True
           assert manifest["cleanup_contract"]["rollback_subject"] == base["commit"]
-          assert manifest["next_transition"] == "ADD_STRICT_CONTRACT_AND_FIRST_HOLLOW_OR_FAILING_CONTROL"
-          assert "OWNER IMPLEMENTATION PREPARATION ONLY" in readme
-          assert "No second generic ledger" in readme
-          changed = subprocess.check_output(["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True).splitlines()
-          allowed = {
-              "loop_wiki/inception-compaction-recovery/README.md",
-              "loop_wiki/inception-compaction-recovery/preflight.json",
-              ".github/workflows/inception-a1-compaction-recovery.yml",
+          assert manifest["next_transition"] == "RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK"
+          assert "checkpoint_contract.py" in manifest["implementation_subjects"][0]
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", f"{base['commit']}...HEAD"], text=True
+          ).splitlines()
+          allowed_exact = {".github/workflows/inception-a1-compaction-recovery.yml"}
+          allowed_prefixes = (
+              "loop_wiki/inception-compaction-recovery/",
+              ".arena/modules/inception-compaction-recovery/",
+              "data/inception-compaction-recovery/",
+          )
+          violations = [
+              path for path in changed
+              if path not in allowed_exact and not path.startswith(allowed_prefixes)
+          ]
+          assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          required = {
+              "loop_wiki/inception-compaction-recovery/checkpoint_contract.py",
+              "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py",
           }
-          assert not set(changed) - allowed, f"PATH_LEASE_VIOLATION:{sorted(set(changed) - allowed)}"
+          assert required.issubset(set(changed)), "IMPLEMENTATION_SUBJECT_MISSING"
+
           combined = readme + json.dumps(manifest, ensure_ascii=False)
           forbidden = ["/" + "Users" + "/", "/" + "home" + "/", "/mnt/" + "data/", "gemini." + "google.com", "BEGIN " + "PRIVATE KEY"]
           assert not [value for value in forbidden if value in combined]
           print(f"PASS atom=INCEPTION-A1 changed={len(changed)} mutations={len(manifest['mutation_controls'])}")
           PY
+
+      - name: Execute checkpoint contract and mutation controls
+        run: |
+          python3 loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py
+          python3 -m py_compile \
+            loop_wiki/inception-compaction-recovery/checkpoint_contract.py \
+            loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py
 
       - name: Check textual patch hygiene
         run: git diff --check
