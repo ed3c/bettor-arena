@@ -1,0 +1,46 @@
+{
+  "schema": "bettor-arena/dual-agent-effect-ledger/preflight/v1",
+  "issue": 208,
+  "parent_issue": 185,
+  "atom": "DA-EF-C",
+  "git_parent": {
+    "pull_request": 202,
+    "commit": "7821e81f15d64ff3119d9bdb9278fc725e5aa398",
+    "tree": "60d486041b36608d5d03e33b2eb8944c9899b50b",
+    "workflow_reducer_blob": "12f1048d5abf4fbfd8970815bc46bfdc797cb3d8"
+  },
+  "runtime_contract": {
+    "repository": "ed3c/runtime-env",
+    "pull_request": 69,
+    "commit": "1fd6a65a2e628ba1b31e89800297e7202dadf126",
+    "tree": "cc287010c96391e0a718141c2f4afb92bac3db06",
+    "contract_set_digest": "e6671977dbf0a378474f924a142a82843bc0e3429f4546ffb0145af73f7827fe",
+    "effect_intent_schema_id": "https://runtime-env.invalid/contracts/dual-agent/effect-intent.v1.schema.json",
+    "effect_intent_blob": "7a50a125e77dc4daa9c4721fce0fa2fc9b37fc3b"
+  },
+  "substrate_reference": {
+    "repository": "ed3c/bettor-arena",
+    "pull_request": 196,
+    "commit": "c2613432736c65756ed13d871feb2df486c69118",
+    "tree": "53680d47048f88b9402c6320355121b7ec2f7244",
+    "effect_contract_blob": "fedd4e6a7ee18438c122995be96694c8d26cf242",
+    "reconciliation_worker_blob": "7884038ee68a3eee08324b41c338c6001b8518a7",
+    "reuse_mode": "REFERENCE_SUBSTRATE_ONLY",
+    "writer_authority": "NONE"
+  },
+  "authority": {
+    "canonical_effect_writer": "dual-agent-effect-ledger",
+    "canonical_task_writer": "loopx-ledger",
+    "workflow_request_mode": "EFFECT_ADMISSION_REQUEST",
+    "provider_native_idempotency_is_authority": false
+  },
+  "external_states": {
+    "provider_write": "NOT_EXERCISED",
+    "target_readback": "NOT_EXERCISED",
+    "observable_effect": "NOT_EXERCISED",
+    "compensation": "NOT_EXERCISED",
+    "user_outcome": "NOT_EXERCISED",
+    "release": "NOT_EXERCISED"
+  },
+  "evidence_ceiling": "DETERMINISTIC_EFFECT_CONTRACT_INTERFACE_ONLY"
+}
