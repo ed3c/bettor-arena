@@ -1,12 +1,13 @@
 """Bounded durable checkpoint contract for the Inception A1 public fixture.
 
 This module is deliberately small: it proves the persistence/CAS/recovery semantics
-needed before a production compactor can be admitted.  It is not a second LoopX
+needed before a production compactor can be admitted. It is not a second LoopX
 ledger and it does not summarize model context.
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -17,6 +18,7 @@ from typing import Literal
 
 
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
+FaultHook = Callable[[str], None]
 
 
 class CheckpointContractError(ValueError):
@@ -94,12 +96,17 @@ class CheckpointCandidate:
 class SqliteCheckpointFixture:
     """File-backed SQLite fixture for prepare/recovery/activation semantics.
 
-    A SQLite file is used only as deterministic public evidence.  Production storage
-    remains owned by the existing LoopX persistence path and requires separate live
-    admission.
+    `fault_hook` is a deterministic public-test seam. A test process may terminate
+    at named durability boundaries and a fresh process can then read back the file.
+    Production storage remains owned by the existing LoopX persistence path.
     """
 
-    def __init__(self, path: str | Path) -> None:
+    def __init__(
+        self,
+        path: str | Path,
+        *,
+        fault_hook: FaultHook | None = None,
+    ) -> None:
         raw = str(path)
         if raw == ":memory:" or "mode=memory" in raw:
             raise CheckpointContractError(
@@ -107,6 +114,7 @@ class SqliteCheckpointFixture:
             )
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._fault_hook = fault_hook
         self._db = sqlite3.connect(self.path)
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA synchronous=FULL")
@@ -132,6 +140,10 @@ class SqliteCheckpointFixture:
             """
         )
         self._db.commit()
+
+    def _fault(self, phase: str) -> None:
+        if self._fault_hook is not None:
+            self._fault_hook(phase)
 
     def close(self) -> None:
         self._db.close()
@@ -201,7 +213,9 @@ class SqliteCheckpointFixture:
                     payload_json,
                 ),
             )
+            self._fault("prepare_before_commit")
             self._db.commit()
+            self._fault("prepare_after_commit")
         except Exception:
             self._db.rollback()
             raise
@@ -210,14 +224,20 @@ class SqliteCheckpointFixture:
     def record_recovery_probe(
         self, checkpoint_id: str, state: Literal["PASS", "FAIL"]
     ) -> None:
-        cursor = self._db.execute(
-            "UPDATE checkpoints SET recovery_state=? WHERE checkpoint_id=? AND activated=0",
-            (state, checkpoint_id),
-        )
-        if cursor.rowcount != 1:
+        try:
+            self._db.execute("BEGIN IMMEDIATE")
+            cursor = self._db.execute(
+                "UPDATE checkpoints SET recovery_state=? WHERE checkpoint_id=? AND activated=0",
+                (state, checkpoint_id),
+            )
+            if cursor.rowcount != 1:
+                raise CheckpointContractError("unknown or already activated checkpoint")
+            self._fault("recovery_before_commit")
+            self._db.commit()
+            self._fault("recovery_after_commit")
+        except Exception:
             self._db.rollback()
-            raise CheckpointContractError("unknown or already activated checkpoint")
-        self._db.commit()
+            raise
 
     def activate(self, checkpoint_id: str) -> int:
         try:
@@ -253,7 +273,9 @@ class SqliteCheckpointFixture:
                 "UPDATE checkpoints SET activated=1 WHERE checkpoint_id=?",
                 (checkpoint_id,),
             )
+            self._fault("activate_before_commit")
             self._db.commit()
+            self._fault("activate_after_commit")
             return int(new_revision)
         except Exception:
             self._db.rollback()
@@ -267,3 +289,17 @@ class SqliteCheckpointFixture:
         if row is None:
             raise CheckpointContractError("unknown checkpoint")
         return CheckpointCandidate(**json.loads(str(row[0])))
+
+    def recovery_state(
+        self, checkpoint_id: str
+    ) -> Literal["NOT_EXERCISED", "PASS", "FAIL"]:
+        row = self._db.execute(
+            "SELECT recovery_state FROM checkpoints WHERE checkpoint_id=?",
+            (checkpoint_id,),
+        ).fetchone()
+        if row is None:
+            raise CheckpointContractError("unknown checkpoint")
+        value = str(row[0])
+        if value not in {"NOT_EXERCISED", "PASS", "FAIL"}:
+            raise CheckpointContractError("invalid persisted recovery state")
+        return value  # type: ignore[return-value]
