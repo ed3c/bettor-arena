@@ -1,8 +1,7 @@
 """Pure deterministic canonical effect-ledger reducer for DA-EF-K / #217.
 
-This module serializes effect reservation/state decisions over immutable typed
-history. It performs no provider I/O, owns no production database, never writes
-LoopX task state, and never promotes the PR #196 reference substrate to writer.
+Serializes reservation/state decisions over immutable typed history only.
+No provider I/O, production database, LoopX append, or substrate authority.
 """
 from __future__ import annotations
 
@@ -17,16 +16,12 @@ ROOT = Path(__file__).resolve().parent
 CONTRACT_PATH = ROOT / "effect_contract.py"
 PARENT_CONTRACT_COMMIT = "f9b64994979042fc3726c524944a61da4f9cb8b5"
 PARENT_CONTRACT_TREE = "e0f0ff4bf0b55627b420ace027043c3b7fee5d1d"
-FORBIDDEN_IMPORT_ROOTS = {
-    "aiohttp", "http", "requests", "socket", "subprocess", "urllib",
-}
+FORBIDDEN_IMPORT_ROOTS = {"aiohttp", "http", "requests", "socket", "subprocess", "urllib"}
 SENSITIVE_KEYS = {
     "credential", "credential_value", "password", "private_reasoning",
     "raw_secret", "secret", "secret_value", "token", "token_value",
 }
-ATTEMPT_OUTCOMES = {
-    "RETRYABLE_FAILURE", "SUCCESS", "TIMEOUT", "CONNECTION_LOST", "UNKNOWN",
-}
+ATTEMPT_OUTCOMES = {"RETRYABLE_FAILURE", "SUCCESS", "TIMEOUT", "CONNECTION_LOST", "UNKNOWN"}
 SIDE_EVENTS = {"ATTEMPT_RECORDED", "READBACK_RECORDED", "TASK_PROJECTION"}
 
 spec = importlib.util.spec_from_file_location("dual_agent_effect_contract", CONTRACT_PATH)
@@ -106,13 +101,13 @@ def chain_events(
     request: dict[str, Any],
     specs: list[tuple[str, dict[str, Any] | None]],
 ) -> list[dict[str, Any]]:
-    result: list[dict[str, Any]] = []
+    history: list[dict[str, Any]] = []
     previous = "ROOT"
     for sequence, (event_type, payload) in enumerate(specs):
         event = make_event(request, sequence, event_type, payload, previous)
-        result.append(event)
+        history.append(event)
         previous = event["event_digest"]
-    return result
+    return history
 
 
 def validate_event(
@@ -129,9 +124,8 @@ def validate_event(
         refuse("EFFECT_HISTORY_DIGEST_MISMATCH")
     if event.get("effect_identity_digest") != effect_identity_digest(request):
         refuse("EFFECT_HISTORY_IDENTITY_MISMATCH")
-    supplied = event.get("event_digest")
     unsigned = {key: value for key, value in event.items() if key != "event_digest"}
-    if supplied != digest(unsigned):
+    if event.get("event_digest") != digest(unsigned):
         refuse("EFFECT_HISTORY_DIGEST_MISMATCH")
     event_type = event.get("event_type")
     if event_type != "STATE_TRANSITION" and event_type not in SIDE_EVENTS:
@@ -146,14 +140,11 @@ def validate_event(
         refuse("DUPLICATE_EFFECT_AUTHORITY")
 
 
-def reservation_batch(
-    existing: list[dict[str, Any]], candidate: dict[str, Any]
-) -> dict[str, Any]:
-    """Deterministic serialized reservation decision; not a distributed DB claim."""
+def reservation_batch(existing: list[dict[str, Any]], candidate: dict[str, Any]) -> dict[str, Any]:
+    """Serialized deterministic reservation decision; not a distributed atomicity claim."""
     contract.validate_admission_request(candidate)
     for prior in existing:
-        classification = contract.classify_duplicate(prior, candidate)
-        if classification == "DUPLICATE_REFUSED":
+        if contract.classify_duplicate(prior, candidate) == "DUPLICATE_REFUSED":
             return {
                 "decision": "DUPLICATE_REFUSED",
                 "execute": False,
@@ -166,7 +157,9 @@ def reservation_batch(
     }
 
 
-def _validate_attempt(payload: dict[str, Any], attempts: list[dict[str, Any]], state: str) -> None:
+def _validate_attempt(
+    request: dict[str, Any], payload: dict[str, Any], attempts: list[dict[str, Any]], state: str
+) -> None:
     if state in {"RESULT_UNKNOWN", "RECONCILIATION_REQUIRED"}:
         refuse("UNKNOWN_EFFECT_RETRY_FORBIDDEN")
     attempt_id = str(payload.get("attempt_id", ""))
@@ -174,19 +167,20 @@ def _validate_attempt(payload: dict[str, Any], attempts: list[dict[str, Any]], s
         refuse("ATTEMPT_IDENTITY_MISSING")
     if any(item["attempt_id"] == attempt_id for item in attempts):
         refuse("DUPLICATE_ATTEMPT_IDENTITY")
-    outcome = payload.get("outcome")
-    if outcome not in ATTEMPT_OUTCOMES:
+    if payload.get("outcome") not in ATTEMPT_OUTCOMES:
         refuse("ATTEMPT_OUTCOME_INVALID")
     if payload.get("actor_class") != "EFFECT_LEDGER":
         refuse("WORKER_OR_PROVIDER_SELF_COMMIT")
-    request_digest = str(payload.get("request_digest", ""))
-    if request_digest != str(payload.get("normalized_request_digest", request_digest)):
+    expected_request_digest = request["runtime_intent"]["normalized_request_digest"]
+    if payload.get("request_digest") != expected_request_digest or payload.get("normalized_request_digest") != expected_request_digest:
         refuse("ATTEMPT_REQUEST_DRIFT")
     provider_subject = payload.get("provider_subject")
     if not isinstance(provider_subject, dict):
         refuse("MUTABLE_EFFECT_SUBJECT")
     contract._h40(provider_subject.get("commit"))
     contract._h40(provider_subject.get("tree"))
+    if provider_subject != request["target"]["provider_subject"]:
+        refuse("MUTABLE_EFFECT_SUBJECT")
 
 
 def _validate_readback(
@@ -201,7 +195,11 @@ def _validate_readback(
     if payload.get("remote_version") != expected:
         refuse("READBACK_DISAGREEMENT")
     target = request["target"]
-    if payload.get("provider_id") != target["provider_id"] or payload.get("resource_id") != target["resource_id"] or payload.get("action") != target["action"]:
+    if (
+        payload.get("provider_id") != target["provider_id"]
+        or payload.get("resource_id") != target["resource_id"]
+        or payload.get("action") != target["action"]
+    ):
         refuse("READBACK_TARGET_MISMATCH")
     readback = {
         "remote_version": payload["remote_version"],
@@ -215,9 +213,7 @@ def _validate_readback(
     return readback
 
 
-def reduce_effect_history(
-    request: dict[str, Any], history: list[dict[str, Any]]
-) -> dict[str, Any]:
+def reduce_effect_history(request: dict[str, Any], history: list[dict[str, Any]]) -> dict[str, Any]:
     contract.validate_contract(contract.fixed_contract())
     contract.validate_admission_request(request)
     state = "EFFECT_PROPOSED"
@@ -237,7 +233,7 @@ def reduce_effect_history(
             refuse("EVENT_AFTER_EFFECT_TERMINAL", state)
 
         if event_type == "ATTEMPT_RECORDED":
-            _validate_attempt(payload, attempts, state)
+            _validate_attempt(request, payload, attempts, state)
             attempts.append({
                 "attempt_id": str(payload["attempt_id"]),
                 "outcome": str(payload["outcome"]),
@@ -261,15 +257,19 @@ def reduce_effect_history(
         actor_class = str(payload.get("actor_class", "EFFECT_LEDGER"))
         attempt_result = payload.get("attempt_result")
         latest_readback = None if not readbacks else readbacks[-1]
+
         if target == "EFFECT_ATTEMPTED" and not attempts:
             refuse("ATTEMPT_DENOMINATOR_MISSING")
         if target == "EFFECT_COMMITTED":
+            if state in {"RESULT_UNKNOWN", "RECONCILIATION_REQUIRED"}:
+                refuse("UNRESOLVED_EFFECT_COMMIT")
             if not attempts:
                 refuse("ATTEMPT_DENOMINATOR_MISSING")
             if commit_count:
                 refuse("DOUBLE_COMMIT")
             if latest_readback is None:
                 refuse("READBACK_REQUIRED")
+
         try:
             contract.validate_transition(
                 state,
@@ -288,10 +288,7 @@ def reduce_effect_history(
 
     result = {
         "schema": "bettor-arena/dual-agent-effect-ledger/reducer-result/v1",
-        "parent_contract_subject": {
-            "commit": PARENT_CONTRACT_COMMIT,
-            "tree": PARENT_CONTRACT_TREE,
-        },
+        "parent_contract_subject": {"commit": PARENT_CONTRACT_COMMIT, "tree": PARENT_CONTRACT_TREE},
         "canonical_effect_writer": contract.CANONICAL_EFFECT_WRITER,
         "canonical_task_writer": contract.CANONICAL_TASK_WRITER,
         "effect_identity_digest": effect_identity_digest(request),
