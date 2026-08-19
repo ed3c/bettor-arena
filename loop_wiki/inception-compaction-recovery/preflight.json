@@ -1,8 +1,8 @@
 {
   "schema_version": "inception-owner-preflight/v1",
   "atom_id": "INCEPTION-A1",
-  "stage": "OWNER_IMPLEMENTATION_PREPARATION",
-  "state": "READY_FOR_FIRST_IMPLEMENTATION_COMMIT",
+  "stage": "OWNER_IMPLEMENTATION",
+  "state": "FIRST_IMPLEMENTATION_CANDIDATE",
   "repository": "ed3c/bettor-arena",
   "branch": "agent/inception-a1-compaction-recovery",
   "base_subject": {
@@ -44,6 +44,10 @@
     "loop_wiki/loopx-context-assembly/**",
     "loop_wiki/loopx-resource-gc/**"
   ],
+  "implementation_subjects": [
+    "loop_wiki/inception-compaction-recovery/checkpoint_contract.py",
+    "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py"
+  ],
   "writable_paths": [
     "loop_wiki/inception-compaction-recovery/**",
     ".arena/modules/inception-compaction-recovery/**",
@@ -72,19 +76,22 @@
     "INDEPENDENT_RECOVERY_READBACK"
   ],
   "positive_controls": [
+    "file-backed SQLite checkpoint survives close and reopen",
     "complete ordered tool transaction is preserved",
     "checkpoint activation increments exact task revision once",
     "prior checkpoint remains available until recovery probe passes",
-    "reconstructed context preserves unresolved work leases pending effects and artifacts"
+    "reconstructed state binds unresolved work leases pending effects and artifacts"
   ],
   "mutation_controls": [
+    "in-memory SQLite is rejected as durable evidence",
     "assistant tool call split from one or more results",
     "parallel tool results reordered",
     "stale expected revision",
+    "skipped revision",
     "two active compactors",
-    "crash before and after each persistence transition",
-    "corrupt or missing artifact",
-    "digest mismatch",
+    "activation before recovery PASS",
+    "checkpoint id collision",
+    "corrupt or missing digest",
     "premature deletion of rollback checkpoint",
     "secret or local-only payload in portable receipt",
     "dirty process path port mount or database residue"
@@ -105,10 +112,11 @@
     "rollback"
   ],
   "claims_not_proven": [
-    "No compaction implementation has been added.",
-    "No local fault-injection run has executed.",
+    "The SQLite fixture is deterministic public evidence, not the production LoopX persistence backend.",
+    "Crash-before-and-after transition fault injection is not yet complete.",
     "No provider tokenizer or context-limit receipt exists.",
+    "No live context reconstruction has executed.",
     "No production recovery, Human admission, release or rollback has occurred."
   ],
-  "next_transition": "ADD_STRICT_CONTRACT_AND_FIRST_HOLLOW_OR_FAILING_CONTROL"
+  "next_transition": "RUN_SQLITE_FAULT_MATRIX_AND_SHADOW_READBACK"
 }
