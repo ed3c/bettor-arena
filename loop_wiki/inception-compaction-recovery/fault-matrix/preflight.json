@@ -1,0 +1,75 @@
+{
+  "schema_version": "inception-owner-preflight/v1",
+  "atom_id": "INCEPTION-A1-FAULT",
+  "stage": "PUBLIC_FAULT_EVIDENCE",
+  "state": "FAULT_MATRIX_CANDIDATE",
+  "repository": "ed3c/bettor-arena",
+  "branch": "agent/inception-a1-fault-matrix",
+  "stack_class": "TRUE_CHILD",
+  "parent_subject": {
+    "pull_request": 194,
+    "commit": "77c0da129a933a11de067dac051db14c3e002eec",
+    "tree": "9528723b822ea80f02910e8dd1aada6a94815525"
+  },
+  "owner_issue": "ed3c/bettor-arena#191",
+  "upstream_issue": "ed3c/enterprise_agent_system#5",
+  "state_machine": [
+    "CHECKPOINT_PARENT_BOUND",
+    "FAULT_MATRIX_DECLARED",
+    "ABRUPT_EXIT_INJECTED",
+    "DATABASE_REOPENED",
+    "INTEGRITY_CHECKED",
+    "STATE_TRANSITION_READ_BACK",
+    "SHADOW_REVIEW_REQUIRED"
+  ],
+  "fault_cases": [
+    "CRASH_BEFORE_PREPARE",
+    "CRASH_AFTER_PREPARE_COMMIT",
+    "CRASH_BEFORE_RECOVERY_PROBE",
+    "CRASH_AFTER_RECOVERY_PROBE_COMMIT",
+    "CRASH_BEFORE_ACTIVATION",
+    "CRASH_AFTER_ACTIVATION_COMMIT",
+    "UNCOMMITTED_METADATA_MUTATION_CRASH"
+  ],
+  "positive_controls": [
+    "prepared checkpoint survives abrupt process termination but is not active",
+    "recovery PASS survives abrupt process termination without activating the checkpoint",
+    "activation commit survives abrupt process termination and preserves exact checkpoint identity",
+    "uncommitted metadata mutation rolls back after abrupt process termination",
+    "SQLite integrity_check remains ok after every recovered crash case"
+  ],
+  "writable_paths": [
+    "loop_wiki/inception-compaction-recovery/fault-matrix/**",
+    ".github/workflows/inception-a1-fault-matrix.yml"
+  ],
+  "read_only_paths": [
+    "loop_wiki/inception-compaction-recovery/checkpoint_contract.py",
+    "loop_wiki/inception-compaction-recovery/test_checkpoint_contract.py",
+    "loop_wiki/loopx-*/**",
+    "docs/**",
+    "data/**"
+  ],
+  "resource_leases": [
+    "sqlite-database:inception-a1-fault-fixture",
+    "process-fault-namespace:inception-a1",
+    "workflow-name:inception-a1-fault-matrix"
+  ],
+  "required_evidence_lanes": [
+    "GITHUB_ACTIONS_PROCESS_FAULT",
+    "SQLITE_REOPEN_READBACK",
+    "INDEPENDENT_SHADOW",
+    "LOCAL_LIVE_SEPARATE"
+  ],
+  "cleanup_contract": {
+    "required": true,
+    "ephemeral_temp_directory": true,
+    "persistent_external_effects": false,
+    "rollback_subject": "77c0da129a933a11de067dac051db14c3e002eec"
+  },
+  "claims_not_proven": [
+    "GitHub-hosted process faults do not prove production host power-loss durability.",
+    "No live model context reconstruction or provider tokenizer limit has been exercised.",
+    "No production storage, multi-host failover, Human admission, merge, release or rollback has occurred."
+  ],
+  "next_transition": "RUN_LIVE_CONTEXT_RECONSTRUCTION_AND_PROVIDER_BUDGET_CANARY"
+}
