@@ -1,0 +1,94 @@
+name: Inception A5 matched public benchmark verification
+
+on:
+  push:
+    branches: [agent/inception-a5-discovery-admission]
+  pull_request:
+    paths:
+      - loop_wiki/inception-discovery-admission/**
+      - .arena/modules/inception-discovery-admission/**
+      - data/inception-discovery-admission/**
+      - .github/workflows/inception-a5-discovery-admission.yml
+
+permissions:
+  contents: read
+
+jobs:
+  matched-fixture-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact workflow subject
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate exact A5 verification manifest and lease
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+
+          root = pathlib.Path.cwd()
+          manifest = json.loads((root / "loop_wiki/inception-discovery-admission/preflight.json").read_text())
+          exact = {
+              "schema_version": "inception-owner-preflight/v1",
+              "atom_id": "INCEPTION-A5",
+              "stage": "OWNER_PUBLIC_VERIFICATION",
+              "state": "MATCHED_FIXTURE_BENCHMARK_CANDIDATE",
+              "repository": "ed3c/bettor-arena",
+              "branch": "agent/inception-a5-discovery-admission",
+          }
+          for key, value in exact.items():
+              assert manifest.get(key) == value, f"DRIFT:{key}"
+          controller = manifest["controller_subject"]
+          assert controller["commit"] == "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e"
+          assert controller["packet_digest"] == "sha256:1df5d049ece49aeef3c4418725296cd74f1c02d1e29ad325f68899d03e13d2a6"
+          assert manifest["cleanup_contract"]["required"] is True
+          assert manifest["cleanup_contract"]["persistent_external_effects"] is False
+          assert manifest["next_transition"] == "BIND_EXTERNAL_PUBLIC_CANDIDATE_TERMS_AND_RUN_MATCHED_BENCHMARK"
+          required = {
+              "loop_wiki/inception-discovery-admission/candidate_contract.py",
+              "loop_wiki/inception-discovery-admission/test_candidate_contract.py",
+              "loop_wiki/inception-discovery-admission/benchmark_fixture.py",
+              "loop_wiki/inception-discovery-admission/test_benchmark_fixture.py",
+          }
+          assert required.issubset(set(manifest["implementation_subjects"])), "IMPLEMENTATION_SUBJECT_MISSING"
+          assert "PUBLIC_MATCHED_FIXTURE_BENCHMARK" in manifest["required_evidence_lanes"]
+          assert "EXTERNAL_CANDIDATE_SEPARATE" in manifest["required_evidence_lanes"]
+
+          base = manifest["base_subject"]["commit"]
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", f"{base}...HEAD"], text=True
+          ).splitlines()
+          allowed_exact = {".github/workflows/inception-a5-discovery-admission.yml"}
+          allowed_prefixes = (
+              "loop_wiki/inception-discovery-admission/",
+              ".arena/modules/inception-discovery-admission/",
+              "data/inception-discovery-admission/",
+          )
+          violations = [p for p in changed if p not in allowed_exact and not p.startswith(allowed_prefixes)]
+          assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          print(f"PASS atom=INCEPTION-A5 changed={len(changed)}")
+          PY
+
+      - name: Execute candidate contract disagreement controls
+        run: python3 loop_wiki/inception-discovery-admission/test_candidate_contract.py
+
+      - name: Execute matched public benchmark and mutation controls
+        run: python3 loop_wiki/inception-discovery-admission/test_benchmark_fixture.py -v
+
+      - name: Compile exact Python subjects
+        run: |
+          python3 -m py_compile \
+            loop_wiki/inception-discovery-admission/candidate_contract.py \
+            loop_wiki/inception-discovery-admission/test_candidate_contract.py \
+            loop_wiki/inception-discovery-admission/benchmark_fixture.py \
+            loop_wiki/inception-discovery-admission/test_benchmark_fixture.py
+
+      - name: Check textual patch hygiene
+        run: git diff --check
