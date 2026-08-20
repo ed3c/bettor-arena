@@ -1,0 +1,145 @@
+{
+  "schema": "bettor.dual-agent-program-stack-index.v1",
+  "snapshot_date": "2026-08-20",
+  "owner_issue": 230,
+  "parent_issue": 183,
+  "authority": {
+    "task_writer": "bettor-arena/loopx-ledger",
+    "effect_writer": "bettor-arena/dual-agent-effect-ledger",
+    "provider_owner": "agent-shield-monorepo",
+    "runtime_contract_owner": "runtime-env",
+    "method_owner": "skills-shared",
+    "independent_verification_owner": "truth-verify-loop",
+    "human_release_owner": "external-trusted-authority",
+    "this_index_canonical_write": "NONE"
+  },
+  "problem_denominator": {
+    "local_sovereign_agent": "REQUIRED",
+    "always_on_cloud_agent": "REQUIRED",
+    "offline_reconnect": "REQUIRED",
+    "api_first_browser_fallback": "REQUIRED",
+    "independent_readback": "REQUIRED",
+    "physical_end_to_end_issue": "ed3c/bettor-arena#186",
+    "state": "NOT_PHYSICALLY_CLOSED"
+  },
+  "repositories": [
+    {
+      "repository": "ed3c/skills-shared",
+      "authority": "METHOD_PLANE",
+      "nodes": [
+        {
+          "issue": 362,
+          "atom": "DA-M-C",
+          "commit": "7e33890e9e3763e0cd6188fdc68fce96e1caaba3",
+          "tree": "7e2293b52b48394e4aa905d61fb5782f55110a67",
+          "state": "DETERMINISTIC_SUBJECT_BOUND",
+          "merge_state": "CURRENT_MAIN_READBACK_REQUIRED"
+        }
+      ]
+    },
+    {
+      "repository": "ed3c/runtime-env",
+      "authority": "RUNTIME_CONTRACT_TRANSPORT_IDENTITY",
+      "merge_plan": [
+        69,
+        76,
+        77,
+        78,
+        79,
+        85,
+        86,
+        87,
+        74,
+        84
+      ],
+      "nodes": [
+        {"pr": 69, "atom": "DA-RC-C", "head": "1fd6a65a2e628ba1b31e89800297e7202dadf126", "tree": "cc287010c96391e0a718141c2f4afb92bac3db06", "run": 32251505194, "state": "DRAFT_CANDIDATE"},
+        {"pr": 76, "atom": "DA-TR-C", "head": "08fd712572ebe63b3c4286b361909a11ded9d172", "tree": "a0971d7b4bb0f70548989582f54f522ce655c91b", "run": 32252919999, "state": "DRAFT_CANDIDATE"},
+        {"pr": 77, "atom": "DA-TR-L", "head": "f910536b5a8ace7610eb8957cd3eb37f16c08065", "tree": "a1aa879cbd9b0d8ddf9845183c4d1a3e3a6dc4e3", "run": 32253473378, "state": "DRAFT_CANDIDATE"},
+        {"pr": 78, "atom": "DA-TR-N", "head": "ebf7e36387d4ffff8f8b428eb062525098013f5c", "tree": "c706be102cb4466ffed041d7985e3713579528be", "run": 32254465413, "state": "DRAFT_CANDIDATE"},
+        {"pr": 79, "atom": "DA-ID-C", "head": "5c9a960ed9883e294d6cdb5c949256cf937972ed", "tree": "b8c7efc2a653a008cf12aa4f7120ed526eb80b3d", "run": 32254852893, "state": "DRAFT_CANDIDATE"},
+        {"pr": 85, "atom": "DA-ID-L", "head": "8ea2667265b553059b2879f800c7bb1afc788d40", "tree": "48a5744fd4ca6d6d7b6a4921dba81c02c7c3ddaf", "run": 32258804609, "state": "DRAFT_CANDIDATE"},
+        {"pr": 86, "atom": "DA-ID-CLOUD", "head": "940f9c74be8b8f7b2c427e79725786059696cd45", "tree": "61a7e346c6e0e0a1346d8363188db5128615fd35", "run": 32259034357, "state": "DRAFT_CANDIDATE"},
+        {"pr": 87, "atom": "DA-ID-P", "head": "22bff7e329209491ee47e29c4cdd8c74b4725d81", "tree": "8ddb3c88e80f76ef74210d9fba9b0c9a540404ce", "run": 32259277414, "state": "DRAFT_CANDIDATE"}
+      ],
+      "live_frontier": [
+        {"issue": 73, "capability": "PHYSICAL_NATS_RECONNECT", "state": "NOT_EXERCISED"},
+        {"issue": 83, "capability": "LIVE_CROSS_RUNTIME_IDENTITY", "state": "NOT_EXERCISED"}
+      ]
+    },
+    {
+      "repository": "ed3c/bettor-arena",
+      "authority": "WORKFLOW_EFFECT_COMPOSITION",
+      "workflow_merge_plan": [201, 202, 215, 207],
+      "effect_merge_plan": [216, 224, 225, 228, 229],
+      "absorbed_leaf_prs": [209, 210, 211, 226, 227],
+      "nodes": [
+        {"pr": 201, "atom": "DA-WF-C", "head": "56cb74650bda20adfe84cc522977419158437f53", "tree": "3b2f1a351296f87f6570a182b2d72b46be181bac", "run": 32263925774, "state": "DRAFT_CANDIDATE"},
+        {"pr": 202, "atom": "DA-WF-K", "head": "7821e81f15d64ff3119d9bdb9278fc725e5aa398", "tree": "60d486041b36608d5d03e33b2eb8944c9899b50b", "run": 32264598907, "state": "DRAFT_CANDIDATE"},
+        {"pr": 209, "atom": "DA-WF-R", "head": "37376884bebc7403fab52dc0b2bff8ab5bb61060", "tree": "19b0008b218c10385fc4e5d9a6556464b55f526c", "run": 32265868475, "state": "ABSORBED_BY_215"},
+        {"pr": 210, "atom": "DA-WF-H", "head": "460d8419d579c7dba50800c790af2dce053fbb23", "tree": "5ec3a7bda1c2bbd294943324ce01c55557b9fdba", "run": 32266054386, "state": "ABSORBED_BY_215"},
+        {"pr": 211, "atom": "DA-WF-COMP", "head": "e425ec026c4792b94cf8b2214b4179260e2f1834", "tree": "4a50ff3a58785eb50363304725641e8b3a0e003e", "run": 32266218555, "state": "ABSORBED_BY_215"},
+        {"pr": 215, "atom": "DA-WF-E", "head": "1dd902f1269a47f9c1821fe10bf0a064a74d918f", "tree": "dd30c31395cf9dd32f2593b0e558a45db2b6998f", "run": 32268938521, "state": "DRAFT_CONVERGENCE_CANDIDATE"},
+        {"pr": 216, "atom": "DA-EF-C", "head": "f9b64994979042fc3726c524944a61da4f9cb8b5", "tree": "e0f0ff4bf0b55627b420ace027043c3b7fee5d1d", "run": 32269722930, "state": "DRAFT_CANDIDATE"},
+        {"pr": 224, "atom": "DA-EF-K", "head": "6b99815d2b3fb76436c05641b32d1e7be1a36ec4", "tree": "ac7dba91541dfb8c1bcbc1d4f9bc7d2726735eac", "run": null, "state": "DRAFT_CANDIDATE_READBACK_REQUIRED"},
+        {"pr": 225, "atom": "DA-EF-P", "head": "ba9ebfe5f4efa01d040ec3b51f93b32045899b23", "tree": null, "run": null, "state": "DRAFT_CANDIDATE_READBACK_REQUIRED"},
+        {"pr": 226, "atom": "DA-EF-A", "head": "ee7b99080", "tree": null, "run": null, "state": "ABSORBED_BY_228_READBACK_REQUIRED"},
+        {"pr": 227, "atom": "DA-EF-COMP", "head": "50f0e5ca", "tree": null, "run": null, "state": "ABSORBED_BY_228_READBACK_REQUIRED"},
+        {"pr": 228, "atom": "DA-EF-E", "head": "5ba49cc935c059a8fd96e78773c3df9a2ab9be4c", "tree": "6eb20d4289d7296be7348c70aa8618e2d8a9aecc", "run": 32275372163, "state": "DRAFT_CONVERGENCE_CANDIDATE"},
+        {"pr": 229, "atom": "DA-EF-D", "head": "87af8156dce12e7d5caf0a779162efc42733dcb8", "tree": "3f621e0044da99f5ea9aa5a9caa0746e16da61f1", "run": 32275893533, "state": "DRAFT_DOCS_CANDIDATE"}
+      ],
+      "live_frontier": [
+        {"issue": 223, "capability": "REAL_REVERSIBLE_EFFECT", "state": "HUMAN_REQUIRED"},
+        {"issue": 186, "capability": "PHYSICAL_LOCAL_CLOUD_LOCAL", "state": "NOT_EXERCISED"},
+        {"issue": 68, "capability": "RELEASE_AND_ROLLBACK", "state": "NOT_PERFORMED"}
+      ]
+    },
+    {
+      "repository": "ed3c/agent-shield-monorepo",
+      "authority": "ROUTE_PROVIDER_SANDBOX",
+      "route_merge_plan": [162, 166, 167],
+      "route_absorbed_leaf_prs": [163, 164, 165],
+      "gvisor_merge_plan": [174, 177, 178],
+      "gvisor_absorbed_leaf_prs": [175, 176],
+      "shared_candidate_pr": 180,
+      "nodes": [
+        {"pr": 162, "atom": "DA-INT-C", "head": "1250b096b53b8d114425a3618e91137090f0778a", "state": "DRAFT_CANDIDATE"},
+        {"pr": 166, "atom": "DA-INT-E", "head": "a88951c53e03e0fb5a54ed59d531e8cc3de87930", "tree": "a346d91987e0aa71333b0d2fd96822b2ccb9d92b", "state": "DRAFT_CONVERGENCE_CANDIDATE"},
+        {"pr": 167, "atom": "DA-INT-D", "head": "c2272fcc026b8fca046fc8c7c449088eb2c41177", "tree": "868f71efce8c412f7c543b66c60738d22aeba1f3", "state": "DRAFT_DOCS_CANDIDATE"},
+        {"pr": 174, "atom": "DA-GV-C", "head": "8cc1bea3", "run": 32282011851, "state": "DRAFT_CANDIDATE_READBACK_REQUIRED"},
+        {"pr": 177, "atom": "DA-GV-E", "head": "83f8cf90", "run": 32282711208, "state": "DRAFT_CONVERGENCE_CANDIDATE_READBACK_REQUIRED"},
+        {"pr": 178, "atom": "DA-GV-D", "head": "5820b69d", "run": 32283019825, "state": "DRAFT_DOCS_CANDIDATE_READBACK_REQUIRED"},
+        {"pr": 180, "atom": "DA-SHARED-CANDIDATE", "head": "4c94dc2e43d1d86771c1246e348b33f473c8b1f0", "tree": "2c0648c51635e40b97b451e881c76e490f770e37", "run": 32292994738, "state": "HUMAN_REVIEW_PENDING_NON_PROMOTING"}
+      ],
+      "live_frontier": [
+        {"issue": 95, "capability": "LIVE_NETWORK", "state": "NOT_EXERCISED"},
+        {"issue": 161, "capability": "LIVE_API_BROWSER", "state": "HUMAN_REQUIRED"},
+        {"issue": 173, "capability": "LIVE_RUNSC_GVISOR", "state": "HUMAN_REQUIRED"}
+      ]
+    },
+    {
+      "repository": "ed3c/truth-verify-loop",
+      "authority": "INDEPENDENT_VERIFICATION",
+      "state": "MERGED_DETERMINISTIC_SUBTREE",
+      "merge_path": [29, 39, 44, 45],
+      "closed_completed_issues": [25, 27, 31, 32, 33, 34, 35, 36, 37],
+      "closed_superseded_prs": [24, 26, 28, 38, 40, 41, 42, 43],
+      "parent_issue": 22,
+      "evidence_ceiling": "COMPLETE_DETERMINISTIC_DUAL_AGENT_TRUTH_MATRIX_ONLY",
+      "semantic_state": "UNVERIFIABLE",
+      "live_state": "NOT_EXERCISED"
+    }
+  ],
+  "global_live_frontier": [
+    "runtime-env#73",
+    "runtime-env#83",
+    "agent-shield-monorepo#95",
+    "agent-shield-monorepo#161",
+    "agent-shield-monorepo#173",
+    "bettor-arena#223",
+    "bettor-arena#186",
+    "truth-verify-loop#22",
+    "bettor-arena#68"
+  ],
+  "program_state": "DETERMINISTIC_IMPLEMENTATION_PARTIAL_MERGE_PHYSICAL_LOOP_OPEN"
+}
