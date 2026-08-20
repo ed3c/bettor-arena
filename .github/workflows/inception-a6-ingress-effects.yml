@@ -1,0 +1,102 @@
+name: Inception A6 restart reconciliation verification
+
+on:
+  push:
+    branches: [agent/inception-a6-ingress-effects]
+  pull_request:
+    paths:
+      - loop_wiki/inception-ingress-effects/**
+      - .arena/modules/inception-ingress-effects/**
+      - data/inception-ingress-effects/**
+      - .github/workflows/inception-a6-ingress-effects.yml
+
+permissions:
+  contents: read
+
+jobs:
+  restart-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact workflow subject
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate exact A6 verification manifest and lease
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+
+          root = pathlib.Path.cwd()
+          manifest = json.loads((root / "loop_wiki/inception-ingress-effects/preflight.json").read_text())
+          exact = {
+              "schema_version": "inception-owner-preflight/v1",
+              "atom_id": "INCEPTION-A6",
+              "stage": "OWNER_PUBLIC_VERIFICATION",
+              "state": "RESTART_RECONCILIATION_CANDIDATE",
+              "repository": "ed3c/bettor-arena",
+              "branch": "agent/inception-a6-ingress-effects",
+          }
+          for key, value in exact.items():
+              assert manifest.get(key) == value, f"DRIFT:{key}"
+          controller = manifest["controller_subject"]
+          assert controller["commit"] == "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e"
+          assert controller["packet_digest"] == "sha256:c464b74f13ca211e15f07d90b3d3e50a0298ac5aa178e69197390166a5bc98da"
+          assert manifest["cleanup_contract"]["required"] is True
+          assert manifest["cleanup_contract"]["persistent_external_effects"] is False
+          assert manifest["next_transition"] == "RUN_REVERSIBLE_COMPENSATION_FIXTURE_THEN_PROVIDER_ADAPTER_CANARY"
+          required = {
+              "loop_wiki/inception-ingress-effects/effect_contract.py",
+              "loop_wiki/inception-ingress-effects/test_effect_contract.py",
+              "loop_wiki/inception-ingress-effects/reconciliation_worker.py",
+              "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py",
+              "loop_wiki/inception-ingress-effects/test_restart_reconciliation.py",
+          }
+          assert required.issubset(set(manifest["implementation_subjects"])), "IMPLEMENTATION_SUBJECT_MISSING"
+          assert "PUBLIC_PROCESS_RESTART" in manifest["required_evidence_lanes"]
+          assert "TERMINAL_SQLITE_RESIDUE_READBACK" in manifest["required_evidence_lanes"]
+          assert "REAL_EXTERNAL_EFFECT_SEPARATE" in manifest["required_evidence_lanes"]
+          assert "COMPENSATION_SEPARATE" in manifest["required_evidence_lanes"]
+
+          base = manifest["base_subject"]["commit"]
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", f"{base}...HEAD"], text=True
+          ).splitlines()
+          allowed_exact = {".github/workflows/inception-a6-ingress-effects.yml"}
+          allowed_prefixes = (
+              "loop_wiki/inception-ingress-effects/",
+              ".arena/modules/inception-ingress-effects/",
+              "data/inception-ingress-effects/",
+          )
+          violations = [p for p in changed if p not in allowed_exact and not p.startswith(allowed_prefixes)]
+          assert not violations, f"PATH_LEASE_VIOLATION:{violations}"
+          assert required.issubset(set(changed)), "IMPLEMENTATION_SUBJECT_NOT_IN_STACK"
+          print(f"PASS atom=INCEPTION-A6 changed={len(changed)}")
+          PY
+
+      - name: Execute ingress and effect disagreement controls
+        run: python3 loop_wiki/inception-ingress-effects/test_effect_contract.py
+
+      - name: Execute abrupt restart and UNKNOWN_EFFECT reconciliation matrix
+        run: python3 loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py -v
+
+      - name: Execute close-reopen persistence and terminal SQLite residue matrix
+        run: python3 loop_wiki/inception-ingress-effects/test_restart_reconciliation.py -v
+
+      - name: Compile exact Python subjects
+        run: |
+          python3 -m py_compile \
+            loop_wiki/inception-ingress-effects/effect_contract.py \
+            loop_wiki/inception-ingress-effects/test_effect_contract.py \
+            loop_wiki/inception-ingress-effects/reconciliation_worker.py \
+            loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py \
+            loop_wiki/inception-ingress-effects/test_restart_reconciliation.py
+
+      - name: Check textual patch hygiene
+        run: git diff --check

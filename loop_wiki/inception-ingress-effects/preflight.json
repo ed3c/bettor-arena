@@ -1,0 +1,134 @@
+{
+  "schema_version": "inception-owner-preflight/v1",
+  "atom_id": "INCEPTION-A6",
+  "stage": "OWNER_PUBLIC_VERIFICATION",
+  "state": "RESTART_RECONCILIATION_CANDIDATE",
+  "repository": "ed3c/bettor-arena",
+  "branch": "agent/inception-a6-ingress-effects",
+  "base_subject": {
+    "commit": "6bf8f7966c02b49294e22b329a6fce68fa50a815",
+    "tree": "05bc4982db6ea8a1609e4b5cc374a3db6a125da2"
+  },
+  "controller_subject": {
+    "repository": "ed3c/enterprise_agent_system",
+    "pull_request": 29,
+    "commit": "6e0a916fd06dd8635d77c9a8c4d1b475185ea13e",
+    "tree": "c3851a6953d456d0342a9776eed28561c1af0ca1",
+    "packet_digest": "sha256:c464b74f13ca211e15f07d90b3d3e50a0298ac5aa178e69197390166a5bc98da",
+    "bundle_digest": "sha256:dc4473b3195a738e55eb49c43661b6e1f4ea7f95c66749454776f2003b18ebc3"
+  },
+  "owner_issue": "ed3c/bettor-arena#193",
+  "upstream_issue": "ed3c/enterprise_agent_system#18",
+  "interface": "inception/ingress-effect-writeback",
+  "state_machine": [
+    "EVENT_RECEIVED",
+    "AUTHENTICATED",
+    "REPLAY_CHECKED",
+    "INBOX_PERSISTED",
+    "TASK_ADMITTED",
+    "WRITE_INTENT_VALIDATED",
+    "EFFECT_RESERVED",
+    "EXTERNAL_EXECUTION_ATTEMPTED",
+    "REMOTE_READBACK_VERIFIED",
+    "COMMITTED_OR_UNKNOWN_EFFECT_OR_COMPENSATED_OR_HUMAN_ESCALATED"
+  ],
+  "existing_mechanisms": [
+    "loop_wiki/loopx-ledger/**",
+    "loop_wiki/loopx-worker-gateway/**",
+    "loop_wiki/loopx-kernel/**",
+    "loop_wiki/loopx-resource-gc/**",
+    "docs/git/AUTOMATED_ADMISSION.md"
+  ],
+  "implementation_subjects": [
+    "loop_wiki/inception-ingress-effects/effect_contract.py",
+    "loop_wiki/inception-ingress-effects/test_effect_contract.py",
+    "loop_wiki/inception-ingress-effects/reconciliation_worker.py",
+    "loop_wiki/inception-ingress-effects/test_reconciliation_matrix.py",
+    "loop_wiki/inception-ingress-effects/test_restart_reconciliation.py"
+  ],
+  "writable_paths": [
+    "loop_wiki/inception-ingress-effects/**",
+    ".arena/modules/inception-ingress-effects/**",
+    "data/inception-ingress-effects/**",
+    ".github/workflows/inception-a6-ingress-effects.yml"
+  ],
+  "read_only_paths": [
+    "loop_wiki/loopx-ledger/**",
+    "loop_wiki/loopx-worker-gateway/**",
+    "loop_wiki/loopx-kernel/**",
+    "loop_wiki/loopx-resource-gc/**",
+    "loopctl/**",
+    "mcp/**",
+    ".arena/compositions/**",
+    ".arena/locks/**",
+    "docs/git/pdf-terminal-sequence.json",
+    "data/module-proof/**"
+  ],
+  "resource_leases": [
+    "sqlite-database:inception-inbox-fixture",
+    "effect-ledger:inception-test-double",
+    "provider-session:reversible-test-double-only"
+  ],
+  "required_evidence_lanes": [
+    "DETERMINISTIC_CONTRACT",
+    "PUBLIC_PROCESS_RESTART",
+    "UNKNOWN_EFFECT_RECONCILIATION",
+    "REMOTE_READBACK_TEST_DOUBLE",
+    "TERMINAL_SQLITE_RESIDUE_READBACK",
+    "REAL_EXTERNAL_EFFECT_SEPARATE",
+    "COMPENSATION_SEPARATE"
+  ],
+  "positive_controls": [
+    "authenticated event is persisted before task admission",
+    "duplicate delivery creates one admitted event and one effect identity",
+    "timeout after possible mutation commits UNKNOWN_EFFECT before abrupt process termination",
+    "fresh process readback preserves UNKNOWN_EFFECT and blind retry remains forbidden",
+    "RESERVED ATTEMPTED and UNKNOWN_EFFECT each survive close and reopen with correct retry policy",
+    "stale remote version cannot clear UNKNOWN_EFFECT",
+    "invalid readback digest cannot clear UNKNOWN_EFFECT",
+    "exact expected remote version and digest are required before COMMITTED",
+    "COMMITTED state and event idempotency persist across a second reopen",
+    "terminal SQLite WAL and SHM residue is absent after all handles close",
+    "fixture directory is removed after the abrupt reconciliation matrix"
+  ],
+  "mutation_controls": [
+    "missing or invalid signature",
+    "replay outside allowed window",
+    "HTTP acknowledgement represented as durable admission",
+    "queue delivery represented as effect success",
+    "stale expected remote version",
+    "invalid readback digest",
+    "timeout after possible external mutation",
+    "blind retry while effect state is unknown",
+    "event or effect identity collision after restart",
+    "API and browser receipt substitution",
+    "missing compensation or Human escalation promoted to success",
+    "credential value or secret-bearing receipt",
+    "dirty process path port container queue database WAL SHM or artifact residue"
+  ],
+  "cleanup_contract": {
+    "required": true,
+    "inventory": ["path", "process", "port", "container", "queue", "database", "wal", "shm", "artifact"],
+    "persistent_external_effects": false,
+    "rollback_subject": "6bf8f7966c02b49294e22b329a6fce68fa50a815"
+  },
+  "forbidden_actions": [
+    "use production credentials",
+    "perform real external writes",
+    "claim the local readback test double is a provider receipt",
+    "claim compensation has executed when only reconciliation is tested",
+    "modify shared queue or release state",
+    "expose generic shell or browser authority",
+    "close issues",
+    "merge",
+    "release",
+    "rollback"
+  ],
+  "claims_not_proven": [
+    "No real webhook, provider API, browser or external write has executed.",
+    "The abrupt-process SQLite fixture is public restart evidence, not a production queue or remote effect ledger.",
+    "No real external-effect reconciliation, compensation or Human escalation receipt exists.",
+    "No production credentials, Human admission, merge, release or rollback has occurred."
+  ],
+  "next_transition": "RUN_REVERSIBLE_COMPENSATION_FIXTURE_THEN_PROVIDER_ADAPTER_CANARY"
+}
