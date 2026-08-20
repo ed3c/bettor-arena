@@ -1,0 +1,38 @@
+name: Dual-Agent effect complete matrix
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-matrix.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-matrix.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  effect-matrix:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile complete effect candidate
+        run: python3 -m py_compile loop_wiki/dual-agent-effect-ledger/effect_contract.py loop_wiki/dual-agent-effect-ledger/effect_reducer.py loop_wiki/dual-agent-effect-ledger/effect_policy_gate.py loop_wiki/dual-agent-effect-ledger/effect_provider_adapter.py loop_wiki/dual-agent-effect-ledger/effect_compensation.py loop_wiki/dual-agent-effect-ledger/test_effect_matrix.py
+      - name: Validate convergence preflight
+        run: python3 -m json.tool loop_wiki/dual-agent-effect-ledger/effect-matrix-preflight.json >/dev/null
+      - name: Re-run effect contract controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_contract.py
+      - name: Re-run effect reducer controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_reducer.py
+      - name: Re-run effect policy controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_policy_gate.py
+      - name: Re-run materialized provider controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_provider_adapter.py
+      - name: Re-run materialized compensation controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_compensation.py
+      - name: Run complete effect denominator and planted controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_matrix.py
