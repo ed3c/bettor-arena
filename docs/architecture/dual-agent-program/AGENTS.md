@@ -44,7 +44,7 @@ runtime-env
   runtime wire contracts, transport and identity bindings
 
 bettor-arena workflow
-  durable workflow proposals and task orchestration
+  deterministic workflow proposals and task orchestration
 
 bettor-arena effect ledger
   canonical external-effect admission and reconciliation
@@ -71,8 +71,9 @@ NOT_STARTED
 DRAFT_CANDIDATE
 DETERMINISTIC_PASS
 MERGE_REVIEW_REQUIRED
-MERGED
+MERGED_DETERMINISTIC_SUBTREE
 SUPERSEDED
+ABSORBED_BY_CONVERGENCE
 BLOCKED_RESTACK_REQUIRED
 NOT_EXERCISED
 HUMAN_REQUIRED
@@ -81,7 +82,7 @@ RELEASED
 ROLLED_BACK
 ```
 
-Do not convert `DRAFT_CANDIDATE` or `DETERMINISTIC_PASS` into `MERGED`. Do not convert deterministic or package-presence evidence into live evidence.
+Do not convert `DRAFT_CANDIDATE` or `DETERMINISTIC_PASS` into `MERGED_DETERMINISTIC_SUBTREE` without exact target-branch readback. Do not convert deterministic or package-presence evidence into live evidence.
 
 ## Program State Machine
 
@@ -97,6 +98,17 @@ SOURCE_PROPOSAL_BOUND
 → PHYSICAL_CANARY_EXECUTED
 → HUMAN_ADMITTED
 → RELEASED | ROLLED_BACK
+```
+
+Current deterministic admission has reached:
+
+```text
+runtime contracts / transport / identity       MERGED_DETERMINISTIC_SUBTREE
+workflow / effect                               MERGED_DETERMINISTIC_SUBTREE
+independent technical verification              MERGED_DETERMINISTIC_SUBTREE
+route / browser / gVisor                        MERGE_REVIEW_REQUIRED
+physical local→cloud→local                      NOT_EXERCISED
+Human release                                   NOT_PERFORMED
 ```
 
 Each transition requires its own exact subject and evidence owner. A later-stage PASS cannot backfill an earlier missing subject.
@@ -134,28 +146,68 @@ Close an implementation issue as `completed` only when its acceptance bytes are 
 
 Historical PRs may close as `superseded`; retain their failed heads/runs in documentation or comments.
 
-## Evidence non-substitution
+## Evidence non-substitution laws
 
 ```text
-mergeable                     != merged
-CI green                      != live runtime
-ACK                           != task success
-workflow complete             != effect commit
-provider observation          != user result
-API                           != browser
-local sandbox                 != gVisor isolation
-hash declaration              != byte readback
-technical verifier agreement  != semantic support/refutation
-fixture Human record          != Human decision
+mergeable                       != merged
+CI green                        != live runtime
+ACK                             != task success
+workflow complete               != effect commit
+provider observation            != user result
+API                             != browser
+local sandbox                   != gVisor isolation
+hash declaration                != byte readback
+technical verifier agreement    != semantic support/refutation
+fixture Human record            != Human decision
+merged deterministic subtree    != physical product loop
 ```
 
-## Current integrated truth-plane result
+## Current merged deterministic planes
 
-The independent `truth-verify-loop` deterministic subtree is admitted to main through PRs #29, #39, #44 and #45. Its technical result remains `UNVERIFIABLE` until the existing semantic plane independently closes the exact claim. Parent `truth-verify-loop#22` remains open for real physical evidence.
+### Runtime
+
+```text
+ed3c/runtime-env main
+baa4ce25d32a9fb4383ea8bc3530f9fd80be9ae7
+tree 117901dbd77cc93993ddc388682b7ab26a00d544
+```
+
+Contract, local durable transport semantics, NATS adapter contract, identity/policy semantics, README/AGENTS/Stack and Local Handoff are admitted. Physical transport #73 and live identity #83 remain open through parents #58/#59.
+
+### Workflow and Effect
+
+```text
+ed3c/bettor-arena main
+74d1e75c61589dcd163c7412e1345f726781ffb4
+tree 0de94032a3227ad04dde52f138041294ef9cb810
+```
+
+Workflow contract/reducer/operational siblings/matrix/docs and Effect contract/reducer/policy/provider-readback/compensation/matrix/docs are admitted. Parent #184/#185 remain open for live engine/effect evidence; #223 remains the reversible live-effect frontier.
+
+### Independent verification
+
+The `truth-verify-loop` deterministic subtree is admitted through PRs #29, #39, #44 and #45. Its technical result remains `UNVERIFIABLE` until the existing semantic plane independently closes the exact claim. Parent `truth-verify-loop#22` remains open for real physical evidence.
 
 ## Current merge-review frontier
 
-The runtime, workflow/effect, route/browser and gVisor deterministic PR families remain candidate stacks. Treat their historical green checks as preparation evidence. Before merge, restack or retarget each minimal convergence path onto current main and rerun exact-head checks.
+Only the Agent Shield deterministic families remain in current-main merge review:
+
+```text
+route
+#162 → #166 → #167
+absorb #163/#164/#165
+
+gVisor
+#174 → #177 → #178
+absorb #175/#176
+
+shared non-promoting candidate
+#180
+```
+
+Current Agent Shield main is `30e12cc917503b56b002aa7351428811f20fea8e` / tree `6f465f936515d81ed51c5b80595de530593f25fc`.
+
+Historical green checks are preparation evidence only. Restack or retarget each minimal convergence path to current main, rerun exact-head checks, then close absorbed leaves after admission.
 
 Do not merge live placeholder Issues or create ceremonial live branches for:
 
@@ -164,6 +216,7 @@ Do not merge live placeholder Issues or create ceremonial live branches for:
 - live API/browser route;
 - real runsc/gVisor isolation;
 - external effect/readback;
+- live durable-workflow engine;
 - physical local→cloud→local canary.
 
 ## Shadow stop conditions
@@ -179,7 +232,7 @@ Stop and hand off when the next action requires:
 - Human semantic adjudication;
 - production release or rollback.
 
-Use `local-handoff-queue.md` and update the owning Issue with exact input subjects, commands, expected receipts, failure cases and cleanup criteria.
+Use `local-handoff-queue.md` and update the owning Issue with exact input subjects, commands, expected receipts, failure cases and cleanup criteria. Do not self-approve.
 
 ## Definition of done for this directory
 
