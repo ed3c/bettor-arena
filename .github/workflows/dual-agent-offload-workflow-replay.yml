@@ -1,0 +1,28 @@
+name: Dual-Agent offload workflow replay
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow-replay.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow-replay.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile reducer and replay tests
+        run: python3 -m py_compile loop_wiki/dual-agent-offload-workflow/workflow_reducer.py loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Re-run parent contract controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py
+      - name: Run deterministic exact-history replay controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py

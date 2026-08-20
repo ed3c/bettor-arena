@@ -1,0 +1,28 @@
+name: Dual-Agent offload workflow contract
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile contract
+        run: python3 -m py_compile loop_wiki/dual-agent-offload-workflow/workflow_contract.py loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py
+      - name: Validate preflight JSON
+        run: python3 -m json.tool loop_wiki/dual-agent-offload-workflow/preflight.json >/dev/null
+      - name: Run deterministic workflow contract controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py
