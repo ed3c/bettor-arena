@@ -1,0 +1,30 @@
+name: Dual-Agent effect contract
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  effect-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile effect contract and controls
+        run: python3 -m py_compile loop_wiki/dual-agent-effect-ledger/effect_contract.py loop_wiki/dual-agent-effect-ledger/test_effect_contract.py
+      - name: Validate exact preflight
+        run: python3 -m json.tool loop_wiki/dual-agent-effect-ledger/preflight.json >/dev/null
+      - name: Re-run consumed workflow reducer controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Run deterministic effect authority/readback controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_contract.py
