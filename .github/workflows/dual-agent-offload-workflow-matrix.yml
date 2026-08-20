@@ -1,0 +1,45 @@
+name: Dual-Agent workflow complete matrix
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow-matrix.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow-matrix.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-matrix:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile exact workflow convergence subject
+        run: >-
+          python3 -m py_compile
+          loop_wiki/dual-agent-offload-workflow/workflow_contract.py
+          loop_wiki/dual-agent-offload-workflow/workflow_reducer.py
+          loop_wiki/dual-agent-offload-workflow/workflow_retry_restart.py
+          loop_wiki/dual-agent-offload-workflow/workflow_human_wait.py
+          loop_wiki/dual-agent-offload-workflow/workflow_compensation.py
+          loop_wiki/dual-agent-offload-workflow/test_workflow_matrix.py
+      - name: Validate convergence preflight
+        run: python3 -m json.tool loop_wiki/dual-agent-offload-workflow/matrix-preflight.json >/dev/null
+      - name: Re-run parent workflow contract
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py
+      - name: Re-run parent exact-history replay
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Re-run DA-WF-R materialized sibling
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_retry_restart.py
+      - name: Re-run DA-WF-H materialized sibling
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_human_wait.py
+      - name: Re-run DA-WF-COMP materialized sibling
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_compensation.py
+      - name: Run complete convergence denominator and planted controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_matrix.py
