@@ -1,0 +1,107 @@
+{
+  "schema": "bettor-arena/dual-agent-effect-ledger/stack-index/v1",
+  "canonical_task_writer": "loopx-ledger",
+  "canonical_effect_writer": "dual-agent-effect-ledger",
+  "evidence_ceiling": "COMPLETE_DETERMINISTIC_EFFECT_MATRIX_ONLY",
+  "workflow_parent": {
+    "pr": 202,
+    "commit": "7821e81f15d64ff3119d9bdb9278fc725e5aa398",
+    "tree": "60d486041b36608d5d03e33b2eb8944c9899b50b"
+  },
+  "effect_stack": [
+    {
+      "atom": "DA-EF-C",
+      "issue": 208,
+      "pr": 216,
+      "head": "f9b64994979042fc3726c524944a61da4f9cb8b5",
+      "tree": "e0f0ff4bf0b55627b420ace027043c3b7fee5d1d",
+      "ci_run": 32269722930,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC"
+    },
+    {
+      "atom": "DA-EF-K",
+      "issue": 217,
+      "pr": 224,
+      "head": "6b99815d2b3fb76436c05641b32d1e7be1a36ec4",
+      "tree": "ac7dba91541dfb8c1bcbc1d4f9bc7d2726735eac",
+      "ci_run": 32274232055,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC",
+      "retained_failure": {
+        "head": "bc8131d76e2ef0bf8ecc6c948ad5844439556396",
+        "reason": "error-precedence defect: unresolved-effect commit was classified as generic READBACK_REQUIRED"
+      }
+    },
+    {
+      "atom": "DA-EF-P",
+      "issue": 218,
+      "pr": 225,
+      "head": "ba9ebfe5f4efa01d040ec3b51f93b32045899b23",
+      "tree": "a128ea330647d9a3c83f7852eb7174bcdbbd6511",
+      "ci_run": 32274465651,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC"
+    },
+    {
+      "atom": "DA-EF-A",
+      "issue": 219,
+      "pr": 226,
+      "head": "ee7b99080e71c834c979ba56fb2d9a3f6c7c27db",
+      "tree": "67ed1df8a447e1e4ac958a819203ecf5d4ce8020",
+      "ci_run": 32274717005,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC"
+    },
+    {
+      "atom": "DA-EF-COMP",
+      "issue": 220,
+      "pr": 227,
+      "head": "50f0e5ca7a9a2860d7429f00f3a7b3189910ba08",
+      "tree": "40ae3458df32137fdb1b05e42e7985f5607b5715",
+      "ci_run": 32274943051,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC"
+    },
+    {
+      "atom": "DA-EF-E",
+      "issue": 221,
+      "pr": 228,
+      "head": "5ba49cc935c059a8fd96e78773c3df9a2ab9be4c",
+      "tree": "6eb20d4289d7296be7348c70aa8618e2d8a9aecc",
+      "ci_run": 32275372163,
+      "ci_state": "SUCCESS",
+      "state": "CLOSED_DETERMINISTIC",
+      "denominator_cases": 16
+    }
+  ],
+  "substrate_reference": {
+    "pr": 196,
+    "commit": "c2613432736c65756ed13d871feb2df486c69118",
+    "tree": "53680d47048f88b9402c6320355121b7ec2f7244",
+    "reuse_mode": "REFERENCE_SUBSTRATE_ONLY",
+    "writer_authority": "NONE"
+  },
+  "docs": {
+    "issue": 222,
+    "branch": "docs/222-dual-agent-effect-convergence",
+    "state": "CANDIDATE"
+  },
+  "live_frontier": {
+    "issue": 223,
+    "state": "NOT_EXERCISED",
+    "admission": "HUMAN_TRUSTED_AUTHORITY_REQUIRED"
+  },
+  "external_states": {
+    "credential_resolution": "NOT_EXERCISED",
+    "provider_io": "NOT_EXERCISED",
+    "target_readback": "NOT_EXERCISED",
+    "observable_external_effect": "NOT_EXERCISED",
+    "live_human": "NOT_EXERCISED",
+    "live_policy": "NOT_EXERCISED",
+    "user_outcome": "NOT_EXERCISED",
+    "merge": "NOT_PERFORMED",
+    "release": "NOT_PERFORMED",
+    "rollback_operation": "NOT_EXERCISED"
+  }
+}

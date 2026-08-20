@@ -1,0 +1,66 @@
+{
+  "schema": "bettor-arena/dual-agent-effect-ledger/matrix-preflight/v1",
+  "base_parent": {
+    "pr": 225,
+    "commit": "ba9ebfe5f4efa01d040ec3b51f93b32045899b23",
+    "tree": "a128ea330647d9a3c83f7852eb7174bcdbbd6511"
+  },
+  "effect_contract": {
+    "pr": 216,
+    "commit": "f9b64994979042fc3726c524944a61da4f9cb8b5",
+    "tree": "e0f0ff4bf0b55627b420ace027043c3b7fee5d1d"
+  },
+  "effect_reducer": {
+    "pr": 224,
+    "commit": "6b99815d2b3fb76436c05641b32d1e7be1a36ec4",
+    "tree": "ac7dba91541dfb8c1bcbc1d4f9bc7d2726735eac"
+  },
+  "siblings": [
+    {
+      "atom": "DA-EF-A",
+      "pr": 226,
+      "commit": "ee7b99080e71c834c979ba56fb2d9a3f6c7c27db",
+      "tree": "67ed1df8a447e1e4ac958a819203ecf5d4ce8020",
+      "files": {
+        "loop_wiki/dual-agent-effect-ledger/effect_provider_adapter.py": "b732100ee3c5233c4d122bbb4d98024068540166",
+        "loop_wiki/dual-agent-effect-ledger/test_effect_provider_adapter.py": "d9dc675a9a454b64aef5d394acad7dc9284a67d9"
+      }
+    },
+    {
+      "atom": "DA-EF-COMP",
+      "pr": 227,
+      "commit": "50f0e5ca7a9a2860d7429f00f3a7b3189910ba08",
+      "tree": "40ae3458df32137fdb1b05e42e7985f5607b5715",
+      "files": {
+        "loop_wiki/dual-agent-effect-ledger/effect_compensation.py": "e8e6c12cd6fd472a031633815522b97acf76f32f",
+        "loop_wiki/dual-agent-effect-ledger/test_effect_compensation.py": "a50cebb6791faeaece006c709797582b2ba49743"
+      }
+    }
+  ],
+  "required_cases": [
+    "exact_duplicate",
+    "idempotency_collision",
+    "cross_tenant_collision",
+    "policy_refusal",
+    "approval_required",
+    "precondition_stale",
+    "provider_failure",
+    "timeout_connection_unknown",
+    "result_unknown",
+    "reconciliation",
+    "verified_readback_commit",
+    "readback_disagreement",
+    "compensation_required",
+    "compensated",
+    "compensation_failure",
+    "cleanup_residue"
+  ],
+  "external_states": {
+    "provider_io": "NOT_EXERCISED",
+    "target_readback": "NOT_EXERCISED",
+    "credential_resolution": "NOT_EXERCISED",
+    "live_human": "NOT_EXERCISED",
+    "user_outcome": "NOT_EXERCISED",
+    "release": "NOT_EXERCISED"
+  }
+}

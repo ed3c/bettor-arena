@@ -1,0 +1,28 @@
+name: Dual-Agent effect reducer
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-reducer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/**'
+      - '.github/workflows/dual-agent-effect-reducer.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  effect-reducer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile effect contract reducer and controls
+        run: python3 -m py_compile loop_wiki/dual-agent-effect-ledger/effect_contract.py loop_wiki/dual-agent-effect-ledger/effect_reducer.py loop_wiki/dual-agent-effect-ledger/test_effect_contract.py loop_wiki/dual-agent-effect-ledger/test_effect_reducer.py
+      - name: Re-run parent effect contract controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_contract.py
+      - name: Run deterministic effect reducer controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_reducer.py
