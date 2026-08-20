@@ -1,0 +1,36 @@
+name: Dual-Agent effect docs convergence
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/README.md'
+      - 'loop_wiki/dual-agent-effect-ledger/AGENTS.md'
+      - 'loop_wiki/dual-agent-effect-ledger/stack-index.json'
+      - 'loop_wiki/dual-agent-effect-ledger/test_effect_docs.py'
+      - '.github/workflows/dual-agent-effect-docs.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-effect-ledger/README.md'
+      - 'loop_wiki/dual-agent-effect-ledger/AGENTS.md'
+      - 'loop_wiki/dual-agent-effect-ledger/stack-index.json'
+      - 'loop_wiki/dual-agent-effect-ledger/test_effect_docs.py'
+      - '.github/workflows/dual-agent-effect-docs.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  effect-docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile docs verifier
+        run: python3 -m py_compile loop_wiki/dual-agent-effect-ledger/test_effect_docs.py
+      - name: Validate Stack index JSON
+        run: python3 -m json.tool loop_wiki/dual-agent-effect-ledger/stack-index.json >/dev/null
+      - name: Re-run complete deterministic Effect matrix
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_matrix.py
+      - name: Run Agent/read-route traceability controls
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_docs.py

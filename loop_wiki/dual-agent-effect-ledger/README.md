@@ -1,68 +1,65 @@
-# Dual-Agent Effect Ledger — DA-EF-C
+# Dual-Agent Effect Ledger
 
-Status: deterministic effect-contract/interface candidate for issue #208. This directory does **not** perform an external write and is not selected into release composition.
+Status: deterministic Effect Plane candidate under #185. The current subtree closes the contract/reducer/admission/provider-boundary/compensation **deterministic** denominator through PR #228. It does **not** prove a real external effect, live target readback, Human admission, merge, release, or production operation.
+
+## Read route
+
+```text
+README.md
+→ AGENTS.md
+→ stack-index.json
+→ effect_contract.py          DA-EF-C
+→ effect_reducer.py           DA-EF-K
+→ effect_policy_gate.py       DA-EF-P
+→ effect_provider_adapter.py  DA-EF-A
+→ effect_compensation.py      DA-EF-COMP
+→ effect-matrix-preflight.json / test_effect_matrix.py  DA-EF-E
+```
 
 ## Authority
 
 ```text
-Dual-Agent workflow / PR #202
-  emits EFFECT_ADMISSION_REQUEST only
+runtime-env effect-intent/v1
         ↓
-this contract
-  validates effect identity / policy / precondition / readback law
+Bettor workflow / PR #202
+EFFECT_ADMISSION_REQUEST only
         ↓
+Dual-Agent Effect Plane
 canonical effect writer = dual-agent-effect-ledger
         ↓
-provider adapter / target readback
-  NOT_EXERCISED in DA-EF-C
+provider/readback observation boundary
+        ↓
+commit proposal
+        ↓
+canonical effect writer alone may accept commit
 ```
 
-`loopx-ledger` remains the sole canonical **task** writer. `dual-agent-effect-ledger` is the declared canonical **effect** writer. A Worker, provider, model, browser/API adapter, transport ACK, workflow state, fixture, or PR #196 SQLite substrate cannot self-commit either authority.
+`loopx-ledger` remains the sole canonical **task** writer. `dual-agent-effect-ledger` is the sole canonical **effect** writer. Worker, model, provider, browser/API adapter, transport ACK, workflow state, provider-native idempotency, fixture, or the PR #196 SQLite substrate cannot self-commit either authority.
 
-## Exact inputs
+PR #196 remains an immutable reference substrate only:
 
 ```text
-workflow reducer / PR #202
-commit 7821e81f15d64ff3119d9bdb9278fc725e5aa398
-tree   60d486041b36608d5d03e33b2eb8944c9899b50b
-blob   12f1048d5abf4fbfd8970815bc46bfdc797cb3d8
-
-runtime-env / PR #69
-commit 1fd6a65a2e628ba1b31e89800297e7202dadf126
-tree   cc287010c96391e0a718141c2f4afb92bac3db06
-contract-set e6671977dbf0a378474f924a142a82843bc0e3429f4546ffb0145af73f7827fe
-effect-intent blob 7a50a125e77dc4daa9c4721fce0fa2fc9b37fc3b
-
-PR #196 durability/readback substrate reference
 commit c2613432736c65756ed13d871feb2df486c69118
 tree   53680d47048f88b9402c6320355121b7ec2f7244
-effect_contract.py blob fedd4e6a7ee18438c122995be96694c8d26cf242
-reconciliation_worker.py blob 7884038ee68a3eee08324b41c338c6001b8518a7
-reuse mode REFERENCE_SUBSTRATE_ONLY
-writer authority NONE
+reuse  REFERENCE_SUBSTRATE_ONLY
+writer NONE
 ```
 
-The PR #196 SQLite fixture demonstrates useful durable `RESERVED → ATTEMPTED → UNKNOWN_EFFECT → readback → COMMITTED` mechanics, but its own contract explicitly says it is not a production queue or remote-effect authority. DA-EF-C therefore binds it as exact reference/substrate evidence only; this directory does not import it.
+Its durable `RESERVED → ATTEMPTED → UNKNOWN_EFFECT → readback → COMMITTED` fixture is reusable evidence, not a second canonical ledger.
 
-## Effect identity
+## Directory → State Machine → owner
 
-One effect admission request binds at least:
+| Path | State-machine responsibility | Output authority |
+|---|---|---|
+| `effect_contract.py` | identity/state vocabulary and transition law | contract only |
+| `effect_reducer.py` | ordered reservation/attempt/readback/commit replay | effect proposals/receipts only |
+| `effect_policy_gate.py` | policy + Human + precondition admission | execution authorization packet |
+| `effect_provider_adapter.py` | provider attempt/result/readback observations | observation + commit proposal only |
+| `effect_compensation.py` | linked compensation effect identity/lineage | compensation proposal only |
+| `test_effect_matrix.py` | complete deterministic denominator + disagreement controls | verification receipt only |
+| `stack-index.json` | exact PR/commit/tree/CI routing | traceability only |
 
-```text
-tenant + project + logical operation
-effect_id + idempotency_key + normalized request digest
-exact source + workflow + task + attempt identity
-exact provider subject + resource + action
-policy digest + approval receipt
-precondition digest + expected remote version
-expected evidence class = TARGET_READBACK
-compensation contract
-runtime contract-set digest
-```
-
-An exact duplicate is refused without re-execution. The same idempotency/effect identity with different request bytes is an identity collision. Cross-tenant reuse is refused.
-
-## State Machine
+## Effect State Machine
 
 ```text
 EFFECT_PROPOSED
@@ -92,32 +89,163 @@ COMPENSATION_REQUIRED
 → COMPENSATED | COMPENSATION_FAILED
 ```
 
-`RESULT_UNKNOWN` cannot become `EFFECT_COMMITTED` without reconciliation and target readback. Provider-native idempotency is useful transport/provider behavior but is not canonical ledger authority.
+Hard laws:
+
+```text
+RESULT_UNKNOWN != EFFECT_COMMITTED
+provider success != EFFECT_COMMITTED
+transport ACK != EFFECT_COMMITTED
+workflow completed != EFFECT_COMMITTED
+provider idempotency != canonical authority
+fixture readback != live readback
+```
+
+A commit requires the canonical effect identity, complete attempt denominator, accepted policy/Human/precondition subject, and exact target readback/version/digest agreement.
+
+## Process DAG
+
+```text
+runtime-env PR #69
+wire effect-intent
+        ↓
+PR #202 DA-WF-K
+workflow effect-admission request
+        ↓
+PR #216 DA-EF-C
+contract / authority root
+        ↓
+PR #224 DA-EF-K
+reservation + commit/reconciliation reducer
+        ↓
+PR #225 DA-EF-P
+policy / Human / precondition gate
+        ├─────────────────┐
+        ▼                 ▼
+PR #226 DA-EF-A      PR #227 DA-EF-COMP
+provider/readback     linked compensation
+        └─────────┬───────┘
+                  ▼
+PR #228 DA-EF-E
+complete deterministic matrix
+                  ↓
+this docs convergence
+                  ↓
+#223 DA-EF-LIVE
+real reversible provider effect + readback
+                  ↓
+#186 physical local→cloud→local canary
+                  ↓
+truth-verify-loop #22
+                  ↓
+#68 Human Admit / release / rollback
+```
+
+Actual Git ancestry follows byte dependency. Cross-repository dependencies are exact commit/tree/schema/digest edges, not Git parentage. PR #226 and PR #227 are sibling children of PR #225; PR #228 is based on PR #225 and byte-preserves their implementation/test blobs as convergence inputs.
 
 ## Data flow
 
 ```text
 runtime effect-intent
 + workflow EFFECT_ADMISSION_REQUEST
-+ exact source/task/attempt/provider subjects
-+ policy/approval/precondition bindings
++ tenant/project/effect/idempotency/request identity
++ exact source/workflow/task/attempt/provider subjects
         ↓
-validate identity and authority
+DA-EF-C contract validation
         ↓
-reserve one canonical logical effect
+DA-EF-K canonical reservation + ordered attempt denominator
         ↓
-provider attempt (outside DA-EF-C)
-        ├─ known failure → ATTEMPT_FAILED
-        ├─ unknown/timeout → RESULT_UNKNOWN → readback/reconcile
-        └─ observation → target readback
+DA-EF-P policy/Human/precondition authorization
+        ↓
+DA-EF-A provider attempt observation
+        ├─ FAILURE → ATTEMPT_FAILED
+        ├─ TIMEOUT/CONNECTION_LOST → RESULT_UNKNOWN
+        └─ SUCCESS → readback still required
                               ↓
-                    EFFECT_COMMITTED only after agreement
+                     exact target readback
+                              ↓
+                    EFFECT_COMMIT_PROPOSAL
+                              ↓
+              canonical effect writer decision
+
+reversible committed parent
+        ↓
+DA-EF-COMP linked child effect
+        ↓
+its own admission + attempt + readback
+        ↓
+COMPENSATED | COMPENSATION_FAILED
 ```
+
+## Deterministic denominator
+
+PR #228 jointly exercises:
+
+```text
+exact duplicate
+idempotency collision
+cross-tenant collision
+policy refusal
+approval required
+precondition stale
+provider failure
+timeout/connection unknown
+RESULT_UNKNOWN
+reconciliation
+verified readback commit proposal
+readback disagreement
+compensation required
+compensated
+compensation failure
+cleanup residue
+```
+
+Its matrix also refuses sibling blob drift, incomplete denominator, evidence laundering, provider-native idempotency as authority, provider self-commit, fixture-as-live promotion, mutable provider subjects, raw credentials, unresolved effect hidden by task completion, unresolved effect commit, double commit, and compensation audit deletion.
+
+## Molecular Stack index
+
+```text
+PR #216  DA-EF-C
+└─ PR #224  DA-EF-K
+   └─ PR #225  DA-EF-P
+      ├─ PR #226  DA-EF-A
+      ├─ PR #227  DA-EF-COMP
+      └─ PR #228  DA-EF-E convergence
+           └─ #222 DA-EF-D docs convergence
+```
+
+See `stack-index.json` for exact heads/trees/run IDs. `skipped` workflows never count as PASS.
 
 ## Evidence boundary
 
-This atom can prove deterministic contract shape, identity collision refusal, authority separation, state-transition law, and readback-gated commit semantics for fixtures.
+Closed deterministically:
 
-It does **not** prove a real provider write, provider-native idempotency behavior, target readback, exactly-once observable effect, compensation execution, user outcome, Human approval, merge, release, or rollback.
+```text
+identity/state contract
+single effect-writer law
+reservation/idempotency semantics
+ordered attempt denominator
+RESULT_UNKNOWN reconciliation law
+policy/Human/precondition contract
+provider/readback adapter contract
+linked compensation contract
+complete deterministic mutation matrix
+```
 
-Evidence ceiling: `DETERMINISTIC_EFFECT_CONTRACT_INTERFACE_ONLY`.
+Still outside this evidence ceiling:
+
+```text
+real credential resolution
+real provider write
+live target readback
+provider-native idempotency behavior
+live Human approval
+live policy engine
+exactly-once observable external effect
+physical NATS / identity runtime
+local→cloud→local user outcome
+merge / release / rollback / production operation
+```
+
+Current evidence ceiling: `COMPLETE_DETERMINISTIC_EFFECT_MATRIX_ONLY`.
+
+The next evidence transition is #223. It requires an explicitly safe reversible target plus trusted/Human authorization for credentials, provider enrollment, execution, readback, optional compensation, and cleanup. A GitHub fixture or Actions job cannot satisfy that live lane.
