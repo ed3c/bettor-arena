@@ -1,0 +1,40 @@
+name: Dual-Agent offload workflow docs convergence
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/README.md'
+      - 'loop_wiki/dual-agent-offload-workflow/AGENTS.md'
+      - 'loop_wiki/dual-agent-offload-workflow/stack-index.json'
+      - 'loop_wiki/dual-agent-offload-workflow/test_workflow_docs.py'
+      - '.github/workflows/dual-agent-offload-workflow-docs.yml'
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+  push:
+    branches: [main]
+    paths:
+      - 'loop_wiki/dual-agent-offload-workflow/**'
+      - '.github/workflows/dual-agent-offload-workflow-docs.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Stack index JSON
+        run: python3 -m json.tool loop_wiki/dual-agent-offload-workflow/stack-index.json >/dev/null
+      - name: Compile workflow docs verifier
+        run: python3 -m py_compile loop_wiki/dual-agent-offload-workflow/test_workflow_docs.py
+      - name: Re-run workflow contract
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_contract.py
+      - name: Re-run workflow replay
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_replay.py
+      - name: Re-run complete workflow matrix
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_matrix.py
+      - name: Re-run integrated Effect matrix
+        run: python3 loop_wiki/dual-agent-effect-ledger/test_effect_matrix.py
+      - name: Run Agent read-route and handoff controls
+        run: python3 loop_wiki/dual-agent-offload-workflow/test_workflow_docs.py

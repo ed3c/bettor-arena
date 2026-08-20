@@ -1,0 +1,151 @@
+{
+  "schema": "bettor.dual-agent-workflow-stack-index.v1",
+  "parent_issue": 184,
+  "docs_issue": 207,
+  "docs_pr": 233,
+  "docs_subject_state": "CANDIDATE_SUBJECT_PENDING",
+  "runtime_contract": {
+    "repository": "ed3c/runtime-env",
+    "source_pr": 69,
+    "source_head": "1fd6a65a2e628ba1b31e89800297e7202dadf126",
+    "source_tree": "cc287010c96391e0a718141c2f4afb92bac3db06",
+    "contract_set": "e6671977dbf0a378474f924a142a82843bc0e3429f4546ffb0145af73f7827fe"
+  },
+  "current_candidate": {
+    "repository": "ed3c/bettor-arena",
+    "branch": "feat/200-dual-agent-workflow-replay",
+    "commit": "602134eb5f04b62776b7c1a787d6d8366e9f31af",
+    "tree": "bdfd5080e8c4b2b0a3e84e4fc2d59d4bfc73c8b3",
+    "state": "DETERMINISTIC_WORKFLOW_EFFECT_SUBTREE_CANDIDATE",
+    "runs": {
+      "workflow_contract": 32344035512,
+      "workflow_replay": 32344035413,
+      "workflow_matrix": 32344035463,
+      "effect_contract": 32344035425,
+      "effect_reducer": 32344035430,
+      "effect_policy": 32344035524,
+      "effect_matrix": 32344035489,
+      "effect_docs": 32344035415
+    }
+  },
+  "nodes": [
+    {
+      "atom": "DA-WF-C",
+      "issue": 199,
+      "pr": 201,
+      "head": "56cb74650bda20adfe84cc522977419158437f53",
+      "tree": "3b2f1a351296f87f6570a182b2d72b46be181bac",
+      "targeted_run": 32263925774,
+      "state": "DETERMINISTIC_PASS"
+    },
+    {
+      "atom": "DA-WF-K",
+      "issue": 200,
+      "pr": 202,
+      "head": "7821e81f15d64ff3119d9bdb9278fc725e5aa398",
+      "tree": "60d486041b36608d5d03e33b2eb8944c9899b50b",
+      "targeted_run": 32264598907,
+      "state": "DETERMINISTIC_PASS_ORIGINAL_REDUCER"
+    },
+    {
+      "atom": "DA-WF-R",
+      "issue": 203,
+      "pr": 209,
+      "head": "37376884bebc7403fab52dc0b2bff8ab5bb61060",
+      "tree": "19b0008b218c10385fc4e5d9a6556464b55f526c",
+      "targeted_run": 32265868475,
+      "state": "ABSORBED_BY_PR_232"
+    },
+    {
+      "atom": "DA-WF-H",
+      "issue": 204,
+      "pr": 210,
+      "head": "460d8419d579c7dba50800c790af2dce053fbb23",
+      "tree": "5ec3a7bda1c2bbd294943324ce01c55557b9fdba",
+      "targeted_run": 32266054386,
+      "state": "ABSORBED_BY_PR_232"
+    },
+    {
+      "atom": "DA-WF-COMP",
+      "issue": 205,
+      "pr": 211,
+      "head": "e425ec026c4792b94cf8b2214b4179260e2f1834",
+      "tree": "4a50ff3a58785eb50363304725641e8b3a0e003e",
+      "targeted_run": 32266218555,
+      "state": "ABSORBED_BY_PR_232"
+    },
+    {
+      "atom": "DA-WF-E",
+      "issue": 206,
+      "pr": 232,
+      "head": "bf99eacaa848683a89d327e4c7899a452f2bbd99",
+      "tree": "bdfd5080e8c4b2b0a3e84e4fc2d59d4bfc73c8b3",
+      "targeted_run": 32343897103,
+      "merge_into_parent": "602134eb5f04b62776b7c1a787d6d8366e9f31af",
+      "state": "COMPLETE_DETERMINISTIC_MATRIX_PASS"
+    }
+  ],
+  "effect_integration": {
+    "owner": "loop_wiki/dual-agent-effect-ledger",
+    "canonical_writer": "dual-agent-effect-ledger",
+    "workflow_interface": "EFFECT_ADMISSION_REQUEST",
+    "merge_into_workflow_parent": "0a4e9112c74dda55e5c3a325952a39eec18e2afc",
+    "state": "COMPLETE_DETERMINISTIC_EFFECT_PLANE_INTEGRATED",
+    "live_issue": 223,
+    "live_state": "NOT_EXERCISED"
+  },
+  "authority": {
+    "runtime_contract_owner": "ed3c/runtime-env",
+    "workflow_contract_owner": "loop_wiki/dual-agent-offload-workflow",
+    "workflow_canonical_write": "NONE",
+    "task_writer": "loop_wiki/loopx-ledger",
+    "effect_writer": "loop_wiki/dual-agent-effect-ledger",
+    "provider_owner": "ed3c/agent-shield-monorepo",
+    "verification_owner": "ed3c/truth-verify-loop",
+    "human_admission": "EXTERNAL",
+    "release": "EXTERNAL"
+  },
+  "merge_plan": {
+    "minimal_path": [233, 202, 201],
+    "absorbed_leaf_prs": [209, 210, 211, 215, 232],
+    "issues_ready_to_close_after_main": [199, 200, 203, 204, 205, 206, 207],
+    "parent_keep_open": [184, 185],
+    "live_keep_open": [223, 186, 68]
+  },
+  "retained_failures": [
+    {
+      "pr": 215,
+      "head": "1dd902f1269a47f9c1821fe10bf0a064a74d918f",
+      "finding": "BASE_ADVANCED_AFTER_EFFECT_PLANE_INTEGRATION",
+      "successor_pr": 232,
+      "resolution_head": "bf99eacaa848683a89d327e4c7899a452f2bbd99"
+    }
+  ],
+  "live_frontier": {
+    "durable_engine": "NOT_EXERCISED",
+    "physical_transport": "NOT_EXERCISED",
+    "live_identity": "NOT_EXERCISED",
+    "provider_execution": "NOT_EXERCISED",
+    "external_effect": "NOT_EXERCISED",
+    "live_human": "NOT_EXERCISED",
+    "user_outcome": "NOT_EXERCISED",
+    "physical_end_to_end": "NOT_EXERCISED",
+    "release": "NOT_PERFORMED"
+  },
+  "local_handoff": {
+    "id": "LH-WF-001",
+    "owner": "ed3c/bettor-arena#184",
+    "state": "HANDOFF_READY_NOT_EXERCISED",
+    "exact_base": {
+      "repository": "ed3c/bettor-arena",
+      "commit": "602134eb5f04b62776b7c1a787d6d8366e9f31af",
+      "tree": "bdfd5080e8c4b2b0a3e84e4fc2d59d4bfc73c8b3"
+    },
+    "idempotency": "one logical workflow/job identity; retain every activity and retry attempt",
+    "timeout": "deadline, timeout and cancellation remain typed observations/terminals",
+    "receipt": "ordered history, replay digest, activities, attempts, Human/effect disposition, cleanup and residue",
+    "rollback": "retain exact pre-admission code/namespace subject and disable disposable route without rewriting history",
+    "verifier": "ed3c/truth-verify-loop#22"
+  },
+  "evidence_ceiling": "COMPLETE_DETERMINISTIC_WORKFLOW_AND_EFFECT_SUBTREE_ONLY"
+}
