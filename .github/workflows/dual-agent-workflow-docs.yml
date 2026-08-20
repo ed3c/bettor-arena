@@ -1,0 +1,35 @@
+name: Dual-Agent workflow docs convergence
+
+on:
+  pull_request:
+    paths:
+      - "loop_wiki/dual-agent-offload-workflow/**"
+      - ".github/workflows/dual-agent-workflow-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.14"]
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate workflow Stack index
+        run: python -m json.tool loop_wiki/dual-agent-offload-workflow/stack-index.json >/dev/null
+      - name: Run merged workflow contract and replay matrix
+        run: python -m unittest discover -s loop_wiki/dual-agent-offload-workflow -p 'test_*.py'
+      - name: Run Agent/read-route controls
+        run: python loop_wiki/dual-agent-offload-workflow/docs_selftest.py
