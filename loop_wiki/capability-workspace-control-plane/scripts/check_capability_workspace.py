@@ -9,8 +9,7 @@ import importlib.util
 import json
 import subprocess
 import sys
-import urllib.error
-import urllib.request
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -73,25 +72,26 @@ def local_git_blob(path: Path) -> str:
     return process.stdout.strip()
 
 
-def fetch_bytes(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "bettor-capability-workspace-check/1"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return response.read()
+def run_git(args: list[str], cwd: Path) -> str:
+    process = subprocess.run(["git", *args], cwd=cwd, check=False, capture_output=True, text=True)
+    require(process.returncode == 0, f"git command failed: {' '.join(args)}: {process.stderr.strip()}")
+    return process.stdout.strip()
 
 
 def verify_remote(binding: dict[str, Any]) -> None:
     upstream = binding["upstream"]
     commit = upstream["commit"]
     repository = upstream["repository"]
-    owner, name = repository.split("/", 1)
-    commit_payload = json.loads(
-        fetch_bytes(f"https://api.github.com/repos/{owner}/{name}/git/commits/{commit}").decode("utf-8")
-    )
-    require(commit_payload["sha"] == commit, "remote KAW commit drift")
-    require(commit_payload["tree"]["sha"] == upstream["tree"], "remote KAW tree drift")
-    for path_key, blob_key in (("routerPath", "routerBlob"), ("contractsPath", "contractsBlob")):
-        raw = fetch_bytes(f"https://raw.githubusercontent.com/{repository}/{commit}/{upstream[path_key]}")
-        require(git_blob_sha(raw) == upstream[blob_key], f"remote KAW blob drift: {upstream[path_key]}")
+    with tempfile.TemporaryDirectory(prefix="bettor-kaw-binding-") as temporary:
+        checkout = Path(temporary) / "upstream.git"
+        checkout.mkdir()
+        run_git(["init", "--bare"], checkout)
+        run_git(["fetch", "--no-tags", "--depth=1", f"https://github.com/{repository}.git", commit], checkout)
+        require(run_git(["rev-parse", "FETCH_HEAD"], checkout) == commit, "remote KAW commit drift")
+        require(run_git(["rev-parse", "FETCH_HEAD^{tree}"], checkout) == upstream["tree"], "remote KAW tree drift")
+        for path_key, blob_key in (("routerPath", "routerBlob"), ("contractsPath", "contractsBlob")):
+            actual = run_git(["rev-parse", f"FETCH_HEAD:{upstream[path_key]}"], checkout)
+            require(actual == upstream[blob_key], f"remote KAW blob drift: {upstream[path_key]}")
 
 
 def verify_limits(limits: dict[str, Any]) -> None:
@@ -167,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         verify(args.remote)
-    except (CheckError, consumer.ContractError, OSError, subprocess.SubprocessError, urllib.error.URLError, json.JSONDecodeError, KeyError) as exc:
+    except (CheckError, consumer.ContractError, OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError) as exc:
         print(f"capability workspace control-plane check: FAIL: {exc}", file=sys.stderr)
         return 1
     print("capability workspace control-plane check: PASS")
