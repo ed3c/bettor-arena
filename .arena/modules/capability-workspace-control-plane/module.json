@@ -1,0 +1,88 @@
+{
+  "schema": "bettor-arena/module/v1",
+  "id": "capability-workspace-control-plane",
+  "interface_version": "1.0.0",
+  "summary": "Exact KAW route-proposal admission and bounded Bettor acknowledgement without Worker, Gate, LoopX, or domain authority widening.",
+  "roots": [
+    "loop_wiki/capability-workspace-control-plane"
+  ],
+  "provides": [
+    "bettor.capability-workspace.consumer/v1"
+  ],
+  "requires": [
+    "loopx.contracts/v1",
+    "loopx.worker-gateway/v1",
+    "arena.proof-kernel/v1"
+  ],
+  "conflicts": [],
+  "components": {
+    "contracts": {
+      "required": true,
+      "paths": ["loop_wiki/capability-workspace-control-plane/contracts"]
+    },
+    "runtime": {
+      "required": true,
+      "paths": ["loop_wiki/capability-workspace-control-plane/scripts"]
+    },
+    "proof": {
+      "required": true,
+      "paths": [
+        "loop_wiki/capability-workspace-control-plane/tests",
+        "loop_wiki/capability-workspace-control-plane/receipts"
+      ]
+    }
+  },
+  "loops": [
+    {
+      "id": "capability-workspace-route-admission",
+      "class": "aggregate",
+      "interface_version": "1.0.0",
+      "external_policy": "control-only",
+      "public_port": "python3 loop_wiki/capability-workspace-control-plane/scripts/capability_workspace.py"
+    }
+  ],
+  "proof": {
+    "verify": [
+      "python3",
+      "loop_wiki/capability-workspace-control-plane/scripts/check_capability_workspace.py"
+    ],
+    "selftest": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "loop_wiki/capability-workspace-control-plane/tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "control": [],
+    "mutation": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "loop_wiki/capability-workspace-control-plane/tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ]
+  },
+  "external_policy": {
+    "exposed": false,
+    "network": "public-read-only-checker",
+    "secrets": "none",
+    "mutation": "none"
+  },
+  "runtime": {
+    "profiles": [],
+    "tools": ["git", "python3"]
+  },
+  "skills": {
+    "required": [],
+    "optional": [],
+    "repo_owned": []
+  }
+}
