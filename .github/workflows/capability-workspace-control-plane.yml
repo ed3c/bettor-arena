@@ -1,0 +1,48 @@
+name: Capability Workspace Control Plane
+
+on:
+  pull_request:
+    paths:
+      - 'loop_wiki/capability-workspace-control-plane/**'
+      - '.arena/modules/capability-workspace-control-plane/**'
+      - '.github/workflows/capability-workspace-control-plane.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify exact KAW/Bettor binding and evidence ceiling
+        run: python3 loop_wiki/capability-workspace-control-plane/scripts/check_capability_workspace.py --remote
+      - name: Run admission and laundering mutations
+        run: |
+          python3 -m unittest discover \
+            -s loop_wiki/capability-workspace-control-plane/tests \
+            -p 'test_*.py' -v
+      - name: Exercise CLI ledger and acknowledgement
+        shell: bash
+        run: |
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          python3 loop_wiki/capability-workspace-control-plane/scripts/capability_workspace.py \
+            --input loop_wiki/capability-workspace-control-plane/tests/fixtures/admitted-envelope.json \
+            --binding loop_wiki/capability-workspace-control-plane/contracts/upstream-binding.json \
+            --ledger "$tmp/ledger.json" \
+            --output "$tmp/result.json"
+          RESULT_PATH="$tmp/result.json" python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          result = json.loads(Path(os.environ["RESULT_PATH"]).read_text())
+          assert result["state"] == "ACKNOWLEDGED"
+          assert result["execution"]["state"] == "NOT_EXERCISED"
+          assert result["authority"]["consumerGrantedExecutionAuthority"] is False
+          PY

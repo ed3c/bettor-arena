@@ -1,0 +1,42 @@
+{
+  "schema": "bettor.capability-workspace-binding/v1",
+  "upstream": {
+    "repository": "ed3c/kotlin-auto-webview",
+    "commit": "56eb824866e7e74d63a4297748c647cff738db51",
+    "tree": "0a32759d10c4a08a1815026f9504145d2fbc7cad",
+    "routerPath": "composeApp/src/commonMain/kotlin/dev/ed3c/autowebview/workspace/routing/FederationRouter.kt",
+    "routerBlob": "d25f92d140fa1b7012345a921d52efa7af1d10e7",
+    "contractsPath": "composeApp/src/commonMain/kotlin/dev/ed3c/autowebview/workspace/contract/WorkspaceContracts.kt",
+    "contractsBlob": "47ea8f32ea12bc80239dcb48070174de43a77944",
+    "capabilityId": "orchestrate.work",
+    "routeClass": "ORCHESTRATE_WORK",
+    "destinationOwner": {
+      "kind": "ORCHESTRATOR",
+      "ownerId": "bettor-arena"
+    }
+  },
+  "bettor": {
+    "repository": "ed3c/bettor-arena",
+    "commit": "65b7188ba57b0769419850db462bd92b5c834e00",
+    "tree": "41f0ecdef0232114d9f339fbfd984e37e56f3dc5",
+    "workerManifestPath": "loop_wiki/loopx-worker-gateway/contracts/manifest.json",
+    "workerManifestBlob": "ed851c870b519184bf6b2ea258f291515d783271",
+    "workerReceiptSchemaPath": "loop_wiki/loopx-worker-gateway/contracts/worker-receipt.schema.json",
+    "workerReceiptSchemaBlob": "c9aded898d0108e550e8614b716251f3afef2cd5"
+  },
+  "state": {
+    "consumer": "IMPLEMENTED",
+    "workerGateway": "CONTRACT_PRESENT_FIXTURE_ONLY",
+    "workerRuntime": "NOT_EXERCISED",
+    "gateRuntime": "NOT_EXERCISED",
+    "liveHandoff": "NOT_EXERCISED"
+  },
+  "hardLaws": [
+    "ROUTE_ACK != WORKER_EXECUTION",
+    "WORKER_EXECUTION != GATE_SUCCESS",
+    "GATE_RECEIPT != DOMAIN_TRUTH",
+    "REQUEST_ID != SEMANTIC_IDENTITY",
+    "FIXTURE != LIVE",
+    "KAW_CANNOT_WRITE_LOOPX_STATE"
+  ]
+}

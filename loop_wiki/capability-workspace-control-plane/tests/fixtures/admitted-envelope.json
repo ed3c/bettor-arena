@@ -1,0 +1,51 @@
+{
+  "schema": "bettor.capability-workspace-envelope/v1",
+  "capabilityId": "orchestrate.work",
+  "proposal": {
+    "requestId": "REQ:KAW:L4:001",
+    "caller": {
+      "kind": "EXTERNAL",
+      "ownerId": "kaw-workspace"
+    },
+    "intent": "Admit one exact public orchestration proposal without granting execution authority.",
+    "routeClass": "ORCHESTRATE_WORK",
+    "destinationOwner": {
+      "kind": "ORCHESTRATOR",
+      "ownerId": "bettor-arena"
+    },
+    "evidenceCeiling": "TECHNICAL",
+    "exactSubjects": [
+      {
+        "key": {
+          "logicalId": "WORK:KAW:L4:001",
+          "kind": "WORK_ITEM"
+        },
+        "expectedVersion": "v1",
+        "expectedDigest": {
+          "algorithm": "sha256",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    ]
+  },
+  "subjectAdmission": [
+    {
+      "key": {
+        "logicalId": "WORK:KAW:L4:001",
+        "kind": "WORK_ITEM"
+      },
+      "version": "v1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "visibility": "PUBLIC",
+      "dataClass": "PUBLIC",
+      "canonicalAuthority": {
+        "kind": "GITHUB",
+        "ownerId": "github-workgraph"
+      }
+    }
+  ],
+  "mode": "CONTRACT_ONLY"
+}

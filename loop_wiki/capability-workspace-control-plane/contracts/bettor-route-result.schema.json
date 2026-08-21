@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ed3c/bettor-arena/loop_wiki/capability-workspace-control-plane/contracts/bettor-route-result.schema.json",
+  "title": "Bettor capability workspace route admission result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "requestId", "state", "reasonCode", "maximumClaim",
+    "semanticFingerprint", "idempotentReplay", "kawReceipt", "binding",
+    "execution", "authority", "cleanup", "evidenceBoundary"
+  ],
+  "properties": {
+    "schema": {"const": "bettor.capability-workspace-result/v1"},
+    "requestId": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$"},
+    "state": {"enum": ["ACKNOWLEDGED", "DENIED", "DEFERRED"]},
+    "reasonCode": {"type": "string", "pattern": "^[A-Z0-9_]{1,96}$"},
+    "maximumClaim": {"const": "ROUTE_PROPOSAL_ADMISSION_ONLY"},
+    "semanticFingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "idempotentReplay": {"type": "boolean"},
+    "kawReceipt": {"type": ["object", "null"]},
+    "binding": {"type": "object"},
+    "execution": {
+      "const": {
+        "state": "NOT_EXERCISED",
+        "workerReceiptReference": null,
+        "gateReceiptReference": null,
+        "loopxStateWritten": false
+      }
+    },
+    "authority": {
+      "const": {
+        "kawWroteLoopxState": false,
+        "consumerSubmittedGateVerdict": false,
+        "consumerGrantedExecutionAuthority": false,
+        "consumerPerformedHumanAdmit": false,
+        "consumerPromotedRelease": false,
+        "consumerClaimedDomainTruth": false
+      }
+    },
+    "cleanup": {
+      "const": {"state": "PASS", "residue": []}
+    },
+    "evidenceBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumerContract", "routeAcknowledgement", "workerRuntime", "gateRuntime", "liveBettorHandoff", "domainTruth", "userOutcome", "mergeRelease"],
+      "properties": {
+        "consumerContract": {"const": "PASS"},
+        "routeAcknowledgement": {"enum": ["PASS", "FAIL"]},
+        "workerRuntime": {"const": "NOT_EXERCISED"},
+        "gateRuntime": {"const": "NOT_EXERCISED"},
+        "liveBettorHandoff": {"const": "NOT_EXERCISED"},
+        "domainTruth": {"const": "NOT_CLAIMED"},
+        "userOutcome": {"const": "ABSENT"},
+        "mergeRelease": {"const": "NOT_AUTHORIZED"}
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "bettor.capability-workspace-implementation-limits/v1",
+  "maximumClaim": "BETTOR_CONSUMER_CONTRACT_AND_ROUTE_ACK_CODE_READY",
+  "states": {
+    "consumerContract": "PASS",
+    "routeAdmissionCode": "PASS",
+    "routeAcknowledgementFixture": "PASS",
+    "workerRuntime": "NOT_EXERCISED",
+    "gateRuntime": "NOT_EXERCISED",
+    "loopxReducer": "NOT_EXERCISED",
+    "liveBettorHandoff": "NOT_EXERCISED",
+    "providerRuntime": "NOT_EXERCISED",
+    "userOutcome": "ABSENT"
+  },
+  "externalAuthority": [
+    "BETTOR_DEPLOYMENT",
+    "PROVIDER_CREDENTIALS",
+    "WORKER_RUNTIME",
+    "COST_AND_BUDGET",
+    "MERGE",
+    "RELEASE"
+  ],
+  "forbiddenClaims": [
+    "ROUTE_ACK_IS_WORKER_EXECUTION",
+    "WORKER_EXECUTION_IS_GATE_SUCCESS",
+    "GATE_RECEIPT_IS_DOMAIN_TRUTH",
+    "FIXTURE_IS_LIVE",
+    "KAW_WROTE_LOOPX_STATE",
+    "PROVIDER_OUTPUT_GRANTED_AUTHORITY",
+    "USER_OUTCOME_ESTABLISHED",
+    "MERGE_OR_RELEASE_PERFORMED"
+  ]
+}
